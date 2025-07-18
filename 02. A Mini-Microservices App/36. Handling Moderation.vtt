@@ -1,253 +1,238 @@
 WEBVTT
 
 00:01.530 --> 00:05.340
-We now need to open up our moderation service and make sure that we've got some code inside there to
+الان باید سرویس نظارت (moderation service) رو باز کنیم و مطمئن بشیم کدی داریم که
 
 00:05.340 --> 00:07.470
-handle this comment created event.
+بتونه event مربوط به ایجاد کامنت رو پردازش کنه.
 
 00:07.710 --> 00:13.680
-So as soon as we receive that comment, we'll then do some checking on the content of the comment and
-
-00:13.680 --> 00:16.290
-then we're going to attempt to emit comment moderated.
+به‌محض اینکه این کامنت رو دریافت کردیم، باید محتوای اون رو بررسی کنیم و بعد تلاش کنیم تا یک event جدید به اسم comment moderated منتشر کنیم.
 
 00:16.740 --> 00:18.180
-So let's go ahead and give it a shot.
+بریم سراغ پیاده‌سازی این بخش.
 
 00:19.280 --> 00:22.250
-Back inside my editor, I will find the moderation service.
+برمی‌گردم به ادیتور و سرویس moderation رو باز می‌کنم.
 
 00:22.250 --> 00:24.500
-Inside there, I'll find the index dogs file.
+داخلش فایل index.js رو پیدا می‌کنم.
 
 00:25.140 --> 00:31.100
-So we've got this post request handler right here to watch for any request going to our events endpoint.
+اینجا یک handler برای POST داریم که هر درخواستی که به endpoint مربوط به eventها بیاد رو بررسی می‌کنه.
 
 00:31.110 --> 00:34.350
-So this is where we are going to receive an event from our broker.
+پس اینجا همون‌جاییه که ما event رو از event broker دریافت می‌کنیم.
 
 00:34.800 --> 00:39.870
-Remember that the event itself is going to be contained on the rec body property because we are receiving
+یادت باشه خود event داخل ویژگی `body` از `req` هست چون الان همه‌ی eventها به صورت POST میان.
 
 00:39.870 --> 00:42.480
-all these events as simple post requests for right now.
+پس باید type و data رو از داخل req.body بیرون بکشیم.
 
 00:43.410 --> 00:49.050
-So off of that wrecked body property, we will pull off the events type and the data associated with
+بعدش، type رو بررسی می‌کنیم. اگر type برابر بود با comment created، یعنی یک کامنت جدید ساخته شده،
 
 00:49.050 --> 00:49.500
-it.
+می‌ریم سراغ فرآیند بررسی محتوا.
 
 00:50.970 --> 00:56.490
-Well, then take a look at the type and we'll say if the type is equal to comment created, then we
+اولین قدم اینه که تصمیم بگیریم آیا کامنت تأیید بشه یا رد.
 
 00:56.490 --> 00:59.310
-want to go through this entire content moderation thing.
+برای این کار یک شرط سه‌تایی می‌نویسیم.
 
 01:00.850 --> 01:05.290
-The first thing we have to do inside of here is decide whether or not to approve or reject the comment.
+مثلاً یک متغیر status تعریف می‌کنیم که از روی data.content مقداردهی میشه.
 
 01:05.830 --> 01:08.740
-To do so, we're going to set up a ternary expression.
+یادت باشه این `content` همون متن کامنت هست.
 
 01:09.130 --> 01:13.270
-So let's say con status is going to be data content.
+بررسی می‌کنیم که آیا عبارت "orange" داخلش هست یا نه.
 
 01:13.300 --> 01:16.360
-Remember, that is the actual content of the comment itself.
+اگر باشه، status رو برابر با "rejected" می‌ذاریم.
 
 01:16.930 --> 01:20.920
-We're going to check to see if that includes a string of orange.
+در غیر این صورت مقدار "approved" رو بهش می‌دیم.
 
 01:22.230 --> 01:28.170
-If it does that we want to assign rejected to status.
+الان که کامنت بررسی شده و status مشخصه، وقتشه که event جدیدی به اسم comment moderated رو منتشر کنیم.
 
 01:28.200 --> 01:32.490
-Otherwise we will assign approved like so.
+پس باید یک درخواست POST بفرستیم به event bus، مثل دفعات قبل.
 
 01:35.760 --> 01:38.520
-So now that we've moderated the comment, we've got the status right here.
+کامنت رو به همراه status جدیدش داخل payload می‌فرستیم.
 
 01:38.880 --> 01:42.960
-So now we need to make sure that we emit this common moderated event.
+پس بریم یک درخواست POST بفرستیم به event bus.
 
 01:43.200 --> 01:47.550
-So we're going to make a post request over to our event bus just as we've done several times.
+مثل همیشه، URL رو می‌نویسیم و مشخصات event رو هم بهش می‌دیم.
 
 01:48.850 --> 01:53.020
-We will make sure that we include the comment along with the new updated status.
+آدرس میشه: http://localhost:4005/events
 
 01:55.640 --> 01:57.230
-So I will make a.
+type رو می‌ذاریم: comment moderated
 
 01:58.920 --> 02:07.770
-Post requests to HTTP colon local host and remember our event bus is at 4005 events.
+و داخل data باید اطلاعات کامنت باشه: ID، postID، content، و status.
 
 02:09.870 --> 02:13.290
-Then we will give this thing a type of comment moderated.
+مثلاً ID میشه data.id
 
 02:14.520 --> 02:18.630
-And for the data we will include the comments.
+postID میشه data.postId
 
 02:19.410 --> 02:21.450
-ID is post ID.
+status همون مقدار محاسبه‌شده ماست
 
 02:21.540 --> 02:24.150
-The content itself and the updated status.
+و content هم میشه data.content
 
 02:24.510 --> 02:28.020
-So we will say the ID of this comment is data ID.
+فقط یک نکته مهم: من این فیلدهای ID و postID و content رو همینطوری نوشتم.
 
 02:29.830 --> 02:32.650
-The post ID is data post ID.
+یعنی از روی ذهنم نوشتم، حتماً باید چک کنیم واقعاً تو data هستن یا نه.
 
 02:34.930 --> 02:38.350
-The status is going to be the status that we just calculated right here.
+چون ممکنه اسم دقیقشون فرق داشته باشه یا ساختارشون متفاوت باشه.
 
 02:39.060 --> 02:42.630
-And then finally the content will be data content.
+پس بهتره قبلش مطمئن بشیم که event واقعا این فیلدها رو داره.
 
 02:44.310 --> 02:49.170
-Now, one thing I want to point out right here is that I just kind of pulled these properties of ID,
-
-02:49.170 --> 02:52.320
-post ID and content off the top of my head.
+در غیر این صورت ممکنه موقع ارسال event به event bus به مشکل بخوریم.
 
 02:52.350 --> 02:57.600
-I just kind of remembered them, but I could have very easily forgotten the different properties that
+من این پراپرتی‌ها رو از حفظ نوشتم ولی خیلی راحت ممکن بود که یادم بره چه فیلدهایی داخل event از نوع comment created هست.
 
 02:57.600 --> 03:00.900
-were contained inside of an event of type content created.
+من و تو می‌دونیم این event چه ویژگی‌هایی داره چون همین چند لحظه پیش
 
 03:01.200 --> 03:05.850
-You and I know what is inside of the Common Create event because we were just looking at the definition
+به تعریف اون نگاه کردیم، وقتی که از داخل comment service ارسال می‌شد.
 
 03:05.850 --> 03:09.330
-of that event a moment ago when it was emitted from our comment service.
+این همون comment service هست که داخلش اون event ساخته و ارسال شد.
 
 03:09.870 --> 03:11.090
-So here's the comment service.
+پس می‌تونیم برگردیم به این قسمت
 
 03:11.100 --> 03:15.390
-Here's where we create that event so we can look back at this thing right here and very easily see the
+و به راحتی چک کنیم که event comment created چه پراپرتی‌هایی داره.
 
 03:15.390 --> 03:18.000
-different properties that comment created has.
+اما تصور کن داخل یه سیستم بزرگ کار می‌کردیم.
 
 03:18.390 --> 03:22.680
-Well, I think you can kind of imagine that if we were working on a large system, understanding the
+یاد گرفتن اینکه هر event چه داده‌هایی داخلش داره می‌تونه واقعاً سخت بشه.
 
 03:22.680 --> 03:27.100
-different properties that were contained inside of any given event can be really challenging.
+قطعاً نمی‌تونیم همه چیز رو از حفظ نگه داریم، پس احتمال زیاد نیاز داریم به یک داکیومنتیشن یا چیزی مشابه
 
 03:27.120 --> 03:27.510
-Definitely.
+که نشون بده
 
 03:27.510 --> 03:27.990
-Without a doubt.
+داخل هر event
 
 03:27.990 --> 03:32.760
-It'd be hard to remember off the top of your head, so chances are we would want some kind of documentation
+چه فیلدهایی وجود داره و ساختارش چیه، مخصوصاً وقتی تعداد eventها زیاد می‌شن.
 
 03:32.760 --> 03:38.730
-or something like that to reflect or kind of document what different properties exist inside of every
+فقط خواستم این موضوع رو تو ذهنت نگه داری چون در ادامه خیلی به دردمون می‌خوره.
 
 03:38.730 --> 03:41.430
-event that exists inside of our application.
+الان برگردیم سراغ کدی که نوشتیم.
 
 03:41.460 --> 03:44.640
-There's just something I want you to keep in your mind for right now, because it's going to be very
+چون داخلش از `await` استفاده کردیم، باید فانکشن رو با `async` تعریف کنیم.
 
 03:44.640 --> 03:45.780
-relevant later on.
+این نکته رو فراموش نکن.
 
 03:47.960 --> 03:48.270
-Okay.
+خب،
 
 03:48.290 --> 03:51.380
-So now next up, we made use of the a keyword inside of here.
+بعد از بسته شدن `if` باید حتماً یک response برگردونیم.
 
 03:51.410 --> 03:53.720
-Let's make sure that we mark this function as async.
+اگر نه، request همین‌طور معلق می‌مونه و هیچ پاسخی داده نمیشه.
 
 03:54.110 --> 03:58.430
-And then finally, right after the closing curly brace of the if statement, we do need to make sure
+حالا همه‌چیز خوب به نظر می‌رسه و داریم event مربوط به comment moderated رو می‌سازیم و می‌فرستیم برای event bus.
 
 03:58.430 --> 04:00.350
-that we eventually send off a response.
+فقط یک نکته کوچیک باقی مونده.
 
 04:00.380 --> 04:02.930
-Otherwise, this request handler is just going to hang.
+الان event bus هنوز هیچ eventی برای moderation service نمی‌فرسته،
 
 04:04.420 --> 04:04.680
-Okay.
+چرا؟
 
 04:04.690 --> 04:05.530
-So this looks good.
+چون moderation service
 
 04:05.530 --> 04:11.290
-So this gets us caught up to creating this comment moderated event and sending it off to our event bus.
+بعد از ساختن event bus اضافه شده و هنوز توی سیستم ثبت نشده تا بتونه event دریافت کنه.
 
 04:11.770 --> 04:14.710
-There is one little thing that we need to make sure we do very quickly.
-
-04:14.710 --> 04:20.110
-Right now, our event bus is not sending any events to the moderation service just because we created
-
-04:20.110 --> 04:22.600
-the Moderation Service after we made the event bus.
+پس باید بریم و مطمئن بشیم که event bus به moderation service هم event ارسال می‌کنه.
 
 04:22.870 --> 04:28.450
-Let's make sure that whenever the event bus creates or receives a comment, it sends it out to the moderation
+باید مطمئن بشیم که هر وقت event bus یک کامنت دریافت یا ایجاد می‌کنه، اون رو برای سرویس moderation هم ارسال کنه.
 
 04:28.450 --> 04:29.530
-service as well.
+نه فقط بقیه سرویس‌ها.
 
 04:30.500 --> 04:35.780
-So back inside of my event bus directory, I'll find the indexed JS file.
+برمی‌گردم به پوشه‌ی event-bus و فایل index.js رو باز می‌کنم.
 
 04:36.770 --> 04:40.640
-So right here is where we receive all the different events and then we just turn right back around and
+اینجا همون جاییه که تمام eventها رو دریافت می‌کنیم و بعد به تمام سرویس‌های فعال ارسالشون می‌کنیم.
 
 04:40.640 --> 04:42.980
-send them off to all these different running services.
+الان ارسال به سرویس moderation رو هنوز اضافه نکردیم.
 
 04:43.310 --> 04:49.910
-So again, 4000 is Post's comments query and we just have not added in the moderation one just yet.
+سرویس‌هایی مثل posts، comments، query همگی اضافه شدن ولی moderation هنوز نه.
 
 04:49.910 --> 04:55.100
-So let's paste one of those lines down and then just make sure we update the port to 4003, which is
+پس یکی از این خطوط رو کپی می‌کنم و فقط پورتش رو به 4003 تغییر می‌دم، چون سرویس moderation روی این پورت اجرا میشه.
 
 04:55.100 --> 04:57.170
-where our moderation service is running at.
+کارمون با این فایل تموم شد، ذخیره می‌کنیم و می‌بندیم.
 
 04:58.070 --> 04:58.230
-Okay.
+خب.
 
 04:58.410 --> 05:00.570
-I'll say this file and close it.
+فایل رو ذخیره می‌کنم و می‌بندم.
 
 05:03.030 --> 05:04.590
-So let's take another pause right here.
+اینجا یه توقف کوچیک داشته باشیم.
 
 05:04.590 --> 05:10.060
-When we come back in the next video, we're going to make sure that when the event bus receives comment
+تو ویدیوی بعدی قراره بررسی کنیم که وقتی event bus یک comment moderated رو دریافت کرد
 
 05:10.230 --> 05:15.360
-moderated and sends it over to comments service, we're going to make sure that we receive that event
+و اون رو برای سرویس comments فرستاد، سرویس comments بتونه اون رو دریافت کنه.
 
 05:15.360 --> 05:16.890
-inside of comments service.
+داخل اون event، پراپرتی status رو بررسی کنیم،
 
 05:17.550 --> 05:23.730
-Take a look at the status property, update the status of the appropriate comment and then emit this
+و وضعیت کامنت مربوطه رو با اون مقدار جدید آپدیت کنیم و در نهایت یک event جدید به اسم comment updated منتشر کنیم.
 
 05:23.730 --> 05:26.820
-comment updated event as well.
+پس هنوز یه مقدار کار باقی مونده.
 
 05:27.210 --> 05:28.250
-So still a little bit to do.
-
-05:28.260 --> 05:29.880
-Let's take care of that in just a moment.
+بریم سراغش تو ویدیوی بعد.

@@ -1,256 +1,172 @@
 WEBVTT
 
 00:00.700 --> 00:05.080
-We're now going to take a look at a second option for adding in this moderation service and adding in
+الان می‌خوایم بریم سراغ گزینه دوم برای اضافه کردن سرویس فیلترینگ و تعریف ایونت‌هایی که ازش پشتیبانی کنن.
 
 00:05.080 --> 00:06.450
-some events to support it.
+اینجا گزینه دوم چیه؟
 
 00:06.460 --> 00:08.110
-So here's option number two.
+تقریباً مثل گزینه اوله.
 
 00:08.350 --> 00:12.980
-Option number two is going to be very similar to option number one with very one very small difference.
+اما یه تفاوت خیلی کوچیک داره. در واقع، احتمالاً چیزی که شما فکر می‌کردید گزینه اول باشه، در واقع همین گزینه دومه.
 
 00:13.000 --> 00:17.110
-As a matter of fact, option number two is probably what you thought option number one was going to
-
-00:17.110 --> 00:17.500
-be.
-
-00:18.130 --> 00:19.450
-Okay, so let's walk through it.
+خب، بیاید با هم مرورش کنیم.
 
 00:19.600 --> 00:22.450
-We're still going to have a user submit a comment to the current service.
+هنوز هم کاربر میاد و یه کامنت رو به سرویس کامنت فعلی می‌فرسته.
 
 00:22.450 --> 00:27.250
-We are still going to have the comment service emit an event of something like comment created.
+و همچنان سرویس کامنت یه ایونت از نوع "comment created" ارسال می‌کنه.
 
 00:28.000 --> 00:31.930
-The event plus is still going to send that event off to the moderation service.
+ایونت باس (Event Bus) همچنان این ایونت رو می‌فرسته به سرویس فیلترینگ.
 
 00:31.930 --> 00:37.270
-But now we're going to also have it go off to the query service and actually be processed by the query
-
-00:37.270 --> 00:38.050
-service.
+ولی حالا یه تفاوت کوچیک اینه که این ایونت به سرویس کوئری هم ارسال می‌شه و اون هم پردازش‌ش می‌کنه.
 
 00:38.050 --> 00:43.450
-So this is similar to what is going on inside of our application right now without adding in this moderation
+یعنی دقیقاً مثل چیزی که تا الان توی اپلیکیشن داریم قبل از اینکه سرویس فیلترینگ رو اضافه کنیم.
 
-00:43.450 --> 00:44.050
-feature.
-
-00:44.830 --> 00:49.780
-As soon as the query service CS come and created, we're going to have the query service persist some
+00:43.830 --> 00:49.780
+به‌محض اینکه سرویس کوئری ایونت "comment created" رو ببینه، یه رکورد از اون کامنت ذخیره می‌کنه.
 
 00:49.780 --> 00:54.400
-information about that comment and critically it's also going to have a default status of something
-
-00:54.400 --> 00:55.210
-like pending.
+و نکته مهم اینه که یه وضعیت پیش‌فرض مثلاً "pending" براش در نظر می‌گیره.
 
 00:57.350 --> 01:03.050
-The query service is going to instantly know about this comment, even if it takes some amount of time
-
-01:03.050 --> 01:06.950
-for the moderation service to process and actually moderate the given comment.
+یعنی سرویس کوئری فوراً از وجود این کامنت باخبر میشه، حتی اگه بررسی محتوای اون توسط سرویس فیلترینگ زمان‌بر باشه.
 
 01:08.700 --> 01:12.690
-So now we can imagine that if a user goes over to our application and they enter in a comment right
+الان می‌تونیم تصور کنیم که کاربر میاد یه کامنت وارد می‌کنه و ارسال رو می‌زنه.
 
 01:12.690 --> 01:18.630
-here and hit submit, we're going to instantly emit comment created and that event will instantly go
-
-01:18.630 --> 01:22.800
-over to the query service and the query service will have this record of the comment.
+بلافاصله ایونت "comment created" ارسال میشه و سرویس کوئری اون رو دریافت و ذخیره می‌کنه.
 
 01:22.800 --> 01:27.240
-So as soon as the user refreshes the page in theory, they will see that comment appear right away.
+پس به‌محض اینکه کاربر صفحه رو رفرش کنه، کامنتش رو می‌تونه ببینه.
 
 01:27.240 --> 01:32.340
-And because we know its status is pending, we can show a nice little kind of picture of that thing,
-
-01:32.340 --> 01:36.450
-something like this right here, or a nice little something note that says this comment is awaiting
-
-01:36.450 --> 01:37.260
-moderation.
-
-01:38.260 --> 01:41.440
-Now, of course, we still want to go ahead and moderate this comment.
+و چون وضعیتش "pending" هست، می‌تونیم یه پیام مناسب مثل "در انتظار بررسی" براش نمایش بدیم.
 
 01:41.680 --> 01:45.370
-So the comment created is still going to go to moderation service.
+البته ما هنوز هم می‌خوایم کامنت رو فیلتر کنیم.
 
 01:45.520 --> 01:50.200
-And at some point in time in the future, maybe seconds, months, who knows what?
+بنابراین ایونت "comment created" همچنان به سرویس فیلترینگ هم ارسال میشه.
 
 01:50.200 --> 01:54.760
-It will still continue to even emit an event of something like comment moderated.
+و بعد از یه مدت — حالا چند ثانیه یا چند ساعت — سرویس فیلترینگ یه ایونت جدید منتشر می‌کنه.
 
 01:56.110 --> 01:57.850
-This will go over to the query service.
+ایونتی مثل "comment moderated".
 
 01:58.180 --> 02:03.910
-The query service will see it and update the status of that given comment to, approved or rejected
-
-02:03.910 --> 02:05.200
-or whatever it needs to be.
+که دوباره میره برای سرویس کوئری، و اون هم وضعیت کامنت رو آپدیت می‌کنه به "approved" یا "rejected".
 
 02:06.170 --> 02:07.430
-So that's option number two.
+پس این شد گزینه دوم.
 
 02:07.880 --> 02:12.230
-This definitely solves the issue of a user submitting a comment and not immediately seeing it up here
-
-02:12.230 --> 02:13.120
-on the screen.
-
-02:13.130 --> 02:18.440
-But it does also kind of persist an issue that we did not discuss about option number one.
+این مدل دیگه مشکل اینکه کاربر کامنت رو ارسال کنه ولی بلافاصله نبینه رو حل می‌کنه.
 
 02:18.440 --> 02:22.070
-It's an issue that's present in option number one and option number two as well.
+اما یه مشکلی هست که هم در گزینه اول وجود داشت و هم در گزینه دوم.
 
 02:22.160 --> 02:26.210
-So let me tell you about what the issue is that is common with one and two.
+الان می‌خوایم بگیم اون مشکل چیه که توی هر دو گزینه مشترکه.
 
-02:27.300 --> 02:31.230
-I want you to really think about the query service right now and what its job is.
+002:27.300 --> 02:31.230
+می‌خوام یکم عمیق‌تر به سرویس Query فکر کنی و کاری که داره انجام می‌ده.
 
 02:31.260 --> 02:34.680
-That query service is all about presentation logic.
+این سرویس صرفاً مربوط به منطق نمایش داده‌هاست.
 
 02:34.950 --> 02:37.250
-As a matter of fact, its name is query service.
+در واقع، اسمش هم "query service" ـه.
 
 02:37.260 --> 02:42.960
-It's about making a query or storing some data and serving that data up very quickly to users.
+کارش اینه که داده‌ها رو جمع کنه یا ذخیره کنه و خیلی سریع اون‌ها رو در اختیار کاربر قرار بده.
 
 02:43.470 --> 02:48.420
-So right now, it's really joining just two resources, just the post and comments.
+الان فقط دوتا منبع رو به هم مرتبط می‌کنه: پست‌ها و کامنت‌ها.
 
 02:48.420 --> 02:52.770
-But at some point in time, the future, we could totally imagine that there might be other resources
+ولی در آینده، کاملاً قابل تصوره که منابع دیگه‌ای هم بهش اضافه بشه.
 
 02:52.770 --> 02:59.400
-that it joins together as well, such as maybe upvotes, downvotes, images, who knows what else.
+مثل رأی مثبت، رأی منفی، تصویر، یا هر چیز دیگه‌ای. این سرویس ممکنه چندین منبع داده رو با هم ترکیب کنه.
 
-02:59.400 --> 03:03.450
-This query service might take many different resources and jam them all together.
-
-03:04.620 --> 03:07.110
-And that's what this query service is really all about.
+03:03.450 --> 03:04.620
+و این دقیقاً کاریه که قراره انجام بده.
 
 03:07.500 --> 03:08.880
-So quick question for you.
+حالا یه سؤال برات دارم:
 
 03:09.360 --> 03:16.380
-Does it make sense for this presentation service to understand how to process this very precise update
+آیا منطقیه که این سرویس نمایشی، منطق دقیق مربوط به به‌روزرسانی کامنت‌ها رو هم بفهمه؟
 
 03:16.380 --> 03:19.440
-to a comment like a common moderated event?
+مثلاً ایونت comment moderated رو پردازش کنه؟
 
 03:19.470 --> 03:24.210
-Does it make sense for the query service to understand how to process an event like this?
+الان به‌نظر ساده میاد. چون فقط باید اون کامنت رو پیدا کنه و وضعیتش رو به approved یا rejected تغییر بده.
 
 03:24.840 --> 03:30.660
-Well, right now it's kind of easy to say yes, because the comment moderated event really just means
+پس الان به‌ظاهر مشکلی نیست، چون فقط یه خط کده. اما حالا بیا یه سیستم کامنت‌گذاری واقعی رو تصور کن.
 
 03:30.690 --> 03:35.460
-go and find this comment and update its status to approved or rejected or whatever else.
+توی دنیای واقعی، آپدیت‌های زیادی روی یه کامنت ممکنه انجام بشه.
 
 03:35.610 --> 03:40.590
-So processing this event very simple and straightforward in nature, it's one line of code, more or
-
-03:40.590 --> 03:41.160
-less.
-
-03:41.700 --> 03:45.240
-What I want you to think about a real world commenting system.
+ممکنه یک کامنت فیلتر بشه، رأی مثبت یا منفی بگیره، یا حتی promote بشه.
 
 03:45.660 --> 03:50.820
-Think about all of the different ways in which a real world commenting system or a real world comment
+مثلاً یک ناظر بخواد بگه این کامنت باکیفیت بالاست و اونو بیاره بالاتر از بقیه.
 
 03:50.820 --> 03:52.470
-might be able to be updated.
+ممکنه ناشناس بشه.
 
 03:53.340 --> 03:58.470
-A real world comment, you might be able to moderate it, you might be able to upload it to downvote
-
-03:58.470 --> 04:00.570
-it, you might be able to promote it.
+ممکنه به‌عنوان قابل جستجو علامت‌گذاری بشه یا تبلیغاتی باشه که برای نمایش پول پرداخت شده.
 
 04:00.570 --> 04:05.550
-So maybe a moderator or someone in charge of a website can say, this is a really high quality comment.
+هرکدوم از این تغییرات دقیق، منطق تجاری خاص خودش رو داره.
 
 04:05.550 --> 04:08.160
-I want to boost it up towards the top of all the comments.
-
-04:08.790 --> 04:11.010
-You might be able to make a comment anonymous.
-
-04:11.010 --> 04:12.920
-You might be able to flag it as searchable.
-
-04:12.930 --> 04:17.970
-You might be able to market as an advertised comment, like a comment that someone paid money to promote
-
-04:17.970 --> 04:18.750
-in some way.
-
-04:19.590 --> 04:25.260
-Each of these different precise updates to a comment has some very precise business logic associated
-
-04:25.260 --> 04:28.080
-with it to update the definition of that comment.
+یعنی فقط یه status نیست که عوض شه، چیزای زیادی درگیرشن.
 
 04:29.700 --> 04:33.000
-So if we continue down this line of saying that our.
+اگه بخوایم این مسیر رو ادامه بدیم و بگیم سرویس Query باید بتونه event مربوط به comment moderated رو پردازش کنه،
 
 04:33.790 --> 04:38.630
-Where his service is going to be able to process this comment moderated event.
+در اصل داریم می‌گیم که ممکنه در آینده به یه وضعیتی برسیم مثل همین مثالی که الان می‌زنم،
 
 04:38.650 --> 04:42.970
-We're essentially saying that somewhere down the line we might end up in a scenario like this one right
+که توش سرویس Query باید بتونه کلی نوع مختلف از به‌روزرسانی‌های ممکن روی یک کامنت رو هندل کنه.
 
 04:42.970 --> 04:49.360
-here where the query service needs to understand how to handle this multitude of different possible
+و راحت می‌تونی تصور کنی اگه سرویس‌های دیگه‌ای مشابه سرویس Query داشته باشیم—مثلاً یه سرویسی برای پردازش پست‌های محبوب هفتگی،
 
 04:49.360 --> 04:51.370
-updates that can be made to a comment.
+یا یه سرویس برای پیشنهاد محتوا به کاربر—
 
 04:52.460 --> 04:57.710
-And you can easily imagine that if there were other services like our query service, maybe something
+و اگه اون‌ها هم مجبور باشن ساختار کامنت‌ها رو ذخیره کنن، خب اون‌ها هم باید این eventها رو پردازش کنن.
 
 04:57.710 --> 05:03.260
-to process weekly updates for popular blog posts, or maybe something that functions as a recommendation
-
-05:03.260 --> 05:03.950
-service.
+و اینجا دیگه وارد سناریویی می‌شیم که توش هر تغییر کوچیک در کامنت باید توسط تعداد زیادی از سرویس‌ها هندل بشه.
 
 05:03.950 --> 05:08.450
-And if those had to store the idea of what a comment is as well, in theory, they might also have to
-
-05:08.450 --> 05:09.560
-handle these events.
+و مشخصه که این اصلاً چیزی نیست که بخوایم؛ این معماری اصلاً درست و بهینه نیست.
 
 05:09.920 --> 05:15.620
-And so we start to get into this scenario where every possible way of changing a comment has to be handled
+درسته که این روش الان برای نسخه‌ی فعلی اپلیکیشنمون جواب می‌ده، ولی من می‌خوام بگم که شاید بهترین راه‌حل نباشه.
 
 05:15.620 --> 05:18.320
-by a ton of different services.
+پس یه توقف دیگه اینجا داشته باشیم.
 
 05:18.440 --> 05:22.250
-And as you can imagine, yeah, this is not even remotely what we want.
-
-05:22.730 --> 05:29.090
-So even though this all works and this is a more or less viable approach for our current application
-
-05:29.090 --> 05:32.450
-as it stands right now, I'm going to suggest that maybe it's not the best solution.
-
-05:32.750 --> 05:36.860
-So we're going to take one more pause, come back to the next video and discuss option number three.
+توی ویدئوی بعدی، می‌ریم سراغ بررسی گزینه‌ی سوم برای حل این مسئله.

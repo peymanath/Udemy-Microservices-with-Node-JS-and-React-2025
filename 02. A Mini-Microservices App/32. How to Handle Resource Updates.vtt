@@ -1,241 +1,111 @@
 WEBVTT
 
-00:00.840 --> 00:02.730
-We were just taking a look at option number two.
-
-00:02.730 --> 00:06.960
-And we eventually said that the issue with this approach is that we are allowing our query service to
+00:00.840 --> 00:06.960
+ما الان داشتیم گزینه دوم رو بررسی می‌کردیم و گفتیم مشکلش اینه که query service خیلی عمیق باید بفهمه معنی event "comment moderated" چیه.
 
 00:06.960 --> 00:10.920
-have a very deep understanding of what this common moderated event is.
+برای حل این موضوع، قراره این event توسط comment service پردازش بشه، نه query service.
 
 00:11.190 --> 00:16.920
-So to solve this, we're going to have the comment moderated be instead processed by the comments service.
+اینجوری، مسئولیت دقیق و تخصصی پردازش comment رو می‌سپاریم به سرویسی که خودش اون رو ساخته.
 
 00:17.010 --> 00:19.230
-Let me show you how this is going to work out.
-
-00:19.880 --> 00:20.190
-Okay.
-
-00:20.190 --> 00:24.240
-So in this diagram on the left hand side, we've got our comment service and the query service.
+الان بزار نشونت بدم این روش چطوری پیاده‌سازی میشه.
 
 00:24.630 --> 00:29.970
-The Common Service is the service that is ultimately in charge of exactly what a comment is.
+سمت چپ نمودار، comment service رو داریم که تمام منطق بیزینسی مربوط به کامنت‌ها دستشه.
 
 00:29.970 --> 00:35.820
-It knows all the very precise business rules, all the business logic, everything around what a comment
-
-00:35.820 --> 00:39.120
-is, how to update it and how to deal with it in some way.
+یعنی دقیقاً می‌دونه یک کامنت چیه، چطور باید ساخته یا آپدیت بشه.
 
 00:39.480 --> 00:44.370
-And so it makes a lot of sense to have our common service be the one that is responsible for some very
+پس منطقیه که آپدیت دقیق و درست یک کامنت توسط همین سرویس انجام بشه.
 
 00:44.370 --> 00:47.970
-precise, very well calibrated way of updating a comment.
+بعد از اینکه این سرویس کامنت رو آپدیت کرد، یک event عمومی ارسال می‌کنه به اسم:
 
-00:48.510 --> 00:53.670
-Whenever the comment service updates a comment by handling one of these very specialized events, we're
+01:00.030 --> 01:01.380
+**`comment updated`**
 
-00:53.670 --> 01:00.030
-going to have it emit one single very generic event called simply comment updated.
+01:01.380 --> 01:13.710
+برخلاف eventهای قبلی که مفهوم خاصی داشتن، این یکی خیلی کلیه و فقط می‌گه: «یه نسخه جدید از این کامنت هست، جزئیاتش اینه. هر کی خواست ذخیره‌ش کنه.»
 
-01:01.380 --> 01:05.910
-Whereas all the events on the left hand side meant that we wanted to update a comment in some very specific
+01:13.710 --> 01:18.720
+نه نیازه بدونی چرا آپدیت شده، نه لازم تحلیلش کنی. فقط دریافت و ذخیره کن.
 
-01:05.910 --> 01:06.480
-way.
+01:27.350 --> 01:32.960
+پس در کل، هر سرویسی که مسئول یک منبع (resource) خاصه، مسئول آپدیت تخصصی اون هم هست.
 
-01:06.510 --> 01:11.870
-The common updated event says, Hey, there's a new comment right here or a new version of this comment,
-
-01:11.880 --> 01:13.710
-don't worry about what the update was.
-
-01:13.710 --> 01:15.570
-Don't worry about trying to interpret it.
-
-01:15.570 --> 01:18.720
-Don't worry about trying to run some specialized business logic around it.
-
-01:18.720 --> 01:22.560
-Just take these updated attributes and store them if you need them.
-
-01:23.160 --> 01:26.310
-So we're going to follow this pattern throughout all the services we put together.
-
-01:27.350 --> 01:32.810
-The service that is in charge of a basic resource will be in charge of these very specialized updates.
-
-01:32.960 --> 01:38.900
-And any time those specialized updates occur, that service will emit a very generic event update.
-
-01:40.820 --> 01:44.780
-So let's take a look at what this is going to look like for the services we are talking about right
-
-01:44.780 --> 01:45.260
-now.
-
-01:45.800 --> 01:49.430
-So we're going to once again have a user submitted comment as soon as they do.
+01:38.900 --> 01:40.820
+و بعدش یک event کلی منتشر می‌کنه.
 
 01:49.430 --> 01:53.210
-So, we're going to have our comment service versus that event.
-
-01:53.210 --> 01:57.470
-And notably, you'll notice that it now knows the status of that comment as well.
-
-01:59.400 --> 02:04.620
-The comment service will then continue to emit a comment created event that will go to the event.
+بیایم ببینیم این پروسه برای کامنت چطوری میشه:
 
 02:04.620 --> 02:10.140
-Plus it will go off to our moderation service and to the query service as well.
+۱. کاربر یک کامنت می‌فرسته → comment service اون رو با status ایجاد می‌کنه → بعد event "comment created" رو می‌فرسته به همه.
 
 02:10.770 --> 02:14.520
-So we're going to still solve that issue we ran into earlier where the query service didn't really know
+اینجوری query service بلافاصله می‌فهمه یک کامنت ساخته شده و می‌تونه اون رو نمایش بده.
 
-02:14.520 --> 02:16.920
-that a common root was created.
+02:20.820 --> 02:23.210
+مشکلی که تو گزینه یک داشتیم، اینجا حل شده.
 
-02:16.920 --> 02:20.820
-And so that was where we ran into issues with the user submitting a comment and then refreshing the
+02:28.940 --> 02:35.960
+۲. moderation service اون کامنت رو بررسی می‌کنه و نتیجه رو با event "comment moderated" فقط به comment service می‌فرسته.
 
-02:20.820 --> 02:21.390
-page.
 
-02:23.210 --> 02:28.940
-We're then going to make sure that the moderation service still processes that comment and moderates
-
-02:28.940 --> 02:29.810
-it in some way.
-
-02:30.290 --> 02:32.030
-So that's going to go off to our event plus.
-
-02:32.210 --> 02:35.960
-And now it's only going to go over to the comments service.
-
-02:37.180 --> 02:42.400
-The Common Service will be the only thing that knows how to process this very specialized update to
-
-02:42.400 --> 02:43.660
-what a comet is.
+02:37.180 --> 02:43.660
+کامنت سرویس تنها جاییه که می‌دونه دقیقاً چطوری باید این آپدیت تخصصی رو روی یک کامنت اعمال کنه.
 
 02:44.050 --> 02:48.700
-So in this case, we'll change the status around pending to approved.
+اینجا مثلاً status رو از "pending" به "approved" تغییر می‌ده.
 
-02:49.770 --> 02:55.650
-Then because the comet service just made a change to a comet, a very specialized, very domain specific
+02:49.770 --> 02:56.310
+حالا چون کامنت سرویس یک تغییر تخصصی روی کامنت انجام داده، قراره یک event عمومی منتشر کنه به اسم:
 
-02:55.650 --> 02:56.310
-change.
+**`comment updated`**
 
-02:56.340 --> 02:59.720
-It will then emit a common updated event.
+02:56.340 --> 03:01.710
+این event خیلی ساده‌ست. فقط می‌گه: یه سری ویژگی‌های این کامنت تغییر کرده. همین.
 
-02:59.730 --> 03:01.710
-So this is a very generic event.
+03:01.710 --> 03:10.920
+نه نیاز داری بفهمی چرا، نه اینکه منطق خاصی روش اجرا کنی. اگه لازم داشتی، این ویژگی‌ها رو بردار و ذخیره کن.
 
-03:01.710 --> 03:04.080
-It just says, Hey, some attributes changed.
+03:11.550 --> 03:15.900
+این event می‌ره به event bus و از اونجا به query service ارسال میشه.
 
-03:04.110 --> 03:05.940
-Don't worry about what changed.
-
-03:05.940 --> 03:07.830
-Don't worry about processing this in any way.
-
-03:07.830 --> 03:10.920
-Just use these attributes if you care about it at all.
-
-03:11.550 --> 03:15.600
-That will go up to the event bus and the event bus will send it off to the query service.
-
-03:15.900 --> 03:18.840
-And now the query service is going to say, Oh, a comment was updated.
-
-03:18.840 --> 03:23.340
-I don't care how or why it was updated, I'm just going to take.
-
-03:24.320 --> 03:30.620
-All the different properties out of that event, and I'm going to use those as the basis for my new
+03:18.840 --> 03:24.320
+حالا query service اینجا فقط می‌گه: خب، یه کامنت آپدیت شده. دلیلش مهم نیست، من فقط مقادیر جدید رو برمی‌دارم.
 
 03:30.620 --> 03:32.300
-comment or for updating this comment.
+و اطلاعات قبلی رو آپدیت می‌کنم. تموم شد.
 
-03:32.840 --> 03:35.720
-So we're not even going to necessarily just change that status flag.
-
-03:35.720 --> 03:40.300
-We're just going to say take all those attributes and use them to update our existing comment.
-
-03:40.310 --> 03:40.940
-That's it.
+03:35.720 --> 03:40.940
+ما حتی نمی‌گیم فقط status رو آپدیت کن، کل ویژگی‌ها رو با نسخه جدید جایگزین می‌کنیم.
 
 03:42.270 --> 03:46.620
-Now I know that this might seem a little bit challenging to understand this idea of having kind of a
+این تفکیک بین "event تخصصی" و "event عمومی" شاید اول سخت باشه، ولی بعداً توی پروژه‌های بعدی هم تکرار میشه و جا می‌افته.
 
-03:46.620 --> 03:49.020
-domain specific event in a very generic event.
+03:56.490 --> 04:00.740
+پس توی اپ ما قراره همین روش رو پیاده‌سازی کنیم: **گزینه سوم**.
 
-03:49.020 --> 03:53.090
-But you're going to see many examples of this on the later project we work on as well.
-
-03:53.100 --> 03:55.860
-So don't worry, you'll get a lot of experience with this over time.
-
-03:56.490 --> 03:58.590
-So that's what we're going to do inside of our application.
-
-03:58.600 --> 04:00.740
-We are going to use option number three.
-
-04:00.750 --> 04:02.970
-We are going to end up introducing two events.
-
-04:02.970 --> 04:05.070
-One is going to be very specialized in nature.
-
-04:05.070 --> 04:07.380
-That is going to be the comment moderated event.
-
-04:07.380 --> 04:09.540
-It's going to be processed by Common Service.
-
-04:09.990 --> 04:14.310
-And then as soon as Common Service updates that comment, it's going to emit that generic event to say,
+04:02.970 --> 04:07.380
+یعنی دوتا event خواهیم داشت:  
+۱. `comment moderated` → مخصوص بررسی و تأیید یا رد شدن  
+۲. `comment updated` → عمومی برای اطلاع‌رسانی هرگونه تغییر
 
 04:14.310 --> 04:16.380
-Hey, this comment was just updated.
-
-04:16.380 --> 04:18.960
-If you care about it, great, use it in some way.
+کامنت سرویس تغییر رو اعمال می‌کنه و بعدش اون رو به صورت کلی منتشر می‌کنه.
 
 04:20.440 --> 04:25.650
-Now the upside to this approach is that the query service only needs to know about common updated.
-
-04:25.660 --> 04:31.490
-Even if we start to add in a billion different ways of exactly how we can precisely update a comment.
+مزیت این کار؟ query service فقط باید `comment updated` رو بشناسه.
 
 04:31.510 --> 04:32.980
-Query service doesn't need to know that.
+مهم نیست آپدیت از چه نوعیه.
 
-04:32.980 --> 04:34.330
-It just needs to know.
-
-04:34.330 --> 04:35.560
-Oh, this comment was updated.
-
-04:35.560 --> 04:37.660
-I'm just going to take these attributes and use them.
-
-04:38.560 --> 04:38.890
-Okay.
-
-04:38.890 --> 04:41.110
-So now we understand what we're going to do inside of our application.
+04:35.560 --> 04:38.890
+فقط می‌فهمه که «یه چیزی توی این کامنت عوض شده» و اطلاعات جدید رو ذخیره می‌کنه.
 
 04:41.110 --> 04:45.700
-We'll take a quick pause right here and start to implement option number three in just a moment.
+خب حالا که همه‌چی مشخص شد، یه وقفه کوچیک داشته باشیم و بعدش بریم سراغ پیاده‌سازی این گزینه سوم.
