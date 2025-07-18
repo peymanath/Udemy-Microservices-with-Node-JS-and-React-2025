@@ -1,0 +1,109 @@
+WEBVTT
+
+00:01.080 --> 00:04.110
+All right, last little piece of setup inside of our order service.
+
+00:04.110 --> 00:07.980
+So we're going to write out some routing rules inside of the ingress service config file.
+
+00:08.400 --> 00:12.120
+And we're going to eventually have a deep discussion about all the different routes that the order service
+
+00:12.120 --> 00:13.110
+is going to implement.
+
+00:13.110 --> 00:18.180
+But remember, inside of the Ingress Service file, we're essentially just saying if any request comes
+
+00:18.180 --> 00:22.770
+in for a route like API slash orders, send it over to the order service.
+
+00:22.770 --> 00:26.760
+That's the only thing we are really doing inside of that ingress engine x config file.
+
+00:26.910 --> 00:28.230
+So let's get to it right away.
+
+00:29.190 --> 00:30.360
+Inside of infra.
+
+00:30.570 --> 00:32.340
+I'll find Kate's inside of there.
+
+00:32.340 --> 00:33.960
+I'll find Ingress SRB.
+
+00:35.970 --> 00:39.990
+Inside this file, we're going to find those three different path rules that we've already set up.
+
+00:40.560 --> 00:43.140
+So once again, I will copy the tickets.
+
+00:44.230 --> 00:44.980
+BLOCK.
+
+00:44.980 --> 00:46.780
+I'm going to paste it right underneath.
+
+00:47.470 --> 00:48.730
+Fix the indentation.
+
+00:51.000 --> 00:52.920
+So I've now got the original tickets.
+
+00:52.920 --> 00:56.100
+I've got the new tickets right here on this new block.
+
+00:56.100 --> 01:01.410
+We're going to update tickets once and twice to orders.
+
+01:02.010 --> 01:07.410
+And once again, please make sure, please, please, please make sure that the client service is listed
+
+01:07.410 --> 01:09.360
+at the very bottom of this list.
+
+01:09.630 --> 01:15.240
+We want Ingress Engine X to try to match these first three paths right here before falling back to the
+
+01:15.240 --> 01:16.200
+client service.
+
+01:18.100 --> 01:18.280
+All right.
+
+01:18.280 --> 01:19.990
+Well, that's pretty much it for the ingress service.
+
+01:19.990 --> 01:21.130
+So we'll save this file.
+
+01:21.640 --> 01:22.600
+I'm going to close it.
+
+01:22.600 --> 01:27.340
+And finally, I should be able to go back over to my terminal and inside my scaffold terminal window.
+
+01:27.340 --> 01:30.460
+I should see something that says that the ingress service was configured.
+
+01:30.640 --> 01:35.710
+So in theory, we are now serving traffic up to that order service even though, well, the thing is
+
+01:35.710 --> 01:40.930
+not actually running because it is just crashing non-stop again because those broken import statements.
+
+01:41.990 --> 01:44.030
+Well, that is it for the initial setup.
+
+01:44.030 --> 01:49.190
+So now all we really have to do is figure out what the order service is truly supposed to do and work
+
+01:49.190 --> 01:50.360
+on its implementation.
+
+01:50.630 --> 01:51.620
+So pause right here.
+
+01:51.620 --> 01:53.540
+Let's figure that stuff out in just a moment.

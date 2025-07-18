@@ -1,0 +1,259 @@
+WEBVTT
+
+00:01.760 --> 00:03.840
+Let's get to work inside of our ticket service.
+
+00:03.860 --> 00:07.670
+We're going to create a listener that is going to watch for that order created event.
+
+00:07.790 --> 00:11.480
+And any time we see that event, as I just mentioned, we're going to lock the ticket down.
+
+00:12.110 --> 00:13.460
+So back inside, my editor.
+
+00:14.390 --> 00:16.970
+I'll find my tickets directory inside there.
+
+00:16.970 --> 00:18.290
+I'll find the events folder.
+
+00:18.290 --> 00:22.100
+And inside of events I'll make a new directory of listeners.
+
+00:22.840 --> 00:28.900
+And then inside that, I'm going to make a listener file called Order Created Listener Thoughts.
+
+00:30.300 --> 00:35.040
+Now, I don't know about you, but it's kind of hard to remember how to create a listener.
+
+00:35.070 --> 00:38.910
+You might recall that we've gone through the process of creating a listener twice now, and you might
+
+00:38.910 --> 00:42.270
+recall that it's something around extending that base listener class.
+
+00:42.270 --> 00:47.730
+So we had to find inside of our common module, but the actual details of it kind of easy to forget.
+
+00:48.060 --> 00:52.580
+So here's how we would approach this using TypeScript to kind of help us through development.
+
+00:52.590 --> 00:56.430
+At the very minimum, we probably want to remember that because we are trying to create a listener.
+
+00:56.460 --> 01:01.290
+We're going to want to extend or subclass the listener base class we had put together.
+
+01:01.380 --> 01:05.370
+So at a very minimum, hopefully we can remember that we need to import.
+
+01:06.140 --> 01:09.770
+The Listener base class from our common module.
+
+01:11.700 --> 01:12.750
+So I'll import that.
+
+01:12.750 --> 01:17.790
+And then I will export a new class called Order Rated Listener.
+
+01:19.530 --> 01:22.060
+And that's going to extend our listener base class.
+
+01:22.080 --> 01:26.280
+Now, if we can just remember this part right here, TypeScript is going to help us the rest of the
+
+01:26.280 --> 01:26.760
+way.
+
+01:27.030 --> 01:31.950
+So already we can see that TypeScript is saying, hey, this thing right here is a generic type and
+
+01:31.950 --> 01:33.720
+you have to provide a type argument.
+
+01:34.230 --> 01:38.730
+So we need to stick in as the generic type, the event that we want to be listening for.
+
+01:39.060 --> 01:39.990
+So that's kind of our hint.
+
+01:39.990 --> 01:43.620
+That's how we're going to get hints along the way on how to actually implement this thing.
+
+01:44.660 --> 01:48.760
+So from our common module, let's import the event that we want to listen for.
+
+01:48.770 --> 01:53.840
+In this case it is, as you guessed by the name of our class right here, the order created event.
+
+01:57.280 --> 01:59.200
+So I'll stick that in as the generic type.
+
+02:01.710 --> 02:03.780
+And then after that, TypeScript still has our back.
+
+02:03.780 --> 02:06.990
+It's going to tell us, okay, well, if you want to do this, here's what you have to do.
+
+02:07.020 --> 02:11.790
+You have to implement that on message function, a Q group name and a subject as well.
+
+02:12.230 --> 02:13.440
+Let's start off with the subject.
+
+02:13.440 --> 02:19.200
+If you want to add a subject, we probably need that subjects enum that we had previously declared inside
+
+02:19.200 --> 02:20.520
+of our common module as well.
+
+02:21.530 --> 02:23.810
+So from the common module, I also get these subjects in.
+
+02:25.150 --> 02:27.850
+And then I'll define the subject that we want to listen for.
+
+02:27.880 --> 02:33.790
+In this case, I'm going to annotate the type of subject as subjects order created and then set its
+
+02:33.790 --> 02:36.490
+value as subjects, not order created.
+
+02:38.210 --> 02:38.340
+Okay.
+
+02:38.480 --> 02:41.060
+Next up, we have to set the group name.
+
+02:41.480 --> 02:43.940
+Remember what we did back inside of our order service?
+
+02:43.940 --> 02:48.230
+We created that separate file and we defined the Q group name that was supposed to be used among all
+
+02:48.230 --> 02:49.370
+of our different listeners.
+
+02:49.520 --> 02:52.910
+That was just going to help us from or prevent us from making any silly typos.
+
+02:53.520 --> 02:58.170
+So we'll take that same pattern once again inside of our listeners directory will make a new file of
+
+02:58.170 --> 02:58.800
+Q.
+
+02:59.070 --> 03:02.100
+Group name that's.
+
+03:03.370 --> 03:06.010
+And inside of here I will export a cast of Q.
+
+03:06.250 --> 03:07.450
+Group name.
+
+03:08.330 --> 03:13.220
+And because we are inside the ticket service, I'll get to seeing a group name of tickets service.
+
+03:13.220 --> 03:14.060
+Simple enough.
+
+03:15.940 --> 03:16.170
+Okay.
+
+03:16.240 --> 03:17.110
+Going to save that.
+
+03:17.530 --> 03:23.200
+Then back inside of our listener at the very top, I will import Q group name.
+
+03:24.620 --> 03:25.550
+From same directory.
+
+03:25.590 --> 03:26.450
+Q Group name.
+
+03:26.960 --> 03:29.580
+Now we can set that property on our class.
+
+03:29.600 --> 03:29.960
+So.
+
+03:29.960 --> 03:33.920
+Q group name is new group name.
+
+03:35.880 --> 03:39.660
+And then finally, our last step, we have to implement the on message function.
+
+03:40.800 --> 03:42.600
+So we will define on a message.
+
+03:43.760 --> 03:47.510
+And remember, this is where TypeScript is not going to quite help us out until we start to list out
+
+03:47.510 --> 03:48.600
+some arguments right here.
+
+03:48.620 --> 03:51.110
+This thing is going to have to arguments provided.
+
+03:51.110 --> 03:54.830
+The first is going to be the data property of the event that we were listening for.
+
+03:54.860 --> 03:59.540
+And second will be the message type from the node net streaming library.
+
+04:00.110 --> 04:05.360
+So I'll put in here data and that's going to be of type order created event, specifically the data
+
+04:05.360 --> 04:06.890
+property of that interface.
+
+04:07.190 --> 04:09.950
+So order created event at data.
+
+04:11.560 --> 04:16.630
+And then the second argument will be our message, which is subtype message again from the node net
+
+04:16.630 --> 04:17.470
+streaming library.
+
+04:17.470 --> 04:19.870
+We definitely need to import that at the top as well.
+
+04:25.190 --> 04:26.240
+No, not streaming.
+
+04:28.050 --> 04:31.200
+Chances are our on message function is going to have some async code inside of it.
+
+04:31.200 --> 04:34.470
+So let's mark this this function as async as well.
+
+04:35.600 --> 04:37.240
+So there we go again.
+
+04:37.250 --> 04:41.540
+Easy to forget what's going on inside of here, but as long as we can, just remember that we have to
+
+04:41.540 --> 04:42.830
+extend that base class.
+
+04:42.860 --> 04:45.080
+TypeScript is going to pretty much help us along the way.
+
+04:46.420 --> 04:46.750
+All right.
+
+04:46.750 --> 04:48.490
+So we've got the listener put together.
+
+04:48.790 --> 04:50.410
+Let's take a pause right here in the next video.
+
+04:50.410 --> 04:55.990
+We're going to figure out some strategy, some way of figuring out how to mark a ticket as being locked
+
+04:55.990 --> 04:58.630
+down and prevent any changes from being made to it.

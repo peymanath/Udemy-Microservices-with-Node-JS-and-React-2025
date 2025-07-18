@@ -1,0 +1,256 @@
+WEBVTT
+
+00:01.560 --> 00:03.370
+Our air handler is looking pretty good.
+
+00:03.390 --> 00:06.630
+We can now very easily make a request that results in an error.
+
+00:06.630 --> 00:10.440
+In any time we do, we get back a message that says something like something went wrong.
+
+00:10.650 --> 00:14.320
+Now this definitely works, but there's definitely a downside to this approach.
+
+00:14.340 --> 00:19.050
+Right now, we are not really communicating a lot of information back to the user about exactly what
+
+00:19.050 --> 00:20.080
+just went wrong.
+
+00:20.100 --> 00:22.290
+We are only saying something went wrong.
+
+00:22.770 --> 00:29.190
+So I want to make sure that if a user enters in, say, an invalid email or an invalid password, or
+
+00:29.190 --> 00:33.300
+if we take a look at our signup request handler right now, if we imagine that there's something wrong
+
+00:33.300 --> 00:39.990
+connecting to the database, I want to tell the user about exactly what just went wrong, not just something
+
+00:39.990 --> 00:40.650
+went wrong.
+
+00:41.300 --> 00:46.280
+So we need to somehow consume some more information out of all these different areas that we are throwing
+
+00:46.280 --> 00:48.890
+inside of our air middleware handler.
+
+00:49.690 --> 00:49.930
+To do.
+
+00:49.930 --> 00:52.150
+So I'm going to go back over to my middleware handler.
+
+00:52.180 --> 00:53.200
+So here it is right here.
+
+00:53.620 --> 00:55.480
+I'm going to find where we set the message.
+
+00:55.750 --> 01:01.600
+I'm going to remove something went wrong and I will replace it with error dot message like so.
+
+01:02.260 --> 01:03.670
+So what is this right here?
+
+01:03.910 --> 01:09.520
+Well, back inside of our signup request handler, whenever we create a new error and throw it whatever
+
+01:09.520 --> 01:14.800
+string we provide as the first argument to that constructor is assigned to the message property of the
+
+01:14.800 --> 01:15.310
+air.
+
+01:15.970 --> 01:17.580
+So we are creating a new error right here.
+
+01:17.590 --> 01:19.170
+This string is going to be used.
+
+01:19.180 --> 01:21.820
+It's going to be assigned to the message property.
+
+01:22.580 --> 01:29.390
+So over inside of our middleware, by setting message to message, we're going to see whatever string
+
+01:29.390 --> 01:31.340
+we gave to the error when we threw it.
+
+01:31.340 --> 01:35.570
+And so that should hopefully tell the user a little bit more information about what just went wrong.
+
+01:36.230 --> 01:38.230
+So if I save this, I will know.
+
+01:38.240 --> 01:41.240
+Now go back over to Postman, I'll send this in again.
+
+01:41.390 --> 01:45.950
+And now I'm being told that the request failed because I have an invalid email or password.
+
+01:47.450 --> 01:52.580
+If I update the email right here and make it valid instead and then send the request again.
+
+01:52.580 --> 01:57.260
+Now I am told you're connecting to the database, so it's clear that we can definitely communicate a
+
+01:57.260 --> 01:58.760
+lot more information.
+
+01:59.980 --> 02:05.230
+From our request handler to our air handling middleware by attaching that information to the air object
+
+02:05.230 --> 02:06.040
+in some way.
+
+02:06.490 --> 02:09.270
+But right now, we are really just limited to that message property.
+
+02:09.280 --> 02:12.280
+In other words, we are really limited to a simple string.
+
+02:13.220 --> 02:18.240
+Ideally we would send back a lot more information to the user than just that simple string.
+
+02:18.260 --> 02:24.080
+So for example, whenever we fail validation on that incoming request using that express validator library,
+
+02:24.080 --> 02:31.070
+remember we get back an array of objects and those objects describe exactly what property failed validation.
+
+02:31.400 --> 02:35.170
+And it also provides a message about what went wrong and how to fix it.
+
+02:35.180 --> 02:40.880
+So ideally, when we throw in air object, we would take the results of the express validator step and
+
+02:40.880 --> 02:43.220
+somehow attach it to that object.
+
+02:43.910 --> 02:48.440
+If we could do something like that, then we can teach our error handling middleware to take that array
+
+02:48.440 --> 02:54.110
+of objects, format it in some nice way, and continue to send back some well structured response.
+
+02:56.110 --> 03:00.130
+Now, if you're using plain JavaScript, this would be pretty easy to do.
+
+03:00.160 --> 03:02.170
+Let me show you one possible solution.
+
+03:02.380 --> 03:05.650
+If again, we were using just plain JavaScript.
+
+03:06.330 --> 03:13.170
+So back inside my sign up route handler I'm going to pretend for a second that this is JavaScript land.
+
+03:14.000 --> 03:15.380
+Not TypeScript.
+
+03:16.160 --> 03:23.090
+So if we were in JavaScript land right now, we could write out something like Konst Air is a new air.
+
+03:24.440 --> 03:27.500
+And I can say invalid email or password as before.
+
+03:28.630 --> 03:32.290
+I could then take that eyres array that we had produced previously.
+
+03:33.130 --> 03:39.250
+And we could do something like air dot reasons, totally made up property off the top of my head and
+
+03:39.250 --> 03:42.220
+we could assign that the heirs array.
+
+03:42.250 --> 03:45.040
+Technically it would be asked to array.
+
+03:45.690 --> 03:48.030
+So now we're just simply array.
+
+03:48.690 --> 03:52.130
+So now we're going to take that errors that we got back from the validation results.
+
+03:52.140 --> 03:57.720
+We're going to turn it into the array of objects and then we will assign it to this new imaginary reason's
+
+03:57.720 --> 03:58.530
+property.
+
+03:59.040 --> 04:03.720
+We could then throw that error instead of creating a new one on the fly.
+
+04:04.510 --> 04:10.210
+If we assigned or took this air stuff and assign it to this reasons property, we can then access that
+
+04:10.210 --> 04:12.820
+reason's property inside of our air handler.
+
+04:13.300 --> 04:17.950
+We could then iterate over that array of objects all out, all the reasons that this stuff failed.
+
+04:17.950 --> 04:22.780
+So it would be messages like say, email must be valid, password must be between four and 20 characters
+
+04:22.780 --> 04:25.420
+and so on, and send that back to the user.
+
+04:25.930 --> 04:28.630
+So something like this right here, this would be kind of ideal.
+
+04:28.630 --> 04:33.700
+This would give us the ability to share a lot more information about what just went wrong with the user
+
+04:34.030 --> 04:35.440
+compared to what we have right now.
+
+04:36.110 --> 04:38.190
+However, this is not JavaScript land.
+
+04:38.210 --> 04:44.650
+We are writing TypeScript and we cannot just assign magic properties made up on the fly to any old object
+
+04:44.650 --> 04:46.250
+that we want to assign stuff to.
+
+04:46.670 --> 04:50.830
+An error in JavaScript and in TypeScript does not have a reason's property.
+
+04:50.840 --> 04:54.620
+And so TypeScript is saying Sorry, but this property just doesn't exist.
+
+04:54.620 --> 04:56.360
+You cannot assign something to it.
+
+04:56.990 --> 05:01.970
+So it's clear that we need to somehow communicate a lot more information from the request handler to
+
+05:01.970 --> 05:03.050
+the air handler.
+
+05:03.530 --> 05:08.450
+We have to do it using the error object, but we cannot really use this very simple and straightforward
+
+05:08.450 --> 05:08.840
+approach.
+
+05:08.840 --> 05:12.380
+We have to do something a little bit more TypeScript, so to speak.
+
+05:12.960 --> 05:13.930
+So I'm going to save this.
+
+05:13.950 --> 05:15.390
+We're going to take a quick pause right here.
+
+05:15.390 --> 05:19.860
+And in the next video, I'm going to show you how we're going to use TypeScript to essentially do this,
+
+05:19.860 --> 05:22.950
+but in a much more TypeScript style fashion.

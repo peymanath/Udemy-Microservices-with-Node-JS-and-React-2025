@@ -1,0 +1,214 @@
+WEBVTT
+
+00:01.610 --> 00:05.480
+We've now taken a look twice at this style of asynchronous communication.
+
+00:05.480 --> 00:08.110
+And at this point, you probably have some really burning questions.
+
+00:08.140 --> 00:12.380
+So in this video, I want to go over some questions I think you might have and some possible answers.
+
+00:12.770 --> 00:16.070
+The first thing you might be thinking is something like, wait a minute, Steven.
+
+00:16.070 --> 00:21.650
+You're saying that if we have two types of resources, so in our case, both in comments, if we want
+
+00:21.650 --> 00:25.370
+to serve up that information effectively, we have to create a third service.
+
+00:25.670 --> 00:28.100
+No, that is not what I'm saying at all.
+
+00:28.250 --> 00:33.950
+We are not always going to be creating extra services just for the sole purpose of joining data together.
+
+00:34.280 --> 00:40.070
+In reality, if we were actually building this sort of blog application, well, this blog application
+
+00:40.070 --> 00:44.520
+would be part of a larger scheme of resources or a larger application.
+
+00:44.540 --> 00:49.730
+In reality, we would probably put this idea of posts and comments together in the same service so we
+
+00:49.730 --> 00:54.860
+could join that data together at the code level rather than at the service level by creating a third
+
+00:54.860 --> 00:55.520
+service.
+
+00:55.790 --> 00:58.790
+So what we're doing right now, this is solely for learning purposes.
+
+00:58.790 --> 01:04.850
+This is just to help expose you to these ideas of how we can have information stored in multiple services
+
+01:04.850 --> 01:09.590
+and eventually kind of replicate that data or make use of it in one single location.
+
+01:09.590 --> 01:15.200
+So I'm not advocating that you create an extra service for every last join of data that you need.
+
+01:16.680 --> 01:18.120
+Second big question you might have.
+
+01:18.240 --> 01:22.800
+I've been saying many times that these services are independent and if one crashes, the others stay
+
+01:22.800 --> 01:23.430
+alive.
+
+01:23.810 --> 01:25.220
+You might say, who cares?
+
+01:25.230 --> 01:27.420
+How often are these services going to be crashing?
+
+01:27.900 --> 01:32.280
+Well, at this point in the course, I haven't really gone into a lot of reasons on why you would use
+
+01:32.280 --> 01:34.010
+microservices in the first place.
+
+01:34.020 --> 01:37.920
+To be totally honest with you, I'm kind of assuming that if you're in this course, you've already
+
+01:37.920 --> 01:43.380
+done at least a little bit of research and you might have an idea of why you want to use microservices.
+
+01:44.010 --> 01:49.500
+One of the big reasons that we use microservices is the possibility of increasing the overall reliability
+
+01:49.500 --> 01:50.420
+of our system.
+
+01:50.430 --> 01:54.690
+That's a huge driving force in why we use microservices.
+
+01:54.960 --> 01:59.910
+So the fact that we can make these things independent and keep the vast majority of our application
+
+01:59.910 --> 02:02.130
+running, even if some part of it goes down.
+
+02:02.130 --> 02:07.380
+That's a huge driving force in why we are here learning about microservices in the first place.
+
+02:08.430 --> 02:08.640
+Okay.
+
+02:08.640 --> 02:10.420
+Third thing you might be saying.
+
+02:10.460 --> 02:14.760
+Okay, this is way too complicated for the tiny bit of benefit that we get.
+
+02:15.520 --> 02:20.040
+We're having to create entire new projects just to support these very basic data queries.
+
+02:20.520 --> 02:22.010
+And I know it seems that way now.
+
+02:22.020 --> 02:28.410
+I know this entire event style architecture might seem really complicated and challenging, but it really
+
+02:28.410 --> 02:30.420
+just seems like that at this point.
+
+02:30.690 --> 02:34.910
+We're going to very shortly start to add in another feature to the project.
+
+02:34.920 --> 02:36.570
+So the one we're working on right now.
+
+02:37.350 --> 02:41.880
+And by taking this kind of event style architecture, adding in this additional feature is going to
+
+02:41.880 --> 02:48.750
+actually be somewhat darn easy compared to if we were using a monolith or possibly some kind of synchronous
+
+02:48.750 --> 02:50.070
+style of communication.
+
+02:50.250 --> 02:54.270
+So I know it seems like this is way over the top right now, but it turns out that some things down
+
+02:54.270 --> 02:56.250
+the line start to get a little bit easier.
+
+02:58.010 --> 03:01.970
+The last thing I want to mention here is that at this point, if you are really starting to think through
+
+03:01.970 --> 03:04.940
+this architecture, you might be starting to say, Hey, Steven, wait.
+
+03:04.970 --> 03:06.950
+This system is going to work in this scenario.
+
+03:06.950 --> 03:09.950
+Or what if this event occurs and that event?
+
+03:09.950 --> 03:11.960
+Or what about this quarter case over here?
+
+03:12.440 --> 03:17.690
+Just to be clear, there are definitely some super special corner cases that you and I need to be concerned
+
+03:17.690 --> 03:19.610
+about or very special scenarios.
+
+03:19.610 --> 03:24.830
+When we start using this event based architecture, we are going to take a deep look at some of these
+
+03:24.830 --> 03:29.090
+problems and I mean a deep look later on inside the course.
+
+03:29.090 --> 03:32.390
+And if you don't see anything wrong with this current approach, hey, don't sweat it.
+
+03:32.510 --> 03:35.990
+It's something you really have to think about for a pretty long time before we start to realize where
+
+03:35.990 --> 03:38.270
+things start might start to go wrong again.
+
+03:38.270 --> 03:41.210
+If you see some stuff that looks a little bit funny right now, don't sweat it.
+
+03:41.210 --> 03:46.730
+We're going to go over a lot of possible cases later on and we have solutions for a lot of them.
+
+03:46.730 --> 03:50.270
+I'm not going to say like every possible solution, I'm sure you could think of some things that are
+
+03:50.270 --> 03:51.890
+going to go wrong that I have not thought of.
+
+03:51.890 --> 03:55.820
+But again, on that big application we're going to work on later, we're going to look at a lot of these
+
+03:55.820 --> 03:56.990
+different corner cases.
+
+03:57.730 --> 03:58.030
+Okay.
+
+03:58.030 --> 03:58.600
+So that's it.
+
+03:58.600 --> 04:01.900
+Just want to go over a couple of questions and answers that you might have had.
+
+04:02.110 --> 04:04.780
+So with all that in mind, let's take a pause right here.
+
+04:04.810 --> 04:07.460
+We're going to start to implement this new query service.
+
+04:07.480 --> 04:11.740
+We're going to start to set up this event bus and then have all these services communicating with each
+
+04:11.740 --> 04:13.900
+other via events in the next video.

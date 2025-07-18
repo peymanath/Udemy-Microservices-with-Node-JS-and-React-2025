@@ -1,0 +1,328 @@
+WEBVTT
+
+00:01.070 --> 00:05.090
+All right, let's do a quick series of tests around this expiration complete listener.
+
+00:05.720 --> 00:09.830
+Inside my order service, I'll find the listeners directory test folder inside there and they'll make
+
+00:09.830 --> 00:11.780
+a new file of expiration.
+
+00:11.960 --> 00:15.350
+Complete listener tests.
+
+00:16.750 --> 00:21.910
+This listener test file once again going to look identical to all the other test files we put together
+
+00:21.910 --> 00:23.030
+for our listeners.
+
+00:23.050 --> 00:27.010
+So at the very top, we're going to add in a couple of imports for the listener Nats wrapper.
+
+00:27.040 --> 00:29.800
+That's actually going to be the Nets rapper Mock, of course.
+
+00:29.800 --> 00:34.930
+But then going to build a setup function, do all the kind of data set up, you get the idea business
+
+00:34.930 --> 00:35.680
+as usual.
+
+00:35.980 --> 00:37.030
+So let's get to it.
+
+00:37.240 --> 00:41.410
+At the very top, I'm going to first import the one thing I know that I absolutely need, and that is
+
+00:41.410 --> 00:42.100
+the listener.
+
+00:42.640 --> 00:43.450
+I'll get my.
+
+00:45.090 --> 00:49.380
+Exploration complete listener from up one directory expiration complete.
+
+00:50.280 --> 00:51.870
+I'll then build my setup function.
+
+00:54.110 --> 00:55.090
+Inside of here.
+
+00:55.100 --> 00:56.780
+Well, let's make our instance.
+
+00:56.780 --> 01:01.280
+That will be a new exploration complete listener.
+
+01:02.540 --> 01:05.090
+And we do have to provide a Nets client to it.
+
+01:05.390 --> 01:06.510
+That's the air we're getting right here.
+
+01:06.530 --> 01:09.470
+So let's make sure that we import nets.
+
+01:09.890 --> 01:10.670
+Rapper.
+
+01:11.610 --> 01:13.230
+From up to directories.
+
+01:13.260 --> 01:13.590
+Nope.
+
+01:13.590 --> 01:15.330
+Three, that's rapper.
+
+01:15.720 --> 01:18.750
+And then we can provide Nat's rapper client.
+
+01:22.010 --> 01:24.790
+After that, we're going to first build out an order.
+
+01:24.800 --> 01:29.030
+We're going to associate it with a ticket so everything is in the right state and then we're going to
+
+01:29.030 --> 01:32.020
+save both the order and the ticket to do so.
+
+01:32.030 --> 01:35.270
+We do have to get access to the ticket model and the order model.
+
+01:35.270 --> 01:36.500
+So let's do that at the top.
+
+01:36.980 --> 01:39.410
+I'll get my order from up.
+
+01:39.410 --> 01:40.670
+Three Directories.
+
+01:40.670 --> 01:41.870
+Models Order.
+
+01:44.760 --> 01:48.450
+And then my ticket from up three directories models ticket.
+
+01:51.540 --> 01:54.870
+Then down inside of setup, let's first build up our ticket and save it.
+
+01:55.110 --> 01:57.990
+They'll say Ticket is ticket build.
+
+01:59.760 --> 02:01.620
+This thing will have some title.
+
+02:03.160 --> 02:04.030
+Some price.
+
+02:04.630 --> 02:07.210
+And remember, we have to provide this thing an ID as well.
+
+02:07.720 --> 02:12.640
+They'll give this thing a hardcoded ID, which we're going to generate from Mongoose.
+
+02:14.810 --> 02:18.860
+And I really should not refer to that as a hardcoded ID because we are randomly generating it.
+
+02:19.010 --> 02:19.570
+We'll throw in here.
+
+02:19.610 --> 02:23.780
+Mongoose types object ID to hex string.
+
+02:24.480 --> 02:25.050
+Here we go.
+
+02:26.430 --> 02:27.630
+We can then save that ticket.
+
+02:29.960 --> 02:31.820
+Then we'll build up our order.
+
+02:32.750 --> 02:34.190
+So we'll do an order build.
+
+02:36.940 --> 02:39.250
+In order is going to get a couple of different properties.
+
+02:39.250 --> 02:42.370
+So user IDs, status, all this different stuff.
+
+02:42.970 --> 02:47.980
+In this case, we don't really care about the user ID once again, we also don't really care all that
+
+02:47.980 --> 02:53.920
+much about expires at because we are canceling an order no matter what whenever we receive that expiration
+
+02:53.920 --> 02:54.970
+complete event.
+
+02:55.210 --> 02:57.790
+So we could throw in some arbitrary string for expired set?
+
+02:57.790 --> 02:58.600
+Without a doubt.
+
+02:59.330 --> 03:03.710
+However, the status does need or mean the ticket needs to be a real ticket and status needs to be the
+
+03:03.710 --> 03:04.970
+correct status as well.
+
+03:05.000 --> 03:08.990
+So we're probably going to have to import that order status from our common module once again.
+
+03:09.410 --> 03:11.450
+Let's begin with that up at the top of the file.
+
+03:12.140 --> 03:14.780
+So at the top, we will get our order status.
+
+03:18.110 --> 03:19.310
+From our common module.
+
+03:22.140 --> 03:28.740
+Then on our build statement, we'll plug in a status of order status dot created.
+
+03:29.820 --> 03:31.560
+We'll just go through all those other properties.
+
+03:31.560 --> 03:36.810
+So we've got a user ID that will be whatever we got it expires at that can be whatever.
+
+03:37.910 --> 03:42.320
+And then a ticket, which will be the ticket that we had to find right before.
+
+03:43.600 --> 03:49.450
+Now getting an ear around expires at right here oh my mistake needs to be actually be a date not a plane
+
+03:49.450 --> 03:49.840
+string.
+
+03:49.840 --> 03:52.300
+It's a plane string once we transmit it in our event.
+
+03:52.300 --> 03:55.600
+But as we are plugging it into the build method, it does need to be an actual date.
+
+03:55.600 --> 03:57.880
+So we'll just make a new date object and throw that in.
+
+03:58.360 --> 03:58.990
+That works.
+
+04:00.510 --> 04:01.890
+So we can now save that order.
+
+04:02.160 --> 04:02.780
+So wait.
+
+04:02.790 --> 04:03.060
+Order.
+
+04:03.210 --> 04:03.900
+Save.
+
+04:04.780 --> 04:07.180
+And that is it for our data level.
+
+04:09.240 --> 04:11.770
+So now we can create our actual event.
+
+04:11.780 --> 04:14.480
+We'll create the message as well, and we should be good to go.
+
+04:15.050 --> 04:16.580
+Let's first create the event.
+
+04:16.610 --> 04:22.820
+To do so, we should get the event interface from our common module as well that we will import the
+
+04:22.850 --> 04:24.980
+exploration complete event.
+
+04:25.940 --> 04:29.720
+And while we're up here, since we know we're going to need it, let's also get that message type.
+
+04:31.480 --> 04:34.510
+From the Nats streaming library.
+
+04:35.730 --> 04:37.200
+From node net streaming.
+
+04:39.490 --> 04:42.010
+So now we can build up our fake data object.
+
+04:43.580 --> 04:45.230
+This will be a type order.
+
+04:46.570 --> 04:49.930
+The expiration complete event at data.
+
+04:50.050 --> 04:50.630
+There we go.
+
+04:50.650 --> 04:52.930
+Just so many variable names floating around here.
+
+04:52.960 --> 04:55.180
+It definitely does get confusing pretty quickly.
+
+04:55.810 --> 04:59.290
+Now, this event, we're expected to provide some order ID property.
+
+04:59.290 --> 05:01.990
+And of course, we can mouse over that right there and we will be told that.
+
+05:02.290 --> 05:05.200
+So we'll give this thing an order ID, which will come from order ID.
+
+05:05.230 --> 05:07.660
+So that is the ID of the order that we just built and saved.
+
+05:09.450 --> 05:11.370
+Well, then also create our message.
+
+05:12.930 --> 05:14.400
+It'll be uptight message.
+
+05:14.850 --> 05:20.100
+And as usual, this is just going to have an EQ function that will be a just mock.
+
+05:21.060 --> 05:22.650
+And we're just going to tell TypeScript.
+
+05:22.650 --> 05:23.460
+Let it be.
+
+05:23.850 --> 05:24.630
+Let it be.
+
+05:26.240 --> 05:26.800
+So that's it.
+
+05:26.810 --> 05:28.930
+So now we can't take all these variables.
+
+05:28.940 --> 05:32.980
+We probably don't really need the ticket to be returned from set up, but we will anyways.
+
+05:32.990 --> 05:36.110
+We're going to take basically everything we just created and return it from setup.
+
+05:38.260 --> 05:43.210
+So my listener, my order, my ticket data and the message.
+
+05:44.260 --> 05:45.760
+And that's our set up function.
+
+05:47.040 --> 05:48.290
+Let's take a quick pause right here.
+
+05:48.300 --> 05:51.360
+We'll start to write out our actual individual tests in just a moment.

@@ -1,0 +1,250 @@
+WEBVTT
+
+00:00.950 --> 00:03.790
+Our ticket service is now in a really, really good place.
+
+00:03.800 --> 00:08.720
+We do have to go back into the ticket service in just a little bit and add in some stuff to handle concurrency
+
+00:08.720 --> 00:09.950
+and a couple of other events.
+
+00:10.190 --> 00:15.550
+Right now, we can kind of leave it in our dust, so we're going to start to move on to our orders service.
+
+00:15.560 --> 00:19.880
+Now, I want you to recall that this order service is all about creating an order and then eventually
+
+00:19.880 --> 00:21.860
+updating it and paying for it as well.
+
+00:22.490 --> 00:27.170
+So if we take a look at the UI or the original mockups over here, we've got one screen where we're
+
+00:27.170 --> 00:28.730
+going to list out all the different tickets.
+
+00:28.730 --> 00:31.520
+A user is going to click on a ticket in order to purchase it.
+
+00:32.000 --> 00:34.870
+They'll be taken to a page to purchase the ticket.
+
+00:34.910 --> 00:39.380
+The click on that button and then we'll take the user to yet another page where we tell them that you
+
+00:39.380 --> 00:42.680
+have 30 seconds or so to purchase this ticket.
+
+00:43.220 --> 00:48.230
+So this order service is all about keeping track of who is attempting to purchase the ticket at any
+
+00:48.230 --> 00:49.040
+given time.
+
+00:49.370 --> 00:53.630
+It's also going to have the information that's going to lock down a ticket and not allow anyone else
+
+00:53.630 --> 00:56.660
+to purchase it and then eventually expire as well.
+
+00:57.850 --> 01:02.470
+So in total, we're going to have a couple of different pieces of data inside this new order service.
+
+01:02.890 --> 01:05.290
+Let's first focus on just the order service itself.
+
+01:05.880 --> 01:06.960
+Inside the order service.
+
+01:06.960 --> 01:09.240
+We're going to have a type of record called an Order.
+
+01:09.630 --> 01:14.010
+Inside of that order, we're going to store a user ID property that's going to be the user who is trying
+
+01:14.010 --> 01:15.270
+to purchase a ticket.
+
+01:16.130 --> 01:20.270
+We're going to have a status property and that's going to describe the current status of the order.
+
+01:20.270 --> 01:25.250
+So whether it has expired, whether it has been paid or whether it is awaiting payment.
+
+01:25.950 --> 01:28.600
+We'll also make sure it has an expires at property.
+
+01:28.620 --> 01:33.540
+This is going to be essentially a time stamp that says what time this order expires at.
+
+01:33.930 --> 01:37.140
+So it's going to essentially power that part of the UI right there.
+
+01:37.770 --> 01:40.380
+Once the expires, time passes.
+
+01:40.470 --> 01:44.190
+The ticket will then become unlocked and someone else will be able to purchase it.
+
+01:45.540 --> 01:51.510
+The order also needs to know what ticket is actually trying to lock down and the price of it as well.
+
+01:52.140 --> 01:57.810
+So rather than storing down or storing some ticket information directly inside the order, we're going
+
+01:57.810 --> 02:03.690
+to instead have the order service replicate information over from the ticket service.
+
+02:03.750 --> 02:07.200
+So inside the order service, we will also have a collection of tickets.
+
+02:07.320 --> 02:12.240
+And in this collection, we're going to store only the title, The Price and the version of the Ticket.
+
+02:13.070 --> 02:18.680
+So the order is going to store the ticket ID or the ticket that is trying to lock down access to and
+
+02:18.680 --> 02:19.760
+through that ticket ID.
+
+02:19.790 --> 02:25.040
+We will know how much a user has to pay in order to purchase this order or complete the order because
+
+02:25.040 --> 02:27.230
+we're going to be able to look up a very particular ticket.
+
+02:27.230 --> 02:28.340
+Look at that things price.
+
+02:28.340 --> 02:30.770
+And that's going to tell us how much the user needs to pay.
+
+02:31.950 --> 02:36.300
+So because we are trying to replicate this ticket data over to the order service, that means the Order
+
+02:36.300 --> 02:39.210
+Service needs to listen to two kinds of events.
+
+02:39.420 --> 02:43.920
+It's going to listen for a ticket created event coming from the ticket service and a ticket updated
+
+02:43.920 --> 02:44.970
+event as well.
+
+02:45.600 --> 02:48.780
+Now, you'll notice on here, I've got this version property on the ticket.
+
+02:49.140 --> 02:54.630
+You might recall that when we had been discussing concurrency issues with Nats streaming server, we
+
+02:54.630 --> 02:58.710
+said that one way to solve that problem of events going out of order was to make use of some kind of
+
+02:58.710 --> 02:59.880
+version flag.
+
+03:00.630 --> 03:02.490
+So just a very quick reminder here.
+
+03:02.490 --> 03:08.070
+If our ticket service emits a series of events all about one kind of ticket being updated, so in this
+
+03:08.070 --> 03:13.420
+case, ticket with the ABC, we're going to first update its price to ten, 20 and 30.
+
+03:13.860 --> 03:19.410
+We always kind of assume that these events might flow into our order, service or other services in
+
+03:19.410 --> 03:20.610
+a very particular order.
+
+03:20.610 --> 03:24.900
+But as we saw when we were talking about that streaming server, it is entirely possible that these
+
+03:24.900 --> 03:29.580
+events will end up going over to our order service in a completely jumbled order.
+
+03:29.580 --> 03:34.650
+So we really can't rely upon the order of events coming in to our order service correctly, and that's
+
+03:34.650 --> 03:36.780
+why we discussed that version properly.
+
+03:37.660 --> 03:43.720
+So inside the order service inside of our tickets collection, we're going to store the version of the
+
+03:43.720 --> 03:44.200
+ticket.
+
+03:44.200 --> 03:49.600
+And this version right here is going to be a plane number that describes exactly what version of ticket
+
+03:49.600 --> 03:50.270
+this is.
+
+03:50.290 --> 03:55.390
+Every time we make a change to some attributes on the ticket itself, we're going to update that version
+
+03:55.390 --> 03:57.340
+number inside the ticket service.
+
+03:57.700 --> 03:59.590
+The ticket service will then emit an event.
+
+03:59.890 --> 04:03.250
+And inside that event we will print out that version number.
+
+04:04.360 --> 04:08.200
+Then inside of our order service, when we receive these events, we're going to reference that version
+
+04:08.200 --> 04:11.860
+number to make sure that we are processing these events in the correct order.
+
+04:13.290 --> 04:17.220
+We're not going to worry too much about this version stuff just yet until we start to get a lot of other
+
+04:17.220 --> 04:19.080
+stuff put together inside of our order service.
+
+04:19.080 --> 04:23.190
+So if you don't remember anything about that version number because we only discussed it in like one
+
+04:23.190 --> 04:25.980
+or two videos, we never actually coded it in or anything like that.
+
+04:25.980 --> 04:27.660
+If you don't recall it at all, totally fine.
+
+04:27.660 --> 04:31.500
+We're going to have a reminder discussion about how all that stuff works in a little bit.
+
+04:32.360 --> 04:32.630
+Okay.
+
+04:32.630 --> 04:34.310
+So that is the order service.
+
+04:34.340 --> 04:36.980
+Long story short, it's going to have orders.
+
+04:36.980 --> 04:39.290
+It's going to have replication of the ticket data.
+
+04:39.560 --> 04:41.990
+It's going to have to listen to events from the ticket service.
+
+04:41.990 --> 04:45.680
+And it's also going to emit a couple of events of its own that we'll discuss in due time.
+
+04:46.130 --> 04:51.440
+But right now, we're going to get started on the very basics of the order service, which means installing
+
+04:51.440 --> 04:56.480
+dependencies, creating a Kubernetes deployment file, adding in routing rules and all that kind of
+
+04:56.480 --> 04:57.020
+stuff.
+
+04:57.350 --> 05:01.820
+So let's take a pause right here and get started on creating this new service in just a moment.

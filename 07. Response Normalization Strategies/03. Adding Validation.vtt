@@ -1,0 +1,409 @@
+WEBVTT
+
+00:01.250 --> 00:04.220
+Let's get started working on our sign up route handler.
+
+00:04.220 --> 00:07.820
+So we're going to make sure first that a user can sign up to our application and then we'll worry about
+
+00:07.820 --> 00:10.910
+allowing them to sign in, sign out and fetch the current user.
+
+00:11.060 --> 00:14.930
+So to get started, I'm going to find my sign up router.
+
+00:15.200 --> 00:16.250
+So here it is right here.
+
+00:16.790 --> 00:19.850
+We've got the appropriate method and the appropriate route on there.
+
+00:20.240 --> 00:23.540
+So instead of here, we need to figure out exactly how we sign up a user.
+
+00:23.660 --> 00:27.380
+Well, the first thing we probably need to think about is the information that needs to be provided
+
+00:27.380 --> 00:27.860
+to this route.
+
+00:27.890 --> 00:33.530
+Handler In this diagram, I said that we need to receive some kind of email and password on the incoming
+
+00:33.530 --> 00:36.890
+request or more specifically, inside the body of the request.
+
+00:37.310 --> 00:39.650
+So let's try to just pull that information out.
+
+00:40.410 --> 00:41.520
+Back inside the sign up route.
+
+00:41.550 --> 00:48.480
+Handler I'm going to try and pull email and password out of rec dot body like so.
+
+00:49.850 --> 00:50.720
+Now right away.
+
+00:50.720 --> 00:55.230
+I want you to just understand that we've kind of made a really big assumption here.
+
+00:55.250 --> 01:00.080
+We are assuming 100% that there's going to be an email and password on the body.
+
+01:00.110 --> 01:02.950
+We're not maybe we're not 100% assuming that just yet.
+
+01:02.960 --> 01:06.620
+But let's imagine that we just took that information and then used it to create some new user right
+
+01:06.620 --> 01:06.980
+here.
+
+01:06.980 --> 01:12.620
+So if we said something like make a user of some kind with an email and password.
+
+01:12.650 --> 01:14.180
+Who knows what user actually looks like?
+
+01:14.180 --> 01:19.040
+That's just some imaginary code, but we're kind of assuming that email and password are actually defined
+
+01:19.040 --> 01:21.410
+and they actually contain an email and a password.
+
+01:21.440 --> 01:26.690
+It is entirely possible that a user might send us some kind of malicious request or even just a faulty
+
+01:26.690 --> 01:30.050
+request, one that doesn't include an email or a password.
+
+01:30.760 --> 01:36.070
+So I don't want to build anything in this application, as I've mentioned many times, taking that many
+
+01:36.070 --> 01:36.700
+shortcuts.
+
+01:36.730 --> 01:39.890
+I want to make sure that a lot of the stuff is as production as possible.
+
+01:39.910 --> 01:44.980
+So I don't really want to have any code that's just going to assume that a user is providing an email
+
+01:44.980 --> 01:46.630
+and password as expected.
+
+01:47.590 --> 01:50.710
+Instead, I want to put in some validation attempt inside of here.
+
+01:50.740 --> 01:53.740
+I want to make sure that email and password are actually defined.
+
+01:54.160 --> 02:02.320
+We could do that by adding in a little check and saying if there is no email or if type of email is
+
+02:02.320 --> 02:03.760
+not equal to a string.
+
+02:04.970 --> 02:07.640
+So we can do a resident status of.
+
+02:08.480 --> 02:09.560
+Or 100.
+
+02:11.310 --> 02:18.210
+That should be status like so and a send of maybe provide a valid email or something like that.
+
+02:18.810 --> 02:22.500
+Naturally, writing out the code you see right here would get very tedious very quickly.
+
+02:22.500 --> 02:27.570
+So rather than doing any kind of manual validation, we're going to rely upon an outside library instead.
+
+02:27.720 --> 02:29.700
+Let me show you the library we're going to use.
+
+02:30.460 --> 02:31.210
+At my terminal.
+
+02:31.210 --> 02:33.520
+I'm going to navigate over to KPMG's.
+
+02:37.070 --> 02:41.450
+Once here, I'm going to do a search for express dash validator.
+
+02:43.920 --> 02:45.510
+Well, then find the first result.
+
+02:46.760 --> 02:50.690
+And then once here I'm going to find the link to the documentation for this module.
+
+02:52.930 --> 02:57.220
+If you've never used Express Validator before, it's a very simple little module that's going to make
+
+02:57.220 --> 03:01.270
+sure that a user provides the appropriate information on incoming requests.
+
+03:01.390 --> 03:04.270
+It's going to do some automatic validation of this information.
+
+03:04.300 --> 03:07.240
+It can also sanitize that information as well.
+
+03:07.660 --> 03:12.310
+Validation is the process of making sure that information has the correct structure and form, whereas
+
+03:12.310 --> 03:16.090
+sanitization is going to change that information in some way.
+
+03:16.200 --> 03:20.140
+So it might try to remove certain types of characters or stuff like that.
+
+03:21.650 --> 03:25.010
+If you want to, you can read through the documentation of Express Validator.
+
+03:25.220 --> 03:28.850
+But rather than going through all that, I'm just going to show you directly how to use it.
+
+03:29.270 --> 03:33.230
+Naturally, the first thing we have to do is install it into our project using NPM.
+
+03:33.890 --> 03:35.540
+So we're going to go back over to our terminal.
+
+03:37.110 --> 03:39.780
+I'm going to change into my office directory.
+
+03:40.810 --> 03:43.660
+And then inside of here, we're going to do an NPM install.
+
+03:44.680 --> 03:47.470
+Of Express dash validator like.
+
+03:49.790 --> 03:50.990
+So let that do its thing.
+
+03:51.080 --> 03:56.240
+Now, when we install that module, that of course makes a change to our package JSON file, we are
+
+03:56.240 --> 03:59.540
+now listing out express validator as a dependency to our project.
+
+03:59.990 --> 04:03.170
+Scaffold is watching all the files inside of our project directory.
+
+04:03.170 --> 04:09.500
+And so as soon as it sees a change to a non synced file in our package, that JSON file is not synced.
+
+04:09.530 --> 04:14.720
+It's going to decide to automatically rebuild our image and then update the associated deployment.
+
+04:15.020 --> 04:20.990
+So as soon as I ran that command, you'll see that scaffold detected the change and decided to rebuild
+
+04:20.990 --> 04:21.710
+the image.
+
+04:23.190 --> 04:30.180
+After the image was built, scaffold then updated our deployment and we can now see the updated pod
+
+04:30.180 --> 04:30.840
+right here.
+
+04:30.870 --> 04:34.870
+And naturally, the pod itself is emitting the exact same logs as before.
+
+04:34.890 --> 04:40.110
+We did not make a change to the actual login information, but the thing definitely did restart.
+
+04:40.650 --> 04:43.500
+So now we should have express validator inside of our project.
+
+04:44.520 --> 04:47.640
+So to use it, I'm going to go back over to my signup file.
+
+04:48.730 --> 04:56.590
+At the very top we are going to import body from express dash validator.
+
+04:57.470 --> 05:00.000
+There's a couple of different ways to use Express Validator.
+
+05:00.020 --> 05:02.030
+We're going to be using this body thing.
+
+05:02.060 --> 05:05.480
+This is a function that's going to check the body of the incoming request.
+
+05:05.720 --> 05:10.700
+We can also use Express Validator to explicitly check for, say, parameters like let's say if we had
+
+05:10.700 --> 05:15.590
+an ID parameter on here, for some reason we could use express validator to do some validation around
+
+05:15.590 --> 05:16.700
+that ID parameter.
+
+05:17.120 --> 05:20.090
+It can also handle validation of query strings as well.
+
+05:20.360 --> 05:23.650
+But in this case, we don't want to do a validation of parameters or query strings.
+
+05:23.660 --> 05:26.690
+We want to do a validation of the body of the request.
+
+05:28.950 --> 05:30.390
+To make use of this body thing.
+
+05:30.390 --> 05:32.730
+We're going to apply it as a middleware.
+
+05:32.760 --> 05:35.610
+So right before our callback function right there.
+
+05:36.730 --> 05:38.260
+I'm going to add in a comma.
+
+05:39.240 --> 05:40.680
+I'll then put in an array.
+
+05:41.810 --> 05:45.560
+And we're going to list out our validation steps inside of this array.
+
+05:48.170 --> 05:53.750
+So I'm going to put inside of your body look for the email property.
+
+05:53.750 --> 05:57.470
+So this means in the body of the incoming request, look for the email property.
+
+05:57.710 --> 06:01.280
+We're then going to chain on a couple of checks to run on that property.
+
+06:01.280 --> 06:03.860
+So a chain on dot is email.
+
+06:04.310 --> 06:10.130
+This is a validation function that's built directly into express validator or technically a dependent
+
+06:10.130 --> 06:10.880
+package of it.
+
+06:10.910 --> 06:14.240
+That's going to make sure that this email thing has the structure of an email.
+
+06:14.810 --> 06:19.130
+We can then optionally append on a message.
+
+06:19.130 --> 06:24.830
+If there is something wrong with the email property, we can do that by writing out dot with message
+
+06:25.040 --> 06:28.250
+and we could say something like Email must be valid.
+
+06:29.180 --> 06:34.220
+Now, if anything is wrong with this email, if it doesn't have the structure of an email or if no email
+
+06:34.220 --> 06:39.080
+is provided at all, then we're going to automatically give ourselves or produce some kind of error
+
+06:39.080 --> 06:43.730
+message that's going to say Email must be provided and it will be up to you and I to figure out how
+
+06:43.730 --> 06:45.140
+to send that back over to the user.
+
+06:46.000 --> 06:50.450
+So now we can do the same thing for the password that we expect to receive in this thing as well.
+
+06:50.470 --> 06:53.500
+Just as a reminder, we're expected to receive an email and a password.
+
+06:56.090 --> 06:56.440
+Soldier.
+
+06:56.440 --> 06:58.550
+Your body password.
+
+06:59.800 --> 07:02.230
+And then for this, we will do a trim.
+
+07:02.530 --> 07:07.300
+That is a sanitization step that's going to make sure that there are no leading or trailing spaces on
+
+07:07.300 --> 07:08.080
+the password.
+
+07:09.140 --> 07:15.650
+I'll then make sure that the length of this thing is at least four and at most 20.
+
+07:15.980 --> 07:22.250
+And then I'll attach a message in case the password is not present or doesn't have that supplied length.
+
+07:22.580 --> 07:28.250
+We'll say something like Password must be between four and 20 characters.
+
+07:29.080 --> 07:29.680
+Like so.
+
+07:31.500 --> 07:32.010
+And that's it.
+
+07:32.010 --> 07:33.850
+That's how we add in some validation.
+
+07:33.870 --> 07:35.910
+Well, almost how we added in stuff.
+
+07:35.920 --> 07:37.020
+Do one last little step.
+
+07:37.860 --> 07:41.850
+You'll notice that as soon as I added in that array for these two middle wears by the way we got some
+
+07:41.850 --> 07:44.250
+errors coming out of rec and reds right here.
+
+07:44.730 --> 07:46.590
+So TypeScript is getting a little bit angry.
+
+07:46.590 --> 07:50.510
+It's telling us that it doesn't know what the type of rec is or rez.
+
+07:50.520 --> 07:54.480
+We can fix that up by adding in some type annotations to those two arguments.
+
+07:55.320 --> 07:56.840
+To do so we'll go back up to the top.
+
+07:56.850 --> 07:58.770
+I'm going to find where we import Express.
+
+08:00.240 --> 08:06.990
+And I'm going to import in the types of request and response and then I will annotate rec and rez with
+
+08:06.990 --> 08:14.550
+those two types that will say req is going to be of type request and rez will be of type response and
+
+08:14.550 --> 08:15.720
+then those errors go away.
+
+08:17.860 --> 08:18.190
+Okay.
+
+08:18.190 --> 08:23.380
+Well, we definitely added in some code right here to make sure that the user is providing email and
+
+08:23.380 --> 08:24.130
+a password.
+
+08:24.130 --> 08:28.140
+But at no point in time do we appear to actually be consuming this information.
+
+08:28.150 --> 08:32.530
+In other words, we never seem to take any actual errors that might be coming out of this validation
+
+08:32.530 --> 08:34.720
+step and sending them back to the user.
+
+08:35.080 --> 08:37.270
+So let's figure out how we do that in the next video.

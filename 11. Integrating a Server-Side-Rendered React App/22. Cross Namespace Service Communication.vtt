@@ -1,0 +1,388 @@
+WEBVTT
+
+00:00.770 --> 00:05.450
+In the last video, we laid out the solution we're going to use to address this big IRL problem.
+
+00:05.660 --> 00:10.100
+So if our code is running inside the browser, we're just going to let everything behave as it's currently
+
+00:10.100 --> 00:10.700
+working.
+
+00:10.880 --> 00:14.960
+We really only have to be concerned about the case in which we're trying to run some code inside this
+
+00:14.960 --> 00:19.640
+next JS application, when we need to reach out to some other service and fetch some data.
+
+00:20.060 --> 00:25.520
+So we eventually decided to go with option number one whenever we need to fetch some data while we are
+
+00:25.520 --> 00:30.770
+doing some server side rendering, we need to somehow reach out to ingress engine X and allow ingress
+
+00:30.770 --> 00:32.720
+engine X to root off this request.
+
+00:32.750 --> 00:37.670
+The only issue was how do we actually make a request to ingress engine x?
+
+00:38.180 --> 00:43.310
+We can access Ingress Engine X on our local machine in the words inside of our browser by navigating
+
+00:43.310 --> 00:45.170
+to local host port 80.
+
+00:45.200 --> 00:47.040
+That's how we get to Ingress Engine X.
+
+00:47.060 --> 00:51.740
+If I were to open up my browser right now, but we're trying to make this request from a totally different
+
+00:51.740 --> 00:52.410
+environment.
+
+00:52.430 --> 00:57.020
+We're trying to make the request from inside of this next JS Pod or the client pod.
+
+00:58.070 --> 01:03.860
+If we try to access local host inside this pod, then we're going to access local hosts inside the pod
+
+01:03.860 --> 01:06.290
+or excuse me, inside the container itself.
+
+01:06.680 --> 01:10.370
+That's what's happening right now, and that's what's resulting in the nasty air that we're currently
+
+01:10.370 --> 01:10.880
+getting.
+
+01:11.330 --> 01:16.760
+So we want to instead figure out how we can tell the pod to reach out directly to ingress engine.
+
+01:17.120 --> 01:19.530
+So in short, what do we type right there?
+
+01:19.550 --> 01:20.700
+What is our domain?
+
+01:20.720 --> 01:25.720
+What do we have to type in to get this entire system routing requests over to ingress engine x?
+
+01:25.940 --> 01:28.580
+So that's the big question that we're going to try to solve in this video.
+
+01:30.380 --> 01:30.660
+Okay.
+
+01:30.680 --> 01:32.840
+So I want to give you first a very quick reminder.
+
+01:33.380 --> 01:38.360
+Whenever we have two pods that need to communicate with each other in a synchronous fashion, we can
+
+01:38.360 --> 01:40.850
+do so by using those cluster IP services.
+
+01:41.000 --> 01:46.670
+So, for example, if we wanted our client to reach out directly to that pod, we would write out the
+
+01:46.670 --> 01:48.890
+name of the cluster IP service.
+
+01:48.890 --> 01:53.120
+So it would be something like HTTP off CRV.
+
+01:53.900 --> 01:58.310
+Now, unfortunately, this rule right here only works when these services.
+
+01:59.130 --> 02:04.800
+Ah, referring or assuming when we're trying to access a service that is inside of the same namespace.
+
+02:05.130 --> 02:07.050
+So what is the namespace?
+
+02:07.320 --> 02:10.280
+Well, a namespace is something that exists in the world of Kubernetes.
+
+02:10.290 --> 02:14.580
+All the different objects we create are created under a specific namespace.
+
+02:14.610 --> 02:17.850
+You can think of a namespace as being like a sandbox of sorts.
+
+02:17.880 --> 02:20.730
+We use namespaces for organizing different objects.
+
+02:21.180 --> 02:24.750
+Right now, we've been working under a namespace called default.
+
+02:25.020 --> 02:26.670
+So if we go back over to our terminal.
+
+02:28.130 --> 02:30.980
+And do a little get namespace.
+
+02:31.430 --> 02:35.720
+We'll print out all the different namespaces that currently exist inside of our Kubernetes cluster.
+
+02:35.750 --> 02:37.670
+You'll see default is listed right there.
+
+02:37.670 --> 02:40.940
+And again, that's where all the objects we have been creating get created.
+
+02:41.690 --> 02:47.420
+There's another namespace called Ingress and Gen X, and that's where all of our Ingress Engine X related
+
+02:47.420 --> 02:48.350
+stuff works.
+
+02:48.740 --> 02:53.660
+Now, unfortunately, we cannot use this style of communication to reach out to a service that exists
+
+02:53.660 --> 02:55.610
+inside of another namespace.
+
+02:55.850 --> 03:01.190
+So in short, we really can't use this very short form right here to reach out to Ingress and Gen X
+
+03:01.190 --> 03:01.610
+directly.
+
+03:01.610 --> 03:07.280
+We cannot just put in something like ingress engine x dash CRV.
+
+03:07.700 --> 03:11.500
+Unfortunately, the domain we have to type out is a little bit more complicated.
+
+03:11.510 --> 03:16.280
+So let's take a look how we would get our client to communicate directly over to the Ingress Engine
+
+03:16.280 --> 03:17.270
+X Service.
+
+03:18.320 --> 03:18.670
+Yeah.
+
+03:18.680 --> 03:24.770
+So if we want to do some cross namespace communication to a service created in a different namespace,
+
+03:24.770 --> 03:29.090
+we're still going to type out a domain, but the domain is going to be a little bit more complicated,
+
+03:29.690 --> 03:31.100
+the domain that we're going to type out.
+
+03:32.130 --> 03:35.760
+Will be the name of service.
+
+03:36.240 --> 03:37.080
+Then a dot.
+
+03:37.350 --> 03:39.150
+Then the namespace.
+
+03:39.850 --> 03:43.120
+Then SVC cluster local.
+
+03:43.890 --> 03:47.730
+Let me give you a more practical example so we can really understand what's going on there.
+
+03:48.090 --> 03:52.200
+The first thing we need to understand is what is the name of the namespace we are trying to reach into?
+
+03:52.470 --> 03:54.960
+So in this case, the name is Ingress Engine X.
+
+03:55.320 --> 03:59.850
+Then the second question is what is the name of the service inside there that we're trying to access?
+
+04:00.150 --> 04:04.950
+Well, to figure out what that is, we need to list out all the services that exist inside that namespace.
+
+04:05.310 --> 04:08.160
+Right now, when we type out cube, CTL gets services.
+
+04:08.460 --> 04:11.820
+This is only listing services from the default namespace.
+
+04:11.820 --> 04:15.630
+There are technically other services that exist in these other namespaces.
+
+04:15.720 --> 04:20.460
+So if we want to figure out what services exist inside of ingress and generics, we have to customize
+
+04:20.460 --> 04:25.740
+the Git Services Command and tell it to fetch services from inside of Ingress Engine X namespace.
+
+04:25.890 --> 04:32.460
+So we would do that by writing CTL, get services, dash DN, and then the name of the namespace, which
+
+04:32.460 --> 04:35.040
+in this case is Ingress Engine X.
+
+04:38.420 --> 04:39.230
+So I'll run that.
+
+04:39.410 --> 04:41.270
+And there's the name of our service.
+
+04:41.510 --> 04:46.070
+That is the name of the service inside of this namespace that we are trying to reach out to.
+
+04:46.100 --> 04:47.810
+It's simply ingress engine x.
+
+04:48.170 --> 04:54.860
+So in total, to reach to this other namespace and access the ingress engine x service inside there
+
+04:54.860 --> 04:56.930
+we would write out and let me.
+
+04:57.780 --> 05:00.000
+Myself a little bit of space here so you can see us very easily.
+
+05:00.000 --> 05:01.680
+We would write out http.
+
+05:02.690 --> 05:10.190
+Slash slash the name of the service which is ingress dash and gen x, then a dot the the name of the
+
+05:10.190 --> 05:16.130
+name space ingress and gen x and then SVC cluster local.
+
+05:16.780 --> 05:17.410
+And that's it.
+
+05:17.410 --> 05:23.080
+That's how we reach from our client across the namespace over to this other one and access the service
+
+05:23.080 --> 05:23.800
+inside their.
+
+05:25.870 --> 05:31.720
+So whenever we want to follow request option number one right here and somehow make a request over to
+
+05:31.720 --> 05:37.660
+the current user service without having to worry about reaching over to all service directly, we would
+
+05:37.660 --> 05:38.890
+make our request to.
+
+05:40.010 --> 05:41.540
+I'll zoom in on this in just a moment.
+
+05:41.630 --> 05:43.340
+Ingress and X.
+
+05:44.380 --> 05:49.390
+Dot ingress and x svc cluster local.
+
+05:51.690 --> 05:52.830
+And I will zoom in.
+
+05:54.140 --> 05:55.040
+That's how we do it.
+
+05:55.040 --> 05:57.740
+And we just need to make sure that we pass along the cookie as well.
+
+06:01.380 --> 06:01.800
+All right.
+
+06:01.800 --> 06:04.500
+So that's how we're going to communicate across namespaces now.
+
+06:04.500 --> 06:09.510
+Very quickly, having to memorize this kind of syntax right here kind of gets nasty really quickly.
+
+06:09.510 --> 06:15.600
+So there actually is a solution to this that will allow us to make a very similar looking request to
+
+06:15.600 --> 06:16.290
+this one right here.
+
+06:16.290 --> 06:19.700
+So a very simple kind of just ingress dash, engine X dash.
+
+06:19.710 --> 06:24.450
+XB If we wanted to be able to make a request to something like this, we can create something that is
+
+06:24.450 --> 06:26.820
+called an external name service.
+
+06:27.470 --> 06:31.670
+So an external name service essentially just re maps the domain of a request.
+
+06:31.820 --> 06:38.060
+We can set up a external name service that will map requests from, say, ingress dash engine x dash
+
+06:38.210 --> 06:41.870
+CRV to this more complicated domain, like the one you see right there.
+
+06:42.500 --> 06:46.100
+So if we did something like this, we would not have to memorize this crazy syntax.
+
+06:46.400 --> 06:50.090
+We would just follow that kind of short form that we are somewhat already used to.
+
+06:50.720 --> 06:52.280
+This is not at all necessary.
+
+06:52.310 --> 06:53.940
+It's just a nice to have thing.
+
+06:53.960 --> 06:56.340
+It's just something that makes it a little bit easier to remember.
+
+06:56.360 --> 07:00.050
+Hey, here's the URL, or here's a very short URL that I can make my request to.
+
+07:01.180 --> 07:05.830
+We are not going to create the external name service just because as you come back and reference this
+
+07:05.830 --> 07:09.670
+code in the future, this really is a pretty big layer of indirection.
+
+07:09.670 --> 07:11.770
+And I just do not want you to have to remember that.
+
+07:11.770 --> 07:15.790
+Oh yeah, we created that external name service that's going to map this thing off.
+
+07:16.000 --> 07:18.760
+That's just an extra thing to have to remember in the future.
+
+07:18.760 --> 07:20.500
+So we are not going to go down this route.
+
+07:20.500 --> 07:21.910
+But again, it is an option.
+
+07:21.910 --> 07:25.630
+It is something you could do if you did not want to memorize that longer URL.
+
+07:27.150 --> 07:27.690
+Huh?
+
+07:28.110 --> 07:28.710
+All right.
+
+07:28.710 --> 07:31.830
+As I've said many times, you know, the stuff is pretty crazy.
+
+07:32.100 --> 07:33.990
+That's why microservices are hard.
+
+07:34.140 --> 07:36.900
+That's why you get paid the big bucks once you start to learn this stuff.
+
+07:37.290 --> 07:41.280
+So now that we've got a good idea, or at least some idea of what's going on here, I think that's pretty
+
+07:41.280 --> 07:42.860
+much it for the lecture in the theory.
+
+07:42.870 --> 07:45.300
+So we're going to start to implement all this stuff in the next video.

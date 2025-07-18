@@ -1,0 +1,319 @@
+WEBVTT
+
+00:00.940 --> 00:05.290
+In the last two videos, we spoke about some basic topics around classes that for the most part are
+
+00:05.290 --> 00:09.820
+probably going to be at least a little bit familiar if you have covered is 2015 before.
+
+00:10.060 --> 00:15.100
+So now we're going to start to discuss some of the differences between is 2015 classes and classes in
+
+00:15.100 --> 00:15.850
+TypeScript.
+
+00:16.270 --> 00:20.560
+So the first thing we're going to cover is the existence of something called modifiers.
+
+00:21.550 --> 00:26.470
+Modifiers are a keyword so we can place on different methods and properties inside of a class.
+
+00:26.770 --> 00:29.680
+The different options are public, private and protected.
+
+00:30.220 --> 00:35.530
+The goal of these different modifiers is to restrict access to different functions or different variables
+
+00:36.040 --> 00:36.820
+by default.
+
+00:36.820 --> 00:42.610
+Every different method and property that we add to a class is always going to have the public the public
+
+00:42.610 --> 00:43.690
+modifier on it.
+
+00:44.020 --> 00:48.490
+Now, the reason I say by default is that right now you'll notice that we don't have anything that looks
+
+00:48.490 --> 00:51.280
+like public, private or protected inside of our class.
+
+00:51.670 --> 00:57.070
+So because we did not add anything or any of those modifiers inside of here, it is assumed that these
+
+00:57.070 --> 00:59.050
+are all currently public.
+
+00:59.560 --> 01:01.300
+So what does it mean to actually be public?
+
+01:01.630 --> 01:05.980
+Well, it means that a given method or a property, because we can add a modifier on a property as well.
+
+01:05.980 --> 01:07.540
+But we'll discuss that in a little bit.
+
+01:07.690 --> 01:11.260
+It means that method can be called anywhere, any time.
+
+01:12.290 --> 01:16.880
+It's easiest to understand what public means if we then look first at private and protected.
+
+01:17.240 --> 01:22.370
+If a method is marked as private, it means that that method can only be called by other methods in
+
+01:22.370 --> 01:24.800
+the exact same class definition.
+
+01:25.760 --> 01:31.040
+If a method is marked as protected, it means it can be called by other methods in that class and by
+
+01:31.040 --> 01:33.680
+other methods in child classes as well.
+
+01:34.970 --> 01:38.420
+By far, the easiest way to understand all this is to just write out code samples.
+
+01:38.420 --> 01:39.860
+So let's do that right now.
+
+01:41.400 --> 01:46.590
+So right now, back inside my editor, I'm going to add on the public modifier to all three of these
+
+01:46.590 --> 01:47.790
+different methods, you see.
+
+01:48.090 --> 01:49.320
+So I'm going to say public.
+
+01:49.560 --> 01:50.340
+Public.
+
+01:51.220 --> 01:51.940
+Public.
+
+01:52.560 --> 01:56.100
+By doing so, I have changed absolutely nothing inside of my code.
+
+01:56.130 --> 02:00.720
+Again, by default, all these different modifiers are considered to be public.
+
+02:01.570 --> 02:06.550
+So in general, it's only when we start to add on different modifiers like protected or private, that
+
+02:06.550 --> 02:08.080
+we're going to see any difference.
+
+02:08.710 --> 02:12.940
+Let's try marking the drive method right here as private to get started.
+
+02:13.540 --> 02:15.820
+So I'm going to add on the private modifier to that.
+
+02:16.670 --> 02:17.270
+As soon as I do.
+
+02:17.270 --> 02:20.090
+So you're going to see an heir appear on car drive.
+
+02:20.150 --> 02:24.410
+It says Property Drive is private and only accessible within class car.
+
+02:24.890 --> 02:29.570
+So that means that we can never call this method from outside of this class.
+
+02:29.930 --> 02:32.900
+Only methods inside this class can actually call drive.
+
+02:33.440 --> 02:38.960
+So let's say, for example, that we add a new method to this thing called start driving process.
+
+02:40.620 --> 02:42.780
+And I'm going to have that with the return type of void.
+
+02:43.260 --> 02:48.930
+This method right here, because it is inside of class car, can safely call the drive method by referring
+
+02:48.930 --> 02:50.910
+to this drive like so.
+
+02:52.000 --> 02:57.100
+So now down here on card drive, rather than calling card drive, we can instead call start driving
+
+02:57.100 --> 02:58.030
+process.
+
+02:58.510 --> 03:03.100
+We can safely call start driving process because it does not have the private modifier on it.
+
+03:03.940 --> 03:10.150
+And start driving process can safely call drive even though a drive is marked as private because it
+
+03:10.150 --> 03:12.640
+is an inside of the same class.
+
+03:13.890 --> 03:16.980
+Now you'll notice we've got a little air right here if you hover over it.
+
+03:18.100 --> 03:24.010
+We're seeing this there because we have added in a new property or we've modified a property in class
+
+03:24.010 --> 03:27.880
+car that is also existing inside a vehicle as well.
+
+03:28.240 --> 03:33.280
+But in vehicle, our definition up here drive is marked as public.
+
+03:33.850 --> 03:38.650
+So the air here is that we've got a child class that has a different modifier than the parent class.
+
+03:39.310 --> 03:45.250
+If we ever are overriding a method, as we are right here, we cannot change the modifier in the child
+
+03:45.250 --> 03:45.970
+class.
+
+03:46.480 --> 03:50.140
+So in this example, if we remove private like so, that air will go away.
+
+03:51.280 --> 03:56.620
+However, if vehicle did not have that method at all, we are no longer overriding it inside of car
+
+03:56.620 --> 04:00.400
+and so now we can successfully add on private like so.
+
+04:02.230 --> 04:05.860
+So again, we're going to use private whenever we want to restrict access to a function.
+
+04:06.280 --> 04:09.340
+Now, here's the really important thing, like, why do we care about this?
+
+04:09.340 --> 04:09.570
+Right?
+
+04:09.580 --> 04:11.350
+That's the real important definition.
+
+04:11.680 --> 04:16.240
+The first thing I want to tell you and make extremely clear is that we do not mark methods as being
+
+04:16.240 --> 04:22.720
+private over any type of security concern around like being hacked or something like that or having
+
+04:22.720 --> 04:24.070
+some malicious user.
+
+04:24.730 --> 04:31.060
+When you define a method as being private, we are not adding in any layer of application security.
+
+04:31.600 --> 04:36.670
+The only reason to marked something as private is to restrict the different methods that other developers
+
+04:36.670 --> 04:37.510
+can call.
+
+04:37.780 --> 04:42.820
+And the reason we want to do that is if we might have a method that very deeply manipulates a class
+
+04:42.820 --> 04:47.920
+and maybe there's some like really complicated, special way to use it, and maybe you and I don't trust
+
+04:47.920 --> 04:50.320
+other developers to call that method safely.
+
+04:50.770 --> 04:55.390
+If other developers call a given method, they might just inadvertently break something inside of our
+
+04:55.390 --> 04:56.200
+application.
+
+04:56.740 --> 05:01.000
+And so if that's the case, if we have some method that we just don't want other developers to call
+
+05:01.000 --> 05:05.320
+because it's very likely they're going to break something, we will mark it as being private.
+
+05:07.280 --> 05:07.520
+Okay.
+
+05:07.520 --> 05:08.960
+So now we've taken a look at private.
+
+05:08.960 --> 05:12.200
+Let's also discuss what protected does.
+
+05:12.200 --> 05:13.700
+So protected is just like private.
+
+05:13.700 --> 05:19.370
+The only difference is that with protected, we can access the given method in child classes as well.
+
+05:20.310 --> 05:23.320
+So, for example, let's go back up to vehicle right here.
+
+05:23.340 --> 05:29.070
+Rather than saying that honk is going to be public, let's mark it as private really quickly.
+
+05:29.690 --> 05:33.860
+And then let's say that when we start the driving process, we're not only going to do a drive, but
+
+05:33.860 --> 05:35.330
+we'll also do a honk.
+
+05:37.090 --> 05:37.870
+Like so.
+
+05:38.550 --> 05:43.980
+So when we try to call honk, our class is going to automatically try to call this method.
+
+05:44.310 --> 05:49.800
+But because this thing is marked as private and is in a parent class, we are not allowed to do so.
+
+05:50.400 --> 05:53.250
+So honk is only accessible within vehicle.
+
+05:54.510 --> 05:58.830
+If we still actually really wanted to call honk, even though it's inside of a parent class, we could
+
+05:58.830 --> 06:00.300
+market as protected.
+
+06:00.990 --> 06:06.480
+So now that child class can access that method, but it cannot be accessed by anywhere outside of that
+
+06:06.480 --> 06:07.470
+child class.
+
+06:08.070 --> 06:13.680
+So for example, if we now made an instance of vehicle right here, so concert vehicle.
+
+06:15.320 --> 06:16.340
+His new vehicle.
+
+06:17.550 --> 06:19.890
+We would not be allowed to call honk.
+
+06:20.580 --> 06:23.790
+If I try to do so, we'll very quickly see an error message once again.
+
+06:25.200 --> 06:25.440
+Okay.
+
+06:25.440 --> 06:27.480
+So that's the basics of modifiers.
+
+06:27.660 --> 06:34.380
+So we've now taken a look at basics of classes, methods, a very tiny bit around inheritance and modifiers
+
+06:34.380 --> 06:35.050
+as well.
+
+06:35.070 --> 06:36.120
+So a quick pause right here.
+
+06:36.130 --> 06:38.520
+We're going to start to cover fields in the next section.
+
+06:38.520 --> 06:40.140
+So I'll see you in just a minute.

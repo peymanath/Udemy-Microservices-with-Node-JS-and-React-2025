@@ -1,0 +1,313 @@
+WEBVTT
+
+00:01.530 --> 00:05.460
+We just saw all of our tests get executed whenever we create this new request.
+
+00:05.490 --> 00:09.000
+Now, I want to try to add in an additional commit to this request.
+
+00:09.210 --> 00:13.030
+And in this additional commit, we're going to make a breaking change to one of our tests.
+
+00:13.050 --> 00:16.920
+Again, this is just so you can see what would happen if we make a change that's going to break our
+
+00:16.920 --> 00:21.510
+test and that would be assigned to us, that we should probably fix up our code before we merge it into
+
+00:21.510 --> 00:22.500
+the master branch.
+
+00:23.470 --> 00:24.730
+The back inside my editor.
+
+00:25.330 --> 00:28.840
+I'm going to find the roots directory inside the alt service.
+
+00:29.630 --> 00:31.310
+I'll find a test folder inside there.
+
+00:31.610 --> 00:33.530
+I'll open up the current user test file.
+
+00:34.660 --> 00:38.530
+And I'm going to make a change to this test to forcibly break it.
+
+00:38.980 --> 00:43.240
+In particular, I'll change the expectation right here from 200 to 400.
+
+00:43.900 --> 00:46.120
+That should definitely cause my test suite to fail.
+
+00:47.270 --> 00:48.200
+So I'm going to save that.
+
+00:48.200 --> 00:52.490
+And we're going to imagine that maybe along with this failing test, we also wrote out some other code
+
+00:52.490 --> 00:55.550
+inside of our project that we would want to eventually deploy.
+
+00:55.820 --> 00:57.380
+So we would want to go again.
+
+00:58.270 --> 01:00.460
+Go through this kind of process right here.
+
+01:00.700 --> 01:03.480
+We're going to commit our changes to that same branch.
+
+01:03.510 --> 01:05.650
+Well, then push that up to GitHub.
+
+01:05.740 --> 01:10.510
+Now, because we have already created a request for this branch, we do not have to create a pull request
+
+01:10.510 --> 01:14.950
+a second time instead because we are making these changes to the same branch.
+
+01:14.980 --> 01:19.180
+They will be added in as additional changes to the request we had just created.
+
+01:20.300 --> 01:22.030
+I will go back over to my terminal.
+
+01:23.110 --> 01:24.640
+I'll do a get status.
+
+01:25.090 --> 01:25.360
+Yep.
+
+01:25.360 --> 01:27.340
+There's the test change I just made.
+
+01:27.610 --> 01:30.760
+They'll add it, admit it, and I'll call this.
+
+01:30.760 --> 01:32.560
+How about last minute change?
+
+01:35.000 --> 01:37.850
+And I'll push it up to the same branch, the dev branch.
+
+01:37.880 --> 01:40.700
+They'll do a get push origin dev.
+
+01:45.410 --> 01:45.710
+All right.
+
+01:45.710 --> 01:49.760
+Once we push that, we should be able to go back over to GitHub and take a look at that request.
+
+01:50.380 --> 01:52.270
+So there's the last minute change.
+
+01:52.780 --> 01:57.430
+And after a moment or two, I should see this little box down here update and say that it's running
+
+01:57.430 --> 01:58.720
+an additional set of tests.
+
+01:58.990 --> 02:02.620
+The tests that are now being executed include that latest change.
+
+02:02.620 --> 02:05.380
+And so we should have a test inside there that is going to fail.
+
+02:05.800 --> 02:11.530
+I can once again click on details and take a look at the running tests so I can expand that little bullet
+
+02:11.530 --> 02:12.850
+point right here.
+
+02:14.780 --> 02:16.910
+If it'll let me know, it's not going to let me.
+
+02:17.830 --> 02:19.330
+Well, there we go.
+
+02:19.360 --> 02:19.660
+Okay.
+
+02:19.660 --> 02:22.480
+So we're installing dependencies once again, we're going to run the tests.
+
+02:22.480 --> 02:24.310
+In this case, they should fail horribly.
+
+02:25.000 --> 02:26.890
+So I'm just going to let it do its thing for a moment here.
+
+02:30.230 --> 02:34.700
+It looks like the tests we just started up, there's are a couple of passes and eventually we get that
+
+02:34.700 --> 02:37.160
+failure because our test failed.
+
+02:37.370 --> 02:41.780
+Now this overall little workflow right here should have failed as well.
+
+02:42.170 --> 02:44.540
+So if I now go back over to my conversation tab.
+
+02:46.210 --> 02:48.850
+I'll be told that some of our checks are in this case.
+
+02:48.850 --> 02:50.290
+All of our checks have failed.
+
+02:50.740 --> 02:56.020
+And so we can't technically merge our code into master, but GitHub is going to strongly discourage
+
+02:56.020 --> 02:56.950
+you to do so.
+
+02:56.980 --> 02:59.530
+It's going to say, Hey, look, you are trying to run some tests here.
+
+02:59.530 --> 03:04.240
+It is clear that there is something wrong inside of your code base right now, and it's kind of encouraging
+
+03:04.240 --> 03:08.350
+us to fix up our code base before we merge these changes into master.
+
+03:08.800 --> 03:10.030
+I bet you guess how we do that.
+
+03:10.030 --> 03:15.040
+We just go into our code base, make the fixes, make sure a test pass locally, and then eventually
+
+03:15.040 --> 03:17.890
+commit those changes and push them back up to the same PR.
+
+03:18.470 --> 03:19.480
+So we're going to do that right now.
+
+03:19.480 --> 03:22.030
+We're going to essentially undo the change we just made.
+
+03:23.420 --> 03:28.130
+Back over inside my editor, I'll find that current user test file and I'll change that response right
+
+03:28.130 --> 03:28.370
+there.
+
+03:28.370 --> 03:30.050
+Back over to 200.
+
+03:33.230 --> 03:38.660
+Once I've got that updated, I'm then going to run my tests locally just to make sure that that actually
+
+03:38.660 --> 03:41.730
+fixed it up because this is what you really would do in the real world.
+
+03:41.750 --> 03:46.100
+They'll change into off and then do an NPM run test pull in CI.
+
+03:46.280 --> 03:50.990
+I'm running the CI script because I really just want to run the test one time and immediately exit as
+
+03:50.990 --> 03:53.660
+opposed to start at my test and then kind of watch your mode.
+
+03:57.380 --> 03:58.940
+It looks like everything is now passing.
+
+03:59.770 --> 04:03.280
+Now we can commit that change and push it back up to GitHub once again.
+
+04:04.520 --> 04:06.050
+So I'll add that change.
+
+04:06.080 --> 04:09.230
+I'll give a message of something like fixed test.
+
+04:09.770 --> 04:12.830
+We should probably provide a better description than that, but I'll leave that up to you.
+
+04:13.920 --> 04:16.410
+And then I'll push that to Origin Dev.
+
+04:21.310 --> 04:25.030
+Now, once again, after that change has been made, I should be able to flip back over.
+
+04:27.070 --> 04:30.680
+We're going to either see another test run right here.
+
+04:30.720 --> 04:30.990
+Yep.
+
+04:31.000 --> 04:32.350
+Looks like there it starts.
+
+04:32.980 --> 04:35.620
+And once again, we're going to have to wait for these tests to be completed.
+
+04:36.010 --> 04:37.840
+So I bet you can guess what's going to happen now.
+
+04:37.840 --> 04:40.600
+Those tests are going to run in about 30 seconds or so.
+
+04:40.750 --> 04:43.720
+We're going to see a little green checkmark that says, hey, everything looks good.
+
+04:43.720 --> 04:46.450
+You can merge these changes into the master branch.
+
+04:47.170 --> 04:47.440
+All right.
+
+04:47.440 --> 04:48.430
+So that is pretty much it.
+
+04:48.430 --> 04:51.670
+That is kind of step number one in this entire workflow.
+
+04:51.970 --> 04:55.720
+Again, it's going to go something like this diagram right here.
+
+04:56.230 --> 05:01.240
+Remember, this diagram is really all about the first time that you create a particular branch or really
+
+05:01.240 --> 05:02.920
+a particular pull request.
+
+05:03.190 --> 05:06.250
+After you create that pull request, you do not have to create the pull request.
+
+05:06.250 --> 05:07.960
+Again, you can continue.
+
+05:08.760 --> 05:11.550
+Making changes on the same branch, pushing them up to GitHub.
+
+05:11.550 --> 05:16.260
+Every time you push those changes to that same branch, the tests are going to rerun and update the
+
+05:16.260 --> 05:17.160
+pull request.
+
+05:17.990 --> 05:22.270
+It's only when you merge that request or otherwise close it that you're going to have to create a pull
+
+05:22.280 --> 05:24.230
+request again at some point in the future.
+
+05:25.210 --> 05:25.540
+All right.
+
+05:25.540 --> 05:30.040
+So at this point, we have successfully shown that we can run tests around our suite whenever we push
+
+05:30.040 --> 05:35.260
+up code and we can get some output from those tests visible on our request itself.
+
+05:35.800 --> 05:38.520
+Now we're going to expand the GitHub action we put together.
+
+05:38.530 --> 05:44.440
+We're going to make sure that we run tests from all of our different services, not just the service.
+
+05:44.470 --> 05:48.280
+So quick pause right here and we're going to expand that little script in just a moment.

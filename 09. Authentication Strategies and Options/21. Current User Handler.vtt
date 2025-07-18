@@ -1,0 +1,145 @@
+WEBVTT
+
+00:00.880 --> 00:04.120
+We are all done with our sign in and sign up route handlers.
+
+00:04.120 --> 00:06.270
+We're not going to start to move on to a current user.
+
+00:06.280 --> 00:09.470
+So inside my route directory, I'll find the current user file.
+
+00:09.850 --> 00:12.250
+Let me first begin by telling you the goal of this route.
+
+00:12.250 --> 00:16.150
+Handler So here's what we're going to try to implement at some point in time.
+
+00:16.150 --> 00:21.130
+Our React application is going to need to figure out whether or not the user is signed into our application.
+
+00:21.550 --> 00:26.860
+The React application cannot directly look at the cookie and try to inspect and decide whether or not
+
+00:26.860 --> 00:29.110
+there is a valid JSON web token inside there.
+
+00:29.200 --> 00:34.990
+We have set up our cookies in such a way that they cannot be executed or accessed from JavaScript running
+
+00:34.990 --> 00:35.950
+inside the browser.
+
+00:36.130 --> 00:41.470
+So instead the React application needs to be able to make a request to something inside of our app to
+
+00:41.470 --> 00:44.350
+figure out whether or not the user is currently logged in.
+
+00:44.350 --> 00:47.260
+And that is the goal of this current user route handler.
+
+00:47.930 --> 00:52.280
+So at some point in time, our React application is going to make a request to figure out who the current
+
+00:52.280 --> 00:56.150
+user is or essentially whether or not the user is logged in.
+
+00:56.880 --> 01:00.060
+That request is going to include a cookie if it exists.
+
+01:00.390 --> 01:03.360
+So we are going to get a cookie with this incoming request.
+
+01:03.390 --> 01:08.940
+Maybe if the user is not logged in, there will be no cookie, but if they are logged in, there will
+
+01:08.940 --> 01:10.020
+be a cookie present.
+
+01:11.170 --> 01:16.300
+So inside of our service or more specifically inside of this current user route handler, we're going
+
+01:16.300 --> 01:20.560
+to take a look at that rec session, JWT property.
+
+01:21.760 --> 01:25.480
+So remember, that is where we are going to see our JSON Web token show up.
+
+01:26.590 --> 01:29.910
+So if the cookie is set, there will be a JSON web token there.
+
+01:29.920 --> 01:31.060
+If the cookie is not set.
+
+01:31.090 --> 01:34.000
+Chances are there will not be a JSON web token.
+
+01:35.100 --> 01:37.440
+So we're going to then take a look at that property.
+
+01:37.440 --> 01:42.930
+If it is not set or if for some reason the JSON web token is invalid.
+
+01:42.960 --> 01:46.950
+Then we're going to return early and we're going to send back a response that looks like this.
+
+01:47.900 --> 01:54.680
+Otherwise, if there is a JSON web token set on that session and the JSON Web token is valid, then
+
+01:54.680 --> 01:58.790
+we're going to send back the payload that is stored inside the JSON web token.
+
+01:58.790 --> 02:00.610
+So it's going to look something like this right here.
+
+02:00.620 --> 02:04.130
+We're going to provide an object with a current user property.
+
+02:04.490 --> 02:09.080
+And then for current user, we're going to put in the payload from the JSON web token.
+
+02:11.020 --> 02:12.370
+So that's the general idea.
+
+02:12.400 --> 02:17.350
+You'll notice I put in this diagram, I said if the JSON web token is invalid or valid.
+
+02:17.680 --> 02:23.170
+So remember, at any given point in time, a user can technically try to mess around with their JSON
+
+02:23.170 --> 02:23.860
+web token.
+
+02:23.860 --> 02:29.470
+They can try to manipulate the information inside there and pretend that they are some other user or
+
+02:29.470 --> 02:31.930
+change their email address or something like that.
+
+02:32.780 --> 02:37.610
+But because we have set up this secure signature thing with JSON Web token, we're going to be able
+
+02:37.610 --> 02:42.410
+to very easily detect if the JSON Web token has been manipulated in any way.
+
+02:42.860 --> 02:48.080
+So if it has been manipulated, that's the case in which we will just return early and say, sorry,
+
+02:48.080 --> 02:49.040
+you're not logged in.
+
+02:49.070 --> 02:52.280
+Your JSON web token doesn't really look all that valid.
+
+02:53.040 --> 02:53.310
+Okay.
+
+02:53.310 --> 02:55.790
+So with all this in mind, let's take a quick pause right here.
+
+02:55.800 --> 03:00.120
+When we get back the next video, we'll put all this implementation together inside of our current user
+
+03:00.120 --> 03:00.960
+route handler.

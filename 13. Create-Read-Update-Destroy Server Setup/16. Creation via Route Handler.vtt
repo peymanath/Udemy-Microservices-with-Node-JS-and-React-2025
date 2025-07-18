@@ -1,0 +1,442 @@
+WEBVTT
+
+00:01.310 --> 00:05.360
+I'm back inside of my test where we're going to try and check to make sure that a ticket was actually
+
+00:05.360 --> 00:06.560
+saved to our database.
+
+00:06.590 --> 00:09.350
+There's definitely a wide variety of ways we can do this.
+
+00:09.560 --> 00:12.570
+I think that we're going to take a very simple, simplistic approach.
+
+00:12.590 --> 00:19.040
+What I would like to do is first do a check and see how many records are inside of our ticket collection.
+
+00:19.460 --> 00:23.810
+We'll then make the request and then after that, we'll once again check to see how many records are
+
+00:23.810 --> 00:24.290
+in there.
+
+00:24.290 --> 00:29.180
+And we should see that there should be one additional record after making the request.
+
+00:29.330 --> 00:31.010
+So let's write out the code for this.
+
+00:31.010 --> 00:33.770
+I think you'll understand where we're going with it really, really quickly.
+
+00:34.430 --> 00:38.990
+To get started, I'm going to go up to the top of my test file and I'm going to import that ticket model
+
+00:38.990 --> 00:40.010
+that we just created.
+
+00:40.750 --> 00:44.640
+They're going to import ticket from up up bottles.
+
+00:44.800 --> 00:45.430
+Ticket.
+
+00:48.320 --> 00:48.770
+Okay.
+
+00:49.610 --> 00:50.630
+Back down at the bottom.
+
+00:52.860 --> 00:57.450
+I'm then going to look into my tickets collection and take a look at all the different tickets that
+
+00:57.450 --> 00:58.470
+exist inside there.
+
+00:58.710 --> 01:03.270
+So I'll say let tickets is a wait ticket find.
+
+01:04.180 --> 01:05.530
+With empty object.
+
+01:05.800 --> 01:10.210
+So this query is going to get all the different tickets that exist inside of that collection, every
+
+01:10.210 --> 01:10.870
+last one.
+
+01:11.380 --> 01:15.460
+Now, when I say every last one, that's kind of a little misleading statement.
+
+01:15.490 --> 01:21.310
+You might recall that back inside of our test setup file, after every single test that we run, or
+
+01:21.310 --> 01:25.240
+I should say before every single one, we take a look at all of our different collections inside of
+
+01:25.240 --> 01:25.660
+MongoDB.
+
+01:25.690 --> 01:29.230
+MongoDB, and we delete all the data inside of every single one of them.
+
+01:29.740 --> 01:33.670
+So when this test first runs, there should be zero tickets.
+
+01:34.410 --> 01:39.240
+Let's write out an expectation around that right away to just confirm there are zero tickets inside
+
+01:39.240 --> 01:40.380
+the database right now.
+
+01:40.770 --> 01:45.630
+So I'll put in expect tickets not length to equal zero.
+
+01:47.220 --> 01:49.370
+By the way, notice I'm using the keyword right here.
+
+01:49.380 --> 01:53.550
+That's because we're going to reassign that variable right after we make the request.
+
+01:54.830 --> 01:55.130
+Okay.
+
+01:55.130 --> 01:56.420
+So now we make the request.
+
+01:57.140 --> 01:59.540
+You might notice that we're missing a little step inside of here.
+
+01:59.540 --> 02:03.560
+We never actually add in any check or any authentication step.
+
+02:03.950 --> 02:05.060
+So very similar to what we did.
+
+02:05.060 --> 02:05.660
+Back up here.
+
+02:05.660 --> 02:07.430
+Let's make sure that we set that cookie.
+
+02:08.700 --> 02:14.850
+So after calling post, I'll do a set global sign in.
+
+02:19.440 --> 02:23.550
+So now after making the requests, let's take a look at all of our tickets inside that collection once
+
+02:23.550 --> 02:23.880
+again.
+
+02:23.880 --> 02:27.540
+And we're going to expect there to now be exactly one ticket inside there.
+
+02:28.460 --> 02:29.710
+So I'll say tickets.
+
+02:30.130 --> 02:33.640
+Again, that's why we use the keyword right here, so we could redefine this variable.
+
+02:34.880 --> 02:37.220
+Is a wait ticket find.
+
+02:38.700 --> 02:44.520
+And we should now be able to expect tickets length to equal one.
+
+02:46.200 --> 02:46.830
+If we wanted to.
+
+02:46.860 --> 02:50.850
+We could also take a look at the record that was actually created and write out an assertion about,
+
+02:50.850 --> 02:52.550
+say, its title or its price.
+
+02:52.560 --> 02:58.830
+So, for example, we could do something like tickets at zero dot price to equal 20.
+
+02:59.520 --> 03:01.330
+We could do the same thing for the title as well.
+
+03:01.350 --> 03:02.130
+Totally up to you.
+
+03:03.280 --> 03:08.500
+If you want to write in an assertion around the title, I would recommend extracting the ticket or that
+
+03:08.500 --> 03:10.360
+title right there to a separate variable.
+
+03:10.360 --> 03:13.500
+So something like title is blah blah blah.
+
+03:14.250 --> 03:15.780
+Then use that as the title.
+
+03:18.020 --> 03:24.770
+And then for the actual assertion, expect tickets zero title to equal title.
+
+03:26.650 --> 03:28.640
+Well, that is it for our test.
+
+03:28.660 --> 03:30.020
+So let's save this.
+
+03:30.040 --> 03:33.130
+We're going to go back over to our terminal and just make sure the test is failing.
+
+03:33.160 --> 03:34.750
+Yep, definitely is.
+
+03:37.110 --> 03:39.420
+So now let's go work on the actual implementation.
+
+03:40.120 --> 03:42.430
+I'm going to go and find my new route handler.
+
+03:43.510 --> 03:44.440
+At the very top.
+
+03:44.440 --> 03:47.050
+I'm going to import the model that we just created.
+
+03:48.010 --> 03:49.630
+So we can actually save some data.
+
+03:50.760 --> 03:53.700
+So we'll go up on directory models ticket.
+
+03:56.630 --> 04:01.310
+Then down inside of this thing, I'm going to remove the resin status.
+
+04:01.940 --> 04:07.520
+We're going to first try to pull off the title and the price from the body of the incoming request.
+
+04:08.030 --> 04:09.590
+So to pull off that data.
+
+04:11.800 --> 04:13.210
+Title and price.
+
+04:15.400 --> 04:16.690
+From Record Body.
+
+04:18.710 --> 04:20.150
+Well, then build up our ticket.
+
+04:20.270 --> 04:22.200
+That's going to be ticket build.
+
+04:22.220 --> 04:25.970
+Remember, that's how we are creating records here because TypeScript can jump in and make sure that
+
+04:25.970 --> 04:28.340
+we're providing the correct structure of data.
+
+04:29.700 --> 04:32.820
+Then we'll put in our title, we'll put in the price.
+
+04:32.820 --> 04:35.280
+And then remember, there is a third property required.
+
+04:35.280 --> 04:40.020
+We have to put in the user ID of the person who is creating this ticket so we know who actually owns
+
+04:40.020 --> 04:40.350
+it.
+
+04:40.830 --> 04:46.860
+So so we'll say that the ID is going to come from req current user ID.
+
+04:47.130 --> 04:51.840
+Remember, we have access to current user on that request object because we had previously executed
+
+04:51.840 --> 04:54.030
+our current user middleware back inside of app.
+
+04:54.030 --> 04:55.470
+It's that thing right there.
+
+04:55.470 --> 05:01.470
+That's what sets the recurrent user property we are getting complained at by TypeScript right now TypeScript
+
+05:01.470 --> 05:05.790
+is saying, hey, this ID thing might not actually be defined.
+
+05:06.240 --> 05:11.250
+So remember whenever we set current user, we are possibly setting current user.
+
+05:11.490 --> 05:16.410
+If the user is not authenticated, then the current user middleware is not going to set current user
+
+05:16.410 --> 05:18.630
+to anything and that will be undefined.
+
+05:20.020 --> 05:23.520
+So right now TypeScript is saying, hey, you can't look up the property here.
+
+05:23.530 --> 05:26.380
+You have to make sure that the current user actually exists.
+
+05:26.830 --> 05:28.730
+Well, we don't really have to do that.
+
+05:28.750 --> 05:32.680
+You might recall that our require auth middleware already does that for us.
+
+05:32.800 --> 05:37.510
+If I go back to the definition of the require auth middleware inside of our common module right here
+
+05:37.510 --> 05:41.740
+we are inside this middleware doing a check to make sure that current user is defined.
+
+05:41.740 --> 05:47.560
+And if it's not, we then throw this error and we never continue on to the next middleware or possibly
+
+05:47.560 --> 05:49.360
+the next request handler in this case.
+
+05:50.490 --> 05:54.960
+So in other words, right now, we're never going to end up in this statement right here if current
+
+05:54.960 --> 05:56.430
+user is undefined.
+
+05:56.490 --> 06:01.770
+TypeScript just doesn't understand that because it is not looking into the required auth function and
+
+06:01.770 --> 06:07.170
+understanding that we're going to return early out of this entire chain if current user isn't defined.
+
+06:07.650 --> 06:13.770
+So I feel pretty comfortable adding in a exclamation to this thing and telling TypeScript, Hey, don't
+
+06:13.770 --> 06:14.340
+sweat it.
+
+06:14.430 --> 06:15.720
+Current user is defined.
+
+06:15.720 --> 06:17.130
+We've got this thing defined.
+
+06:18.080 --> 06:20.900
+Now you'll notice that even after that, I'm still getting an air here.
+
+06:22.410 --> 06:24.320
+I put in ID right here.
+
+06:24.330 --> 06:25.260
+That is my mistake.
+
+06:25.290 --> 06:26.280
+It should be user ID.
+
+06:26.310 --> 06:26.970
+That's better.
+
+06:28.480 --> 06:29.770
+Okay, so there's our ticket.
+
+06:29.770 --> 06:30.460
+We've built it up.
+
+06:30.460 --> 06:32.350
+After that, we need to actually save it.
+
+06:32.860 --> 06:34.930
+So I'll do an A wait to get that safe.
+
+06:35.140 --> 06:39.880
+If I want to use the awake keyword inside of here, as usual will mark the enclosing function with async.
+
+06:41.690 --> 06:45.620
+After saving that record, we can now do a rez status.
+
+06:49.400 --> 06:50.480
+Of 201.
+
+06:51.750 --> 06:54.900
+And we will send back the ticket that we just created.
+
+06:56.690 --> 06:57.710
+And that should be it.
+
+06:58.320 --> 06:59.550
+So let's save this.
+
+07:00.120 --> 07:01.560
+We'll go back over to our terminal.
+
+07:02.360 --> 07:04.280
+And all of our tests are passing.
+
+07:04.280 --> 07:05.240
+Fantastic.
+
+07:06.180 --> 07:07.480
+Well, this is pretty good.
+
+07:07.500 --> 07:09.920
+Now, at this point, you might be thinking, Stephen.
+
+07:10.200 --> 07:11.190
+Writing these tests.
+
+07:11.190 --> 07:14.770
+Such a pain, such a pain, so much extra stuff to go through.
+
+07:14.790 --> 07:16.550
+Well, here's the good thing about it.
+
+07:16.560 --> 07:21.270
+We spent just a little bit of extra time, really not that much writing out these tests.
+
+07:21.390 --> 07:24.510
+And even as we were going through that, we had to do a lot of extra set up stuff.
+
+07:24.540 --> 07:29.760
+But we've now got a route handler and we are really sure that it works the way we expect without ever
+
+07:29.760 --> 07:33.540
+having to actually run our code inside the browser or at Postman.
+
+07:34.170 --> 07:37.200
+So this really is a great advantage during development.
+
+07:37.200 --> 07:40.950
+We do not have to be manually testing everything over and over and over again.
+
+07:40.950 --> 07:46.610
+And we've now got this great record right here of how this request handler should behave.
+
+07:46.620 --> 07:48.630
+So we could start to make changes to it now.
+
+07:48.630 --> 07:52.710
+And if we start to break it in some particular way, well, we've got something to yell at us and tell
+
+07:52.710 --> 07:54.900
+us, Hey, you're doing something wrong, go fix it up.
+
+07:55.380 --> 07:58.560
+So if you don't like writing tests out, I apologize for that.
+
+07:58.560 --> 08:03.720
+But I really feel very strongly that this is the right thing to do when we are developing microservices
+
+08:03.720 --> 08:07.470
+because we don't have to go through the process of wiring this ticket up to everything else inside of
+
+08:07.470 --> 08:12.210
+our application or the React app or whatever else, just to make sure that it's working as expected.
+
+08:13.650 --> 08:13.950
+All right.
+
+08:13.950 --> 08:17.730
+So now that we're all done with creating a ticket, we're going to take a pause right here.
+
+08:18.000 --> 08:21.060
+And in the next video, we're going to move on to our next request handler.

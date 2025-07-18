@@ -1,0 +1,382 @@
+WEBVTT
+
+00:01.130 --> 00:04.280
+Our events now include a version numbers, which is fantastic.
+
+00:04.280 --> 00:08.240
+So we're now going to move over to our orders service inside of our order service.
+
+00:08.240 --> 00:13.730
+We will eventually wire up that update if current plug in inside of our order model.
+
+00:13.730 --> 00:17.300
+But right now we're going to focus on making our ticket work correctly.
+
+00:17.300 --> 00:22.370
+So I want to make sure that we wire up that plug in to the ticket model inside of orders.
+
+00:22.400 --> 00:26.660
+And I want to make sure that we execute all the appropriate logic inside of the ticket.
+
+00:26.660 --> 00:31.760
+Updated Listener So in other words, I want to go through the process that we've described many times
+
+00:31.760 --> 00:36.860
+where we receive some kind of event and then we run some kind of query to try to find a ticket with
+
+00:36.860 --> 00:39.920
+the same ID and the version minus one.
+
+00:39.920 --> 00:44.720
+So in this case version of to subtract one, that gives us one and we would be looking for this version
+
+00:44.720 --> 00:45.440
+right here.
+
+00:45.680 --> 00:50.840
+We would then apply our updates to this record, and when we save it, we would want to see that version
+
+00:50.840 --> 00:52.940
+number automatically incremented for us.
+
+00:53.060 --> 00:54.710
+So that is what we're focused on right now.
+
+00:54.710 --> 00:58.760
+We want to make sure the ticket updated events get wired up properly.
+
+00:59.390 --> 01:03.770
+So to get started, we're going to first install that plug in into our order service and we're going
+
+01:03.770 --> 01:05.000
+to do that at the terminal.
+
+01:05.960 --> 01:07.040
+So at my terminal.
+
+01:07.940 --> 01:16.460
+I'm inside of my orders service directory and I'll do an NP pm install mongoose update if current.
+
+01:19.920 --> 01:20.130
+Kat.
+
+01:20.160 --> 01:20.910
+So it's pretty small.
+
+01:20.910 --> 01:22.470
+Should install it rather quickly.
+
+01:22.500 --> 01:22.860
+Yep.
+
+01:22.860 --> 01:23.610
+Looks good.
+
+01:24.330 --> 01:28.620
+So we'll now go back over to my ticket model file inside of the orders service.
+
+01:29.170 --> 01:30.130
+So here's the order service.
+
+01:30.150 --> 01:35.280
+I'll find the ticket model file and we're going to wire up the same series of steps that we had done
+
+01:35.280 --> 01:38.190
+back inside the ticket file inside of our ticket service.
+
+01:38.370 --> 01:43.680
+We're going to import the plug in at the top, wired up to the schema and list this new version property
+
+01:43.680 --> 01:45.960
+inside of our ticket dock interface.
+
+01:46.900 --> 01:51.700
+So at the very top we will begin by importing update if current plugin.
+
+01:52.730 --> 01:55.940
+From Mongoose update if current.
+
+01:58.390 --> 01:59.770
+I'll then go down to my schema.
+
+01:59.770 --> 02:02.230
+So here's ticket schema right after it.
+
+02:03.240 --> 02:08.220
+We'll put in to get schema set version, key and version.
+
+02:09.580 --> 02:13.840
+And then ticket schema plugin update if current.
+
+02:14.900 --> 02:16.430
+Plug in like so.
+
+02:19.020 --> 02:21.720
+Then finally up inside of our ticket doc interface.
+
+02:22.820 --> 02:24.590
+We'll add in the version property.
+
+02:25.820 --> 02:27.150
+And again, this is just here.
+
+02:27.150 --> 02:31.920
+So we can eventually write out code like ticket version without having TypeScript complain at us.
+
+02:33.420 --> 02:33.670
+Okay.
+
+02:33.690 --> 02:34.280
+So that is it.
+
+02:34.290 --> 02:37.770
+We are now using this plug in with the ticket model inside the order service.
+
+02:38.070 --> 02:41.540
+So now we're going to focus on making our listener work correctly.
+
+02:41.550 --> 02:45.780
+We're going to make sure that the ticket updated listener is going to receive these events.
+
+02:46.500 --> 02:49.920
+It's going to reach into the database and try to find a record with IDC's.
+
+02:49.920 --> 02:53.660
+Q And whatever the event's version is, minus one.
+
+02:53.670 --> 02:56.940
+So in this case, we'd be looking for a version of one inside the database.
+
+02:56.970 --> 03:01.290
+If we do not find some ticket, we would throw an error and say, Hey, something's wrong here.
+
+03:01.290 --> 03:03.420
+We were not able to find the appropriate ticket.
+
+03:05.910 --> 03:10.770
+So inside of our Events Listeners directory, I'm going to find ticket updated listener.
+
+03:14.710 --> 03:19.150
+We're then going to take a look at the query they execute right here and we're going to adjust that
+
+03:19.150 --> 03:19.720
+query.
+
+03:19.720 --> 03:22.720
+So we're going to make sure that the query we run is what we just described.
+
+03:22.720 --> 03:26.290
+Find the ticket with Q and the appropriate version.
+
+03:27.640 --> 03:30.010
+So I'm going to remove the fine buy ID.
+
+03:30.040 --> 03:33.940
+We can't use that query or that little helper to make the query any more because now we want to make
+
+03:33.940 --> 03:37.930
+a query based on two different criteria, both the ID and the version number.
+
+03:38.110 --> 03:40.900
+So we're going to change this to a find one.
+
+03:42.250 --> 03:46.330
+Well, then put in an object and list the filter or search criteria inside of here.
+
+03:46.420 --> 03:48.670
+So we want to find a ticket with an ID.
+
+03:48.700 --> 03:52.150
+Notice how its underscore ID of data ID.
+
+03:52.850 --> 03:56.420
+And a version of data, version minus one.
+
+03:59.800 --> 04:04.600
+If we mouse over a ticket updated event right here or do a command click on it, we should see that
+
+04:04.600 --> 04:06.190
+this thing now has the version property.
+
+04:06.190 --> 04:10.540
+If you do not see that, you'll want to restart your code editor because remember we did just update
+
+04:10.540 --> 04:11.650
+that common module.
+
+04:12.750 --> 04:15.850
+So that's where we are getting the version from is contained inside the event.
+
+04:15.870 --> 04:16.290
+Now.
+
+04:17.690 --> 04:18.800
+So we're going to run that query.
+
+04:18.800 --> 04:24.140
+And again for the 20th time inside this course, if we do not find that ticket right there, it means
+
+04:24.140 --> 04:26.720
+we must be processing events out of order.
+
+04:26.720 --> 04:31.850
+And so an example of that would be if we are on version three too early, we would take version three,
+
+04:31.850 --> 04:35.540
+subtract one, that would give us version two, and there's no record inside of our database with the
+
+04:35.540 --> 04:36.320
+appropriate version.
+
+04:36.320 --> 04:40.520
+So oops, we won't find the ticket and we would end up throwing an error right here or something.
+
+04:40.520 --> 04:42.200
+It says Ticket not found.
+
+04:44.030 --> 04:45.050
+And that's pretty much it.
+
+04:45.260 --> 04:48.190
+So now we can make our updates to the ticket.
+
+04:48.200 --> 04:51.410
+We can set the new title and price on there and then save the record.
+
+04:51.440 --> 04:57.530
+And once we save that record, that is why we just wired up this update if current plug in to the ticket
+
+04:57.530 --> 04:58.910
+model inside the order service.
+
+04:58.910 --> 05:03.650
+So when we save this thing, it's going to increment the version to match the version that just came
+
+05:03.650 --> 05:04.670
+in the event.
+
+05:07.070 --> 05:07.480
+Okay.
+
+05:07.790 --> 05:08.750
+That's pretty much it.
+
+05:08.780 --> 05:10.190
+Let's save this thing.
+
+05:11.600 --> 05:14.530
+And then to test it, we're going to use postman with postman.
+
+05:14.540 --> 05:17.720
+We're going to manually create a ticket and then try to update it.
+
+05:17.720 --> 05:21.400
+And we're just going to make sure that all of our code for right now runs without any kind of error.
+
+05:21.410 --> 05:25.550
+We don't really have anything to verify and say that it's handling concurrency correctly right here.
+
+05:25.550 --> 05:29.330
+But we'll take a look at an example of how it's going to fix that stuff in just a little bit.
+
+05:30.160 --> 05:30.250
+Yeah.
+
+05:30.390 --> 05:31.530
+So inside a postman.
+
+05:35.690 --> 05:40.280
+I'm going to first go to my tab where I am making a post request to API tickets.
+
+05:40.820 --> 05:43.580
+I am of course going to make sure I'm authenticated really quickly as well.
+
+05:43.580 --> 05:45.080
+So API users, current user.
+
+05:45.080 --> 05:46.280
+Yep, I'm authenticated.
+
+05:46.910 --> 05:50.870
+So post requests to API tickets and I'll put in a title and a price.
+
+05:50.870 --> 05:54.020
+I'm going to send that off and here is my created ticket.
+
+05:54.260 --> 05:59.240
+If I go over to scaffold really quickly, I should see some event saying something around, Hey, we
+
+05:59.240 --> 06:02.300
+have published this event and receive the event as well.
+
+06:02.450 --> 06:04.640
+So if we take a look at scaffold really quick.
+
+06:04.640 --> 06:04.970
+Yep.
+
+06:04.970 --> 06:05.600
+There we go.
+
+06:05.600 --> 06:07.760
+Publish ticket created and received.
+
+06:07.760 --> 06:08.630
+Ticket created.
+
+06:10.770 --> 06:15.900
+So now take the ID of the ticket that I just made, and I'm going to try to make an update to this ticket.
+
+06:16.700 --> 06:18.980
+So I'll go over to my put request tab.
+
+06:21.800 --> 06:23.270
+Over on this put request tab.
+
+06:23.270 --> 06:26.720
+I'll make sure that I am making a put request to API slash tickets.
+
+06:26.720 --> 06:30.230
+I'm then going to put in the ID of the record that we just created a moment ago.
+
+06:30.230 --> 06:34.490
+So remember, we can get that from the post request tab that ID right there.
+
+06:35.410 --> 06:37.570
+I'm going to throw it in at the very end of the URL.
+
+06:37.600 --> 06:40.420
+I'll then make sure that there is some new price listed in here.
+
+06:41.110 --> 06:42.970
+Then finally, I'm going to send this off.
+
+06:44.000 --> 06:44.160
+Okay.
+
+06:44.180 --> 06:46.220
+Let's go back over to Scaffold and see how we're doing.
+
+06:46.580 --> 06:51.800
+So it looks like I was able to successfully process the created and the update as well.
+
+06:52.160 --> 06:56.420
+And in theory, this should now solve a lot of these different concurrency issues.
+
+06:57.350 --> 07:00.740
+But it's kind of hard to see that from the limited style of testing that we have right now.
+
+07:01.070 --> 07:02.140
+So we going to take a quick pause.
+
+07:02.150 --> 07:05.330
+We're going to come back the next video and we're going to try to run that little test script I put
+
+07:05.330 --> 07:10.400
+together again and see if there's still any disagreement between the records on our order service and
+
+07:10.400 --> 07:11.540
+the ticket service.
+
+07:11.750 --> 07:13.670
+So let's take a look at that in just a moment.

@@ -1,0 +1,271 @@
+WEBVTT
+
+00:00.790 --> 00:04.840
+In the last video we left off, having just created a class user right here.
+
+00:05.080 --> 00:09.010
+Once again, if you see a warning around this class definition, that's totally fine.
+
+00:09.010 --> 00:10.720
+We're going to fix it up in just a second.
+
+00:11.320 --> 00:14.410
+So in this video, I want to focus on our implementation of a user.
+
+00:14.650 --> 00:19.450
+Remember, we had said that a user should have a couple of different properties assigned to it that
+
+00:19.450 --> 00:20.920
+will be randomly generated.
+
+00:20.920 --> 00:24.940
+So that should probably be like a user's name and their location as well.
+
+00:25.750 --> 00:26.350
+To get started.
+
+00:26.350 --> 00:31.210
+I think that we should define a couple of different fields on our user class and then we can figure
+
+00:31.210 --> 00:33.220
+out how to randomly generate those properties.
+
+00:34.170 --> 00:34.530
+All right.
+
+00:34.530 --> 00:36.480
+So I'm going to flip back over to my class definition.
+
+00:36.750 --> 00:41.090
+And inside of here, I'm going to assign two different properties to my user.
+
+00:41.100 --> 00:46.980
+I'm going to say that every user is going to have a name property that is a string and a location property
+
+00:47.310 --> 00:53.820
+that's going to be an object that has a latitude, that is a number and a longitude that is a number
+
+00:53.820 --> 00:54.540
+as well.
+
+00:54.990 --> 00:58.710
+So LAT stands for latitude, LSG stands for longitude.
+
+00:59.100 --> 01:04.470
+Remember, we can use latitudes and longitudes to model a physical location in the world.
+
+01:04.950 --> 01:10.800
+So we're going to eventually randomly generate a latitude and longitude, assign it to this user, and
+
+01:10.800 --> 01:15.510
+use that data to decide where to map a user on our Google Map interface.
+
+01:17.610 --> 01:17.820
+Okay.
+
+01:17.820 --> 01:22.110
+So now that we've defined these properties right here, we need to eventually initialize them.
+
+01:22.260 --> 01:27.600
+Remember, every time we define a property, we need to either initialize it on the same exact line
+
+01:27.600 --> 01:29.160
+or inside the constructor.
+
+01:30.100 --> 01:34.660
+Usually we will initialize the property on the same line if it's going to be some hardcoded value.
+
+01:34.720 --> 01:39.260
+But in this case we want to randomly generate a name and a latitude and longitude.
+
+01:39.280 --> 01:44.380
+So we will instead do our initialization inside of a constructor function instead.
+
+01:44.950 --> 01:48.820
+So I'm going to define my constructor function right here like so.
+
+01:49.480 --> 01:49.810
+All right.
+
+01:49.810 --> 01:53.720
+So we've got our place to initialize the name latitude and longitude.
+
+01:53.740 --> 01:56.320
+All we need now is our randomly generated data.
+
+01:56.680 --> 02:01.300
+So for that, let's take a look at some documentation for library that we're going to use to generate
+
+02:01.300 --> 02:02.380
+that information.
+
+02:03.240 --> 02:03.690
+All right.
+
+02:03.690 --> 02:05.450
+So quick link right here.
+
+02:05.460 --> 02:11.280
+We're going to go to NPM and take a look at the documentation for a package called Faker.
+
+02:11.820 --> 02:16.800
+The Faker package gives us the ability to randomly generate a bunch of different types of information,
+
+02:16.800 --> 02:19.980
+which makes it really well-suited for the project we are working on right now.
+
+02:20.760 --> 02:22.320
+So I'm going to go to KPMG's.
+
+02:23.900 --> 02:28.760
+Once here, I'm going to search for Faker at the top, and I should see it as one of the first results
+
+02:28.760 --> 02:29.420
+on here.
+
+02:31.820 --> 02:32.090
+All right.
+
+02:32.090 --> 02:33.420
+So here's the documentation.
+
+02:33.440 --> 02:35.090
+You can scroll down a little bit.
+
+02:35.930 --> 02:39.470
+And underneath API right here are simply not API.
+
+02:39.500 --> 02:40.220
+Next section down.
+
+02:40.220 --> 02:40.570
+Here we go.
+
+02:40.580 --> 02:41.630
+API methods.
+
+02:42.140 --> 02:45.710
+This is the absolute extent of all the documentation we get.
+
+02:45.740 --> 02:47.680
+Unfortunately, it's not super detailed.
+
+02:47.690 --> 02:53.970
+So what this is essentially saying is that the Faker package has a module inside of it called address
+
+02:53.990 --> 03:00.500
+and we can use the address module to randomly generate a zip code, a city, a street name, a county,
+
+03:00.500 --> 03:02.610
+a country state, latitude, longitude.
+
+03:02.730 --> 03:05.420
+Well, those look really relevant and so on.
+
+03:06.320 --> 03:12.050
+Likewise, there is a company module that we can use to randomly generate a catchphrase or a company
+
+03:12.050 --> 03:13.250
+name and so on.
+
+03:14.010 --> 03:15.780
+If you scroll down a little bit more.
+
+03:16.470 --> 03:19.530
+You'll also find a section inside of here called.
+
+03:20.690 --> 03:26.030
+Name and we can use this module to generate a first name, last name and so on.
+
+03:26.630 --> 03:31.430
+So as you might guess, we're going to use this name module to generate some information for our user.
+
+03:31.970 --> 03:34.430
+We'll use the company module back up here.
+
+03:36.250 --> 03:40.120
+To generate some random information for the companies we create inside of our app.
+
+03:40.850 --> 03:46.460
+And finally, for both the user and the company will use the address module to generate a random latitude
+
+03:46.460 --> 03:47.810
+and longitude.
+
+03:48.850 --> 03:49.110
+Okay.
+
+03:49.120 --> 03:52.870
+So it looks like the fake module is really going to take care of all of our data requirements for our
+
+03:52.870 --> 03:53.680
+application.
+
+03:53.890 --> 03:55.840
+So all we have to do is install this thing.
+
+03:56.290 --> 04:00.670
+So to install this package, I'm going to flip back over to my terminal inside of my project directory.
+
+04:01.060 --> 04:06.250
+I'm going to stop the running parcel server with Control C and then I'll do an NPM install.
+
+04:07.100 --> 04:09.890
+Baker Like so, and that's pretty much it.
+
+04:10.550 --> 04:14.510
+Now the package is pretty small, so it should complete installation rather quickly.
+
+04:14.540 --> 04:19.760
+Once it's all done, we'll start up parcel once again with parcel indexed HTML.
+
+04:21.330 --> 04:21.660
+All right.
+
+04:21.660 --> 04:25.050
+So now we can flip back over to our editor and make use of faker.
+
+04:25.650 --> 04:29.400
+To do so, I'm going to go to the top of the file inside my user file.
+
+04:30.520 --> 04:36.940
+And I'm going to import the Faker module import statements inside of TypeScript look identical to import
+
+04:36.940 --> 04:38.800
+statements in S 2015.
+
+04:38.890 --> 04:43.720
+So if you've ever worked on a React or Angular application, you're probably going to be right at home.
+
+04:44.140 --> 04:49.330
+In other words, to access a module that we install within PM, all we have to do is write out import
+
+04:49.330 --> 04:52.450
+faker from faker like so.
+
+04:53.250 --> 04:57.780
+So that's going to reach into our package node modules directory right here.
+
+04:58.480 --> 05:03.040
+It's going to find that faker module that we just installed and it's going to give us access to all
+
+05:03.040 --> 05:06.160
+the code inside there through a variable called faker.
+
+05:07.010 --> 05:09.040
+Now there's just one little issue here.
+
+05:09.050 --> 05:13.730
+If we hover over faker, we're going to see a little error message right here.
+
+05:13.730 --> 05:17.060
+It says could not find a declaration file for model faker.
+
+05:17.630 --> 05:22.520
+Now, this is an error or a warning that you're going to see many, many, many times as you start to
+
+05:22.520 --> 05:23.960
+work on TypeScript projects.
+
+05:23.960 --> 05:28.130
+So let's take a quick pause right here and talk about why we are seeing this little warning message.

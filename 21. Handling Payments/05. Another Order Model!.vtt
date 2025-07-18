@@ -1,0 +1,409 @@
+WEBVTT
+
+00:01.350 --> 00:03.090
+All right, let's open up our payment service.
+
+00:03.090 --> 00:07.890
+We're going to create a new model file, and we're going to make sure that we replicate these five properties
+
+00:07.890 --> 00:08.400
+right here.
+
+00:08.400 --> 00:12.480
+Or I should say that we are going to store these five properties tied to every order inside the payment
+
+00:12.480 --> 00:13.110
+service.
+
+00:13.620 --> 00:17.040
+So back inside my editor, I'm going to find the payments directory.
+
+00:17.160 --> 00:21.630
+I'll find the CRC folder inside there and then I'll make a new directory called Models.
+
+00:22.050 --> 00:26.340
+And inside that I'll make a new file called Order as usual.
+
+00:26.340 --> 00:28.860
+At the very top, I will import Mongoose.
+
+00:29.930 --> 00:34.340
+From Mongoose, and then we will define our three separate interfaces.
+
+00:35.980 --> 00:38.710
+So our first interface will be order adders.
+
+00:40.460 --> 00:41.720
+Then order duck.
+
+00:41.720 --> 00:44.870
+And that's going to be extending mongoose dot document.
+
+00:47.610 --> 00:48.840
+And then order.
+
+00:49.590 --> 00:50.310
+Model.
+
+00:50.640 --> 00:53.220
+And that's going to be extending mongoose model.
+
+00:53.520 --> 00:56.670
+This is generic and we'll put in order doc like so.
+
+00:58.550 --> 01:01.670
+These three interfaces serve the same goal they always have.
+
+01:01.700 --> 01:05.030
+First one is a list of properties we have to provide when building an order.
+
+01:05.120 --> 01:09.560
+The second one is the list of properties that an order has, and then finally the list of properties
+
+01:09.560 --> 01:11.530
+that the model itself contains.
+
+01:11.540 --> 01:15.350
+So this is going to list out any custom methods we add to the overall collection and so on.
+
+01:16.250 --> 01:16.420
+Yes.
+
+01:16.430 --> 01:16.940
+Let's get to it.
+
+01:16.940 --> 01:21.380
+We're going to go through and fill out each of these interfaces, essentially using the same properties
+
+01:21.380 --> 01:22.940
+that we just spoke about over here.
+
+01:24.450 --> 01:29.760
+So whenever we create a new order, we have to specify the ID of that order as a string.
+
+01:30.480 --> 01:34.800
+We have to specify the about version user ID and price.
+
+01:34.800 --> 01:36.350
+We'll come back to status in just a moment.
+
+01:36.360 --> 01:38.070
+So version is definitely going be a number.
+
+01:38.070 --> 01:40.590
+User ID will be a string and price will be a number as well.
+
+01:42.510 --> 01:44.130
+Subversion is a number.
+
+01:44.610 --> 01:47.820
+User ID is a string and price is a number.
+
+01:48.240 --> 01:48.930
+And then status.
+
+01:48.960 --> 01:53.370
+You might recall we had created that order status enum inside of our common module that lists out all
+
+01:53.370 --> 01:55.560
+the different possible statuses that an order could have.
+
+01:56.130 --> 02:01.770
+So for our status, we're going to say that this must be one of the possible enum cases or one of the
+
+02:01.770 --> 02:04.470
+possible cases listed inside of our order status enum.
+
+02:04.860 --> 02:08.760
+So for that, at the very top, we will import our order status enum.
+
+02:09.920 --> 02:13.790
+From our common module and then use that enum like so.
+
+02:16.430 --> 02:16.580
+Okay.
+
+02:16.730 --> 02:18.620
+Next up, we'll work on the order document.
+
+02:19.070 --> 02:23.210
+Right now, the order doc is going to look absolutely identical in nature, except we are not going
+
+02:23.210 --> 02:24.680
+to list out the ID right here.
+
+02:24.800 --> 02:29.060
+Remember, we only list ID inside the order at ERs to say that whenever we want to create an order,
+
+02:29.060 --> 02:31.760
+we must provide provide an ID.
+
+02:32.060 --> 02:36.770
+But when we write out the order doc, the mongoose document interface right here that we are extending
+
+02:36.770 --> 02:40.280
+already includes or defines the idea of an ID property.
+
+02:40.280 --> 02:45.170
+So we do not have to re list it down inside the order doc interface because it is essentially already
+
+02:45.200 --> 02:46.820
+listed inside of that interface.
+
+02:47.420 --> 02:49.730
+So we will put in version that is the number.
+
+02:50.730 --> 02:52.470
+User ID that is a string.
+
+02:53.420 --> 02:53.640
+Rice.
+
+02:53.660 --> 02:57.980
+That is a number and status that is of type order status.
+
+02:59.620 --> 03:00.000
+Okay.
+
+03:00.070 --> 03:01.460
+Finally, our order model.
+
+03:01.480 --> 03:04.690
+So as usual, we're just going to say that this thing should have a build method.
+
+03:04.690 --> 03:10.800
+It's going to take in some object of type order adders and then return an instance of an order doc.
+
+03:11.840 --> 03:13.130
+So we'll list out build.
+
+03:13.910 --> 03:18.860
+This will take something of type order at and then return something of type order doc.
+
+03:20.320 --> 03:20.740
+Cool.
+
+03:21.420 --> 03:22.050
+So let's now start.
+
+03:22.050 --> 03:24.180
+You defined the actual schema itself.
+
+03:24.630 --> 03:26.940
+We'll make a new order schema variable.
+
+03:28.960 --> 03:31.510
+This will be new mongoose schema.
+
+03:32.410 --> 03:36.820
+And then inside of here, we're going to list out all the different properties and it's going to roughly
+
+03:37.150 --> 03:39.820
+be the same as what we list out inside of order, doc.
+
+03:39.910 --> 03:43.720
+The only big difference is that we are not going to include the version because remember the version
+
+03:43.720 --> 03:48.880
+property is going to be maintained automatically by the mongoose update if current module which we will
+
+03:48.880 --> 03:51.340
+eventually install and wire up to this document.
+
+03:52.310 --> 03:54.680
+So we're going to list out user ID.
+
+03:55.710 --> 03:57.030
+That's going to be a string.
+
+03:57.030 --> 04:01.950
+And remember, because we are inside of a schema definition here, we are using capital S string because
+
+04:01.950 --> 04:04.170
+this is not an interface we are writing right now.
+
+04:04.170 --> 04:07.530
+It is not TypeScript not required to put lowercase s.
+
+04:07.530 --> 04:08.880
+It must be capital s.
+
+04:09.580 --> 04:12.400
+We'll also say that it is required to provide a user ID.
+
+04:12.400 --> 04:13.690
+So required is true.
+
+04:15.830 --> 04:17.660
+Next up is our price.
+
+04:18.850 --> 04:21.490
+That is going to be a number also required.
+
+04:22.570 --> 04:24.280
+And then finally a status.
+
+04:25.770 --> 04:27.960
+I will say that this is going to be a string.
+
+04:28.790 --> 04:30.470
+And it is required as well.
+
+04:30.500 --> 04:34.940
+You might recall that back on our order service and we defined the order model, we used a little trick
+
+04:34.940 --> 04:39.600
+to make sure that the value of status we provided was one of the values inside of the Order enum.
+
+04:39.620 --> 04:42.980
+We could definitely do that here as well, but just to save some time, I'm going to skip it.
+
+04:44.070 --> 04:47.090
+There's our order schema, or at least the different properties it's going to have.
+
+04:47.210 --> 04:52.700
+Now as the second argument, as usual, we are going to define that to JSON method, just to make sure
+
+04:52.700 --> 04:57.470
+that if we ever have to turn this thing into JSON, send it over somewhere else, we provide the appropriate
+
+04:57.470 --> 04:58.160
+properties.
+
+04:58.160 --> 05:03.080
+We also want to make sure that we rename on the fly that underscore ID property as well.
+
+05:03.730 --> 05:06.820
+So to define that, we're going to throw in here.
+
+05:09.420 --> 05:11.430
+Our two Jason section.
+
+05:12.710 --> 05:14.420
+This will have a transform method.
+
+05:15.810 --> 05:18.780
+That receives the document and the return value.
+
+05:19.800 --> 05:24.300
+So we'll say that Rhett ID is Rhett underscore ID.
+
+05:25.110 --> 05:28.890
+And then we will delete ret dot underscore ID.
+
+05:34.690 --> 05:36.910
+Next up, let's define our build method.
+
+05:37.090 --> 05:41.290
+We are skipping temporarily over that update if current plug in, but we will come back to it.
+
+05:41.890 --> 05:43.240
+So our build method will be order.
+
+05:43.240 --> 05:46.840
+Schema statics build.
+
+05:47.820 --> 05:52.920
+This is going to be a function that takes an argument of adders that must be of type order adders.
+
+05:53.640 --> 05:56.310
+And then inside of here, we're going to return a new order.
+
+05:58.290 --> 05:59.070
+And on the fly.
+
+05:59.070 --> 06:01.440
+We're going to pass through a couple of different properties.
+
+06:01.440 --> 06:07.230
+So remember in particular this adders object right here is going to have an ID property, but when we
+
+06:07.230 --> 06:11.430
+pass it into the constructor, we must rename that thing to underscore ID instead.
+
+06:14.370 --> 06:18.780
+So we're going to say that underscore ID is at first underscore ID.
+
+06:19.840 --> 06:21.640
+Or simply me, just normal ID.
+
+06:21.670 --> 06:22.300
+There we go.
+
+06:23.640 --> 06:26.010
+The version for this, the first version.
+
+06:28.410 --> 06:31.020
+We're then going to have a price from our stock price.
+
+06:31.920 --> 06:34.770
+User ID from addressed user ID.
+
+06:35.250 --> 06:36.870
+And then what else are we missing here?
+
+06:37.590 --> 06:39.090
+Take a look at order adders.
+
+06:40.140 --> 06:40.550
+Status.
+
+06:40.560 --> 06:42.090
+I think it's just status and that's it.
+
+06:42.090 --> 06:43.440
+So our status.
+
+06:45.000 --> 06:46.650
+Will be at IRS's status.
+
+06:48.690 --> 06:52.690
+We are getting an air around order that will go away as soon as we define the actual model itself.
+
+06:52.710 --> 06:54.270
+Speaking of which, let's do that right now.
+
+06:54.540 --> 06:57.960
+So order is going to be mongoose dot model.
+
+06:58.690 --> 07:00.040
+We're going to feed in our two generics.
+
+07:00.040 --> 07:00.790
+So order, doc.
+
+07:00.790 --> 07:01.510
+Order!
+
+07:02.680 --> 07:03.310
+Model.
+
+07:04.540 --> 07:07.810
+Make a new collection called Order and fill in the order schema.
+
+07:08.020 --> 07:10.810
+And then finally at the very bottom export order.
+
+07:11.230 --> 07:12.160
+And that's it.
+
+07:13.660 --> 07:13.890
+Yeah.
+
+07:13.900 --> 07:15.070
+I think we're good to go here.
+
+07:15.070 --> 07:16.300
+So let's take a quick pause.
+
+07:16.300 --> 07:21.100
+When we come back, the next video, we're going to start to put together our two listeners, which
+
+07:21.100 --> 07:23.860
+are going to listen for the order created and order canceled events.
+
+07:23.860 --> 07:28.120
+Whenever we receive those, we're going to either create an order or cancel an existing order inside
+
+07:28.120 --> 07:29.200
+the order's collection.

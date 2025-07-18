@@ -1,0 +1,262 @@
+WEBVTT
+
+00:01.040 --> 00:04.100
+In this video, we're going to set up our scaffold config file.
+
+00:04.130 --> 00:07.460
+The scaffold config file is going to watch our infra directory.
+
+00:07.460 --> 00:11.270
+Any time we make a change to a config file, it will automatically apply it to our cluster.
+
+00:11.510 --> 00:16.310
+It's also going to make sure that any time we change any code inside of our auth directory, it will
+
+00:16.310 --> 00:21.230
+sync all the files inside there with the appropriate running container inside of our cluster.
+
+00:22.060 --> 00:26.980
+So to create our scaffold config file, I'm going to find my root project directory and inside there
+
+00:26.980 --> 00:31.090
+I'll make another file called scaffold dot yaml like so.
+
+00:32.920 --> 00:33.490
+Inside of here.
+
+00:33.490 --> 00:34.660
+We're going to write out some config.
+
+00:34.660 --> 00:38.860
+It's going to be absolutely identical in nature to the project we were just working on.
+
+00:38.860 --> 00:42.520
+Just one or two very small things are going to change the inside.
+
+00:42.520 --> 00:48.100
+If you're I'll put in an API version of scaffold slash v two, alpha three.
+
+00:49.130 --> 00:50.840
+A kind of config.
+
+00:51.890 --> 00:53.600
+I'll set up a deploy section.
+
+00:53.930 --> 00:58.280
+The deploy section is going to list out all the different config files we want to load into our cluster.
+
+00:59.560 --> 01:00.910
+Inside of deploy.
+
+01:00.910 --> 01:02.560
+We'll list out CTL.
+
+01:03.410 --> 01:04.490
+Manifests.
+
+01:05.330 --> 01:09.690
+And then we'll list out all the directories or all the files we want to sync or make use of.
+
+01:09.710 --> 01:12.440
+So in our case, we're going to say take a look at infra.
+
+01:13.310 --> 01:14.910
+Hey, Eight's star.
+
+01:14.930 --> 01:17.870
+So get all the files inside of in for a K star.
+
+01:17.870 --> 01:22.610
+And really, at the start of that path, we should put in a dot slash like so to say from the current
+
+01:22.610 --> 01:27.290
+working directory, go into infra then k and then find all the files inside there.
+
+01:29.730 --> 01:33.810
+Next up, at the very top level of indentation, we'll set up a built.
+
+01:34.600 --> 01:37.710
+So we're going to put in local with a push of false.
+
+01:37.720 --> 01:42.460
+Once again, this is going to say that whenever we build an image, do not try to push it off to Docker
+
+01:42.460 --> 01:45.340
+Hub or anything like that, which is the default behavior.
+
+01:47.370 --> 01:49.530
+Well, then list out our artifacts.
+
+01:49.530 --> 01:54.120
+So these are going to be all the things that are going to be built, and I need to fix my spelling.
+
+01:54.120 --> 01:54.840
+That is better.
+
+01:56.460 --> 02:00.960
+So we're going to list out the image that's going to be produced by that auth project.
+
+02:01.380 --> 02:06.690
+So inside of you, I'll say there's going to be an image called my Docker ID slash auth.
+
+02:07.890 --> 02:12.610
+The context or the folder that contains all the code for this image is off.
+
+02:12.630 --> 02:14.700
+So I'll list out a context of off.
+
+02:16.700 --> 02:18.810
+I'm going to specify the Docker file to use.
+
+02:18.840 --> 02:21.920
+So I'll say Docker, docker file, docker file.
+
+02:21.950 --> 02:23.270
+Notice the capitalization here.
+
+02:23.270 --> 02:26.300
+So lowercase D, lowercase and capital D.
+
+02:27.690 --> 02:33.660
+And we'll set up the sink section, which is going to tell Scaffold how to handle any files that change
+
+02:33.660 --> 02:34.500
+inside of here.
+
+02:35.840 --> 02:39.890
+We'll say that we're going to give it some manual configuration and be very explicit about what to do
+
+02:39.890 --> 02:41.660
+when some files inside of here change.
+
+02:42.700 --> 02:45.070
+I'm going to say array entry.
+
+02:45.070 --> 02:46.450
+So it's the dash right there.
+
+02:47.340 --> 02:51.750
+SOARES So this is going to be the set of files that scaffold needs to watch.
+
+02:52.170 --> 02:58.560
+I want scaffold to watch inside of my CRC directory and find all the files inside there that end with
+
+02:58.790 --> 03:02.580
+dots because we want to sync all the relevant typescript files.
+
+03:03.030 --> 03:07.710
+So inside of a set of single quotes, I will list out CRC slash star.
+
+03:07.710 --> 03:10.020
+Star slash dots.
+
+03:13.260 --> 03:16.140
+And they will set up a destination of DOT.
+
+03:17.290 --> 03:21.880
+The destination of DOT means where to sync this file to inside of our running container.
+
+03:21.910 --> 03:26.440
+The dot means basically just take wherever the file was found from and throw it to the corresponding
+
+03:26.440 --> 03:27.850
+path inside the container.
+
+03:30.400 --> 03:33.030
+All right, so that should be enough config to get us started.
+
+03:33.040 --> 03:37.720
+So I'm going to save this file and we're going to go back over to our terminal and run scaffold and
+
+03:37.720 --> 03:41.560
+just make sure that we can get our project up and running inside of our cluster.
+
+03:42.190 --> 03:43.750
+So I'm going to go back over to my terminal.
+
+03:46.240 --> 03:50.560
+If you are still running scaffold from the previous project, do make sure that you close it at this
+
+03:50.560 --> 03:54.640
+point so you'll want to find the terminal window that is running scaffold and press control.
+
+03:54.640 --> 03:55.660
+See inside of it.
+
+03:56.320 --> 04:01.900
+We'll then change into our ticketing directory, which is where our scaffold HTML file should be.
+
+04:02.350 --> 04:06.160
+And inside of here we should be able to do a scaffold dev like so.
+
+04:07.620 --> 04:11.370
+If you get an error the first time you run scaffold dev, that's totally fine.
+
+04:11.370 --> 04:16.650
+Try killing the process with control C and then running scaffold dead dev a second time.
+
+04:16.890 --> 04:20.160
+You only have to do that if you end up seeing some kind of distinct error message.
+
+04:20.160 --> 04:23.970
+Just, you know, warnings, as you see right here, are not errors.
+
+04:23.970 --> 04:26.160
+They are simply warnings, not errors.
+
+04:28.090 --> 04:28.450
+Okay.
+
+04:28.450 --> 04:31.030
+So it looks like I successfully built the image.
+
+04:31.240 --> 04:33.340
+We then started the deploy with scaffold.
+
+04:34.160 --> 04:38.030
+A fourth deployment was created and an service was created as well.
+
+04:38.360 --> 04:42.650
+And then right here I can see all the output coming from my newly running container.
+
+04:43.220 --> 04:46.340
+So I've got my listing on Port 3000 right there.
+
+04:46.760 --> 04:47.390
+Awesome.
+
+04:48.000 --> 04:53.040
+So now at this point in time, in theory, we should be able to go back over to our project, open up
+
+04:53.040 --> 04:59.520
+the indexed file inside there, make changes to this thing, and see it reflected inside of scaffold.
+
+05:00.060 --> 05:04.590
+So I'm going to find the console.log where we say listing on Port 3000 and I'm going to add in a couple
+
+05:04.590 --> 05:06.840
+of exclamations at the end like so.
+
+05:07.790 --> 05:09.030
+Well, then save the file.
+
+05:09.050 --> 05:15.080
+I'm going to flip back over and I should see listing on port 3000 with a bunch more exclamations like
+
+05:15.080 --> 05:15.500
+so.
+
+05:16.330 --> 05:20.080
+Now, if you do not see that update right away, that is totally okay.
+
+05:20.110 --> 05:25.960
+Remember I mentioned that sometimes we run into some really big issues on detecting changes made to
+
+05:25.960 --> 05:28.330
+projects that are running inside of a Docker container.
+
+05:28.330 --> 05:30.850
+So if you don't see an immediate change, that is fine.
+
+05:31.210 --> 05:35.410
+Let's take a quick pause right here and take a look at what you should do if you do not see a change.

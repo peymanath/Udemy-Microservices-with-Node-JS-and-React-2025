@@ -1,0 +1,169 @@
+WEBVTT
+
+00:00.910 --> 00:04.600
+Now that we have seen the goal of this application, we're going to spend a couple of videos to go over
+
+00:04.600 --> 00:06.190
+the design of this app.
+
+00:06.250 --> 00:10.390
+We're going to first begin by discussing the different pieces of data that we're going to have to store
+
+00:10.390 --> 00:11.980
+in order to implement this thing.
+
+00:12.370 --> 00:16.270
+So in total, I think we are going to have four different types of resources.
+
+00:16.510 --> 00:23.290
+We're going to first have some table or collection, some storage of users as your guest is going to
+
+00:23.290 --> 00:25.740
+store all the different users who sign up to our application.
+
+00:25.750 --> 00:29.740
+And presumably along with each user, we will store their email and password.
+
+00:30.250 --> 00:36.370
+That's pretty much it for each user will then have some collection or table of tickets, and each of
+
+00:36.370 --> 00:41.560
+these records are going to represent one single ticket that someone is trying to buy or sell.
+
+00:42.670 --> 00:43.510
+For every ticket.
+
+00:43.510 --> 00:48.430
+We're going to allow it to have a title that's going to be a string, a price, which will be a number,
+
+00:49.120 --> 00:54.670
+a user ID reference, which is going to be a reference to the user who is trying to sell the ticket.
+
+00:55.660 --> 00:58.030
+And a reference to some order.
+
+00:58.420 --> 00:59.860
+Let's give you a order ID.
+
+01:00.820 --> 01:06.550
+And that order ID reference is going to be the kind of purchase attempt to actually get at this ticket.
+
+01:07.620 --> 01:10.500
+Or then going to have a collection or table of orders.
+
+01:10.950 --> 01:16.110
+So for each order that gets created, we're going to store the user ID of the person who is creating
+
+01:16.110 --> 01:16.800
+this order.
+
+01:17.610 --> 01:18.900
+The status of the order.
+
+01:18.900 --> 01:24.570
+So whether it is cancelled, whether we are waiting for payment to come in, whether it is 100% complete
+
+01:24.570 --> 01:26.250
+and some new person owns the ticket.
+
+01:27.070 --> 01:29.140
+We're going to store the ticket ID.
+
+01:30.710 --> 01:35.360
+And the time at which the order expires, because, remember, people only have 15 minutes or so or
+
+01:35.360 --> 01:39.050
+some configurable amount of time to actually purchase a ticket.
+
+01:39.470 --> 01:44.470
+Just to be really clear, this order represents the attempt to purchase a ticket.
+
+01:44.480 --> 01:50.840
+So the instant that a user clicks on that purchase button right there, we're going to create this order
+
+01:50.840 --> 01:51.680
+object.
+
+01:51.710 --> 01:54.800
+And the order object represents the intent to purchase the ticket.
+
+01:56.260 --> 01:58.930
+That expires, that will represent the 15 minutes.
+
+01:59.170 --> 02:03.310
+And as soon as the person actually enters in their credit card or what have you, we will update the
+
+02:03.310 --> 02:07.330
+order status to complete it or awaiting payment or something like that.
+
+02:09.370 --> 02:12.010
+And then finally we're going to have a charge object.
+
+02:12.040 --> 02:17.770
+This charge is going to represent our ability to actually charge some persons credit card and get some
+
+02:17.770 --> 02:18.610
+money out of them.
+
+02:19.290 --> 02:24.900
+So on the charge object, we'll have a reference to the order that user is trying to pay for the status
+
+02:24.900 --> 02:25.530
+of the charge.
+
+02:25.530 --> 02:30.900
+So whether it is created, failed or completed, the amount of money tied to the charge, and we'll
+
+02:30.900 --> 02:35.070
+also have two little maintenance fields or administrative fields on here as well.
+
+02:35.070 --> 02:36.840
+One is going to be a stripe ID.
+
+02:36.930 --> 02:39.630
+So again, we're going to be using Stripe to handle payments.
+
+02:39.630 --> 02:44.850
+Stripe ID is going to be a reference to some object over in the Stripe JS or the stripe world.
+
+02:44.970 --> 02:47.670
+That is going to be us trying to actually build someone's credit card.
+
+02:48.270 --> 02:50.880
+We're also going to have the ability to refund tickets as well.
+
+02:50.880 --> 02:54.270
+So we're going to have something called the Stripe refund ID on here too.
+
+02:54.840 --> 02:58.050
+At this point, I'm sure a lot of these different objects look completely foreign.
+
+02:58.050 --> 03:00.930
+You might be saying, what is the difference between a ticket and an order?
+
+03:00.930 --> 03:02.940
+What's the difference between an order and a charge?
+
+03:02.940 --> 03:03.510
+Don't worry.
+
+03:03.510 --> 03:06.270
+Over time you're going to see the purpose of each of these different objects.
+
+03:06.270 --> 03:11.130
+Right now, I just want to get these pieces of terminology out there and get you thinking about them.
+
+03:11.940 --> 03:13.260
+So that's a little design talk.
+
+03:13.260 --> 03:17.280
+Number one, we're going to go through another couple of videos just like these to give you some big
+
+03:17.280 --> 03:20.640
+overall picture, give you an idea of how we're going to put this thing together.
+
+03:20.640 --> 03:21.420
+So quick pause.
+
+03:21.420 --> 03:22.860
+Next one in just a moment.

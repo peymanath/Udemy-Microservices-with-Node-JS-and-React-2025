@@ -1,0 +1,127 @@
+WEBVTT
+
+00:00.780 --> 00:04.740
+In the last section, we started up a new copy of the reddest container image.
+
+00:04.740 --> 00:10.140
+Inside there we have a running copy of the Red Server and we now need to figure out how we can somehow
+
+00:10.140 --> 00:14.160
+start up the red, essentially also inside of that container.
+
+00:14.490 --> 00:18.030
+To do so, we're going to be making use of another Docker command.
+
+00:18.030 --> 00:21.450
+So the Docker command we're going to use is Docker exec.
+
+00:21.540 --> 00:27.870
+Exec is short for execute and we use it to execute an additional command inside of a container.
+
+00:28.050 --> 00:30.060
+We're going to write docker exec.
+
+00:30.060 --> 00:33.450
+We'll then put down i t dash it.
+
+00:33.720 --> 00:38.730
+This little argument right here allows us to type input directly into the container.
+
+00:39.000 --> 00:44.490
+We then provide the container ID and then the command that we want to execute inside of the container.
+
+00:44.670 --> 00:47.490
+So let's try doing this right now and seeing what happens.
+
+00:48.960 --> 00:50.880
+I'm going to first go back over to my terminal.
+
+00:50.910 --> 00:53.810
+I'm going to verify that my reddest container is still running.
+
+00:53.820 --> 00:56.110
+I can either look at it inside the running window.
+
+00:56.130 --> 00:58.800
+Alternatively, I could run Docker PS and see.
+
+00:58.800 --> 01:01.650
+Yep, I still have that reddest image still going.
+
+01:03.060 --> 01:07.170
+So then to start up a second program inside the container, I'll run.
+
+01:07.170 --> 01:08.370
+Docker Exec.
+
+01:08.400 --> 01:08.880
+Oops.
+
+01:08.910 --> 01:09.600
+Forgot one thing here.
+
+01:09.600 --> 01:13.650
+We got to get the containers ID, we'll do Docker PS and there's the ID right there.
+
+01:14.430 --> 01:22.620
+So I'll do Docker exec dash it, I'll paste in the ID and then the command that I want to execute inside
+
+01:22.620 --> 01:25.950
+there is Redis CLI.
+
+01:26.820 --> 01:30.840
+And when I do so, you'll see that I now get that a little bit more familiar looking command prompt
+
+01:30.840 --> 01:38.940
+here and I can write out something like set my value five and get my value in it retrieves five.
+
+01:39.390 --> 01:45.810
+So by using the exact command, we were able to start up a second running program inside of our container
+
+01:46.020 --> 01:52.590
+and the dash it flag right here allowed us to enter in text on our keyboard and have it be sent into
+
+01:52.590 --> 01:55.320
+that running container as a very quick exercise.
+
+01:55.320 --> 01:58.650
+Let's try removing the flag there and seeing what happens.
+
+01:59.460 --> 02:05.280
+I'm going to exit this by hitting control C on my keyboard and then I'll do Docker exec again.
+
+02:05.280 --> 02:08.580
+But this time I'm going to leave off the IT flags.
+
+02:09.030 --> 02:15.840
+So I'll do Docker exec the ID and then Redis CLI and you'll notice that this time around I just got
+
+02:15.840 --> 02:18.090
+kicked directly back to my terminal.
+
+02:18.270 --> 02:24.060
+I got kicked directly back because Red essentially was started up, but we did not get the ability to
+
+02:24.060 --> 02:25.710
+enter in any text.
+
+02:25.860 --> 02:30.570
+So when reticle was started up, but it very quickly realized, hey, I don't have any possibility of
+
+02:30.570 --> 02:36.270
+getting any text input, it decided to just entirely close down and kick us back to our terminal.
+
+02:37.260 --> 02:42.930
+Now, this idea behind kind of adding on this flag and adding in text here is actually something that's
+
+02:42.930 --> 02:44.970
+rather important in the world of Docker.
+
+02:44.970 --> 02:48.780
+So let's take a quick pause right here, and we're going to come back in the next section and kind of
+
+02:48.780 --> 02:51.180
+expand upon what it right here means.
+
+02:51.180 --> 02:52.680
+So I'll see you in just a minute.

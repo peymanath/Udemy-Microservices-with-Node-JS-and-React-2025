@@ -1,0 +1,55 @@
+WEBVTT
+
+00:00.890 --> 00:03.920
+In the last video, we made an update to our scaffold HTML file.
+
+00:03.950 --> 00:07.370
+There's actually two other small things we need to update inside of here very quickly.
+
+00:07.790 --> 00:13.370
+First off, we currently have a option right here of local and an option of Google Cloud built.
+
+00:13.580 --> 00:18.320
+We can actually only have one of these options present inside of our scaffold file at any time.
+
+00:18.500 --> 00:22.640
+So I'm going to find the section that says Local push false and comment it out.
+
+00:23.240 --> 00:24.470
+I'll then save this file.
+
+00:25.400 --> 00:30.540
+Next up, we're going to find our people file inside of that deployment file.
+
+00:30.560 --> 00:35.420
+We had listed out the image to use with all the different pods that were being managed by this deployment.
+
+00:35.870 --> 00:40.850
+The image that's being listed right here is still referring to our old image, the one with the name
+
+00:40.850 --> 00:42.800
+of your Docker ID slash off.
+
+00:43.040 --> 00:47.480
+But inside of our scaffold file we are saying that the image is going to have a very different name.
+
+00:47.690 --> 00:52.430
+So we need to make sure that we update that deployment and tell it to use this image name instead.
+
+00:52.820 --> 00:59.180
+So I'm going to copy that image name over to my off deployment file and update the image name right
+
+00:59.180 --> 00:59.720
+there.
+
+00:59.960 --> 01:00.710
+Like so.
+
+01:01.440 --> 01:01.670
+Okay.
+
+01:01.680 --> 01:04.410
+That's better now that we've got those two fixes in place.
+
+01:04.410 --> 01:06.240
+Let's continue in the next video.

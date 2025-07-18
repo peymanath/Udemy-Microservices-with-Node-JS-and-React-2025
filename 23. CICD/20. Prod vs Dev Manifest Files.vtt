@@ -1,0 +1,208 @@
+WEBVTT
+
+00:00.950 --> 00:04.250
+In the last video, we discussed how this singular property right here really needs to be different
+
+00:04.250 --> 00:07.550
+depending upon whether we are on a development or production cluster.
+
+00:08.000 --> 00:10.010
+There are a couple of different ways of handling this.
+
+00:10.040 --> 00:12.410
+I'm going to show you a very simple, straightforward way.
+
+00:13.220 --> 00:13.910
+To solve this.
+
+00:13.910 --> 00:17.450
+We're going to create a couple of additional directories inside of our infra folder.
+
+00:17.810 --> 00:23.090
+I'm going to create another folder inside of infra called a dash prod.
+
+00:24.310 --> 00:28.450
+And then another one called AIDS Dev.
+
+00:29.270 --> 00:34.160
+The idea here is that we are going to have some number of manifests or YAML files split between all
+
+00:34.160 --> 00:35.210
+three directories.
+
+00:35.600 --> 00:40.940
+Inside of our directory, we're going to have a series of manifest files that can be applied to any
+
+00:40.940 --> 00:42.250
+cluster that we connect to.
+
+00:42.260 --> 00:44.960
+So either a production or deployment cluster.
+
+00:45.710 --> 00:47.870
+Inside of the AIDS dev directory.
+
+00:47.870 --> 00:51.740
+As you would guess, we're going to play some config files inside of here that are only supposed to
+
+00:51.740 --> 00:53.960
+be applied to a development cluster.
+
+00:54.230 --> 00:58.970
+And then inside of kids prod are going to be manifests that are supposed to be applied to a production
+
+00:58.970 --> 00:59.630
+cluster.
+
+01:00.550 --> 01:07.630
+So now I'm going to take my ingress service file and I'm going to move it into the K dev folder.
+
+01:09.470 --> 01:14.420
+Because this file, as it stands right now, should be only applied to a development cluster.
+
+01:14.420 --> 01:19.340
+I do not want to use this on my production cluster because that will expose or make use of a host of
+
+01:19.340 --> 01:20.240
+ticketing def.
+
+01:21.390 --> 01:27.650
+Then inside of Kate's prod, I'm going to make a new file also called Ingress SVG, html.
+
+01:28.520 --> 01:33.710
+I'm going to copy everything from the existing Ingress service file and paste it over here.
+
+01:34.220 --> 01:39.810
+And now in theory, we will change this hostname right here to whatever our final domain name is.
+
+01:39.830 --> 01:43.940
+We have not yet purchased a domain name for our application, so we don't have anything to change that
+
+01:43.940 --> 01:44.810
+to just yet.
+
+01:44.810 --> 01:49.610
+But as soon as we do purchase a domain name for our app, we will come back to the prod file right here
+
+01:49.610 --> 01:51.260
+and update that host property.
+
+01:54.690 --> 01:55.180
+That's it.
+
+01:55.200 --> 01:57.120
+We now have these three different directories.
+
+01:57.120 --> 02:02.430
+And again, KATES is going to hold everything that is related to any given cluster, be it development
+
+02:02.430 --> 02:03.330
+or production.
+
+02:03.330 --> 02:06.000
+Dev is for just development and prod is for prod.
+
+02:06.630 --> 02:10.800
+Now, by just moving these folders around and moving these files around, well, we do have to fix up
+
+02:10.800 --> 02:14.310
+a couple of other things that are making use of these config files.
+
+02:14.940 --> 02:18.660
+So first off, we do have to make sure that we open up our scaffold YAML file.
+
+02:20.260 --> 02:24.550
+So whenever we run Scaffold, we're going to tell it that in addition to some config files we've placed
+
+02:24.550 --> 02:30.400
+inside that directory, we also want it to use some config files that are going to be inside of the
+
+02:31.150 --> 02:34.540
+dev directory so I can add in that line right there.
+
+02:36.520 --> 02:40.600
+We're also going to go back over to our GitHub repository.
+
+02:41.500 --> 02:45.430
+We're going to find the deploy manifest config file that we just put together.
+
+02:45.910 --> 02:50.560
+And we were going to adjust that command right there and make sure that in addition to applying everything
+
+02:50.560 --> 02:55.450
+from the folder, we also apply everything from the prod folder as well.
+
+02:56.020 --> 02:57.490
+So I'm going to edit this file.
+
+02:59.050 --> 03:01.480
+And I'll put in a little and step right here.
+
+03:03.190 --> 03:08.090
+It'll apply f infra slash 8/8 dashboard.
+
+03:08.620 --> 03:13.840
+I think that you might possibly be able to put in multiple directories to a dash f reference.
+
+03:13.880 --> 03:19.000
+I'm actually not 100% sure now that I'd say it out loud, so that would actually be a pretty good place
+
+03:19.000 --> 03:20.800
+to look at the documentation for that.
+
+03:20.800 --> 03:24.450
+You might be able to simplify this to just something that looks like that right there.
+
+03:24.460 --> 03:27.430
+But again, you might look at the documentation on your own.
+
+03:29.200 --> 03:30.640
+They all commit at this file again.
+
+03:32.830 --> 03:33.070
+Okay.
+
+03:33.070 --> 03:34.720
+So now we should be good to go.
+
+03:34.780 --> 03:39.520
+Once we buy a domain name, we're going to come back to that prod ingress service file, update the
+
+03:39.520 --> 03:41.620
+host and that should pretty much be it.
+
+03:42.440 --> 03:46.100
+Well, I think that we're just about ready for an actual test run here.
+
+03:46.130 --> 03:50.630
+Now, before we do a test run, there is a little bit more setup we have to do specifically around our
+
+03:50.630 --> 03:51.260
+cluster.
+
+03:51.290 --> 03:57.080
+You might recall that our cluster expects there to be one or two secrets to find, such as the JSON
+
+03:57.080 --> 03:58.700
+web token key secret.
+
+03:59.180 --> 04:04.280
+So we define that a very long time ago and we made use of it inside of our deployment.
+
+04:04.730 --> 04:05.750
+So here it is right here.
+
+04:05.870 --> 04:10.240
+Right now, our digital ocean cluster does not have a secret called JWT.
+
+04:10.630 --> 04:14.360
+And I think there might be one other secret somewhere inside of here as well that we have to mainly
+
+04:14.360 --> 04:15.890
+create inside of our cluster as well.
+
+04:16.280 --> 04:21.350
+So once we create those two secrets, one or two secrets will then be able to test out this entire flow
+
+04:21.350 --> 04:23.180
+and then start to finish things up.

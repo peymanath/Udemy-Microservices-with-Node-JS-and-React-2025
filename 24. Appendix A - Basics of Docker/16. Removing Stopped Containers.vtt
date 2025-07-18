@@ -1,0 +1,88 @@
+WEBVTT
+
+00:00.510 --> 00:04.740
+In the last section, I'd mentioned that I'd cleared out all the stopped containers on my machine,
+
+00:04.800 --> 00:06.750
+so I thought you might be curious on how I did that.
+
+00:06.900 --> 00:09.020
+If I run Docker, dash, dash.
+
+00:09.060 --> 00:09.450
+All right.
+
+00:09.450 --> 00:12.810
+Now I can see that I currently have two stopped containers.
+
+00:12.810 --> 00:17.460
+So these containers right now are essentially just taking up disk space on my computer.
+
+00:17.460 --> 00:22.500
+And so it might be to my advantage to try to entirely delete them and not just leave them in this stop
+
+00:22.500 --> 00:27.420
+state to delete all these containers I can run Docker system.
+
+00:28.320 --> 00:29.100
+Prune.
+
+00:30.440 --> 00:32.650
+Well, then we presented with a warning here.
+
+00:32.660 --> 00:37.850
+So just to be clear, this is not only going to delete stopped containers, it's also going to delete
+
+00:37.850 --> 00:40.120
+a couple of either items as well.
+
+00:40.130 --> 00:42.260
+Most notably your build cache.
+
+00:42.260 --> 00:45.930
+The build cache is any image that you have fetch from Docker Hub.
+
+00:45.950 --> 00:51.410
+So after running Docker Prune, you will have to redownload images from Docker Hub, which is not a
+
+00:51.410 --> 00:52.270
+really big deal.
+
+00:52.280 --> 00:56.150
+Just be aware that you're going to have to wait a couple of minutes the next time you start up a container.
+
+00:56.150 --> 00:58.430
+Not really a couple of minutes, but a couple of seconds, really.
+
+00:58.700 --> 00:59.690
+So we can enter in.
+
+00:59.690 --> 01:01.460
+Yes, hit enter.
+
+01:01.580 --> 01:06.650
+And then it will tell us about the deleted containers and it'll tell me also how much space has been
+
+01:06.650 --> 01:08.990
+reclaimed by deleting those resources.
+
+01:09.080 --> 01:15.650
+If I then do another Docker dash all, I'll see that I do not have any stopped containers whatsoever.
+
+01:16.250 --> 01:22.700
+I really recommend you keep the Docker system prune command in mind because any time that you're kind
+
+01:22.700 --> 01:27.500
+of done working with Docker for a period of weeks or months, or if you decide you just don't want to
+
+01:27.500 --> 01:32.360
+work with Docker again at all, you will want to run this command to delete any containers that are
+
+01:32.360 --> 01:35.180
+still just kind of sitting around eating up disk space.
+
+01:35.690 --> 01:36.050
+All right.
+
+01:36.060 --> 01:38.750
+Let's take another quick break and we'll continue in the next section.

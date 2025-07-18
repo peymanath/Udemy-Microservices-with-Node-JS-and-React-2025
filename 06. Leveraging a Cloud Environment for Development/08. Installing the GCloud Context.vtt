@@ -1,0 +1,187 @@
+WEBVTT
+
+00:00.640 --> 00:05.080
+Now that the Google Cloud SDK is all installed and configured, we're going to tell it to go and fetch
+
+00:05.080 --> 00:09.280
+some context information to connect to the cluster we just created in Google Cloud.
+
+00:09.610 --> 00:14.170
+Now, how we do this really comes down to a little decision that you need to make on your end.
+
+00:14.650 --> 00:19.190
+At this point in time, we still have Docker for Mac or Docker for Windows running up here.
+
+00:19.210 --> 00:23.830
+So if I click on that little icon, yep, Docker is running and Kubernetes is running.
+
+00:24.340 --> 00:29.500
+If you do not want to run Docker on your local machine at all anymore, then you're going to run the
+
+00:29.500 --> 00:31.990
+two commands you see over here to the left hand side.
+
+00:32.680 --> 00:37.660
+First off, you're going to close Docker desktop, so you'll go up there and hit Docker Desktop.
+
+00:37.990 --> 00:44.830
+You'll then run Google Cloud or G Cloud components, install cube ETL that will grab a custom version
+
+00:44.830 --> 00:50.500
+or really not a custom version, but it will grab cube ETL and install it on your local machine.
+
+00:51.790 --> 00:56.470
+Because of that, you no longer have to be running this Docker client and you can even uninstall that
+
+00:56.470 --> 00:57.760
+local Docker client.
+
+00:58.610 --> 01:01.070
+You'll then run g cloud container clusters.
+
+01:01.100 --> 01:01.820
+Get credentials.
+
+01:01.820 --> 01:07.490
+And then whatever your cluster name is, your cluster name is going to be back over on your dashboard.
+
+01:07.520 --> 01:12.000
+It'll be whatever name we entered in right there, which in this case is ticketing dash dev.
+
+01:13.600 --> 01:18.190
+So if you go through this process, you no longer need Docker for desktop on your local machine.
+
+01:18.580 --> 01:23.620
+If you're still running Docker or you still want to have this Docker client around, then you will instead
+
+01:23.620 --> 01:26.290
+run G cloud container clusters, blah blah blah.
+
+01:27.040 --> 01:31.030
+Chances are you're going to fit in this crew or this side over here.
+
+01:31.180 --> 01:36.220
+The only reason to go with these stuff on the left hand side is if you really, truly are very sure
+
+01:36.220 --> 01:41.080
+that you're not going to be running Docker locally anytime soon, or if you have space constraints on
+
+01:41.080 --> 01:43.030
+your local machine or something like that.
+
+01:43.540 --> 01:47.380
+So again, chances are you're going to be using this command over here on the right hand side.
+
+01:47.440 --> 01:49.420
+As a matter of fact, that's what I'm going to do as well.
+
+01:50.810 --> 01:59.690
+So I'm going to go back over to my terminal and I will run g cloud container clusters, get dash credentials,
+
+01:59.690 --> 02:05.210
+and then the name of my cluster, which as we just saw a moment ago, is ticketing dash dev.
+
+02:09.760 --> 02:10.780
+So I'll run that.
+
+02:11.580 --> 02:15.090
+And then very quickly it'll pretty much resolve and kick me back to the command line.
+
+02:15.510 --> 02:17.040
+So did it work?
+
+02:17.220 --> 02:18.310
+Well, that's a good question.
+
+02:18.330 --> 02:20.580
+I'm going to go back up here to the top right hand side.
+
+02:21.480 --> 02:26.430
+Or find my little Docker for desktop icon, then go down to Kubernetes and you'll notice I now have
+
+02:26.430 --> 02:28.800
+an additional entry in this little context menu.
+
+02:29.400 --> 02:35.190
+So this little entry right here is how I'm going to tell Kube CTL that I want to connect to the Kubernetes
+
+02:35.190 --> 02:37.860
+cluster that is running in Google Cloud.
+
+02:38.100 --> 02:43.230
+If I ever want to use my local cluster instead, I can select Docker Desktop instead.
+
+02:43.410 --> 02:45.120
+So let me show you this in action.
+
+02:45.300 --> 02:49.410
+I'm going to select Docker Desktop and then at my terminal I'll do a queue.
+
+02:49.560 --> 02:56.070
+It'll get pods and when I do so, you'll see that without a doubt I'm connected to my local cluster.
+
+02:56.250 --> 03:02.040
+My local cluster has the auth pod running, which we created that deployment for just a little bit ago.
+
+03:02.610 --> 03:09.210
+If I then go back up to this dropdown and select the other context, I am now connected through CTL
+
+03:09.240 --> 03:12.030
+to the cluster that we just created in Google Cloud.
+
+03:12.210 --> 03:15.120
+So I can now do a cube, CTL, get pods.
+
+03:16.250 --> 03:18.620
+And you'll see that says no resources found.
+
+03:18.650 --> 03:23.690
+That's because the cluster we just made in the cloud is, of course, running nothing whatsoever.
+
+03:25.500 --> 03:29.520
+So we can now toggle between these two different clusters very easily if we need to.
+
+03:29.850 --> 03:34.230
+Now, having said that, moving forward in the course really encourage you to keep your mind on this
+
+03:34.230 --> 03:38.550
+little menu right here and make sure that you are always connected to the appropriate cluster.
+
+03:38.910 --> 03:43.200
+So for right now, because I'm still going to show you how to finish up this initial setup of the cluster
+
+03:43.200 --> 03:44.010
+in Google Cloud.
+
+03:44.010 --> 03:45.780
+I'm going to leave it on that context.
+
+03:45.780 --> 03:50.070
+But eventually, later on after we go through this Google Cloud setup, I'm going to eventually go back
+
+03:50.070 --> 03:51.240
+to my local cluster.
+
+03:51.240 --> 03:56.100
+And so at some point in time, I'm going to go here and go back to Docker Desktop instead.
+
+03:57.020 --> 03:57.290
+Okay.
+
+03:57.290 --> 04:00.020
+So this is looking pretty good, but we're not quite done yet.
+
+04:00.170 --> 04:05.390
+Even though we have connected to this cluster that's running the cloud, we still do not have the ability
+
+04:05.390 --> 04:08.660
+to tell scaffold to build any of our images.
+
+04:09.520 --> 04:11.560
+Using this Google Cloud build thing.
+
+04:11.740 --> 04:13.600
+So we saw it a little bit of set up to do.
+
+04:13.630 --> 04:17.110
+Let's take a pause right here and then finish this stuff up in the next video.

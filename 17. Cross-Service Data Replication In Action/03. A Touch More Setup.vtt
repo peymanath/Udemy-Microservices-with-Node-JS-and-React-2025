@@ -1,0 +1,391 @@
+WEBVTT
+
+00:01.810 --> 00:04.480
+I have now installed dependencies and built an image out of this.
+
+00:04.480 --> 00:05.900
+Start to the order service.
+
+00:05.920 --> 00:08.890
+I'm now going to create a Kubernetes deployment file.
+
+00:09.250 --> 00:10.690
+So back inside, my editor.
+
+00:11.620 --> 00:17.440
+I will find my infra directory inside of that I'll find k kate's and then I'll make a new file inside
+
+00:17.440 --> 00:20.500
+there called orders dash double html.
+
+00:22.090 --> 00:26.140
+Just about everything inside of here is going to be identical in nature to our tickets deployment.
+
+00:26.140 --> 00:28.330
+So I'm going to go over to the tickets deployment file.
+
+00:28.420 --> 00:30.280
+I'm going to copy everything inside of here.
+
+00:31.930 --> 00:35.560
+Go over to the new order's deployment file and paste everything in.
+
+00:37.900 --> 00:39.560
+I'm now inside of orders deployment.
+
+00:39.580 --> 00:43.390
+We're going to go through here and update tickets over to orders instead.
+
+00:43.630 --> 00:44.950
+It's all put in orders.
+
+00:45.740 --> 00:46.550
+Orders.
+
+00:47.380 --> 00:48.220
+Orders.
+
+00:48.790 --> 00:49.570
+Orders.
+
+00:50.930 --> 00:52.160
+On the image name right here.
+
+00:52.160 --> 00:54.530
+I'll change that to my Docker ID slash orders.
+
+00:54.530 --> 00:59.870
+And as a reminder, if you are running your cluster on Google Cloud, you are not going to put in an
+
+00:59.870 --> 01:01.190
+image right here with this format.
+
+01:01.190 --> 01:06.560
+Instead, you will put in that GCR IO slash your project, ID slash orders.
+
+01:06.590 --> 01:08.510
+So make sure you get the correct thing inside there.
+
+01:10.770 --> 01:13.470
+We then are listing out a couple of environment variables.
+
+01:13.470 --> 01:15.660
+So these are all going to stay the same.
+
+01:15.660 --> 01:20.550
+We definitely want to have the same kind of source for our Nats client ID, the same Nats URL, the
+
+01:20.550 --> 01:21.660
+same cluster ID.
+
+01:21.930 --> 01:23.910
+We want to have the same JSON web token key.
+
+01:23.940 --> 01:28.980
+However, we do not want our order service to connect to the MongoDB instance that was intended for
+
+01:28.980 --> 01:30.120
+the ticket service.
+
+01:31.820 --> 01:36.710
+So we do need to eventually make sure we create a new MongoDB instance for our order stuff.
+
+01:37.340 --> 01:38.700
+We have not created that yet.
+
+01:38.720 --> 01:39.920
+We will in just a moment.
+
+01:39.920 --> 01:43.170
+But for right now, let's just go ahead and update the URL right here.
+
+01:43.190 --> 01:48.320
+Assuming that we eventually will have a order service specific MongoDB instance.
+
+01:48.800 --> 01:57.830
+So I'm going to update the Mongo URI to MongoDB orders, mongo servers slash orders at the end.
+
+02:01.380 --> 02:02.190
+That looks good.
+
+02:02.670 --> 02:04.620
+I'll then go down to the very bottom of the file.
+
+02:05.130 --> 02:09.780
+I'm going to find tickets on here listed three times and I'll update all three of those over two orders.
+
+02:10.670 --> 02:16.280
+So at this point, I should be able to do a find inside of this file, search for tickets, and not
+
+02:16.280 --> 02:18.740
+see the word tickets anywhere inside of here.
+
+02:21.060 --> 02:24.120
+Once I've got that all put together, I'm going to save this file.
+
+02:25.670 --> 02:33.380
+Then inside of K Eights, I'm going to create another new file called orders dash mongo dash devel html.
+
+02:33.710 --> 02:38.210
+So this is where we will create our MongoDB instance specifically for the order service.
+
+02:40.440 --> 02:43.740
+I'm going to once again open up the tickets mongo deployment file.
+
+02:44.310 --> 02:46.200
+So here is take its mongo deployment.
+
+02:46.680 --> 02:48.450
+I'm going to copy everything inside of here.
+
+02:50.000 --> 02:51.770
+Go over to the brand new orders.
+
+02:51.770 --> 02:52.280
+Mongoose.
+
+02:52.370 --> 02:53.810
+Mongoose deployment file.
+
+02:55.180 --> 02:56.470
+And paste everything in.
+
+02:57.900 --> 03:01.890
+And now once again, we will go through here, update the word tickets over to orders.
+
+03:02.040 --> 03:04.260
+So I will find once.
+
+03:05.350 --> 03:06.130
+Weiss.
+
+03:06.880 --> 03:07.960
+Three times.
+
+03:08.560 --> 03:09.520
+Four times.
+
+03:11.040 --> 03:15.240
+I'm going to make sure that I see orders four times inside of the deployment config.
+
+03:16.640 --> 03:17.990
+I'll then go down to the bottom.
+
+03:18.660 --> 03:23.220
+And down here, I'm going to update this to orders and orders.
+
+03:25.150 --> 03:30.370
+Now, once again inside of here, I should be able to do a find for the word tickets and get no results
+
+03:30.370 --> 03:31.180
+whatsoever.
+
+03:33.090 --> 03:35.640
+Once I've confirmed that, I'll go ahead and say this file.
+
+03:36.700 --> 03:37.690
+And that should be it.
+
+03:38.230 --> 03:41.290
+So if we now go back over to our terminal window running scaffold.
+
+03:42.790 --> 03:48.010
+After saving those two files, I should see some information inside of here about creating the orders.
+
+03:48.010 --> 03:49.110
+Mongo deployment.
+
+03:49.120 --> 03:50.320
+About creating the orders.
+
+03:50.320 --> 03:51.340
+Mongo service.
+
+03:52.150 --> 03:56.860
+And I should probably somewhere inside of here also see something about the order deployment and the
+
+03:56.860 --> 03:57.850
+order service.
+
+03:59.080 --> 04:05.260
+Now, if you see any ears inside of here right now around creating orders or running the container or
+
+04:05.260 --> 04:11.560
+anything like that, or if you do not see any console logs or anything from the orders service as I
+
+04:11.560 --> 04:16.060
+do and definitely do not write here, I don't see anything inside of here about building or running
+
+04:16.120 --> 04:18.360
+the order service that is totally okay.
+
+04:18.370 --> 04:22.270
+After we go through all this setup, we're going to restart Scaffold and make sure that everything comes
+
+04:22.270 --> 04:23.590
+up online successfully.
+
+04:23.590 --> 04:26.920
+So if you're getting any errors from scaffold right now, just don't sweat it.
+
+04:29.330 --> 04:29.560
+Yes.
+
+04:29.600 --> 04:30.380
+Back over here.
+
+04:30.770 --> 04:35.060
+We're now going to make sure we set up some file sync stuff inside of our scaffold HTML file, and then
+
+04:35.060 --> 04:36.960
+we'll go ahead and take care of those routing rules.
+
+04:36.980 --> 04:39.200
+Let's take care of that scaffold HTML file first.
+
+04:39.620 --> 04:45.140
+So back inside my editor inside of my root project directory here is scaffold HTML.
+
+04:47.780 --> 04:50.270
+I'm going to scroll down to the very end of this list.
+
+04:51.340 --> 04:54.330
+I'm going to take the last entry, which was for our ticket service.
+
+04:54.340 --> 04:56.770
+Once again, just go ahead and copy paste it.
+
+04:58.650 --> 05:00.060
+Picks up the indentation.
+
+05:02.160 --> 05:06.210
+So I've now got the original ticket service block and then the new one right here.
+
+05:06.450 --> 05:11.380
+We're going to update the image name to orders and the context of orders.
+
+05:11.400 --> 05:15.600
+And once again, remember, if you are running on Google Cloud, this image name right here should be
+
+05:15.600 --> 05:19.770
+the GCR IO slash project ID slash orders.
+
+05:21.330 --> 05:23.850
+And we can leave everything else inside of you except for the contacts.
+
+05:23.850 --> 05:24.510
+The same.
+
+05:24.660 --> 05:26.820
+So we should have an image of orders.
+
+05:26.820 --> 05:27.960
+Context of orders.
+
+05:27.960 --> 05:31.530
+And then the Docker section and sync sections should remain the same.
+
+05:34.030 --> 05:35.200
+Kent still looks pretty good.
+
+05:35.650 --> 05:36.610
+I'll save this.
+
+05:38.390 --> 05:41.150
+Now let's go ahead and finally try to restart scaffold.
+
+05:41.150 --> 05:44.060
+And after this, hopefully we're going to see something start up.
+
+05:44.090 --> 05:49.310
+I am definitely going to expect there to be an air once the pod starts up because inside the order service,
+
+05:49.310 --> 05:53.570
+once again, we've got a lot of stuff inside of here with some broken import statements, for example,
+
+05:53.570 --> 05:54.620
+Inside the Order's app.
+
+05:55.190 --> 05:58.630
+There are still import statements for some root handlers that do not exist.
+
+05:58.640 --> 06:02.180
+So I will expect to eventually see an error when the pod starts to run.
+
+06:02.180 --> 06:07.820
+But I do not want to see an error around just plain starting up the container or building the pod or
+
+06:07.820 --> 06:08.810
+something like that.
+
+06:09.540 --> 06:10.860
+So I'll go back over to my terminal.
+
+06:11.760 --> 06:14.070
+I'm going to stop everything with a control.
+
+06:14.070 --> 06:14.550
+See?
+
+06:17.650 --> 06:24.950
+Or then restart all of it with a scaffold dev and you might want to wait for the git pod's command to
+
+06:24.950 --> 06:26.360
+show everything emptying out.
+
+06:26.720 --> 06:29.660
+So when I print everything out, it looks like everything has already been terminated.
+
+06:29.660 --> 06:31.970
+So I should now be able to do a scaffold.
+
+06:36.270 --> 06:37.140
+And there we go.
+
+06:41.510 --> 06:44.020
+All right, so I'm getting a lot of logs right here.
+
+06:44.030 --> 06:47.210
+I did successfully see something about the order service starting up.
+
+06:47.240 --> 06:47.960
+Very good.
+
+06:47.960 --> 06:53.320
+But then very shortly after that, I got an error around finding a module inside the order service.
+
+06:53.330 --> 06:55.400
+So if you see this area here, that is good.
+
+06:55.400 --> 06:59.150
+We want to see this because this is truly a broken import statement that we need to fix.
+
+06:59.480 --> 07:03.860
+If you see something that says, I don't have it inside my log anymore, but if you see something that
+
+07:03.860 --> 07:08.900
+says cannot build image or cannot find image or something like that, that means that there is probably
+
+07:08.900 --> 07:09.950
+a little issue.
+
+07:10.520 --> 07:14.810
+If you see something that says cannot build this order's image or it cannot retrieve it, cannot find
+
+07:14.810 --> 07:20.330
+it, then the best thing to do is to try to rebuild the image and then restart scaffold once again.
+
+07:22.110 --> 07:22.470
+All right.
+
+07:22.470 --> 07:23.430
+So let's take a pause right here.
+
+07:23.440 --> 07:26.430
+When we come back, the next video, we're going to discuss some of the different routing rules that
+
+07:26.430 --> 07:28.860
+we're going to want to add to our ingress service file.
+
+07:28.860 --> 07:32.370
+And then after that, we can start to work on the order service in earnest.

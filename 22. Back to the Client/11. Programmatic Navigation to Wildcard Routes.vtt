@@ -1,0 +1,241 @@
+WEBVTT
+
+00:01.010 --> 00:02.630
+A user can now create an order.
+
+00:02.630 --> 00:06.980
+So when they do so by clicking on that purchase button, we need to make sure that we then navigate
+
+00:06.980 --> 00:08.990
+the user over to a new page.
+
+00:09.290 --> 00:12.770
+So this is going to be orders slash the ID of the order.
+
+00:13.700 --> 00:16.430
+Pretty much this last row down here.
+
+00:17.150 --> 00:22.010
+So we're going to have to create a new route inside of a new order's directory inside of our pages folder.
+
+00:22.040 --> 00:25.430
+We'll call this component order show or something similar to that.
+
+00:26.030 --> 00:31.400
+So inside of here, we're going to want to fetch details about the order using that order ID right there,
+
+00:31.400 --> 00:35.750
+and then just print out some information about it on the screen and eventually put on this payment button
+
+00:35.750 --> 00:36.440
+as well.
+
+00:37.010 --> 00:40.910
+The other little challenge we're going to have to take care of is this little timer where we're going
+
+00:40.940 --> 00:44.360
+to tell the user how many seconds they have left to actually pay for the order.
+
+00:45.250 --> 00:45.430
+Okay.
+
+00:45.430 --> 00:46.300
+Let's get to it.
+
+00:46.960 --> 00:48.040
+Inside of my editor.
+
+00:48.700 --> 00:52.150
+I'm going to find my pages directory inside the client folder.
+
+00:53.960 --> 00:54.560
+Inside there.
+
+00:54.560 --> 00:57.770
+I'll make a new directory of orders.
+
+00:59.200 --> 01:01.650
+And then I want to add in a new wild card route.
+
+01:01.660 --> 01:04.450
+So I'm going to add it in there inside a square brackets.
+
+01:04.480 --> 01:07.120
+Order ID dot jazz.
+
+01:08.420 --> 01:12.560
+Once again, let's just put in some very simple markup right now and then focus on how we can navigate
+
+01:12.560 --> 01:15.740
+a user over immediately after the order is created.
+
+01:17.090 --> 01:19.700
+They'll put in a new component called Order Show.
+
+01:21.280 --> 01:25.660
+Actually I think we've been using a slightly different convention having oh no, we have similar conventions.
+
+01:25.660 --> 01:26.280
+So ticket show.
+
+01:26.290 --> 01:27.580
+Yeah, a good enough order show.
+
+01:27.580 --> 01:28.480
+It matches up.
+
+01:29.200 --> 01:30.580
+All right, so let's return to Div.
+
+01:32.110 --> 01:34.510
+And say, Order, Joe.
+
+01:36.110 --> 01:38.860
+An export default order show at the bottom.
+
+01:40.500 --> 01:40.800
+All right.
+
+01:40.800 --> 01:42.270
+So now back inside the component.
+
+01:42.270 --> 01:44.940
+We are just working at that ticket ID wild card.
+
+01:45.330 --> 01:50.580
+We want to navigate a user over to the order show component whenever on success gets invoked, because
+
+01:50.580 --> 01:53.250
+that's the point at which we know that, hey, order has been created.
+
+01:53.250 --> 01:56.730
+We should now navigate the user over and show them details about this order.
+
+01:58.140 --> 02:02.250
+As a reminder that function is going to be called with the order that was just created.
+
+02:02.250 --> 02:05.490
+So inside there we already have access to the ID of the order.
+
+02:05.700 --> 02:09.900
+So all we really have to do is figure out how to programmatically navigate a user right here instead
+
+02:09.900 --> 02:11.340
+of doing the simple console log.
+
+02:12.300 --> 02:12.400
+Now.
+
+02:12.420 --> 02:14.820
+We've already seen programmatic navigation once before.
+
+02:14.850 --> 02:18.000
+We're going to import router from next router at the top.
+
+02:23.050 --> 02:25.930
+And then we can call router dot push.
+
+02:27.040 --> 02:28.600
+Just one little issue here.
+
+02:28.630 --> 02:32.560
+Once again, we are navigating programmatically over to a wild card route.
+
+02:32.830 --> 02:37.060
+Remember what I mentioned just a little bit ago when we were working on that link element inside of
+
+02:37.060 --> 02:38.140
+our landing page?
+
+02:38.410 --> 02:40.820
+So back inside the landing page, here it is right here.
+
+02:40.840 --> 02:46.120
+I told you that to create a link element, to go to a wild card route, we had to provide both the ref
+
+02:46.120 --> 02:47.110
+and as.
+
+02:47.110 --> 02:51.880
+And I'd also said we have to do something similar when making use of route or push to go to a wild card
+
+02:51.880 --> 02:52.810
+route as well.
+
+02:52.900 --> 02:55.180
+So yep, that's what we can do right now.
+
+02:55.750 --> 03:02.290
+So to make use of route dot push to navigate to a wild card route, we're going to first put in an argument
+
+03:02.620 --> 03:07.930
+that is essentially the path to the file or essentially the file name path, whatever you want to call
+
+03:07.930 --> 03:09.400
+it, inside of our pages directory.
+
+03:09.730 --> 03:15.640
+So for us, it'll be slash orders, slash square brackets, order ID.
+
+03:15.850 --> 03:18.070
+And again, no extension is required.
+
+03:19.640 --> 03:23.660
+Then as a second argument, we're going to put in the actual URL that we're trying to go to.
+
+03:23.690 --> 03:26.420
+So order slash the real ID of the order.
+
+03:27.080 --> 03:29.570
+And once again, we're going to use some string templating for this.
+
+03:29.570 --> 03:32.510
+So I'll put in some back tactics, orders.
+
+03:33.250 --> 03:37.810
+And then I'm going to reference the ID property of the order that is being provided to on success.
+
+03:38.140 --> 03:39.520
+So order ID.
+
+03:40.600 --> 03:41.560
+And that should be it.
+
+03:43.170 --> 03:44.190
+I'm going to save this.
+
+03:46.070 --> 03:48.710
+And go back and do another quick test.
+
+03:50.510 --> 03:51.370
+The back over here.
+
+03:51.380 --> 03:55.910
+The first order that I had created around my first client ticket should have now expired.
+
+03:55.940 --> 03:58.100
+It has definitely been at least 60 seconds.
+
+03:58.430 --> 04:03.560
+So now attempt to purchase this ticket and as soon as I do, I will get navigated automatically over
+
+04:03.560 --> 04:04.460
+to order show.
+
+04:05.000 --> 04:05.540
+Cool.
+
+04:06.640 --> 04:06.830
+Okay.
+
+04:06.890 --> 04:07.870
+Well, that's not too bad.
+
+04:08.200 --> 04:09.770
+Let's take another quick pause right here.
+
+04:09.790 --> 04:13.510
+When we come back, we're going to tackle this little timer, make sure that the user understands how
+
+04:13.510 --> 04:15.850
+much time they have left to actually pay for the order.

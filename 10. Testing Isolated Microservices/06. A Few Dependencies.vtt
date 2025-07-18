@@ -1,0 +1,187 @@
+WEBVTT
+
+00:01.220 --> 00:05.210
+In this video, we're going to install a couple of dependencies to get our test set up, up and running.
+
+00:05.390 --> 00:06.980
+So I'm going to go over to my terminal.
+
+00:07.010 --> 00:11.480
+I'm going to make sure I'm inside my service directory and we will do an NPM install.
+
+00:11.900 --> 00:16.430
+Now, very critically, these test dependencies are going to install are going to be marked as development
+
+00:16.430 --> 00:17.240
+dependencies.
+
+00:17.240 --> 00:19.940
+So we're going to add on that save dev flag right there.
+
+00:20.000 --> 00:22.490
+I'll show you why we were adding this in in just a moment.
+
+00:22.790 --> 00:25.130
+I'm then going to list out all the stuff we're going to install.
+
+00:25.250 --> 00:30.500
+So I'll do an at types, just at types super test.
+
+00:31.930 --> 00:36.190
+We'll get just we are going to get something else called just.
+
+00:37.630 --> 00:38.650
+Super test.
+
+00:39.640 --> 00:43.720
+And then MongoDB memory server.
+
+00:45.040 --> 00:45.390
+Okay.
+
+00:45.400 --> 00:49.450
+So let's run this command because it is going to take a little bit to install and we'll discuss exactly
+
+00:49.450 --> 00:50.770
+what's going on with all this.
+
+00:51.860 --> 00:52.190
+All right.
+
+00:52.190 --> 00:55.310
+So this is going to kick off the installation process, and I'm just going to sit here at the screen
+
+00:55.310 --> 00:56.150
+for a little bit.
+
+00:56.540 --> 01:01.370
+You're going to start to see that as we install a very particular package, the one called MongoDB Memory
+
+01:01.370 --> 01:05.060
+Server, there's actually a rather large download to go along with it.
+
+01:05.090 --> 01:09.500
+Now, just before this video, I pre-installed that thing just to save a little bit of time in this
+
+01:09.500 --> 01:09.830
+video.
+
+01:09.830 --> 01:14.600
+But for you, you're probably going to see that it's downloading a file that is 80 megabytes large or
+
+01:14.600 --> 01:15.140
+so.
+
+01:15.500 --> 01:18.860
+So that is this copy of MongoDB that is going to be running in memory.
+
+01:19.040 --> 01:24.530
+The reason we are running a copy of Mongo in memory is that we can easily test multiple databases at
+
+01:24.530 --> 01:25.430
+the same time.
+
+01:25.520 --> 01:30.230
+Remember, we really want to be able to run tests for different services concurrently on the same machine.
+
+01:30.650 --> 01:34.430
+That might eventually start to be a little bit challenging if we are having them all connect to the
+
+01:34.430 --> 01:36.320
+same instance of MongoDB.
+
+01:36.680 --> 01:42.530
+So rather than having all these different services connecting to the same test instance of Mongo, we're
+
+01:42.530 --> 01:48.140
+going to instead create a MongoDB memory server or an instance of Mongo in memory.
+
+01:48.140 --> 01:52.610
+For each of these different services we are testing, it's going to end up running much, much more
+
+01:52.610 --> 01:53.210
+quickly.
+
+01:54.700 --> 01:59.470
+Now that 80 megabyte download is something that we really do not want to repeat every single time that
+
+01:59.470 --> 02:02.980
+we tried to build up our Docker image for the service.
+
+02:03.400 --> 02:07.960
+The only thing that's going to be running inside of our Docker container for the service is the actual
+
+02:07.960 --> 02:09.190
+express application.
+
+02:09.190 --> 02:13.510
+We have said that we're not going to be running our tests inside of that image at any point in time.
+
+02:13.930 --> 02:17.770
+So we don't really need to install any of these dependencies as we are building that image.
+
+02:17.770 --> 02:21.010
+That's why we installed them as development dependencies.
+
+02:21.610 --> 02:25.780
+We're not going to go over to our Docker file and we're going to update it to make sure that whenever
+
+02:25.780 --> 02:30.310
+we build an image for the service, we do not attempt to install these development dependencies.
+
+02:30.310 --> 02:35.320
+And again, so we can avoid downloading that 80 megabyte file every single time we have to rebuild our
+
+02:35.320 --> 02:35.890
+image.
+
+02:36.520 --> 02:38.050
+So I'm going to go back over to my editor.
+
+02:38.260 --> 02:44.080
+I'm going to find my Docker file inside the auth directory and I'm going to modify the NPM install command.
+
+02:44.900 --> 02:48.740
+I'm going to change the very end of it to only fraud like so.
+
+02:49.920 --> 02:51.060
+And then I'll save the file.
+
+02:51.690 --> 02:56.820
+So now if we ever decide to install more dependencies into our project or change any other file that's
+
+02:56.820 --> 03:02.070
+going to cause the image to be rebuilt, we will not have to sit around and wait for that 80 megabyte
+
+03:02.070 --> 03:02.700
+download.
+
+03:02.910 --> 03:06.750
+This might sound like a very small optimization, but you're going to see that we're going to actually
+
+03:06.750 --> 03:12.390
+have to rebuild our image several times in the coming videos or as we build in one last thing to our
+
+03:12.690 --> 03:13.460
+service here.
+
+03:13.470 --> 03:18.510
+And if we had to redownload that MongoDB memory server every single time, it would be really annoying
+
+03:18.510 --> 03:19.530
+really quickly.
+
+03:20.220 --> 03:20.570
+Okay.
+
+03:20.580 --> 03:24.350
+So back at my terminal, it looks like all those dependencies were installed.
+
+03:24.360 --> 03:27.540
+So let's take a quick pause right here and we're going to start to make use of these things.
+
+03:27.540 --> 03:30.240
+I know we haven't really discussed each of them in detail yet.
+
+03:30.330 --> 03:32.730
+We're going to start to wear them all up in the next video.

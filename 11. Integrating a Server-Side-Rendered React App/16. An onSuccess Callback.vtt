@@ -1,0 +1,322 @@
+WEBVTT
+
+00:00.570 --> 00:05.250
+After a user is successfully signs up to our application, we want to direct them back over to the landing
+
+00:05.250 --> 00:05.920
+page.
+
+00:05.940 --> 00:08.140
+So for us, that's essentially just the root route.
+
+00:08.490 --> 00:12.750
+So we need to figure out some way, number one, to actually redirect a user around inside of a next
+
+00:12.750 --> 00:13.540
+application.
+
+00:13.560 --> 00:18.270
+And number two, we need to make sure that we only do that after user has successfully signed in.
+
+00:18.750 --> 00:23.820
+Let me first show you how we redirect a user or forcibly navigate them around inside of a next app.
+
+00:24.240 --> 00:26.430
+I'm inside of my sign up file at the very top.
+
+00:26.430 --> 00:28.890
+I'm going to find the import statement that we have for Axios.
+
+00:28.920 --> 00:32.160
+We're not making use of that anymore, so I'm just going to clean it up very quickly.
+
+00:32.880 --> 00:37.920
+I'm then going to import router from next router.
+
+00:38.740 --> 00:43.480
+So this router object right here is how we're going to programmatically navigate a user around.
+
+00:43.960 --> 00:44.680
+Right now.
+
+00:44.680 --> 00:47.530
+Let's just add in a call directly inside of on submit.
+
+00:47.530 --> 00:53.290
+So we'll say regardless of whether or not we sign up successfully or not, let's just navigate our user
+
+00:53.290 --> 00:54.400
+back to the root route.
+
+00:54.820 --> 00:59.470
+So I will do so by calling router push and then providing the route that I want to navigate the user
+
+00:59.470 --> 01:00.010
+to.
+
+01:00.580 --> 01:01.810
+And that's pretty much it.
+
+01:02.320 --> 01:04.420
+So now if we save this and flip back over.
+
+01:05.890 --> 01:10.840
+Now whenever I click on sign up, even if the request is not successful, I should navigate back over
+
+01:10.840 --> 01:11.920
+to the landing page.
+
+01:11.950 --> 01:12.340
+Yep.
+
+01:12.340 --> 01:13.330
+Definitely works.
+
+01:13.870 --> 01:15.140
+All right, well, that's easy enough.
+
+01:15.160 --> 01:19.180
+So now we need to figure out how we can navigate a user only if our request is successful.
+
+01:19.630 --> 01:23.680
+There's two different ways we could approach this with our user request hook.
+
+01:24.280 --> 01:29.710
+We can either put on an A wait on do request right here because that is an asynchronous function.
+
+01:30.130 --> 01:31.120
+And then call.
+
+01:32.370 --> 01:33.900
+Whoosh right after that.
+
+01:33.900 --> 01:38.370
+So this is approach number one, but it's not going to quite work as we expect right now.
+
+01:38.400 --> 01:40.770
+Let me show you why I'm going to save this.
+
+01:40.770 --> 01:41.910
+I'm going to flip back over.
+
+01:43.220 --> 01:44.750
+I'll then click on Sign Up.
+
+01:45.740 --> 01:50.420
+So really quickly, if I look at my network request log, I'll see that the request to sign up was not
+
+01:50.420 --> 01:54.160
+successful, but I still navigated over to that landing page.
+
+01:54.170 --> 01:55.220
+So why is that?
+
+01:55.820 --> 01:59.690
+Well, inside of our user class took the do request function.
+
+01:59.900 --> 02:00.860
+Here it is right here.
+
+02:01.960 --> 02:03.850
+Is going to attempt to make the request.
+
+02:03.850 --> 02:09.970
+And if the request fails for any reason we enter this catch statement, we then set errors and that's
+
+02:09.970 --> 02:13.210
+going to cause our component, the sign up component in this case to be updated.
+
+02:13.210 --> 02:16.660
+But most importantly, we caught the error that occurred right here.
+
+02:16.660 --> 02:22.150
+So no error is going to surface back out inside this on summit function, which means no matter what,
+
+02:22.150 --> 02:26.830
+after calling due request, even if there's an error, we're still going to proceed on down to router
+
+02:27.010 --> 02:27.940
+push right here.
+
+02:28.510 --> 02:30.400
+So that's not super ideal.
+
+02:31.120 --> 02:33.640
+And there's a couple of different ways that we can deal with this.
+
+02:33.790 --> 02:39.750
+We could decide back over inside of due request that after catching this air right here, we could re
+
+02:39.760 --> 02:42.370
+throw it after updating this areas piece of state.
+
+02:42.790 --> 02:47.170
+So, for example, right after calling set errors, I could put in throw air.
+
+02:47.920 --> 02:52.840
+So I'm at re throwing the air, which means it's going to be exposed or essentially throw this line
+
+02:52.840 --> 02:55.780
+right here, which means I will never proceed on to the router.
+
+02:55.960 --> 02:56.590
+Push.
+
+02:57.530 --> 03:00.320
+So let's save that and try this out back inside of our browser.
+
+03:01.830 --> 03:02.850
+So I'll do a sign up.
+
+03:02.850 --> 03:04.770
+And now I see the air right here.
+
+03:05.160 --> 03:06.750
+And I did not get redirected.
+
+03:07.320 --> 03:12.420
+We could now put together some additional tri catch inside of On Summit to make sure that we don't see
+
+03:12.420 --> 03:14.250
+the air down here inside of our console.
+
+03:14.370 --> 03:16.200
+It doesn't really matter that we see an air down here.
+
+03:16.200 --> 03:17.280
+It's not that big a deal.
+
+03:17.280 --> 03:21.360
+But if you really care about it, we could wrap this thing with an additional tri catch.
+
+03:21.780 --> 03:26.640
+That's one way to deal with this, but another way there might be just a little bit easier to implement
+
+03:26.880 --> 03:31.770
+would be to add in an additional argument or additional parameter to our user request hook.
+
+03:32.040 --> 03:37.800
+We could call it something like on success, and as you'd guess, this would be a callback that will
+
+03:37.800 --> 03:40.860
+be invoked any time that we make a request successfully.
+
+03:41.220 --> 03:42.450
+So let's try that approach.
+
+03:43.300 --> 03:48.490
+I'm going to take that rudder top push line and move it up into this on success thing, and I'll make
+
+03:48.490 --> 03:50.680
+sure to clean up that semicolon at the very end.
+
+03:53.350 --> 03:57.790
+So now we can flip back over to user request and say after we make the request successfully, let's
+
+03:57.790 --> 03:59.560
+call this on success callback.
+
+04:01.270 --> 04:05.590
+So back inside of user request, I will do structure off on success.
+
+04:07.820 --> 04:09.260
+And then down inside of do request.
+
+04:09.260 --> 04:15.020
+After making the request and getting back a response successfully, I will check and see if the on success
+
+04:15.380 --> 04:16.610
+callback was provided.
+
+04:16.610 --> 04:19.190
+And if it was, then let's go ahead and call it.
+
+04:20.060 --> 04:25.270
+And just for convenience sake, let's provide the response data that we got inside of here as well.
+
+04:25.280 --> 04:29.300
+So I'm going to call that thing with response data not strictly required right now because we're not
+
+04:29.300 --> 04:33.620
+actually making use of the data that comes back in response, but maybe we will at some point in time.
+
+04:33.620 --> 04:35.090
+So I'm just kind of thinking ahead here.
+
+04:36.150 --> 04:40.770
+If we take this approach, we no longer need to re throw that air down here at the bottom inside that
+
+04:40.770 --> 04:41.670
+catch statement.
+
+04:43.650 --> 04:43.990
+Okay.
+
+04:43.990 --> 04:44.120
+That's.
+
+04:44.130 --> 04:44.810
+That looks pretty good.
+
+04:44.820 --> 04:46.230
+I'm going to save both these files.
+
+04:47.540 --> 04:49.130
+I'm going to flip back over.
+
+04:49.160 --> 04:50.480
+I'll refresh the page.
+
+04:51.050 --> 04:52.130
+I'll click on sign up.
+
+04:52.610 --> 04:53.420
+That looks good.
+
+04:54.100 --> 04:56.650
+And if I put in some valid information.
+
+04:57.500 --> 04:58.460
+And sign up again.
+
+04:58.700 --> 05:02.630
+I get redirected over to landing page when the request was made successfully.
+
+05:03.290 --> 05:04.520
+Well, I think that looks pretty good.
+
+05:05.500 --> 05:07.200
+Well, that's pretty much it for real.
+
+05:07.210 --> 05:08.560
+On our sign up component.
+
+05:08.920 --> 05:13.680
+Now that we have signed up, we need to make sure on our landing page let's go and look at our mockup.
+
+05:13.690 --> 05:15.550
+We need to show the text on the landing page.
+
+05:15.550 --> 05:17.740
+Something like you are signed in now.
+
+05:17.740 --> 05:22.090
+It's not going to be as easy as just always showing you are signed in because remember, there's really
+
+05:22.090 --> 05:23.890
+two forms to this landing page.
+
+05:23.890 --> 05:27.730
+We need to somehow detect whether or not the user is signed in and if they are not, we're going to
+
+05:27.730 --> 05:28.240
+put in.
+
+05:28.240 --> 05:29.560
+You are not signed in.
+
+05:29.560 --> 05:32.530
+Otherwise if they are signed in will show you are signed in.
+
+05:34.390 --> 05:37.750
+It's a quick pause right here, and we'll start working on this landing page in just a moment.

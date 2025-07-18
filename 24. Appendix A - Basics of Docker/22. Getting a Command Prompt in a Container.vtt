@@ -1,0 +1,196 @@
+WEBVTT
+
+00:00.630 --> 00:04.290
+In the last section we learned about the importance of the Dash flag.
+
+00:04.320 --> 00:08.430
+In this section, I want to tell you about one last use of the Docker exit command.
+
+00:08.430 --> 00:12.510
+And this use of it is probably going to be the most common that you're going to be making use of on
+
+00:12.510 --> 00:14.220
+your own personal projects.
+
+00:14.430 --> 00:19.680
+A very common thing that you're going to want to do when you are using Docker is to get Shell access
+
+00:19.680 --> 00:22.380
+or terminal access to your running container.
+
+00:22.380 --> 00:28.230
+In other words, you are going to want to run commands inside of your container without having to rerun
+
+00:28.230 --> 00:31.950
+Docker exec, Docker exec, Docker exec again and again all day.
+
+00:31.950 --> 00:37.440
+So in this section, I'm going to show you how you can open up a shell or terminal in the context of
+
+00:37.440 --> 00:39.030
+your running container.
+
+00:39.330 --> 00:40.980
+So here's what we're going to do.
+
+00:40.980 --> 00:44.040
+I'm going to flip back over to my terminal.
+
+00:44.070 --> 00:47.340
+I'm going to verify that I'm still running that reddest container.
+
+00:47.790 --> 00:51.690
+I'm going to open up a second terminal window inside of here.
+
+00:51.750 --> 00:56.130
+I'm going to run Docker PS and get my container ID.
+
+00:57.880 --> 01:01.840
+And then I'm going to run Docker Exec, dash it.
+
+01:02.050 --> 01:07.210
+I'll put the container ID in and then here's the magic I'm going to put in S-H and we'll talk about
+
+01:07.210 --> 01:09.310
+what FX is in just a second.
+
+01:09.880 --> 01:13.330
+I'm going to run that command and you'll see that I get the little pound over here.
+
+01:13.630 --> 01:18.790
+Once I'm in here, I can now start to type out typical commands that I would expect to be able to run
+
+01:18.790 --> 01:20.740
+in a Unix environment.
+
+01:20.740 --> 01:25.640
+So, for example, I could change my directory to my home directory.
+
+01:25.660 --> 01:27.810
+I can list out the files and folders inside there.
+
+01:27.820 --> 01:28.890
+Nothing there right now.
+
+01:28.900 --> 01:35.110
+Let's try going back to the root directory of Slash and then if I do an RLS, I'll see all the root
+
+01:35.110 --> 01:39.850
+files and folders of the container I could execute commands like echo.
+
+01:39.850 --> 01:40.680
+Hi there.
+
+01:40.690 --> 01:47.500
+I can export variables, environment variables like export B equals five and then echo that.
+
+01:47.500 --> 01:53.830
+So essentially when I make use of this Docker exec command with S-H over here, I get full terminal
+
+01:53.830 --> 01:58.990
+access inside the context of the container, which is extremely powerful for debugging.
+
+01:59.140 --> 02:04.660
+I could even do things like say run the docker cli directly or something, not docker c cli, but read
+
+02:04.660 --> 02:07.540
+a cli and that starts up the red is cli.
+
+02:07.540 --> 02:10.450
+And then when I'm all done, I can hit control c.
+
+02:11.480 --> 02:14.600
+And it looks like nothing's happening so quick shortcut here.
+
+02:14.600 --> 02:19.700
+If you ever are in a container and it feels like you can't hit control C to exit you can always try
+
+02:19.700 --> 02:23.150
+hitting command DX or excuse me control dx to get out as well.
+
+02:23.420 --> 02:23.750
+All right.
+
+02:23.750 --> 02:25.690
+So let's talk about what just happened there.
+
+02:25.700 --> 02:30.980
+So we ran Docker Exec, which we've seen several times before, and then we did S-H.
+
+02:30.980 --> 02:32.540
+So what is S-H?
+
+02:33.350 --> 02:39.410
+Well, S-H is the name of a program, and it's a program that is being executed inside of that container.
+
+02:39.920 --> 02:43.160
+S-H is a command processor or a shell.
+
+02:43.160 --> 02:48.590
+It's something that allows us to type commands in and have them be executed inside that container.
+
+02:48.860 --> 02:54.310
+You are already making use of a program very much like S-H on your own computer.
+
+02:54.320 --> 02:58.090
+Chances are if you're on MAC OS, you are probably using something like Bash.
+
+02:58.100 --> 03:01.760
+If you're on Windows, you're probably using something like Git Bash or PowerShell.
+
+03:01.790 --> 03:04.340
+Me personally, I'm making use of Z Shell.
+
+03:04.370 --> 03:09.800
+These are all programs that allow you to type commands into your terminal and have them be executed.
+
+03:09.800 --> 03:15.950
+And so when we start up S-H inside of our container, that's just another command shell that we can
+
+03:15.950 --> 03:17.690
+use to execute commands.
+
+03:18.560 --> 03:22.580
+Traditionally, a lot of the different containers that you're going to be working with are probably
+
+03:22.580 --> 03:28.190
+going to have the S-H command or the S-H program already included.
+
+03:28.220 --> 03:34.670
+Some more complete versions of containers or images are going to also have the bash command processor
+
+03:34.670 --> 03:35.120
+as well.
+
+03:35.120 --> 03:37.520
+So in some cases you can make use of bash directly.
+
+03:37.520 --> 03:42.830
+In vast majority, you're probably going to be able to run the shell inside there to start up a command
+
+03:42.830 --> 03:44.630
+prompt and type in some commands.
+
+03:45.800 --> 03:46.070
+Okay.
+
+03:46.070 --> 03:52.460
+So again, I think that you're probably going to be using Docker exec dash it with FX as the command
+
+03:52.910 --> 03:55.970
+very, very often when you start doing your own Docker development.
+
+03:56.750 --> 03:57.200
+All right.
+
+03:57.200 --> 03:59.780
+So we've spoken a whole bunch around Docker CLI.
+
+03:59.810 --> 04:01.210
+Let's take one more break here.
+
+04:01.220 --> 04:05.150
+There's just one or two quick topics I want to talk about and we'll start to move on to our next big
+
+04:05.150 --> 04:05.780
+topic.

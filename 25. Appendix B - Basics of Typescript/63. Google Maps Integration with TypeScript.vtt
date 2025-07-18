@@ -1,0 +1,193 @@
+WEBVTT
+
+00:00.890 --> 00:05.090
+In the last section, we installed Google Maps into our project as one side note here, just to really
+
+00:05.090 --> 00:08.810
+make sure everything is set up correctly, you can open up your console inside the browser and just
+
+00:08.810 --> 00:12.710
+write out Google like so, and you should see an object like that up here.
+
+00:12.890 --> 00:16.520
+If you don't see that once again, it means something was not set up correctly.
+
+00:17.280 --> 00:18.860
+All right, so now we've got everything going.
+
+00:18.870 --> 00:22.560
+We can start to think about how we're going to add in Google Map support to our project.
+
+00:23.040 --> 00:25.440
+So this is kind of an interesting scenario.
+
+00:25.470 --> 00:31.710
+Usually when we make use of typescript, we install dependencies using NPM and we import them with normal
+
+00:31.710 --> 00:33.630
+import statements like the one you see right here.
+
+00:34.110 --> 00:40.020
+However, this time around, we have added in a script directly to our HTML file, and so that script
+
+00:40.020 --> 00:43.620
+is going to be added into our project as a global variable.
+
+00:43.620 --> 00:48.270
+It means that essentially inside of our console over here, you notice how I just typed out Google by
+
+00:48.270 --> 00:48.840
+itself.
+
+00:48.840 --> 00:54.210
+This is a global excuse me, not a Google, a global variable that is available everywhere inside of
+
+00:54.210 --> 00:57.780
+our project without import statements or anything like that.
+
+00:58.320 --> 01:03.840
+The only issue is that right now, if we flip back over to our editor and inside of our indexed file,
+
+01:03.840 --> 01:05.520
+just write out Google by itself.
+
+01:05.520 --> 01:09.930
+We'll very quickly see an error message here that says cannot find any name Google.
+
+01:10.530 --> 01:16.860
+So the reason we are seeing this is that TypeScript just doesn't understand that there is a global variable
+
+01:16.860 --> 01:18.690
+available inside of our project.
+
+01:19.140 --> 01:21.390
+So we need to help TypeScript understand that.
+
+01:21.390 --> 01:26.490
+We need to help TypeScript understand that there will be a global variable available inside of our project
+
+01:26.490 --> 01:31.590
+and we need to help it understand the different methods that are available on this Google object.
+
+01:32.250 --> 01:36.360
+So to do so, we're going to install another type definition file.
+
+01:36.630 --> 01:39.540
+Remember we spoke about type definition files just a little bit ago.
+
+01:39.570 --> 01:40.920
+We installed one for Faker.
+
+01:40.920 --> 01:47.280
+JS The goal of a type definition file is to help TypeScript understand how a third party JavaScript
+
+01:47.280 --> 01:48.330
+library works.
+
+01:48.630 --> 01:56.070
+We can use these type definition files not only for NPM modules but also for script tags added in directly
+
+01:56.070 --> 01:57.660
+to our HTML file as well.
+
+01:58.660 --> 02:01.780
+So let's take a look at the documentation for the.
+
+02:02.690 --> 02:05.810
+Type definition of file we're going to add once again, I'm going to go to NPM.
+
+02:07.010 --> 02:11.810
+And the only reason I really want to pull up the documentation here so you can see the name of the package.
+
+02:11.810 --> 02:15.920
+Remember the general goal that we use or the general name that we use to get a type definition file
+
+02:15.920 --> 02:20.090
+is at types slash and then the name of the library we are using.
+
+02:20.090 --> 02:26.030
+So in this case, the technical name or as it was added to the definitely type project was Google Maps
+
+02:26.030 --> 02:26.200
+like.
+
+02:26.210 --> 02:27.950
+So that's what we are really looking for.
+
+02:28.230 --> 02:33.290
+And so you'll see right here type definition files for Google Maps, JavaScript API, which is exactly
+
+02:33.290 --> 02:36.620
+what we are using so we can take a look at the documentation.
+
+02:36.620 --> 02:40.520
+It's not really going to tell us a whole bunch besides the fact that, yep, this thing exists and you
+
+02:40.520 --> 02:44.510
+can use it to have TypeScript understand what is going on inside that library.
+
+02:45.170 --> 02:47.150
+So let's install this type definition file.
+
+02:47.150 --> 02:53.060
+This is going to tell TypeScript that there is a global variable called Google and all the different
+
+02:53.060 --> 02:55.160
+properties and functions that it has.
+
+02:55.840 --> 03:02.500
+So back inside my terminal, I'll do an NPM install at types slash Google Maps.
+
+03:05.030 --> 03:09.170
+Once I've got that added in, I can then flip back over to my editor and then once again inside of my
+
+03:09.170 --> 03:12.690
+index file, I'm going to write out Google.
+
+03:12.710 --> 03:13.490
+Like so.
+
+03:13.610 --> 03:16.610
+And now when I do that, I don't get any error message.
+
+03:17.000 --> 03:19.190
+In fact, I can actually hover over this.
+
+03:19.340 --> 03:22.880
+It's going to say something called a namespace, which we're going to learn about later on inside this
+
+03:22.880 --> 03:23.510
+course.
+
+03:24.020 --> 03:29.300
+Remember, any time that we want to inspect a third party library or even something that we wrote out
+
+03:29.300 --> 03:30.650
+as well, just be technical.
+
+03:30.650 --> 03:35.480
+We can hold down that command key or control key and then click on that thing like so.
+
+03:35.960 --> 03:40.460
+So here's the type definition file for the Google Maps JavaScript SDK.
+
+03:41.190 --> 03:47.070
+Once again, we can use this type definition file to get a better idea of how to work with this library.
+
+03:47.280 --> 03:52.440
+We can pull up the documentation or we can just try to read this stuff and figure out what is going
+
+03:52.440 --> 03:52.950
+on.
+
+03:54.110 --> 03:54.440
+All right.
+
+03:54.440 --> 03:59.930
+So now that we've got access to Google Maps, like 100% for real this time inside of our project, let's
+
+03:59.930 --> 04:01.820
+take a quick pause right here and continue.
+
+04:01.820 --> 04:05.270
+In the next video, we're going to finally get a map to appear on the screen.

@@ -1,0 +1,301 @@
+WEBVTT
+
+00:00.880 --> 00:04.760
+In the last video we spoke about two big issues in getting TypeScript and Mongoose to work together.
+
+00:04.780 --> 00:07.150
+We wrote out this model and everything looks good right now.
+
+00:07.150 --> 00:12.160
+But as we saw, as soon as we start to try to create a user, we can start to run into some issues because
+
+00:12.160 --> 00:16.030
+TypeScript is not checking the type of arguments we are passing to that constructor.
+
+00:16.330 --> 00:20.380
+So in this video, we're going to figure out how we can solve issue number one.
+
+00:20.410 --> 00:25.150
+How can we make sure that TypeScript is going to check the type of arguments that we are passing into
+
+00:25.150 --> 00:26.590
+this user constructor?
+
+00:27.920 --> 00:28.580
+To solve this.
+
+00:28.580 --> 00:30.200
+I'm going to go back over to my editor.
+
+00:30.230 --> 00:33.230
+I'm going to go up to the top of the file right after the import statement.
+
+00:33.240 --> 00:36.110
+And I'm going to write out a new interface right here.
+
+00:36.710 --> 00:40.790
+I'm going to put a comment on this interface just so we understand what it is doing as we go into the
+
+00:40.790 --> 00:41.420
+future.
+
+00:41.990 --> 00:45.320
+So I'm going to write out an comment that says an interface.
+
+00:46.500 --> 00:52.230
+That describes the properties that are required to create a new user.
+
+00:53.260 --> 01:00.160
+So in our case, to create a new user, you must provide an email that's a string and a password that
+
+01:00.160 --> 01:00.840
+is a string.
+
+01:00.850 --> 01:02.440
+That's what we want to have.
+
+01:02.710 --> 01:06.310
+So I'm going to write out an interface that describes this object right here.
+
+01:08.830 --> 01:12.100
+I'm going to call this interface user adders.
+
+01:14.300 --> 01:16.310
+Adders is short for attributes.
+
+01:16.310 --> 01:19.670
+So these are the attributes that are required to create a new user.
+
+01:20.270 --> 01:22.460
+Inside this interface, I'll write out an email.
+
+01:23.400 --> 01:26.070
+That is a string and a password.
+
+01:26.310 --> 01:27.270
+That is a string.
+
+01:28.470 --> 01:33.120
+We are now going to use this interface to make sure that anytime we try to create a new user, we are
+
+01:33.120 --> 01:35.460
+passing in the correct set of attributes.
+
+01:36.060 --> 01:39.990
+To do so, we're going to use a little trick, and this trick is going to be something that we're going
+
+01:40.100 --> 01:45.210
+to keep in mind for all the rest of this application any time we try to create a new user.
+
+01:45.570 --> 01:50.700
+Let me show you what we're going to do down at the very bottom right after we create our new user or
+
+01:50.700 --> 01:52.260
+the actual user user model.
+
+01:52.800 --> 01:56.070
+I'm going to define a new function called build user.
+
+01:57.690 --> 02:04.470
+Any time that we want to create a new user, we are going to call this function instead of calling new
+
+02:04.470 --> 02:05.130
+user.
+
+02:05.810 --> 02:07.580
+So this is something this is a little trick.
+
+02:07.580 --> 02:10.010
+This is a thing that you need to keep in mind.
+
+02:10.670 --> 02:14.930
+All the mongoose documentation that you're ever going to look at or blog posts and so on are going to
+
+02:14.930 --> 02:19.520
+say, Oh yeah, to create a new document you call new, then the name of your model and you pass in
+
+02:19.520 --> 02:20.450
+the attributes.
+
+02:20.480 --> 02:25.490
+We are not going to follow that because we cannot really do effective type checking with TypeScript
+
+02:25.490 --> 02:27.320
+if we follow this pattern.
+
+02:28.020 --> 02:32.580
+Instead, any time that we want to create a new user document, we are going to call this build user
+
+02:32.580 --> 02:33.300
+function.
+
+02:33.510 --> 02:36.810
+So that is the very important thing that you keep in mind going forward.
+
+02:38.890 --> 02:43.870
+As the argument to this function, I'm going to receive an argument called adders and we're going to
+
+02:43.870 --> 02:47.020
+put in a type here of user adders.
+
+02:50.490 --> 02:57.660
+And then inside, all we're going to do is turn right around and return a new user that gets fed that
+
+02:57.660 --> 02:58.500
+set of adders.
+
+02:58.990 --> 03:04.710
+So really doing here is putting in this extra little step just to get TypeScript involved in this process
+
+03:04.710 --> 03:05.820
+of creating a user.
+
+03:06.790 --> 03:09.920
+Because we are never going to write out new user directly inside of our code.
+
+03:09.940 --> 03:12.250
+Instead, we're going to call build user.
+
+03:12.280 --> 03:17.090
+TypeScript is going to be aware of the set of arguments that must be provided to this function.
+
+03:17.110 --> 03:19.960
+TypeScript knows we have to pass in an object that has an email.
+
+03:19.960 --> 03:21.100
+That's a string and a password.
+
+03:21.100 --> 03:21.850
+That's a string.
+
+03:22.120 --> 03:26.950
+So now, so long as we only ever create a user by using this function, TypeScript is going to have
+
+03:26.950 --> 03:30.070
+our back and make sure that we are providing the correct set of arguments.
+
+03:30.840 --> 03:34.770
+Now we can try to test this out by writing some similar code to what I showed you just a little bit
+
+03:34.770 --> 03:39.990
+ago when we were trying to call new user directly with a set of arguments that didn't make any sense.
+
+03:41.470 --> 03:43.990
+If I call, build a user and pass in an object.
+
+03:44.720 --> 03:46.430
+I'm going to throw in an email.
+
+03:48.210 --> 03:49.560
+And a password.
+
+03:51.130 --> 03:56.230
+If I now start to add in any additional arguments like let's say something like that right there, TypeScript
+
+03:56.230 --> 03:58.480
+is going to jump in and say, nope, don't do that.
+
+03:58.660 --> 03:59.140
+Awesome.
+
+03:59.140 --> 04:00.090
+That is what we want.
+
+04:00.100 --> 04:04.870
+We want TypeScript to jump in and tell us that we are making a mistake in creating a user.
+
+04:06.520 --> 04:08.740
+If I ever make a typo in a property name.
+
+04:08.740 --> 04:13.480
+So for example, if I accidentally type out pad once again, TypeScript has our back.
+
+04:14.150 --> 04:19.550
+And if we ever tried to assign a property or provide a property that is of the incorrect type, TypeScript
+
+04:19.550 --> 04:21.050
+is going to have our back as well.
+
+04:22.090 --> 04:26.500
+So if I put in a type of number right here instead of a string, I script says, Hey, sorry, but this
+
+04:26.500 --> 04:27.670
+really needs to be a string.
+
+04:28.720 --> 04:28.990
+Okay.
+
+04:28.990 --> 04:29.500
+So that's it.
+
+04:29.500 --> 04:31.990
+That is how we are going to solve issue number one.
+
+04:32.320 --> 04:38.050
+We're going to make sure that we do not call new user directly at any point in time, even though that
+
+04:38.050 --> 04:40.030
+is what the official documentation says.
+
+04:40.030 --> 04:45.340
+Instead, we are going to use this build user function because this is how we can get TypeScript involved
+
+04:45.340 --> 04:49.120
+in the process of making sure we are passing in the correct set of attributes.
+
+04:51.050 --> 04:54.890
+So we probably want to make sure that we export this function like so.
+
+04:56.050 --> 04:56.440
+All right.
+
+04:56.440 --> 05:00.820
+So now having said that, having repeated to you like four times, this is how we are going to create
+
+05:00.820 --> 05:01.440
+a user.
+
+05:01.450 --> 05:05.320
+I do want to throw out a little kind of uncertainty here.
+
+05:06.150 --> 05:08.430
+So right now we've created this new function.
+
+05:10.130 --> 05:14.840
+And now any time we want to create a user or kind of work with users in any way, we now have to import
+
+05:14.840 --> 05:19.160
+two different things from this file that is not super convenient.
+
+05:19.340 --> 05:24.410
+So even though this approach works right here, I'm wondering, is there some way that we can improve
+
+05:24.410 --> 05:24.860
+it?
+
+05:25.040 --> 05:29.960
+Is there some way that we can still make building a new user or creating a new user at least somewhat
+
+05:29.960 --> 05:35.060
+similar to what we were doing before so that we don't have to have this really high mental burden as
+
+05:35.060 --> 05:36.650
+engineers and have to memorize.
+
+05:36.650 --> 05:41.090
+Oh yeah, I always need to import this build user function any time I want to create a new user.
+
+05:41.630 --> 05:47.180
+So I'm thinking, although this definitely works, maybe we can take a very similar approach but express
+
+05:47.180 --> 05:51.650
+it in a slightly different fashion just to make it a little bit more convenient for us.
+
+05:52.410 --> 05:54.620
+So with that in mind, let's take another pause right here.
+
+05:54.630 --> 05:59.400
+We're going to figure out how to rewrite this slightly to make it just a little bit more convenient
+
+05:59.400 --> 06:00.150
+to use.

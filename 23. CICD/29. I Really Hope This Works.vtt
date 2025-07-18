@@ -1,0 +1,121 @@
+WEBVTT
+
+00:01.460 --> 00:03.500
+It's been about 15 or 20 minutes for me.
+
+00:03.500 --> 00:08.660
+So I'm now going to open up a new browser tab and try to navigate to my application at ticketing app
+
+00:08.660 --> 00:11.960
+product XYZ so I can open up a new browser.
+
+00:11.960 --> 00:13.310
+I'm going to navigate over there.
+
+00:13.730 --> 00:17.660
+And lo and behold, the application actually appears awesome.
+
+00:17.870 --> 00:22.220
+Now, as you can see, I've kind of recorded this video once or twice before, so there already is a
+
+00:22.250 --> 00:23.930
+ticket here that I have created.
+
+00:24.620 --> 00:27.830
+But once I'm here, I can definitely try to create a new account.
+
+00:27.980 --> 00:30.290
+I should be able to sign up with a new account.
+
+00:34.860 --> 00:39.270
+I should then be able to sell a ticket so I could put in something like.
+
+00:40.020 --> 00:41.600
+Football match.
+
+00:41.610 --> 00:42.660
+20 bucks.
+
+00:43.870 --> 00:45.460
+And there is my ticket right there.
+
+00:45.460 --> 00:48.370
+I can then view it and attempt to purchase it.
+
+00:50.990 --> 00:52.910
+I can get up that stripe window.
+
+00:54.390 --> 00:57.990
+One of my fake credit card number because our stripe account is still in test mode.
+
+01:01.980 --> 01:04.800
+And after that, I should be told that everything is good to go.
+
+01:04.830 --> 01:05.160
+Yeah.
+
+01:05.190 --> 01:05.550
+There we go.
+
+01:05.550 --> 01:06.210
+There's my ticket.
+
+01:06.210 --> 01:07.020
+Complete.
+
+01:07.410 --> 01:09.060
+So that is pretty much it.
+
+01:09.390 --> 01:10.950
+Our application is now deployed.
+
+01:11.490 --> 01:14.340
+So now if we ever want to make a change, the process.
+
+01:14.340 --> 01:16.100
+Well, we've gone through it several times now.
+
+01:16.110 --> 01:20.970
+We're going to make some changes on a branch, push those up to GitHub, make a pull request, merge
+
+01:20.970 --> 01:21.810
+that into master.
+
+01:21.810 --> 01:25.370
+As soon as we do, our new images will be built and applied to the cluster.
+
+01:25.380 --> 01:25.890
+That's it.
+
+01:25.890 --> 01:27.600
+That's how we make changes over time.
+
+01:28.470 --> 01:30.120
+That is pretty much it for this course.
+
+01:30.120 --> 01:32.570
+That is all the topics we are going to go over.
+
+01:32.580 --> 01:36.660
+But I'm sure you might be curious about how we can expand this application because, well, we're definitely
+
+01:36.660 --> 01:38.310
+kind of light on the styling side.
+
+01:38.310 --> 01:42.210
+We never really built in the idea of some transferable information about tickets.
+
+01:42.210 --> 01:46.590
+In other words, when you purchase a ticket, nothing really happens beyond saying, Hey, this is now
+
+01:46.590 --> 01:49.770
+assigned to you, so there might be some features you want to add in.
+
+01:49.770 --> 01:51.090
+So check out the next video.
+
+01:51.090 --> 01:55.590
+I'm going to put in a couple of notes on some things you can expand on in this application, along with
+
+01:55.590 --> 01:57.900
+some possible ways of implementing those steps.

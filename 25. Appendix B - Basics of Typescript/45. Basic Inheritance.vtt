@@ -1,0 +1,148 @@
+WEBVTT
+
+00:00.610 --> 00:01.180
+In this video.
+
+00:01.180 --> 00:06.100
+We're going to continue discussing classes in TypeScript by taking a look at the inheritance system.
+
+00:06.670 --> 00:11.230
+So right underneath my class vehicle, I'm going to get started by creating a second class definition.
+
+00:11.650 --> 00:13.720
+I'm going to call this thing car like so.
+
+00:14.490 --> 00:19.260
+I want you to think about the relationship between a car and a vehicle in the real world.
+
+00:19.290 --> 00:24.900
+I think that we would say that a car is a type of vehicle and chances are that a whatever a car can
+
+00:24.900 --> 00:25.320
+do.
+
+00:25.350 --> 00:27.180
+A vehicle should be able to do as well.
+
+00:27.330 --> 00:31.950
+So, for example, a car should be able to drive and it should probably be able to honk as well.
+
+00:32.550 --> 00:39.030
+So we would probably want our class car to have essentially all the same methods or functions of class
+
+00:39.030 --> 00:41.240
+vehicle to make that happen.
+
+00:41.250 --> 00:46.920
+We could either copy paste all these methods down here like so, or alternatively we could have our
+
+00:46.920 --> 00:49.830
+class car extend the vehicle class.
+
+00:50.460 --> 00:51.060
+To do so.
+
+00:51.060 --> 00:56.940
+I'm going to find class car right here and then right after I'm going to say extends vehicle like so.
+
+00:57.570 --> 01:01.860
+By writing in this little additional syntax right here, we're essentially telling TypeScript that we
+
+01:01.860 --> 01:07.290
+want it to take all the different methods inside of this class and essentially copy paste them over
+
+01:07.290 --> 01:08.490
+to class car.
+
+01:09.090 --> 01:11.890
+Now, there's not actually a real copy paste going on here.
+
+01:11.910 --> 01:16.710
+The actual system is a little bit more complicated, and we're going to go deeper into that system over
+
+01:16.710 --> 01:17.280
+time.
+
+01:17.280 --> 01:22.350
+But if right now we can just imagine that by adding on extends vehicle, we're essentially taking all
+
+01:22.350 --> 01:25.080
+these methods and copy pasting them down like so.
+
+01:26.750 --> 01:27.590
+So now.
+
+01:28.550 --> 01:33.100
+Where we create a new vehicle down here, rather than creating a vehicle, we can delete all that.
+
+01:33.110 --> 01:36.290
+And instead let's try creating an instance of a car.
+
+01:36.620 --> 01:39.590
+So I'm going to say car is new car like so.
+
+01:40.010 --> 01:44.750
+And then on this instance of the class, we can now call all the different methods that we had associated
+
+01:44.750 --> 01:45.800
+with vehicle.
+
+01:46.070 --> 01:50.240
+So we can say car drive and car honk like so.
+
+01:51.270 --> 01:56.250
+Now, if I save this file, flip back over to my terminal and run the file again, we're going to see
+
+01:56.250 --> 01:57.900
+the same output once again.
+
+01:58.840 --> 02:04.360
+When we have a class that extends another, we can optionally choose to override different methods.
+
+02:04.630 --> 02:09.400
+So, for example, let's say that we want our car class right here to have a different implementation
+
+02:09.400 --> 02:11.380
+of drive than the parent class.
+
+02:12.190 --> 02:16.360
+To do so we can simply redefine drive inside of car.
+
+02:17.620 --> 02:22.390
+I'm going to again annotate this with the return type of void and maybe inside there for our car rather
+
+02:22.390 --> 02:24.250
+than doing a console log of chugga chugga.
+
+02:24.280 --> 02:28.060
+I instead wanted to do a console log of like vroom.
+
+02:28.060 --> 02:28.870
+Like so.
+
+02:30.080 --> 02:34.550
+So if we now save this again and flip back over to our terminal, we can rerun the file once more.
+
+02:34.550 --> 02:36.220
+And no longer are we going to do that.
+
+02:36.230 --> 02:38.510
+Chugga, chugga and we'll see vroom instead.
+
+02:39.050 --> 02:43.790
+So we've successfully overridden a method on the child class.
+
+02:43.880 --> 02:49.280
+We refer to CAR as a child class because it is extending vehicle.
+
+02:49.580 --> 02:53.570
+We would refer to vehicle in this case as this superclass or the parent class.
+
+02:55.240 --> 02:55.540
+All right.
+
+02:55.540 --> 02:59.240
+Now that we've taken a look at basic inheritance, let's take another quick pause right here.
+
+02:59.260 --> 03:02.260
+We're going to address a couple more side topics around classes.

@@ -1,0 +1,250 @@
+WEBVTT
+
+00:00.570 --> 00:05.670
+In the last section we download it and installed Docker for Windows or Docker for Mac on your personal
+
+00:05.670 --> 00:06.360
+computer.
+
+00:06.360 --> 00:10.410
+You should now be able to run the command docker version at the command line and see a little bit of
+
+00:10.410 --> 00:11.640
+text like this appear.
+
+00:11.820 --> 00:17.400
+I now want to write out our very first kind of meaningful command with the Docker client or the Docker
+
+00:17.430 --> 00:18.180
+Clai.
+
+00:18.270 --> 00:22.470
+We're going to run a very quick command here and then we're going to go through a very specific flow
+
+00:22.470 --> 00:25.260
+of actions that occurred when that command got executed.
+
+00:25.260 --> 00:26.760
+So here's the command.
+
+00:26.760 --> 00:28.800
+We're going to write Docker Run.
+
+00:28.800 --> 00:30.750
+Hello World.
+
+00:30.750 --> 00:33.150
+Yes, it is kind of a hello world thing of sorts.
+
+00:33.150 --> 00:35.130
+Don't worry, it's going to be rather interesting.
+
+00:35.400 --> 00:41.040
+I'll then press enter and we're going to very quickly see a lot of text start to scroll along the screen.
+
+00:41.250 --> 00:46.290
+Now I'm going to scroll up a little bit and you'll see a little hello from Docker Message right here
+
+00:46.290 --> 00:50.940
+and then you'll notice underneath that it lists out the series of steps that just occurred when you
+
+00:50.940 --> 00:51.900
+ran that command.
+
+00:51.930 --> 00:55.200
+Now we're going to go over the series of steps right here in great detail.
+
+00:55.200 --> 00:57.930
+So if you want to, you can kind of ignore that text for right now.
+
+00:58.260 --> 01:03.240
+I'm going to scroll up a little bit further and I want you to see up here it says Unable to find image
+
+01:03.240 --> 01:04.830
+hello world locally.
+
+01:04.950 --> 01:05.220
+All right.
+
+01:05.220 --> 01:09.030
+So with that in mind, let's go take a look at a couple of diagrams that are going to help explain what
+
+01:09.030 --> 01:10.890
+just occurred when we ran that command.
+
+01:12.800 --> 01:13.850
+All right, here we go.
+
+01:13.940 --> 01:17.660
+So at the terminal, you and I executed the command docker run.
+
+01:17.660 --> 01:22.430
+Hello world that starts up the Docker client or the Docker cli.
+
+01:22.460 --> 01:28.010
+Again, the Docker cli is in charge of taking commands from you, kind of doing a little bit of processing
+
+01:28.010 --> 01:32.630
+on them and then communicating the commands over to something called the Docker server.
+
+01:32.630 --> 01:36.350
+And it's that Docker server that is really in charge of the heavy lifting.
+
+01:36.770 --> 01:42.560
+When we ran the command Docker run Hello World, that meant that we wanted to start up a new container
+
+01:42.560 --> 01:45.650
+using the image with the name of Hello World.
+
+01:45.800 --> 01:52.490
+The Hello World Image has a tiny little program inside of it whose sole purpose sole job is to print
+
+01:52.490 --> 01:54.260
+out the message that you see right here.
+
+01:54.260 --> 01:56.690
+That's the only purpose of that image.
+
+01:57.380 --> 02:02.900
+Now, when we ran that command and it was issued over to the Docker server, a series of actions very
+
+02:02.900 --> 02:04.610
+quickly occurred in the background.
+
+02:04.850 --> 02:10.970
+The Docker server saw that we were trying to start up a new container using an image called Hello World.
+
+02:11.210 --> 02:16.790
+The first thing that the Docker server did was check to see if it already had a local copy, like a
+
+02:16.790 --> 02:22.280
+copy on your personal machine of the Hello World image or that hello world file.
+
+02:22.430 --> 02:26.120
+So the Docker server looked into something called the image cache.
+
+02:26.120 --> 02:31.730
+Now because you and I just installed Docker on our personal computers, the image cache is currently
+
+02:31.730 --> 02:32.210
+empty.
+
+02:32.210 --> 02:37.790
+We have no images that have already been downloaded before, so because the image cache was empty,
+
+02:37.790 --> 02:42.410
+the Docker server decided to reach out to a free service called Docker Hub.
+
+02:42.710 --> 02:48.710
+The Docker Hub is a repository of free public images that you can freely download and run on your personal
+
+02:48.710 --> 02:49.400
+computer.
+
+02:49.670 --> 02:55.640
+So Docker Server reached out to Docker Hub and said, Hey, I'm looking for an image called Hello World.
+
+02:55.640 --> 02:56.630
+Do you have one?
+
+02:57.650 --> 02:59.420
+Of course the Docker hub does.
+
+02:59.540 --> 03:06.890
+So Docker Server downloaded this hello world file and stored it on your personal computer in this image
+
+03:06.890 --> 03:12.320
+cache where it can now be rerun at some point in the future very quickly without having to redownload
+
+03:12.320 --> 03:13.610
+it from the Docker hub.
+
+03:13.670 --> 03:20.630
+So essentially we downloaded it over here like so after that the Docker server then said, okay, great,
+
+03:20.630 --> 03:25.490
+I've got this image and now it's time to use it to create an instance of a container.
+
+03:25.580 --> 03:28.550
+And remember what we just said about a container a moment ago.
+
+03:28.640 --> 03:31.850
+An instance container is an instance of an image.
+
+03:31.850 --> 03:35.600
+Its sole purpose is to run one very specific program.
+
+03:37.200 --> 03:42.900
+So the Docker server then essentially took that single file, loaded it up into memory, created a container
+
+03:42.900 --> 03:45.810
+out of it, and then ran a single program inside of it.
+
+03:45.810 --> 03:49.950
+And that single program's purpose was to print out the message that you see right here.
+
+03:50.490 --> 03:51.630
+So that's pretty much it.
+
+03:51.630 --> 03:54.680
+That's what happens when you run this Docker run command.
+
+03:54.690 --> 03:59.640
+It reaches out to Docker Hub, it grabs the image and then it creates a container out of that image.
+
+03:59.850 --> 04:04.890
+Now, one thing that you'll notice that's kind of interesting, if we run the Docker run hello World
+
+04:04.890 --> 04:11.790
+Command a second time, you'll notice that we are not going to see the message of downloading or container
+
+04:11.790 --> 04:14.050
+image not found locally that we saw the first time.
+
+04:14.070 --> 04:15.990
+So scroll back up to the very top.
+
+04:16.600 --> 04:18.510
+Here's the first time that we ran the command.
+
+04:18.540 --> 04:21.480
+You'll notice that up here it said, unable to find image locally.
+
+04:21.480 --> 04:27.060
+But now the second time, we did not see that message and that is because we already downloaded it to
+
+04:27.060 --> 04:29.380
+our image cache on our personal computer.
+
+04:29.400 --> 04:34.080
+So the big lesson here is that the first time that you try to make use of any of these public images
+
+04:34.080 --> 04:36.930
+over here, you're going to have to do a little bit of a download.
+
+04:36.930 --> 04:42.090
+But then in the future after that, you can start up a container using that image much more quickly
+
+04:42.090 --> 04:44.880
+because the image has already been downloaded to your computer.
+
+04:45.510 --> 04:46.080
+All right.
+
+04:46.770 --> 04:51.360
+Now, in this entire flow, one thing that we've been kind of light on at this point is talking about
+
+04:51.360 --> 04:53.670
+exactly what a container is.
+
+04:53.670 --> 04:55.530
+So let's take a quick pause right here.
+
+04:55.530 --> 04:59.820
+We're going to come back the next section and go into a little bit greater detail on exactly what a
+
+04:59.820 --> 05:00.510
+container is.
+
+05:00.510 --> 05:02.640
+So a quick break and I'll see you in just a minute.

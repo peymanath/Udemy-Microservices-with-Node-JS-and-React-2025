@@ -1,0 +1,316 @@
+WEBVTT
+
+00:01.350 --> 00:02.640
+Our test suite is up and running.
+
+00:02.640 --> 00:06.870
+So let's create a test file to make sure that the new route handler is working as expected.
+
+00:07.170 --> 00:11.220
+Inside of my roots directory, I'll make a new folder of underscore, underscore.
+
+00:11.550 --> 00:12.510
+Test, underscore.
+
+00:12.510 --> 00:13.260
+Underscore.
+
+00:13.920 --> 00:18.460
+And then inside that directory, I'll make a new file of new tests.
+
+00:19.220 --> 00:22.880
+So we're going to write out some number of tests inside this file to make sure that the new handler
+
+00:22.880 --> 00:24.290
+is working as expected.
+
+00:24.770 --> 00:27.470
+I'm going to go back over to the new root handler really quickly.
+
+00:28.190 --> 00:32.630
+You might recall from the ticket service, we wrote out a decent number of tests to make sure that some
+
+00:32.630 --> 00:35.090
+different handlers enforced authentication.
+
+00:35.120 --> 00:40.820
+We also wrote out some tests to make sure that users were providing some valid body information or parameters
+
+00:40.820 --> 00:42.140
+with the request as well.
+
+00:42.790 --> 00:44.800
+We already took a look at how to write those tests.
+
+00:44.800 --> 00:47.820
+So we're not going to focus on writing those tests for the order service.
+
+00:47.830 --> 00:52.510
+If you want to add those tests in and it definitely is worth adding them in, feel free to do so on
+
+00:52.510 --> 00:56.080
+your own so you can write out some tests to make sure that a user is authenticated.
+
+00:56.080 --> 01:01.000
+And if they're not, we should respond within error and we should make sure that we have a test that
+
+01:01.000 --> 01:04.480
+checks to make sure that the body of the request has a valid ticket ID as well.
+
+01:04.480 --> 01:06.250
+So it's totally up to you if you want to write those.
+
+01:06.250 --> 01:09.520
+We're not going to read about them going forward because we already took a look at it in the past.
+
+01:09.910 --> 01:13.630
+Instead, we're going to really focus on the business logic of our different handlers.
+
+01:13.990 --> 01:16.000
+So we're going to make sure that we handle the case.
+
+01:17.590 --> 01:20.680
+In which a user tries to reserve a ticket that does not exist.
+
+01:21.730 --> 01:26.320
+Make sure we handle the case in which a user tries to reserve a ticket that has already been reserved.
+
+01:27.130 --> 01:32.470
+And then finally handled the success case as well when a user actually successfully reserves a ticket.
+
+01:32.980 --> 01:36.370
+So in total, we're going to focus on writing just three tests around this handler.
+
+01:36.670 --> 01:37.750
+So let's get to it.
+
+01:38.230 --> 01:42.940
+Back inside the new test file, we're going to write out the three statements right away.
+
+01:43.630 --> 01:46.690
+So we'll say, how about it returns an error.
+
+01:47.730 --> 01:51.810
+If the user tries to reserve actually let's shorten this thing.
+
+01:51.810 --> 01:55.830
+How about returns an error if the ticket does not exist?
+
+01:55.860 --> 02:00.570
+Let's be a little bit more direct rather than writing out a super long description.
+
+02:01.600 --> 02:03.440
+Then how about returns and air?
+
+02:03.460 --> 02:05.530
+If the ticket is already.
+
+02:06.220 --> 02:07.090
+Reserved.
+
+02:09.520 --> 02:13.150
+And then finally it reserves a ticket.
+
+02:13.150 --> 02:17.230
+So this will be our success case in which everything goes as expected.
+
+02:18.860 --> 02:23.420
+Now, in all the tests we had written previously, we essentially could just write out some implementation
+
+02:23.420 --> 02:26.060
+inside of each of these different statements, and that was it.
+
+02:26.270 --> 02:30.410
+But now that we're working on a slightly more complicated service where we're essentially operating
+
+02:30.410 --> 02:35.090
+over multiple different types of records, we're going to see that in some cases we've got to do a decent
+
+02:35.090 --> 02:37.490
+amount of setup before any test runs.
+
+02:37.730 --> 02:43.370
+So, for example, with our second and third cases right here, we're going to need to make sure that
+
+02:43.370 --> 02:47.060
+there is a valid ticket inside the database so we can actually find.
+
+02:47.270 --> 02:52.310
+So before we write out any test implementation or actually any logic to make the request itself, we
+
+02:52.310 --> 02:54.860
+have to manually save a ticket into the database.
+
+02:55.160 --> 02:56.450
+So just keep that in mind.
+
+02:57.660 --> 02:57.800
+Okay.
+
+02:57.870 --> 02:59.460
+So let's take care of this first statement.
+
+02:59.460 --> 03:04.170
+First, let's add in a couple import statements at the very top to make the request.
+
+03:04.440 --> 03:05.910
+So we'll get request.
+
+03:06.960 --> 03:08.310
+From super test.
+
+03:09.660 --> 03:14.190
+And app from up to directories app.
+
+03:18.300 --> 03:22.590
+So then for the very first one right here, pretty much just make the request, make sure we get a 404
+
+03:22.590 --> 03:23.160
+back.
+
+03:23.670 --> 03:29.160
+Do keep in mind as well that even though we are not going to directly test and make sure that we've
+
+03:29.160 --> 03:33.850
+got this body validation going on, this body validation is still going to be executed.
+
+03:33.870 --> 03:39.120
+So in other words, we do have to make sure that we provide some kind of valid ID for the ticket ID
+
+03:39.120 --> 03:40.310
+in the body of the request.
+
+03:40.320 --> 03:44.430
+And when I say valid ID, I mean a valid MongoDB object ID.
+
+03:45.520 --> 03:51.910
+So we do have to import Mongoose at the top as well so we can generate randomly a valid object ID at
+
+03:51.910 --> 03:52.600
+the very top.
+
+03:53.320 --> 03:55.960
+I will get mongoose from mongoose.
+
+03:57.360 --> 04:02.160
+So then inside this first test right here, let's randomly generate an ID, we'll then make a request
+
+04:02.160 --> 04:04.010
+attempting to create a new order.
+
+04:04.020 --> 04:07.980
+Now we're going to simply expect it to return a four of four status code.
+
+04:08.670 --> 04:10.050
+So I'll say ticket.
+
+04:10.680 --> 04:11.340
+I'd.
+
+04:12.120 --> 04:15.240
+Is Mongoose types object ID.
+
+04:15.270 --> 04:16.860
+That's how we create a new random ID.
+
+04:16.890 --> 04:18.090
+We've seen that once before.
+
+04:19.630 --> 04:21.220
+Then we'll go ahead and make our request.
+
+04:21.520 --> 04:24.100
+Though we will await request to app.
+
+04:25.410 --> 04:28.590
+I'm going to do a post request to API orders.
+
+04:29.380 --> 04:33.670
+And then remember we are requiring authentication, so we have to set our cookie in the same way we
+
+04:33.670 --> 04:34.540
+had previously.
+
+04:34.840 --> 04:39.670
+So to do so, we had copied over that implementation from our test setup file.
+
+04:40.400 --> 04:46.100
+So we want to call sign in off the global object, and we're going to use that to set the cookie header
+
+04:46.100 --> 04:47.060
+on our request.
+
+04:47.600 --> 04:53.030
+So we'll say dot set, cookie global, sign in.
+
+04:56.380 --> 05:01.120
+Well, then send along in the body the request, the ticket ID that we just generated in the step previously.
+
+05:01.150 --> 05:01.900
+So I'll put in a ticket.
+
+05:01.930 --> 05:03.520
+ID ticket.
+
+05:04.660 --> 05:09.430
+ID and actually we can condense that down to just ticket ID and probably condense it down to one line
+
+05:09.430 --> 05:10.120
+as well.
+
+05:10.970 --> 05:13.970
+And then finally, we will expect to get back 400 for.
+
+05:17.080 --> 05:18.740
+So that should be it for the very first test.
+
+05:18.760 --> 05:22.630
+Let's save this flight back over to our terminal and see how we're doing.
+
+05:23.290 --> 05:25.060
+It looks like that test is passing.
+
+05:26.180 --> 05:28.480
+Just to make sure that it actually is passing correctly.
+
+05:28.490 --> 05:31.190
+I'm going to go back over to the new test handler itself.
+
+05:31.610 --> 05:34.430
+I'm going to find where we are throwing a not found error.
+
+05:35.240 --> 05:39.560
+I'm going to copy the battery there and put it right above the not found air.
+
+05:39.860 --> 05:42.620
+So now we're going to get back a status code of 401.
+
+05:42.620 --> 05:46.250
+As opposed to a 404 or a 400.
+
+05:46.250 --> 05:48.170
+That's what our battery is going to throw.
+
+05:48.440 --> 05:52.370
+So this is going to, of course, our test to fail just to make sure that it's failing in the correct
+
+05:52.370 --> 05:52.790
+way.
+
+05:53.390 --> 05:54.860
+So I'll save that flip back over.
+
+05:55.070 --> 05:55.520
+All right.
+
+05:55.520 --> 05:57.500
+Definitely getting the correct thing here.
+
+05:57.530 --> 06:03.110
+So we got 400 instead of the 404 that was expected, which means our test is probably working as expected.
+
+06:04.420 --> 06:05.360
+So that's our first test.
+
+06:05.380 --> 06:08.290
+Quick files right here and we'll take care of the next two in just a moment.

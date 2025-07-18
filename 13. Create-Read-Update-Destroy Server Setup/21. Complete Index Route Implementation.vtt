@@ -1,0 +1,343 @@
+WEBVTT
+
+00:01.290 --> 00:03.600
+All right, you guessed it, onto our next row handler.
+
+00:03.600 --> 00:05.560
+In this case, we'll take care of index.
+
+00:05.580 --> 00:11.220
+So we need a route handler where we can make a request to API tickets that should retrieve all the different
+
+00:11.220 --> 00:13.350
+tickets we have in our tickets collection.
+
+00:13.350 --> 00:17.520
+We will eventually add on some filtering to this root handler to make sure that we can only retrieve,
+
+00:17.550 --> 00:20.090
+say, tickets that are available and still for sale.
+
+00:20.100 --> 00:22.830
+But right now, we're just going to try to retrieve all tickets.
+
+00:22.980 --> 00:26.190
+So once again, we're going to write out tests, then do the implementation.
+
+00:27.050 --> 00:30.800
+As we go on, we're getting a little bit and a little bit faster with each of these.
+
+00:30.800 --> 00:34.550
+So if you're kind of tired of writing out these tests and whatnot, don't worry, we're going to get
+
+00:34.550 --> 00:36.020
+through this stuff rather quick.
+
+00:36.050 --> 00:37.580
+So back inside, my editor.
+
+00:38.590 --> 00:40.300
+I'm going to find our test directory.
+
+00:40.330 --> 00:45.820
+I'll make a new file inside there of index test ts at the top.
+
+00:46.480 --> 00:49.000
+Let's get request from super test.
+
+00:50.380 --> 00:51.820
+And app from.
+
+00:52.570 --> 00:53.980
+Up to directories at.
+
+00:55.090 --> 00:56.800
+So what do we need to test here?
+
+00:56.830 --> 01:01.000
+Well, without a doubt, we want anyone to be able to access this list of all tickets.
+
+01:01.000 --> 01:02.770
+You should not need to be authenticated.
+
+01:03.490 --> 01:05.580
+There's not really any input required for this thing.
+
+01:05.590 --> 01:09.580
+Not really any case where a user might need to provide an ID or anything like that.
+
+01:09.580 --> 01:15.220
+So I think in total we really just need maybe one test, one test to create a couple of tickets and
+
+01:15.220 --> 01:16.270
+then fetch them.
+
+01:16.840 --> 01:18.610
+So let's put that together.
+
+01:20.630 --> 01:26.780
+I'm going to write out in its statement and say it can fetch a list of tickets.
+
+01:29.470 --> 01:33.400
+But inside of here, we're going to use the same methodology for creating tickets as we did back inside
+
+01:33.400 --> 01:34.010
+of show.
+
+01:34.030 --> 01:38.410
+So in other words, we're going to make a couple of requests to create those tickets manually.
+
+01:41.590 --> 01:44.380
+So I'm going to do an O8 request to app.
+
+01:47.840 --> 01:51.320
+I'll make a post request to API tickets.
+
+01:53.290 --> 01:54.970
+I'm going to include the cookie.
+
+01:56.110 --> 01:59.200
+Not cookie, but set cookie.
+
+01:59.960 --> 02:01.580
+Then global sign in.
+
+02:03.010 --> 02:08.020
+And then I'll send in a title of whatever and a price of How about 20?
+
+02:08.500 --> 02:10.000
+And then I'm going to repeat that.
+
+02:10.860 --> 02:12.090
+But just once more.
+
+02:13.620 --> 02:19.050
+So that's going to build out two separate tickets for me rather than having these two calls directly
+
+02:19.050 --> 02:21.310
+in a row and making this really confusing.
+
+02:21.330 --> 02:24.570
+Another engineer might look at this and think there's actually some difference between this.
+
+02:24.750 --> 02:27.540
+We're just plain repeating these identical requests in a row.
+
+02:27.540 --> 02:30.660
+So how about instead we extract that into a little helper function?
+
+02:30.930 --> 02:33.990
+So how about we call it create ticket up here at the top?
+
+02:36.410 --> 02:40.240
+And then inside there I will return and I'm going to delete the keyword.
+
+02:40.260 --> 02:44.420
+O8 So we're going to make the request and then immediately return the promise.
+
+02:45.460 --> 02:48.580
+So now I can call that much more easily from down inside of my test.
+
+02:49.860 --> 02:54.000
+So I can call it create ticket, not trick it, but ticket.
+
+02:54.630 --> 02:59.250
+And because we get back a promise from this, we do want to await it so that we can allow time for the
+
+02:59.250 --> 03:00.420
+request to be completed.
+
+03:00.630 --> 03:03.720
+So I'm going to chain on or place an A wait right before.
+
+03:04.260 --> 03:05.250
+And then how about in total?
+
+03:05.250 --> 03:06.720
+Let's create three tickets.
+
+03:07.810 --> 03:08.050
+Okay.
+
+03:08.080 --> 03:09.040
+That looks reasonable.
+
+03:09.850 --> 03:11.660
+So now we can do a request.
+
+03:11.680 --> 03:17.290
+What we're actually trying to test here, we're going to do a get request to API tickets and we're really
+
+03:17.290 --> 03:21.100
+just going to expect that we get three objects in response.
+
+03:22.480 --> 03:24.040
+So I'm going to make a request.
+
+03:24.040 --> 03:25.330
+I'll capture the response.
+
+03:27.920 --> 03:30.770
+I want to do a get request to API tickets.
+
+03:31.570 --> 03:36.160
+I'm going to send that off and I'm going to expect to get back a status code of 200.
+
+03:38.100 --> 03:41.700
+Then inside the response, we're going to have a body property in there that has the information that
+
+03:41.700 --> 03:43.200
+was actually sent back to us.
+
+03:43.710 --> 03:47.880
+I'm going to assume we haven't really discussed the design of this thing just yet, but I'm going to
+
+03:47.880 --> 03:53.040
+assume that our index route or this kind of listing route is going to send back an array of objects.
+
+03:53.370 --> 03:56.540
+So I'm really just going to look at the response dot body property.
+
+03:56.550 --> 04:00.480
+I'm going to expect that to be an array and that it has length three because there should be three tickets
+
+04:00.480 --> 04:01.350
+that we are returning.
+
+04:02.510 --> 04:08.540
+So I will write out expect response body length to equal three.
+
+04:10.500 --> 04:11.460
+And that should be it.
+
+04:12.490 --> 04:13.030
+As usual.
+
+04:13.030 --> 04:14.080
+We can save this.
+
+04:15.390 --> 04:16.740
+Go back over to our terminal.
+
+04:17.250 --> 04:20.430
+I see the new test appear and not unpredictably.
+
+04:20.430 --> 04:21.720
+I get a 404.
+
+04:23.150 --> 04:23.470
+Okay.
+
+04:23.540 --> 04:24.120
+Not bad.
+
+04:24.140 --> 04:26.250
+Let's go in to find our actual handler.
+
+04:26.270 --> 04:29.400
+So inside the rat's directory, new file indexed?
+
+04:29.730 --> 04:30.110
+Yes.
+
+04:31.290 --> 04:33.630
+And very similar to the other route handlers at the top.
+
+04:33.630 --> 04:35.700
+Let's import express.
+
+04:37.210 --> 04:40.330
+Request response from Express.
+
+04:41.220 --> 04:44.940
+And I'm definitely going to need my ticket model to make a query as well.
+
+04:45.240 --> 04:47.730
+I'll go up one directory model's ticket.
+
+04:49.130 --> 04:50.480
+I'll then create my router.
+
+04:53.360 --> 04:57.140
+And I'll associate a get route of API tickets.
+
+04:58.170 --> 05:01.740
+I'm going to put in an async handler since we definitely have to make a database query.
+
+05:03.030 --> 05:04.650
+I'll get my request.
+
+05:05.360 --> 05:06.590
+And Rez.
+
+05:08.100 --> 05:09.120
+Then inside of here.
+
+05:09.480 --> 05:10.650
+Let's get our tickets.
+
+05:11.870 --> 05:16.070
+We'll do an a weight ticket, find and throw in an empty object.
+
+05:16.070 --> 05:20.510
+That empty object right there usually use for filtering if you want to have any kind of conditions on
+
+05:20.510 --> 05:24.320
+what records we actually find, we're putting in an empty object right now to say, just give us all
+
+05:24.320 --> 05:25.910
+the tickets inside this collection.
+
+05:27.350 --> 05:30.260
+After that, we can take those tickets and send them back.
+
+05:31.010 --> 05:32.030
+And that's pretty much it.
+
+05:33.990 --> 05:36.700
+Well, what we've written out right here is not quite everything we need.
+
+05:36.720 --> 05:40.680
+We do have to export this router and wire it up inside of our file.
+
+05:41.190 --> 05:43.950
+So at the bottom, I'm going to export router as.
+
+05:44.710 --> 05:46.900
+Index ticket router.
+
+05:50.250 --> 05:53.160
+Then back over to our app file at the top.
+
+05:53.160 --> 05:55.380
+We will import it right after all the other routers.
+
+05:55.590 --> 06:00.090
+So index ticket router from routes index.
+
+06:01.550 --> 06:04.040
+And then finally wired that up to our app.
+
+06:04.280 --> 06:07.820
+So app use index ticket router.
+
+06:11.100 --> 06:15.270
+Let's make sure we save all the files we've changed and we'll go back over to our terminal, see how
+
+06:15.270 --> 06:16.200
+our tests are doing.
+
+06:17.240 --> 06:18.970
+It looks like we're passing very good.
+
+06:19.300 --> 06:23.080
+That means that we successfully created three tickets and then fetched all three them.
+
+06:24.070 --> 06:25.870
+One route handler left.
+
+06:25.870 --> 06:28.220
+All we have to do is take care of put.
+
+06:28.240 --> 06:31.000
+So let's tackle that entire thing in the next video.

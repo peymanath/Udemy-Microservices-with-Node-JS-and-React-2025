@@ -1,0 +1,235 @@
+WEBVTT
+
+00:01.340 --> 00:06.020
+In this video, we're going to make sure that the common service watches for the event of comment moderated.
+
+00:06.320 --> 00:10.370
+We're going to make sure that we take some information about the comment that was just moderated and
+
+00:10.370 --> 00:12.770
+update our local definition of that comment.
+
+00:12.770 --> 00:17.210
+So the status should go from pending to either approved or rejected.
+
+00:17.920 --> 00:22.450
+Now, once again, I just want to remind you that understanding the different properties that are inside
+
+00:22.450 --> 00:24.490
+of each of these events is super critical.
+
+00:24.760 --> 00:28.780
+So I took a little bit of time just to kind of document out exactly what's going on right now with the
+
+00:28.780 --> 00:35.440
+comment moderated event comment moderated has an ID, content post ID and status and status is going
+
+00:35.440 --> 00:37.570
+to be either approved or rejected.
+
+00:38.970 --> 00:44.010
+It's going to be emitted from the moderation service and we're going to receive it inside of comments.
+
+00:44.310 --> 00:49.380
+So let's open up comments right now and make sure we receive this event and use that updated status
+
+00:49.380 --> 00:49.950
+field.
+
+00:51.720 --> 00:53.610
+So I'm going to open up my common directory.
+
+00:53.880 --> 00:55.560
+I'll find index dogs.
+
+00:56.760 --> 00:57.360
+Inside of here.
+
+00:57.360 --> 01:01.590
+I'll go down to the post request handler we had already put together to handle incoming events.
+
+01:04.070 --> 01:09.200
+I'm going to pull off the type and data properties once again from rec body.
+
+01:10.540 --> 01:13.180
+Well then say if type is equal to.
+
+01:14.190 --> 01:15.780
+Comment moderated.
+
+01:15.930 --> 01:18.210
+Then we want to handle this thing in some way.
+
+01:20.930 --> 01:25.670
+So the first thing I do inside of here is pull out the comment that we already have stored inside of
+
+01:25.670 --> 01:29.030
+our data structure of comments by post ID.
+
+01:29.060 --> 01:33.530
+So we need to find the appropriate comment that we've already stored inside of here and update its status
+
+01:33.530 --> 01:34.130
+property.
+
+01:38.200 --> 01:40.570
+So let's get the post ID.
+
+01:41.470 --> 01:44.770
+Well, this pull all the different properties out of data because we're probably going have to use each
+
+01:44.770 --> 01:45.820
+of these very shortly.
+
+01:45.820 --> 01:48.820
+So I'll pull out the ID, post ID and status.
+
+01:48.820 --> 01:53.530
+So post ID, ID and status from data.
+
+01:55.690 --> 01:58.180
+Well, then get all of our different comments.
+
+01:59.030 --> 02:02.500
+That are associated with that post ID will say comments is.
+
+02:03.450 --> 02:07.230
+Comments by post ID at post ID.
+
+02:08.970 --> 02:13.620
+We then need to iterate through this array of comments and find the appropriate comment inside there
+
+02:13.620 --> 02:15.300
+or the one that we actually want to update.
+
+02:15.810 --> 02:17.790
+Let's say Colin's comment is.
+
+02:20.350 --> 02:21.220
+Comments.
+
+02:22.760 --> 02:23.540
+Find out.
+
+02:24.110 --> 02:26.120
+And then we're going to try to find a comment.
+
+02:28.460 --> 02:30.260
+With an ID equal to.
+
+02:31.430 --> 02:32.990
+The ID from the event.
+
+02:33.470 --> 02:35.630
+So this right here is the comment that we need to update.
+
+02:37.800 --> 02:42.330
+So we'll take that comment and we're going to update it status to be the status that we just pulled
+
+02:42.330 --> 02:43.650
+out of the event as well.
+
+02:44.690 --> 02:45.560
+And that should be it.
+
+02:45.920 --> 02:49.400
+And we don't have to actually insert this thing back into the comments of rain or anything like that,
+
+02:49.400 --> 02:51.770
+because the object is the same object in memory.
+
+02:51.770 --> 02:53.480
+It's the same object inside the array.
+
+02:53.600 --> 02:57.830
+We essentially just don't have to insert it back into the array or anything like that.
+
+02:58.930 --> 03:00.550
+So we've now updated status.
+
+03:00.880 --> 03:05.650
+So now the next thing we need to do is tell every other service inside our application that this update
+
+03:05.650 --> 03:06.460
+just occurred.
+
+03:06.700 --> 03:10.300
+That's going to be where we attempt to emit content updated.
+
+03:12.560 --> 03:14.300
+So we're going to send out an updated.
+
+03:15.150 --> 03:16.860
+That's going to go over to our bus.
+
+03:17.100 --> 03:21.450
+And once again, we're going to make sure we receive that over inside the query service.
+
+03:23.050 --> 03:26.980
+Let's also take a look at some documentation on comment updated just so we really understand the different
+
+03:26.980 --> 03:28.870
+properties that need to be inside there.
+
+03:30.090 --> 03:30.960
+So common update.
+
+03:30.960 --> 03:37.530
+It needs to have the ID of the comment, the content, the post ID and status as well.
+
+03:37.530 --> 03:40.650
+And at this point, status should be either approved or rejected.
+
+03:42.580 --> 03:45.760
+So let's put this event together and send it over to our event bus.
+
+03:47.530 --> 03:50.440
+So let's say await Axios dot post.
+
+03:51.240 --> 03:54.550
+Over to http local.
+
+03:54.570 --> 03:56.670
+Host 4005.
+
+04:00.760 --> 04:04.240
+The type of the event is going to be a comment updated.
+
+04:06.000 --> 04:12.000
+And our data is going to be once again ID content, post ID and the updated status.
+
+04:13.080 --> 04:20.040
+So ID we can use the shortened syntax here because we've already got ID post ID status and you what
+
+04:20.040 --> 04:22.110
+the comment will be in there as well.
+
+04:23.230 --> 04:24.280
+Or you can be content.
+
+04:26.830 --> 04:28.150
+So take the ID.
+
+04:29.410 --> 04:35.560
+The updated status, the post ID that this comment is associated with and the content as well.
+
+04:39.340 --> 04:43.600
+Now I'm using the syntax right here, so I'm going to make sure that I mark the enclosing function as
+
+04:43.600 --> 04:44.320
+async.
+
+04:45.280 --> 04:46.270
+And that should be it.
+
+04:47.430 --> 04:54.500
+Now the last thing we need to do is open up our query service and just make sure that we receive comment
+
+04:54.500 --> 04:55.160
+updated.
+
+04:55.490 --> 04:56.600
+So another quick pause.
+
+04:56.600 --> 04:58.190
+We'll take care of that in just a moment.

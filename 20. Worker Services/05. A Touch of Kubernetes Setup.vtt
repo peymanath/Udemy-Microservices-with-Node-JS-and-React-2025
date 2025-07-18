@@ -1,0 +1,406 @@
+WEBVTT
+
+00:00.790 --> 00:03.250
+We've got a good start to our exploration service.
+
+00:03.280 --> 00:07.120
+Now, in this video, we're going to create a Docker image out of this project.
+
+00:07.150 --> 00:09.610
+We're going to push that image off to Docker Hub.
+
+00:09.610 --> 00:14.470
+We'll then create a couple of different Kubernetes config files to make sure we load this thing up as
+
+00:14.470 --> 00:19.720
+a deployment into our cluster and also create an instance of the readiness in-memory database as well.
+
+00:20.170 --> 00:23.380
+That's a lot of fancy terminology, so let's just start writing some code.
+
+00:23.890 --> 00:24.250
+All right.
+
+00:24.250 --> 00:29.440
+So back at my terminal again, inside of exploration, we'll first build a Docker image with Docker
+
+00:29.440 --> 00:30.070
+build.
+
+00:30.550 --> 00:34.780
+I'm going to tag it with my Docker ID slash expiration.
+
+00:35.080 --> 00:37.330
+And then don't forget the dot on the very end.
+
+00:39.690 --> 00:41.270
+That will take just a moment or two.
+
+00:41.280 --> 00:42.680
+So I'm just going to let it do its thing.
+
+00:42.690 --> 00:46.290
+And then once that is all complete, once again, we're going to make sure we push this off to Docker
+
+00:46.290 --> 00:46.680
+Hub.
+
+00:49.040 --> 00:50.870
+Image build is all complete.
+
+00:50.870 --> 00:53.750
+So after that is all done, I'll do a Docker push.
+
+00:54.560 --> 00:57.110
+My Docker ID expiration.
+
+00:58.530 --> 01:00.280
+That's going to take a moment or two to push off.
+
+01:00.300 --> 01:03.210
+So while that's occurring, I'm going to go back over to my editor.
+
+01:03.450 --> 01:05.430
+We're going to find our infra directory.
+
+01:05.430 --> 01:06.720
+Inside of there is K.
+
+01:07.650 --> 01:13.440
+And once again, we're going to create a config file or expiration and create a separate one for our
+
+01:13.440 --> 01:15.120
+Redis instance as well.
+
+01:15.270 --> 01:17.250
+We'll first start off with the red instance.
+
+01:17.670 --> 01:19.500
+Now all the set up for this reddest stuff.
+
+01:19.500 --> 01:23.670
+Even if you're not familiar with Redis, it really is going to be just about identical to what we did
+
+01:23.670 --> 01:25.230
+for the Mongo deployments.
+
+01:25.560 --> 01:33.120
+So inside of K Eights, I'm going to make a new file of expiration dash, redis dash, double html.
+
+01:35.940 --> 01:40.530
+And then going to go into any of the different MongoDB deployment files.
+
+01:40.980 --> 01:42.780
+I'm just going to copy everything inside there.
+
+01:43.770 --> 01:47.130
+And take it over to the new list deployment file that we just created.
+
+01:48.550 --> 01:49.630
+Well, then go through this thing.
+
+01:49.630 --> 01:53.830
+So inside of expiration red devil and we'll change a couple of different properties.
+
+01:54.730 --> 01:56.590
+First we'll change the name.
+
+01:56.590 --> 02:03.490
+So instead of Mongo deployment, we're going to change that once, twice, three times, four times
+
+02:03.970 --> 02:07.060
+over to expiration dash redis.
+
+02:08.540 --> 02:10.970
+So make sure you now see four times in a row expiration.
+
+02:13.300 --> 02:15.220
+Inside of our listing of containers.
+
+02:15.430 --> 02:18.160
+Naturally, we do not want to run MongoDB.
+
+02:18.190 --> 02:20.230
+Instead, we want to run a copy of Redis.
+
+02:21.050 --> 02:23.150
+So I'll just replace it with the image redness.
+
+02:23.660 --> 02:28.230
+This is an actual name of an image, and if you wanted to, you could hop over to Docker Hub.
+
+02:28.250 --> 02:29.870
+Let's just do it for fun really quickly.
+
+02:30.350 --> 02:34.100
+So HubSpot, Docker, and then we can do a quick search.
+
+02:35.540 --> 02:36.650
+Or us.
+
+02:36.740 --> 02:38.900
+And that is the image that we are specifying.
+
+02:42.090 --> 02:46.290
+Now to connect to that reticence, since we do still need to have a cluster IP service.
+
+02:46.290 --> 02:52.140
+So we'll go down just a little bit and we'll change the name of this service from off Mongo service
+
+02:52.140 --> 02:56.280
+over to expiration Redis CRV.
+
+02:56.550 --> 03:00.510
+And we'll update that selector as well to expiration us.
+
+03:05.090 --> 03:06.350
+Well then update the port.
+
+03:06.470 --> 03:13.430
+So port 2701 seven is a port used by MongoDB red instead uses by default port 6379.
+
+03:13.550 --> 03:18.410
+So we'll update both these 26379 and 6379.
+
+03:20.060 --> 03:20.260
+Okay.
+
+03:20.390 --> 03:23.000
+So that is it for our reddest deployment file?
+
+03:23.090 --> 03:23.350
+Yep.
+
+03:23.360 --> 03:24.470
+Not the worst thing in the world.
+
+03:24.570 --> 03:27.690
+Naturally, this is a very simplistic deployment of lettuce.
+
+03:27.710 --> 03:30.170
+There's definitely many more options we could throw in here.
+
+03:30.170 --> 03:34.400
+But right now, as we're just getting started with this expiration service, this is good enough.
+
+03:34.700 --> 03:35.810
+So I'm going to save this.
+
+03:36.230 --> 03:36.950
+Close it out.
+
+03:38.080 --> 03:40.150
+And then we'll create a second config file.
+
+03:41.260 --> 03:42.490
+And we'll name this one.
+
+03:43.340 --> 03:44.450
+Expiration.
+
+03:45.240 --> 03:47.220
+Dash Depot html.
+
+03:48.340 --> 03:52.000
+And as you could guess, we're going to throw our deployment for the actual image inside of here.
+
+03:52.420 --> 03:55.990
+Once again, just about everything is going to be identical to the ticket's deployment.
+
+03:55.990 --> 03:57.970
+So we'll do another little copy paste.
+
+03:58.120 --> 03:59.920
+I'm going to find the tickets deployment file.
+
+04:00.760 --> 04:02.170
+Copy everything inside of there.
+
+04:02.200 --> 04:07.600
+Paste it inside of the expiration file that we just created, and we'll go through and update a couple
+
+04:07.600 --> 04:08.650
+of different properties.
+
+04:10.850 --> 04:13.030
+So once again, I'm going to do a little multi select.
+
+04:13.040 --> 04:21.620
+I'm going to change tickets once, twice, three or five, so five times.
+
+04:22.570 --> 04:24.790
+Over to expiration.
+
+04:26.980 --> 04:28.990
+Well, then take a look at the environment section.
+
+04:30.920 --> 04:34.220
+Still want to have our Nat's client ID still want to nats irl.
+
+04:34.250 --> 04:41.660
+Still want a cluster id, but we do not need a mongo URI and we also do not need a JSON web token key
+
+04:41.660 --> 04:42.290
+either.
+
+04:43.510 --> 04:46.630
+We are going to add in, however, one additional environment variable.
+
+04:46.660 --> 04:52.390
+We're going to add in something that's going to tell our expiration deployment how to connect to Redis.
+
+04:52.660 --> 04:58.420
+So we're going to put in a new environment variable here with the name of Redis underscore host.
+
+04:59.560 --> 05:06.120
+And then a value of the hostname for the server that we want to connect to, to connect to Redis.
+
+05:06.130 --> 05:10.690
+Well, we're just going to specify the service name that we had just written out inside of the expiration
+
+05:10.690 --> 05:11.860
+readiness deployment file.
+
+05:12.460 --> 05:17.080
+So the hostname or the service name that we want to connect to is expiration red SRB.
+
+05:17.650 --> 05:22.750
+So inside of our expiration deployment file for the environment variable named Redis host, we'll put
+
+05:22.750 --> 05:25.780
+in expiration Redis SRB.
+
+05:28.980 --> 05:29.290
+Okay.
+
+05:29.310 --> 05:31.440
+So that's it for the actual deployment.
+
+05:31.440 --> 05:35.970
+We'll then go down to the cluster IP service and once again we'll update this thing just a little bit.
+
+05:37.670 --> 05:41.570
+We're going to change this to a name of exploration CRV.
+
+05:42.840 --> 05:44.850
+A selector of exploration.
+
+05:45.300 --> 05:47.250
+And then what ports do we care about here?
+
+05:47.430 --> 05:48.420
+Oh, wait a minute.
+
+05:48.450 --> 05:50.520
+We don't care about any ports whatsoever.
+
+05:50.560 --> 05:55.680
+Turns out that this service is not going to be contacted by any other part of our application directly
+
+05:55.680 --> 05:56.460
+anyways.
+
+05:56.490 --> 06:00.300
+We're also not going to have any network requests going directly to the expiration service or anything
+
+06:00.300 --> 06:00.990
+like that.
+
+06:01.230 --> 06:07.620
+So in this scenario, we actually do not need a cluster IP service or expiration at all so we can delete
+
+06:07.620 --> 06:08.760
+this entire section.
+
+06:09.770 --> 06:11.750
+And the three little dashes right above it.
+
+06:12.460 --> 06:16.900
+All we really care about in this case is creating the exploration pod that's going to be running the
+
+06:16.900 --> 06:21.580
+exploration container and that thing is going to communicate with everything else asynchronously through
+
+06:21.640 --> 06:22.600
+that streaming server.
+
+06:23.790 --> 06:25.650
+So in this case, just a deployment.
+
+06:25.680 --> 06:26.520
+Nothing else.
+
+06:27.560 --> 06:28.640
+So I'm going to save this.
+
+06:28.700 --> 06:29.540
+Close it out.
+
+06:29.840 --> 06:33.920
+And then finally, let's go back over to our terminal and take a look at scaffold and see how it is
+
+06:33.920 --> 06:34.400
+doing.
+
+06:37.350 --> 06:38.720
+So back over at scaffold.
+
+06:38.730 --> 06:43.650
+It looks like my deployment was just created and if I look a little bit above that, it looks like the
+
+06:43.650 --> 06:48.570
+reddest deployment and the expiration reddest service was created as well.
+
+06:49.230 --> 06:51.600
+I don't really see any feedback from anything inside of here.
+
+06:52.470 --> 06:56.880
+That could be scaffold is just kind of stalled out, so I could always restart scaffold manually.
+
+06:56.880 --> 06:58.470
+But first I'm just going to do a quick cube.
+
+06:58.620 --> 06:59.850
+It'll get pods.
+
+07:01.870 --> 07:04.240
+And see if I can see my expiration stuff running.
+
+07:04.360 --> 07:08.180
+So when I do a get pods, I see the deployment running right there.
+
+07:08.200 --> 07:10.990
+I also see the reddest server running as well.
+
+07:11.340 --> 07:14.740
+It looks like for me everything is good to go now at this time.
+
+07:14.740 --> 07:17.500
+Incredibly possible that some pod is stuck.
+
+07:17.530 --> 07:18.570
+Without a doubt.
+
+07:18.580 --> 07:23.980
+In particular, if you just saved the expiration deployment file before you had finished pushing your
+
+07:23.980 --> 07:29.050
+Docker image up to Docker hub, you might be seeing an error saying something like error image pull
+
+07:29.050 --> 07:30.040
+or something like that.
+
+07:30.280 --> 07:32.890
+If you see any errors like that whatsoever, no problem.
+
+07:32.890 --> 07:35.060
+I would encourage you to just restart scaffold.
+
+07:35.080 --> 07:36.100
+That's pretty much it.
+
+07:36.970 --> 07:40.960
+Once you've got everything up and running, we'll take a quick pause, come back and then start working
+
+07:40.960 --> 07:43.510
+on our actual exploration service in just a moment.

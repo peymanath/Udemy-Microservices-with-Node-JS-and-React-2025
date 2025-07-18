@@ -1,0 +1,244 @@
+WEBVTT
+
+00:01.570 --> 00:03.700
+Our custom publisher is working out pretty well.
+
+00:03.700 --> 00:06.820
+But there are one or two little fixes I want to add in rather quickly.
+
+00:07.000 --> 00:12.280
+So first off, inside of our publisher file, we create the publisher right here and then we call publish
+
+00:12.400 --> 00:12.940
+publishing.
+
+00:12.940 --> 00:16.690
+Any event over to that streaming server is an asynchronous operation.
+
+00:16.960 --> 00:21.610
+The Node Nat Streaming Library is going to make request over publish event and then get some confirmation
+
+00:21.610 --> 00:23.020
+that it actually was published.
+
+00:23.260 --> 00:27.490
+There's probably going to be many scenarios where we want to somehow wait for an event to be published
+
+00:27.490 --> 00:29.900
+before doing something else in our code.
+
+00:29.920 --> 00:35.740
+So in other words, it would be really nice to be able to do and await and wait for the publish to be
+
+00:35.740 --> 00:37.060
+completed successfully.
+
+00:37.450 --> 00:41.740
+So in this video, we're going to figure out how we can somehow add in this a wait keyword right here
+
+00:41.770 --> 00:44.320
+on publish and have it actually do something.
+
+00:45.340 --> 00:45.610
+All right.
+
+00:45.610 --> 00:49.090
+So to implement this, we're going to go back over to our base publisher.
+
+00:50.200 --> 00:55.000
+And then inside the base culture class, we're going to find the Polish function in order to use the
+
+00:55.000 --> 00:56.210
+async await syntax.
+
+00:56.230 --> 01:00.940
+All we have to do is return a promise that we're going to create manually from this published function.
+
+01:01.270 --> 01:05.800
+And inside that promise function, we're going to resolve it ourselves whenever the callback function
+
+01:05.800 --> 01:09.580
+is invoked and reject it if the callback function is invoked with an error.
+
+01:09.730 --> 01:12.310
+Let's first just focus on setting up the promise itself.
+
+01:12.820 --> 01:13.930
+So inside of publish.
+
+01:14.800 --> 01:17.440
+I'm going to return a new promise.
+
+01:17.440 --> 01:21.160
+So if you've never created a promise on your own, this is how we do it.
+
+01:21.760 --> 01:23.980
+We're going to pass in a function to the promise.
+
+01:24.070 --> 01:27.370
+And this is going to be called, with two arguments, resolve and reject.
+
+01:27.580 --> 01:32.710
+So if you want the promise to resolve itself and essentially be completed successfully, we will call
+
+01:32.710 --> 01:34.040
+this resolve function.
+
+01:34.060 --> 01:36.460
+Otherwise, if something goes wrong, we'll call the reject.
+
+01:37.360 --> 01:40.090
+Well, then take our client published code right there.
+
+01:40.300 --> 01:43.330
+I'm going to cut all that and move it into the promise.
+
+01:46.000 --> 01:47.380
+Then inside the callback.
+
+01:47.410 --> 01:52.510
+The callback is what gets invoked after the Nat streaming library has actually published this event
+
+01:52.510 --> 01:53.320
+successfully.
+
+01:53.650 --> 01:56.950
+The first argument to this callback function is an error object.
+
+01:57.190 --> 02:01.900
+This will be null if no error occurred, or it will be some error if something went wrong.
+
+02:02.200 --> 02:04.090
+So we're going to take a look at that error.
+
+02:04.300 --> 02:10.390
+We'll say if there is an error, then let's return early and we're going to reject this promise with
+
+02:10.390 --> 02:11.590
+the error that just occurred.
+
+02:12.720 --> 02:19.020
+Otherwise, if we get past that, rather than doing a plain console log, we will resolve the promise.
+
+02:21.640 --> 02:26.440
+Now if you hover over publish, you'll notice that the type annotation on here is promise.
+
+02:26.440 --> 02:30.040
+That's going to resolve with a value of unknown or a type of unknown.
+
+02:30.400 --> 02:35.320
+We aren't really resolving with anything, so we're going to put on a custom annotation here of promise
+
+02:35.500 --> 02:38.140
+and say This is going to resolve with nothing at all.
+
+02:38.140 --> 02:41.620
+So now it has a more appropriate promise type.
+
+02:44.010 --> 02:44.310
+Okay.
+
+02:44.310 --> 02:45.560
+So now we can save this.
+
+02:45.570 --> 02:48.210
+We'll go back over to our publisher file.
+
+02:48.420 --> 02:50.190
+So this is where we created our publisher.
+
+02:50.190 --> 02:55.770
+We should now be able to mark the enclosing function as async and then put a weight on the publish statement
+
+02:55.770 --> 02:57.420
+and not get any error from it.
+
+02:58.260 --> 03:02.730
+So now we're going to wait for the publish to be completed successfully before executing any other code.
+
+03:02.760 --> 03:06.810
+If we care about capturing an error that might occur, for example, maybe we're not able to connect
+
+03:06.810 --> 03:08.320
+to the NAT streaming server.
+
+03:08.340 --> 03:10.980
+We could always wrap this inside of a tricky catch statement.
+
+03:12.630 --> 03:16.980
+Catch the air and then maybe do a console air with it like so.
+
+03:18.350 --> 03:19.100
+So let's save this.
+
+03:19.130 --> 03:21.410
+Go back over to our terminal and do a quick test.
+
+03:22.440 --> 03:26.010
+I'm going to make sure my listeners are running and the publisher is running.
+
+03:26.040 --> 03:27.480
+I'll then restart the publisher.
+
+03:29.740 --> 03:32.530
+And not quite starting up just yet.
+
+03:33.640 --> 03:35.150
+Oh, it's because I removed the console log.
+
+03:35.170 --> 03:37.660
+That's why if I clear the listener.
+
+03:38.140 --> 03:39.770
+Yeah, the event does get emitted.
+
+03:39.790 --> 03:43.960
+I just remove the console log where we were saying, Oh yeah, we successfully published this thing.
+
+03:44.170 --> 03:48.520
+I think it is nice to leave in a console log whenever we successfully publish an event just so we can
+
+03:48.520 --> 03:49.170
+kind of verify.
+
+03:49.170 --> 03:52.070
+I look at the logs and understand when these things are being published.
+
+03:52.090 --> 03:54.580
+So, I mean, that was kind of a case in point right there.
+
+03:54.610 --> 03:58.690
+I thought my code was not running successfully, so I am going to go back over to the base publisher
+
+03:59.380 --> 04:04.630
+and right after we do the check for an error right above the result, I will do a console log right
+
+04:04.630 --> 04:11.800
+there and say event published to subject and then I'll print out this dot subject.
+
+04:13.580 --> 04:14.480
+Let's save that.
+
+04:14.510 --> 04:15.470
+Flip back over.
+
+04:16.220 --> 04:17.090
+That's a little bit better.
+
+04:17.090 --> 04:20.420
+So now we can see even published to subject ticket colon created.
+
+04:21.140 --> 04:21.380
+Cool.
+
+04:21.380 --> 04:22.100
+So this looks good.
+
+04:22.100 --> 04:23.840
+Definitely a good improvement.
+
+04:24.080 --> 04:25.340
+Now, let's take a quick pause right here.
+
+04:25.340 --> 04:27.680
+I want to make one more improvement in the next video.

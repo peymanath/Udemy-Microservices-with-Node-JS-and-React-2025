@@ -1,0 +1,325 @@
+WEBVTT
+
+00:00.700 --> 00:04.840
+In the last video, we took a look at exactly why we were seeing this really mysterious error message
+
+00:04.880 --> 00:09.490
+any time that we were trying to fetch our current user during the server side rendering process.
+
+00:09.520 --> 00:12.520
+So now in this video, we're going to take a look at how to solve this problem.
+
+00:13.360 --> 00:13.780
+Okay.
+
+00:14.080 --> 00:16.930
+So fortunately, solving the problem is not going to be the worst thing in the world.
+
+00:16.930 --> 00:19.120
+It's more just identifying the problem.
+
+00:19.120 --> 00:20.170
+That was the big issue.
+
+00:21.360 --> 00:24.960
+So we're going to have a two kind of step solution here.
+
+00:24.990 --> 00:27.890
+We're going to configure Axios a little bit differently.
+
+00:27.900 --> 00:32.070
+We're going to configure how Axios makes requests differently depending on whether or not we are making
+
+00:32.070 --> 00:35.550
+the request from the browser or from our next JS application.
+
+00:36.420 --> 00:40.950
+If we are ever making a request from inside the browser, then we're going to configure Axios to use
+
+00:40.950 --> 00:43.740
+a base URL of basically empty string.
+
+00:43.950 --> 00:48.360
+So in other words, we're going to continue to allow the browser to figure out the domain, to make
+
+00:48.360 --> 00:51.390
+the request to if we are running inside the browser.
+
+00:51.930 --> 00:55.410
+Because as we saw just a little bit ago, there's no problem with that whatsoever.
+
+00:55.860 --> 01:01.560
+All we have to do is allow Axios to do its usual thing or more specifically the browser, to do its
+
+01:01.560 --> 01:06.720
+usual thing of appending whatever the current domain is that we're visiting onto the URL.
+
+01:08.110 --> 01:09.940
+That ticketing, for example?
+
+01:10.090 --> 01:11.760
+Totally fine, no issue whatsoever.
+
+01:11.770 --> 01:17.410
+That request did successfully get routed off to ingress engine X and then eventually to all service.
+
+01:17.890 --> 01:21.940
+So again, if we are making the request in the browser, we're not really going to worry about it too
+
+01:21.940 --> 01:22.510
+much.
+
+01:23.050 --> 01:28.510
+However, where we ran into problems was when we were making the request from the servers side rendering
+
+01:28.510 --> 01:29.170
+phase.
+
+01:29.470 --> 01:34.480
+So there's two different ways of solving this when we are making the request from inside of next Edge's.
+
+01:35.260 --> 01:37.480
+There's option number one and option number two.
+
+01:38.310 --> 01:41.850
+So for option number two, we're going to go in reverse order here for option number two.
+
+01:41.880 --> 01:47.340
+We can somehow tell Axios or something inside of Nexus that if we are running inside of next, if we
+
+01:47.340 --> 01:52.740
+are running this code during server side rendering, let's make sure that we put on the domain of that
+
+01:53.100 --> 01:54.750
+service that we're trying to reach out to.
+
+01:55.350 --> 01:57.450
+Remember, this is a little bit of trivia.
+
+01:58.220 --> 02:01.540
+Back when we were putting together all that Kubernetes stuff.
+
+02:01.550 --> 02:04.040
+If we go and take a look at our Office Depot file.
+
+02:04.700 --> 02:11.720
+We had created that cluster IP service and we gave it a name of off CRV, and that meant that any other
+
+02:11.720 --> 02:17.870
+pod or anything else inside of our cluster specifically can access this service, and therefore the
+
+02:17.870 --> 02:24.080
+pod that it governs access to by trying to go to HTTP off CRV.
+
+02:24.790 --> 02:30.470
+So that means that from inside of our next application, we could make a request to Off Dash XB.
+
+02:31.400 --> 02:36.200
+And Kubernetes would make sure that that request was forwarded on to eventually our service.
+
+02:36.230 --> 02:40.970
+Now, remember, right now I'm using that term service somewhat interchangeably between the context
+
+02:40.970 --> 02:43.010
+of microservices and the Kubernetes world.
+
+02:43.010 --> 02:48.000
+Remember that in Kubernetes service refers to a cluster IP service or a node port service.
+
+02:48.020 --> 02:50.270
+So again, kind of using that term interchangeably right now.
+
+02:50.270 --> 02:54.920
+But the point is we can essentially just tell our next application to make a request directly over to
+
+02:54.920 --> 02:55.850
+the service.
+
+02:57.250 --> 03:02.260
+Now I'm going to say that this is not a very good option because this implies that our React client
+
+03:02.260 --> 03:07.420
+code is going to know the exact service name for every different thing it's ever going to want to reach
+
+03:07.420 --> 03:08.020
+out to.
+
+03:08.170 --> 03:13.810
+So if we start to introduce other services, we're going to have to encode those exact service names
+
+03:13.810 --> 03:15.550
+into our React application.
+
+03:15.880 --> 03:17.410
+And that's just a little bit of a nightmare.
+
+03:18.290 --> 03:24.380
+The other problem is that we need to somehow know not only those service names, but also which route
+
+03:24.380 --> 03:26.540
+corresponds to which service.
+
+03:26.990 --> 03:32.180
+So we might right now it might be really easy to just look at this entire URL and say, Oh, we're making
+
+03:32.180 --> 03:34.040
+a request to some user's endpoint.
+
+03:34.070 --> 03:36.370
+Well, that's probably tied to the service.
+
+03:36.380 --> 03:42.320
+But what if some point in time we need to make a request to some mystery service like API slash fruit?
+
+03:43.040 --> 03:47.510
+Would we just naturally know that we need to make a request to some other service named Fruit?
+
+03:47.540 --> 03:51.810
+What if it was actually managed by like some produce service or something like that?
+
+03:51.830 --> 03:56.120
+So not only do we need to know the service names, we also need to know which routes correspond to which
+
+03:56.120 --> 03:57.020
+services.
+
+03:57.840 --> 04:01.930
+Fortunately, all that information has already been encoded in another location.
+
+04:01.950 --> 04:05.700
+We've already set up all that information inside of Ingress Engine X.
+
+04:06.150 --> 04:10.890
+So rather than using option number two and having our client reach directly out to the service, we're
+
+04:10.890 --> 04:12.480
+going to go with option number one.
+
+04:12.750 --> 04:16.620
+We're going to say that anytime we need to fetch data from a service inside of our Kubernetes cluster,
+
+04:16.620 --> 04:22.500
+we're going to have our next gen application reach out to an ingress engine x, which is already running
+
+04:22.500 --> 04:23.460
+inside the cluster.
+
+04:24.340 --> 04:31.030
+Ingress Engine X can then figure out where to send this request off to based upon just the path by itself.
+
+04:31.330 --> 04:35.320
+So all we have to do is say, Hey, Ingress Engine X, I'm trying to make a request to API users.
+
+04:35.320 --> 04:41.800
+Current user and Ingress Engine X already has the set of relevant rules that we put together right here.
+
+04:42.160 --> 04:47.530
+It knows how to take a request to some arbitrary endpoint and map it up to some service and some actual
+
+04:47.530 --> 04:48.010
+port.
+
+04:49.780 --> 04:54.490
+Now there's just a little bit of a challenge with this approach for option number one, and that is
+
+04:54.490 --> 04:57.430
+what domain are we making the request to?
+
+04:57.610 --> 05:02.560
+How do we somehow reach out to Ingress and Gen X while we are inside of some pod?
+
+05:02.830 --> 05:07.120
+We can very easily reach out to Ingress and Gen X from our local machine by just making a request to
+
+05:07.150 --> 05:12.670
+local host port 80 or as we have set it up, ticketing dev that's going to afford the request on to
+
+05:12.670 --> 05:13.690
+ingress in Gen X.
+
+05:13.690 --> 05:17.530
+But how do we do that same kind of thing when we are already inside the cluster?
+
+05:17.920 --> 05:19.660
+So that will be something for us to figure out.
+
+05:19.660 --> 05:25.090
+We need to figure out how to make a request directly to ingress in Gen X when we are inside the cluster.
+
+05:26.170 --> 05:27.630
+That's a little bit of a challenge to figure out.
+
+05:27.640 --> 05:29.950
+There's one other little challenge as well.
+
+05:30.280 --> 05:36.180
+Remember, our entire authentication mechanism right now works based upon cookies.
+
+05:36.190 --> 05:40.660
+And so as we're talking about somehow fetching the current user, we need to keep in mind in the very
+
+05:40.660 --> 05:46.660
+back of our head that we have some request coming into our application and it includes a cookie.
+
+05:46.990 --> 05:50.860
+And at some point in time, we're going to make a follow up request from inside of next.
+
+05:51.370 --> 05:57.850
+And that follow up request is probably going to have to include that cookie information right now.
+
+05:59.370 --> 06:01.500
+Back inside of our index file.
+
+06:01.500 --> 06:07.710
+When this gets executed on the server or inside of next, we do not have access to the browser to automatically
+
+06:07.710 --> 06:09.540
+manage that cookie or anything like that.
+
+06:09.780 --> 06:14.520
+This line of code, when it's executed in a Node.js environment, doesn't care about cookies.
+
+06:14.550 --> 06:18.360
+Cookies are the last thing that it could possibly care about in the world.
+
+06:18.600 --> 06:22.200
+So we need to figure out some way to make sure that we make this request from next.
+
+06:22.200 --> 06:25.860
+JS We take a look at the original incoming request.
+
+06:25.860 --> 06:32.130
+We extract the cookie off there and include it in the request off to ingress engine X so that when this
+
+06:32.130 --> 06:36.870
+request finally gets routed through ingress engine X over to the off service.
+
+06:37.050 --> 06:38.640
+Kind of like that right there.
+
+06:39.640 --> 06:42.010
+The service will see that incoming cookie.
+
+06:42.970 --> 06:43.240
+All right.
+
+06:43.240 --> 06:46.120
+So as you can tell, yeah, this stuff is kind of crazy.
+
+06:46.120 --> 06:48.820
+Pretty darn complicated, as I mentioned in the last video.
+
+06:49.150 --> 06:52.540
+This is really all why I wanted to take the server side rendering approach.
+
+06:52.540 --> 06:58.180
+I want you to see some of these challenges around making requests to other services from inside of our
+
+06:58.180 --> 06:58.810
+cluster.
+
+06:59.320 --> 07:01.330
+Okay, so we got our work cut out for us.
+
+07:01.330 --> 07:04.360
+So let's take a quick pause right here and continue in just a moment.

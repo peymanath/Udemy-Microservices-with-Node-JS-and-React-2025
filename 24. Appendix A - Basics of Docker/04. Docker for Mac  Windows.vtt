@@ -1,0 +1,97 @@
+WEBVTT
+
+00:00.450 --> 00:03.570
+In the last section, we tried to answer the question, what is Docker?
+
+00:03.570 --> 00:05.640
+But we didn't really get a great explanation.
+
+00:05.640 --> 00:08.100
+We said, okay, it's a reference to a bunch of products.
+
+00:08.100 --> 00:11.820
+We then started to talk about something called an image and something called a container.
+
+00:11.910 --> 00:16.770
+At this point, we need to install some more software onto our machine so that you and I can work directly
+
+00:16.770 --> 00:20.850
+with images and containers so that we can get a better idea of how they work.
+
+00:20.850 --> 00:22.770
+So here's what you and I are going to do.
+
+00:22.800 --> 00:28.470
+We're going to be installing a piece of software called Docker for Windows or Docker for Mac, depending
+
+00:28.470 --> 00:29.940
+upon your operating system.
+
+00:30.060 --> 00:35.130
+Inside of this program are two very important tools that we're going to be making use of throughout
+
+00:35.130 --> 00:35.970
+this course.
+
+00:36.480 --> 00:40.500
+The first tool that's inside this package is something called the Docker client.
+
+00:40.530 --> 00:45.240
+The Docker client, also known as the Docker CLI, is a program that you and I are going to interact
+
+00:45.240 --> 00:47.190
+with quite a bit from our terminal.
+
+00:47.190 --> 00:51.120
+We're going to enter in commands to our terminal, issue them to Docker client.
+
+00:51.120 --> 00:54.090
+It's going to take our commands and figure out what to do with them.
+
+00:54.330 --> 01:00.180
+Now, Docker, the Docker client itself, doesn't actually do anything with containers or images.
+
+01:00.180 --> 01:06.810
+Instead, the Docker client is really just a tool or a portal of sorts to help us interact with another
+
+01:06.810 --> 01:12.210
+piece of software that is included in this Docker for Windows or Mac package called the Docker server.
+
+01:12.450 --> 01:15.150
+This is also frequently called the Docker Daemon.
+
+01:15.390 --> 01:20.880
+This program right here is the actual tool or the actual piece of software that is responsible for creating
+
+01:20.880 --> 01:26.760
+containers, images, maintaining containers, uploading images, and doing just about everything you
+
+01:26.760 --> 01:29.430
+can possibly imagine around the world of Docker.
+
+01:29.550 --> 01:32.370
+So it's the Docker client that you and I issue commands to.
+
+01:32.400 --> 01:33.990
+It's the thing that we interact with.
+
+01:33.990 --> 01:38.250
+And behind the scenes this client is interacting with the Docker server.
+
+01:38.370 --> 01:41.880
+You and I are never going to really reach directly out to this Docker server.
+
+01:41.880 --> 01:44.550
+It's something that's just kind of running behind the scenes.
+
+01:45.060 --> 01:47.430
+So again, we're going to take a quick break right now.
+
+01:47.430 --> 01:51.330
+We're going to come back the next section and we're going to start installing this package so that we
+
+01:51.330 --> 01:54.930
+can get a better sense of how to work with images and containers.
+
+01:54.930 --> 01:57.270
+So quick break and I'll see you in just a minute.

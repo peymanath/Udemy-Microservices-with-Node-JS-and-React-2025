@@ -1,0 +1,130 @@
+WEBVTT
+
+00:01.100 --> 00:01.820
+The order cancelled.
+
+00:01.820 --> 00:03.410
+Listener is looking fantastic.
+
+00:03.410 --> 00:07.160
+Now to wrap up our ticket service, just a couple more little steps.
+
+00:07.400 --> 00:11.660
+First off, we have created two listeners now, so order cancelled and order created.
+
+00:11.660 --> 00:15.580
+But at no point in time do we actually start listening for incoming events.
+
+00:15.590 --> 00:19.880
+In other words, in the actual application itself, not in the test environment, do we ever create
+
+00:19.880 --> 00:22.250
+an instance, the listener, and tell it to start listening?
+
+00:22.670 --> 00:26.780
+You might recall that back inside of our order service we wired all that stuff up inside of our index
+
+00:27.110 --> 00:27.710
+file.
+
+00:27.890 --> 00:33.560
+So we're going to do that here once again, back inside my index file at the very top, I'm going to
+
+00:33.560 --> 00:35.060
+import our two listeners.
+
+00:35.700 --> 00:36.810
+So order.
+
+00:38.420 --> 00:39.440
+Created listener.
+
+00:40.490 --> 00:44.360
+From events listeners order created.
+
+00:46.110 --> 00:47.460
+I will also get my.
+
+00:49.130 --> 00:50.390
+Order a cancel listener.
+
+00:54.050 --> 00:54.650
+From Events.
+
+00:54.650 --> 00:56.540
+Listener's Order Cancel listener Wow.
+
+00:56.540 --> 00:58.430
+Those are really long import statements.
+
+00:59.210 --> 01:04.790
+Now we're going to create an instance of both these and pass in the Nats wrapper client to both them.
+
+01:05.680 --> 01:06.970
+So I'll scroll down a little bit.
+
+01:07.890 --> 01:10.410
+Right after all of our Nats connection stuff.
+
+01:11.230 --> 01:15.280
+We will throw in a new order created listener.
+
+01:16.190 --> 01:22.040
+We'll pass in at nats repr client and remember just creating an instance is not enough.
+
+01:22.070 --> 01:26.690
+We've also got on there the listen method and it's the listen function that actually tells the listener
+
+01:26.690 --> 01:28.340
+to start listening for incoming events.
+
+01:28.340 --> 01:30.590
+So we need to make sure we call listen on the very end.
+
+01:31.840 --> 01:34.450
+Well then repeat that for order cancelled.
+
+01:34.960 --> 01:35.770
+Listener.
+
+01:36.930 --> 01:37.370
+That's right.
+
+01:37.380 --> 01:38.340
+For a client.
+
+01:42.690 --> 01:43.620
+He looks good.
+
+01:46.050 --> 01:46.320
+All right.
+
+01:46.320 --> 01:50.970
+There's just one last, very small task we have to take care of inside of our ticket service.
+
+01:51.210 --> 01:56.340
+So we've now got this entire ability through these two listeners to somehow lock down a ticket and then
+
+01:56.340 --> 01:57.720
+unlock it later on.
+
+01:58.080 --> 02:02.850
+But at no point do we actually implement any logic to prevent a user from editing a ticket that is currently
+
+02:02.850 --> 02:03.600
+locked down.
+
+02:04.080 --> 02:09.940
+So this should be a very simple and simple change inside of our router file for the update route.
+
+02:09.960 --> 02:13.380
+We're just going to make sure that if a ticket is locked down, we're going to tell a user, sorry,
+
+02:13.380 --> 02:14.610
+you can't update this thing.
+
+02:14.820 --> 02:18.730
+It should be pretty easy and straightforward, but I would like to write a test around it as well.
+
+02:18.750 --> 02:21.150
+So let's take a shot at this in just a moment.

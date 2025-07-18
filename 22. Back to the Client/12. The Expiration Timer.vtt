@@ -1,0 +1,559 @@
+WEBVTT
+
+00:01.010 --> 00:02.720
+Inside of our order show component.
+
+00:02.720 --> 00:05.150
+We're now going to work on showing a little timer to the user.
+
+00:05.270 --> 00:07.640
+This timer is going to update once per second.
+
+00:07.640 --> 00:11.300
+That's going to start off at 60 seconds and eventually count down to zero.
+
+00:11.510 --> 00:16.520
+As soon as it hits zero, we're then going to hide the timer and hide the pay button and we'll show
+
+00:16.520 --> 00:20.600
+some message instead that says something like, Sorry, but your order has been canceled or it has been
+
+00:20.600 --> 00:22.460
+expired, or something similar to that.
+
+00:23.290 --> 00:27.700
+Now, first thing I want to do is show you how we can very easily get the time that we have left to
+
+00:27.700 --> 00:28.930
+actually pay for the order.
+
+00:29.720 --> 00:30.740
+So back over here.
+
+00:31.010 --> 00:36.050
+I'm going to refresh my or I'm going to go back to the ticket creation page.
+
+00:36.810 --> 00:41.100
+I'm going to make sure I've got my network request log open and I'll click on purchase.
+
+00:41.400 --> 00:44.550
+So I just made an order and I can see it inside of my network request log.
+
+00:45.090 --> 00:50.790
+So when we fetch that order, remember that it has the expires at property and that is a timestamp.
+
+00:51.270 --> 00:57.540
+So to calculate the number of seconds until it expires, that comes or passes or elapses, however you
+
+00:57.540 --> 01:04.620
+want to refer to that, we can write out new date, then paste in the expires at time.
+
+01:06.370 --> 01:06.970
+Here we go.
+
+01:08.810 --> 01:10.970
+And then from that, I'm going to subtract.
+
+01:11.970 --> 01:14.490
+New date like so.
+
+01:14.910 --> 01:21.000
+And that's going to give me the number of milliseconds until that time right there is, I suppose,
+
+01:21.000 --> 01:22.410
+in the present or right now.
+
+01:22.410 --> 01:26.940
+So if I run again, it's at 17, 16, 15, 14 and so on.
+
+01:27.150 --> 01:28.740
+Now I say 15.
+
+01:28.740 --> 01:31.740
+That means this is again 14,000 milliseconds.
+
+01:31.740 --> 01:32.880
+Divide that by 1000.
+
+01:32.880 --> 01:34.020
+That gives us seconds.
+
+01:34.020 --> 01:38.460
+So that's pretty much the calculation we need to do and we need to run that calculation once per second.
+
+01:38.940 --> 01:43.110
+Every time we run the calculation and figure out how many milliseconds are left, we're going to update
+
+01:43.110 --> 01:47.970
+a piece of state inside of our order show component and simply show that piece of state on the screen.
+
+01:47.970 --> 01:48.750
+That's pretty much it.
+
+01:48.750 --> 01:50.010
+So not the worst thing in the world.
+
+01:51.030 --> 01:51.870
+All right.
+
+01:52.840 --> 01:57.940
+So back inside of order show we first need to get access to the order that we are trying to show on
+
+01:57.940 --> 01:58.570
+the screen.
+
+01:58.900 --> 02:03.640
+And so, once again, that means we have to define a get initial prop function and fetch the order.
+
+02:04.680 --> 02:08.520
+It's all put in order so that get initial props.
+
+02:09.680 --> 02:11.510
+Again, this will be an async function.
+
+02:13.310 --> 02:16.220
+That's going to receive context and client.
+
+02:17.600 --> 02:19.940
+I'll then pull the order ID.
+
+02:21.560 --> 02:27.350
+Out of context query and again it is specifically order ID because that is how we named our file square
+
+02:27.350 --> 02:28.580
+brackets order ID.
+
+02:30.830 --> 02:32.540
+Then to fetch details about the order.
+
+02:32.540 --> 02:37.730
+I'm going to pull out data from the Axios response coming from a weight client blanket.
+
+02:39.190 --> 02:42.670
+We'll use a template string right here and put in API orders.
+
+02:43.820 --> 02:44.930
+Order ID.
+
+02:46.900 --> 02:48.790
+And then at the bottom, I'm going to return.
+
+02:49.900 --> 02:50.530
+Order.
+
+02:51.850 --> 02:52.690
+As data.
+
+02:52.900 --> 02:55.000
+Now, again, we've spoken about this several times.
+
+02:55.000 --> 02:57.970
+This object is going to be merged with all the different props go into order show.
+
+02:57.970 --> 03:02.380
+So we should now be able to structure out the order like so.
+
+03:04.910 --> 03:10.430
+So to get started, let's just try to calculate the number of seconds left before this order expires
+
+03:10.430 --> 03:13.850
+and just show that as a fixed value inside this div.
+
+03:14.550 --> 03:17.760
+So to calculate the number of seconds we have left, we would put in.
+
+03:18.830 --> 03:27.680
+M's left, which is going to stand for milliseconds left and that will be new date from order dot expires
+
+03:27.680 --> 03:31.040
+at and I'll subtract from that new date.
+
+03:32.650 --> 03:36.670
+Then inside the div I'm going to delete order show and I will replace it with.
+
+03:38.500 --> 03:40.090
+Square or curly braces.
+
+03:42.180 --> 03:49.530
+RMS left divided by 1000 just to turn it into seconds and then seconds until order expires.
+
+03:52.810 --> 03:53.020
+Okay.
+
+03:53.050 --> 03:55.570
+Let's save that and do another test.
+
+03:56.610 --> 04:00.870
+So back over here, we might immediately have a little bit of an issue.
+
+04:00.930 --> 04:04.440
+And you might also notice that we've got a negative time right here.
+
+04:04.680 --> 04:08.910
+So don't worry too much about the warning that we have down here that's related to some behind the scenes
+
+04:08.910 --> 04:11.100
+stuff going on with next JJ's totally fine.
+
+04:11.580 --> 04:15.210
+The reason we're seeing a negative value right here and chances are you see a negative one as well,
+
+04:15.210 --> 04:15.600
+is that.
+
+04:15.600 --> 04:17.580
+Well, the order itself has already expired.
+
+04:17.790 --> 04:19.140
+So let's go and create another order.
+
+04:19.140 --> 04:23.520
+And we should see it initially start off at about 60 or 59 seconds or so.
+
+04:24.550 --> 04:26.410
+So I'm going to go back to my main ticket listing.
+
+04:26.650 --> 04:29.050
+I'll view one of these tickets, I'll purchase it.
+
+04:29.110 --> 04:29.850
+And there we go.
+
+04:29.860 --> 04:33.010
+I get 59.90 9 seconds until the order expires.
+
+04:33.840 --> 04:34.170
+Okay.
+
+04:34.170 --> 04:36.330
+So not the worst thing in the world once again.
+
+04:37.720 --> 04:40.420
+So now let's put together a interval function.
+
+04:40.420 --> 04:44.680
+So we're going to use set interval to essentially run this calculation once per second.
+
+04:45.010 --> 04:49.270
+And every second we're going to recalculate the number of milliseconds left and then, like I said,
+
+04:49.330 --> 04:52.570
+update a piece of state which will cause the entire component to re render.
+
+04:53.640 --> 04:54.690
+To set up the interval.
+
+04:54.690 --> 04:59.250
+We're going to make use of the use effect hook as well to make sure that we only attempt to set the
+
+04:59.250 --> 05:01.260
+interval up exactly one time.
+
+05:01.970 --> 05:03.140
+So at the top of the file.
+
+05:04.720 --> 05:08.980
+I'm going to import use effect and use state.
+
+05:09.880 --> 05:10.750
+From React.
+
+05:12.260 --> 05:15.020
+Well, then create a new piece of state that I will call.
+
+05:15.380 --> 05:16.790
+I'm left.
+
+05:21.350 --> 05:23.570
+And I'm going to default that to be an empty string.
+
+05:25.660 --> 05:27.100
+I'm then going to create.
+
+05:28.260 --> 05:29.070
+A use effect.
+
+05:32.960 --> 05:35.000
+When my component first renders.
+
+05:35.000 --> 05:36.810
+I want to call this function right here.
+
+05:36.830 --> 05:41.180
+Only one time we're going to put together a set interval call inside of here that's going to make sure
+
+05:41.180 --> 05:43.730
+that we calculate the amount of time left once per second.
+
+05:43.760 --> 05:48.680
+I only want to set up that interval exactly once, so to make sure that I run this function only one
+
+05:48.680 --> 05:51.140
+time when the component is first displayed on the screen.
+
+05:51.320 --> 05:53.480
+I'm going to put in an empty array like so.
+
+05:55.140 --> 05:58.800
+Then inside of here, I'm going to write out a function that is going to actually calculate the amount
+
+05:58.800 --> 06:00.150
+of time that we have remaining.
+
+06:00.480 --> 06:03.240
+So I will put in find time left.
+
+06:07.270 --> 06:10.240
+I'm going to take the IMF's left line that we had just put together right here.
+
+06:10.270 --> 06:12.940
+I'm going to cut it and put it into fine time left.
+
+06:14.070 --> 06:18.000
+And then after finding the number of milliseconds left, I'm going to use that millisecond value right
+
+06:18.000 --> 06:21.690
+there to update the time left piece of state.
+
+06:23.920 --> 06:25.690
+So set time left.
+
+06:25.960 --> 06:27.760
+I'm going to pass in my left.
+
+06:28.420 --> 06:31.540
+I'm going to divide that by 1000 to convert it into seconds.
+
+06:31.750 --> 06:36.130
+And then I'm also going to round this value so we don't get the 59.99.
+
+06:36.130 --> 06:38.590
+Instead, we'll round it to just 60 seconds.
+
+06:39.360 --> 06:43.650
+So I'm going to round the little calculation right there with a math round.
+
+06:46.920 --> 06:51.600
+So now every time that we call Find Time Left, we're going to update our time left piece of state.
+
+06:51.840 --> 06:55.530
+Now we just need to make sure that we call that little helper function once per second.
+
+06:56.760 --> 06:59.530
+So right after that function, I'm going to set up a interval.
+
+06:59.550 --> 07:00.750
+So a set interval.
+
+07:02.610 --> 07:04.040
+I'm going to tell this thing to call.
+
+07:04.050 --> 07:05.370
+Find time left.
+
+07:05.730 --> 07:07.980
+Once every second, though.
+
+07:07.980 --> 07:09.900
+Once every 1000 milliseconds.
+
+07:10.680 --> 07:14.280
+Once again notice that I do not have any parentheses after fine time left.
+
+07:14.280 --> 07:18.990
+If we put parentheses on there, then that is going to invoke that function and then pass the result
+
+07:18.990 --> 07:20.020
+off to set interval.
+
+07:20.040 --> 07:21.030
+That's not what we want.
+
+07:21.060 --> 07:25.380
+We want to provide a reference to the fine time left function to set interval instead.
+
+07:26.700 --> 07:26.940
+Okay.
+
+07:26.970 --> 07:29.260
+Now, this right here is going to more or less work.
+
+07:29.280 --> 07:33.510
+We do have to update the render or the actual returning down here.
+
+07:33.660 --> 07:37.440
+But before we actually test this out, there are two little shortcomings around it.
+
+07:37.830 --> 07:43.710
+First off, set interval is going to run for the first time, 1000 milliseconds into the future.
+
+07:43.710 --> 07:48.720
+So in other words, when you call set interval, it's going to wait that amount of time before calling
+
+07:48.720 --> 07:50.520
+that function for the very first time.
+
+07:51.130 --> 07:55.350
+So that means that inside of our app, we're going to essentially have to wait 1/2 when this component
+
+07:55.350 --> 07:58.320
+is first rendered before we're going to see any time up here.
+
+07:59.170 --> 08:00.160
+Probably not what we want.
+
+08:00.190 --> 08:02.710
+We do not want to go 1/2 without showing any time.
+
+08:02.710 --> 08:05.140
+We want to show a time remaining up here instantly.
+
+08:05.530 --> 08:08.230
+So I'm going to manually invoke find.
+
+08:08.230 --> 08:10.120
+I'm left immediately.
+
+08:10.690 --> 08:12.880
+That's going to update our time left right away.
+
+08:12.880 --> 08:16.840
+And then 1/2 later start to call it again and again and again.
+
+08:18.500 --> 08:20.300
+That's first fixed, number one.
+
+08:20.330 --> 08:25.160
+The second little fix, whenever we call set interval, that's going to set up an interval or a timer
+
+08:25.160 --> 08:28.220
+that's going to run forever unless we actually stop it.
+
+08:28.670 --> 08:32.930
+So if we ever navigate away from this component, the timer is still going to be running.
+
+08:33.050 --> 08:37.790
+So we need to make sure that if we ever navigate away, we stop the interval entirely.
+
+08:39.040 --> 08:43.730
+So to do so, whenever we set up an interval, we're going to get back a timer ID.
+
+08:44.170 --> 08:48.250
+This is an integer that is going to identify the interval that we just created.
+
+08:49.010 --> 08:51.920
+Then to make sure that we turn off or stop this interval.
+
+08:51.920 --> 08:57.200
+As soon as we navigate away from this component, I'm going to return a function from use effect.
+
+08:58.190 --> 09:02.510
+And inside there I will call clear interval and pass in the timer ID.
+
+09:03.530 --> 09:09.050
+Whenever we return a function from user effect, that function will be invoked if we are about to navigate
+
+09:09.050 --> 09:14.150
+away from this component or if the component is going to be rendered, it's only going to call it if
+
+09:14.150 --> 09:15.710
+the component is about to be rendered.
+
+09:15.740 --> 09:21.320
+If we have a dependency listed inside of this array right here, but since we have an empty array,
+
+09:21.530 --> 09:25.760
+this function is only going to be called if we navigate away or stop showing this component for some
+
+09:25.760 --> 09:26.300
+reason.
+
+09:27.790 --> 09:28.050
+Okay.
+
+09:28.060 --> 09:28.870
+So this should work.
+
+09:28.900 --> 09:30.850
+Last thing we have to make or take care of, though.
+
+09:30.850 --> 09:35.760
+We have to make sure that we actually use time left inside of our div down here instead of the RMS left.
+
+09:35.770 --> 09:37.090
+So let's update that div.
+
+09:38.640 --> 09:42.300
+And we'll say about time left to pay.
+
+09:43.710 --> 09:45.120
+And we'll stick in here.
+
+09:45.780 --> 09:48.150
+I'm left seconds.
+
+09:49.620 --> 09:50.760
+And that should be it.
+
+09:52.290 --> 09:56.850
+Now just you know, we might get a little warning when we try to run this code because we are referencing
+
+09:56.850 --> 09:58.770
+some kind of dependency inside of here.
+
+09:59.520 --> 10:01.770
+Without referencing it inside of that array.
+
+10:01.770 --> 10:05.670
+So if you see a warning inside of your console that says something like, Oh, you have to provide a
+
+10:05.670 --> 10:07.380
+dependency list to use effect.
+
+10:07.410 --> 10:09.990
+What we got to do is add inside of here order like.
+
+10:09.990 --> 10:12.870
+So that should make that little warning that might pop up go away.
+
+10:14.330 --> 10:15.250
+So let's save that.
+
+10:15.250 --> 10:16.270
+I'm going to flip back over.
+
+10:17.130 --> 10:19.680
+I can refresh and there we go.
+
+10:19.710 --> 10:22.230
+So we're going further and further negative right now.
+
+10:23.360 --> 10:27.260
+Well, let's try to create another order and make sure that it just counts down from 60.
+
+10:27.970 --> 10:29.600
+So I'll go back to my list of tickets.
+
+10:29.620 --> 10:30.990
+I'm going to create a new order.
+
+10:31.000 --> 10:34.720
+There we go, 60, 59, 58, 57 and so on.
+
+10:35.510 --> 10:36.800
+Well, timer definitely works.
+
+10:36.800 --> 10:37.760
+Definitely looks good.
+
+10:38.030 --> 10:44.570
+Now, all we have to do is make sure that once this thing hits 0 seconds, we update the entire component
+
+10:44.570 --> 10:49.940
+and presumably show something that instead of says time left to pay, we should instead just say sorry
+
+10:49.940 --> 10:51.290
+about the order has expired.
+
+10:52.080 --> 10:53.900
+Let's give that a shot in just a moment.

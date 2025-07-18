@@ -1,0 +1,514 @@
+WEBVTT
+
+00:01.190 --> 00:05.530
+Let's take care of the validation test and the actual success case as well in this video.
+
+00:05.540 --> 00:07.460
+So we should be able to get through it pretty quickly.
+
+00:07.910 --> 00:12.380
+I'm going to first get started by writing in a test here or doing some validation.
+
+00:12.710 --> 00:16.730
+So as usual, I do need to make sure that a ticket actually already exists.
+
+00:16.730 --> 00:18.860
+So go back up to the previous test.
+
+00:18.890 --> 00:20.990
+I'm going to copy that creation logic right there.
+
+00:22.230 --> 00:24.900
+And I'll put it down inside of here like so.
+
+00:25.800 --> 00:31.380
+Now in this case, we want to make a request as the same user we were when we created the ticket.
+
+00:31.620 --> 00:35.490
+So I'm going to save a reference to the cookie that we are generating right here so that I can pretend
+
+00:35.490 --> 00:37.800
+to be the same user over multiple requests.
+
+00:38.070 --> 00:40.170
+So I'm going to cut out that global sign in.
+
+00:40.650 --> 00:44.550
+And right above I'll say Cookie is global, sign in.
+
+00:46.030 --> 00:47.860
+And I'll stick the cookie in there.
+
+00:50.110 --> 00:50.410
+Okay.
+
+00:50.410 --> 00:51.700
+So we are creating the ticket.
+
+00:51.910 --> 00:54.820
+Now I want to try to make some requests to update this thing.
+
+00:54.820 --> 00:58.230
+And as we try to update it, we're going to put in some invalid values inside of here.
+
+00:58.240 --> 01:03.100
+And we're just going to write out an assertion to say that we get back some kind of error saying, hey,
+
+01:03.100 --> 01:06.310
+sorry, 400, you provided us some bad input.
+
+01:07.890 --> 01:10.380
+So we'll do an O8 request to EP.
+
+01:11.260 --> 01:14.680
+Once again, we want to do a put request to a very specific ticket.
+
+01:14.680 --> 01:20.380
+So I'm going to use those back tickets, we'll put in API tickets and then we'll stick in the ID from
+
+01:20.380 --> 01:25.870
+the ticket that was created and we get that out of the response, the response body ID.
+
+01:27.450 --> 01:30.600
+Well, then set the cookie so that I am the exact same user.
+
+01:32.430 --> 01:33.790
+And then let's send along.
+
+01:34.450 --> 01:36.370
+How about an invalid title?
+
+01:37.610 --> 01:40.010
+And I'll stick with the same price of 20.
+
+01:40.960 --> 01:45.550
+So in this case, well, we want to make sure every ticket always has a title that has some value inside
+
+01:45.550 --> 01:45.970
+of it.
+
+01:46.630 --> 01:49.240
+So I'm going to expect to get back a 400.
+
+01:50.640 --> 01:54.900
+We could definitely do another follow up, one to make sure that we get a 400 if the title does not
+
+01:54.900 --> 01:55.450
+exist.
+
+01:55.470 --> 01:57.540
+If you want to write out that test two, totally fine.
+
+01:57.570 --> 02:02.490
+Otherwise, I'll just do another check to make sure that a price that is invalid results in a 400 as
+
+02:02.490 --> 02:02.970
+well.
+
+02:03.150 --> 02:04.740
+So I'm going to copy that request.
+
+02:07.710 --> 02:08.840
+Based it down below.
+
+02:09.210 --> 02:15.110
+In this case, I'll put in a valid title, but an invalid price so prices can be invalid if it is in
+
+02:15.110 --> 02:15.920
+the negatives.
+
+02:16.310 --> 02:18.140
+So negative ten that should work just fine.
+
+02:19.730 --> 02:20.000
+All right.
+
+02:20.000 --> 02:21.560
+As usual, I will save this.
+
+02:22.540 --> 02:23.410
+Flip back over.
+
+02:26.750 --> 02:30.430
+And now it looks like we do have a failing test, which is good in this case.
+
+02:30.440 --> 02:35.720
+The reason it's failing is that you and I expected to see a 400, but instead we got a 200.
+
+02:36.020 --> 02:38.940
+So right now we're erroneously sending back a 200.
+
+02:38.960 --> 02:41.270
+Even though we've put in some very bad inputs.
+
+02:41.540 --> 02:45.980
+So let's now go add in some validation steps and we're going to make sure that that 200 that we get
+
+02:45.980 --> 02:47.660
+turns into a 400.
+
+02:48.930 --> 02:51.870
+All right, back over inside of my update file.
+
+02:52.700 --> 02:54.610
+We definitely need to do some validation.
+
+02:54.620 --> 02:57.740
+Luckily we've already imported body and validate requests.
+
+02:59.220 --> 03:03.320
+So right after our require off middleware, let's put in an array.
+
+03:03.330 --> 03:05.460
+We're going to write out our different validators in here.
+
+03:05.610 --> 03:10.110
+And then after that array, I'll make sure right away that I add in the validate request middleware.
+
+03:10.500 --> 03:15.060
+So validate request and we'll do some checks on the incoming body.
+
+03:16.560 --> 03:18.570
+So first we will check our title.
+
+03:19.330 --> 03:23.920
+And just like we had in our creation steps, we'll pretty much just make sure that this thing exists
+
+03:23.920 --> 03:26.170
+so not is empty.
+
+03:27.010 --> 03:30.760
+Custom message of title is required.
+
+03:32.860 --> 03:34.450
+And then check out our price.
+
+03:35.600 --> 03:38.330
+And for this, let's make sure that we've got a float here.
+
+03:39.780 --> 03:42.840
+And we want to make sure it's greater than zero.
+
+03:44.160 --> 03:46.290
+With the message of price.
+
+03:47.410 --> 03:51.440
+Must be provided and must be greater than zero.
+
+03:51.460 --> 03:53.830
+I think we use a better message back in our creation.
+
+03:53.830 --> 03:57.100
+Handler If you want to go look up that error message and use a consistent one.
+
+03:57.130 --> 03:58.150
+Feel free to do so.
+
+03:59.400 --> 03:59.660
+Okay.
+
+03:59.700 --> 04:00.670
+So that looks good.
+
+04:00.690 --> 04:01.770
+Let's save this.
+
+04:02.020 --> 04:03.270
+Rerun our tests.
+
+04:04.420 --> 04:05.500
+So back over here.
+
+04:07.480 --> 04:09.040
+Everything's passing very good.
+
+04:09.250 --> 04:10.870
+It's now just one last thing to do.
+
+04:11.110 --> 04:14.050
+Let's make sure that we actually can update a ticket.
+
+04:14.290 --> 04:15.850
+So very last test down here.
+
+04:17.090 --> 04:17.720
+As usual.
+
+04:17.720 --> 04:21.380
+Once again, we need to create a ticket ahead of time so we can actually edit it.
+
+04:21.680 --> 04:24.560
+I'm going to do a little bit of copy paste from the test right above.
+
+04:25.200 --> 04:29.250
+So from the one we were just working on, I'm going to grab where we create the cookie and then make
+
+04:29.250 --> 04:30.480
+the initial ticket.
+
+04:31.760 --> 04:32.750
+So I copy all that.
+
+04:34.450 --> 04:36.400
+Go down to our happy path right here.
+
+04:36.400 --> 04:37.210
+Paste that in.
+
+04:38.260 --> 04:40.870
+And let's try to edit the ticket.
+
+04:42.110 --> 04:44.570
+So we'll do an O8 request.
+
+04:45.890 --> 04:46.620
+Two EP.
+
+04:48.750 --> 04:51.870
+I'm going to do a not a post, but a put.
+
+04:52.110 --> 04:56.130
+And once again, we're going to use some string interpolation to API tickets.
+
+04:57.330 --> 04:59.250
+Response Body ID.
+
+05:00.860 --> 05:03.020
+I'm going to set the exact same cookie on there.
+
+05:04.970 --> 05:07.970
+And I'll send along our actual update to make.
+
+05:08.300 --> 05:11.350
+So how about this time we give it a kind of legible title?
+
+05:11.360 --> 05:12.710
+I'll say new title.
+
+05:13.980 --> 05:15.690
+And a price of 100.
+
+05:16.760 --> 05:19.790
+Coming out of that, I'm going to expect to get a 200.
+
+05:23.650 --> 05:26.080
+And then finally we could be happy with the 200.
+
+05:26.110 --> 05:31.120
+Or alternatively, we could do one more follow up request to try to now fetch this ticket and write
+
+05:31.120 --> 05:33.790
+out an assertion and say this thing was actually updated.
+
+05:34.420 --> 05:35.380
+We did not do that.
+
+05:35.380 --> 05:37.630
+On the earlier test up here.
+
+05:37.630 --> 05:41.170
+We were making sure that update did not occur if the user was not logged in.
+
+05:41.170 --> 05:45.310
+So since we did not do it up there, let's do it down here just so we can see what that would really
+
+05:45.310 --> 05:45.970
+look like.
+
+05:46.120 --> 05:50.500
+So I want to make a follow up request and just say, okay, on fetching this ticket after it's been
+
+05:50.500 --> 05:53.320
+updated, it actually has the new title and the new price.
+
+05:54.750 --> 05:55.650
+To fetch that ticket.
+
+05:55.650 --> 05:58.920
+We will make another request here and I'm going to save the response as a variable.
+
+05:58.920 --> 06:00.600
+I will call a ticket response.
+
+06:01.930 --> 06:03.490
+They'll do our request to EP.
+
+06:03.760 --> 06:07.300
+I want to make a gift request and I want to fetch a very particular ticket.
+
+06:07.300 --> 06:12.100
+So I'm going to make a gift request to a very similar URL, API tickets and then the ID of the ticket.
+
+06:12.700 --> 06:14.230
+So API tickets.
+
+06:15.170 --> 06:16.730
+Response body.
+
+06:16.820 --> 06:17.450
+I'd.
+
+06:18.750 --> 06:19.700
+I'll send that off.
+
+06:20.090 --> 06:24.110
+We do not actually have to set any cookies or anything like that because we do not require authentication
+
+06:24.110 --> 06:26.030
+to fetch details about a single ticket.
+
+06:26.510 --> 06:27.470
+So inside of here.
+
+06:28.680 --> 06:30.240
+Let's write out our expectation.
+
+06:30.240 --> 06:33.210
+So we're going to expect the response body right here.
+
+06:33.210 --> 06:36.090
+Inside there, we should see details about that ticket.
+
+06:36.090 --> 06:38.700
+In particular, we should have the title and the price.
+
+06:38.700 --> 06:42.630
+The title should be equal to new title and the price should be equal to 100.
+
+06:43.230 --> 06:45.990
+So we will expect ticket response.
+
+06:45.990 --> 06:47.400
+Body title.
+
+06:48.400 --> 06:49.480
+To equal.
+
+06:52.210 --> 06:52.930
+New title.
+
+06:54.160 --> 06:56.140
+I'm going to do a little copy paste.
+
+06:56.590 --> 07:00.100
+I'll check the price and make sure that is equal to 100.
+
+07:01.380 --> 07:04.860
+All right, let's save this and just make sure that this test is failing.
+
+07:05.010 --> 07:07.440
+So I just want to make sure that it's not erroneously passing.
+
+07:07.440 --> 07:09.540
+For some reason, it's back at my terminal.
+
+07:09.570 --> 07:09.920
+Yep.
+
+07:09.930 --> 07:11.100
+Looks like we're good to go.
+
+07:11.490 --> 07:14.280
+The update was received, but never actually applied.
+
+07:15.790 --> 07:16.420
+So let's go.
+
+07:16.420 --> 07:19.330
+And now do a little bit of update to our route handler itself.
+
+07:20.090 --> 07:23.150
+I'm going to go back over to the route handler handling updates.
+
+07:24.670 --> 07:25.540
+Right here.
+
+07:27.360 --> 07:32.400
+Then we're going to go right after we do the check to see if this user actually owns the ticket and
+
+07:32.400 --> 07:33.180
+if they do own it.
+
+07:33.180 --> 07:34.560
+We're going to apply the update.
+
+07:34.890 --> 07:39.570
+To apply the update, we can use the set command on the ticket document that we already fetched.
+
+07:40.110 --> 07:44.550
+Whenever we call set, we can pass in an object that contains the properties we want to update this
+
+07:44.550 --> 07:45.210
+thing to.
+
+07:45.880 --> 07:47.800
+So we want to change the title.
+
+07:48.760 --> 07:49.570
+To wreck.
+
+07:49.840 --> 07:50.380
+Body.
+
+07:50.800 --> 07:51.400
+Title.
+
+07:52.090 --> 07:55.480
+And the price to wreck body price.
+
+07:58.610 --> 08:03.470
+After setting some new properties on the ticket that just makes updates to the document in memory.
+
+08:03.470 --> 08:06.800
+It doesn't actually persist those updates back to our MongoDB database.
+
+08:07.180 --> 08:12.950
+So after calling set, we then have to do an A wait ticket dot save and that's what's going to actually
+
+08:12.950 --> 08:18.770
+persist everything back just you know a little bit of trivia after we call save those updates will be
+
+08:18.770 --> 08:20.150
+persisted to the database.
+
+08:20.300 --> 08:25.940
+And Mongoose is going to make sure that any further updates either due to some post save hooks, pre
+
+08:25.940 --> 08:31.310
+save hooks, something done by MongoDB itself or whatever else, all other possible updates will be
+
+08:31.310 --> 08:34.730
+persisted back to this ticket document that we already have a reference to.
+
+08:34.910 --> 08:39.080
+So we do not have to say re fetch this ticket to get the updated version that's been saved.
+
+08:39.230 --> 08:41.420
+We already have the updated version right here.
+
+08:43.130 --> 08:47.630
+So we can continue to rely upon docent to send back details about this updated ticket.
+
+08:48.550 --> 08:48.690
+Okay.
+
+08:48.760 --> 08:49.720
+Let's save this.
+
+08:50.050 --> 08:51.820
+Take a look at our tests, see how we're doing.
+
+08:54.190 --> 08:56.710
+So looks like we're agreeing across the board.
+
+08:56.830 --> 08:57.760
+Fantastic.
+
+08:57.820 --> 08:59.170
+This is a super long video.
+
+08:59.170 --> 09:03.640
+So let's take a pause right now and do a quick wrap up of all these different route handlers in just
+
+09:03.640 --> 09:04.210
+a moment.

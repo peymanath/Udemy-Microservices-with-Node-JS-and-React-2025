@@ -1,0 +1,262 @@
+WEBVTT
+
+00:01.390 --> 00:02.890
+Our application is looking pretty good.
+
+00:02.890 --> 00:05.540
+And in this video I would like to start to add in a new feature.
+
+00:05.560 --> 00:08.290
+Let's first discuss exactly what this feature is going to be.
+
+00:09.200 --> 00:10.620
+Here's what we're going to try to do.
+
+00:10.640 --> 00:13.670
+I want to add in the idea of content moderation.
+
+00:13.970 --> 00:18.230
+So, in other words, I want to take a look at the content of every comment that gets submitted.
+
+00:18.230 --> 00:22.640
+And depending upon whether or not it has some very specific word, we're going to flag that comment
+
+00:22.640 --> 00:26.030
+in some way and say, hey, this thing is not permitted or something like that.
+
+00:26.960 --> 00:29.540
+We're going to flag comments that contain the word orange.
+
+00:29.540 --> 00:31.820
+So it's going to be a very simple filter.
+
+00:31.820 --> 00:36.170
+We're going to literally say, does the comment contain the word orange?
+
+00:36.200 --> 00:38.870
+If it does, there's something wrong with this comment.
+
+00:38.870 --> 00:40.460
+We want to flag it in some way.
+
+00:41.060 --> 00:44.870
+Let me give you a little bit more detail on this feature, just to clarify a couple of different things.
+
+00:45.170 --> 00:50.030
+So first off, if we were doing some simple filtering like this and just trying to say whether or not
+
+00:50.030 --> 00:54.980
+a comment had orange, it would make a lot of sense to implement it just in the React application.
+
+00:55.070 --> 00:59.660
+But let's just pretend for a second that maybe the filter list changes very frequently.
+
+00:59.660 --> 01:01.090
+In other words, that word orange.
+
+01:01.100 --> 01:04.700
+Maybe in 5 minutes we need to change it to banana or something like that.
+
+01:05.620 --> 01:09.970
+If that was the case, we would not want to hardcoded any filtering logic directly inside the React
+
+01:09.970 --> 01:15.280
+app because then every single time we wanted to change that filter keyword, we would have to redeploy
+
+01:15.280 --> 01:16.480
+the React application.
+
+01:18.080 --> 01:22.640
+The next thing that we're going to assume here is that although it would be super easy to implement
+
+01:22.640 --> 01:26.870
+this in the existing comment service that we already have, we're going to say that for some reason
+
+01:26.870 --> 01:27.740
+who knows what it is?
+
+01:27.740 --> 01:33.140
+We want to create a new service, so we are going to make a new service to implement this kind of filtering
+
+01:33.140 --> 01:34.700
+or moderation logic.
+
+01:35.810 --> 01:40.280
+The third little assumption we're going to make here is that in some scenarios, you'll see why in a
+
+01:40.280 --> 01:40.640
+little bit.
+
+01:40.640 --> 01:46.790
+We're going to assume that it might take a very long time for the news service to actually moderate
+
+01:46.790 --> 01:47.490
+a comment.
+
+01:47.510 --> 01:51.620
+So at the end of the day, we are really just checking to see if a string contains orange, but we are
+
+01:51.620 --> 01:56.660
+going to assume that maybe that is going to take minutes or even hours to actually complete.
+
+01:57.730 --> 01:58.060
+Okay.
+
+01:58.060 --> 02:02.500
+So let me show you a mockup of what I want this app to eventually look like after we make this change.
+
+02:02.800 --> 02:05.380
+So we will imagine that we've got three posts right here.
+
+02:06.280 --> 02:07.900
+And each of them has one comment.
+
+02:08.350 --> 02:12.040
+So each of these comments can be in one of three different states.
+
+02:12.160 --> 02:14.460
+The comment can be successfully moderated.
+
+02:14.470 --> 02:18.250
+So as you see right here in the middle one, this drink does not contain the word or int or anything
+
+02:18.250 --> 02:18.880
+like that.
+
+02:18.880 --> 02:20.620
+So we show that comment to the user.
+
+02:21.100 --> 02:24.430
+The other state a comment can be in is awaiting moderation.
+
+02:24.430 --> 02:29.830
+So this is the scenario in which maybe it takes 5 minutes or an hour to actually run that moderation
+
+02:29.830 --> 02:30.760
+logic again.
+
+02:30.760 --> 02:34.690
+It's really just a simple string comparison, but you'll see why we kind of have to make this assumption
+
+02:34.690 --> 02:35.500
+from the get go.
+
+02:35.860 --> 02:40.240
+If we are waiting moderation, then we should display something like this to the user, something it
+
+02:40.240 --> 02:40.690
+says.
+
+02:40.690 --> 02:42.580
+This comment is awaiting moderation.
+
+02:43.000 --> 02:48.190
+And then finally, the third possible state is the case in which the comment contained the string orange.
+
+02:48.190 --> 02:52.600
+So in that scenario, we want to display to the user this comment was rejected and let them know that
+
+02:52.600 --> 02:53.710
+there was a comment there.
+
+02:53.710 --> 02:55.690
+But for some reason we are filtering it.
+
+02:56.780 --> 03:01.280
+So from the get go, I want to point out that there's kind of one assumption we can probably make here
+
+03:01.310 --> 03:07.340
+very easily, without a doubt, based on the mockups you're just looking at, we know 100% that the
+
+03:07.340 --> 03:13.910
+React application needs to be able to tell whether a comment is awaiting moderation, rejected or approved.
+
+03:14.510 --> 03:18.590
+Right now, the React application thinks that a comment has this structure you see right here.
+
+03:18.590 --> 03:22.760
+The React app thinks that comments just have an ID and content and that's it.
+
+03:23.120 --> 03:28.010
+So to really tell the React app whether a comment is moderated, rejected or approved, we're going
+
+03:28.010 --> 03:31.490
+to add in an additional little flag to every comment.
+
+03:31.880 --> 03:35.810
+And that flag will be a string of approved, rejected or pending.
+
+03:36.750 --> 03:40.440
+As you could guess approved means that we've filtered this comment.
+
+03:40.440 --> 03:45.300
+We've made sure that it doesn't contain the string orange or whatever else reject it again, as you
+
+03:45.300 --> 03:49.140
+can probably guess, means that, well, for some reason we don't want this comment displayed to the
+
+03:49.140 --> 03:49.710
+user.
+
+03:49.710 --> 03:52.890
+So if the status is rejected, we want to show that right there.
+
+03:53.680 --> 03:56.950
+And then finally, if the comment is pending, that means that we're still trying to do that filtering
+
+03:56.950 --> 03:57.540
+logic.
+
+03:57.550 --> 04:02.620
+And in that scenario, we should display this comment as awaiting, pending or awaiting moderation over
+
+04:02.620 --> 04:03.100
+here.
+
+04:03.760 --> 04:04.210
+All right.
+
+04:04.210 --> 04:09.550
+So in this video, I've now spent about 4 minutes telling you about what appears to be a very simple
+
+04:09.550 --> 04:10.930
+and straightforward feature.
+
+04:10.930 --> 04:12.490
+And I cannot stress that enough.
+
+04:12.490 --> 04:15.910
+This feature looks crazy, simple at first glance.
+
+04:16.210 --> 04:21.130
+But as we start to implement this, you're going to see that there is some incredible hidden complexity
+
+04:21.130 --> 04:21.590
+here.
+
+04:21.610 --> 04:24.520
+There's way more going on than you would ever expect.
+
+04:24.520 --> 04:29.710
+And implementing stuff like this, turns out, is a little bit more challenging than if we were in a
+
+04:29.710 --> 04:32.650
+very simple, monolith style world.
+
+04:33.430 --> 04:34.450
+So let's take a pause right here.
+
+04:34.450 --> 04:35.710
+We're going to come back the next video.
+
+04:35.710 --> 04:39.820
+We're going to take a look at the current design of our application and talk about how we can change
+
+04:39.820 --> 04:41.050
+it to implement this feature.
+
+04:41.050 --> 04:44.530
+And we're going to see some issues start to arise along the way.
+
+04:44.560 --> 04:46.450
+The quick pause continue in just a minute.

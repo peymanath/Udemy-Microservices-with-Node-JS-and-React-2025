@@ -1,0 +1,94 @@
+WEBVTT
+
+00:00.920 --> 00:05.240
+In the last video we spoke about why the any type is a very bad thing to have inside of application
+
+00:05.420 --> 00:11.720
+right now coordinates is of type any and it's only the case because JSON parse returns a value of type
+
+00:11.720 --> 00:16.700
+any and that's because TypeScript just can't predict what JSON Parse is going to return.
+
+00:17.180 --> 00:22.580
+So to fix this up, one way we could fix it is to add in a type annotation for coordinates.
+
+00:23.450 --> 00:27.050
+So we need to add in a type annotation for an object.
+
+00:27.290 --> 00:32.480
+We already saw an example of that right back up here when we defined the object literal of point.
+
+00:33.020 --> 00:38.000
+So to add in a type annotation for an object right after the variable name, we're put in that colon
+
+00:38.270 --> 00:41.150
+and then the overall structure of that object.
+
+00:41.830 --> 00:44.260
+So for us, we're going to add in coordinates right here.
+
+00:44.260 --> 00:47.410
+I'll put in a colon then instead of curly braces.
+
+00:47.410 --> 00:52.360
+And inside there I'm going to say this thing is going to have a property called X that is a number and
+
+00:52.360 --> 00:55.330
+it's going to have a property Y that is a number as well.
+
+00:56.600 --> 01:01.520
+So now we've given enough information to TypeScript that it can figure out what type of value coordinates
+
+01:01.520 --> 01:02.390
+is by now.
+
+01:02.420 --> 01:03.190
+Mouse over it.
+
+01:03.200 --> 01:07.820
+I see the type annotation on here and now if I try to reference a coordinates.
+
+01:08.090 --> 01:09.110
+Blah blah blah.
+
+01:09.140 --> 01:14.000
+I'll very quickly see an error message that tells me that is not a property on that object.
+
+01:14.840 --> 01:15.070
+Okay.
+
+01:15.080 --> 01:16.020
+So that's pretty much it.
+
+01:16.040 --> 01:21.290
+This is one of the three cases where we are going to add in type annotations any time we call a function
+
+01:21.290 --> 01:22.700
+that returns type any.
+
+01:23.210 --> 01:27.220
+Now, JSON parse is just one of the functions in JavaScript that returns type any.
+
+01:27.230 --> 01:28.880
+There are several others as well.
+
+01:28.880 --> 01:31.850
+So we'll kind of see some of those different functions over time.
+
+01:31.850 --> 01:36.080
+And in fact we might eventually have to write our own functions that return type any as well.
+
+01:36.950 --> 01:37.190
+All right.
+
+01:37.190 --> 01:38.420
+So let's take a quick pause right here.
+
+01:38.420 --> 01:39.620
+When we come back, the next video.
+
+01:39.650 --> 01:46.370
+We'll move on to the next example or the next case where we are going to add in a type annotation willingly.
+
+01:46.370 --> 01:48.680
+So quick pause and I'll see you in just a minute.

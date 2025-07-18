@@ -1,0 +1,421 @@
+WEBVTT
+
+00:01.760 --> 00:05.480
+Our error handling middleware is looking pretty good, but as I've said several times, just one or
+
+00:05.480 --> 00:07.040
+two quick more things.
+
+00:07.490 --> 00:10.220
+So the next thing I want to take a look at is inside this middleware.
+
+00:10.250 --> 00:13.370
+I just want to really study these two statements for a moment.
+
+00:13.580 --> 00:18.680
+At present, we are checking to see if the error is of type request validation error or database connection
+
+00:18.680 --> 00:19.040
+error.
+
+00:19.070 --> 00:25.160
+If it is, we then call the errors serialize error method, stick it into this bigger object and then
+
+00:25.160 --> 00:26.660
+send the result back to the user.
+
+00:27.320 --> 00:30.920
+There's a very big potential for a mistake inside of here right now.
+
+00:31.630 --> 00:35.990
+Let's imagine for a second that someone is building out a new custom air class.
+
+00:36.010 --> 00:41.140
+So let's imagine that we are building out request validation here for the very first time and I sit
+
+00:41.140 --> 00:43.780
+down to implement this serialized areas function.
+
+00:44.460 --> 00:48.840
+So let's imagine that we're writing this out for the very first time and maybe for some accidental reason.
+
+00:48.840 --> 00:51.420
+We make a little typo in message.
+
+00:51.420 --> 00:53.880
+Maybe I type in mage instead of message.
+
+00:54.150 --> 00:59.670
+At present, there is absolutely nothing inside of our typescript code to verify and make sure that
+
+00:59.670 --> 01:02.040
+serialize errors is put together correctly.
+
+01:02.400 --> 01:06.360
+It would be really nice if we had some kind of check inside of our code.
+
+01:06.510 --> 01:12.030
+Something to make sure that serialize errors is always going to return this kind of structure right
+
+01:12.030 --> 01:12.300
+here.
+
+01:12.300 --> 01:17.100
+That nice array of objects that we are doing all this work to make sure we get.
+
+01:18.440 --> 01:21.620
+So right now when these errors flow into our error handling middleware.
+
+01:22.710 --> 01:26.490
+We're just checking to see if we have an instance of database connection error or request validation
+
+01:26.490 --> 01:26.910
+error.
+
+01:27.330 --> 01:31.050
+If we do so, if we say yes, that's what this error is.
+
+01:31.050 --> 01:35.520
+Our error handling middleware is pretty much just saying, Gee, I sure hope you implemented that.
+
+01:35.520 --> 01:37.740
+Serialize errors function correctly.
+
+01:37.770 --> 01:43.980
+It's really just a hope and it would be kind of nice to actually have something in the TypeScript world
+
+01:43.980 --> 01:49.170
+to just double check and make sure that these custom errors have the correct implementation of serialize
+
+01:49.170 --> 01:49.710
+errors.
+
+01:50.100 --> 01:54.570
+That would be something to be really nice to add in because it would make sure that as we start to add
+
+01:54.570 --> 01:59.430
+some additional custom error classes in the future, we want to make sure that we've always creating
+
+01:59.430 --> 02:04.560
+a custom error that has a status code that's a number and has a serialized errors function that's going
+
+02:04.560 --> 02:06.830
+to return the correct structure of data.
+
+02:06.840 --> 02:11.580
+Because again, we're going through all this extra effort just to make sure that all of our different
+
+02:11.580 --> 02:15.840
+servers that we're going to create over time are always going to return the exact same structure of
+
+02:15.840 --> 02:16.230
+error.
+
+02:16.350 --> 02:20.010
+So again, it'd just be really great to make sure that we had something inside the TypeScript world
+
+02:20.010 --> 02:21.150
+to double check that.
+
+02:22.330 --> 02:23.650
+So how can we do this?
+
+02:23.830 --> 02:25.840
+Well, there are two possible approaches.
+
+02:26.140 --> 02:27.400
+Here's option number one.
+
+02:27.760 --> 02:32.710
+Option number one, we could create a new file inside of our ears directory, and we would call this
+
+02:32.710 --> 02:34.210
+file something like custom air.
+
+02:34.360 --> 02:37.570
+Inside there, we would define an interface called Custom Air.
+
+02:38.380 --> 02:43.150
+So inside this custom air interface, we would define what it means to be a custom air.
+
+02:43.390 --> 02:47.350
+We could say that in order to be a customer, you must have a status code that is a number, and you
+
+02:47.350 --> 02:52.780
+must implement a serialized function that returns an array of objects that has a message property and
+
+02:52.780 --> 02:54.310
+possibly a field property.
+
+02:55.010 --> 03:00.980
+We could then import that into our request validation and database connection files and use that implements
+
+03:00.980 --> 03:04.730
+keyword to make sure that those classes correctly implement that interface.
+
+03:05.820 --> 03:08.700
+Now, this is a very, very viable option.
+
+03:08.700 --> 03:11.730
+Absolutely not anything inherently wrong with this.
+
+03:11.730 --> 03:17.010
+And because of that, I want to just very quickly, like really quickly write out the code to do something
+
+03:17.010 --> 03:19.380
+like this, just to make sure it's really crystal clear.
+
+03:20.520 --> 03:22.470
+Now we are going to delete this code immediately.
+
+03:22.470 --> 03:25.980
+Again, I just want to give you a very quick example so you do not have to write this out if you don't
+
+03:25.980 --> 03:26.580
+want to.
+
+03:27.150 --> 03:32.520
+So as an example, normally I would define this interface inside of a separate file, but just to save
+
+03:32.520 --> 03:36.300
+some time, I'll write the interface directly inside of request validation error.
+
+03:37.030 --> 03:39.490
+So we could do something inside of here, like customer.
+
+03:40.120 --> 03:45.520
+We could say that in order to be a customer, you have to have a status code that is a.
+
+03:46.400 --> 03:52.790
+Number and you must have a serialized air function that's going to return an array of objects.
+
+03:53.700 --> 03:57.780
+And each of those objects should have a message that is a string.
+
+03:59.080 --> 04:01.180
+And optionally a field.
+
+04:02.750 --> 04:07.280
+The question mark right there says that field is not necessary, but you can optionally provide it.
+
+04:07.760 --> 04:12.770
+So now that this interface is put together, we can make sure that our custom class satisfies this interface
+
+04:12.770 --> 04:14.600
+by writing onto the very end of the class.
+
+04:14.600 --> 04:17.980
+Declaration implements custom air.
+
+04:17.990 --> 04:18.650
+Like so.
+
+04:20.540 --> 04:23.990
+So now this is double check, going to double check and make sure that I've got a status code that is
+
+04:23.990 --> 04:29.180
+a number and a function called serialize errors that returns an array of objects that look like that.
+
+04:29.510 --> 04:33.860
+As soon as I add on implements custom error, I can scroll down and see that I've now got an error around
+
+04:33.860 --> 04:37.090
+serialize errors and that's because I have a function.
+
+04:37.100 --> 04:42.650
+It is called serialize errors but is returning the incorrect structure of data rather than saying message,
+
+04:42.650 --> 04:43.790
+it says mage.
+
+04:43.790 --> 04:46.460
+And so this would help me catch errors in my code.
+
+04:46.490 --> 04:52.190
+It would help make sure that I always write out custom errors with the correct structure or status code
+
+04:52.190 --> 04:53.420
+and serialize errors.
+
+04:54.190 --> 04:58.330
+So again, this is an absolutely viable option, but it's not quite what we're going to do this time
+
+04:58.330 --> 04:58.920
+around.
+
+04:58.930 --> 05:00.580
+So I'm going to delete that interface.
+
+05:01.580 --> 05:04.880
+And implements on the very end as well.
+
+05:07.100 --> 05:08.480
+So what are we going to do instead?
+
+05:08.660 --> 05:12.380
+Well, we're going to take a very similar approach, but instead of using an interface, we're going
+
+05:12.380 --> 05:14.090
+to use something slightly different.
+
+05:14.540 --> 05:18.080
+We're going to create a new abstract class called Custom Air.
+
+05:18.260 --> 05:22.640
+The abstract class is going to serve the exact same purpose as the interface that we just looked at.
+
+05:22.850 --> 05:27.620
+So it's going to set out a number of properties that must be defined in order to be considered to be
+
+05:27.620 --> 05:28.610
+a custom error.
+
+05:29.000 --> 05:33.830
+If you're not familiar with abstract classes in general and TypeScript, couple of reminders on them,
+
+05:34.400 --> 05:39.290
+an abstract class is like a class, but it cannot be directly instantiated.
+
+05:39.410 --> 05:41.930
+So in other words, we cannot say new custom error.
+
+05:42.200 --> 05:48.980
+Instead, custom or abstract classes are used to organize our code and somehow set up requirements for
+
+05:48.980 --> 05:50.600
+subclasses of this class.
+
+05:50.990 --> 05:54.260
+So really, it's being used to set up a requirement for a subclass.
+
+05:56.490 --> 06:01.170
+The nice thing about a abstract class is that when we translate this over to JavaScript to actually
+
+06:01.170 --> 06:04.860
+execute, we actually do end up with a class definition.
+
+06:05.310 --> 06:09.310
+When we translate interfaces to JavaScript, all interfaces fall away.
+
+06:09.330 --> 06:14.310
+They don't actually exist in the world of JavaScript, but abstract classes do.
+
+06:14.520 --> 06:19.260
+And that means that we can use an abstract class with an instance of check.
+
+06:19.620 --> 06:24.390
+And that's extremely relevant because remember back over inside of our area handling middleware.
+
+06:26.270 --> 06:29.360
+Here it is right here we are doing some instance of checks.
+
+06:29.630 --> 06:34.310
+If we continue with the same pattern that we have right here, we would eventually have to have a ton
+
+06:34.310 --> 06:38.060
+of different if statements for all the different kinds of errors.
+
+06:38.060 --> 06:41.960
+And so we start to run into that issue again where our error handling middleware starts to get really
+
+06:41.960 --> 06:42.650
+bloated.
+
+06:43.300 --> 06:46.690
+But if all these custom errors are going to be extending.
+
+06:48.810 --> 06:51.560
+Some custom based class of custom air right here.
+
+06:51.570 --> 06:56.220
+We can instead just have one single instance of checks, something that says is the air, in instance
+
+06:56.220 --> 06:57.780
+of custom air.
+
+06:58.080 --> 07:03.150
+Subclasses of this custom air abstract class will satisfy this instance of check.
+
+07:03.150 --> 07:07.890
+So we will only have to write out that if statement one time and that will capture all possible custom
+
+07:07.890 --> 07:10.290
+errors that ever get thrown inside of our application.
+
+07:10.770 --> 07:15.780
+So long story short, rather than defining an interface and having our classes implement it, we're
+
+07:15.780 --> 07:22.380
+going to instead define a abstract class called Custom Air, and we're going to have request validation
+
+07:22.380 --> 07:23.820
+and database connection error.
+
+07:23.940 --> 07:25.920
+Extend that abstract class.
+
+07:27.370 --> 07:27.860
+Ooh.
+
+07:28.270 --> 07:30.130
+I know this stuff is nasty, isn't it?
+
+07:30.730 --> 07:32.470
+This is why I'm learning this stuff.
+
+07:32.470 --> 07:34.600
+This is why you go and get a job and get paid the big bucks.
+
+07:34.600 --> 07:36.900
+It's because this stuff is just ridiculous sometimes.
+
+07:36.910 --> 07:41.740
+I know this is just really challenging stuff right now, and I know it's a lot of TypeScript stuff and
+
+07:41.740 --> 07:46.930
+it's not really specific to the world of microservices, but this is stuff where again, you got to
+
+07:46.930 --> 07:49.360
+make sure same thing this is all about.
+
+07:49.360 --> 07:54.880
+We have to make sure that the air is coming out of our services are always satisfying that same structure
+
+07:55.030 --> 08:00.250
+and it is by doing stuff like this right here, literally exactly this that we're going to make sure
+
+08:00.250 --> 08:05.080
+that all the different areas we ever create inside of our application have that identical structure.
+
+08:05.380 --> 08:09.340
+If you tried doing all this stuff with JavaScript, I can guarantee you you would start to run into
+
+08:09.340 --> 08:10.600
+errors almost immediately.
+
+08:10.600 --> 08:15.370
+And when I say errors, I mean bad errors, not these actual handled errors that we're talking about.
+
+08:16.180 --> 08:20.800
+So I know this typescript stuff is nasty, but this is how we implement structure inside of really large
+
+08:20.800 --> 08:21.580
+code bases.
+
+08:21.610 --> 08:27.160
+It's just how it's done and it's what we have to do to implement microservices in some reasonable fashion.
+
+08:27.770 --> 08:27.880
+Okay.
+
+08:27.970 --> 08:29.840
+So a little bit of a spontaneous pep talk there.
+
+08:29.860 --> 08:31.150
+Anyways, let's take a pause right here.
+
+08:31.150 --> 08:32.240
+We're going to come back the next video.
+
+08:32.260 --> 08:34.360
+Start to implement this abstract class.

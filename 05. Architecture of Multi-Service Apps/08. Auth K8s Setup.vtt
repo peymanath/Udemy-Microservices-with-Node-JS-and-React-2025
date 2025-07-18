@@ -1,0 +1,388 @@
+WEBVTT
+
+00:01.140 --> 00:04.110
+We've now got a little bit of starter code for all service.
+
+00:04.110 --> 00:08.730
+Rather than developing the service out, let's immediately start to set up some different Kubernetes
+
+00:08.730 --> 00:13.560
+infrastructure stuff so we can start to run the service in Kubernetes immediately, which is going to
+
+00:13.560 --> 00:17.670
+make our lives a little bit easier than if we were going to develop the whole service and then come
+
+00:17.670 --> 00:20.160
+back later and start to set up the Kubernetes stuff.
+
+00:20.580 --> 00:23.890
+So any time that we start to set up Kubernetes, we need a couple of different things.
+
+00:23.910 --> 00:27.840
+We first need to make sure that we can build an image out of our service.
+
+00:28.080 --> 00:31.650
+In order to build an image, remember, we have to write out a Docker file.
+
+00:32.010 --> 00:36.630
+So inside of my off directory, I'm going to make a new file called Docker File.
+
+00:37.910 --> 00:42.080
+Then inside this file, we're going to write out a couple of different steps, very similar to the ones
+
+00:42.080 --> 00:45.470
+that we wrote out a little bit ago on our last project.
+
+00:45.710 --> 00:49.640
+So at the very top, I'll do from Node Alpine.
+
+00:50.870 --> 00:53.520
+We will set up a working directory of app.
+
+00:54.650 --> 00:58.310
+We will copy over just our package json file.
+
+00:59.920 --> 01:04.000
+We will then install all of our dependencies with run npm install.
+
+01:05.470 --> 01:10.690
+Well then copy over everything else from our project directory into that app folder.
+
+01:11.840 --> 01:16.610
+And then finally we can set up our command to run with the image or the container first starts up.
+
+01:16.640 --> 01:19.460
+So we'll do a command of AMPM.
+
+01:20.320 --> 01:21.520
+Start like so.
+
+01:23.020 --> 01:25.660
+I'm going to save that file and close it.
+
+01:26.830 --> 01:32.320
+Now, remember, we don't really want to load up node modules into our container as it's being built.
+
+01:33.290 --> 01:38.310
+So I'm going to create another file inside this directory called Dot Docker.
+
+01:38.330 --> 01:39.200
+Ignore.
+
+01:40.470 --> 01:42.030
+And inside of Docker ignore.
+
+01:42.030 --> 01:45.690
+I will list out node modules and then save the file.
+
+01:49.620 --> 01:50.130
+Cool.
+
+01:50.160 --> 01:52.740
+So we've now got some config put together for off.
+
+01:52.920 --> 01:56.610
+I'm going to go back over to my terminal and just try to build this image very quickly just to make
+
+01:56.610 --> 01:59.340
+sure that, yeah, we can run it and everything looks reasonable.
+
+01:59.950 --> 02:01.480
+So back at my terminal.
+
+02:02.170 --> 02:04.540
+I'm going to stop the server that we're currently running.
+
+02:05.710 --> 02:09.070
+I'll then do a docker build dash t.
+
+02:09.940 --> 02:12.240
+My Docker ID slash.
+
+02:12.460 --> 02:14.050
+I'm going to call this thing off.
+
+02:14.950 --> 02:17.320
+And then don't forget a period at the very end.
+
+02:19.090 --> 02:21.780
+All right, so it looks like I've copied over the package shot chase on file.
+
+02:21.790 --> 02:23.860
+I'm doing a little bit of installation.
+
+02:24.310 --> 02:28.360
+And so after a brief second or so, I should see this thing kick back out.
+
+02:28.750 --> 02:29.020
+Yep.
+
+02:29.020 --> 02:32.140
+Looks like it's all installed and I have successfully built the image.
+
+02:33.890 --> 02:34.060
+Okay.
+
+02:34.070 --> 02:35.090
+Well, that's a good start.
+
+02:35.490 --> 02:40.280
+So now we're going to start to put together a little bit more configuration to get that image loaded
+
+02:40.280 --> 02:41.990
+up into a Kubernetes cluster.
+
+02:42.760 --> 02:43.990
+To get that image running.
+
+02:43.990 --> 02:46.580
+We're going to create remember, it is called a deployment.
+
+02:46.600 --> 02:49.690
+A deployment is going to create a set of pods for us automatically.
+
+02:49.690 --> 02:52.870
+And we can make sure that those pods are running our off service.
+
+02:53.960 --> 02:58.880
+So to write out a Kubernetes config file, I'm going to take the same strategy that we used in the last
+
+02:58.880 --> 02:59.660
+project.
+
+02:59.750 --> 03:04.940
+I'm going to create a new folder inside this directory called Infra Short for Infrastructure.
+
+03:06.440 --> 03:09.260
+I'll make a new folder inside there called K Eights.
+
+03:09.710 --> 03:15.920
+And then inside that folder I'll make a new file called off dash devel html.
+
+03:16.760 --> 03:19.930
+So inside this file, we're going to create our deployment.
+
+03:19.940 --> 03:21.530
+That's why we had the depot on there.
+
+03:21.530 --> 03:23.030
+It is just short for deployment.
+
+03:24.570 --> 03:28.650
+Then inside of here, we're going to write out a bunch of configuration that looks identical to what
+
+03:28.650 --> 03:31.680
+we just did a little bit ago on our last project.
+
+03:32.360 --> 03:35.840
+So at the very top we'll do API version of apps.
+
+03:36.690 --> 03:37.950
+Slash V one.
+
+03:38.690 --> 03:41.210
+We're going to set a kind of deployment.
+
+03:42.670 --> 03:46.870
+I'll set metadata with a name of auth dash devel.
+
+03:50.230 --> 03:51.850
+Well, then start to write out a spec.
+
+03:52.210 --> 03:57.430
+So inside of here, we're going to first designate the number of pods that we want to run for the auth
+
+03:57.430 --> 03:58.270
+service.
+
+03:59.140 --> 04:00.760
+So I want replicas.
+
+04:01.590 --> 04:02.250
+Of one.
+
+04:02.250 --> 04:05.250
+I just want to run one copy of that image right now.
+
+04:06.750 --> 04:13.380
+Well then set up a selector with match labels and app of off.
+
+04:13.830 --> 04:17.250
+Remember, this is step one in a little two step process.
+
+04:17.620 --> 04:21.930
+This the purpose of this selector right here is going to be to tell the deployment how to find all the
+
+04:21.930 --> 04:23.460
+pods that it's going to create.
+
+04:24.340 --> 04:27.490
+After setting up that selector, we'll then set up the template.
+
+04:28.150 --> 04:32.950
+And so this template right here is how to create each individual pod that this deployment is going to
+
+04:32.950 --> 04:33.580
+create.
+
+04:34.480 --> 04:40.810
+Well, first set up our metadata in here with labels of app colon auth.
+
+04:41.230 --> 04:46.060
+So again, this selector right here is kind of matching up with the label that we set right there.
+
+04:48.600 --> 04:53.970
+Then on the same indentation level as metadata, we'll set up our actual spec.
+
+04:53.970 --> 04:56.430
+So this is going to tell the pod how to behave.
+
+04:57.690 --> 05:02.220
+We're going to first designate all the containers that are going to be running inside this pod.
+
+05:02.820 --> 05:05.220
+We're going to have one entry inside this array.
+
+05:05.220 --> 05:08.220
+So I'll put in a little dash right there to indicate an array entry.
+
+05:08.960 --> 05:11.180
+I'm going to give the container a name of auth.
+
+05:11.180 --> 05:15.410
+And remember, this name right here is only important for logging purposes.
+
+05:16.800 --> 05:20.400
+We're going to set the image to use, which will be your Docker ID.
+
+05:22.190 --> 05:26.630
+Slash off the name of the image that we just put together 2 seconds ago.
+
+05:28.490 --> 05:30.410
+And that should be enough to get us started.
+
+05:31.220 --> 05:32.480
+So there's our deployment.
+
+05:33.980 --> 05:37.760
+Now, remember, any time we create a deployment, we usually are going to want to end up creating a
+
+05:37.760 --> 05:39.320
+service to go along with it.
+
+05:39.350 --> 05:45.260
+This is a Kubernetes service, something to give us access or allow us to get access to a pod.
+
+05:45.560 --> 05:50.630
+We could create a separate file inside of our directory to house the service, but a lot of the time
+
+05:50.630 --> 05:54.950
+we're going to end up with a 1 to 1 ratio between our deployments and the services.
+
+05:55.100 --> 06:00.170
+So I personally like to just define a service inside the same file as the deployment so that all this
+
+06:00.170 --> 06:02.540
+stuff is put together in one single location.
+
+06:04.820 --> 06:07.400
+So let's define a service at the very bottom of the file.
+
+06:08.470 --> 06:09.460
+At the very bottom down here.
+
+06:09.460 --> 06:14.110
+I'll put in that dash, dash, dash, and then we'll write out our config for our service.
+
+06:15.190 --> 06:20.860
+I'll put an API version of V one in this case, a kind of service.
+
+06:22.530 --> 06:23.330
+Or metadata.
+
+06:23.340 --> 06:26.220
+I'll set up a name of auth CRV.
+
+06:29.860 --> 06:32.470
+Then our spec to tell the service how to behave.
+
+06:33.320 --> 06:38.060
+So we will put on that selector, which is going to tell this service how to find the set of pods that
+
+06:38.060 --> 06:39.890
+is supposed to govern access to.
+
+06:40.310 --> 06:44.350
+We want to find all the pods with the label of app colon off.
+
+06:45.670 --> 06:49.390
+So as a selector I will put in app colon auth like so.
+
+06:50.820 --> 06:54.540
+Well, then list out all the different ports that we want to expose on that pod.
+
+06:54.900 --> 06:57.630
+We only have one port that we really care about right now.
+
+06:58.110 --> 07:00.420
+So I'm going to put in name of off.
+
+07:01.590 --> 07:03.810
+A protocol of TCP.
+
+07:05.450 --> 07:07.130
+And then we can set up our port.
+
+07:07.370 --> 07:13.850
+Should not be a colon at the end there a port of 3000 and a target port of 3000 as well.
+
+07:14.390 --> 07:20.060
+So we're using 3000 in this case because remember, our off can implementation that we put together
+
+07:20.060 --> 07:23.240
+in the last video, we had it listening on Port 3000.
+
+07:25.410 --> 07:25.650
+Okay.
+
+07:25.650 --> 07:26.520
+So it's looks good.
+
+07:26.760 --> 07:32.100
+You'll notice that in the spec section I did not define a type for the service we are relying upon the
+
+07:32.100 --> 07:32.940
+default.
+
+07:32.940 --> 07:37.210
+The default service whenever we create one is a cluster IP service.
+
+07:37.240 --> 07:42.360
+You might recall that a cluster IP service is going to allow communication to the service from anything
+
+07:42.360 --> 07:44.910
+else running only inside of our cluster.
+
+07:46.720 --> 07:48.640
+So this looks like a good place to get started.
+
+07:48.910 --> 07:50.200
+We'll save this right here.
+
+07:50.230 --> 07:53.440
+This video is running a little bit long, so we'll take a quick pause.
+
+07:53.440 --> 07:58.510
+But when we come back, the next video, we're going to start to write out a scaffold config file.
+
+07:58.540 --> 08:03.880
+Remember, the goal of scaffold is to find all the different things we want to throw into our cluster,
+
+08:04.480 --> 08:09.610
+build them up and then throw them in and also handle some live code reload for any changes that we make
+
+08:09.610 --> 08:11.380
+to our project as well.
+
+08:11.860 --> 08:14.740
+So a quick pause and we'll start to set up scaffold in just a moment.

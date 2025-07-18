@@ -1,0 +1,208 @@
+WEBVTT
+
+00:00.660 --> 00:05.520
+There's one last little interesting thing that I want to show you about our current build process and
+
+00:05.520 --> 00:07.470
+the container that we're running out of it.
+
+00:07.650 --> 00:11.160
+I'm going to start out my container very quickly with Docker Run.
+
+00:11.190 --> 00:18.000
+We'll do the port mapping again with 88, 88, 80, and I'll do Steven Grider slash simple web.
+
+00:19.020 --> 00:20.440
+So running on port 80, 80.
+
+00:20.490 --> 00:23.370
+Now I'm going to again visit the application inside the browser.
+
+00:23.400 --> 00:24.600
+I'll refresh the page.
+
+00:24.600 --> 00:25.050
+Yep.
+
+00:25.050 --> 00:27.000
+Everything is working as we expect.
+
+00:27.240 --> 00:32.010
+Now let's try making a change to the source code of our indexed JS file.
+
+00:32.430 --> 00:35.430
+I'm going to open up the indexed JS file right here.
+
+00:35.790 --> 00:41.910
+This is the route handler right here that is executed any time someone visits the root route on our
+
+00:41.910 --> 00:42.800
+running server.
+
+00:42.810 --> 00:46.680
+And so as you can see, we are sending back a string of simply hi there.
+
+00:46.890 --> 00:51.830
+Let's try making a change to the string and then refreshing the page and seeing what happens.
+
+00:51.840 --> 00:55.460
+So I'm going to change from hi there to by there.
+
+00:55.470 --> 00:57.000
+I know I'm not very original.
+
+00:58.010 --> 00:59.420
+I'm going to save this file.
+
+00:59.450 --> 01:00.740
+It definitely saved.
+
+01:00.770 --> 01:04.100
+I'm going to file save 100% saved, no two ways about it.
+
+01:04.100 --> 01:08.240
+And then I'm going to go back over to the browser and I'll refresh the page.
+
+01:08.270 --> 01:13.040
+And when I do so, you'll notice that we still see hi there appear on the screen.
+
+01:13.550 --> 01:15.380
+So what's going on?
+
+01:15.500 --> 01:20.480
+Well, remember, any time that we create our image or create the container, we're taking a snapshot
+
+01:20.510 --> 01:21.980
+of the file system.
+
+01:21.980 --> 01:26.900
+So we took a snapshot of indexes after it got copied over.
+
+01:26.900 --> 01:32.140
+And we are running our application based on that old version of indexes.
+
+01:32.150 --> 01:38.030
+When we modify the index file inside of our current working directory right here, that change is not
+
+01:38.030 --> 01:41.270
+going to be automatically reflected inside the container.
+
+01:41.420 --> 01:46.400
+If we want it to update the file inside the container, we're going to have to do some additional fancy
+
+01:46.400 --> 01:47.480
+configuration.
+
+01:47.900 --> 01:50.240
+We're not going to go through that configuration just yet.
+
+01:50.240 --> 01:53.360
+That's going to be something that we're going to address on the next application.
+
+01:53.360 --> 01:58.550
+But just so you're aware, yeah, changes we make here not reflected inside the container.
+
+01:59.510 --> 02:05.510
+So what would we have to do to get our container to get this new file or to get this new change right
+
+02:05.510 --> 02:05.990
+here?
+
+02:06.110 --> 02:09.840
+Well, we would have to completely rebuild the container.
+
+02:09.860 --> 02:15.260
+We would have to rerun the Docker, build command and attempt to build it again, which is going to
+
+02:15.260 --> 02:20.300
+copy over the newly changed files, then run, NPM, install and then start our server up.
+
+02:20.390 --> 02:23.990
+Let's go through that process right now because there's one more little thing that I want to show you
+
+02:23.990 --> 02:25.850
+along those lines.
+
+02:27.410 --> 02:31.790
+So I'm going to start my running server and then we'll do a Docker build.
+
+02:31.850 --> 02:33.200
+We're going to tag it.
+
+02:35.540 --> 02:39.230
+And then I'll make sure that I do the DOT to specify the build context.
+
+02:39.470 --> 02:43.370
+So I'm going to run that and oh, this is kind of interesting.
+
+02:43.370 --> 02:44.990
+I want you to notice something here.
+
+02:45.020 --> 02:49.640
+During step three, we are copying over all of our project files and folders.
+
+02:49.640 --> 02:51.410
+Every last one of them.
+
+02:51.410 --> 02:57.800
+We just made a change, the index file and Docker has detected that we changed one of the files.
+
+02:57.800 --> 03:02.450
+That copy was copied over during that step because we made a change to the step.
+
+03:02.450 --> 03:08.300
+This step right here, step number three and every step after it has to be executed again.
+
+03:08.300 --> 03:13.340
+In other words, when we rebuild our container, we have to reinstall all of our dependencies, even
+
+03:13.340 --> 03:19.430
+though we very clearly did not make a single change to any of the dependencies inside of our project.
+
+03:19.430 --> 03:23.030
+And so I'm going to argue that that's probably not ideal.
+
+03:23.030 --> 03:28.070
+If we don't make a change to a dependency inside of the project, we probably don't want to rerun NPM
+
+03:28.070 --> 03:28.760
+install.
+
+03:28.820 --> 03:33.110
+All we did was change one of the source code files of our project.
+
+03:33.110 --> 03:36.020
+And again, that has nothing to do with our dependencies.
+
+03:36.740 --> 03:41.300
+So I think that would be really neat if we could figure out a way to make sure that just by changing
+
+03:41.300 --> 03:46.910
+one of our source code files, we do not have to rerun NPM, install and install all of our dependencies
+
+03:46.910 --> 03:51.350
+again because even though this is only taking a handful of seconds right now, well, it's only because
+
+03:51.350 --> 03:53.120
+we have one single dependency.
+
+03:53.120 --> 03:58.520
+If you're working on a real application or a real project, it might take several minutes to rerun the
+
+03:58.520 --> 04:00.020
+NPM install command.
+
+04:00.020 --> 04:04.820
+And I would not want you to have to reinstall all those dependencies every time you make a change to
+
+04:04.820 --> 04:06.350
+the source code of your project.
+
+04:06.500 --> 04:10.220
+So let's come back to the next section and we're going to figure out a better way to handle copying
+
+04:10.220 --> 04:13.790
+over our project files and folders into the container.
+
+04:13.790 --> 04:15.890
+So quick break and I'll see you in just a minute.

@@ -1,0 +1,223 @@
+WEBVTT
+
+00:00.660 --> 00:01.980
+Much earlier in this course.
+
+00:01.980 --> 00:07.140
+Like in the first one or two sections, you saw me start up a new copy of a treatise on my computer
+
+00:07.140 --> 00:13.170
+by using Docker as a reminder, Redis is an in-memory data store that is very commonly used with web
+
+00:13.170 --> 00:14.160
+applications.
+
+00:14.550 --> 00:19.860
+You saw me start up, I read this instance using Docker and it seemed to be really easy and very straightforward.
+
+00:19.860 --> 00:24.540
+But I want to show you kind of an oddity around using Redis with Docker very quickly.
+
+00:24.690 --> 00:31.050
+I took the liberty of installing Redis on my local machine directly without Docker being involved whatsoever,
+
+00:31.050 --> 00:35.190
+because I want to show you the normal way in which we might interact with Redis.
+
+00:35.490 --> 00:39.330
+I'm going to first start up an instance of the reddest server by running Red List server.
+
+00:39.330 --> 00:44.910
+Now again, I am able to run this command because I installed red on my local machine without Docker
+
+00:44.910 --> 00:45.570
+involved.
+
+00:45.570 --> 00:50.670
+Chances are you do not have Redis installed on your computer, so don't try to run this command because
+
+00:50.670 --> 00:52.380
+it's probably going to result in an error.
+
+00:53.040 --> 00:54.900
+Now, when I run that command, you're going to see that.
+
+00:54.900 --> 00:55.170
+Yep.
+
+00:55.170 --> 00:57.300
+I get an instance of the red server running.
+
+00:57.300 --> 01:02.580
+It's in-memory, it's ready to store data or do whatever I need it to do that.
+
+01:02.730 --> 01:08.070
+One of the very common ways in which we can kind of poke into this thing or into the server and inspect
+
+01:08.070 --> 01:13.470
+the data that is inside of it is by using a second program called the Redis CLI.
+
+01:13.740 --> 01:16.620
+So on my computer I've already got rid of server running.
+
+01:16.620 --> 01:20.070
+I'm going to now start up a second program called Read CLI.
+
+01:20.070 --> 01:24.720
+And again, the entire purpose of this thing is to kind of reach into that server and poke around inside
+
+01:24.720 --> 01:25.140
+of it.
+
+01:26.010 --> 01:33.210
+So I'm going to open up a second terminal window and I'll run Redis CLI and that gives me a little prompt
+
+01:33.210 --> 01:37.260
+right here that allows me to issue commands directly to the running server.
+
+01:37.260 --> 01:46.290
+And so I can do something like store my number or something, not store, but set my number is five
+
+01:46.290 --> 01:48.810
+and then I can then retrieve that value.
+
+01:49.900 --> 01:51.140
+And it prints out five.
+
+01:51.160 --> 01:56.710
+So this right here is the normal interaction that you would see with red is with red esele clearly it's
+
+01:56.710 --> 02:01.390
+really nice to be able to run the red light and interact directly with information inside that running
+
+02:01.390 --> 02:02.230
+red server.
+
+02:02.530 --> 02:02.830
+All right.
+
+02:02.830 --> 02:05.050
+So now you're probably wondering, where am I going with this?
+
+02:05.050 --> 02:10.540
+Well, let's try starting up Redis using Docker, and then you're going to very quickly see some interesting
+
+02:10.540 --> 02:12.660
+behavior around red clay.
+
+02:12.670 --> 02:14.050
+So let's give it a shot.
+
+02:14.200 --> 02:16.540
+I'm going to stop my running stuff.
+
+02:18.050 --> 02:24.200
+And then I'm going to start up an instance of redness on my machine using Docker run Redis.
+
+02:25.130 --> 02:27.480
+Now it's going to start up just about instantly for me.
+
+02:27.500 --> 02:31.640
+For you, it might take a second or two as it has to download the image, but overall it should be pretty
+
+02:31.640 --> 02:32.480
+darn quick.
+
+02:32.660 --> 02:35.600
+When you start up Redis, you might see a couple of warnings.
+
+02:35.600 --> 02:36.620
+Those are totally fine.
+
+02:36.620 --> 02:37.600
+You can ignore them.
+
+02:37.610 --> 02:42.410
+Just make sure that the very last line that you see is something that says Ready to accept connections.
+
+02:42.410 --> 02:44.420
+So as long as you see that, you're good to go.
+
+02:44.900 --> 02:45.230
+All right.
+
+02:45.230 --> 02:48.620
+So this right here, what we are running right here is the reddest server.
+
+02:48.620 --> 02:54.350
+So I now want to start up a copy of the red CLI and try to work with the information that is being handled
+
+02:54.350 --> 02:55.880
+inside of this server.
+
+02:56.450 --> 03:02.450
+As you saw just a moment ago, I was able to open up a second console window and run read CLI.
+
+03:02.480 --> 03:07.790
+So maybe for Docker being involved here, maybe we just have to run like Red SEAL here.
+
+03:08.090 --> 03:08.390
+Oh no.
+
+03:08.390 --> 03:09.830
+That clearly doesn't do anything.
+
+03:09.950 --> 03:13.670
+Maybe we need to start up a second terminal window and try running right a cli there.
+
+03:13.670 --> 03:14.510
+Let's try that.
+
+03:14.720 --> 03:18.500
+We'll open up a second window and then run rita cli.
+
+03:18.620 --> 03:22.700
+Now, chances are you're going to see a message that says something like command not recognize or command
+
+03:22.700 --> 03:23.410
+not found.
+
+03:23.420 --> 03:26.140
+I see something that says could not connect to Redis.
+
+03:26.150 --> 03:27.630
+So what's going on here?
+
+03:27.650 --> 03:29.030
+Well, let's look at a diagram.
+
+03:30.380 --> 03:35.570
+So just a second ago, we started up a new container that is running Redis server.
+
+03:35.750 --> 03:39.230
+Now Redis is running only inside this container.
+
+03:39.230 --> 03:43.670
+So if I tried to run Redis cli outside the container.
+
+03:43.670 --> 03:47.990
+Outside the container, I have no access to anything that's going on inside there.
+
+03:47.990 --> 03:52.320
+And so there is no reticle command to run outside the container.
+
+03:52.340 --> 04:00.200
+If we want to start up the CLI, we need to somehow get into this container and execute a second command
+
+04:00.200 --> 04:02.060
+inside of it like this.
+
+04:02.060 --> 04:05.540
+We need to start up a second program inside the container.
+
+04:05.810 --> 04:07.970
+So to figure out how to do so, let's take a quick break.
+
+04:07.970 --> 04:13.250
+We'll come back the next section and figure out how we can execute a second command inside of a running
+
+04:13.250 --> 04:13.940
+container.
+
+04:14.090 --> 04:15.620
+So I'll see you in just a minute.

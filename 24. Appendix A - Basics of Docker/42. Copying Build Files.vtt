@@ -1,0 +1,223 @@
+WEBVTT
+
+00:00.820 --> 00:06.070
+In the last section we saw that the NPM install command failed to run because the package JSON file
+
+00:06.070 --> 00:08.440
+was not found and we spoke about why that was.
+
+00:08.470 --> 00:13.090
+In this section, we're going to figure out how we can make sure that the package JSON file is available
+
+00:13.120 --> 00:16.720
+before NPM install is executed inside of the container.
+
+00:17.350 --> 00:22.000
+To do so, we're going to add one little instruction to our Docker file.
+
+00:22.150 --> 00:24.610
+This is going to be an instruction that we've not used before.
+
+00:24.610 --> 00:26.320
+It's the copy instruction.
+
+00:26.320 --> 00:31.780
+And as you might guess, the copy instruction is used to move files and folders from our local file
+
+00:31.780 --> 00:37.030
+system on your machine to the file system inside of that temporary container that is created during
+
+00:37.030 --> 00:38.200
+the build process.
+
+00:38.470 --> 00:45.940
+The overall syntax for this is copy, then a path to the folder on your local file system and then the
+
+00:45.940 --> 00:49.240
+path that you want to copy that stuff to inside the container.
+
+00:49.630 --> 00:54.940
+Right now I'm showing these commands with a dot slash, which means the current working directory.
+
+00:55.210 --> 00:59.140
+Now one little technicality here, the path from our folder.
+
+00:59.140 --> 01:04.570
+The first argument right here is relative to the build context and you'll recall that I had said that
+
+01:04.570 --> 01:10.150
+the build context is the dot right here when we execute Docker build at the terminal.
+
+01:10.150 --> 01:14.890
+So build right here means simple web directory or the current working directory.
+
+01:14.890 --> 01:18.970
+So we have set the current build context to be simple web.
+
+01:18.970 --> 01:24.550
+So then inside the copy command right here, when I say slash, that means the build context, which
+
+01:24.550 --> 01:25.870
+is simple web.
+
+01:26.050 --> 01:27.550
+I know that's a little bit confusing.
+
+01:27.550 --> 01:30.310
+It's essentially kind of like two layers of indirection.
+
+01:30.310 --> 01:35.050
+Again, we're going to see a better example of why we would alter this build context stuff in the future.
+
+01:35.050 --> 01:39.700
+When we start working on some more complicated projects right now, all we really need to know is that
+
+01:39.700 --> 01:45.160
+if we add this right here to our Docker file, we're going to copy everything from our current working
+
+01:45.160 --> 01:47.950
+directory into the container, and that's pretty much it.
+
+01:48.430 --> 01:53.380
+So let's flip over to our Docker file and we're going to add in this instruction and then try to rebuild
+
+01:53.380 --> 01:54.250
+our image.
+
+01:56.190 --> 02:02.350
+Now we definitely want to make sure that the package JSON file is available before we run NPM install.
+
+02:02.370 --> 02:05.310
+So I'm going to add in the new instruction right above that.
+
+02:05.730 --> 02:09.400
+So I'll say copy, dot slash, dot slash.
+
+02:09.420 --> 02:16.110
+Again, everything from the current working directory of simple web to the current working directory
+
+02:16.110 --> 02:17.430
+inside the container.
+
+02:18.350 --> 02:18.740
+All right.
+
+02:18.740 --> 02:23.870
+So I'm going to save this and then we're going to try to run the Docker build command again over at
+
+02:23.870 --> 02:24.650
+our terminal.
+
+02:25.430 --> 02:30.350
+So I'm going to flip back over and I'll do Docker build Dot.
+
+02:31.330 --> 02:32.260
+We'll run that.
+
+02:32.440 --> 02:37.210
+Now, between the last section and this one, I removed my Alpine image or the node alpine image, so
+
+02:37.210 --> 02:38.350
+I had to redownload it.
+
+02:38.350 --> 02:40.680
+But after that we should see the copy step.
+
+02:40.690 --> 02:41.740
+There it is right there.
+
+02:41.740 --> 02:43.510
+We'll then see NPM install.
+
+02:43.540 --> 02:45.940
+Now you will notice a couple of little warnings.
+
+02:45.940 --> 02:47.500
+The warnings are totally fine.
+
+02:47.500 --> 02:51.340
+If you see a notice and then three warnings in a row, that's totally fine.
+
+02:51.340 --> 02:52.270
+No issue.
+
+02:52.300 --> 02:58.000
+So we've now successfully installed all of our NPM dependencies and then if we keep on scrolling down,
+
+02:58.000 --> 03:03.220
+we'll eventually see at the bottom that we have correctly generated this new image and this is the ID
+
+03:03.220 --> 03:04.330
+of the new image.
+
+03:04.480 --> 03:08.140
+Now remember, it's not really nice to work with IDs all the time.
+
+03:08.140 --> 03:13.300
+Let's try running the Docker, build command again, but this time we're going to tag the image.
+
+03:13.600 --> 03:21.940
+So I'll say Docker, build dash t, then my Docker ID and then the name of this project which we are
+
+03:21.940 --> 03:23.320
+calling Simple Web.
+
+03:23.740 --> 03:27.550
+And then I'm going to make sure that I pass in the build context on the very end.
+
+03:28.210 --> 03:31.660
+You'll notice I did not put on the colon latest to the tag right there.
+
+03:31.660 --> 03:37.480
+It's because remember the colon latest tag is automatically appended if you don't specify it in here.
+
+03:38.830 --> 03:42.790
+Now, one thing I just want to remind you about, please don't forget the dot on the very end.
+
+03:42.790 --> 03:46.450
+And once you've got that all on there, let enter to rebuild it.
+
+03:46.450 --> 03:51.400
+And now we have tagged that newly built image as your Docker ID slash simple web.
+
+03:51.640 --> 03:56.980
+So now last thing we're going to do is try to start out that image and get the node server running.
+
+03:57.370 --> 03:59.050
+So I'll do a Docker run.
+
+03:59.260 --> 04:02.800
+Stephen Grider slash simple web.
+
+04:05.600 --> 04:05.960
+All right.
+
+04:05.960 --> 04:12.060
+So I very quickly see that the node index command was issued through the NPM start command.
+
+04:12.080 --> 04:15.470
+I then see that the server is correctly listing on Port 80.
+
+04:15.770 --> 04:19.400
+So I think that we're ready to open up a web browser and test this thing out.
+
+04:19.790 --> 04:24.680
+So I'm going to flip on over to my browser and to visit that running application, we should be able
+
+04:24.680 --> 04:29.240
+to go to local host Colon 8080.
+
+04:30.670 --> 04:35.590
+But once I do, I get a nasty error message that says this site can't be reached.
+
+04:35.830 --> 04:41.020
+Well, we definitely got our image built and we are running a container out of it, but we still are
+
+04:41.020 --> 04:45.310
+not able to actually visit this port or see the web application running.
+
+04:45.310 --> 04:49.390
+So let's take a quick pause right here and we'll continue in the next section and figure out what is
+
+04:49.390 --> 04:50.110
+going wrong.

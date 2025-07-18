@@ -1,0 +1,346 @@
+WEBVTT
+
+00:00.750 --> 00:06.240
+In the last section, we took a first stab at our Docker file to build out this Node.js project, but
+
+00:06.240 --> 00:12.180
+we very quickly saw that during the run NPM install step, we got an error message that said NPM not
+
+00:12.180 --> 00:12.810
+found.
+
+00:13.380 --> 00:18.270
+We're seeing this error message because during step number two right here where we try to execute the
+
+00:18.270 --> 00:24.690
+command NPM install inside of a temporary container, there is no copy of NPM available.
+
+00:25.110 --> 00:29.250
+We're seeing this because we are using Alpine as our base image.
+
+00:29.250 --> 00:36.150
+Remember, we had said that we select our base image based upon the collection of default programs that
+
+00:36.150 --> 00:39.800
+we need to successfully build our image by default.
+
+00:39.810 --> 00:41.970
+Alpine is a very small image.
+
+00:41.970 --> 00:48.090
+It's only about five megabytes large, and so it has a rather limited set of default programs and included
+
+00:48.090 --> 00:48.840
+inside of it.
+
+00:49.080 --> 00:51.390
+In fact, I kind of like this diagram right here.
+
+00:51.600 --> 00:54.240
+What programs are included in the Alpine image?
+
+00:54.240 --> 00:57.570
+Well, this is supposed to be a tumbleweed of sorts, not much.
+
+00:57.570 --> 00:59.790
+So there's not a whole lot of stuff going on.
+
+00:59.790 --> 01:00.420
+By default.
+
+01:00.420 --> 01:06.030
+Inside the Alpine image, you get a couple of very default Linux or Unix programs.
+
+01:06.030 --> 01:09.960
+You get that package manager that we use just a little bit ago, but that's pretty much it.
+
+01:09.960 --> 01:12.210
+You don't get a lot of other stuff for free.
+
+01:12.840 --> 01:18.450
+So when you are using the Alpine image and you expect to run some fancy web application depending upon
+
+01:18.450 --> 01:24.870
+Node.js or depending upon Ruby or Java, chances are you are going to have to do some additional fixes
+
+01:24.870 --> 01:27.150
+or some additional setup to get this thing working.
+
+01:27.480 --> 01:33.360
+Now, to solve this issue, to solve the issue of NPM not being available inside of our base image,
+
+01:33.360 --> 01:35.190
+we have two options.
+
+01:35.190 --> 01:39.090
+The first option is to find a different base image.
+
+01:39.090 --> 01:45.030
+We can try to find a base image that already has Node and NPM pre installed inside of it.
+
+01:45.870 --> 01:52.260
+Alternatively, we can continue using the Alpine image and run an additional command like right here
+
+01:52.260 --> 01:57.000
+to attempt to install Node.js and NPM inside of our image.
+
+01:57.000 --> 02:02.670
+So two approaches we can either essentially use someone else's work or we can try to build up our own
+
+02:02.670 --> 02:04.110
+image from scratch.
+
+02:04.230 --> 02:08.490
+In our case, we're going to try using someone else's image.
+
+02:08.490 --> 02:13.950
+We're going to find an image that has already been configured to have npm preinstalled inside of it.
+
+02:15.210 --> 02:19.830
+So to get started, I'm going to flip back over to my terminal and we're going to navigate to Docker
+
+02:19.830 --> 02:26.520
+Hub, which you'll recall is a repository of public images that we can easily pull into our build process.
+
+02:26.520 --> 02:31.640
+So I'm going to open up a new tab and navigate to hub dot docker dot com.
+
+02:33.400 --> 02:36.280
+And then on the top bar, I'm going to find the explore button.
+
+02:37.940 --> 02:41.480
+You'll see a listing of very popular images immediately appear.
+
+02:41.480 --> 02:43.680
+And so, of course, right there is Alpine.
+
+02:43.730 --> 02:48.220
+We're going to scroll down a little bit and I'll few options down.
+
+02:48.230 --> 02:50.380
+You'll see node listed right here.
+
+02:50.390 --> 02:55.190
+If you don't see Node listed on here, you can always do a search up here at the top left hand side.
+
+02:55.190 --> 03:00.380
+And we're essentially just looking for the repository called Node and it should have a little sub description
+
+03:00.380 --> 03:01.490
+of official.
+
+03:01.850 --> 03:03.380
+So we can click on this.
+
+03:03.560 --> 03:05.570
+We'll get a short description right here.
+
+03:05.570 --> 03:08.630
+Now, the description in this case is not super helpful.
+
+03:08.630 --> 03:13.250
+It says, Oh, yeah, no, here's what it is, but what are we really downloading?
+
+03:13.250 --> 03:14.990
+Like, what is this repository?
+
+03:15.080 --> 03:20.780
+This repository is a Docker image that has Node preinstalled on it.
+
+03:21.440 --> 03:26.300
+So if we want to, we can attempt to build our image based upon this node one.
+
+03:26.300 --> 03:30.320
+And this node image already has node preinstalled or he has npm preinstalled.
+
+03:30.320 --> 03:35.840
+And so we don't have to worry about getting more errors like this where NPM is not found.
+
+03:37.550 --> 03:42.530
+Now before we just go and use Node willy nilly, I want to show you a little bit more inside this description.
+
+03:42.560 --> 03:45.200
+So you'll see this full description panel right here.
+
+03:45.860 --> 03:51.110
+And then first section here is supported tags and respective Docker file links.
+
+03:51.290 --> 03:55.640
+So this is a listing of all the different versions of this image that is available.
+
+03:55.760 --> 04:01.550
+You can get different versions of Node.js encapsulated in each of these different tags.
+
+04:01.550 --> 04:08.990
+So for example, if I have a application that requires Node version 6.14, I can find the tag version
+
+04:08.990 --> 04:10.700
+6.14 right here.
+
+04:10.760 --> 04:18.860
+And then inside of my Docker file, when I specify my base image, I can say node and I can specify
+
+04:18.860 --> 04:22.670
+the version of it specifically by adding on 6.14.
+
+04:22.670 --> 04:29.240
+So this will give me a image that contains a pre installed version of Node.js, specifically version
+
+04:29.240 --> 04:31.700
+6.14 of Node.js.
+
+04:32.880 --> 04:35.860
+Now in our case, we don't want version 6.14.
+
+04:35.880 --> 04:41.520
+Instead, I want you to scroll around just a little bit and you'll eventually see one tag in here called
+
+04:41.520 --> 04:42.310
+Alpine.
+
+04:42.330 --> 04:46.710
+You might have to do a command f search for Alpine and you'll see that.
+
+04:46.710 --> 04:49.860
+Well, yeah, there's a lot of examples on it on here.
+
+04:49.860 --> 04:51.330
+So here's Alpine right here.
+
+04:51.990 --> 04:54.150
+I want you to remember this is a tag.
+
+04:54.150 --> 04:56.400
+So this is not the name of the repository.
+
+04:56.400 --> 05:00.840
+So when you see Alpine right here, it doesn't mean that we're supposed to use like Alpine, like we
+
+05:00.840 --> 05:01.770
+were just before.
+
+05:01.800 --> 05:05.040
+The first word right here is the name of the repository.
+
+05:05.040 --> 05:08.850
+You place a colon, and then you put down a tag name.
+
+05:08.850 --> 05:14.010
+And so in this case, when you see Alpine right here, it means that we can optionally select node,
+
+05:14.010 --> 05:15.300
+colon, alpine.
+
+05:15.540 --> 05:17.910
+So now you might be curious, why would we do this?
+
+05:17.910 --> 05:21.720
+Like, what is the purpose of Alpine being tied onto Node?
+
+05:21.960 --> 05:28.800
+Well, Alpine is a term in the Docker world for an image that is as small and compact as possible.
+
+05:29.370 --> 05:36.150
+Many popular repositories are going to offer Alpine versions of their image in an alpine version of
+
+05:36.150 --> 05:41.250
+Node in particular means that you're not going to get a bunch of additional preinstalled programs.
+
+05:41.430 --> 05:47.700
+So the default node installation might include extra programs like, say, Get or a package manager
+
+05:47.700 --> 05:51.780
+or, I don't know, some fancy text editing tools inside that image.
+
+05:51.960 --> 05:57.750
+When you get the Alpine version of an image, it means you're getting the absolute most stripped down
+
+05:57.750 --> 05:59.520
+version of that image possible.
+
+05:59.520 --> 06:03.960
+So it's going to essentially have no edges and pretty much nothing else.
+
+06:03.960 --> 06:07.800
+It will have some very basic programs like, say, the PIN Command.
+
+06:07.800 --> 06:12.900
+Maybe you have to look at the actual image to figure that out, but it might have the pin command you'll
+
+06:12.900 --> 06:17.820
+have say cat, maybe a simple text editor ls simple programs like that.
+
+06:17.820 --> 06:21.720
+But in general, you're getting a very stripped down version of that image.
+
+06:21.840 --> 06:28.740
+So for us, the Alpine version works just fine because essentially all you and I need is Node and PM.
+
+06:28.740 --> 06:34.290
+An MPLM is included in this node image right here and we need absolutely nothing else.
+
+06:34.290 --> 06:39.000
+So we are totally fine using the alpine version of the node image.
+
+06:40.070 --> 06:40.520
+All right.
+
+06:40.520 --> 06:45.980
+So with all that in mind, now that we've made the change to the from right here, we now have specified
+
+06:45.980 --> 06:50.300
+a base image that hopefully is going to include AMPM inside of it.
+
+06:50.300 --> 06:52.070
+And I can tell you it definitely is.
+
+06:52.070 --> 06:54.410
+This is going to have AMPM Pre-installed.
+
+06:54.410 --> 06:55.610
+We're definitely good to go.
+
+06:55.790 --> 07:00.890
+So let's now try to rebuild our image with this change and see if that error message goes away.
+
+07:01.490 --> 07:02.390
+First things first.
+
+07:02.390 --> 07:04.700
+Do make sure that you save the Docker file.
+
+07:05.370 --> 07:12.870
+And then once you save it, well, full pack over to the terminal and do a Docker build dot again.
+
+07:14.690 --> 07:15.200
+All right.
+
+07:15.200 --> 07:18.950
+So now you can see that we're downloading the new node alpine image.
+
+07:19.400 --> 07:23.540
+We then get down to step number two right here where we run NPM install.
+
+07:23.540 --> 07:28.370
+But very shortly after that, we get a series of error messages and the first of which says no such
+
+07:28.370 --> 07:31.250
+file or directory package JSON.
+
+07:31.700 --> 07:37.070
+So the package JSON is a file that exists inside of our current working directory, but it looks like
+
+07:37.070 --> 07:40.610
+the container is complaining that, hey, I don't have this file available.
+
+07:40.610 --> 07:42.750
+Like where's the package JSON file?
+
+07:42.770 --> 07:45.740
+I need this to know which dependencies I need to install.
+
+07:45.830 --> 07:47.540
+So let's take a quick pause right here.
+
+07:47.550 --> 07:50.540
+We're going to start to investigate why we're seeing this error message.

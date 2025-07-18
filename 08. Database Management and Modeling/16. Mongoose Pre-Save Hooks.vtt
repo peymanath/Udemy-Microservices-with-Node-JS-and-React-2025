@@ -1,0 +1,301 @@
+WEBVTT
+
+00:01.000 --> 00:04.780
+Now that we've got our password manager class all put together, we're going to make use of it inside
+
+00:04.780 --> 00:06.400
+of our user model file.
+
+00:06.490 --> 00:08.230
+Some inside of my model's directory.
+
+00:08.260 --> 00:16.780
+Looking at the user file at the very top, I'm going to import password from a one directory services
+
+00:16.810 --> 00:17.410
+password.
+
+00:18.940 --> 00:23.440
+So now whenever we try to save a user to our database, we're going to implement some code inside of
+
+00:23.440 --> 00:26.950
+here that's going to automatically intercept that save attempt.
+
+00:27.160 --> 00:32.770
+It's going to take the user's password that we've set on the user document, hash it, and then overwrite
+
+00:32.770 --> 00:34.300
+the password on the document.
+
+00:34.980 --> 00:36.450
+So let's put this together.
+
+00:36.840 --> 00:41.160
+Down towards the bottom of the file right after we build out our user schema.
+
+00:42.160 --> 00:48.760
+I'm going to add in a new method right after that we will say user schema dot pre save.
+
+00:52.660 --> 00:55.740
+So this is a middleware function implemented in Mongoose.
+
+00:55.750 --> 01:00.310
+Any time we attempt to save a document to our database, we are going to execute this function right
+
+01:00.310 --> 01:00.790
+here.
+
+01:01.180 --> 01:01.750
+Immediately.
+
+01:01.750 --> 01:05.110
+You will notice that I marked this function as async mongoose.
+
+01:05.140 --> 01:08.710
+Very similar to Express is kind of in the old way of doing things.
+
+01:08.830 --> 01:14.170
+Mongoose does not really have great support out of the box for async, await syntax instead to handle
+
+01:14.170 --> 01:19.060
+any kind of asynchronous code that we want to run inside this little callback function, we get this
+
+01:19.060 --> 01:24.760
+done argument so we are responsible for calling done once we have done all the work we need to do inside
+
+01:24.760 --> 01:25.330
+of here.
+
+01:25.780 --> 01:30.490
+So rather than just saying, await, blah, blah blah something and then letting mongoose figure out
+
+01:30.490 --> 01:34.630
+what's going on, we have to do our await call, anything else we want to do.
+
+01:34.630 --> 01:36.850
+And then at the very end we have to call it done.
+
+01:39.360 --> 01:44.550
+You'll also notice that I define this function using the function keyword as opposed to an arrow function
+
+01:44.580 --> 01:45.750
+like this right here.
+
+01:45.780 --> 01:51.300
+So quick reminder, whenever we put together a middleware function, we get access to the document that
+
+01:51.300 --> 01:52.050
+is being saved.
+
+01:52.050 --> 01:58.110
+So the actual user that we're trying to persist to the database as this inside of this function.
+
+01:59.230 --> 02:01.150
+If we used an arrow function right here.
+
+02:02.470 --> 02:08.110
+Then the value of this inside the function would be overridden and would be actually instead equal to
+
+02:08.110 --> 02:13.240
+the context of this entire file as opposed to our user document, not what we want.
+
+02:13.240 --> 02:17.170
+So that's why we are using the function keyword instead of the arrow function.
+
+02:18.470 --> 02:21.430
+So inside of here, we're going to do two quick things.
+
+02:21.440 --> 02:26.540
+We're going to check and see if the user or we're going to check and see if we've modified the user's
+
+02:26.540 --> 02:27.200
+password.
+
+02:27.200 --> 02:30.560
+We're going to say if this dot is modified.
+
+02:31.590 --> 02:32.220
+Password.
+
+02:33.530 --> 02:37.850
+The reason for this is that we might be retrieving the user out of the database and then trying to save
+
+02:37.850 --> 02:41.030
+them back into the database at some future point in time.
+
+02:41.030 --> 02:43.540
+We don't really have any functionality around that just right now.
+
+02:43.550 --> 02:48.020
+Well, let's imagine that we had some kind of email change functionality that would involve us fetching
+
+02:48.020 --> 02:52.730
+a user out of the database, changing the email, and then trying to save it to the database.
+
+02:53.360 --> 02:57.110
+So in that scenario, we would still be running this middleware right here.
+
+02:57.680 --> 03:03.020
+If we only change the email, we would not want to try to rehash the password or anything like that,
+
+03:03.020 --> 03:08.630
+because that means that we would be hashing a already hashed password, definitely not what we want.
+
+03:08.930 --> 03:13.190
+So we are only going to attempt to hash the password if it has been modified.
+
+03:14.460 --> 03:17.550
+When we first create a user and assign a password to them.
+
+03:17.550 --> 03:23.820
+So in other words, when we eventually write out something like user build and throw in an email and
+
+03:23.820 --> 03:24.720
+a password.
+
+03:25.440 --> 03:29.130
+This mongoose will consider password to be modified.
+
+03:29.130 --> 03:32.760
+So even if we are just creating this thing for the very first time is modified.
+
+03:32.760 --> 03:33.870
+Password will return.
+
+03:33.870 --> 03:34.380
+True.
+
+03:35.770 --> 03:36.070
+All right.
+
+03:36.070 --> 03:40.480
+So inside of here, we're going to get the hashed version of the password.
+
+03:41.050 --> 03:44.530
+So we'll do it and await password to hash.
+
+03:45.200 --> 03:50.030
+And we will pass in the users password that they just set or that we just set on the user document.
+
+03:50.030 --> 03:50.840
+So we'll say.
+
+03:52.710 --> 03:54.030
+Biscuit.
+
+03:55.200 --> 03:55.800
+Password.
+
+03:57.000 --> 04:01.710
+So that's going to get the user's password off the document and we'll pass it into two hash.
+
+04:01.710 --> 04:03.630
+And that gives us back the hash password.
+
+04:04.510 --> 04:06.400
+Well then go ahead and update the password.
+
+04:06.400 --> 04:07.630
+So this set.
+
+04:08.840 --> 04:09.560
+Password.
+
+04:10.490 --> 04:10.970
+To whatever.
+
+04:10.970 --> 04:13.520
+We just got back out of the password hashing function.
+
+04:14.800 --> 04:19.300
+And then finally after the if statement, we'll call done because we've now done all the asynchronous
+
+04:19.300 --> 04:20.350
+work we need to do.
+
+04:21.710 --> 04:22.920
+All right, so that looks pretty good.
+
+04:22.940 --> 04:23.930
+I'm going to save this.
+
+04:25.980 --> 04:30.480
+So let's now go ahead and attempt to test this out by signing up for a new account.
+
+04:30.630 --> 04:35.820
+Remember, right now, any time we sign up for an account or sign up as a user, our route handler back
+
+04:35.820 --> 04:41.640
+inside of sign signup takes the newly saved user and sends it back to whoever made the request.
+
+04:42.520 --> 04:47.320
+Right now or previously when we were trying to test this thing out, we saw that we sent back the password
+
+04:47.320 --> 04:48.310
+in plain text.
+
+04:48.310 --> 04:53.050
+So now when we send back this user, we should see the password in a hashed format instead.
+
+04:54.880 --> 04:56.200
+All right, so I'm going to go to Postman.
+
+04:56.830 --> 04:59.950
+I'm going to put in another unique email address.
+
+05:00.190 --> 05:01.300
+I'm going to send this in.
+
+05:01.990 --> 05:03.040
+And there we go.
+
+05:03.400 --> 05:09.130
+So I can now see that the user that gets sent back to me, I've got my email and I've got a hash password
+
+05:09.130 --> 05:10.150
+on there as well.
+
+05:11.300 --> 05:12.410
+Well, that looks good.
+
+05:13.110 --> 05:16.350
+So now we are no longer storing passwords in plaintext inside of our database.
+
+05:16.380 --> 05:17.550
+That is fantastic.
+
+05:18.570 --> 05:22.090
+Now we still have to put together some logic to actually do the password comparison.
+
+05:22.110 --> 05:26.130
+We're going to write that out during our actual sign in implementation.
+
+05:26.520 --> 05:29.040
+So we're just about done with the sign up stuff.
+
+05:29.070 --> 05:33.660
+The last thing we have to do, as you will recall, is make sure.
+
+05:34.880 --> 05:35.510
+Where is it?
+
+05:35.540 --> 05:35.950
+Where is it?
+
+05:35.960 --> 05:36.860
+Where is it?
+
+05:36.890 --> 05:37.880
+Back over here.
+
+05:38.270 --> 05:42.710
+After we have saved the user to the database, we are now considering this person to be logged in.
+
+05:42.710 --> 05:46.120
+So we need to figure out how we're going to actually consider a person to be logged in.
+
+05:46.130 --> 05:50.090
+We need to figure out whether we want to use a cookie JSON Web token or whatever else.
+
+05:50.390 --> 05:53.300
+Let's figure all that stuff out, starting in just a moment.

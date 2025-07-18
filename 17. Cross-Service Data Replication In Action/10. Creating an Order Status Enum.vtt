@@ -1,0 +1,436 @@
+WEBVTT
+
+00:01.050 --> 00:02.700
+Let's go back over to our common library.
+
+00:02.700 --> 00:07.050
+We're going to define this enum of order status to describe all the possible statuses that an order
+
+00:07.050 --> 00:07.710
+can have.
+
+00:08.430 --> 00:09.480
+Back inside my editor.
+
+00:09.480 --> 00:12.000
+I'll find my common directory inside there.
+
+00:12.000 --> 00:14.610
+I'm going to find Z then events.
+
+00:14.610 --> 00:18.540
+And inside of events I'm going to make a new folder called Types.
+
+00:19.270 --> 00:23.500
+And then inside of types, I'll make a new file called Order Status.
+
+00:23.830 --> 00:24.400
+It's.
+
+00:25.890 --> 00:27.060
+Inside of order status.
+
+00:27.060 --> 00:30.570
+I'll then write out export order status.
+
+00:31.340 --> 00:35.260
+So in total, we're going to say that an order can have four different possible states.
+
+00:35.270 --> 00:39.130
+Only four are going to first write out all these different states that an order can be in.
+
+00:39.140 --> 00:42.050
+And then we'll put in some comments to describe the purpose of each of them.
+
+00:42.680 --> 00:44.390
+So first is going to be created.
+
+00:45.930 --> 00:46.710
+Cancelled.
+
+00:50.620 --> 00:52.510
+Awaiting payment.
+
+00:56.240 --> 00:57.560
+And complete.
+
+01:00.810 --> 01:04.290
+So these are the only four possible statuses that an order can ever have.
+
+01:04.530 --> 01:06.630
+It's not going to put on a comment for each one.
+
+01:06.900 --> 01:10.720
+So when is something going to be or when is an order going to have a status of created?
+
+01:10.740 --> 01:16.520
+We're going to say that in order has a status of created when the order has been created.
+
+01:16.530 --> 01:17.490
+But the.
+
+01:18.710 --> 01:20.990
+Ticket it is.
+
+01:23.030 --> 01:27.050
+Trying to order has not been reserved.
+
+01:27.750 --> 01:32.100
+So it turns out, as you'll see in a little bit, whenever someone creates an order, we're not going
+
+01:32.100 --> 01:37.350
+to necessarily immediately have full confirmation that a ticket or the ticket the user is trying to
+
+01:37.350 --> 01:40.110
+purchase is actually 100% reserved.
+
+01:40.140 --> 01:45.150
+It turns out that there actually is a race condition that we need to think about very deeply.
+
+01:45.420 --> 01:50.100
+So whenever an order gets created, we're going to say, well, we think that we have reserved the ticket,
+
+01:50.100 --> 01:52.020
+but we don't actually know for sure.
+
+01:52.050 --> 01:56.970
+There's kind of a difference between a order reserving a ticket and a ticket being actually available.
+
+01:57.330 --> 01:58.980
+We'll dive more into this over time.
+
+01:59.010 --> 02:03.270
+Right now, we're just going to say that whenever a order has been created by default, it will be simply
+
+02:03.270 --> 02:03.870
+created.
+
+02:05.300 --> 02:06.710
+Next up is cancelled.
+
+02:06.740 --> 02:10.250
+So a order will be in the state of cancelled any time.
+
+02:11.320 --> 02:17.650
+The ticket the order is trying to reserve has already been reserved.
+
+02:18.750 --> 02:21.210
+Or when the user has cancelled.
+
+02:22.260 --> 02:22.890
+The order.
+
+02:24.190 --> 02:25.750
+So kind of two scenarios here.
+
+02:25.780 --> 02:30.170
+The first one is kind of a reference to what I just mentioned around this created case.
+
+02:30.190 --> 02:35.860
+So it is possible for a user to create an order, but for it to not actually successfully reserve the
+
+02:35.860 --> 02:37.490
+ticket that the order was for.
+
+02:37.510 --> 02:40.630
+And again, it goes to that kind of race condition that we'll discuss in a little.
+
+02:41.110 --> 02:44.830
+If that's the case, if we kind of fail to reserve the ticket, then we're going to fall into this cancelled
+
+02:44.830 --> 02:45.400
+case.
+
+02:45.700 --> 02:50.200
+And naturally, if a user decides to cancel the order, we will also market as canceled.
+
+02:51.320 --> 02:59.570
+Now awaiting payment is going to occur whenever the order has successfully reserved the ticket.
+
+03:02.190 --> 03:03.750
+And finally complete.
+
+03:04.790 --> 03:06.560
+Mark this thing as complete any time.
+
+03:06.830 --> 03:14.480
+The order has reserved the ticket and the user has provided payment successfully.
+
+03:16.050 --> 03:19.900
+There is actually one other case here I mentioned or I failed to mention around canceled.
+
+03:19.920 --> 03:25.740
+The other possibility is if the order expires before payment.
+
+03:26.550 --> 03:28.340
+Totally forgot that very important case.
+
+03:28.350 --> 03:32.430
+So if, say, 15 minutes goes by and we don't get any payment from the user, then we're going to mark
+
+03:32.430 --> 03:34.260
+the order as cancelled as well.
+
+03:34.800 --> 03:39.720
+The notice that cancelled is kind of a catch all, so we're kind of capturing these three different
+
+03:39.720 --> 03:40.170
+cases.
+
+03:40.170 --> 03:45.030
+So when we fail to do the reservation, when the user cancels the order or when it expires as well,
+
+03:45.360 --> 03:47.400
+all three of those are under one case right here.
+
+03:47.400 --> 03:51.510
+If you wanted to, you could definitely split these out to three different statuses to get a better
+
+03:51.510 --> 03:52.110
+idea.
+
+03:52.110 --> 03:57.270
+As far as analytics goes of why orders are failing to actually be processed, that'd be something I'm
+
+03:57.270 --> 03:58.050
+just mentioning.
+
+03:58.050 --> 04:03.000
+We're not going to do it because essentially for our purposes in order is either kind of progressing
+
+04:03.000 --> 04:06.930
+through the stages and getting towards complete or it has failed, in which case we're going to market
+
+04:06.930 --> 04:08.130
+as simply cancelled.
+
+04:09.040 --> 04:09.150
+Kit.
+
+04:09.250 --> 04:09.880
+So this is it.
+
+04:09.880 --> 04:13.240
+These are the four statuses we can possibly have around in order.
+
+04:13.660 --> 04:14.950
+So now I'm going to save this file.
+
+04:15.880 --> 04:19.930
+We need to now make sure that we export this income from our common module.
+
+04:19.960 --> 04:26.020
+We then need to republish the module and then update the common module inside of our order's project.
+
+04:27.420 --> 04:30.360
+So step one, let's make sure that we actually export order status.
+
+04:30.360 --> 04:33.330
+So inside of the common modules indexed file.
+
+04:34.160 --> 04:36.470
+I will add in an expert from.
+
+04:37.940 --> 04:40.520
+Events types order status.
+
+04:41.420 --> 04:42.200
+That was easy.
+
+04:43.530 --> 04:44.670
+I'm going to save this file.
+
+04:45.000 --> 04:45.630
+Close it.
+
+04:45.870 --> 04:49.680
+I'm going to close the order status and then go back over to my terminal.
+
+04:50.770 --> 04:52.630
+I'll change into my common directory.
+
+04:53.810 --> 04:56.630
+And I'll do an AMPM run pub inside there.
+
+04:57.900 --> 04:59.610
+As usual going to commit.
+
+04:59.790 --> 05:00.600
+Build.
+
+05:01.170 --> 05:04.640
+Increment version pushed off to 9 p.m..
+
+05:04.650 --> 05:05.790
+All that kind of good stuff.
+
+05:07.490 --> 05:11.570
+Once that thing is all done, I'll then change over to orders.
+
+05:13.560 --> 05:15.420
+And do an NPM update.
+
+05:16.420 --> 05:18.340
+SGA tickets common.
+
+05:19.380 --> 05:19.980
+Naturally.
+
+05:19.980 --> 05:22.050
+Make sure you change that to your organization name.
+
+05:24.010 --> 05:24.190
+Okay.
+
+05:24.190 --> 05:24.970
+We'll run that.
+
+05:26.900 --> 05:30.490
+And then we should just really confirm, make sure we get the correct version on the update.
+
+05:30.500 --> 05:32.540
+So I just published version 14.
+
+05:32.750 --> 05:34.280
+There's version 14 right there.
+
+05:34.280 --> 05:36.200
+Definitely feel like I got the right version.
+
+05:37.300 --> 05:37.520
+Cool.
+
+05:37.540 --> 05:39.040
+So now we can go back over to our editor.
+
+05:40.190 --> 05:44.730
+And back inside of our orders project, the order service will find the order model file, which we
+
+05:44.730 --> 05:45.680
+were just working on.
+
+05:46.930 --> 05:51.490
+Then at the very top, we're going to import the order status enum.
+
+05:54.900 --> 05:56.310
+From our common module.
+
+05:59.330 --> 06:01.400
+I've got a little air here around the import.
+
+06:02.220 --> 06:07.050
+It's just kind of an issue out of VS code every now and then whenever you update a type definition file,
+
+06:07.050 --> 06:11.550
+which is pretty much what's going on right here, the code is not going to understand that we've actually
+
+06:11.550 --> 06:12.930
+updated this module right away.
+
+06:12.930 --> 06:18.240
+So to get code, to understand what's going on here, you can do a command shift P to open the command
+
+06:18.240 --> 06:18.750
+palette.
+
+06:18.750 --> 06:23.880
+If you're on windows, I believe it's going to be control shift P and then you can search for reload
+
+06:23.880 --> 06:24.630
+window.
+
+06:26.400 --> 06:27.480
+Go ahead and hit enter.
+
+06:27.510 --> 06:29.520
+That's essentially just going to reload vs code.
+
+06:30.240 --> 06:32.850
+That's going to force it also to reload all the type definitions.
+
+06:32.850 --> 06:35.700
+And now you'll notice that I don't have an error around that import anymore.
+
+06:37.060 --> 06:38.710
+So now let's make use of this order status.
+
+06:38.710 --> 06:44.200
+We're going to apply it to the order attributes interface in order document to severely restrict what
+
+06:44.200 --> 06:46.240
+the status of an order can be set to.
+
+06:46.270 --> 06:51.100
+So rather than allowing an order to have any arbitrary status, so long as it is a string, we're going
+
+06:51.100 --> 06:57.160
+to say that the status property must be one of the possibilities listed inside of order status.
+
+06:57.520 --> 06:59.500
+And we'll do the same thing for the order dock as well.
+
+07:02.930 --> 07:08.840
+And then finally we can actually also encode on our mongoose schema, this requirement as well.
+
+07:08.870 --> 07:14.480
+So technically the interfaces up here should be enough to capture any kind of erroneous case.
+
+07:14.600 --> 07:20.150
+But we can also add in some validation on mongoose side to make sure that anytime someone tries to change
+
+07:20.150 --> 07:25.550
+or set the status property right here, Mongoose will make sure that it gets set to one of several possible
+
+07:25.550 --> 07:26.290
+values.
+
+07:26.300 --> 07:31.340
+So on status are going to add in another key here of Enum.
+
+07:32.340 --> 07:36.240
+Object values and then put in the order status enum.
+
+07:37.730 --> 07:42.920
+So now whenever we try to set update whatever the status property mongoose will make sure that we set
+
+07:42.920 --> 07:45.980
+it to one of the values listed inside of that enum.
+
+07:47.500 --> 07:52.150
+One other thing that we might optionally want to do is provide a default value for this to make sure
+
+07:52.150 --> 07:55.090
+100% that this thing really, truly always gets set.
+
+07:55.420 --> 08:00.000
+So by default, we could say that every order gets created with a default status of created.
+
+08:00.010 --> 08:07.870
+So to say that right in default then order status created like so this really is 100% optional because
+
+08:07.870 --> 08:10.750
+we've got now two type checks at the top of the file.
+
+08:10.750 --> 08:12.520
+We've also got the enum right here.
+
+08:12.760 --> 08:14.590
+So not super necessary.
+
+08:14.740 --> 08:18.760
+We're always going to make sure we set that order status, but you can just add that in if you wish.
+
+08:20.460 --> 08:21.390
+Yes, that looks good.
+
+08:21.420 --> 08:24.960
+That's definitely going to solve all this issue around handling the order status.
+
+08:24.990 --> 08:26.190
+So now a quick pause right here.
+
+08:26.190 --> 08:29.910
+We'll come back the next video and discuss the other property on here, that ticket property, and how
+
+08:29.910 --> 08:31.080
+that thing is going to be set.

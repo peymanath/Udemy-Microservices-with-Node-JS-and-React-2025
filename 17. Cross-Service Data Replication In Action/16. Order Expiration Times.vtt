@@ -1,0 +1,310 @@
+WEBVTT
+
+00:01.160 --> 00:04.700
+Onto our next step where we're going to calculate an expiration date for this order.
+
+00:04.730 --> 00:09.090
+So I've said in a lot of diagrams that we're going to say that the order expires after 15 minutes.
+
+00:09.110 --> 00:11.570
+Again, it doesn't really matter what the expiration time is.
+
+00:11.600 --> 00:14.240
+It can be 15 minutes, 15 seconds, no difference.
+
+00:15.000 --> 00:15.600
+For this step.
+
+00:15.600 --> 00:18.830
+All we really have to do right here is create a JavaScript date object.
+
+00:18.840 --> 00:23.280
+If we go back over to our order model file, you'll recall that we said that when we create a new order,
+
+00:23.280 --> 00:25.620
+we were going to provide a date object.
+
+00:25.620 --> 00:28.740
+So that's a plain JavaScript date object, nothing fancy about it.
+
+00:29.370 --> 00:33.450
+So to create an expiration date, we'll say expiration.
+
+00:34.310 --> 00:36.080
+Is a new date object.
+
+00:36.560 --> 00:41.720
+When we create a new date object, it will be given a date value or a time essentially of right now,
+
+00:41.720 --> 00:43.010
+this instant in time.
+
+00:43.340 --> 00:47.180
+So we now want to take a look at this expiration or this object we just created.
+
+00:47.180 --> 00:49.040
+And we want to advance it forward.
+
+00:49.040 --> 00:55.670
+We want to point it, say, 15 minutes into the future or 15 seconds or whatever it is to do so we can
+
+00:55.670 --> 00:57.110
+write out to expiration.
+
+00:58.600 --> 01:06.610
+Dot set seconds and then we will pass an expiration get seconds, plus some number of seconds to add
+
+01:06.610 --> 01:07.030
+on.
+
+01:07.210 --> 01:11.650
+So if you want this thing to expire, 15 seconds in the future, we would put in just 15.
+
+01:11.890 --> 01:20.630
+If we want this to expire 15 minutes in the future, we would put in 15 times 60 and that would be 15
+
+01:20.630 --> 01:21.370
+minutes.
+
+01:23.140 --> 01:27.700
+Now we probably do not want to bury a very important configuration variable like this inside of some
+
+01:27.700 --> 01:30.640
+line instead of side of some hidden root file.
+
+01:30.910 --> 01:37.120
+So I'm going to extract this expiration time into a really big, very well declared variable at the
+
+01:37.120 --> 01:38.020
+top of the file.
+
+01:38.290 --> 01:45.420
+So up here at the very top, I'm going to create a constant and call it expiration window seconds.
+
+01:45.430 --> 01:48.780
+So this is going to be the number of seconds before the order expires.
+
+01:48.790 --> 01:53.500
+And I'm calling it window to say this is the window of time that a user has to actually pay for this
+
+01:53.500 --> 01:53.950
+order.
+
+01:54.840 --> 01:57.330
+So for me, I'm going to make this right now 15 minutes.
+
+01:57.330 --> 02:00.300
+So I will put in the 15 times 60 like so.
+
+02:02.640 --> 02:07.250
+Now, even writing this out as a really big constant at the top of the file still kind of buries it
+
+02:07.290 --> 02:08.610
+inside of our application.
+
+02:08.610 --> 02:14.370
+This is potentially a very important setting right here because it dramatically affects how our application
+
+02:14.370 --> 02:18.570
+behaves and how long a user has to actually build or purchase the ticket.
+
+02:18.690 --> 02:24.060
+So you might want to extract this thing into possibly an environment variable that would allow you to
+
+02:24.060 --> 02:28.080
+make changes to that window of time without having to redeploy the entire application.
+
+02:28.080 --> 02:33.300
+You could instead just update the value inside of your Kubernetes config file inside that infrared directory.
+
+02:33.330 --> 02:35.820
+Alternatively, you could even get fancier than that.
+
+02:35.820 --> 02:40.650
+You could try to save this number of seconds as a record to the database and then put together some
+
+02:40.650 --> 02:44.610
+kind of web UI that would allow an administrator to change it on the fly.
+
+02:44.640 --> 02:49.890
+You might even want to have some kind of per user expiration settings, but for right now, I think
+
+02:49.890 --> 02:51.210
+this is just fine.
+
+02:51.270 --> 02:51.930
+Good enough.
+
+02:52.800 --> 02:53.940
+So I'm going to go back down.
+
+02:55.010 --> 02:58.670
+And rather than doing the plus 15 by 60, I'll put an expiration.
+
+02:59.440 --> 03:01.810
+Window seconds like so.
+
+03:02.660 --> 03:05.090
+And I'll collapse my sidebar so you can see that whole line.
+
+03:08.270 --> 03:09.760
+So we're on to the last steps right here.
+
+03:09.770 --> 03:12.500
+We're going to build up our order and save it to the database.
+
+03:12.860 --> 03:17.240
+Well, this is going to be very similar to some code that we saw when we were discussing that Mongo
+
+03:17.240 --> 03:20.420
+or Mongoose reference builder just a moment ago.
+
+03:20.690 --> 03:22.750
+We're essentially just going to build up a normal model.
+
+03:22.760 --> 03:24.650
+We'll say, let's make an order.
+
+03:25.400 --> 03:27.140
+Using the order build method.
+
+03:28.100 --> 03:31.450
+We can then use TypeScript to remember what attributes we have to provide.
+
+03:31.460 --> 03:34.940
+So we got to give a user ID status, blah, blah, blah, all that stuff.
+
+03:36.100 --> 03:37.780
+So let's throw in the user ID first.
+
+03:38.050 --> 03:41.230
+This will come from recurrent user ID.
+
+03:41.770 --> 03:46.710
+Remember that TypeScript really does not think that that current user property is defined.
+
+03:46.720 --> 03:48.670
+So if we mouse over it.
+
+03:50.240 --> 03:51.050
+It's going to tell us.
+
+03:51.050 --> 03:52.550
+Oh, yes, current user right here.
+
+03:52.550 --> 03:55.160
+It might possibly be undefined.
+
+03:55.160 --> 03:57.890
+And so if I look at the second error, that's what I was looking for.
+
+03:57.890 --> 03:59.180
+Object is possibly undefined.
+
+03:59.180 --> 04:01.220
+But remember, we've been over this several times.
+
+04:01.220 --> 04:05.690
+We already doing a check to make sure recurrent user is defined inside that require auth middleware.
+
+04:05.690 --> 04:08.360
+So we feel pretty much just fine saying that.
+
+04:08.360 --> 04:12.530
+Yeah, this thing definitely has a current user property assigned, so I'll put in an exclamation like
+
+04:12.530 --> 04:13.550
+so telling TypeScript.
+
+04:13.550 --> 04:14.480
+Don't worry about it.
+
+04:16.380 --> 04:17.760
+Next up, we need our status.
+
+04:17.790 --> 04:24.600
+We technically are setting a default status on the order, but our actual type or our interface is expecting
+
+04:24.600 --> 04:25.980
+us to provide a status.
+
+04:25.980 --> 04:28.680
+So we do have to put in a status here of order.
+
+04:29.800 --> 04:34.420
+Status dot created, which is the initial status that all orders are going to get.
+
+04:35.150 --> 04:36.950
+Well then set that expires at.
+
+04:37.100 --> 04:41.200
+Which is going to be just the entire expiration object that we just created a moment ago.
+
+04:41.210 --> 04:45.230
+And then finally the ticket that we found just a little bit ago.
+
+04:45.820 --> 04:50.800
+So throw in the ticket as ticket, and naturally we can condense that down to just be ticket.
+
+04:53.710 --> 04:54.480
+It looks good.
+
+04:56.020 --> 04:58.660
+So after building the order, we'll then save it to the database.
+
+04:58.660 --> 05:00.460
+So we'll do in a wait order.
+
+05:00.700 --> 05:01.270
+Save.
+
+05:03.320 --> 05:07.670
+As I mentioned a little bit ago, we don't have any infrastructure right now to emit an event saying
+
+05:07.670 --> 05:08.820
+that order was created.
+
+05:08.840 --> 05:11.940
+So right now, we'll just skip on to a sending back response to the user.
+
+05:11.960 --> 05:13.880
+We'll do a resource status.
+
+05:15.290 --> 05:20.120
+Of 201 to say that a record was created and let's send back the entire order.
+
+05:23.410 --> 05:24.000
+All right.
+
+05:24.010 --> 05:24.700
+That should be it.
+
+05:26.670 --> 05:30.180
+We are pretty much done with this new route handler to create a new order.
+
+05:30.210 --> 05:34.490
+However, we don't really know if this stuff works yet, so we're going to take a pause right here.
+
+05:34.500 --> 05:37.830
+When we come back, the next video, we are going to start to write out some automated tests to make
+
+05:37.830 --> 05:40.080
+sure that all this logic works as expected.
+
+05:40.470 --> 05:45.200
+As I mentioned at the start of this order, service not required for you to write tests around the stuff.
+
+05:45.210 --> 05:50.250
+However, I really do recommend you still download the completed test that I write and run them inside
+
+05:50.250 --> 05:54.460
+of your project just to make sure that everything is actually working as expected.
+
+05:54.480 --> 05:59.190
+Because debugging this stuff, well, it starts to be a little bit tricky if you're going to debug it
+
+05:59.190 --> 06:01.620
+once you're actually using it from the React application.
+
+06:02.310 --> 06:04.920
+So let's do a little bit of test setup in just a moment.

@@ -1,0 +1,517 @@
+WEBVTT
+
+00:01.020 --> 00:04.980
+Once we submit that payment information up to Stripe, we get back this object right here that has the
+
+00:04.980 --> 00:06.130
+ID inside of it.
+
+00:06.150 --> 00:09.570
+That ID is the token that we want to provide to our payment service.
+
+00:09.720 --> 00:14.340
+Let's go take a quick look at our payment service just to get a quick reminder on what we have to do
+
+00:14.340 --> 00:14.970
+next.
+
+00:15.330 --> 00:21.150
+So inside of my payment service, I'm going to find the RC root directory and then inside their new.
+
+00:22.440 --> 00:28.260
+So we need to make a post request to API payments and we need to include the token, which is the ID
+
+00:28.260 --> 00:31.140
+inside that object along with the order ID.
+
+00:31.760 --> 00:32.750
+That's pretty much it.
+
+00:34.020 --> 00:36.090
+Let's go back over to our auto show component.
+
+00:36.120 --> 00:36.990
+Here it is right here.
+
+00:37.720 --> 00:43.480
+So we have our callback right there that we are passing off to the token prop of stripe checkout.
+
+00:43.810 --> 00:47.440
+So once we get that token, I'll be really care about it is the ID.
+
+00:47.620 --> 00:51.100
+So I'm going to get started by structuring out just the ID.
+
+00:52.790 --> 00:55.340
+And right now I'll just update the console.log to ID.
+
+00:56.160 --> 01:01.440
+Now we need to make sure that we take that ID and the ID off of the order that we received as a prop
+
+01:01.440 --> 01:03.810
+and make that request off to our payment service.
+
+01:04.080 --> 01:06.990
+Once again, we're going to make use of the use request hook.
+
+01:07.500 --> 01:08.820
+So at the very top of the file.
+
+01:11.300 --> 01:17.600
+I will import user request from up to directories books use request.
+
+01:20.710 --> 01:25.630
+And then right after our you state, I'm going to add in due request.
+
+01:27.630 --> 01:28.440
+Airs.
+
+01:30.110 --> 01:35.840
+And that will come from calling user request with our URL of API payments.
+
+01:36.700 --> 01:38.590
+The method is most.
+
+01:40.250 --> 01:44.570
+The body is going to contain our order ID.
+
+01:45.550 --> 01:46.360
+As order.
+
+01:46.480 --> 01:47.670
+Got it.
+
+01:48.550 --> 01:52.680
+And now in this scenario, we're in just a little bit of a challenging spot right here.
+
+01:52.690 --> 01:57.490
+So in all things we've looked at so far around this user request hook, we really just provided some
+
+01:57.490 --> 02:02.230
+body properties to this thing and that was pretty much it that loaded up or kind of created a request
+
+02:02.230 --> 02:03.190
+that was ready to go.
+
+02:03.190 --> 02:06.550
+And as soon as we call do request, it would then execute the request.
+
+02:06.940 --> 02:11.920
+But in this case, as the instant that we get that token inside this token callback right here, the
+
+02:11.920 --> 02:17.230
+instant we get that little ID thing, we want to make our request and we don't really have the opportunity
+
+02:17.230 --> 02:21.730
+to go back and set any state or add that property into body right here.
+
+02:22.060 --> 02:27.700
+What would be really nice is if we could provide this extra token property off to the do request function
+
+02:27.700 --> 02:31.870
+and have the do request function just automatically merge in this additional property to the request
+
+02:31.870 --> 02:32.500
+itself.
+
+02:32.800 --> 02:37.660
+So in other words, what I would really like to do instead of this console log right here, I would
+
+02:37.660 --> 02:45.250
+like to call due request and then pass in an object that has a token, which is the ID of that object
+
+02:45.430 --> 02:47.410
+and then have the request function.
+
+02:47.410 --> 02:53.020
+Merge this little object right here together with the body object right here.
+
+02:53.020 --> 02:57.610
+And so we should end up with two properties being sent off to our back end API, both the order ID and
+
+02:57.610 --> 02:58.480
+the token.
+
+02:59.130 --> 03:02.910
+So to make this work, we're going to have to make a little change to our user request hook and just
+
+03:02.910 --> 03:07.680
+make sure that if we pass any additional properties off to do request, it should merge those into the
+
+03:07.680 --> 03:09.480
+eventual requests that we send off.
+
+03:10.020 --> 03:11.490
+Let's open up our hooks file.
+
+03:11.490 --> 03:12.810
+Find user request.
+
+03:14.950 --> 03:17.380
+I'll find the do request function right here.
+
+03:17.860 --> 03:22.510
+So I'm going to say that this thing is going to receive some additional props or properties we want
+
+03:22.510 --> 03:23.350
+to send along.
+
+03:24.630 --> 03:28.740
+I'm going to default that to be an empty object, just in case we decide not to provide any.
+
+03:28.740 --> 03:32.640
+Which is how we've already made use of this hook several times throughout this project.
+
+03:33.800 --> 03:39.340
+So then I'm going to take those props and I'm going to merge them in with the body that we had provided
+
+03:39.340 --> 03:40.630
+to the hook originally.
+
+03:40.630 --> 03:43.630
+So in total, I'm going to remove body.
+
+03:43.870 --> 03:46.750
+I'm going to put in a new line here just to give myself a little bit of space.
+
+03:47.290 --> 03:49.390
+I'll then create a new object.
+
+03:49.390 --> 03:53.830
+I'll put in dot, dot, dot, body and dot, dot, dot props like so.
+
+03:54.990 --> 03:56.220
+And that should be it.
+
+03:56.250 --> 04:00.210
+So let's say the file and I guess it really wants it to be on one line after all.
+
+04:01.010 --> 04:06.590
+So now whenever we make use of our use request hook, when we call due request, we can pass in some
+
+04:06.590 --> 04:09.380
+additional properties to include with the request body.
+
+04:10.340 --> 04:15.050
+And so now the code that we just added in over back inside of order show specifically the call to do
+
+04:15.050 --> 04:17.450
+request right here should work as expected.
+
+04:18.600 --> 04:18.830
+Okay.
+
+04:18.840 --> 04:24.390
+So now last thing we have to do when we call a user request after the body, we also have to provide
+
+04:24.900 --> 04:27.660
+the on success callback.
+
+04:28.670 --> 04:31.580
+We're going to receive as a response the payment object.
+
+04:31.580 --> 04:35.270
+So remember, whenever we create a payment, we send back some information about the payment that was
+
+04:35.270 --> 04:35.930
+just made.
+
+04:35.930 --> 04:39.710
+And really, I think it just includes the ID and maybe the order ID as well.
+
+04:40.340 --> 04:40.610
+All right.
+
+04:40.610 --> 04:42.860
+Now let's just do a console log of that payment.
+
+04:45.670 --> 04:51.220
+And then finally, let's take the heirs right there and make sure that we show it somewhere inside of
+
+04:51.220 --> 04:54.640
+our return block down here as well.
+
+04:56.020 --> 04:58.170
+I'll just stick an Ayres anywhere inside there.
+
+04:59.900 --> 05:01.650
+So let's say this and go test it out.
+
+05:01.670 --> 05:04.790
+Now, I do want to know, the first time we run this code, we are going to see an error.
+
+05:04.820 --> 05:06.920
+This is just a tiny little gotcha.
+
+05:06.920 --> 05:07.730
+We're going to fix it up.
+
+05:07.730 --> 05:09.560
+I just want you to see the error in action.
+
+05:09.890 --> 05:10.140
+Okay.
+
+05:10.250 --> 05:11.210
+So I'm going to flip back over.
+
+05:11.210 --> 05:12.440
+I'm at my list of tickets.
+
+05:13.220 --> 05:15.020
+I'm going to try to create a new order.
+
+05:15.020 --> 05:18.650
+So click on purchase and as soon as I do, I see a nasty error right here.
+
+05:18.860 --> 05:20.120
+Like I said, just a little.
+
+05:20.120 --> 05:20.600
+Gotcha.
+
+05:20.630 --> 05:21.920
+Nothing we can't fix.
+
+05:22.340 --> 05:25.730
+So we just made a change to our user request hook.
+
+05:25.760 --> 05:26.600
+Here it is right here.
+
+05:26.900 --> 05:32.120
+And we said that when we call use or when we call due request, we can optionally provide in some additional
+
+05:32.120 --> 05:34.250
+properties to include with request body.
+
+05:35.800 --> 05:40.990
+That means that any time we call do request, if we provide any argument whatsoever, that argument
+
+05:40.990 --> 05:43.630
+is going to be merged into the request body.
+
+05:44.020 --> 05:45.220
+And why is that relevant?
+
+05:45.250 --> 05:51.070
+Well, you might recall just a moment ago when we were working inside of our ticket show component,
+
+05:51.070 --> 05:53.740
+which is really tickets, ticket ID, that file right there.
+
+05:54.440 --> 05:58.850
+We had made use of the user request hook, so we got that request function.
+
+05:59.270 --> 06:04.610
+And then I kind of made a big deal about putting the button element right here, giving it the on click
+
+06:04.610 --> 06:05.300
+callback.
+
+06:05.300 --> 06:09.200
+And then as soon as someone clicked on that thing, we were going to invoke do request.
+
+06:09.680 --> 06:14.480
+Well, remember, any time that we put something in as an event handler, that function right there
+
+06:14.480 --> 06:18.140
+is going to be given a first argument of the event object.
+
+06:18.380 --> 06:22.730
+So right now, with the change we just made to the do request function, we're going to essentially
+
+06:22.730 --> 06:27.980
+receive the event object as this prop argument and then merge it into the request body.
+
+06:27.980 --> 06:33.110
+So we are trying to take an event and send it off as a request body, which is why we're seeing that
+
+06:33.110 --> 06:34.010
+nasty error.
+
+06:34.550 --> 06:37.730
+So to fix this up, all we have to do is go back over to our ticket show.
+
+06:40.080 --> 06:43.740
+Finally on click and we're going to wrap that with an arrow function.
+
+06:44.040 --> 06:47.760
+So now even though this does get called with an event object, we're not going to receive it.
+
+06:47.760 --> 06:50.550
+We're not going to pass it through to do requests or anything like that.
+
+06:51.350 --> 06:51.540
+Okay.
+
+06:51.600 --> 06:52.470
+So that should fix the error.
+
+06:52.500 --> 06:53.490
+So let's save this.
+
+06:54.690 --> 06:55.920
+I'm going to flip back over.
+
+06:56.340 --> 06:57.720
+I'm going to create an order.
+
+06:58.170 --> 06:58.890
+Here we go.
+
+06:59.070 --> 07:00.270
+I'll pay with my card.
+
+07:01.330 --> 07:03.280
+Four, two, four, two, four, two, four, two.
+
+07:04.930 --> 07:06.000
+Eight $20.
+
+07:07.920 --> 07:09.840
+And now we should make a request to our payment.
+
+07:09.840 --> 07:10.760
+End point.
+
+07:10.890 --> 07:11.280
+There it is.
+
+07:11.280 --> 07:12.030
+Payments.
+
+07:12.330 --> 07:16.770
+Now, we have purchased this order, or at least provided some payment in theory.
+
+07:17.190 --> 07:21.300
+Now, just so you know, if we now do any follow up payments, it is extremely likely that we'll end
+
+07:21.300 --> 07:24.840
+up seeing an error because the payment service will probably say something like, Hey, that order has
+
+07:24.840 --> 07:26.820
+already been paid for or something like that.
+
+07:27.240 --> 07:31.200
+We can verify, make sure that the payment has been processed if we go back over to Scaffold.
+
+07:32.650 --> 07:33.820
+Back inside of scaffold.
+
+07:33.820 --> 07:38.410
+We can take a look at these series of events that have been emitted and received and try to parse or
+
+07:38.410 --> 07:41.710
+get an idea of the series of actions that just went on behind the scenes.
+
+07:42.340 --> 07:46.840
+So first off, it looks like that right there is probably where we initially created the order.
+
+07:47.170 --> 07:48.880
+We published an order create event.
+
+07:49.300 --> 07:51.670
+The expiration service started up a timer.
+
+07:52.120 --> 07:56.500
+Then the payment service received that and knew that it needed to start to watch for an incoming payment
+
+07:56.500 --> 07:57.460
+for that order.
+
+07:58.830 --> 08:01.620
+Later on, it looks like we had a ticket updated.
+
+08:01.620 --> 08:05.400
+So that's where we successfully reserve the ticket by setting its order ID property.
+
+08:06.330 --> 08:10.770
+It looks like the order service itself got acknowledgment that the ticket was reserved.
+
+08:11.600 --> 08:15.530
+Then a little bit later in these two events for me right here are out of order.
+
+08:15.740 --> 08:17.780
+This is where we submitted a payment.
+
+08:17.930 --> 08:21.290
+So the payment service event saying that a payment was created.
+
+08:21.470 --> 08:23.720
+The order service received that event.
+
+08:23.720 --> 08:28.700
+And so at that point in time, it marked that order as probably being paid for or completed, I think
+
+08:28.700 --> 08:29.570
+is what we called it.
+
+08:31.300 --> 08:33.130
+Then a little bit later, once again, out of order.
+
+08:33.130 --> 08:33.610
+Right here.
+
+08:33.610 --> 08:34.030
+I see.
+
+08:34.030 --> 08:34.960
+Expiration.
+
+08:35.700 --> 08:36.340
+Complete.
+
+08:36.370 --> 08:39.480
+So that's where our exploration service says, hey, it's been 60 seconds.
+
+08:39.480 --> 08:41.040
+Hopefully this thing has been paid for.
+
+08:41.040 --> 08:45.210
+And it looks like the order service received that and said, Oh, well, this order has already been
+
+08:45.210 --> 08:48.120
+paid for, so I don't have to worry about cancelling it or anything like that.
+
+08:49.080 --> 08:49.350
+All right.
+
+08:49.350 --> 08:50.670
+Well, I'd say it looks pretty good.
+
+08:50.700 --> 08:56.340
+Now, just to confirm, if we do go back over and try to repurchase this ticket again.
+
+08:56.340 --> 08:57.150
+So here's the ticket.
+
+08:57.170 --> 09:01.190
+If I click on purchase, I'll probably see something that says ticket is already reserved.
+
+09:01.200 --> 09:03.150
+So this is the ticket I just paid for.
+
+09:03.180 --> 09:05.970
+It's never going to become unreserved or anything like that.
+
+09:06.330 --> 09:10.650
+So you should probably figure out some way of maybe filtering this list right here and only show tickets
+
+09:10.650 --> 09:11.640
+that are available.
+
+09:11.670 --> 09:15.540
+Or alternatively, we could just mark tickets that have already been purchased on this list as well,
+
+09:15.540 --> 09:16.230
+something like that.
+
+09:16.230 --> 09:19.350
+Something you just make it really clear which tickets we can still purchase.
+
+09:20.070 --> 09:21.720
+Well, I think we solve a little bit of work to do.
+
+09:21.720 --> 09:23.370
+So let's get to it in just a moment.

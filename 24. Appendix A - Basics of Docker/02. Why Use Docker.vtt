@@ -1,0 +1,199 @@
+WEBVTT
+
+00:00.470 --> 00:01.730
+Hello and welcome.
+
+00:01.730 --> 00:06.320
+In this section, I want to start to tackle two very important questions that we're going to be answering
+
+00:06.320 --> 00:07.760
+throughout this entire course.
+
+00:07.760 --> 00:10.220
+The two important questions are what is soccer?
+
+00:10.220 --> 00:12.650
+And secondly, why do we use soccer?
+
+00:12.680 --> 00:17.450
+We're going to first tackle why we use soccer by going through a quick little demo right now.
+
+00:17.870 --> 00:20.180
+Now I'm going to show you a little flow diagram.
+
+00:20.180 --> 00:24.770
+And this is a flow of probably a process you've gone through at least once in your life before.
+
+00:24.770 --> 00:27.980
+It's a flow of installing software on your personal computer.
+
+00:27.980 --> 00:31.160
+And I bet at least once for you this is what has happened.
+
+00:31.160 --> 00:36.410
+Maybe you have downloaded some installer, you run that installer, and then inevitably at some point
+
+00:36.410 --> 00:39.860
+in time you end up getting an error message during installation.
+
+00:39.860 --> 00:40.910
+So what do you do?
+
+00:40.910 --> 00:44.180
+Well, you probably troubleshoot the issue by looking on Google.
+
+00:44.180 --> 00:45.530
+You try to find a solution.
+
+00:45.530 --> 00:47.510
+You eventually solve that issue.
+
+00:47.840 --> 00:53.780
+You then rerun the installer only to find, Hey, today you have some other error appearing and then
+
+00:53.780 --> 00:56.750
+you have to go through this entire troubleshooting process again.
+
+00:56.870 --> 01:00.200
+So this is at its core what Docker is trying to fix.
+
+01:00.200 --> 01:06.020
+Docker wants to make it really easy and really straightforward for you to install and run software on
+
+01:06.020 --> 01:11.180
+any given computer, not just your computer, not just your personal laptop or your personal desktop,
+
+01:11.180 --> 01:15.590
+but on web servers as well or any cloud based computing platform.
+
+01:16.130 --> 01:20.960
+I want to give you a very quick demonstration of this flow right here in action and then show you how
+
+01:20.960 --> 01:26.600
+quickly I can solve installing a problem or installing a piece of software by making use of Docker.
+
+01:26.690 --> 01:31.520
+So I'm going to very quickly go through the flow of installing a piece of software called Redis.
+
+01:31.550 --> 01:33.830
+Redis is an in-memory data store.
+
+01:33.830 --> 01:36.080
+We're going to be using it quite a bit throughout this course.
+
+01:36.080 --> 01:40.430
+But right now, I just want to give you a quick demo of how it can be a little bit challenging to get
+
+01:40.430 --> 01:42.260
+installed on your own computer.
+
+01:42.260 --> 01:45.380
+So I'm just going to go through the installation steps here very quickly.
+
+01:45.680 --> 01:47.630
+So this is the red zone page.
+
+01:47.630 --> 01:49.460
+This is the official download page.
+
+01:49.460 --> 01:54.140
+In theory, I could use the documentation here to install Redis on my local machine.
+
+01:54.590 --> 01:59.780
+I'm going to go down to the installation section and it very proudly says, Oh yeah, just run these
+
+01:59.780 --> 02:02.600
+four commands right here and boom, that's pretty much it.
+
+02:02.600 --> 02:04.730
+You can then then run Redis.
+
+02:04.820 --> 02:06.950
+So I'm going to grab the first command right here.
+
+02:07.130 --> 02:11.000
+I'm going to copy it and then I'm going to run it inside of my terminal.
+
+02:13.080 --> 02:13.370
+So.
+
+02:13.380 --> 02:15.240
+Paste There is the same exact command.
+
+02:15.240 --> 02:18.630
+I'm going to run it and sure enough, yep, I get an error message.
+
+02:18.660 --> 02:21.240
+Now in this case, the error message is a little bit predictable.
+
+02:21.240 --> 02:24.930
+It's complaining about a program that is just not installed on my local machine.
+
+02:24.930 --> 02:29.340
+Now, I could definitely go and troubleshoot this, install that program, and then try installing Redis
+
+02:29.370 --> 02:29.850
+again.
+
+02:29.850 --> 02:31.140
+But that's the whole point.
+
+02:31.140 --> 02:35.910
+You kind of get into this endless cycle of trying to do all this troubleshooting as you are installing
+
+02:35.910 --> 02:37.260
+and running software.
+
+02:37.260 --> 02:40.110
+So let me now show you how easy it is to run Redis.
+
+02:40.140 --> 02:45.330
+If you are making use of Docker instead, I'm going to go back over to my command line and I'm going
+
+02:45.330 --> 02:47.610
+to run one single command.
+
+02:47.760 --> 02:53.490
+I'll say Docker, run, dash it, read like, so I'll hit enter.
+
+02:53.640 --> 03:00.180
+And then after a very brief pause, almost instantaneously, I have an instance of Redis up and running
+
+03:00.180 --> 03:02.340
+on my computer, and that's pretty much it.
+
+03:02.340 --> 03:04.110
+That is Docker in a nutshell.
+
+03:04.110 --> 03:08.070
+That is how easy it is to run software when you're making use of Docker.
+
+03:08.370 --> 03:14.850
+So to answer the question very directly of why we use Docker, well, we make use of it because it makes
+
+03:14.850 --> 03:20.310
+life really easy for installing and running software without having to go through a whole bunch of setup
+
+03:20.310 --> 03:22.530
+or installation of dependencies.
+
+03:22.860 --> 03:26.850
+Now we're going to learn many more reasons throughout this course of why we use Docker.
+
+03:26.850 --> 03:31.170
+But I want to give you a very quick demo and show you how easy it can be to get up and running with
+
+03:31.170 --> 03:33.840
+some new piece of software when you are using Docker.
+
+03:34.260 --> 03:35.670
+Let's take a quick pause right here.
+
+03:35.670 --> 03:39.720
+We're going to come back to the next section and start trying to the answer of answer the question of
+
+03:39.720 --> 03:41.040
+what Docker is.
+
+03:41.040 --> 03:42.600
+So I'll see you in just a minute.

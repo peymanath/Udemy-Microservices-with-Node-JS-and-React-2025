@@ -1,0 +1,454 @@
+WEBVTT
+
+00:00.630 --> 00:03.530
+In this video, we're going to do a little bit of environment setup.
+
+00:03.540 --> 00:08.280
+Once we set up our local machine to work with, TypeScript will then begin working on our first project.
+
+00:08.280 --> 00:09.600
+So let's get to it.
+
+00:10.490 --> 00:13.250
+The first thing we'll do is to install the TypeScript compiler.
+
+00:13.310 --> 00:15.340
+To install it, we're going to use NPM.
+
+00:15.570 --> 00:19.580
+If you're here in this course, I'm going to assume that you've got a basic understanding of both Node
+
+00:19.580 --> 00:20.720
+and PM.
+
+00:20.930 --> 00:26.120
+So I'm going to assume in particular that you've already got Node in NPM installed on your local system.
+
+00:26.660 --> 00:30.860
+If you don't, you'll want to do a quick Google search on how to install Node on your local machine.
+
+00:30.890 --> 00:34.130
+Again, I'm really assuming that you've got that knowledge ahead of time.
+
+00:34.970 --> 00:39.320
+So we're going to use NPM to install TypeScript as a global module.
+
+00:39.350 --> 00:43.040
+We're also going to install a second module called TS Node.
+
+00:43.550 --> 00:48.560
+To US, Node is a little command line tool that allows us to compile and execute TypeScript with one
+
+00:48.560 --> 00:49.910
+command at our terminal.
+
+00:49.940 --> 00:54.050
+We're going to use it in the first half of this course just for running some typescript very quickly
+
+00:54.050 --> 00:57.590
+without having to set up a full tooling installation kind of deal.
+
+00:57.830 --> 00:58.970
+So let's get to it.
+
+00:59.330 --> 01:02.230
+I'm going to open up my terminal once over here.
+
+01:02.240 --> 01:09.860
+I'm going to run NPM, install DAG and I'll get TypeScript and TS Node like so.
+
+01:11.090 --> 01:11.330
+All right.
+
+01:11.330 --> 01:14.690
+So that's going to take just a moment or two to install rather quickly.
+
+01:14.690 --> 01:19.130
+Once it is installed, I can then make sure that it is successfully installed and then I can run the
+
+01:19.130 --> 01:20.420
+compiler by running.
+
+01:20.420 --> 01:21.380
+Tsk.
+
+01:21.710 --> 01:22.070
+Dash.
+
+01:22.070 --> 01:23.750
+Dash help like so.
+
+01:24.550 --> 01:26.950
+So we installed a package called TypeScript.
+
+01:28.140 --> 01:33.480
+It gives us access to a command called Tsk, which is short for, as you might guess, TypeScript compiler.
+
+01:33.510 --> 01:38.550
+This is what we're going to use to actually compile our TypeScript code into plain JavaScript.
+
+01:39.230 --> 01:43.460
+So if I run this command, I should see a bunch of help messages up here on the screen.
+
+01:43.460 --> 01:49.100
+Like, so if you see any error, that means that your NPM installation probably has a little issue and
+
+01:49.100 --> 01:50.990
+you'll need to do a little bit of troubleshooting.
+
+01:51.800 --> 01:51.970
+Okay.
+
+01:52.040 --> 01:55.340
+So that's pretty much it for the actual typescript set up.
+
+01:55.580 --> 02:01.190
+Now we're going to walk through a little additional setup here for setting up Visual Studio code.
+
+02:01.520 --> 02:02.930
+Now, this is a code editor.
+
+02:02.930 --> 02:05.490
+If you've already got Visual Studio code installed.
+
+02:05.510 --> 02:09.560
+I encourage you to still watch this video because I'm going to show you some settings that are important
+
+02:09.560 --> 02:10.460
+for you to have.
+
+02:11.000 --> 02:14.990
+If you want to use another code editor inside this course, that's totally fine.
+
+02:15.020 --> 02:20.060
+I've tried out many other code editors, and personally I think that Visual Studio code is one of the
+
+02:20.060 --> 02:22.400
+best ones out there for working with TypeScript.
+
+02:22.580 --> 02:26.000
+So if you've never used it, I would recommend at least try it one time.
+
+02:26.900 --> 02:29.750
+So I'm going to go through the installation process here really quickly.
+
+02:30.110 --> 02:34.490
+Well, first, go to that link inside of a new browser tab and I'll find the green download button on
+
+02:34.490 --> 02:35.510
+the left hand side.
+
+02:36.890 --> 02:40.190
+Once I download this zip file, I'll then open it up.
+
+02:41.670 --> 02:43.530
+That's going to extract it.
+
+02:44.420 --> 02:46.520
+Here's the Visual Studio code application.
+
+02:46.700 --> 02:51.170
+And if you're on Mac, all you have to do is drag and drop that into the applications folder.
+
+02:51.680 --> 02:54.780
+If you're on Windows, you're going to instead see a little installer.
+
+02:54.800 --> 02:57.390
+All you have to do is go through the installation process.
+
+02:57.410 --> 02:58.970
+It's just a couple of clicks.
+
+03:00.050 --> 03:04.730
+Now that we've got the code installed, we're going to do just a couple steps of configuration.
+
+03:05.090 --> 03:06.700
+So this is what we're going to go through.
+
+03:06.710 --> 03:11.540
+I'm mostly showing you these configuration steps, just you understand the exact settings that I'm running
+
+03:11.540 --> 03:12.230
+locally.
+
+03:12.890 --> 03:18.830
+Now, just to be clear, I just did a fresh installation of VS code, like I completely deleted my previous
+
+03:18.830 --> 03:19.640
+installation.
+
+03:20.030 --> 03:24.500
+So when I go through these settings, you're going to see a fresh installation being set up here.
+
+03:24.500 --> 03:27.170
+So I don't have any previous setup whatsoever.
+
+03:28.070 --> 03:28.310
+All right.
+
+03:28.310 --> 03:29.300
+So let's get to it.
+
+03:29.750 --> 03:32.600
+The first thing I'm going to do is open up Visual Studio code.
+
+03:35.190 --> 03:39.330
+And it's going to take just a moment this first time that it boots up to actually open so it's going
+
+03:39.330 --> 03:40.320
+to let it do its thing.
+
+03:42.180 --> 03:42.600
+All right.
+
+03:42.600 --> 03:43.320
+There we go.
+
+03:47.070 --> 03:47.310
+All right.
+
+03:47.310 --> 03:51.990
+So once I've got Visual Studio code open, we're going to go through each of these different setup steps
+
+03:51.990 --> 03:52.710
+right here.
+
+03:53.130 --> 03:57.300
+So the first thing I'm going to do is set up code in my path variable.
+
+03:57.690 --> 04:02.220
+And what this essentially does is allow me to launch my code editor from the terminal, which I'm going
+
+04:02.220 --> 04:04.050
+to be doing quite a bit throughout this course.
+
+04:04.500 --> 04:10.890
+So to do so, I'm going to go over to the editor and then I'll go up to view and then find command palette.
+
+04:11.670 --> 04:16.280
+And then once here I'm going to search for add path, actually not add path.
+
+04:16.290 --> 04:17.750
+I think it's install path.
+
+04:17.760 --> 04:18.600
+Yeah, there we go.
+
+04:18.600 --> 04:20.910
+So install a code command in path.
+
+04:21.000 --> 04:23.470
+All we have to do is click that and that's pretty much it.
+
+04:23.490 --> 04:25.320
+We'll see a little notification down here.
+
+04:26.060 --> 04:29.660
+If I now flip on over to my terminal, I can open up a new window.
+
+04:29.660 --> 04:31.010
+Make sure you open up a new window.
+
+04:31.010 --> 04:34.490
+If you try to run this command in an existing window, it's probably going to fail.
+
+04:35.000 --> 04:39.800
+And then once over here, you can open up your code editor in any directory by running code and then
+
+04:39.800 --> 04:40.460
+dot like.
+
+04:40.460 --> 04:44.300
+So now as you'll see, it'll pop open my code editor right away.
+
+04:45.710 --> 04:45.980
+All right.
+
+04:45.980 --> 04:47.920
+So let's keep going through these installation steps.
+
+04:47.930 --> 04:49.550
+The other ones are going to be pretty quick.
+
+04:49.910 --> 04:53.030
+So the next one is going to be to install the prettier extension.
+
+04:53.740 --> 04:55.230
+Prettier is a code formatter.
+
+04:55.240 --> 04:59.920
+It's going to take a look at your code every time you save a file and automatically format it in some
+
+04:59.920 --> 05:01.180
+fixed fashion.
+
+05:01.390 --> 05:04.990
+So I usually use pretty or just have some very consistent looking code.
+
+05:04.990 --> 05:07.120
+Now I highly recommend you try it out as well.
+
+05:07.850 --> 05:09.110
+To install this extension.
+
+05:09.110 --> 05:10.790
+I'll go back over to my editor.
+
+05:11.300 --> 05:12.440
+I'll find a view.
+
+05:13.330 --> 05:15.190
+Well, then look for extensions.
+
+05:16.100 --> 05:19.250
+And then on the left hand side, I'll search for prettier.
+
+05:20.730 --> 05:24.960
+And it's going to be the first one right here by SBN Pettersson.
+
+05:25.410 --> 05:26.520
+So I'll hit install.
+
+05:27.530 --> 05:28.880
+And that's pretty much it.
+
+05:30.040 --> 05:32.530
+Now we're going to do a little bit of configuration on Prettier.
+
+05:32.560 --> 05:36.670
+We're going to make sure first that it formats every file when we save it.
+
+05:37.240 --> 05:39.250
+So to do so, I'll go back over.
+
+05:39.790 --> 05:42.040
+I'm going to again go to my view menu.
+
+05:43.090 --> 05:46.270
+And then I'm going to look for excuse me not view.
+
+05:46.270 --> 05:49.600
+I'm looking for preferences or code preferences settings.
+
+05:49.600 --> 05:50.350
+There it is.
+
+05:52.880 --> 05:57.920
+And then once I've got the settings tab up right here, I'll do a search for format.
+
+05:58.790 --> 06:00.470
+On Save.
+
+06:01.190 --> 06:04.070
+And I'll see a setting right here called format on Save.
+
+06:04.460 --> 06:06.950
+So we just have to check that and that's pretty much it.
+
+06:08.760 --> 06:11.940
+Next up, I'm going to configure prettier to use single quotes.
+
+06:11.970 --> 06:13.950
+Now, this is entirely personal.
+
+06:13.950 --> 06:16.120
+If you want to use double quotes, totally fine.
+
+06:16.140 --> 06:19.200
+You can use either single quotes or double quotes safely.
+
+06:19.200 --> 06:21.660
+With TypeScript, I just prefer single quotes.
+
+06:21.930 --> 06:27.270
+So to set up prettier to format my code in that fashion, I'll go back over to my settings page.
+
+06:27.300 --> 06:29.880
+I'll look for single quotes.
+
+06:31.260 --> 06:36.120
+And I'll scroll down just a little bit right here and I'll see a setting called prettier single quote
+
+06:36.120 --> 06:37.200
+and check it.
+
+06:39.960 --> 06:40.260
+All right.
+
+06:40.260 --> 06:45.300
+Next one is I'm going to make sure that I use two spaces for indentation as opposed to tabs.
+
+06:45.330 --> 06:46.880
+Again, this is very personal.
+
+06:46.890 --> 06:48.010
+You can go either way.
+
+06:48.030 --> 06:54.330
+I personally like to use two spaces for indentation, so to do so, I'm going to delete the search term
+
+06:54.330 --> 06:54.930
+up here.
+
+06:56.050 --> 07:01.390
+And then scroll down on the default settings here just a little bit and I should see tab size right
+
+07:01.390 --> 07:01.990
+here.
+
+07:02.440 --> 07:05.140
+And let's change it to two like so.
+
+07:08.400 --> 07:08.700
+All right.
+
+07:08.700 --> 07:11.970
+So last thing I'm going to set my theme to be solar light.
+
+07:11.970 --> 07:15.030
+So that's just going to change the coloring of my editor a little bit.
+
+07:15.690 --> 07:19.590
+So to do so, I'm going to go back over once again, I'll look for theme.
+
+07:20.570 --> 07:22.280
+I'll find color theme right here.
+
+07:22.310 --> 07:26.870
+Right now the default is dark and I'm going to change it to solar light instead.
+
+07:27.960 --> 07:28.740
+And that's it.
+
+07:29.910 --> 07:30.220
+Okay.
+
+07:30.240 --> 07:32.280
+Now, one last little thing I'm going to do here.
+
+07:32.280 --> 07:34.680
+I am going to hide this bar on the left hand side.
+
+07:35.040 --> 07:38.310
+I can find that setting by looking up activity bar.
+
+07:39.540 --> 07:43.170
+So workbench activity bar visible and I'm just going to deselect that.
+
+07:43.170 --> 07:44.910
+So that little bar on the side goes away.
+
+07:45.810 --> 07:46.680
+All right, so that's it.
+
+07:46.680 --> 07:48.930
+That's all the configuration I do to my editor.
+
+07:48.930 --> 07:53.250
+So if you went through these steps, you now have an editor that's set up identically to mine.
+
+07:53.580 --> 07:57.030
+So now that we've got everything set up for our local environment, let's take a quick pause right here,
+
+07:57.030 --> 07:59.340
+and we're going to start writing some code in the next video.

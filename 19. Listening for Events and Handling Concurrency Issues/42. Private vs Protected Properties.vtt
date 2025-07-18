@@ -1,0 +1,346 @@
+WEBVTT
+
+00:01.140 --> 00:03.780
+As we were just discussing inside of our order, create a listener.
+
+00:03.780 --> 00:07.920
+Right after we save our ticket, we're going to want to publish an event saying that this ticket was
+
+00:07.920 --> 00:08.900
+just updated.
+
+00:08.910 --> 00:14.700
+That is going to allow our different replicated services or services that have replicated data to stay
+
+00:14.700 --> 00:15.360
+in sync.
+
+00:16.100 --> 00:20.930
+Now to put this update together, I first want to give you a quick reminder on how we publish an event
+
+00:20.930 --> 00:25.670
+in general, because we had spent a little bit of time since we have published an event inside of our
+
+00:25.670 --> 00:30.380
+ticket service, you might recall that we have a publishers directory and inside there is the ticket
+
+00:30.380 --> 00:31.610
+updated publisher.
+
+00:32.460 --> 00:36.960
+So this is the class that we use to publish an event saying that a ticket has been updated.
+
+00:37.320 --> 00:39.750
+To make use of this, we create an instance.
+
+00:40.950 --> 00:48.030
+Of the publisher we pass in a Nats client, so that might be something like Nats wrapper client and
+
+00:48.030 --> 00:49.710
+we'll call the publish function.
+
+00:50.690 --> 00:54.080
+And it's published function is going to have all the properties that are going to be contained inside
+
+00:54.080 --> 00:54.770
+the event.
+
+00:55.370 --> 01:00.800
+Now, unfortunately, our ticket updated event definition is just a little bit out of date.
+
+01:01.100 --> 01:05.690
+In particular, you'll notice that we are saying that this event is going to have an ID, a version
+
+01:05.690 --> 01:12.560
+title price and user ID, but our ticket also now has an order ID property tied to it as well.
+
+01:13.960 --> 01:17.890
+This event object right here does not yet support that order ID property.
+
+01:18.250 --> 01:22.930
+Chances are that whenever we update a ticket, we're going to want to tell every other service whether
+
+01:22.930 --> 01:24.490
+or not this ticket is reserved.
+
+01:24.490 --> 01:27.190
+And we would do that by sharing that order ID property.
+
+01:27.490 --> 01:32.320
+So we should probably go back over to our common module very quickly and make sure that we add in to
+
+01:32.320 --> 01:38.080
+this event definition or the definition for ticket updated and say that the event is going to have an
+
+01:38.080 --> 01:39.790
+order ID property as well.
+
+01:40.150 --> 01:44.140
+But before we do so, there's one other very quick thing I want to mention.
+
+01:45.060 --> 01:47.220
+I'm going to go back over to the order created a listener.
+
+01:47.940 --> 01:48.480
+At the top.
+
+01:48.480 --> 01:51.990
+I'm going to import the publisher that we were just taking a look at.
+
+01:54.200 --> 01:55.820
+So we'll get the ticket.
+
+01:57.870 --> 01:59.430
+Updated publisher.
+
+02:00.310 --> 02:04.600
+From up one directory publishers ticket updated publisher.
+
+02:06.930 --> 02:11.430
+And then very quickly, I want to imagine how we're going to write this out right after that ticket
+
+02:11.580 --> 02:12.150
+safe.
+
+02:12.180 --> 02:16.560
+Well, just as we saw in that other file, we would probably write out something that looks like new
+
+02:16.770 --> 02:18.810
+ticket updated publisher.
+
+02:19.790 --> 02:22.970
+And then we would want to pass in our Nats client right here.
+
+02:23.390 --> 02:26.690
+Now there are two different ways that we can provide a Nats client.
+
+02:26.720 --> 02:28.750
+One is going to be very easy and direct.
+
+02:28.760 --> 02:33.140
+The other is going to be a little bit harder to understand, but ultimately a lot easier.
+
+02:33.770 --> 02:38.720
+So in order to provide a Nat's client right here, the easy solution that will work right away without
+
+02:38.720 --> 02:41.000
+any changes would be to import.
+
+02:42.380 --> 02:43.490
+Our Nats rapper.
+
+02:45.360 --> 02:46.890
+From up to directories.
+
+02:46.920 --> 02:48.120
+Nats rapper.
+
+02:49.450 --> 02:51.400
+And then we could provide that to the publisher.
+
+02:53.990 --> 02:55.220
+Like so easy enough.
+
+02:55.220 --> 02:57.050
+No problem whatsoever, right?
+
+02:57.500 --> 02:59.420
+Well, there is a downside to this approach.
+
+02:59.570 --> 03:05.620
+The downside is that we are adding in yet another tie between two different files inside of our project.
+
+03:05.630 --> 03:10.250
+So we are importing the Nats wrapper directly into order created listener.
+
+03:10.850 --> 03:12.230
+Normally that is unavoidable.
+
+03:12.230 --> 03:15.850
+At some point in time we just have to tie different files together and that's life.
+
+03:15.860 --> 03:17.510
+That's just how stuff works.
+
+03:17.870 --> 03:23.480
+However, because you have already seen that testing, a lot of these listeners revolves around somehow
+
+03:23.480 --> 03:25.460
+mocking this Nats wrapper right here.
+
+03:25.460 --> 03:30.200
+If we add in a direct input for Nats wrapper, that might make testing a little bit more challenging
+
+03:30.200 --> 03:30.980
+down the line.
+
+03:31.580 --> 03:35.990
+So it turns out that there actually is a slightly easier way to approach this.
+
+03:36.380 --> 03:40.550
+It is just going to involve making one other very quick change inside of our common module.
+
+03:40.670 --> 03:44.660
+So let's take a look at a quick diagram and understand what the other option is.
+
+03:46.640 --> 03:47.180
+Okay.
+
+03:47.600 --> 03:49.160
+So this is what we are doing right now.
+
+03:49.160 --> 03:50.800
+We've got our order created a listener.
+
+03:50.810 --> 03:53.810
+It is trying to create an instance of ticket updated publisher.
+
+03:54.600 --> 03:58.320
+And we are doing so by importing the gnats wrapper into the order.
+
+03:58.320 --> 04:02.610
+Create a listener and we're going to take that things client and then pass it off to the ticket.
+
+04:02.610 --> 04:03.660
+Updated Publisher.
+
+04:04.290 --> 04:06.270
+But there's something else I want you to recall.
+
+04:06.600 --> 04:11.130
+The order created Listener is a subclass of the listener base class.
+
+04:11.430 --> 04:14.700
+Let's go take a look at that listener base class definition very quickly.
+
+04:14.700 --> 04:16.590
+And we're going to see something really interesting.
+
+04:17.520 --> 04:20.430
+Our listener base class is defined inside of our common module.
+
+04:21.110 --> 04:26.480
+So I'll go to my common module CRC events and then find based listener TS.
+
+04:27.530 --> 04:33.260
+So inside of here, you might recall that whenever we create an instance of a listener or anything that
+
+04:33.260 --> 04:38.760
+extends a listener, for that matter, we are required to provide a Nat's client.
+
+04:38.780 --> 04:41.390
+That's what this constructor function is saying right here.
+
+04:42.000 --> 04:47.700
+We then assign that to this client property and we had marked this client or the client property as
+
+04:47.700 --> 04:53.190
+private, which means that it cannot be accessed by any other class, even a subclass.
+
+04:53.970 --> 04:56.500
+So technically our order created a listener.
+
+04:56.520 --> 04:58.140
+That is what we are working on right now.
+
+04:58.380 --> 05:01.650
+It is a subclass or a child class of the listener.
+
+05:01.920 --> 05:03.540
+So inside of order create listener.
+
+05:03.540 --> 05:08.190
+There technically already is a Nat's client kind of wrapped up into this thing.
+
+05:08.460 --> 05:13.980
+But unfortunately, we had marked it as a private property, which means that this child class cannot
+
+05:13.980 --> 05:15.600
+access that client property.
+
+05:16.600 --> 05:18.610
+So in diagram format, this is what it looks like.
+
+05:18.820 --> 05:19.660
+We've got our order.
+
+05:19.660 --> 05:20.260
+Create a listener.
+
+05:20.260 --> 05:21.520
+It is extending the listener.
+
+05:21.700 --> 05:26.890
+Listener definitely already has a initialized Nats client is there ready to be taken.
+
+05:27.370 --> 05:31.720
+So if we could somehow get a handle on that thing, we could very easily pass it through to the ticket
+
+05:31.720 --> 05:36.520
+updated publisher without having to worry about that Nat's wrapper class or anything like that.
+
+05:36.910 --> 05:41.230
+The only reason we cannot do this right now is because we had marked that client property as private.
+
+05:41.230 --> 05:46.900
+And again, if a client or if a property is marked as private, we cannot access it from anywhere outside
+
+05:46.900 --> 05:49.510
+the class, even in a child class.
+
+05:50.140 --> 05:54.900
+So to fix this inside of our common module, we can just update the modifier on that property.
+
+05:54.910 --> 05:57.460
+We could instead mark as protected.
+
+05:58.120 --> 06:03.070
+If we mark it as protected, that means that the child class of order created listener can access that
+
+06:03.070 --> 06:03.820
+property.
+
+06:03.880 --> 06:07.480
+It can access the client, take the client and pass it off to the ticket.
+
+06:07.480 --> 06:08.590
+Updated Publisher.
+
+06:09.160 --> 06:14.200
+And so this would be a way preferable solution because it's going to make testing easier down the line.
+
+06:14.200 --> 06:18.790
+And it's also going to mean that we've got one less direct tie between two different files inside of
+
+06:18.790 --> 06:21.640
+a project, which again is usually a pretty good thing.
+
+06:23.180 --> 06:23.450
+Okay.
+
+06:23.450 --> 06:27.800
+So at this point, what we've really established inside of this video is that we really need to go over
+
+06:27.800 --> 06:30.410
+to our common module and make two changes.
+
+06:30.740 --> 06:35.640
+The first change we need to make is a change to our ticket updated events.
+
+06:35.660 --> 06:40.010
+We need to make sure that the ticket update event also communicates an order ID property.
+
+06:41.360 --> 06:46.520
+And then we've also established that our base listener, we need to mark that client as a protected
+
+06:46.520 --> 06:48.350
+property instead of private.
+
+06:49.040 --> 06:50.900
+So now that we've established what we have to do.
+
+06:50.930 --> 06:51.870
+Quick pause right here.
+
+06:51.890 --> 06:53.870
+Make those two changes in the next video.

@@ -1,0 +1,181 @@
+WEBVTT
+
+00:01.640 --> 00:01.940
+All right.
+
+00:01.940 --> 00:02.810
+So moment of truth.
+
+00:02.810 --> 00:05.770
+We're now going to make another change on our debt branch.
+
+00:05.780 --> 00:09.920
+We're going to push it up to GitHub and expect to see all the tests inside of our service being ran
+
+00:09.920 --> 00:10.700
+in parallel.
+
+00:11.240 --> 00:14.090
+So in this case, I'm going to open up my order service.
+
+00:14.150 --> 00:20.360
+I'll open up the index file, and at the very top of my start function, I'll add in a console log of
+
+00:20.360 --> 00:21.080
+starting.
+
+00:21.380 --> 00:25.850
+So that is the change that I want to add in to my polar request that I still have running.
+
+00:26.390 --> 00:27.350
+So I'm going to save the file.
+
+00:27.350 --> 00:28.130
+Close it out.
+
+00:29.070 --> 00:30.720
+I'm going to go backward to my terminal.
+
+00:31.960 --> 00:36.400
+I'm going to check out my dev branch because remember, I want to make this change on the dev branch.
+
+00:37.350 --> 00:39.300
+So get check out Dev.
+
+00:40.160 --> 00:41.780
+I'm going to add that change.
+
+00:41.810 --> 00:44.270
+I'll do a get status just to make sure I successfully added it.
+
+00:44.270 --> 00:44.570
+Yep.
+
+00:44.570 --> 00:45.740
+Looks like I got it on there.
+
+00:47.760 --> 00:55.380
+Commit it, and I'll give this one a message as something like Add startup message to order service.
+
+00:56.250 --> 00:59.370
+And then I will push that to Origin Dev.
+
+01:02.740 --> 01:03.100
+All right.
+
+01:03.100 --> 01:07.540
+So we should now be able to flip back over to that pull request we had created and see all these different
+
+01:07.540 --> 01:09.250
+workflows running at the same time.
+
+01:09.610 --> 01:11.140
+I'll go to my pull request tab.
+
+01:11.230 --> 01:13.330
+I'll go to added startup message.
+
+01:14.640 --> 01:19.020
+And now if I go down to latest commits, I'll see all four workflows running in parallel.
+
+01:19.380 --> 01:24.030
+Now, just so you know, I've noticed that the very first time that you run or add in a workflow, sometimes
+
+01:24.030 --> 01:26.500
+GitHub doesn't really want to process it right away.
+
+01:26.520 --> 01:32.070
+So if you just sit here and wait for a while and don't see any progress being made or if some of the
+
+01:32.070 --> 01:36.240
+or one of these is just stuck in a this check has started or something like that state for 5 minutes
+
+01:36.240 --> 01:39.120
+or so, then you can always click on details.
+
+01:40.070 --> 01:45.110
+We can cancel workflow on the right hand side and then make another change to your local repository
+
+01:45.110 --> 01:45.940
+on the dev branch.
+
+01:45.950 --> 01:48.230
+Push it back up and let these things run again.
+
+01:48.380 --> 01:52.100
+Again, you only have to do that if it looks like everything has stalled out for about 5 minutes or
+
+01:52.100 --> 01:52.580
+so.
+
+01:53.820 --> 01:54.180
+Okay.
+
+01:54.180 --> 01:59.520
+So it looks like my orders tests have passed successfully and I can easily click around, take a look
+
+01:59.520 --> 02:00.780
+at the auth tests.
+
+02:01.290 --> 02:02.660
+Looks like those are still running.
+
+02:02.670 --> 02:04.380
+I can take a look at the payments tests.
+
+02:04.920 --> 02:05.130
+Yep.
+
+02:05.130 --> 02:09.360
+Looks like those are running as well, but also looks like some of them are starting to be resolved.
+
+02:09.840 --> 02:12.180
+So I'm going to go back to my polar request itself.
+
+02:12.840 --> 02:13.890
+Here's the pull request.
+
+02:15.260 --> 02:16.250
+And I'll just wait here.
+
+02:16.250 --> 02:18.310
+And after a minute or two, after all the tests run.
+
+02:18.320 --> 02:18.660
+Yep.
+
+02:18.680 --> 02:19.820
+Looks like we're good to go.
+
+02:19.940 --> 02:23.110
+So I've now ran all the different tests across all of my different services.
+
+02:23.120 --> 02:26.120
+They ran rather quickly because they all ran in parallel.
+
+02:26.150 --> 02:30.590
+And now I can safely merge this pilot request in because I'm pretty confident that, hey, I've made
+
+02:30.590 --> 02:33.650
+some changes and I have not broken anything inside my application.
+
+02:34.540 --> 02:36.160
+Okay, so this looks good.
+
+02:36.160 --> 02:40.150
+And we've now taken care of this workflow all the way up to the point where.
+
+02:41.750 --> 02:43.940
+We have all of our test passing now.
+
+02:43.940 --> 02:50.330
+In theory, if we merge this PR into the master branch, we want to somehow take this updated master
+
+02:50.330 --> 02:53.780
+branch and somehow deploy these changes.
+
+02:54.350 --> 02:58.970
+That's going be the next big thing we start to work on actually deploying our code after merging IPR
+
+02:58.970 --> 03:00.290
+into the master branch.

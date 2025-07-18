@@ -1,0 +1,52 @@
+WEBVTT
+
+00:00.700 --> 00:04.240
+There is one other small change we're going to make to our exploration complete listener.
+
+00:04.480 --> 00:09.160
+So right now, whenever we receive a message, we're going to find the corresponding order no matter
+
+00:09.160 --> 00:12.520
+what, and always mark the order as being cancelled.
+
+00:12.790 --> 00:16.050
+And as you can imagine, there might be a kind of big downside to this.
+
+00:16.060 --> 00:21.310
+What would happen if we received a cancellation event around an order that has already been paid for?
+
+00:21.640 --> 00:26.410
+Well, chances are we would take this order that has already been paid for or be marked as complete
+
+00:26.410 --> 00:28.120
+and cancel it anyways.
+
+00:28.390 --> 00:32.230
+So we do have to add in a little check here and just make sure that we do not try to cancel an order
+
+00:32.230 --> 00:36.520
+that has been paid for right after our little check to make sure that we have an order.
+
+00:37.150 --> 00:42.040
+We're going to take a look at the order status property and we're going to say that if this is equal
+
+00:42.040 --> 00:49.750
+to order status dot complete, then let's just return early act the message because we do not want to
+
+00:49.750 --> 00:51.850
+do anything with this cancellation event.
+
+00:52.180 --> 00:55.980
+So I'm going to return early and call message back leg.
+
+00:56.000 --> 00:56.440
+So.
+
+00:57.750 --> 00:58.050
+Okay.
+
+00:58.080 --> 00:58.990
+Good little fix.
+
+00:59.010 --> 01:01.380
+Quick pause right here and continue in just a minute.

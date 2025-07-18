@@ -1,0 +1,199 @@
+WEBVTT
+
+00:00.690 --> 00:04.770
+Now that we've fixed up a little issue or two, we're going to start adding in some these new routes.
+
+00:04.830 --> 00:08.520
+The first route we're going to work on is going to give the user the ability to create a ticket.
+
+00:08.520 --> 00:12.810
+So it will be a very simple form where a user will enter in a title and a price.
+
+00:14.200 --> 00:19.360
+We're going to make this as a new route accessible at tickets new and to implement that route.
+
+00:19.390 --> 00:23.020
+Naturally, we have to create a file at ticket slash new JS.
+
+00:23.200 --> 00:25.210
+So let's create that new file right now.
+
+00:26.050 --> 00:27.370
+Back inside my editor.
+
+00:27.520 --> 00:29.560
+I'm going to find my pages directory.
+
+00:29.590 --> 00:31.990
+Inside there, I'll make a new folder called Tickets.
+
+00:32.200 --> 00:36.160
+And then inside there, I'll make a new file of new JS.
+
+00:37.010 --> 00:41.990
+Inside of this new JSS file, I'm going to create a new component called New Ticket.
+
+00:44.500 --> 00:46.720
+At the bottom, I will immediately export it.
+
+00:49.550 --> 00:51.560
+And inside the component itself right now.
+
+00:51.560 --> 00:52.880
+Let's just throw in a div.
+
+00:55.240 --> 00:59.770
+And I'll give it maybe an H one that says Create a ticket.
+
+01:01.600 --> 01:02.800
+Let's immediately save this.
+
+01:02.830 --> 01:06.130
+Go back over to our browser and just make sure that we can access this new route.
+
+01:06.560 --> 01:12.580
+Those should be able to access ticketing, dot dev tickets, slash new and see create a ticket, appear
+
+01:12.580 --> 01:15.850
+on the screen like so it's only reasonable.
+
+01:16.890 --> 01:17.100
+Now.
+
+01:17.100 --> 01:20.070
+Next up, well, let's start to add in the form itself.
+
+01:20.760 --> 01:23.640
+For the form, I'll go back over to my new ticket component.
+
+01:25.340 --> 01:27.980
+We're going to add in a decent amount of sex here.
+
+01:28.740 --> 01:30.720
+So we'll put in a form element.
+
+01:31.940 --> 01:36.880
+I'm going to give it a div that has a class name of form group.
+
+01:38.590 --> 01:39.490
+Inside that div.
+
+01:39.490 --> 01:41.080
+I'll place a label.
+
+01:43.770 --> 01:45.000
+That has tech's title.
+
+01:46.180 --> 01:48.640
+After that, I'll put in a simple input.
+
+01:49.850 --> 01:52.040
+I then going to duplicate that entire div.
+
+01:53.180 --> 01:56.000
+And I'll change the label over to price instead.
+
+01:57.980 --> 02:02.990
+And then finally after the second div that we just copy paste it in, I'll place a button with the class
+
+02:02.990 --> 02:04.850
+name of BTN.
+
+02:05.360 --> 02:06.860
+BTN primary.
+
+02:09.900 --> 02:11.910
+And I'll give it some text of submit.
+
+02:13.700 --> 02:14.730
+Pretty simple start.
+
+02:14.750 --> 02:16.490
+Let's take a look at what that looks like.
+
+02:16.850 --> 02:17.120
+Yep.
+
+02:17.120 --> 02:17.810
+There we go.
+
+02:20.880 --> 02:21.000
+Okay.
+
+02:21.120 --> 02:26.100
+Now that we've got that put together, we need to make sure that we also add in to these inputs.
+
+02:26.100 --> 02:30.390
+Just a quick class name just to fix up some of the styling on both the inputs.
+
+02:30.750 --> 02:34.050
+I'm going to add a class name of form control.
+
+02:36.950 --> 02:39.110
+And form control.
+
+02:40.210 --> 02:42.280
+If I now save that and flip back over, we'll now see.
+
+02:42.280 --> 02:43.690
+It stretches the entire length.
+
+02:44.080 --> 02:46.840
+Now, having it stretched the entire length looks just a little bit weird.
+
+02:46.840 --> 02:50.050
+We don't really have any gap on the left hand side or the right hand side.
+
+02:50.470 --> 02:53.440
+So to fix that up, we're going to go back over to our app component.
+
+02:53.440 --> 02:57.790
+We're just going to add in really quickly an additional little class that's going to give us a little
+
+02:57.790 --> 02:59.590
+bit of spacing on either side.
+
+03:01.050 --> 03:02.520
+So on the app component.
+
+03:04.220 --> 03:07.130
+I'm going to find where we create the actual component right here.
+
+03:07.130 --> 03:09.590
+So that's the child component that we're trying to show to the user.
+
+03:09.590 --> 03:11.450
+And I'm going to wrap it with a div.
+
+03:14.040 --> 03:16.410
+That has a class name of container.
+
+03:18.100 --> 03:22.040
+Now, if I save that, I'll see that I get that nice border on both sides of the screen.
+
+03:22.580 --> 03:25.430
+And you probably see something a little bit closer to that.
+
+03:25.430 --> 03:29.630
+Just again, as a reminder, as usual, I run my screen really far, zoomed in, just you can see everything
+
+03:29.630 --> 03:30.710
+I'm doing very easily.
+
+03:31.990 --> 03:32.200
+Okay.
+
+03:32.230 --> 03:33.190
+So that's a good start.
+
+03:33.520 --> 03:34.460
+Let's take a pause right here.
+
+03:34.480 --> 03:35.440
+When we come back, the next video.
+
+03:35.470 --> 03:40.580
+We'll make sure that we add in some state to track the values the user is entering and then make a request
+
+03:40.580 --> 03:43.180
+to eventually create a new ticket on our back end server.

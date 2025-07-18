@@ -1,0 +1,475 @@
+WEBVTT
+
+00:00.970 --> 00:05.530
+In the last video, he came to the realization that we should probably be making use of JSON web tokens,
+
+00:05.530 --> 00:11.080
+but now we need to decide how we are going to communicate that JSON Web token over to our backend services.
+
+00:11.110 --> 00:15.460
+So in this video, I want to lay out a couple of further requirements of our application.
+
+00:15.790 --> 00:16.180
+All right.
+
+00:16.180 --> 00:21.520
+So first quick diagram here, just to give you a quick reminder on what goes on during the loading process
+
+00:21.520 --> 00:23.290
+of an application into the browser.
+
+00:23.290 --> 00:28.900
+When we are writing a normal React application, this might not seem relevant to this JSON web token
+
+00:28.900 --> 00:33.150
+question at all, but trust me, it is extremely, extremely relevant.
+
+00:33.160 --> 00:37.360
+So first, just a quick reminder of how a normal React application works.
+
+00:37.990 --> 00:38.830
+I'm going to zoom in here.
+
+00:38.830 --> 00:40.210
+We're going to start off at the very top.
+
+00:41.510 --> 00:46.580
+So we are going to imagine that a user types out ticketing dev into their address bar and hits enter
+
+00:46.850 --> 00:48.260
+as soon as that is done.
+
+00:48.440 --> 00:52.220
+Your browser is going to make a request to ticketing dev.
+
+00:53.040 --> 00:58.680
+Then with a typical React application, we are going to then immediately send back an HTML file that
+
+00:58.680 --> 01:00.230
+is pretty much bare bones.
+
+01:00.240 --> 01:05.730
+There's not really going to be anything inside there except for a little bit of HTML, some script tags,
+
+01:05.730 --> 01:08.370
+some CSS tags, maybe some other stuff.
+
+01:08.370 --> 01:11.490
+But for the most part, there's not going to be a lot of markup inside that file.
+
+01:12.950 --> 01:15.280
+That file is then going to be loaded up by the browser.
+
+01:15.290 --> 01:20.120
+The browser is going to see all those script tags and it's going to decide, Oh, I need to make a follow
+
+01:20.120 --> 01:26.630
+up request to the backend client and get all the associated JavaScript files to actually boot up and
+
+01:26.630 --> 01:28.340
+execute this React application.
+
+01:28.790 --> 01:31.700
+So we're going to make a follow up request for some JavaScript files.
+
+01:31.730 --> 01:34.700
+These are technically all separate requests, but whatever.
+
+01:34.700 --> 01:39.440
+If there are multiple files, we're going to send back all these different JavaScript files and the
+
+01:39.440 --> 01:41.720
+browser is going to execute the code inside them.
+
+01:41.990 --> 01:45.770
+That is when our React application is going to actually boot up inside the browser.
+
+01:45.770 --> 01:51.200
+And at that point in time we might need to make some requests to get some data that the React app at
+
+01:51.200 --> 01:55.610
+that point might make a request over to the Order service asking for some data.
+
+01:56.780 --> 01:59.510
+And the order service will respond with that order's data.
+
+01:59.840 --> 02:04.620
+The React application will then take that info, build some HTML and displayed on the screen to show
+
+02:04.620 --> 02:05.510
+it to the users.
+
+02:06.080 --> 02:10.190
+So again, that is the normal flow of a typical React application.
+
+02:10.550 --> 02:12.140
+Now, quick question for you.
+
+02:12.590 --> 02:15.470
+We are taking a look at more or less three requests here.
+
+02:15.500 --> 02:21.500
+The initial request, a follow up request to get some JavaScript files or CSS files or whatever else.
+
+02:21.710 --> 02:26.600
+And then a third request right here to get some actual data that the application needs.
+
+02:27.020 --> 02:33.110
+So considering these three requests, at what point in time do we need to somehow communicate authentication
+
+02:33.110 --> 02:36.560
+information from the browser over to the back end?
+
+02:37.100 --> 02:39.360
+Well, we probably don't really need to do it.
+
+02:39.380 --> 02:42.920
+We don't really need to know if these user is logged in during the initial request.
+
+02:43.070 --> 02:47.900
+There might be some scenarios where we do not even want to send a user a React application if they are
+
+02:47.900 --> 02:48.680
+not logged in.
+
+02:48.680 --> 02:53.930
+But for the most part, we usually say that we don't really care about sending out the source code for
+
+02:53.930 --> 02:54.740
+a React app.
+
+02:54.770 --> 02:57.950
+You might think to yourself, Well, Stephen, don't we want to secure the source code?
+
+02:57.950 --> 02:58.520
+To be honest?
+
+02:58.550 --> 03:01.610
+No, that's not something that's very commonly done in the production world.
+
+03:01.820 --> 03:07.160
+So during that initial request, with a normal React app, we really don't care about authentication.
+
+03:08.070 --> 03:10.650
+Do we need to know about authentication with JavaScript files?
+
+03:10.680 --> 03:12.240
+Well, no, for the same reasons.
+
+03:12.240 --> 03:14.040
+We don't really care if a user's logged in.
+
+03:14.070 --> 03:15.650
+Sure, they could have some JavaScript code.
+
+03:15.660 --> 03:16.220
+Go for it.
+
+03:16.230 --> 03:16.590
+Take it.
+
+03:16.590 --> 03:17.340
+I don't care.
+
+03:18.310 --> 03:22.840
+The only time that we really care about whether or not a user is logged in is when they start asking
+
+03:22.840 --> 03:23.740
+for data.
+
+03:24.510 --> 03:32.340
+So we would really say that for a normal React application right here is really the soonest point in
+
+03:32.340 --> 03:36.930
+time where we ever need to start to worry about sending authentication data over to the server.
+
+03:36.930 --> 03:39.090
+We need to include authentication data.
+
+03:39.090 --> 03:45.240
+So specifically this JSON web token inside of this request right here to our back end order service,
+
+03:45.240 --> 03:50.250
+because the order service probably needs to know about whether or not this user is logged in and whether
+
+03:50.250 --> 03:52.830
+they have permission to view this data or whatever else.
+
+03:54.520 --> 03:54.820
+Okay.
+
+03:54.820 --> 03:58.870
+So again, that request right there would probably be the soonest that we would want to think.
+
+03:59.510 --> 04:05.390
+About including that JSON web token, and we would probably include that in the headers or some authorization
+
+04:05.390 --> 04:08.390
+header of the request and the body of the request.
+
+04:08.420 --> 04:11.940
+Or alternatively, maybe by using that cookie mechanism as well.
+
+04:11.960 --> 04:15.290
+All three of these would work with a normal React application.
+
+04:16.900 --> 04:19.520
+Now you'll notice that I'm stressing the term normal here.
+
+04:19.540 --> 04:24.730
+So as a reminder, we are not really building a very normal React application.
+
+04:24.760 --> 04:29.140
+Instead, we are building a server side rendered React application.
+
+04:29.710 --> 04:35.590
+The idea behind a server side rendered React app is that we are going to make some initial request to
+
+04:35.590 --> 04:36.700
+some backend server.
+
+04:37.180 --> 04:44.260
+This backend server is then going to render out or build the HTML for our entire app and then send that
+
+04:44.560 --> 04:50.770
+HTML file with all the content inside of it, all the relevant orders or tickets or whatever else already
+
+04:50.770 --> 04:52.450
+rendered as HTML.
+
+04:52.840 --> 04:55.210
+We're going to send that response back over to the browser.
+
+04:55.210 --> 04:59.530
+The browser is going to get that HTML file and instantly have some content to show to the user on the
+
+04:59.530 --> 05:03.880
+screen without having to make all those follow up requests to get some JavaScript files.
+
+05:03.880 --> 05:06.010
+And then another request to get some data.
+
+05:06.840 --> 05:12.720
+The whole reason we are using the server side rendering approach is for SEO purposes, search engine
+
+05:12.720 --> 05:15.180
+optimization and also page load speed.
+
+05:15.180 --> 05:18.870
+If our user has an older device or a mobile device for that matter.
+
+05:20.220 --> 05:25.200
+Now let's think about what this really means to be able to send back an HTML file with all the relevant
+
+05:25.200 --> 05:28.710
+content inside of it from the very first request.
+
+05:29.280 --> 05:34.170
+That means that our client, whatever we built here, this next JS application, that's how we're going
+
+05:34.170 --> 05:35.700
+to do this server side rendering stuff.
+
+05:35.700 --> 05:37.650
+We're going to use a framework called Next.
+
+05:37.650 --> 05:43.230
+JS That means that this next JS process right here is going to have to fetch some data.
+
+05:43.260 --> 05:48.150
+And so that means that that thing is going to have to reach out directly in one way or another to our
+
+05:48.150 --> 05:51.510
+order service or the ticketing service or whatever else.
+
+05:52.750 --> 05:57.580
+It needs to get that information so it can immediately respond with some relevant content.
+
+05:58.350 --> 06:01.290
+So with our approach, you're using server side rendering.
+
+06:01.470 --> 06:08.790
+Without a doubt, we need to know authentication information with the very first request, this very
+
+06:08.790 --> 06:09.750
+first request right here.
+
+06:09.750 --> 06:12.480
+We need to communicate that JSON web token.
+
+06:12.660 --> 06:18.600
+So that very first request needs to have that authorization header or a token in the body or the token
+
+06:18.600 --> 06:20.820
+inside of some cookie or something like that.
+
+06:21.720 --> 06:24.270
+Now this really presents a big issue.
+
+06:24.300 --> 06:25.410
+Let me tell you why.
+
+06:25.950 --> 06:34.380
+When you type in, say, google.com into your address bar and hit enter, Google has no ability to run
+
+06:34.380 --> 06:39.640
+any JavaScript code on your computer before sending you in HTML file.
+
+06:39.660 --> 06:43.740
+When you hit enter, the first thing that's going to happen, you're going to get back in HTML file
+
+06:43.740 --> 06:49.260
+and inside that HTML file, we can have some JavaScript code or a reference to a script tag to load
+
+06:49.260 --> 06:50.130
+up some code.
+
+06:50.340 --> 06:55.200
+And then at that point in time, Google can start to reach around and try to find a token stored on
+
+06:55.200 --> 06:56.810
+your device or something like that.
+
+06:56.830 --> 07:03.120
+But the point is that during that initial page load request, when we press enter in our address bar
+
+07:03.120 --> 07:07.860
+to go to some domain, we cannot customize that initial request in any way.
+
+07:08.010 --> 07:12.180
+We cannot somehow execute some JavaScript code ahead of time or anything like that.
+
+07:12.860 --> 07:15.560
+So that has a really big impact.
+
+07:15.860 --> 07:21.650
+That means that we cannot run some custom code to intercept that initial page load and try to append
+
+07:21.650 --> 07:23.870
+an authorization header in that request.
+
+07:24.170 --> 07:27.410
+We cannot try to add in a token to the body of the request.
+
+07:27.740 --> 07:33.410
+So that means that both of these methods of sharing the JSON web token with our backend server go out
+
+07:33.410 --> 07:36.410
+the window when we are doing server side rendering.
+
+07:36.680 --> 07:42.590
+If we want to tell that server who we are or communicate any information during that initial page load
+
+07:42.590 --> 07:50.300
+request, that information absolutely, positively has to be stored inside of a cookie because only
+
+07:50.300 --> 07:55.280
+this cookie, this cookie right here, that is the only way for us to somehow communicate information
+
+07:55.370 --> 07:59.660
+from our browser to that back end during the initial page load.
+
+08:01.220 --> 08:05.360
+Now, having said that, there is technically a very small corner case, so we could get around this
+
+08:05.360 --> 08:09.800
+by using service workers, but that's really way outside the scope of what we're doing here with our
+
+08:09.800 --> 08:10.850
+React application.
+
+08:10.850 --> 08:17.420
+And in general, service workers is a pretty big architectural change to our React application and it
+
+08:17.420 --> 08:19.810
+would require a lot more integration with next G.
+
+08:19.820 --> 08:23.210
+So that's really something we're not really going to consider here, even though I just want throw it
+
+08:23.210 --> 08:25.430
+out there technically as a workaround for this.
+
+08:25.970 --> 08:31.100
+So long story short, because we are doing server side rendering and because this first request needs
+
+08:31.100 --> 08:36.740
+to have authentication information and because we cannot customize that request in any way to try to
+
+08:36.740 --> 08:42.140
+attach on an additional header or some information inside the body, we have to communicate.
+
+08:43.040 --> 08:45.840
+Our Jason Web token inside of a cookie.
+
+08:45.860 --> 08:47.690
+It's a hard requirement.
+
+08:48.610 --> 08:49.060
+Yet.
+
+08:49.060 --> 08:55.180
+So at this point, we've essentially established that we're going to use a JSON web token and it's going
+
+08:55.180 --> 08:56.650
+to be stored inside of a cookie.
+
+08:56.650 --> 09:01.300
+And that's why a little bit ago, I made kind of a big deal about reviewing the different differences
+
+09:01.300 --> 09:05.860
+between cookies and JSON web tokens, because, again, a lot of time when we hear about cookie based
+
+09:05.860 --> 09:09.670
+authentication, we would think, oh, this is something totally different than a JSON web token.
+
+09:09.670 --> 09:10.990
+No, it's not.
+
+09:11.260 --> 09:13.060
+Cookies are a transport mechanism.
+
+09:13.060 --> 09:15.550
+There's something we use to move information around.
+
+09:15.550 --> 09:20.110
+We can store on a web token or move a JSON web token around inside of a cookie.
+
+09:20.350 --> 09:25.210
+But whenever you hear about cookie based authentication, the assumption a lot of engineers make is
+
+09:25.210 --> 09:30.190
+that we're somehow creating a customized token or something like that and storing inside of a cookie.
+
+09:30.700 --> 09:31.840
+Yeah, that's totally valid.
+
+09:31.840 --> 09:32.800
+We could totally do that.
+
+09:32.800 --> 09:36.010
+But it's not mutually exclusive with using JSON web tokens.
+
+09:36.010 --> 09:41.110
+We can use cookies and JSON Web tokens together, and that's exactly what we are going to do to solve
+
+09:41.110 --> 09:43.150
+this server side rendering issue.
+
+09:43.980 --> 09:44.550
+All right.
+
+09:44.550 --> 09:46.780
+We've gone through a couple of very long videos now.
+
+09:46.800 --> 09:51.840
+I apologize for the duration, but we are essentially all done with the background on this authentication
+
+09:51.840 --> 09:52.370
+stuff.
+
+09:52.380 --> 09:56.910
+So we're going to take a pause right here and start to build out our authentication system for real
+
+09:56.910 --> 09:58.050
+in the next video.

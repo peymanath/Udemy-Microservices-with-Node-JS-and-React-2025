@@ -1,0 +1,247 @@
+WEBVTT
+
+00:00.770 --> 00:02.320
+Enough lecturing, enough talking.
+
+00:02.330 --> 00:04.820
+Let's go and create our actual user model.
+
+00:05.150 --> 00:10.220
+So back inside my code editor, I'm going to find my auth service directory.
+
+00:10.250 --> 00:12.870
+Here it is right here inside the SRC folder.
+
+00:12.890 --> 00:15.500
+I'm going to create another directory called models.
+
+00:15.950 --> 00:20.300
+And inside there, I'll create a file called user dots.
+
+00:21.060 --> 00:24.510
+So this is where we are going to define our mongoose user model.
+
+00:24.750 --> 00:28.470
+We're also going to write out some code inside of here to solve those two issues that we just discussed.
+
+00:29.250 --> 00:30.620
+Let's get started at the very top.
+
+00:30.620 --> 00:34.160
+I'm going to import mongoose from mongoose.
+
+00:35.620 --> 00:38.920
+After that, I'm going to define something called a schema.
+
+00:38.950 --> 00:44.470
+A schema is how we are going to tell Mongoose specifically about all the different properties that a
+
+00:44.470 --> 00:45.700
+user is going to have.
+
+00:46.390 --> 00:51.730
+I'm going to write out user schema is new mongoose schema.
+
+00:52.990 --> 00:56.830
+And inside of here again, we're going to list out the different properties that a user is going to
+
+00:56.830 --> 00:57.400
+have.
+
+00:58.030 --> 01:00.520
+So first off, they're going to have an email.
+
+01:01.950 --> 01:07.290
+I'm going to mark its type as being a string and I'm going to say that this property is required or
+
+01:07.290 --> 01:07.770
+required.
+
+01:07.770 --> 01:08.340
+True.
+
+01:08.920 --> 01:09.950
+A quick little note.
+
+01:09.960 --> 01:14.010
+You'll notice we put a type right here and we said that its type was going to be string.
+
+01:14.160 --> 01:20.010
+This is not in any way, shape or form, not whatsoever tied to type script.
+
+01:20.340 --> 01:24.030
+The type that we are listing right here is 100% specific to Mongoose.
+
+01:24.060 --> 01:27.120
+It does not tell TypeScript anything whatsoever.
+
+01:28.210 --> 01:32.500
+The other thing I want to mention is that when we put a type of string right here, it is capital S
+
+01:32.500 --> 01:38.110
+string because we were referring to the built in string constructor that is available inside the JavaScript
+
+01:38.110 --> 01:38.800
+language.
+
+01:39.190 --> 01:42.340
+Whenever we write out a type of string using TypeScript.
+
+01:42.340 --> 01:47.650
+So for example, if we wrote out an interface here really quickly and when it had some imaginary property
+
+01:47.800 --> 01:51.250
+that was of type string, we'd write out lowercase string.
+
+01:51.700 --> 01:56.920
+So in TypeScript, whenever we want to indicate a type of string, it's lowercase with mongoose.
+
+01:56.920 --> 02:02.590
+When we indicate a type of a property, it is a capital because we're referring to an actual constructor.
+
+02:06.340 --> 02:10.690
+So after that, the other property we're going to eventually store on all these different users is a
+
+02:10.690 --> 02:11.380
+password.
+
+02:12.200 --> 02:17.180
+This will also be of type string and it will be also required.
+
+02:20.380 --> 02:21.550
+All right, so that looks good.
+
+02:22.390 --> 02:27.760
+So now after creating that schema, we can feed the schema into mongoose, and mongoose is going to
+
+02:27.760 --> 02:29.470
+create a new model out of it.
+
+02:29.470 --> 02:34.840
+And remember, this whole model thing is how we actually access a whole big set of data inside of our
+
+02:34.840 --> 02:36.160
+MongoDB database.
+
+02:36.370 --> 02:40.990
+So I can say down here at the bottom user is mongoose model.
+
+02:42.600 --> 02:47.160
+I'm going to put in a string of user and then feed in the user schema like so.
+
+02:48.220 --> 02:50.950
+Then finally at the very bottom, I'm going to export user.
+
+02:53.570 --> 02:53.780
+Okay.
+
+02:53.840 --> 02:58.790
+So at this point in time, well, we wrote out all this code in everything appears to be working without
+
+02:58.790 --> 03:00.020
+any issue whatsoever.
+
+03:00.710 --> 03:03.440
+I don't see any typescript errors or anything like that.
+
+03:03.740 --> 03:08.150
+However, if we start to really play around with this user model that we've now created, you can really
+
+03:08.150 --> 03:12.260
+start to see where these two issues are going to start to cause us some problems.
+
+03:12.680 --> 03:15.170
+For example, let's just try to create a new user.
+
+03:16.080 --> 03:20.430
+So after creating the user model down here, I'm going to say new user.
+
+03:21.140 --> 03:23.990
+And I'll pass in some properties I want to assign to this user.
+
+03:24.140 --> 03:27.440
+Well, naturally, we probably want to have an email and a password.
+
+03:27.950 --> 03:30.620
+So I could put in something like an email of test at test.
+
+03:32.190 --> 03:33.960
+And a password of whatever.
+
+03:35.200 --> 03:36.400
+Well, that looks fine.
+
+03:36.400 --> 03:39.190
+We still don't see any errors from TypeScript or anything like that.
+
+03:39.640 --> 03:42.280
+However, here's where stuff starts to go wrong.
+
+03:42.370 --> 03:47.260
+There is no information about the arguments that are going to be provided to this constructor being
+
+03:47.260 --> 03:48.850
+fed into TypeScript right now.
+
+03:49.240 --> 03:53.830
+So even though you and I know that we want to give that constructor an email and a password that are
+
+03:53.830 --> 03:55.900
+both strings, because that's what we told Mongoose.
+
+03:56.260 --> 03:58.870
+TypeScript has no idea that that is the case.
+
+03:59.350 --> 04:04.870
+So if I start to mangle these properties, if I accidentally put in, like, just as TypeScript says,
+
+04:04.870 --> 04:06.160
+hey, who cares?
+
+04:06.580 --> 04:07.570
+No issue whatsoever.
+
+04:07.570 --> 04:08.550
+We don't get any warnings.
+
+04:08.570 --> 04:09.760
+We don't get any errors.
+
+04:10.150 --> 04:12.700
+I can add in extra properties.
+
+04:12.790 --> 04:13.660
+No problem.
+
+04:13.900 --> 04:18.040
+I can even change this from a string to a number.
+
+04:18.400 --> 04:19.930
+Also, no issue whatsoever.
+
+04:20.850 --> 04:26.010
+So you can start to see right away that TypeScript has no idea about what is going on with the arguments
+
+04:26.010 --> 04:27.570
+that you're passing to this constructor.
+
+04:28.260 --> 04:32.520
+The whole reason that we are using TypeScript is so that it can check stuff like this and make sure
+
+04:32.520 --> 04:35.550
+that we are not making silly typos or anything like that.
+
+04:35.820 --> 04:40.290
+So it would be great if we could somehow teach TypeScript about the different properties that we're
+
+04:40.290 --> 04:44.670
+going to pass into this thing so it can do some validation or something like that for us.
+
+04:45.360 --> 04:45.660
+All right.
+
+04:45.660 --> 04:49.770
+So now that we understand the issue here, let's take a quick pause, come back the next video and start
+
+04:49.770 --> 04:53.880
+to discuss how we're going to get TypeScript and Mongoose to actually work together.

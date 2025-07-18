@@ -1,0 +1,238 @@
+WEBVTT
+
+00:00.900 --> 00:01.260
+All right.
+
+00:01.260 --> 00:03.050
+Let's start to wrap things up.
+
+00:03.060 --> 00:07.050
+So the first thing I want to do is show you how to shut down that Kubernetes cluster we had created
+
+00:07.050 --> 00:08.160
+on digital ocean.
+
+00:08.700 --> 00:12.540
+So when you are ready to close everything down, we're going to go back over to Digital Ocean.
+
+00:13.310 --> 00:15.440
+We're going to first find the networking page.
+
+00:16.130 --> 00:18.070
+We're going to find load balancers.
+
+00:18.080 --> 00:20.720
+We'll then find the load balancer that was created right here.
+
+00:20.750 --> 00:23.000
+We'll click on more and then you can destroy it.
+
+00:23.150 --> 00:26.540
+Remember, you pay about $10 per month for this load balancer.
+
+00:26.540 --> 00:29.690
+So when you're all done testing the stuff out, don't forget to delete it.
+
+00:30.850 --> 00:35.680
+Then to also delete the Kubernetes cluster, we'll go to Kubernetes, we'll find our ticketing cluster,
+
+00:35.710 --> 00:38.020
+go to more, and then destroy that as well.
+
+00:38.290 --> 00:42.850
+We are paying about $30 per month for the ticketing cluster, so don't forget to destroy that at some
+
+00:42.850 --> 00:43.390
+point.
+
+00:45.380 --> 00:45.650
+All right.
+
+00:45.650 --> 00:49.550
+So beyond that, I just want to give you a couple of quick notes on how you might possibly expand this
+
+00:49.550 --> 00:50.360
+application.
+
+00:50.660 --> 00:54.980
+The first and probably most obvious thing that we should probably add in is HTTPS support.
+
+00:55.010 --> 01:00.660
+Right now, we can only connect to our application over HTTP if you want to add in https.
+
+01:00.680 --> 01:02.990
+You can take a look at cert manager IO.
+
+01:04.020 --> 01:10.530
+This is an open source library that makes it fairly easy to add in HTTPS or a Kubernetes cluster that
+
+01:10.530 --> 01:12.180
+is using ingress engine x.
+
+01:12.540 --> 01:17.550
+The documentation is a little bit challenging to get through, but at the end of the day, it is kind
+
+01:17.550 --> 01:22.080
+of a straightforward process, as straightforward as HTTPS is in general.
+
+01:23.160 --> 01:27.510
+The next thing you might try doing is adding in a new service, perhaps with email support.
+
+01:27.870 --> 01:33.780
+So maybe after a user purchases a order or purchases a ticket, we should send them some kind of email
+
+01:33.780 --> 01:35.580
+just to tell them, Hey, you just paid for this thing.
+
+01:35.580 --> 01:37.950
+And here are some details on the ticket you just purchased.
+
+01:38.370 --> 01:43.410
+So we might do that by creating a new service, and we might decide to use a third party email provider
+
+01:43.410 --> 01:46.830
+such as MailChimp or SendGrid or something else like that.
+
+01:47.490 --> 01:52.170
+This new service can then listen for events around an order being paid for, and as soon as the order
+
+01:52.170 --> 01:55.710
+is paid for, the service can send off an email to that particular user.
+
+01:58.810 --> 02:01.120
+The next thing you might add in is a build step.
+
+02:01.150 --> 02:06.070
+So right now, all of our services inside of our production cluster are technically running in development
+
+02:06.070 --> 02:06.610
+mode.
+
+02:06.790 --> 02:12.640
+They are using node dev to actually invoke the individual services or at least the back end typescript
+
+02:12.640 --> 02:13.180
+ones.
+
+02:13.450 --> 02:16.630
+And the next application is still running in dev mode as well.
+
+02:17.110 --> 02:21.370
+We can definitely speed up all of our different services by running them in production mode.
+
+02:21.640 --> 02:26.230
+To do this, we're going to create a separate Docker file for each service that is going to build up
+
+02:26.230 --> 02:28.090
+each service in a production style.
+
+02:28.120 --> 02:30.070
+Really, just about the only thing that needs to change.
+
+02:30.070 --> 02:34.900
+You're going to add in a single command into each one to tell the application to build itself.
+
+02:34.930 --> 02:38.320
+In the case of next, it's something like NPM, run, build or something like that.
+
+02:38.680 --> 02:43.900
+And then for the actual execution command in those Docker files, you'll change it to what are the appropriate
+
+02:43.900 --> 02:46.540
+command is generally node index JS.
+
+02:48.040 --> 02:49.210
+The last thing you might try doing.
+
+02:49.210 --> 02:53.470
+And this is really just for people who are expecting to work on microservices projects very quickly
+
+02:53.470 --> 02:56.260
+or very soon with teams of other engineers.
+
+02:56.290 --> 03:01.630
+It might be nice if we had a staging cluster, so a staging cluster would be not a production cluster,
+
+03:01.630 --> 03:04.870
+but a cluster where other team members could test out our application.
+
+03:05.440 --> 03:08.350
+So maybe we should create another cluster on digital ocean.
+
+03:08.560 --> 03:13.600
+It should use some other kind of domain name, and it should only be accessible to people who are trying
+
+03:13.600 --> 03:15.430
+to well, test out the application.
+
+03:15.910 --> 03:18.760
+We might then create another branch on our GitHub repo.
+
+03:19.600 --> 03:22.400
+And tie another kind of workflow scripts to it.
+
+03:22.420 --> 03:28.210
+We could say that whenever someone tries to push some code to this staging branch, maybe we will deploy
+
+03:28.210 --> 03:33.310
+the application to that staging cluster and then other people could come and test out our application
+
+03:33.310 --> 03:35.890
+before we finally merge that code into master.
+
+03:36.770 --> 03:39.730
+So those are four possible ways of expanding this application.
+
+03:39.740 --> 03:44.930
+And of course, the most open ended one here is really add in adding in some additional services.
+
+03:44.930 --> 03:45.350
+Absolutely.
+
+03:45.350 --> 03:45.950
+Feel free.
+
+03:45.950 --> 03:50.900
+You do not only have to do something around email, we could add in any number of other kind of services
+
+03:50.900 --> 03:51.860
+to our application.
+
+03:53.040 --> 03:54.400
+All right, so that is it.
+
+03:54.420 --> 03:57.720
+This is by far the longest course I have ever created.
+
+03:57.750 --> 03:59.670
+And I really hope you enjoyed it.
+
+03:59.700 --> 04:02.250
+It took about two months for me to record everything.
+
+04:02.250 --> 04:06.840
+And I recorded on average about one and a half hours of video per day.
+
+04:07.320 --> 04:12.180
+You'll notice that the end total doesn't really total up to two months times 1.5.
+
+04:12.520 --> 04:15.580
+It turns out I recorded a ton of video, ended up throwing it away.
+
+04:15.600 --> 04:19.760
+I do that all the time for all these different courses, so it's really was a lot of work on my side.
+
+04:19.770 --> 04:21.360
+I really hope you enjoyed it.
+
+04:21.630 --> 04:26.160
+I put in a lot of effort and I hope that you learned a lot during this process.
+
+04:26.920 --> 04:29.560
+I do hope you check out some of my other courses as well in the future.
+
+04:29.560 --> 04:33.520
+And in general, I hope you have a good time with the knowledge you gained in this course.
+
+04:33.940 --> 04:36.100
+That's it for me, and I will catch you later.

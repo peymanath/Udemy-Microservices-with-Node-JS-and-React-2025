@@ -1,0 +1,265 @@
+WEBVTT
+
+00:01.640 --> 00:06.290
+This video, we're going to take a look at how to get just to essentially fake out this import statement
+
+00:06.290 --> 00:07.580
+or redirect it.
+
+00:07.860 --> 00:09.260
+So here's the entire process.
+
+00:09.260 --> 00:10.790
+This is what we're going to do in this video.
+
+00:11.330 --> 00:14.780
+The first thing we're going to do is find the file that we want to fake.
+
+00:15.050 --> 00:17.270
+In our case, the file that we want to fake.
+
+00:18.170 --> 00:22.610
+Is our net's wrapper file inside of our root CRC directory.
+
+00:23.000 --> 00:24.690
+So this and that's wrapper right here.
+
+00:24.710 --> 00:29.150
+This has all the code that is going to try to actually connect to our real net server.
+
+00:29.150 --> 00:34.010
+And we do not want to run this code because we don't want to have to run a copy of nets when we are
+
+00:34.010 --> 00:35.240
+executing our tests.
+
+00:35.630 --> 00:38.270
+So this is some code that we want to somehow fake out.
+
+00:39.230 --> 00:41.050
+So to do so, we're going to find that file.
+
+00:41.060 --> 00:42.170
+Well, just found it.
+
+00:42.470 --> 00:47.810
+Then inside the same directory, we're going to create a folder called Underscore, Underscore, Box,
+
+00:47.810 --> 00:49.160
+Underscore, Underscore.
+
+00:49.190 --> 00:50.420
+Let's do that right now.
+
+00:51.390 --> 00:54.330
+So inside the same directory, which in this case would be Z.
+
+00:54.360 --> 00:58.190
+I'll make a new folder called Underscore Underscore.
+
+00:58.200 --> 00:59.310
+Make sure you get two in there.
+
+00:59.790 --> 01:02.730
+Box, underscore, underscore.
+
+01:05.660 --> 01:10.250
+After that, we're going to open up that folder we just created and we're going to create a file inside
+
+01:10.250 --> 01:13.010
+there with an identical name to the file that we are trying to fake.
+
+01:13.460 --> 01:18.470
+So in our case, we are trying to fake or kind of duplicate or redirect Nat's wrapper.
+
+01:19.220 --> 01:23.510
+So you'll make an identically named file inside of underscore underscore mocks.
+
+01:24.170 --> 01:26.860
+So that's rapper TS.
+
+01:29.320 --> 01:33.010
+Then inside this file, we're going to write out some fake implementation.
+
+01:33.010 --> 01:38.680
+So in our case, this is where we're going to want to somehow fake out or provide some code to run instead
+
+01:38.680 --> 01:40.510
+of this net's wrapper stuff.
+
+01:41.700 --> 01:48.870
+So to do so inside of the new file we just created, we can do an export const that's wrapper and I'm
+
+01:48.870 --> 01:51.030
+going to directly return an object.
+
+01:51.690 --> 01:55.110
+So why do I know to do a export constants wrapper?
+
+01:55.140 --> 02:00.330
+Well, we are essentially trying to fake out or duplicate the functionality of the real Nats wrapper
+
+02:00.330 --> 02:02.700
+file the real Nats wrapper file.
+
+02:02.970 --> 02:09.030
+If we go down to the bottom, it exports a single named export of NATS wrapper and that is going to
+
+02:09.030 --> 02:12.750
+be an instance of a class or essentially an object.
+
+02:13.260 --> 02:19.170
+So we can't build up or export NATS wrapper and then this is the object that we are going to export.
+
+02:19.410 --> 02:24.960
+So we can write out our fake implementation or essentially some code to run instead of the real stuff
+
+02:24.960 --> 02:26.430
+inside of this object.
+
+02:27.090 --> 02:29.010
+Right now, I'm just going to leave this empty.
+
+02:30.100 --> 02:33.100
+We'll come back and write in some fake implementation in just a moment.
+
+02:34.960 --> 02:35.310
+All right.
+
+02:35.320 --> 02:36.220
+Now the last step.
+
+02:37.030 --> 02:41.620
+We're going to make sure that we tell just to use that fake file we just put together inside of our
+
+02:41.620 --> 02:42.430
+test file.
+
+02:43.430 --> 02:47.720
+Right now, we have a couple of different files that are essentially trying to make use of this Napster
+
+02:47.720 --> 02:48.530
+app or stuff.
+
+02:48.560 --> 02:53.090
+They are specifically the new and update set of tests.
+
+02:54.340 --> 02:59.440
+So inside of my test directory, we're going to first focus on getting the new test file working correctly
+
+02:59.950 --> 03:01.030
+so inside of there.
+
+03:01.900 --> 03:05.770
+I'm going to add in an import statement at the top of this new test file.
+
+03:07.010 --> 03:09.890
+That's going to tell just to make use of our mock file.
+
+03:10.160 --> 03:17.330
+So to do so, we'll write out just the mock, and then we will write out a relative path to that file
+
+03:17.330 --> 03:18.410
+that we want to fake.
+
+03:18.860 --> 03:22.850
+So in this case, the file we want to fake is in that wrapper inside the SRC directory.
+
+03:23.330 --> 03:28.730
+So to write out a relative path to it, we would go up one directory from underscore, underscore test
+
+03:28.730 --> 03:35.750
+into roots, up another directory into CRC and then we can get Nat's dash wrapper.
+
+03:35.750 --> 03:40.580
+So in total, up one directory, up one directory, that's dash wrapper.
+
+03:41.840 --> 03:46.730
+Now whenever these tests are executed, just is going to see that we are trying to mock that file.
+
+03:46.940 --> 03:53.090
+So if anything tries to import that file rather than actually importing the real file just is going
+
+03:53.090 --> 03:57.510
+to redirect that import and give whatever file is trying to import that wrapper.
+
+03:57.530 --> 04:00.830
+Our implementation we wrote out inside of underscore underscore mocks.
+
+04:01.620 --> 04:02.780
+So I'm not going to save this.
+
+04:02.790 --> 04:07.860
+This you know, our tests are not going to run correctly just yet because we do not have any fake implementation
+
+04:07.860 --> 04:09.140
+inside of Nat's wrapper.
+
+04:09.150 --> 04:13.290
+But we should at least see some kind of different error messages inside of our tests that will at least
+
+04:13.290 --> 04:18.270
+tell us that this file is being required in or imported instead of the real Nats wrapper.
+
+04:18.660 --> 04:19.560
+Let's try this out.
+
+04:21.010 --> 04:22.210
+I'm going to flip back over.
+
+04:22.690 --> 04:24.910
+I'm going to restart my test suite entirely.
+
+04:28.540 --> 04:30.460
+And then we're probably going to still see a lot of errors.
+
+04:30.460 --> 04:35.470
+So I'm going to try to import only or run tests only for the new file.
+
+04:35.800 --> 04:41.830
+So to only run the test inside of that new file, I'm going to type into this terminal window, the
+
+04:41.830 --> 04:47.590
+letter P, which is going to allow us to only run tests with a very specific file name press p.
+
+04:48.040 --> 04:50.980
+I then get prompted on which file I want to try to run.
+
+04:51.100 --> 04:52.120
+I'm going to put in.
+
+04:52.850 --> 04:57.110
+New that's going to try to find the new test file.
+
+04:57.890 --> 05:00.890
+They'll now see that it's only executing that one test file alone.
+
+05:02.430 --> 05:05.970
+And now we're going to get a very different message compared to what we got before.
+
+05:06.060 --> 05:10.350
+Previously it said, Oh, you have to initialize the client or connect with it before you make use of
+
+05:10.350 --> 05:10.590
+it.
+
+05:10.620 --> 05:15.450
+Now we're seeing a very different error message, one that says cannot read property published of undefined,
+
+05:15.450 --> 05:21.510
+which makes me think, at least tentatively, that this fake implementation is being used instead of
+
+05:21.510 --> 05:22.380
+our real one.
+
+05:23.290 --> 05:23.590
+Okay.
+
+05:23.590 --> 05:27.030
+So that's how we kind of set up this import, redirecting stuff.
+
+05:27.040 --> 05:31.090
+So now that this is working, we're going to take a quick pause, come back the next video and figure
+
+05:31.090 --> 05:34.600
+out how we can somehow write out a usable fake implementation.

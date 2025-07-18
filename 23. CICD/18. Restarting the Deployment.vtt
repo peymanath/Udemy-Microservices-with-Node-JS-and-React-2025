@@ -1,0 +1,376 @@
+WEBVTT
+
+00:01.450 --> 00:03.980
+We have built our image and push it off to Docker Hub.
+
+00:04.000 --> 00:08.860
+Now we just need to make sure that we reach into our running Kubernetes cluster and tell the deployment
+
+00:08.860 --> 00:12.910
+inside they're responsible for our off pods to use this new image.
+
+00:13.270 --> 00:18.190
+So the key phrase inside there is that we need to reach into our Kubernetes cluster running inside of
+
+00:18.190 --> 00:19.150
+digital ocean.
+
+00:19.660 --> 00:24.040
+So to do so, we're going to go through a process very similar to what we just did on our local machines
+
+00:24.040 --> 00:25.750
+using the dactyl cli.
+
+00:26.080 --> 00:28.660
+Let me show you a diagram, just to summarize what's going to go on.
+
+00:30.530 --> 00:30.800
+Okay.
+
+00:30.800 --> 00:33.530
+So our workflow is running inside of a GitHub container.
+
+00:33.800 --> 00:36.830
+Inside that container we are going to install ductile.
+
+00:37.250 --> 00:42.200
+After installing ductile inside the container, we're going to authorize it or initialize it using an
+
+00:42.200 --> 00:43.250
+API key.
+
+00:43.280 --> 00:46.970
+Let's give me the same API key we created just a moment ago on Digital Ocean.
+
+00:47.690 --> 00:53.210
+We're going to use Ductile to fetch the context that describes how we can connect to the cluster running
+
+00:53.210 --> 00:54.530
+inside of digital ocean.
+
+00:54.530 --> 00:57.980
+And we're going to feed that context into Cube ETL.
+
+00:58.310 --> 01:04.150
+Now it turns out that ETL comes preinstalled inside of a GitHub container, so we do not have to install
+
+01:04.160 --> 01:06.140
+cube ETL or anything like that.
+
+01:06.140 --> 01:07.880
+It's already there ready to go.
+
+01:08.210 --> 01:12.380
+We do have to, however, have to make sure that we install ourselves manually.
+
+01:13.030 --> 01:13.140
+Okay.
+
+01:13.290 --> 01:14.220
+So that's the general idea.
+
+01:14.250 --> 01:15.150
+Let's get to it.
+
+01:16.090 --> 01:17.110
+Back over on GitHub.
+
+01:17.110 --> 01:18.730
+I'm going to go to the code tab.
+
+01:20.280 --> 01:22.560
+And then dot GitHub workflows.
+
+01:23.040 --> 01:25.680
+And then I'll find deploy off HTML again.
+
+01:26.870 --> 01:31.550
+I'll then find the pencil on the right hand side and we're going to add in a couple more steps to this
+
+01:31.550 --> 01:32.000
+thing.
+
+01:33.280 --> 01:35.410
+Right after the run, Docker pushed right there.
+
+01:35.410 --> 01:45.160
+We're going to add in another step of uses and then digital ocean splash action dash ductile at v2.
+
+01:45.850 --> 01:48.040
+So I did say that we have to install ductile manually.
+
+01:48.040 --> 01:49.810
+Well, I mean kind of manually.
+
+01:49.840 --> 01:54.490
+It turns out that digital ocean has already put together a little shortcut, so to speak, that's going
+
+01:54.490 --> 01:58.480
+to install ductile into our running GitHub container for us automatically.
+
+01:58.780 --> 02:00.490
+All we have to do is add in this little line.
+
+02:01.090 --> 02:04.330
+In addition to that line, we're also going to add in width.
+
+02:05.510 --> 02:06.260
+Token.
+
+02:07.060 --> 02:09.550
+And then we're going to enter in our token right there.
+
+02:10.360 --> 02:14.500
+That's going to make sure that the token we enter is going to be provided to that script and we're going
+
+02:14.500 --> 02:18.490
+to get back a pre initialized version of ductal all ready to go for us.
+
+02:19.700 --> 02:23.250
+Now for the token, of course we are not going to add it in as plain text.
+
+02:23.270 --> 02:27.440
+Instead, we're going to reference it in the same kind of way that we did back up here with this secret
+
+02:27.460 --> 02:27.980
+thing.
+
+02:29.210 --> 02:32.290
+So we have to add a new secret into our repository.
+
+02:32.300 --> 02:33.110
+Remember how we do that?
+
+02:33.110 --> 02:38.270
+We go back up towards the top, find settings on the right hand side, open it in the new tab.
+
+02:39.620 --> 02:41.960
+And then inside of that new tab, I'll go to Secrets.
+
+02:42.930 --> 02:44.850
+And then I'm going to add in another secret.
+
+02:45.930 --> 02:50.340
+So I'm going to call this new secret digital ocean.
+
+02:51.890 --> 02:53.450
+Access token.
+
+02:54.080 --> 02:56.390
+Once again, please triple check your spelling here.
+
+02:56.390 --> 02:59.120
+In particular, make sure you've got two seas in access.
+
+03:00.760 --> 03:04.600
+Then for the value, we're going to go back over to our Digital Ocean Dashboard and generate another
+
+03:04.600 --> 03:05.590
+API token.
+
+03:06.550 --> 03:08.170
+So here is my dashboard.
+
+03:08.650 --> 03:11.470
+On the bottom left hand side, you'll find that AP section.
+
+03:11.980 --> 03:16.120
+And then on personal access tokens, we will generate a new token.
+
+03:16.630 --> 03:20.170
+I'm going to give this new token a descriptive name and I'll call it something like GitHub.
+
+03:21.380 --> 03:22.790
+Access token.
+
+03:24.470 --> 03:25.700
+I'll then generate the token.
+
+03:26.620 --> 03:28.330
+And then once again, I'm going to copy it.
+
+03:29.980 --> 03:33.250
+Take it back over to my repo and paste the value in.
+
+03:33.490 --> 03:37.120
+And again, by the time you watch this video, trust me, I have deleted this token.
+
+03:37.120 --> 03:40.420
+So please don't try to just use the same one I am entering.
+
+03:41.170 --> 03:41.250
+Okay.
+
+03:41.360 --> 03:42.560
+So I'm going to add that secret.
+
+03:43.560 --> 03:46.110
+And I'll go back over to my editor.
+
+03:48.600 --> 03:53.300
+So now down here on the width token, right after that, I'm going to put in dollar sign.
+
+03:53.310 --> 03:53.880
+Curly brace.
+
+03:53.910 --> 03:54.780
+Curly Brace.
+
+03:55.230 --> 03:58.260
+Secrets dot digital ocean.
+
+03:59.350 --> 04:03.490
+Access token and then close off the curly braces.
+
+04:03.490 --> 04:07.510
+And again, please double check your spelling on digital ocean and access.
+
+04:07.690 --> 04:09.640
+Very easy places to make a little typo.
+
+04:11.450 --> 04:11.750
+All right.
+
+04:11.750 --> 04:17.120
+So then after that, very similar again to what we did at our terminal, we're going to use octal to
+
+04:17.120 --> 04:22.220
+get the Kubernetes config and save it onto our local machine, or in this case, I should say, inside
+
+04:22.220 --> 04:22.970
+the container.
+
+04:24.010 --> 04:25.390
+So inside of a new.
+
+04:26.200 --> 04:27.880
+The ash run section.
+
+04:30.350 --> 04:33.470
+We're going to add in ductile Kubernetes.
+
+04:34.910 --> 04:35.600
+Cluster.
+
+04:36.330 --> 04:43.440
+You config save and then the name of our cluster so you can get the name of your cluster just in case
+
+04:43.440 --> 04:44.010
+you forgot it.
+
+04:44.010 --> 04:45.900
+Back over on the Kubernetes dashboard.
+
+04:46.050 --> 04:49.350
+Go to the Kubernetes section, and that is going to be your name right there.
+
+04:49.590 --> 04:51.690
+So I had called mine simply ticketing.
+
+04:51.810 --> 04:57.030
+So I'm going to enter in cube config save ticketing like so.
+
+05:00.220 --> 05:04.990
+So that should give us a pre initialized copy or all the context information we need and shove it into
+
+05:05.050 --> 05:05.800
+CTL.
+
+05:05.860 --> 05:09.310
+It should also make that the active context on ETL as well.
+
+05:09.400 --> 05:14.740
+So at that point on, we should be able to issue commands to cube CTL and have them be executed against
+
+05:14.740 --> 05:17.080
+our cluster running inside of digital ocean.
+
+05:18.400 --> 05:24.130
+Now the very last step, we have to tell our department to update itself and use the latest image that
+
+05:24.130 --> 05:25.720
+we just pushed off to Docker Hub.
+
+05:26.450 --> 05:29.030
+So for that, we're going to put in another run section right here.
+
+05:29.270 --> 05:33.020
+And you might remember this command from way earlier on inside this course.
+
+05:35.400 --> 05:40.980
+They command that we're going to use to restart a deployment is to rollout.
+
+05:42.170 --> 05:46.970
+Restart deployment and then the name of the deployment that we want to restart.
+
+05:47.000 --> 05:50.930
+Remember the name of our deployment is simply auth dash devel.
+
+05:51.020 --> 05:55.370
+And if we forget the name or where that comes from right there, we can go back over into our editor,
+
+05:56.210 --> 05:57.650
+find the infra directory.
+
+05:57.650 --> 06:02.480
+Inside there is our auth deployment and that is the name of our deployment right there.
+
+06:02.750 --> 06:07.760
+So we are trying to specifically restart this deployment and tell it to use the latest version of our
+
+06:08.030 --> 06:08.660
+image.
+
+06:10.980 --> 06:11.250
+Okay.
+
+06:11.280 --> 06:12.240
+That should be it.
+
+06:12.510 --> 06:18.120
+So once again, we are going to build our image, log into Docker, push it off to Docker Hub.
+
+06:19.040 --> 06:21.330
+We then authenticate and install ductile.
+
+06:21.350 --> 06:26.720
+We then get connection credentials to get connection to our digital ocean communities cluster.
+
+06:26.960 --> 06:31.010
+And then we reach into that cluster and tell the deployment to restart itself.
+
+06:31.160 --> 06:36.470
+Boy, that is just a totally tongue tie phrase to some crazy steps inside there, but I think we've
+
+06:36.470 --> 06:38.300
+got a solid solution put together.
+
+06:39.070 --> 06:43.720
+So we're going to what now commit this file lookup to start commit and then commit changes.
+
+06:45.270 --> 06:47.280
+And it sure would be great to test this thing out.
+
+06:47.310 --> 06:49.830
+Unfortunately, we cannot test it just yet.
+
+06:49.860 --> 06:55.830
+Remember, our cluster itself is not actually running anything related to the deployment at all.
+
+06:55.830 --> 07:01.230
+We have not applied any of our original config files to it, so we still have to put together one other
+
+07:01.230 --> 07:05.980
+workflow that's going to make sure that it takes everything inside that info directory and applies all
+
+07:06.000 --> 07:07.890
+those different config files to our cluster.
+
+07:08.810 --> 07:12.230
+So we're going to take a pause right here and then start that second workflow in just a moment.
+
+07:12.230 --> 07:15.560
+Once we're done with that one, we'll then be able to test everything out.
+
+07:15.710 --> 07:17.720
+A quick pause, and I'll see you in just a minute.

@@ -1,0 +1,295 @@
+WEBVTT
+
+00:00.880 --> 00:03.580
+The last thing we have to do is update our event once again.
+
+00:03.580 --> 00:07.480
+So we're going to update some URLs inside there to reach out to our newly created comments.
+
+00:07.480 --> 00:08.410
+Query and moderation.
+
+00:08.410 --> 00:14.200
+Cluster IP services will then rebuild that image, push it off to Docker Hub and then update our deployment.
+
+00:15.540 --> 00:16.110
+To get started.
+
+00:16.110 --> 00:18.450
+I'll open up my editor inside of here.
+
+00:18.450 --> 00:21.450
+I'm going to find the event bus index file.
+
+00:22.730 --> 00:26.270
+So here's where we had just commented out those three calls.
+
+00:27.340 --> 00:30.720
+So remember, we no longer have any kind of idea of local host.
+
+00:30.730 --> 00:34.240
+Instead, we have to reach out to the direct cluster IP services.
+
+00:34.600 --> 00:39.400
+If we ever forget the names of those IP services and all we have to do is go to our terminal and do
+
+00:39.400 --> 00:41.890
+a little get services.
+
+00:42.630 --> 00:45.420
+So we need to make sure that we make a request up to comments.
+
+00:45.420 --> 00:47.370
+XV at Port 4001.
+
+00:47.760 --> 00:52.470
+Moderation at 4003 and query at 4002.
+
+00:55.470 --> 00:56.460
+So back over here.
+
+00:56.460 --> 00:57.990
+Here is 4001.
+
+00:58.260 --> 01:00.660
+That should be our comments, CRV.
+
+01:01.990 --> 01:04.840
+Next up at 4002 is query.
+
+01:06.140 --> 01:06.950
+Savi.
+
+01:07.680 --> 01:10.980
+And then finally at 4003 is moderation.
+
+01:16.170 --> 01:17.550
+All right, I'll say this file.
+
+01:17.850 --> 01:19.500
+We'll then go back over to our terminal.
+
+01:21.390 --> 01:23.220
+Let's change into our.
+
+01:24.240 --> 01:26.060
+Event bus directory.
+
+01:26.070 --> 01:28.740
+We're going to rebuild this image because we made a change to our code.
+
+01:29.250 --> 01:30.600
+So, Docker, build.
+
+01:31.580 --> 01:32.270
+Tag it.
+
+01:34.110 --> 01:35.850
+Don't forget the dot on the very end.
+
+01:38.970 --> 01:40.560
+Well, then do a darker push.
+
+01:45.170 --> 01:51.230
+And then finally, don't forget option number two, for updating a deployment, we'll run, it'll rollout,
+
+01:51.230 --> 01:56.630
+restart deployment and then the deployments name and we have to do that after we successfully push that
+
+01:56.630 --> 01:57.890
+image off to Docker Hub.
+
+01:58.600 --> 02:04.300
+So we can do a cube kettle and I forget this command all the darn time rollout restart deployment.
+
+02:04.300 --> 02:10.150
+You think I could remember that rollout restart deployment and the name of our deployment in this case.
+
+02:10.570 --> 02:15.040
+Let's just do a IT deployments as a reminder.
+
+02:16.260 --> 02:18.210
+The name of our deployment is.
+
+02:19.120 --> 02:19.800
+Where is it?
+
+02:19.810 --> 02:20.840
+Event bus depot.
+
+02:20.920 --> 02:22.660
+So tell.
+
+02:25.130 --> 02:27.410
+Roll out restart deployment.
+
+02:28.560 --> 02:30.750
+Event Bus depot.
+
+02:32.440 --> 02:36.160
+Right after that, we can do a get pods and make sure that the pod was updated.
+
+02:36.160 --> 02:38.460
+So there's the old pod for event bus.
+
+02:38.470 --> 02:39.460
+It's been terminated.
+
+02:39.460 --> 02:42.130
+And here's the new one that was just created with the new image.
+
+02:45.770 --> 02:47.210
+I can then run pods again.
+
+02:48.710 --> 02:51.830
+And I'll see that the terminated one has now been completely cleaned up.
+
+02:51.830 --> 02:55.820
+And now we've got just the new version of our code right there inside of the event bus.
+
+02:57.200 --> 02:57.710
+All right.
+
+02:57.950 --> 02:59.450
+Now, how are we going to test this out?
+
+02:59.480 --> 03:02.840
+Well, we don't really have the React project wired up at all right now.
+
+03:02.870 --> 03:06.170
+As a matter of fact, we haven't really discussed the React application whatsoever.
+
+03:06.350 --> 03:07.910
+We'll figure it that out in just a moment.
+
+03:07.910 --> 03:13.670
+But for right now, a more immediate test we can do is once again use Postman to make a new post directly.
+
+03:14.510 --> 03:19.610
+We can then take a look at some logs around, say comments or maybe query moderation.
+
+03:20.060 --> 03:22.250
+Just print out some logs and verify.
+
+03:22.280 --> 03:25.900
+Make sure that we see some events being received from the event bus.
+
+03:25.910 --> 03:27.800
+I think that's a good enough test for right now.
+
+03:29.660 --> 03:31.580
+So let's open up post man once again.
+
+03:32.970 --> 03:35.610
+I still got the exact same request loaded up right here.
+
+03:35.910 --> 03:40.350
+So remember it is a post to local host if you're on Docker for Windows or Docker for Mac.
+
+03:40.380 --> 03:42.270
+Otherwise you'll do that mini cube IP.
+
+03:42.660 --> 03:48.180
+You'll then have your node port port right there, which very likely is not 3402 for you.
+
+03:48.400 --> 03:55.560
+Slash post make sure you've got headers of content type application JSON, select raw, select JSON
+
+03:55.560 --> 03:58.500
+and then put in an object or some JSON data like so.
+
+03:59.330 --> 04:00.350
+Well, then send us.
+
+04:01.460 --> 04:03.020
+Looks like this was successful.
+
+04:03.050 --> 04:04.910
+So now we can go and check out some logs.
+
+04:06.650 --> 04:07.610
+Back over here.
+
+04:09.090 --> 04:10.320
+Remember to retrieve logs.
+
+04:10.320 --> 04:14.760
+We're going to do a little logs and then the name of the pod that we want to get the logs from.
+
+04:14.970 --> 04:17.430
+So let's take a look at the comments pod first.
+
+04:17.550 --> 04:20.760
+I'll do a little get me logs.
+
+04:22.040 --> 04:22.640
+EST.
+
+04:23.250 --> 04:25.500
+And I can see event received of created.
+
+04:27.190 --> 04:28.540
+I'll do the same thing for moderation.
+
+04:28.540 --> 04:32.110
+I don't recall if our moderation actually has a console.log when it receives an event.
+
+04:32.110 --> 04:36.100
+So if we don't see one, when we get logs from that thing, I'll probably assume that everything is
+
+04:36.100 --> 04:36.760
+okay.
+
+04:37.550 --> 04:38.690
+Right now, at least.
+
+04:40.380 --> 04:40.650
+Okay.
+
+04:40.650 --> 04:42.030
+So I don't see a log right here.
+
+04:42.030 --> 04:46.350
+But again, I believe that's because we did not add in any logging whenever we receive an event.
+
+04:46.350 --> 04:48.360
+So I'm just going to ignore that right now.
+
+04:49.080 --> 04:50.730
+And then finally we'll take a look at query.
+
+04:51.850 --> 04:57.400
+So keep CTL logs and this one is seeing the event as well.
+
+04:57.880 --> 04:58.510
+Awesome.
+
+04:59.000 --> 05:03.040
+Well, I think that means that all of our different microservices are loaded into the cluster and they
+
+05:03.040 --> 05:05.140
+have the ability to communicate with each other.
+
+05:05.770 --> 05:09.310
+Maybe not the moderation one, but again, I'm pretty sure that's working just fine.
+
+05:10.330 --> 05:14.140
+So we're still not done yet, believe it or not, even though we've been going through this Kubernetes
+
+05:14.140 --> 05:16.180
+stuff for a really long time.
+
+05:16.690 --> 05:20.170
+The last thing to do is really figure out that React application.
+
+05:20.590 --> 05:22.930
+There's going to be some special concerns around it.
+
+05:22.930 --> 05:24.250
+So let's take a pause right here.
+
+05:24.250 --> 05:28.630
+We'll come back to the next video and discuss how we're going to wire up the React app to all these
+
+05:28.630 --> 05:29.650
+different services.

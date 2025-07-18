@@ -1,0 +1,226 @@
+WEBVTT
+
+00:01.210 --> 00:04.660
+In this video, we're going to take a look at the different kinds of tests we're going to try to write
+
+00:04.660 --> 00:07.900
+out for the different services inside of our ticketing project.
+
+00:08.080 --> 00:13.150
+So, again, we're not going to focus too much on testing or trying to launch multiple services together
+
+00:13.150 --> 00:14.680
+and try to test how they interact.
+
+00:14.710 --> 00:19.240
+Instead, we're going to try to look at each service individually and test them one at a time.
+
+00:19.540 --> 00:23.080
+So I want to show you the different kinds of tests that we're going to write as we are looking at,
+
+00:23.080 --> 00:25.240
+say, just the OTT service by itself.
+
+00:26.240 --> 00:30.440
+The first kind of test that we're going to write out is going to try to test basic request handling.
+
+00:30.560 --> 00:35.270
+So, for example, we might want to try to make sure that if we make a request to our service to sign
+
+00:35.270 --> 00:40.940
+up for something, then perhaps we should get back a response with a cookie that has the JSON web token
+
+00:40.940 --> 00:41.650
+inside of it.
+
+00:41.660 --> 00:45.890
+Or we might want to try to assert that we write some data into our MongoDB database.
+
+00:46.250 --> 00:48.080
+So this is the first kind of test we're going to write.
+
+00:48.080 --> 00:52.070
+We're going to make sure that we can issue a request to the service and then make sure that it gets
+
+00:52.070 --> 00:54.920
+handled some in some very particular fashion.
+
+00:55.930 --> 00:59.830
+The second test we're going to write is going to be more of a unit test style approach.
+
+01:00.160 --> 01:04.480
+So the second test we're going to write might take a look at a very particular model inside of our app
+
+01:04.480 --> 01:06.730
+and try to test some functionality around it.
+
+01:07.000 --> 01:12.110
+This is not very relevant for the OTT service because our user model right now is very simple in nature.
+
+01:12.130 --> 01:16.780
+But some of these services that we work on later will have models that are a little bit more complicated.
+
+01:17.200 --> 01:21.130
+And so we are going to want to write some tests around them and make sure that they function in a very
+
+01:21.130 --> 01:22.090
+particular way.
+
+01:22.570 --> 01:26.350
+So again, the second kind of test we're going to write is going to take a look at individual models
+
+01:26.350 --> 01:29.680
+and just try to make sure that they have some particular piece of functionality.
+
+01:31.250 --> 01:36.470
+The final kind of test that we are going to write is going to handle the receiving and emitting of events
+
+01:36.470 --> 01:37.580
+inside of our service.
+
+01:37.880 --> 01:42.500
+At present, our service is not sending out or receiving any events, and we haven't even discussed
+
+01:42.500 --> 01:45.110
+event handling inside this Kubernetes environment yet.
+
+01:45.290 --> 01:50.060
+So we're not going to really worry about test goal number three either for the service, but for our
+
+01:50.060 --> 01:54.470
+later services we put together, we will be writing out some code to make sure that we can receive incoming
+
+01:54.470 --> 01:59.090
+events, to make sure that they get processed in some particular way, and to make sure that we can
+
+01:59.120 --> 02:02.180
+issue events or send events to the outside world as well.
+
+02:02.820 --> 02:05.820
+So again, those are the three kinds of tests that we're going to be focusing on.
+
+02:06.920 --> 02:08.390
+Test gold number three right here.
+
+02:08.420 --> 02:13.760
+Emitting and receiving events is how we are really going to accomplish kind of simulating different
+
+02:13.760 --> 02:15.110
+services, working together.
+
+02:15.110 --> 02:19.550
+So even though we are not going to directly launch, say, an orders and ticketing service at the same
+
+02:19.550 --> 02:25.370
+time and try to test them together, this idea of testing events or receiving them and emitting them
+
+02:25.370 --> 02:28.850
+is very similar in nature, and it will achieve a very similar goal.
+
+02:30.020 --> 02:31.280
+All right, one last thing.
+
+02:31.550 --> 02:34.000
+How are we going to actually execute these tests?
+
+02:34.010 --> 02:39.160
+In other words, at a very practical level, when I say to you, okay, let's go and run our tests,
+
+02:39.170 --> 02:40.000
+how do we do that?
+
+02:40.010 --> 02:42.260
+How do we actually execute our tests at all?
+
+02:42.680 --> 02:45.960
+Well, we're going to take a very simple, indirect approach.
+
+02:45.980 --> 02:48.630
+We're going to run all of our tests directly at our terminal.
+
+02:48.650 --> 02:49.660
+We're not going to use Docker.
+
+02:49.670 --> 02:52.220
+We're not going to use Kubernetes or anything like that.
+
+02:52.250 --> 02:56.330
+So when I say let's go run our tests, we're going to pretty much go over to our terminal and run a
+
+02:56.330 --> 03:02.270
+command like NPM run test that's going to start up our server on our local machine or our individual
+
+03:02.270 --> 03:05.240
+service, and then try to run some number of tests against it.
+
+03:05.900 --> 03:08.210
+Now this has a very strong implication.
+
+03:08.210 --> 03:14.660
+This is really implying that our local environment is capable, 100% of running each of these services.
+
+03:14.900 --> 03:17.030
+And that probably makes a lot of sense right now.
+
+03:17.090 --> 03:18.700
+Think about our off service.
+
+03:18.710 --> 03:24.110
+What dependencies or what software do we need to have installed on our local system to run the service?
+
+03:24.320 --> 03:28.190
+Well, we pretty much just need Node.js and a copy of MongoDB.
+
+03:28.220 --> 03:32.750
+That's all we really have to have installed on our local system to run the service.
+
+03:33.200 --> 03:39.080
+But in the future, you might be working on way more complex projects, projects where your services
+
+03:39.080 --> 03:41.240
+have way more dependencies.
+
+03:41.540 --> 03:46.460
+In other words, at some point in time in the future, you might be trying to test a service that requires
+
+03:46.460 --> 03:52.280
+you to have a very particular operating system or a very particular and very complex and hard to run,
+
+03:52.280 --> 03:53.720
+hard to set up database.
+
+03:54.350 --> 03:59.090
+So even though this approach is going to be just fine for this current application in the future, it
+
+03:59.090 --> 04:00.800
+might not work out so well.
+
+04:01.190 --> 04:06.260
+So I'm going to show you some way that we can still run tests very easily, but it's a little bit more
+
+04:06.260 --> 04:11.090
+complex in nature, but it can also handle way more complex setup requirements.
+
+04:11.510 --> 04:12.980
+If not, that makes sense right now.
+
+04:13.010 --> 04:13.960
+Don't sweat it.
+
+04:14.040 --> 04:18.590
+Let's keep in mind I'm going to give you a quick guide on how to handle more complex testing in the
+
+04:18.590 --> 04:19.190
+future.
+
+04:20.030 --> 04:23.330
+So with all this in mind, I think we got a good overview on what we're doing.
+
+04:23.630 --> 04:27.350
+So we're going to take a quick pause right now and then actually get down to the nitty gritty.
+
+04:27.350 --> 04:29.090
+What are we really doing here?
+
+04:29.090 --> 04:32.060
+What code are we really writing to test out our all service?

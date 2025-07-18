@@ -1,0 +1,253 @@
+WEBVTT
+
+00:01.040 --> 00:04.610
+Now that we've got our project all set up and ready to go, we can start to actually write out some
+
+00:04.610 --> 00:05.150
+code.
+
+00:05.180 --> 00:10.820
+So to get started, I'm going to create a new file inside of my project directory called Index Dots.
+
+00:11.270 --> 00:14.020
+Notice the file extension on here is dots.
+
+00:14.030 --> 00:18.710
+I start for, as you might guess, TypeScript, we're always going to place all of our TypeScript code
+
+00:18.710 --> 00:20.570
+into Dot's files.
+
+00:21.170 --> 00:25.310
+So now inside this file, we can start to actually write out some code to implement our program.
+
+00:25.340 --> 00:30.860
+And just as a quick reminder, our goal here is to fetch some JSON data and print the result for this
+
+00:30.860 --> 00:31.580
+first program.
+
+00:31.580 --> 00:33.890
+We're going to speed through the implementation very quickly.
+
+00:33.890 --> 00:36.410
+It's not going to have a lot of TypeScript specific syntax.
+
+00:36.410 --> 00:42.110
+And it just yet remember, the goal of this first application is not to learn a bunch of different TypeScript
+
+00:42.110 --> 00:42.740
+syntax.
+
+00:42.740 --> 00:45.800
+Instead, I just want to show you why TypeScript is handy.
+
+00:46.400 --> 00:50.480
+So to get started, we're going to first import that Axios module that we just installed.
+
+00:50.900 --> 00:51.830
+At the top of the file.
+
+00:51.830 --> 00:55.610
+I will write out import Axios from Axios like so.
+
+00:56.970 --> 01:02.400
+After that, I'm going to flip back over to my browser, go to that JSON placeholder endpoint right
+
+01:02.400 --> 01:07.800
+here and copy the the URL that's going to give me just the first to do.
+
+01:08.560 --> 01:12.250
+So I'll copy that URL and go back over to my editor.
+
+01:12.670 --> 01:18.070
+I'm going to create a variable called URL and a sign that URL to it like so.
+
+01:21.210 --> 01:22.810
+So now that we've got the URL in here.
+
+01:22.830 --> 01:26.280
+We can use Axios to make a network request to this URL.
+
+01:26.910 --> 01:31.680
+To do so, I'll write out Axios target and then I'll pass in that URL.
+
+01:32.440 --> 01:37.930
+So that's going to make a HTTP, get request to that URL and attempt to fetch that JSON data.
+
+01:38.650 --> 01:40.780
+That entire operation is async.
+
+01:40.810 --> 01:45.130
+So by calling Axios target, we're going to receive a promise in return.
+
+01:45.520 --> 01:50.830
+So to get a notification on when the request is complete, we can chain on a dot, then statement that
+
+01:50.830 --> 01:51.730
+will be called.
+
+01:52.850 --> 01:55.880
+With the response once we get a response from that API.
+
+01:58.280 --> 02:03.260
+So then inside of here, remember the goal here was to just console.log out the JSON data we get back.
+
+02:03.260 --> 02:08.960
+So I'm going to console.log response data, which should be the actual to do that we receive back from
+
+02:08.990 --> 02:09.890
+that API.
+
+02:11.110 --> 02:12.610
+All right, so let's save this.
+
+02:12.940 --> 02:14.440
+That's the entire program right here.
+
+02:14.440 --> 02:17.980
+We are going to make a couple of changes to it in just a moment, but let's just try to figure out how
+
+02:17.980 --> 02:18.850
+to run this code.
+
+02:18.850 --> 02:25.000
+Now, remember, we cannot run typescript code directly inside the browser or with Node.js.
+
+02:25.030 --> 02:30.850
+We have to first compile this file into plain JavaScript and then we can execute the resulting JavaScript
+
+02:30.850 --> 02:31.390
+code.
+
+02:31.930 --> 02:35.800
+So to compile this file right here, we will flip back over to our terminal.
+
+02:37.930 --> 02:39.060
+Inside of my terminal.
+
+02:39.070 --> 02:42.940
+I'm going to use the TypeScript compiler that we just installed two videos ago.
+
+02:43.300 --> 02:46.120
+We can access that compiler by writing out TSC.
+
+02:46.480 --> 02:51.130
+Remember, that stands for TypeScript compiler and then I'll feed in the name of the file that I want
+
+02:51.130 --> 02:51.940
+to compile.
+
+02:53.240 --> 02:57.500
+I'll run that command and then I'll get kicked back over to my terminal almost instantly.
+
+02:57.500 --> 03:01.250
+So it seems like nothing happened, but the compilation did occur.
+
+03:01.640 --> 03:06.920
+If you flip back over to your code editor and look at the file explorer on the left hand side, you'll
+
+03:06.920 --> 03:09.170
+see that we've got a new file inside of here called Index.
+
+03:09.350 --> 03:13.490
+JS So that is the compiled version of our TypeScript code.
+
+03:14.030 --> 03:18.530
+You can open up that file and you'll see what TypeScript did to our code base.
+
+03:20.400 --> 03:20.640
+All right.
+
+03:20.640 --> 03:26.550
+So now to run this, we can use the node command line tool and we'll run node indexes and that will
+
+03:26.550 --> 03:29.550
+execute the compiled JavaScript file that we just created.
+
+03:30.090 --> 03:33.300
+So back at my terminal, I'll run node indexed JS.
+
+03:33.330 --> 03:36.630
+Notice the extension out here we are running the JavaScript file.
+
+03:37.260 --> 03:41.670
+So if I run that command, I'll then see the To-Do print it out on the screen.
+
+03:42.270 --> 03:42.960
+Perfect.
+
+03:44.190 --> 03:44.460
+All right.
+
+03:44.460 --> 03:50.430
+So as you might guess, having to always run tsk index dots and then compile or something and then run
+
+03:50.430 --> 03:53.610
+that resulting file gets really old really quickly.
+
+03:53.820 --> 04:00.090
+So to combine these two commands into just one, we also installed a little module two videos ago called
+
+04:00.090 --> 04:01.530
+TS Dash Node.
+
+04:02.610 --> 04:08.520
+Dash Node is going to combine these two commands into one, so it's going to automatically compile a
+
+04:08.520 --> 04:12.120
+given file and then automatically execute the resulting JavaScript.
+
+04:12.330 --> 04:16.080
+So it's just saving us from having to run that one extra command.
+
+04:16.760 --> 04:22.040
+So we can run Node and then the name of the TypeScript file that we want to execute.
+
+04:22.340 --> 04:24.170
+So index is.
+
+04:25.520 --> 04:27.110
+So then run that command.
+
+04:28.470 --> 04:30.650
+And then I should see my JSON printed out.
+
+04:30.660 --> 04:30.930
+Yep.
+
+04:30.930 --> 04:31.490
+There we go.
+
+04:31.500 --> 04:32.370
+A little bit of a pause there.
+
+04:32.370 --> 04:36.450
+I guess my internet connection is a little bit spotty right now, but I saw the printout right there.
+
+04:36.450 --> 04:40.260
+So in one step we compiled and then executed the resulting JavaScript.
+
+04:41.070 --> 04:41.300
+Okay.
+
+04:41.310 --> 04:46.140
+So that's how we put together a very basic TypeScript program and then execute it at the terminal.
+
+04:46.530 --> 04:48.930
+But I still haven't really shown you anything around.
+
+04:48.930 --> 04:50.940
+You know why TypeScript is handy here.
+
+04:50.940 --> 04:52.350
+So let's take a quick pause.
+
+04:52.350 --> 04:56.010
+And when we come back in the next video, we're going to start making a couple of changes to this program,
+
+04:56.010 --> 05:00.360
+and we'll very quickly see why making use of TypeScript is really, really handy.
+
+05:00.570 --> 05:02.790
+So a quick pause and I'll see you in just a minute.

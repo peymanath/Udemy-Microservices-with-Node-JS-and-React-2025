@@ -1,0 +1,259 @@
+WEBVTT
+
+00:01.040 --> 00:04.370
+The last couple of videos we've had have been just a bunch of lecturing for me.
+
+00:04.370 --> 00:05.660
+I know that's super boring.
+
+00:05.660 --> 00:08.270
+Just one more lecture and we're going to start writing some code again.
+
+00:08.660 --> 00:11.870
+So in this video we're going to go over the design of the event bus.
+
+00:11.870 --> 00:16.430
+We're going to talk about how we can use an event bus to communicate events from one service over to
+
+00:16.430 --> 00:16.970
+another.
+
+00:17.390 --> 00:22.580
+As a reminder, we're going to try to build as much of as this stuff as possible from scratch rather
+
+00:22.580 --> 00:24.650
+than using some off the shelf solution.
+
+00:24.650 --> 00:26.270
+And that includes the event bus.
+
+00:26.270 --> 00:28.340
+So we're going to build this event bus on our own.
+
+00:28.340 --> 00:31.070
+We're going to build it using JavaScript and express it.
+
+00:31.110 --> 00:33.560
+I want to give you a couple of notes on how this thing needs to work.
+
+00:34.660 --> 00:35.020
+Okay.
+
+00:35.020 --> 00:36.340
+So event buses.
+
+00:36.550 --> 00:40.720
+The first thing to understand about them is that there are many different implementations available.
+
+00:40.960 --> 00:45.580
+You might have heard of terms like Rabbit in Q, Kafka or Nets.
+
+00:45.850 --> 00:47.980
+These are all different types of event buses.
+
+00:47.980 --> 00:49.420
+They're open source projects.
+
+00:49.420 --> 00:54.550
+You could download them and run them yourself, or you can get some kind of pre hosted provided solution.
+
+00:55.910 --> 01:00.740
+The one common thing between these different event buses is that they're going to receive events and
+
+01:00.740 --> 01:02.540
+then publish them out to listeners.
+
+01:03.360 --> 01:07.180
+When we use the term events here, we're really talking about some piece of information.
+
+01:07.200 --> 01:10.320
+There's no set structure of what a event has to look like.
+
+01:10.350 --> 01:17.010
+It can be JSON, it can be raw bytes of data, it can be a string, it can be whatever you want to share
+
+01:17.010 --> 01:18.510
+between your different services.
+
+01:18.990 --> 01:23.730
+When we use the term listeners, we're talking about other services that want to listen to events that
+
+01:23.730 --> 01:24.690
+are being emitted.
+
+01:26.370 --> 01:31.920
+Now between these different implementations of, say, Revit and Q, Kafka, Gnats and many others that
+
+01:31.920 --> 01:37.110
+exist out there, it turns out that there are many very small features available in these different
+
+01:37.110 --> 01:41.160
+event buses that make some things a lot easier or a lot harder.
+
+01:41.610 --> 01:45.840
+So in this larger application that we're going to work on in the second half of this course, I picked
+
+01:45.840 --> 01:50.710
+a event bus that is really easy to get started with, extremely fast.
+
+01:50.730 --> 01:55.170
+But there are some downsides to it as well, some things that are going to make our lives a little bit
+
+01:55.170 --> 01:56.190
+more complicated.
+
+01:56.490 --> 02:00.830
+So you just need to be aware that you cannot just pick one of these implementations off the shelf.
+
+02:00.840 --> 02:04.200
+You kind of have to evaluate them and understand what they can really do for you.
+
+02:05.010 --> 02:08.220
+Now once again, we are going to build our own event bus using EXPRESS.
+
+02:08.250 --> 02:15.510
+It is not going to implement the vast, vast majority of features that a normal event bus has.
+
+02:15.510 --> 02:21.540
+So ours is going to be incredibly simplistic, incredibly simple, not very useful outside of this one
+
+02:21.540 --> 02:22.860
+single implementation.
+
+02:23.040 --> 02:24.690
+But again, we're going to build this from scratch.
+
+02:24.690 --> 02:28.170
+Just you have a really good idea of what is going on behind the scenes.
+
+02:28.560 --> 02:32.100
+And yes, again, for our next application, we're going to work on the much larger one.
+
+02:32.100 --> 02:35.010
+We are going to use a production grade event bus.
+
+02:35.010 --> 02:39.810
+This is an event bus that is used in many, many very large deployments and projects.
+
+02:39.810 --> 02:43.680
+So you're going to get some very practical experience with some real technology as well.
+
+02:45.070 --> 02:45.430
+All right.
+
+02:45.430 --> 02:49.570
+Let's talk about the express based event bus that you and I are going to put together.
+
+02:49.840 --> 02:53.770
+Now, this really is a very simplistic implementation for event bus.
+
+02:53.800 --> 02:58.600
+The reason we are doing such a simple implementation is just so you can see how this stuff kind of works
+
+02:58.600 --> 03:02.950
+behind the scenes, and so you can very easily see the flow of data throughout our application.
+
+03:03.550 --> 03:05.590
+So let me tell you about how this thing is going to work.
+
+03:06.340 --> 03:10.810
+We are going to add in a new route to our post service and our common service.
+
+03:10.840 --> 03:14.170
+We're also going to make sure that our query service has a very similar route as well.
+
+03:14.680 --> 03:19.180
+Each of these routes are going to watch for a post request to a path of events.
+
+03:19.420 --> 03:21.610
+We'll talk about the purpose of that in just a moment.
+
+03:22.380 --> 03:26.190
+At some point in time inside our application, we're going to have our post service or Common Service
+
+03:26.190 --> 03:28.440
+decide that it needs to emit an event.
+
+03:28.800 --> 03:34.290
+Whenever a service needs to emit an event, it's going to make a post request off to this new event
+
+03:34.290 --> 03:36.120
+bus that you and I are going to put together.
+
+03:36.390 --> 03:40.290
+Again, this event bus right here is going to be a plane express application.
+
+03:40.500 --> 03:44.460
+So essentially, we're really just doing a post request from one service to another.
+
+03:45.970 --> 03:49.510
+In that post request, we're going to attach along some event data.
+
+03:49.660 --> 03:53.020
+So it's going to be some object that represents this event right here.
+
+03:53.820 --> 03:56.400
+This event, plus is going to receive this event.
+
+03:56.780 --> 04:01.140
+It's going to take that event and make a series of post request with its.
+
+04:01.730 --> 04:07.460
+So it's going to take all that event data and it's going to take that exact information and just send
+
+04:07.460 --> 04:12.040
+it off to a post request to localhost 4000 events.
+
+04:12.090 --> 04:13.370
+That would be our post service.
+
+04:13.880 --> 04:21.680
+It's going to make an identical request off to localhost, 4001 slash events and same thing or localhost
+
+04:21.680 --> 04:23.450
+4002 slash events.
+
+04:23.600 --> 04:27.290
+So in all three of these post requests, it's going to send along this event data.
+
+04:28.010 --> 04:34.070
+So in short, any time one of our services makes a post request over to event bus, event bus is just
+
+04:34.070 --> 04:38.460
+going to take that exact information and throw it out to everything else that we have running inside
+
+04:38.460 --> 04:39.350
+of our application.
+
+04:39.440 --> 04:42.740
+Even the same service that emitted the event originally.
+
+04:44.070 --> 04:44.720
+So that's it.
+
+04:44.730 --> 04:47.220
+That's how simple our event bus is going to be.
+
+04:47.310 --> 04:51.870
+Now, again, as we start to use some more production ready application or solutions here for the event
+
+04:51.870 --> 04:55.260
+bus, you're going to see that there's a lot more to this implementation.
+
+04:55.260 --> 04:58.160
+But at the end of the day, this is pretty much what is going on.
+
+04:58.170 --> 05:01.200
+More or less we're throwing an event over to the event bus.
+
+05:01.230 --> 05:05.100
+The event bus is just going to echo that event back over to all of our different services.
+
+05:06.600 --> 05:09.100
+So now that we've got an idea of what's going on here, quick pause.
+
+05:09.150 --> 05:12.860
+We're going to start building this event bus, which is going to be very simple, very straightforward
+
+05:12.870 --> 05:13.950
+in the next video.

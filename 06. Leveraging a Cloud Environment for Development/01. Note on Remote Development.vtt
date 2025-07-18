@@ -1,0 +1,148 @@
+WEBVTT
+
+00:01.370 --> 00:05.270
+We can now access our application inside the browser, which is fantastic.
+
+00:05.360 --> 00:08.780
+Before we move on and continue developing this server any more.
+
+00:08.810 --> 00:10.940
+There's something very quick I want to mention.
+
+00:11.480 --> 00:16.220
+This video and the series of videos right after it are a part of an optional section.
+
+00:16.400 --> 00:21.320
+So in this very optional section, which you do not have to watch, we are going to learn how to set
+
+00:21.320 --> 00:24.170
+up our development environment to run through Google Cloud.
+
+00:24.410 --> 00:29.060
+The reason that we are going to do this is that later on, as we continue with this application, we're
+
+00:29.060 --> 00:32.060
+going to have many different pods running inside of our local cluster.
+
+00:32.210 --> 00:37.580
+If you're on an older computer, you might eventually start to experience a lot of lag or even crashes
+
+00:37.580 --> 00:40.130
+because of the amount of code that we are executing.
+
+00:40.400 --> 00:47.360
+So if you're on an older machine specifically or particularly if you are on a older Windows machine,
+
+00:47.360 --> 00:51.890
+as you continue building this application, you might eventually start to experience some crashes.
+
+00:52.130 --> 00:56.690
+And so in this optional section, I'm going to show you how you can get around that by running all of
+
+00:56.690 --> 01:00.260
+our code on Google Cloud instead of on your local machine.
+
+01:00.800 --> 01:02.090
+Now, something very important.
+
+01:02.090 --> 01:05.420
+This does not have to be done right now this instant.
+
+01:05.450 --> 01:09.860
+The reason I'm putting this videos right here is because if you are on an older machine, I just cannot
+
+01:09.860 --> 01:12.370
+predict when you're going to start to experience some crashes.
+
+01:12.380 --> 01:16.380
+It might be after we create three pods or it might be after we create ten.
+
+01:16.400 --> 01:20.630
+So I'm just going to show you right now how to set up all this stuff to run through Google Cloud.
+
+01:20.630 --> 01:25.220
+And if you are going to anticipate going through this stuff or having the performance issues rate,
+
+01:25.220 --> 01:26.250
+do the setup right now.
+
+01:26.270 --> 01:28.580
+Otherwise, just continue on with the course.
+
+01:28.580 --> 01:31.940
+And if you start to experience performance issues, then go ahead and do the setup.
+
+01:31.940 --> 01:33.290
+Then it's totally up to you.
+
+01:34.010 --> 01:39.460
+Now, having said that, another quick note here to make use of Google Cloud as our development environment,
+
+01:39.470 --> 01:41.480
+you must have a credit card.
+
+01:41.510 --> 01:42.650
+This is strictly required.
+
+01:42.660 --> 01:43.990
+There's nothing I can do about it.
+
+01:44.000 --> 01:45.590
+You have to have a credit card.
+
+01:46.190 --> 01:51.110
+Now, you probably are not going to have to pay any money because we're going to use a relatively small
+
+01:51.110 --> 01:53.120
+amount of resources on Google Cloud.
+
+01:53.120 --> 01:55.070
+So we should be fitting into the free tier.
+
+01:55.070 --> 01:59.840
+You should not be getting charged any money, but that is not at all a guarantee.
+
+01:59.840 --> 02:04.280
+I am not guaranteeing you that you're not going to have to pay money, but we should not have to.
+
+02:05.190 --> 02:10.140
+At present, when you create a new Google Cloud account, specifically make a new account, you get
+
+02:10.140 --> 02:13.080
+$300 in credit once you associate a credit card.
+
+02:13.080 --> 02:17.850
+And there's no way that we're ever going to be spending more than $300 unless you do something very,
+
+02:17.850 --> 02:18.800
+very wrong.
+
+02:18.810 --> 02:21.230
+So, again, we should be fitting into this free tier.
+
+02:21.240 --> 02:24.900
+You should not have to pay any actual money, but it will require a credit card.
+
+02:24.900 --> 02:29.550
+And I'm not necessarily guaranteeing that you're not going to be charged if you do something wrong during
+
+02:29.550 --> 02:30.570
+the setup process.
+
+02:31.210 --> 02:31.530
+Okay.
+
+02:31.530 --> 02:35.970
+So now that we understand the purpose of the following videos, if you're on a very new computer, if
+
+02:35.970 --> 02:39.690
+you don't think that you're going to run into any performance issues or if you just don't have a credit
+
+02:39.690 --> 02:41.190
+card to use, no problem.
+
+02:41.190 --> 02:46.190
+Skip over the next set of videos that are talking about Google Cloud and continue with the setup stuff.
+
+02:46.200 --> 02:50.220
+Otherwise, continue in the next video and I'm going to show you how to use Google Cloud.

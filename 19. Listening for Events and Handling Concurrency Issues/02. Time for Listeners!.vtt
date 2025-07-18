@@ -1,0 +1,115 @@
+WEBVTT
+
+00:00.950 --> 00:03.980
+We've now got some publishers put together inside of our order service.
+
+00:03.980 --> 00:08.360
+And at this point in time I'm really excited because we've got publishers available inside the order
+
+00:08.360 --> 00:10.820
+service and inside the ticket service.
+
+00:11.390 --> 00:13.170
+So here's what we're going to start to work on.
+
+00:13.190 --> 00:17.400
+We're going to start to put together some number of listeners in these two services.
+
+00:17.420 --> 00:22.460
+Remember that the goal of a listener is to process some number of incoming events inside of both these
+
+00:22.460 --> 00:25.220
+services, we have to create two different listeners.
+
+00:25.400 --> 00:29.450
+So you might recall seeing this diagram right here, it was a diagram of where all of these different
+
+00:29.450 --> 00:31.460
+events are coming from and where they're going to.
+
+00:32.490 --> 00:37.480
+So for the ticket created event, we need to make sure that the order service receives this event or
+
+00:37.480 --> 00:39.210
+it listens for ticket created.
+
+00:39.330 --> 00:42.330
+And I've got some notes on here about what that listener needs to do.
+
+00:43.150 --> 00:46.120
+The Order service also needs to listen for ticket updated.
+
+00:46.510 --> 00:48.010
+That's two listeners at least.
+
+00:48.040 --> 00:49.810
+We have to build inside the order service.
+
+00:50.540 --> 00:55.160
+Then inside the ticket service, we need to make sure that thing listens for the order created event
+
+00:55.640 --> 00:57.980
+and for the order canceled event.
+
+00:59.080 --> 01:04.750
+We're going to first begin working on our listeners for creating a ticket and updating a ticket.
+
+01:04.750 --> 01:08.140
+So these are both listeners we're going to put together inside of our orders service.
+
+01:08.770 --> 01:12.790
+Now, the reason I'm so excited about this is that this is where we're going to start to see some crazy
+
+01:12.790 --> 01:17.410
+concurrency issues start to come up, and we're going to have to figure out how to solve these concurrency
+
+01:17.410 --> 01:18.040
+issues.
+
+01:18.280 --> 01:23.710
+You might recall discussing this diagram a little bit ago, a couple of hours ago inside the course
+
+01:24.100 --> 01:30.220
+where we discussed having some of these events of ticket created and ticket updated come in to our application
+
+01:30.220 --> 01:31.660
+in some weird order.
+
+01:31.660 --> 01:36.550
+And we saw that if they get processed in a weird order, we could end up with some super invalid data.
+
+01:37.030 --> 01:42.880
+So we eventually came up with a solution of using this version field to somehow track in order these
+
+01:42.880 --> 01:44.560
+different events inside of our app.
+
+01:44.860 --> 01:49.330
+So this is where we're going to start to go back to all this concurrency stuff and implement this versioning
+
+01:49.330 --> 01:49.870
+thing.
+
+01:50.440 --> 01:54.100
+So again, the first stuff we're going to put together, we're going to get a listener put together
+
+01:54.100 --> 01:57.700
+for ticket created and ticket updated inside of our order service.
+
+01:57.700 --> 02:02.140
+And as soon as we do, that's what we're going to start to see these version number start to become
+
+02:02.140 --> 02:03.130
+really important.
+
+02:03.760 --> 02:04.060
+All right.
+
+02:04.060 --> 02:07.270
+So now we've got a little kind of preview of what we're going to be focusing on.
+
+02:07.270 --> 02:08.500
+Let's take a quick pause right here.
+
+02:08.500 --> 02:12.460
+We're going to get a quick reminder on how we create a listener in the next video.

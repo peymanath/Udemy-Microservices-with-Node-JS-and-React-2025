@@ -1,0 +1,511 @@
+WEBVTT
+
+00:00.990 --> 00:05.790
+Let's write a test to make sure this optimistic and currency control stuff works as expected.
+
+00:05.820 --> 00:06.910
+So here's the general idea.
+
+00:06.930 --> 00:08.080
+Here's what we're going to test.
+
+00:08.100 --> 00:11.760
+We're going to first create an instance of a ticket.
+
+00:13.320 --> 00:16.260
+We're going to save the ticket to the database.
+
+00:17.370 --> 00:20.490
+We're then going to fetch the ticket twice.
+
+00:20.490 --> 00:22.530
+So we're going to fetch it two separate times.
+
+00:22.530 --> 00:27.060
+Three essentially have two separate handles onto a ticket and they're both going to have some initial
+
+00:27.060 --> 00:32.040
+version flags set to either zero or one, whatever the default is for the module that we just grabbed.
+
+00:32.870 --> 00:33.950
+We're then going to make.
+
+00:34.740 --> 00:39.360
+Two separate changes to the tickets we fetched.
+
+00:39.360 --> 00:40.330
+When I say two separate.
+
+00:40.350 --> 00:42.990
+I mean to say we're going to make one change to the first ticket.
+
+00:42.990 --> 00:45.330
+We fetched another change to the second ticket we fetched.
+
+00:45.780 --> 00:52.320
+We're then going to save the first fetched ticket and we're going to expect that that is going to work
+
+00:52.320 --> 00:59.100
+as expected, because the first fetch ticket is going to have a version number equal to one or exactly
+
+00:59.100 --> 01:03.510
+greater than whatever the initial ticket that we save to the database has or its version number.
+
+01:03.900 --> 01:07.470
+So we're going to expect that the first save is going to work as expected.
+
+01:07.920 --> 01:11.220
+We're then going to try to save the second.
+
+01:13.160 --> 01:14.180
+Fetch ticket.
+
+01:14.420 --> 01:18.980
+When we try to save the second fetch ticket, this thing is going to have an outdated version number
+
+01:18.980 --> 01:23.630
+because when we saved the first fetch ticket, it will have incremented the version number inside of
+
+01:23.630 --> 01:24.530
+our database.
+
+01:24.530 --> 01:28.610
+So when we try to save the second one, we're going to expect to see some kind of error, something
+
+01:28.610 --> 01:33.530
+that says, hey, you can't save this, you've got some out-of-date version number or something similar
+
+01:33.530 --> 01:34.220
+to that.
+
+01:35.310 --> 01:39.000
+So we're going to save the second fetch ticket and expect an heir.
+
+01:39.120 --> 01:40.080
+That's the idea.
+
+01:40.620 --> 01:41.640
+So let's get to it.
+
+01:43.220 --> 01:45.740
+Step number one, create a ticket and save it.
+
+01:45.830 --> 01:50.000
+They'll make a ticket using the ticket build method.
+
+01:51.640 --> 01:53.440
+And I'll give this thing a title.
+
+01:54.670 --> 01:59.010
+A price of five and then we are required to provide a user ID as well.
+
+01:59.020 --> 02:00.460
+I'll just give ID.
+
+02:00.460 --> 02:01.270
+One, two, three.
+
+02:02.860 --> 02:04.480
+Next up, we're going to save that to our database.
+
+02:04.480 --> 02:06.610
+So we'll do an a weight ticket save.
+
+02:08.780 --> 02:11.060
+So now that ticket has been persisted into the database.
+
+02:11.060 --> 02:17.570
+And in theory when we saved it, Mongoose, and more specifically, the update if current plugin should
+
+02:17.570 --> 02:19.670
+have assigned some kind of version property to it.
+
+02:19.670 --> 02:25.730
+So inside the database, there's now a record that says Here's a ticket as a version of zero or one,
+
+02:25.730 --> 02:28.340
+again, whatever the default version number is.
+
+02:29.000 --> 02:31.760
+So we're now going to fetch that ticket out of the database twice.
+
+02:32.590 --> 02:36.010
+So I'll do a first ticket.
+
+02:36.040 --> 02:37.750
+How about we call it first instance?
+
+02:39.550 --> 02:43.540
+And that will be an O8 ticket defined by ID.
+
+02:44.970 --> 02:47.210
+And we're going to find tickets ID.
+
+02:48.600 --> 02:52.950
+Then second instance, a wait ticket find.
+
+02:54.120 --> 02:56.160
+By ID.
+
+02:57.830 --> 02:58.520
+Like so.
+
+02:59.780 --> 03:03.730
+So now we're going to make a change to first instance and to second instance.
+
+03:03.740 --> 03:07.790
+We'll then save the first instance, and that should work as expected, save the second one, and we
+
+03:07.790 --> 03:08.960
+should see some kind of error.
+
+03:10.390 --> 03:12.070
+So here's my change to both the tickets.
+
+03:12.070 --> 03:14.020
+I'll say first instance.
+
+03:15.080 --> 03:17.930
+I'll do a set and I'll update the price to ten.
+
+03:19.360 --> 03:23.020
+You'll notice I'm once again getting an air right here, because when we do the fine by ID, we might
+
+03:23.020 --> 03:24.910
+get back null as usual.
+
+03:25.610 --> 03:30.440
+I'm going to put an exclamation on there because again, as usual, we really want TypeScript to just
+
+03:30.440 --> 03:32.640
+not worry about that if we fail to find that ticket.
+
+03:32.660 --> 03:35.420
+I actually do want to see an error so we can fix up our tests.
+
+03:36.460 --> 03:40.120
+Then we'll do our second instance, exclamation.
+
+03:40.510 --> 03:42.730
+We'll set our price to 15.
+
+03:44.330 --> 03:45.460
+So now here's the moment of truth.
+
+03:45.460 --> 03:47.740
+We're going to attempt to save the first tickets.
+
+03:47.740 --> 03:52.060
+So await first instance, exclamation dot, save.
+
+03:52.890 --> 03:55.080
+And that should go off as expected.
+
+03:55.840 --> 03:59.230
+Now we'll put down our second save right here and this one when we run.
+
+03:59.230 --> 04:00.700
+It should result in an error.
+
+04:00.850 --> 04:05.710
+Right now, we're just going to throw the save in and we'll expect to see an error inside of our tests
+
+04:05.710 --> 04:09.670
+just to make sure that the test is working as expected and that in general, all this stuff is working
+
+04:09.670 --> 04:11.830
+as expected around this versioning stuff.
+
+04:11.830 --> 04:16.660
+So I'll do an await second instance, exclamation save.
+
+04:17.350 --> 04:18.280
+And that's it.
+
+04:19.650 --> 04:20.730
+So let's save this.
+
+04:21.510 --> 04:23.190
+I'm not going to go back over to my terminal.
+
+04:23.900 --> 04:29.720
+And I have closed the test suite for my ticket service, so I'm going to go into my tickets directory
+
+04:29.720 --> 04:32.240
+and do an MPM run test inside of here.
+
+04:34.340 --> 04:34.590
+Yet.
+
+04:34.670 --> 04:38.120
+We're going to see a lot of different tests run because we're also doing all of our route handlers and
+
+04:38.120 --> 04:38.760
+whatnot.
+
+04:38.780 --> 04:41.360
+I do see the tests for my ticket stuff though.
+
+04:41.930 --> 04:43.420
+It looks like I got one failure here.
+
+04:43.430 --> 04:44.810
+I'm going to scroll up a little bit.
+
+04:46.050 --> 04:47.400
+And there we go.
+
+04:47.400 --> 04:49.680
+Exactly what we wanted to see.
+
+04:49.710 --> 04:54.780
+No matching document found for ID, blah blah blah with a version number of zero.
+
+04:55.910 --> 05:01.340
+When we're trying to update Rice and you'll notice this error came from the second save.
+
+05:01.790 --> 05:07.220
+So the second instance right here has an outdated version property has the incorrect version property.
+
+05:07.670 --> 05:11.660
+Now, even though this version property is outdated, it still kind of simulates what's going to happen
+
+05:11.660 --> 05:15.890
+inside of our actual application, where we might eventually try to save a document with a version that's
+
+05:15.890 --> 05:17.510
+too far into the future.
+
+05:18.110 --> 05:22.760
+So this right here is excellent and means that this optimistic concurrency control stuff is working
+
+05:22.760 --> 05:23.870
+as expected.
+
+05:24.910 --> 05:29.740
+So now we really just have to fix up the test and make sure that we somehow say that we expect this
+
+05:29.740 --> 05:30.730
+thing to go wrong.
+
+05:31.210 --> 05:36.580
+Now, just, you know, just does have some built in matters to help us expect that something is going
+
+05:36.580 --> 05:37.390
+to throw an air.
+
+05:37.390 --> 05:42.670
+It has a measure of expect some function to throw.
+
+05:43.210 --> 05:44.560
+So we could do that in theory.
+
+05:44.560 --> 05:48.610
+But I found that there are some interop issues between Gest and TypeScript.
+
+05:48.760 --> 05:53.310
+So I found that this expectation right here does not quite work as expected.
+
+05:53.320 --> 05:55.900
+If we wanted to really do this, we would do something like.
+
+05:56.860 --> 05:58.540
+This like so.
+
+05:59.110 --> 06:01.950
+But like I said, I found that just doesn't work out too well with this.
+
+06:01.960 --> 06:05.680
+If you're watching this at some point in time in the future, perhaps you can see this actually work
+
+06:05.680 --> 06:06.340
+as expected.
+
+06:06.340 --> 06:08.560
+But again, I have not actually gotten this to work.
+
+06:08.560 --> 06:11.080
+So instead, we're going have to get just a little bit creative here.
+
+06:12.490 --> 06:14.650
+So because we do expect this thing to throw.
+
+06:16.250 --> 06:17.300
+We're going to put in.
+
+06:18.160 --> 06:20.200
+A try around that.
+
+06:23.380 --> 06:25.060
+We're going to put in a catch.
+
+06:26.280 --> 06:28.590
+And we're going to expect to get into catch.
+
+06:28.590 --> 06:31.440
+And if we get into catch, we're going to immediately return.
+
+06:34.080 --> 06:38.220
+And because we should be entering the couch right there, right after, I'm going to throw a manually.
+
+06:38.220 --> 06:42.720
+So throw new air and I'll say should not reach this point.
+
+06:42.990 --> 06:46.980
+So if our test is working as expected, when we run this line of code right here, we're going to throw
+
+06:46.980 --> 06:49.680
+an error that's going to cause us to enter the catch statement.
+
+06:49.680 --> 06:51.780
+We should return automatically.
+
+06:52.140 --> 06:55.410
+And when we return, we will not get to that error.
+
+06:55.590 --> 06:59.640
+If this line of code does not throw, then we're going to skip over the catch and we're going to hit
+
+06:59.640 --> 07:00.030
+the error.
+
+07:00.060 --> 07:03.120
+That's going to throw the error and that's going to cause our test to fail.
+
+07:03.870 --> 07:08.130
+Now, one other little gotcha, if you're going to use this pattern right here, just cannot really
+
+07:08.130 --> 07:10.200
+figure out the async await situation here.
+
+07:10.200 --> 07:13.470
+It can't really figure out when our tests are all done when we call return right here.
+
+07:13.470 --> 07:19.680
+So to just help type to help just out, we have to receive a callback to our actual test function right
+
+07:19.680 --> 07:20.910
+here of done.
+
+07:22.100 --> 07:27.020
+Done is a function that we should invoke manually if we want to specifically tell just that we are done
+
+07:27.020 --> 07:30.590
+with our test and that should not expect anything else to go on with our test.
+
+07:31.380 --> 07:31.860
+So.
+
+07:31.860 --> 07:36.210
+Right when we return right here, we're going to also call Don and just very officially tell just that's
+
+07:36.210 --> 07:36.390
+it.
+
+07:36.390 --> 07:37.140
+Test complete.
+
+07:37.140 --> 07:39.270
+Don't worry about anything else inside this test.
+
+07:40.280 --> 07:44.750
+So again, all this stuff right here is just to work around the fact that right now, just with that
+
+07:44.750 --> 07:47.750
+to throw matter doesn't quite work as expected.
+
+07:48.410 --> 07:50.630
+Okay, so let's save this and see how we're doing.
+
+07:51.020 --> 07:52.310
+So let's flip back over.
+
+07:55.310 --> 07:57.020
+And it looks like everything is passing.
+
+07:57.410 --> 08:01.610
+Now let's run just our ticket test file by itself, just to save ourselves a little bit of time here
+
+08:01.610 --> 08:05.930
+so I can hit W to enter the watch menu, then p to enter in the name of the file.
+
+08:05.930 --> 08:06.680
+I want to run.
+
+08:07.350 --> 08:09.920
+And we want to run the ticket test file.
+
+08:09.930 --> 08:10.140
+So I'll.
+
+08:10.140 --> 08:11.400
+Let's put in a pattern of ticket.
+
+08:12.030 --> 08:14.490
+Oh, they all say ticket inside of it, I guess.
+
+08:15.300 --> 08:16.550
+I guess I'm going have to use a little bit more.
+
+08:16.920 --> 08:18.720
+Yeah, I have to use a little bit more specific.
+
+08:18.720 --> 08:19.170
+Better than that.
+
+08:19.170 --> 08:21.090
+Let's do tickets test.
+
+08:22.010 --> 08:22.730
+That's better.
+
+08:23.090 --> 08:24.700
+Now we're just running that one test.
+
+08:24.710 --> 08:25.460
+Very good.
+
+08:25.580 --> 08:28.610
+And as usual, let's try to make it fail just one time here.
+
+08:29.590 --> 08:31.960
+So I'll try commenting out the second instance.
+
+08:32.140 --> 08:33.820
+Save I'll save the file.
+
+08:34.390 --> 08:35.260
+And there we go.
+
+08:35.290 --> 08:39.100
+Looks like if it doesn't throw an error, we do in fact end up getting to that error at the bottom.
+
+08:39.100 --> 08:41.080
+And the tests fail.
+
+08:42.250 --> 08:43.090
+So it looks good.
+
+08:43.300 --> 08:45.430
+So this is pretty fantastic stuff.
+
+08:45.430 --> 08:49.690
+This means that we can now be really sure that when we save a record, if we save it successfully,
+
+08:49.690 --> 08:52.150
+we are saving it essentially in the correct order.
+
+08:52.150 --> 08:54.250
+And we're not working on some kind of stale data.
+
+08:54.250 --> 08:58.750
+And in the instance of our order service when we're processing events, this is also going to make sure
+
+08:58.750 --> 09:00.970
+that we are processing events in the correct order.
+
+09:01.400 --> 09:04.360
+Now there is one other very quick test I would like to write in the next video.
+
+09:04.360 --> 09:06.580
+So quick pause right here and I'll see you in just a minute.

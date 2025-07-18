@@ -1,0 +1,196 @@
+WEBVTT
+
+00:01.850 --> 00:03.670
+Let's begin the implementation.
+
+00:03.680 --> 00:08.480
+So we're going to first go over inside of our tickets service to our ticket model file.
+
+00:09.390 --> 00:09.960
+Inside of here.
+
+00:09.960 --> 00:13.890
+We're going to add in the idea of a order ID being tied to a ticket.
+
+00:14.520 --> 00:18.750
+So to get started, I'm going to go down to my schema and I'm going to say that in addition to these
+
+00:18.750 --> 00:22.710
+three properties, we're also going to have an order ID property as well.
+
+00:23.860 --> 00:25.960
+We're going to say that this is going to be of type string.
+
+00:26.230 --> 00:31.210
+Again, with a capital S right there and we are not going to market as being required because when a
+
+00:31.210 --> 00:35.140
+ticket is first created, there is not going to be any order associated with it.
+
+00:37.020 --> 00:39.990
+Well, then go back up to our ticket doc interface.
+
+00:40.320 --> 00:44.520
+So we need to make sure that TypeScript understands that a ticket document or an instance of a ticket
+
+00:44.550 --> 00:46.860
+has an order ID property as well.
+
+00:47.190 --> 00:48.480
+It will add in order.
+
+00:48.480 --> 00:50.430
+ID is going to be a type string.
+
+00:52.160 --> 00:54.830
+The other thing we're going to do on this property inside the interface, we're going to make sure that
+
+00:54.830 --> 00:59.930
+we mark this as optional because again, when we first create a ticket, there will not be an order
+
+00:59.930 --> 01:01.340
+ID associated with it.
+
+01:01.610 --> 01:05.300
+So to make sure that it's clear that this is going to be an optional property, we're going to put on
+
+01:05.300 --> 01:06.710
+a question mark right there.
+
+01:06.710 --> 01:11.840
+And that tells TypeScript that order ID is going to be either a string or possibly undefined.
+
+01:13.070 --> 01:13.280
+Yes.
+
+01:13.280 --> 01:15.110
+That is it for our ticket model file.
+
+01:15.380 --> 01:17.720
+They'll say this and then go back over to the listener.
+
+01:20.140 --> 01:21.160
+So inside the listener.
+
+01:21.460 --> 01:25.030
+Let's write a couple of comments just to guide ourselves on how we're going to put this together.
+
+01:25.690 --> 01:34.000
+First, we need to reach into our tickets collection and find the ticket that the order is reserving.
+
+01:37.030 --> 01:38.890
+If we do not find the ticket, we should throw an heir.
+
+01:38.890 --> 01:45.390
+So if no ticket throw heir because presumably maybe our events are out of order or something like that.
+
+01:45.400 --> 01:49.570
+Maybe we erroneously said that a ticket was being reserved when the ticket didn't even exist.
+
+01:49.600 --> 01:50.380
+Who knows?
+
+01:51.720 --> 01:59.100
+After that, we will then mark the ticket as being reserved by setting its order ID property.
+
+02:00.550 --> 02:01.660
+We'll save the ticket.
+
+02:04.570 --> 02:07.290
+And then finally EQ the message.
+
+02:07.300 --> 02:07.930
+That's it.
+
+02:09.610 --> 02:12.740
+Now that we know what we're going to go through here, let's start the implementation.
+
+02:12.760 --> 02:17.470
+First off, in order to run a query and find some particular ticket inside of our tickets collection,
+
+02:17.470 --> 02:19.210
+naturally we need our ticket model.
+
+02:19.510 --> 02:25.390
+So at the very top, I will import our ticket model from up three directory or two directories.
+
+02:25.390 --> 02:26.230
+My mistake.
+
+02:26.230 --> 02:29.590
+It's inside of our test folder that we need to go up three directories.
+
+02:30.780 --> 02:31.150
+Here we go.
+
+02:31.170 --> 02:32.370
+We'll get our ticket model.
+
+02:34.380 --> 02:38.640
+So we'll go ahead and attempt to find the ticket that this order is mentioning, where the event is
+
+02:38.640 --> 02:39.240
+mentioning.
+
+02:39.970 --> 02:47.350
+So let's say ticket is a weight ticket defined by ID data dot ticket ID.
+
+02:47.380 --> 02:49.150
+That is the ticket that we're trying to reserve.
+
+02:50.280 --> 02:52.260
+We'll then check to see if a ticket was actually found.
+
+02:52.260 --> 02:54.090
+So if there is not a ticket.
+
+02:54.900 --> 02:56.160
+Let's just throw a plain air.
+
+02:58.000 --> 03:00.430
+That's a ticket not found.
+
+03:04.240 --> 03:07.810
+After that, we'll then set the order ID property on the ticket itself.
+
+03:08.110 --> 03:09.490
+The ticket set?
+
+03:11.170 --> 03:12.040
+Order ID.
+
+03:12.780 --> 03:14.220
+Two data ID.
+
+03:14.250 --> 03:17.010
+That is the idea of the order that was just created.
+
+03:18.610 --> 03:19.600
+Well, then save the ticket.
+
+03:19.600 --> 03:21.010
+So a simple a ticket.
+
+03:21.190 --> 03:21.850
+Save.
+
+03:23.280 --> 03:24.840
+And then finally act the message.
+
+03:24.930 --> 03:26.310
+Remember second argument right there.
+
+03:26.400 --> 03:29.370
+We will take a look at the message and call back on it.
+
+03:29.880 --> 03:31.140
+And that's pretty much it.
+
+03:32.770 --> 03:35.550
+So I'd say this looks pretty reasonable as usual.
+
+03:35.560 --> 03:39.460
+Let's take a pause right here and then write out a couple of tests just to make sure that this thing
+
+03:39.460 --> 03:41.020
+is working as expected.

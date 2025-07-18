@@ -1,0 +1,358 @@
+WEBVTT
+
+00:00.540 --> 00:04.430
+We are now able to show a little pop up window any time a user clicks on a marker.
+
+00:04.440 --> 00:09.180
+So this is definitely a good advancement, but now we probably want to customize the content inside
+
+00:09.180 --> 00:10.140
+of that window.
+
+00:10.830 --> 00:14.490
+So let's flip back over to our code editor and figure out how we can do this.
+
+00:15.030 --> 00:17.040
+I'm still looking at ad marker right here.
+
+00:17.190 --> 00:21.600
+Remember, the content that gets shown in the window is going to be assigned to this content property
+
+00:21.600 --> 00:23.220
+when we create the info window.
+
+00:23.580 --> 00:27.780
+So the real question here is how are we going to customize this content?
+
+00:28.910 --> 00:34.660
+We probably want to customize that content depending upon whether we pass it in a user or a company
+
+00:34.670 --> 00:39.710
+as an argument to add marker or put another way, put it more precisely.
+
+00:39.710 --> 00:45.410
+We probably want to make this content right here a responsibility of this argument.
+
+00:45.950 --> 00:51.560
+In other words, we want this argument, this object to have some property or some method attached to
+
+00:51.560 --> 00:52.020
+it.
+
+00:52.040 --> 00:58.700
+And any time we reference that property or call it it should return some string that will be displayed
+
+00:58.700 --> 01:00.500
+inside of the info window.
+
+01:01.320 --> 01:06.490
+So in other words, what we're doing here is adding in a new requirement for this argument.
+
+01:06.510 --> 01:11.730
+We're saying that now, in order to be considered to be malleable or to be an argument, to add marker,
+
+01:11.760 --> 01:13.620
+you have to have a method.
+
+01:14.350 --> 01:19.840
+Any time we call that method, it should return a string and that string will be some HTML to show inside
+
+01:19.840 --> 01:20.800
+the info window.
+
+01:22.410 --> 01:27.240
+So in order to update the definition of this argument, we're going to add a new requirement to this
+
+01:27.240 --> 01:28.050
+interface.
+
+01:28.810 --> 01:31.330
+So remember, we define Tappable at the top of the file.
+
+01:31.360 --> 01:32.710
+I'm going to go back up here.
+
+01:32.710 --> 01:37.330
+So we're going to say that now, in order to be considered, to be malleable, to be an argument to
+
+01:37.330 --> 01:42.130
+the add marker function, you also have to have a property called.
+
+01:42.930 --> 01:44.850
+How about marker content?
+
+01:45.510 --> 01:46.920
+This has to be a function.
+
+01:47.280 --> 01:50.910
+And any time we call this thing, you have to return a string.
+
+01:51.740 --> 01:54.920
+So we've now added in a new requirement to our interface.
+
+01:55.550 --> 02:00.770
+If we save this and then flip back over to index indexes, you'll notice that we now have an air around
+
+02:00.770 --> 02:02.960
+add marker and add marker right here.
+
+02:03.260 --> 02:08.960
+If we hover over the arguments, you'll notice that it says property marker content is missing from
+
+02:08.960 --> 02:11.600
+user, but it's required by our interface.
+
+02:12.170 --> 02:18.260
+So we just updated the interface we added in a new requirement to be an argument to add marker, but
+
+02:18.260 --> 02:21.110
+user and company do not yet have that property.
+
+02:21.470 --> 02:27.500
+So we now have to go back to our user definition or user class and our company class and make sure they
+
+02:27.500 --> 02:28.880
+satisfy this new requirement.
+
+02:28.880 --> 02:33.950
+They both have to have a method called marker content and they have to return a string.
+
+02:35.200 --> 02:36.790
+So let's try doing that right now.
+
+02:36.820 --> 02:41.530
+Back inside of user dots, I'm going to go down to the bottom of the class underneath the constructor.
+
+02:42.280 --> 02:46.690
+Usually our constructor method is going to be at the very top right after any properties we want to
+
+02:46.690 --> 02:47.260
+list.
+
+02:47.870 --> 02:50.450
+And then right here, we're going to add in marker content.
+
+02:51.160 --> 02:52.870
+This is going to be a function.
+
+02:53.800 --> 02:56.470
+Any time we call it, we have to return a string.
+
+02:57.890 --> 02:59.600
+So then inside of here we will return.
+
+02:59.600 --> 03:01.880
+How about just like user?
+
+03:03.380 --> 03:09.230
+Name is and actually let's use a template string here so I can use back ticks instead just to kind of
+
+03:09.230 --> 03:10.430
+inject the user name.
+
+03:11.000 --> 03:15.200
+So I'm going to place the back ticks and we'll do this name like so.
+
+03:16.560 --> 03:16.830
+Okay.
+
+03:16.830 --> 03:23.940
+So now user has a marker content method that returns a string and that means that now user satisfies
+
+03:23.940 --> 03:25.410
+our Tappable interface.
+
+03:25.590 --> 03:29.550
+It has all the different properties that Tappable is required to have.
+
+03:30.440 --> 03:33.920
+So if we now go back over to indexes, you'll notice that the error is gone.
+
+03:34.840 --> 03:37.330
+So now we can repeat the same process for company as well.
+
+03:37.810 --> 03:39.400
+I'm going to go back over to my company.
+
+03:40.450 --> 03:41.980
+Here's class company right here.
+
+03:42.400 --> 03:48.040
+And again, at the bottom of the class, I'm going to add in a new method called marker content.
+
+03:48.610 --> 03:53.660
+It has to be called marker content because that's what our interface right here is requiring.
+
+03:53.680 --> 03:57.730
+We cannot just arbitrarily name the methods something different inside of company.
+
+03:58.150 --> 04:02.860
+The interface is going to look specifically for a method called marker content.
+
+04:03.880 --> 04:06.190
+So back inside of company, here's marker content.
+
+04:06.190 --> 04:09.220
+We're going to annotate it as a return type of string.
+
+04:10.240 --> 04:15.310
+And inside of here we can once again return something like company name.
+
+04:16.290 --> 04:18.240
+And we'll print out this company name.
+
+04:18.570 --> 04:19.080
+And you know what?
+
+04:19.080 --> 04:23.220
+Just for fun, let's also show the company catchphrase as well.
+
+04:23.790 --> 04:26.850
+So inside the string, I'm going to turn it into a multi line string like so.
+
+04:27.730 --> 04:33.460
+And then we'll do catch phrase is this dot catch phrase.
+
+04:34.810 --> 04:37.140
+Remember that these strings can actually be HTML.
+
+04:37.150 --> 04:41.040
+We just saw that inside the type documentation file or the type definition file.
+
+04:41.050 --> 04:45.370
+So if we wanted to, we could also wrap the company name with an H one tag.
+
+04:46.340 --> 04:49.130
+And maybe the catch phrase gets like an H three.
+
+04:49.790 --> 04:52.490
+And then let's just wrap all this with a div.
+
+04:56.280 --> 04:57.060
+Like so.
+
+05:00.490 --> 05:00.850
+All right.
+
+05:00.850 --> 05:01.900
+So it looks pretty good.
+
+05:02.260 --> 05:06.460
+Now, one thing I want to mention here about this interface stuff, you'll notice that marker content
+
+05:06.460 --> 05:08.830
+right here is just saying we have to return string.
+
+05:08.830 --> 05:09.850
+That's all it's saying.
+
+05:10.120 --> 05:15.460
+This interface is not going to somehow make sure that we are returning like the correct string from
+
+05:15.460 --> 05:16.540
+marker content.
+
+05:16.540 --> 05:17.350
+So inside of company.
+
+05:17.980 --> 05:24.190
+If we put some like completely gibberish string inside of here with some nonsense HTML typescript is
+
+05:24.220 --> 05:25.170
+not going to complain at all.
+
+05:25.180 --> 05:30.040
+The only thing TypeScript is doing is making sure that we have this method that returns the correct
+
+05:30.040 --> 05:30.550
+type.
+
+05:30.850 --> 05:36.310
+If we goofed the implementation of the method that's still on us, TypeScript can only do so much.
+
+05:37.140 --> 05:37.380
+Okay.
+
+05:37.380 --> 05:42.180
+So now we got the new definition of marker content in both our company and our user.
+
+05:42.210 --> 05:48.900
+They are both now satisfying the updated interface so they can continue to be arguments to add marker.
+
+05:49.320 --> 05:51.420
+You'll notice that both those errors have now gone away.
+
+05:52.410 --> 05:55.410
+So now the last thing we have to do is go back over to custom map.
+
+05:56.080 --> 05:58.060
+Down inside of the add marker function.
+
+05:59.240 --> 06:01.520
+We still have a hardcoded string here of.
+
+06:01.520 --> 06:02.420
+Hi there.
+
+06:02.450 --> 06:05.510
+So now we're going to say, rather than using that hardcoded string.
+
+06:05.540 --> 06:07.730
+Take a look at that map, double argument.
+
+06:07.730 --> 06:13.730
+The argument that we passed into add marker map able and now has a new function tied to it called marker
+
+06:13.730 --> 06:14.510
+content.
+
+06:14.810 --> 06:20.210
+So now any time that we click on the info window rather than showing simply Hi there, we want to show
+
+06:20.210 --> 06:25.040
+the content that comes from that marker content function of the argument.
+
+06:25.520 --> 06:27.200
+So we'll do map tappable.
+
+06:28.190 --> 06:31.040
+Dot marker content like so.
+
+06:33.880 --> 06:34.690
+All right.
+
+06:34.690 --> 06:35.950
+So that's pretty much it.
+
+06:35.950 --> 06:36.940
+Let's save this thing.
+
+06:36.940 --> 06:42.280
+I'm going to flip back over to my browser, do a refresh, and then I'll click on one of these and I
+
+06:42.280 --> 06:49.570
+see user name Nick or yeah, Nick, I suppose pop up and if I click on the other one, I'll see an H
+
+06:49.570 --> 06:52.960
+one and an H three for the company name and catchphrase.
+
+06:53.760 --> 06:54.600
+So that's it.
+
+06:55.080 --> 06:55.560
+All right.
+
+06:55.560 --> 06:57.130
+So this has been a lot of fun here.
+
+06:57.150 --> 07:01.710
+Let's take a quick pause and we'll do a wrap up in the next section to make sure once again that we
+
+07:01.710 --> 07:04.950
+understand what's going on with this interface and what actually now they think about it.
+
+07:04.950 --> 07:09.300
+There's one last little bit of code I want to add in this project just to show you something very quickly.
+
+07:09.300 --> 07:11.550
+So quick pause and I'll see you in just a minute.

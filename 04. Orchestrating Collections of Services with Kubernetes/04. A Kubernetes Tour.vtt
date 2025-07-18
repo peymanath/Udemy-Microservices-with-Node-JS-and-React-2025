@@ -1,0 +1,475 @@
+WEBVTT
+
+00:01.000 --> 00:04.060
+Hopefully you now have Kubernetes up and running on your local machine.
+
+00:04.090 --> 00:08.620
+The first thing we're going to do is just run one simple command to make sure that it is running successfully.
+
+00:09.070 --> 00:12.760
+To run this command, we're going to open up a new terminal window, and that's really important.
+
+00:12.760 --> 00:16.210
+Please make sure you open up a new terminal window, even if you already have one open.
+
+00:16.810 --> 00:21.640
+And in this new window, we will run Kube CTL version.
+
+00:23.330 --> 00:28.190
+So go ahead and run that and we should see something print out for a client version and server version.
+
+00:28.490 --> 00:32.120
+Now, if you're running a newer version than I am, that is totally fine.
+
+00:32.240 --> 00:38.120
+Newer versions of Kubernetes add in some pretty exotic features that we are very unlikely to use any
+
+00:38.120 --> 00:39.560
+time inside this course.
+
+00:39.680 --> 00:44.870
+So really, we could be using a much earlier version of Kubernetes than what even I'm using right now.
+
+00:44.870 --> 00:47.780
+And everything inside this course is still going to work just fine.
+
+00:47.810 --> 00:52.580
+Remember, Kubernetes to some degree is about stability because we're using it to manage a tremendous
+
+00:52.580 --> 00:53.930
+aspect of our application.
+
+00:55.080 --> 00:59.310
+Now that we've got Kubernetes up and running, we're going to take a look at a quick couple of diagrams
+
+00:59.310 --> 01:04.520
+here, really just one big diagram and get a quick tour of what Kubernetes is really all about.
+
+01:04.530 --> 01:08.220
+So I'm going to walk you through the workflow of how we're really going to use Kubernetes.
+
+01:09.260 --> 01:10.100
+Quick note here.
+
+01:10.100 --> 01:12.190
+What I'm going to show you is really in depth.
+
+01:12.200 --> 01:14.410
+There's going to be a lot of terminology floating around.
+
+01:14.420 --> 01:17.180
+I do not expect you to memorize anything.
+
+01:17.510 --> 01:18.730
+All of this, any of this.
+
+01:18.740 --> 01:20.420
+You don't have to memorize any of it.
+
+01:20.420 --> 01:24.850
+I just want to throw some terms out there and start exposing you to a couple of these ideas.
+
+01:24.860 --> 01:28.670
+We are going to actually implement the entire workflow that we're about to discuss in just a moment.
+
+01:28.670 --> 01:32.690
+So you'll see a much more in-depth version of all the stuff in the coming videos.
+
+01:33.140 --> 01:34.280
+All right, so let's get to it.
+
+01:34.370 --> 01:35.300
+So here's our diagram.
+
+01:35.300 --> 01:38.780
+I'm going to zoom in on a part of it, and we're going to work through this thing step by step.
+
+01:39.410 --> 01:43.400
+The first part we're going to take a look at is over here on the left hand side.
+
+01:45.970 --> 01:48.640
+So this little workflow right here should look really familiar.
+
+01:49.060 --> 01:53.230
+We've got some post files or essentially our post service source code.
+
+01:53.830 --> 01:58.600
+We took all those files and a Docker file and we fed them more or less into Docker.
+
+01:58.600 --> 02:01.450
+And out of that came an image for our post service.
+
+02:01.690 --> 02:06.940
+We can now create as many instances of this image or containers as we call them as we wish.
+
+02:06.970 --> 02:10.870
+The image is really the blueprint for how to create a post container.
+
+02:11.840 --> 02:15.440
+Now, of course, at some point in time, we're going to want to actually create an instance of this
+
+02:15.440 --> 02:17.960
+post image or again, a container.
+
+02:18.560 --> 02:21.350
+So to do so, we're going to zoom out here for just a moment.
+
+02:24.720 --> 02:24.930
+Sorry.
+
+02:24.930 --> 02:26.670
+This is jumping around just a little bit.
+
+02:26.700 --> 02:27.390
+There we go.
+
+02:28.380 --> 02:30.320
+So we've got our image all created.
+
+02:30.330 --> 02:31.980
+That's kind of the prerequisite here.
+
+02:32.340 --> 02:36.420
+Whenever we want to use Kubernetes, we have to have a set of images that are already ready to go.
+
+02:37.030 --> 02:40.180
+So of course, we're going to want to actually create a container out of this thing at some point in
+
+02:40.180 --> 02:40.720
+time.
+
+02:40.720 --> 02:43.600
+And we're going to want to deploy it into our Kubernetes cluster.
+
+02:44.080 --> 02:47.380
+Now, in the cluster, I have kind of drawn out or diagrammed right here.
+
+02:47.380 --> 02:49.420
+I'm showing three separate notes.
+
+02:49.720 --> 02:52.280
+And remember, a node is a virtual machine.
+
+02:52.300 --> 02:55.930
+It is essentially a computer that's going to run some number of containers for us.
+
+02:56.620 --> 02:59.710
+We are currently running Kubernetes on our own personal computers.
+
+02:59.950 --> 03:04.960
+If you're running Kubernetes on your own computer, it's extremely likely that you are only running
+
+03:04.960 --> 03:06.370
+one node by default.
+
+03:06.370 --> 03:08.050
+So you have one virtual machine.
+
+03:08.500 --> 03:12.460
+It's only once we start deploying to some cloud provider that we're going to have multiple nodes.
+
+03:12.760 --> 03:15.610
+Regardless, everything we're about to discuss works identical.
+
+03:15.610 --> 03:20.290
+Whether we have one node or 1000 nodes, it's all the same.
+
+03:21.350 --> 03:25.070
+I am going to show three nodes on here just to give a little bit more clarity on what is going on behind
+
+03:25.070 --> 03:25.730
+the scenes.
+
+03:27.380 --> 03:27.680
+All right.
+
+03:27.680 --> 03:32.960
+So to create a container out of image or something out of the post image, we are going to first create
+
+03:32.960 --> 03:34.280
+a configuration file.
+
+03:34.760 --> 03:39.080
+In this configuration file, we're going to list out some very explicit directions for Kubernetes.
+
+03:39.080 --> 03:44.960
+We're going to say, please create two copies of the post image for us, make containers and host them
+
+03:44.960 --> 03:46.460
+somewhere on these notes.
+
+03:47.320 --> 03:48.490
+Inside that config file.
+
+03:48.490 --> 03:52.690
+We are also going to say please allow these copies of posts to be accessible.
+
+03:52.690 --> 03:55.720
+So in other words, set up some networking on the on these things.
+
+03:55.720 --> 04:01.480
+Allow other containers to get created among these nodes to access these post services that we're about
+
+04:01.480 --> 04:02.050
+to create.
+
+04:03.180 --> 04:06.090
+So we're going to feed that thing into Kubernetes.
+
+04:06.570 --> 04:11.130
+We're going to get that config file into Kubernetes using that command line tool.
+
+04:11.220 --> 04:13.680
+We just wrote out a second ago, Cube, CTL.
+
+04:13.710 --> 04:15.990
+That's how we interact with our Kubernetes cluster.
+
+04:17.900 --> 04:22.730
+The Kubernetes cluster is going to read this config file, read it over and say, okay, well, I guess
+
+04:22.730 --> 04:24.830
+I got to create two containers out of posts.
+
+04:25.340 --> 04:31.670
+So Kubernetes is going to look out among the world and try to find a copy of this post image.
+
+04:31.880 --> 04:37.330
+It's going to first take a look at the Docker Daemon or the Docker server running on your personal computer.
+
+04:37.340 --> 04:40.910
+So on your computer, we have built up that post image already.
+
+04:41.210 --> 04:45.920
+So Kubernetes is going to look at your local machine and see if there is a copy of that image already
+
+04:45.920 --> 04:46.520
+available.
+
+04:46.910 --> 04:51.860
+If it is not available, then it will default to looking out at Docker Hub and try to find a copy of
+
+04:51.860 --> 04:53.210
+that image there instead.
+
+04:53.630 --> 04:56.480
+Either way, Kubernetes is going to try to find that image.
+
+04:56.960 --> 04:58.320
+Once it finds that image.
+
+04:58.340 --> 05:00.650
+It's going to create two containers.
+
+05:01.520 --> 05:05.930
+Because we ask for to and randomly distribute more or less randomly.
+
+05:05.930 --> 05:07.760
+Again, there's some science to this.
+
+05:08.000 --> 05:12.350
+Distribute those to containers that create get created among these nodes.
+
+05:15.620 --> 05:21.110
+So we get two containers like so each container that is created is going to be hosted or essentially
+
+05:21.110 --> 05:23.630
+created inside of something called a pod.
+
+05:24.230 --> 05:27.530
+For the purposes of this course, this is really important.
+
+05:27.530 --> 05:33.230
+For the purposes of this course, you and I are going to be pretty much using the terms pod and container
+
+05:33.230 --> 05:34.430
+interchangeably.
+
+05:34.790 --> 05:40.280
+Pods and containers in reality are not the same thing, but in the context of this course it is good
+
+05:40.280 --> 05:42.710
+enough and I feel pretty strongly about this.
+
+05:42.920 --> 05:47.270
+They're not technically the same thing, but I feel pretty strongly that we can safely say a pod in
+
+05:47.270 --> 05:49.400
+a container is more or less the same thing.
+
+05:49.910 --> 05:54.410
+A pod, technically, it wraps up a container and technically a pod can have multiple containers inside
+
+05:54.410 --> 05:54.740
+of it.
+
+05:54.740 --> 05:58.790
+But again, for the fourth time, for the purposes of this course, we're going to say a pod and the
+
+05:58.790 --> 06:00.620
+container are basically the same thing.
+
+06:01.430 --> 06:03.770
+So we asked for two copies of the post service.
+
+06:04.100 --> 06:06.510
+So Kubernetes is going to create two pods.
+
+06:06.530 --> 06:10.550
+Each of them is going to have a copy of the post container running inside of it.
+
+06:13.100 --> 06:18.650
+In order to manage these two pods, Kubernetes is also going to create something called a deployment.
+
+06:19.770 --> 06:25.650
+This deployment is going to read in this configuration file over here and it's going to say, Oh, okay,
+
+06:25.650 --> 06:28.290
+they wanted two copies of the post image.
+
+06:28.650 --> 06:34.590
+So this deployment is going to be in charge of managing both these pots if anything ever goes wrong
+
+06:34.590 --> 06:35.340
+with these pods.
+
+06:35.340 --> 06:41.090
+So if it crashes for some reason or if it just stops running or whatever else might possibly happen,
+
+06:41.100 --> 06:47.160
+this deployment right here is going to make sure that that pod automatically gets recreated for us.
+
+06:47.640 --> 06:52.350
+So the deployment is in charge of making sure that we've always got the right number of pods and that
+
+06:52.350 --> 06:54.300
+these pods are running successfully.
+
+06:57.570 --> 07:00.870
+So now second step here in this config file.
+
+07:00.870 --> 07:06.450
+We had also said, please allow us to access these services from other pods or essentially containers
+
+07:06.450 --> 07:09.450
+inside of our Kubernetes cluster to do so.
+
+07:10.350 --> 07:13.740
+Kubernetes is going to create something else called a service.
+
+07:13.770 --> 07:18.360
+Now, this is where life starts to get a little bit confusing because, hey, we are in a course.
+
+07:18.360 --> 07:22.650
+You're talking about microservices and now we're introducing this thing called a service.
+
+07:23.220 --> 07:28.710
+So the term service in the world of Kubernetes is not like the way that we've been using the word service
+
+07:28.710 --> 07:29.630
+throughout this course.
+
+07:29.640 --> 07:32.340
+It is not necessarily a running program.
+
+07:32.340 --> 07:36.960
+It's not necessarily a running server or a running application server or anything like that.
+
+07:36.990 --> 07:44.670
+Instead, a server is something that gives us access to running ODS or running containers inside of
+
+07:44.670 --> 07:45.480
+our cluster.
+
+07:47.690 --> 07:51.110
+I'm going to zoom in on this a little bit more right now so we can see it a little bit more easily.
+
+07:52.570 --> 07:57.670
+So the service is what is in charge of kind of abstracting away all of those difficulties we spoke about
+
+07:57.670 --> 08:02.140
+a little bit ago in handling networking among different microservices.
+
+08:02.140 --> 08:07.420
+You might recall a little bit ago we looked at a diagram right here like this one more or less, and
+
+08:07.420 --> 08:08.380
+we said, Oh yeah, you know what?
+
+08:08.380 --> 08:11.110
+This event plus it's kind of challenging for us to have the event.
+
+08:11.110 --> 08:15.940
+Plus always know how to reach out to all these different copies of comments that exist and how to know
+
+08:15.940 --> 08:17.950
+what port to reach out to as well.
+
+08:18.430 --> 08:23.110
+So when we started talking about Kubernetes, we introduced this thing down here where we said, Oh
+
+08:23.110 --> 08:26.620
+yeah, just send me a request and I will afford it on to the appropriate service.
+
+08:27.250 --> 08:30.130
+So that's what you need, the appropriate we'll say container here.
+
+08:30.130 --> 08:32.530
+I don't want to overuse the term service moving forward.
+
+08:32.740 --> 08:34.450
+And so that's what this service thing is.
+
+08:34.450 --> 08:40.180
+It abstracts away all the difficulties of trying to figure out what IP or what port some given program
+
+08:40.180 --> 08:40.990
+is running on.
+
+08:41.590 --> 08:48.970
+So if at some point in time in the future we create another pod running, say our event bus over here,
+
+08:49.600 --> 08:51.820
+the event bus to reach out to posts.
+
+08:51.820 --> 08:56.650
+Either these things right here rather than trying to reach out to that container directly, it's going
+
+08:56.650 --> 09:01.930
+to instead just reach out to this service which will be available at a very easy to know or easy to
+
+09:01.930 --> 09:03.580
+understand URL.
+
+09:03.610 --> 09:08.560
+It won't be like localhost 4005, which is of course really challenging to remember.
+
+09:08.590 --> 09:15.040
+Instead, it will be a very well understood URL, something like post serve or post service, something
+
+09:15.040 --> 09:19.510
+just very simple, very straightforward doesn't really require a lot of difficult memorization.
+
+09:19.720 --> 09:25.630
+And so this service thing is going to make it much more easy for us to get from our event bus and reach
+
+09:25.630 --> 09:27.640
+on out to our running pods.
+
+09:29.640 --> 09:29.960
+Okay.
+
+09:29.970 --> 09:33.840
+So that is our big overview of Kubernetes at this point.
+
+09:33.840 --> 09:36.450
+This video is running a little bit long, so we're going to take a quick pause right here.
+
+09:36.450 --> 09:37.380
+We'll come back the next video.
+
+09:37.380 --> 09:42.000
+And I just want to kind of highlight a couple of really important pieces of terminology.
+
+09:42.000 --> 09:45.450
+And then, as I mentioned, we're going to start to implement this exact workflow.

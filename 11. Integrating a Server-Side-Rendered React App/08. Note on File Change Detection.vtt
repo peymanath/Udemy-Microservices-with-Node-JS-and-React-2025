@@ -1,0 +1,208 @@
+WEBVTT
+
+00:01.280 --> 00:05.220
+We've now got an XSS running inside of our Kubernetes cluster, which is fantastic.
+
+00:05.240 --> 00:11.330
+However, I want you to be aware right away that sometimes next days can be a little bit finicky.
+
+00:11.840 --> 00:13.880
+Let's go back over to our editor really quickly.
+
+00:13.910 --> 00:17.240
+I'm going to find the banana file inside of our pages folder.
+
+00:17.720 --> 00:22.400
+I'm then going to change the string inside of here to have a banana two, whatever, just some very
+
+00:22.400 --> 00:23.270
+small change.
+
+00:23.570 --> 00:28.100
+I'm then going to save this and flip back over to my browser and you'll notice as soon as I save the
+
+00:28.100 --> 00:31.520
+file I see that change reflected inside the browser right away.
+
+00:32.060 --> 00:37.070
+Now you are going to see I can just about guarantee it either you might not have seen that update right
+
+00:37.070 --> 00:42.410
+away, or alternatively, at some point in time in the future you might make a change to some code and
+
+00:42.410 --> 00:44.720
+not see it reflected in the browser as well.
+
+00:45.170 --> 00:51.020
+So next JS unfortunately is a little bit finicky with file change detection when it is running inside
+
+00:51.020 --> 00:52.400
+of a Docker container.
+
+00:52.820 --> 00:58.370
+So we're going to put in a little fix right now, just proactively, even if you saw this thing change
+
+00:58.370 --> 01:03.060
+automatically when you save the file, I still recommend you do this because I personally have seen
+
+01:03.100 --> 01:08.210
+Nexis not always reflect file updates, even if it sometimes appears to work.
+
+01:09.020 --> 01:10.190
+So here's what we're going to do.
+
+01:10.370 --> 01:16.640
+Back inside my client directory, I'm going to make a new file called Next Dot Configs.
+
+01:17.360 --> 01:21.440
+And then inside of here, we're going to write out module exports.
+
+01:22.410 --> 01:25.380
+We're going to set that equal to an object inside of here.
+
+01:25.380 --> 01:29.040
+We're going to put in a Webpack dev middleware.
+
+01:29.250 --> 01:33.180
+And please double check your spelling and capitalization on this.
+
+01:34.710 --> 01:39.090
+We're then going to assign this an aero function that's going to take in some config variable.
+
+01:39.930 --> 01:46.230
+Then inside will do config dot watch options pull equals 300.
+
+01:46.590 --> 01:49.260
+And then we will return config.
+
+01:50.230 --> 01:50.590
+Oop.
+
+01:50.860 --> 01:51.430
+There we go.
+
+01:53.240 --> 01:56.570
+So what this file does, this file is loaded up automatically.
+
+01:56.900 --> 01:58.040
+Where is it?
+
+01:58.730 --> 01:59.380
+There it is, right there.
+
+01:59.390 --> 02:02.960
+This file is loaded up automatically by next year whenever our project starts up.
+
+02:03.980 --> 02:06.840
+Next is then going to attempt to read this thing in.
+
+02:06.860 --> 02:11.510
+It's going to take a look at this Webpack dev middleware function and it's going to call it with some
+
+02:11.510 --> 02:15.110
+middle pack configuration that it has created by default.
+
+02:15.140 --> 02:20.720
+We are changing a single option on there to tell Webpack that rather than trying to watch for file changes
+
+02:20.720 --> 02:26.240
+in some automated fashion, instead pull all the different files inside of our project directory automatically
+
+02:26.240 --> 02:28.080
+at once every 300 milliseconds.
+
+02:28.100 --> 02:33.020
+Traditionally, this change right here will fix this issue with file change detection when running inside
+
+02:33.020 --> 02:34.190
+of a Docker container.
+
+02:34.190 --> 02:38.630
+But as I mentioned, I have still noticed that it is not 100% foolproof.
+
+02:39.930 --> 02:44.670
+So if you ever start to change any code and you feel as though that change is not being reflected on
+
+02:44.670 --> 02:49.290
+the screen inside the browser, we're going to want to try to somehow restart scaffold.
+
+02:49.320 --> 02:51.270
+We'll take a look at how that's going to work eventually.
+
+02:51.270 --> 02:55.830
+But right now, let's just make sure that this change gets reflected inside of our running pod.
+
+02:56.040 --> 03:01.620
+Now remember, because this file is ending with a JS scaffold should sync this file into our running
+
+03:01.620 --> 03:02.640
+pod automatically.
+
+03:02.670 --> 03:08.100
+However, next does not automatically restart itself whenever we add this file in or make changes to
+
+03:08.100 --> 03:10.310
+it, unlike changes that are made to it.
+
+03:10.320 --> 03:11.400
+React files.
+
+03:11.610 --> 03:15.960
+So we need to somehow just get our pod to restart itself to do so.
+
+03:16.920 --> 03:18.450
+We're going to go back over to our terminal.
+
+03:19.170 --> 03:23.910
+We're going to list out all of our running pods with cube, CTL, get pods, and then we're going to
+
+03:24.000 --> 03:27.870
+manually kill the client one right here by killing this pod.
+
+03:27.900 --> 03:32.580
+Our deployment will automatically create a new pod, and that new pod will have this updated config
+
+03:32.580 --> 03:33.570
+file inside of it.
+
+03:33.570 --> 03:36.840
+And next, Jess should read this config file when it first starts up.
+
+03:37.610 --> 03:40.700
+So I'm going to go back over and do a little.
+
+03:41.460 --> 03:45.300
+Delete pod and then paste in the name of our client pod.
+
+03:46.540 --> 03:47.980
+So I'll see that is deleted.
+
+03:48.700 --> 03:55.600
+I could do another get pod's and I'll see that the pod has already been recreated just 5 seconds ago.
+
+03:56.870 --> 04:00.290
+So now this new pod should be running the updated config inside of it.
+
+04:00.530 --> 04:04.880
+Now again, if at any point in time you feel as though you have made a change that is not being reflected
+
+04:04.880 --> 04:07.820
+inside the browser, go through the same steps you see right here.
+
+04:08.300 --> 04:09.640
+List out all your pods.
+
+04:09.650 --> 04:11.690
+Delete the current client pod.
+
+04:11.900 --> 04:17.000
+That pod will be recreated and the changes 100% should be reflected inside there.
+
+04:17.900 --> 04:21.590
+So again, just a quick little tip, something that you're probably going to run into at some point
+
+04:21.590 --> 04:22.130
+in time.
+
+04:22.760 --> 04:26.150
+Let's take a pause right here and continue with our client in just a moment.

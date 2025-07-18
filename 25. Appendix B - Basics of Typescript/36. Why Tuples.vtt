@@ -1,0 +1,181 @@
+WEBVTT
+
+00:00.950 --> 00:05.000
+In this video, we're going to discuss why we care about tuples and when we might use them.
+
+00:05.390 --> 00:10.100
+And I'll be honest with you, I am not a huge fan of tuples, and I don't think you're going to really
+
+00:10.100 --> 00:12.650
+be using them in a very regular basis with TypeScript.
+
+00:12.740 --> 00:14.360
+There are a couple of exceptions.
+
+00:14.360 --> 00:19.310
+Most notably, I think that if you're ever working with a CSV file, any one represents, say, a single
+
+00:19.310 --> 00:19.880
+row.
+
+00:19.910 --> 00:21.710
+You might reach out to a tuple.
+
+00:21.920 --> 00:26.330
+We'll actually work with the CSV file later on inside this course and so you'll see a great example
+
+00:26.330 --> 00:27.380
+of that in action.
+
+00:27.380 --> 00:31.460
+So let me tell you exactly why I don't think you're going to be using tuples that often.
+
+00:31.940 --> 00:37.190
+At the bottom of this file, I'm going to declare a new variable called car specs like so, and I'm
+
+00:37.190 --> 00:43.040
+going to assign it some data that has a real important meaning around a car, like some specifications
+
+00:43.040 --> 00:43.970
+around a car.
+
+00:44.360 --> 00:49.850
+So I'm going to assign it a tuple of 400 3354 like so.
+
+00:50.210 --> 00:54.140
+And I'll make sure that I annotate the type on here to make sure it's really clear that this is a tuple.
+
+00:54.140 --> 00:56.720
+So it's a number and a number like so.
+
+00:57.360 --> 00:57.580
+Okay.
+
+00:57.620 --> 00:58.760
+So here's the question.
+
+00:58.970 --> 01:01.050
+What do these numbers mean to you?
+
+01:01.070 --> 01:05.120
+I mean, looking at this line of code right here in isolation, what do those numbers mean?
+
+01:05.120 --> 01:07.460
+Clearly, it has something to do with these specs around a car.
+
+01:07.460 --> 01:09.650
+But what is the purpose of these numbers?
+
+01:10.100 --> 01:14.810
+Well, for us as engineers, I don't think that we can really look at this line of code and understand
+
+01:14.810 --> 01:15.980
+what is going on here.
+
+01:16.010 --> 01:17.600
+We know that there are two values.
+
+01:17.600 --> 01:20.450
+We know that they are numbers, but that's pretty much it.
+
+01:21.280 --> 01:26.410
+So let's try writing out that same type of data structure right here, but instead as an object.
+
+01:26.680 --> 01:32.560
+So if I write out a very similar variable right here, maybe I'll call it car stats this time I'm going
+
+01:32.560 --> 01:33.520
+to make it an object.
+
+01:33.520 --> 01:37.540
+And because it's an object, this time I have to add in a key and a value.
+
+01:38.110 --> 01:42.610
+So for the value 400, I'm going to give a key of horsepower.
+
+01:44.300 --> 01:45.050
+Horsepower.
+
+01:45.190 --> 01:45.340
+Yeah.
+
+01:45.350 --> 01:46.010
+There we go.
+
+01:46.370 --> 01:50.330
+And then for the three, three, five, four, I'll put in weight like so.
+
+01:51.960 --> 01:52.320
+All right.
+
+01:52.320 --> 01:53.790
+So what am I trying to illustrate here?
+
+01:53.820 --> 01:59.820
+Well, if we use a tuple to represent some meaningful data, it's really hard for you and I as engineers
+
+01:59.820 --> 02:03.420
+to look at this value right here and understand what we are trying to say.
+
+02:04.330 --> 02:10.330
+However, in an object format right here because we are forced to put in a key, it is immediately obvious
+
+02:10.330 --> 02:11.440
+what we are working with.
+
+02:11.440 --> 02:13.630
+I can look at this object right here and understand.
+
+02:13.630 --> 02:15.760
+Oh, horsepower, 400.
+
+02:15.760 --> 02:16.510
+Got it.
+
+02:16.600 --> 02:22.840
+And then for weights, this is the weight of maybe a car in pounds, £3,354.
+
+02:23.110 --> 02:29.170
+So when we make use of an object to model a record, it's really clear what we are working with at one
+
+02:29.170 --> 02:30.010
+glance.
+
+02:30.010 --> 02:34.900
+But when we are working at the tuple much harder to understand exactly what is going on at a glance.
+
+02:35.580 --> 02:41.340
+So honestly, I think that in general, any time we want to model a record or record it in our application,
+
+02:41.340 --> 02:46.440
+somehow we're going to stick with a JavaScript convention of reaching for an object as opposed to a
+
+02:46.440 --> 02:46.980
+tuple.
+
+02:47.490 --> 02:52.200
+Now, like I said, there are some corner cases where we might want to use this in some types of applications,
+
+02:52.200 --> 02:55.020
+and we will see an example of it later on inside this course.
+
+02:55.050 --> 02:59.010
+Actually, it's one of the first two or three applications we're going to work on.
+
+02:59.850 --> 03:00.120
+All right.
+
+03:00.120 --> 03:03.150
+So I'm sorry to teach you about tuples and then say, hey, we're never going to use them.
+
+03:03.150 --> 03:10.110
+But nonetheless, it is a feature of TypeScript that is very prominently kind of featured in the official
+
+03:10.110 --> 03:10.980
+documentation.
+
+03:10.980 --> 03:15.450
+So I just want to make sure you have at least a passing idea of what these couple things are all about.
+
+03:15.780 --> 03:19.740
+So let's take a quick pause right here, and we're going to move on to our next topic in the next video.

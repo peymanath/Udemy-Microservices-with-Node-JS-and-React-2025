@@ -1,0 +1,220 @@
+WEBVTT
+
+00:01.210 --> 00:04.430
+In the last video we got our application working on our local machine.
+
+00:04.430 --> 00:07.420
+So remember, we're normally not going to run this on our local machine.
+
+00:07.430 --> 00:09.710
+We just did it very quickly for testing purposes.
+
+00:10.160 --> 00:13.970
+The other thing I want to mention very quickly is that we created two different component files and
+
+00:13.970 --> 00:17.090
+we wrote them out as playing JavaScript, not TypeScript.
+
+00:17.360 --> 00:19.730
+Next JS has support for TypeScript.
+
+00:19.760 --> 00:25.640
+However, if we use it on this particular application, we would essentially be losing more than we
+
+00:25.640 --> 00:26.530
+would be gaining.
+
+00:26.540 --> 00:31.070
+So the React application we're building here is simple enough that using TypeScript would not really
+
+00:31.070 --> 00:36.050
+give us a lot of benefits, but we would have to add in a lot more extra effort to annotate a ton of
+
+00:36.050 --> 00:37.490
+types that are floating around.
+
+00:37.700 --> 00:41.930
+In particular, we have to add in a lot of annotations for next JS.
+
+00:41.930 --> 00:45.950
+And so to be honest with you, if we use TypeScript here, we would spend a decent amount of time just
+
+00:45.950 --> 00:48.740
+trying to tell TypeScript about what was going on with next.
+
+00:48.740 --> 00:51.890
+And that's not really a super great use of time inside this course.
+
+00:51.890 --> 00:54.780
+So we're just going to keep it simple and use JavaScript instead.
+
+00:54.800 --> 00:58.340
+We are still going to use TypeScript on all the backend services, however.
+
+00:59.090 --> 00:59.450
+All right.
+
+00:59.450 --> 01:04.070
+So with that quick disclaimer out of the way, we're going to focus in this video on making sure that
+
+01:04.070 --> 01:08.120
+we can run our next application inside of our Kubernetes cluster.
+
+01:08.450 --> 01:13.640
+So to do so, we need to make sure that we can build an image out of this client project.
+
+01:13.760 --> 01:15.140
+We're going to set up a.
+
+01:16.100 --> 01:21.140
+Deployment file inside of our info case directory and a couple other odds and ends here and there.
+
+01:21.650 --> 01:25.940
+Let's first get started by making sure that we can build an image out of this client project.
+
+01:25.970 --> 01:29.870
+Remember, any time we want to build an image, we create a Docker file.
+
+01:30.080 --> 01:34.040
+So inside that client directory, I'm going to make a new file called Docker File.
+
+01:34.520 --> 01:36.230
+Don't forget the capital D on there.
+
+01:37.570 --> 01:41.890
+And then inside of here, we're going to write out some configuration or some steps very similar to
+
+01:41.890 --> 01:45.730
+the one we did back over here for our ticketing application.
+
+01:47.150 --> 01:48.770
+Or something for the auth service.
+
+01:49.910 --> 01:52.940
+So we're going to write out from Node Alpine.
+
+01:53.600 --> 01:56.210
+We'll set up a working directory of slash app.
+
+01:57.520 --> 02:00.940
+We will copy over the package json file.
+
+02:01.700 --> 02:03.380
+Into the working directory.
+
+02:03.380 --> 02:04.850
+So don't forget the dot right there.
+
+02:05.580 --> 02:07.740
+We will then run npm install.
+
+02:08.940 --> 02:12.510
+We will copy over everything else inside of our source directory.
+
+02:14.040 --> 02:15.090
+And then finally.
+
+02:15.950 --> 02:23.030
+We'll set up a default command to run whenever a container is created out of this image of npm run dev.
+
+02:24.730 --> 02:26.830
+Well, then save the soccer file and close it.
+
+02:28.920 --> 02:29.280
+All right.
+
+02:29.280 --> 02:33.480
+After that, we're going to also create a Docker ignore file inside the client folder as well.
+
+02:33.510 --> 02:37.410
+Because remember, whenever we are building this image, we really do not want to include that node
+
+02:37.410 --> 02:38.390
+module's directory.
+
+02:38.400 --> 02:42.180
+Instead, we want the image to build up its own set of dependencies on its own.
+
+02:42.570 --> 02:44.850
+We're also going to list out this dot next folder.
+
+02:44.850 --> 02:46.470
+You and I did not create that folder.
+
+02:46.470 --> 02:51.510
+Instead, it was created automatically by next when we started up the server on our local machine.
+
+02:52.630 --> 02:56.300
+So inside this client folder, I'm going to make a new file called Dot.
+
+02:56.320 --> 02:58.360
+Do not forget the leading dot on here.
+
+02:58.420 --> 02:59.860
+Docker ignore.
+
+03:00.750 --> 03:05.820
+And then inside there, I'm going to list out Node modules and Dot next.
+
+03:07.130 --> 03:09.260
+Well, then save this and close the file.
+
+03:11.040 --> 03:15.180
+Now just to make sure that we wrote out the Docker file and the Docker ignore file correctly, I would
+
+03:15.180 --> 03:18.930
+like to try to build out this image one time on our local machine manually.
+
+03:19.530 --> 03:24.810
+If you are using Kubernetes through Google Cloud, as I showed you how to set that up much earlier and
+
+03:24.810 --> 03:29.040
+set this course, you do not have to do this little test build that we're about to run.
+
+03:29.040 --> 03:34.500
+So again, if you are running Kubernetes on Google Cloud, you don't have to do this little test.
+
+03:35.410 --> 03:39.190
+Otherwise, if you are running Kubernetes locally, let's flip on over to our terminal.
+
+03:39.370 --> 03:42.760
+I'm going to find the window that I was running next JSON from the last video.
+
+03:43.120 --> 03:44.830
+I'm going to stop that development server.
+
+03:45.310 --> 03:47.680
+I'm going to make sure I'm still inside the client directory.
+
+03:48.460 --> 03:50.350
+And then I'll do a Docker build.
+
+03:50.800 --> 03:59.110
+I'll tag it as my Docker ID slash client and specify the current directory as the context for the build.
+
+04:00.780 --> 04:01.110
+All right.
+
+04:01.110 --> 04:06.660
+So it looks like everything was sent over correctly, or I should say the package JSON file was we're
+
+04:06.660 --> 04:11.310
+installing a couple of dependencies and after that, the image should successfully be built.
+
+04:11.760 --> 04:12.870
+Okay, so good start.
+
+04:13.230 --> 04:14.610
+I'm going to take a pause right here.
+
+04:14.610 --> 04:15.810
+We'll come back to the next video.
+
+04:15.810 --> 04:22.980
+We'll make sure the image was built successfully and we'll start to set up a brand new config file to
+
+04:22.980 --> 04:24.630
+deploy this next application.
+
+04:24.660 --> 04:27.840
+And we'll also make a quick change to our scaffold config file as well.

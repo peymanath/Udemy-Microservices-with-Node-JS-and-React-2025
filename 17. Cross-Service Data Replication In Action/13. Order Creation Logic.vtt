@@ -1,0 +1,277 @@
+WEBVTT
+
+00:01.530 --> 00:06.390
+We've got our data layer put together, which means we can now go back over to our new route handler,
+
+00:06.390 --> 00:10.050
+the one we were working on just a little bit ago, and start to put this implementation together.
+
+00:10.410 --> 00:14.190
+So inside of my new route handler at the very top, I'm going to import those two models that we just
+
+00:14.190 --> 00:14.850
+created.
+
+00:15.240 --> 00:19.650
+So I'm going to get tickets from up one directory models ticket.
+
+00:21.910 --> 00:25.480
+An order from up one directory models order.
+
+00:26.630 --> 00:31.610
+So now we've got the ability to potentially fetch a ticket out of our database and potentially save
+
+00:31.610 --> 00:32.810
+a order as well.
+
+00:34.580 --> 00:36.500
+So now let's go down to our handler.
+
+00:36.530 --> 00:40.190
+The first thing we're going to do inside of here is write out a couple of comments and really think
+
+00:40.190 --> 00:42.740
+about what logic we need to implement inside of here.
+
+00:42.830 --> 00:47.990
+So this is really going to require us to deeply understand what this application is all about.
+
+00:48.230 --> 00:52.400
+So as a quick reminder, the whole idea here is that we want to be able to create an order associate
+
+00:52.410 --> 00:55.400
+with a ticket that has already been created inside the database.
+
+00:55.580 --> 00:59.720
+And we also want to make sure that order will expire after 15 minutes.
+
+00:59.720 --> 01:03.440
+So we make sure need to make sure we set that expires at flag as well.
+
+01:03.950 --> 01:08.090
+So with all this in mind, let's write out a couple of different comments just to guide ourselves.
+
+01:08.510 --> 01:17.090
+The first thing I have to do inside of here is find the ticket the user is trying to order in the database.
+
+01:18.600 --> 01:23.430
+So when we try to find the ticket that the user trying to order, if we fail to find it for some reason,
+
+01:23.430 --> 01:25.740
+then potentially the ticket has already been purchased.
+
+01:25.740 --> 01:27.330
+Maybe the ticket has been deleted.
+
+01:27.330 --> 01:32.580
+Maybe the user for some reason crafted a malicious request to try to buy a ticket that doesn't exist
+
+01:32.580 --> 01:33.780
+for some crazy reason.
+
+01:33.930 --> 01:38.400
+So if we fail to find the ticket that the user is trying to purchase, we're going to want to definitely
+
+01:38.400 --> 01:40.230
+return some kind of air immediately.
+
+01:41.690 --> 01:45.380
+After that we need to make sure that this ticket.
+
+01:46.290 --> 01:48.780
+Is not already reserved.
+
+01:49.690 --> 01:54.310
+So the entire idea here with reserving a ticket for 15 minutes is that we're kind of planning around
+
+01:54.310 --> 01:58.570
+the idea of our application, getting a lot of traffic and a lot of people trying to buy the same tickets
+
+01:58.570 --> 01:59.890
+at the same point in time.
+
+02:00.280 --> 02:06.190
+So in just 1/2 of time, in other words, in the instant of time, we can kind of imagine that we might
+
+02:06.190 --> 02:11.680
+get ten different requests of a bunch of users, all trying to reserve the exact same ticket.
+
+02:12.710 --> 02:17.390
+So we need to somehow make sure that this ticket is not already been reserved by someone else.
+
+02:17.390 --> 02:20.120
+Just finding the ticket inside the database is not enough.
+
+02:22.060 --> 02:25.810
+Once we have done these two steps right here, we're then going to.
+
+02:26.520 --> 02:30.450
+Calculate an expiration date for this order.
+
+02:31.360 --> 02:34.900
+So as I mentioned, we're going to assume that the order has 15 minutes to pay.
+
+02:34.930 --> 02:40.030
+After that, the ticket will essentially go unlocked and the order will enter a canceled state.
+
+02:40.540 --> 02:42.460
+That 15 minutes is entirely arbitrary.
+
+02:42.460 --> 02:44.320
+Of course, we can make it 15 seconds.
+
+02:44.320 --> 02:45.790
+We can make it 15 days.
+
+02:45.790 --> 02:46.960
+It really doesn't matter.
+
+02:46.960 --> 02:51.130
+We're going to make it a very easy to change variable, but we do have to make sure that at some point
+
+02:51.130 --> 02:54.070
+in time we calculate when that expiration date occurs.
+
+02:54.070 --> 02:55.420
+So we're going to do that inside of here.
+
+02:57.400 --> 03:02.080
+Then after that, assuming we get past all these checks, we calculate that expiration date, then we'll
+
+03:02.080 --> 03:07.840
+finally go ahead and build the order and save it to the database.
+
+03:08.790 --> 03:12.120
+And then immediately after that, we definitely are going to want to tell the rest of our application
+
+03:12.120 --> 03:17.310
+that in order has just been created, we definitely need to think through what other services need to
+
+03:17.310 --> 03:20.970
+know that order has been created, so we'll have to do a little bit of research or thinking on that
+
+03:20.970 --> 03:21.390
+front.
+
+03:21.390 --> 03:25.470
+But chances are right now we can definitely assume that, well, we need to tell the rest of our application
+
+03:25.470 --> 03:26.670
+that order was created.
+
+03:26.670 --> 03:34.530
+We'll say publish an event saying that an order was created and remember publishing an event or creating
+
+03:34.530 --> 03:35.250
+a new event.
+
+03:35.250 --> 03:39.150
+We don't have any infrastructure right now to say that a order was created.
+
+03:39.150 --> 03:43.590
+The only kind of events we have are listed out inside of our common module, specifically inside of
+
+03:43.590 --> 03:44.820
+that event's directory.
+
+03:45.030 --> 03:49.020
+So right now the only two events we have are ticket created and ticket updated.
+
+03:49.320 --> 03:52.680
+So for this last step right here, we will definitely once again have to go back over to our common
+
+03:52.680 --> 03:55.080
+module and create these new types of events.
+
+03:55.080 --> 03:57.000
+Something to say, hey, the order was created.
+
+03:58.610 --> 04:02.690
+And then after we create that event, of course, we'll also have to define a publisher inside of our
+
+04:02.690 --> 04:03.680
+orders project.
+
+04:03.980 --> 04:06.830
+So there really is a lot of stuff going on inside of here.
+
+04:07.040 --> 04:08.230
+Let's get started right away.
+
+04:08.240 --> 04:10.120
+So we're going to go through this first step right here.
+
+04:10.130 --> 04:13.940
+We're going to try to find the ticket that the user is trying to order inside of our database.
+
+04:15.680 --> 04:16.700
+On the line right above it.
+
+04:16.700 --> 04:20.690
+I'm going to take a look at the incoming request body and I'm going to pull off the ID of the ticket
+
+04:20.690 --> 04:22.310
+that the user is trying to order.
+
+04:22.760 --> 04:27.110
+So I'll do a ticket ID coming from wrecked body.
+
+04:30.970 --> 04:33.920
+So let's go ahead and then try to find that ticket inside the database.
+
+04:33.940 --> 04:37.360
+This is going to be a very standard MongoDB or Mongoose query.
+
+04:37.630 --> 04:43.810
+So we'll do a ticket is a weight ticket, find buy ID and we'll pass in the ID.
+
+04:48.930 --> 04:53.130
+So now when we do this, fine by ID, we're going to either get our ticket or not a ticket.
+
+04:53.130 --> 04:57.900
+So this might possibly be a value of null if we were not able to find an ID with the one that the user
+
+04:57.900 --> 04:58.720
+just provided.
+
+04:58.740 --> 05:01.830
+So we need to make sure that we handle the case in which no ticket was found.
+
+05:02.220 --> 05:04.470
+So let's say if there is not a ticket.
+
+05:05.150 --> 05:08.360
+Now let's throw a new not found air.
+
+05:08.570 --> 05:11.060
+Remember, this is one of those custom areas we put together.
+
+05:11.740 --> 05:17.050
+If we throw this air, then our air handling middleware will automatically capture it, turn a response
+
+05:17.050 --> 05:19.390
+into a 404 and send it back to the user.
+
+05:20.130 --> 05:23.130
+We do need to make sure that we import that type into our file, however.
+
+05:23.130 --> 05:24.900
+So let's go back up to the top very quickly.
+
+05:24.900 --> 05:26.370
+Find our common module.
+
+05:27.140 --> 05:29.570
+An import not found air.
+
+05:35.950 --> 05:36.080
+Now.
+
+05:36.100 --> 05:40.160
+I don't want this video to run too long as well as we normally do.
+
+05:40.180 --> 05:41.850
+So let's now take a pause right here.
+
+05:41.860 --> 05:45.280
+We'll come back and start to implement everything else inside of here in just a moment.

@@ -1,0 +1,235 @@
+WEBVTT
+
+00:00.880 --> 00:04.660
+In this video, we're going to write out just a little bit of code to get a better idea of what's going
+
+00:04.660 --> 00:05.740
+on with these types.
+
+00:05.770 --> 00:09.640
+Now, this first little bit of code that we're going to write around types is going to be really simple
+
+00:09.640 --> 00:13.600
+and straightforward just to kind of hammer home some of the concepts that we've been talking about.
+
+00:13.960 --> 00:17.980
+But on some of the other examples or other topics that we're going to discuss very shortly, we're going
+
+00:17.980 --> 00:20.150
+to write out much more complete code snippets.
+
+00:20.200 --> 00:21.910
+So anyways, let's get started.
+
+00:22.210 --> 00:24.640
+I'm going to begin by flipping on over to my code editor.
+
+00:25.350 --> 00:27.870
+I'm still inside of my fetched JSON directory.
+
+00:28.080 --> 00:31.590
+I'm going to change out into my workspace folder and then side up here.
+
+00:31.590 --> 00:35.790
+I'm going to make a new project directory to hold all these different code snippets we're going to put
+
+00:35.790 --> 00:38.820
+together as we're going through some basic features of TypeScript.
+
+00:39.150 --> 00:42.570
+So I'm going to make a new directory here called Features.
+
+00:43.510 --> 00:47.950
+I'll then change into that directory and then I'll open up my code editor inside there.
+
+00:49.740 --> 00:54.570
+Once my editor is open and then going to make a new file and I'm just going to call it typists.
+
+00:54.600 --> 00:59.190
+So like I said, I just want to write out one or two quick snippets of code just to get a better idea
+
+00:59.190 --> 01:00.090
+of what's going on.
+
+01:01.290 --> 01:06.720
+So I want you to remember that the entire idea behind this type system is that it is an easy way for
+
+01:06.720 --> 01:10.560
+us to refer to the different properties and functions that a value has.
+
+01:11.040 --> 01:16.080
+In addition, every value, everything that we can assign to a variable has a type.
+
+01:16.680 --> 01:21.120
+So to get started, I'm going to flip back over to my code editor and I want to just try creating a
+
+01:21.120 --> 01:24.720
+variable that's going to point to an instance of a date object.
+
+01:24.930 --> 01:28.950
+So I'll say const today is going to be new date like so.
+
+01:29.640 --> 01:36.060
+If I hover over that variable, my editor will then tell me the type of value that this variable is
+
+01:36.060 --> 01:36.770
+pointing at.
+
+01:36.780 --> 01:41.580
+So this is saying that the today variable is pointing at an object of type date.
+
+01:42.390 --> 01:47.580
+TypeScript can now use that information to decide exactly what we can do with that variable.
+
+01:47.970 --> 01:53.670
+So, for example, if I put down today and then a dot, I see my autocomplete pop up right here.
+
+01:54.210 --> 01:58.710
+This is listing out all the different functions and properties that a date object has.
+
+01:59.760 --> 02:05.730
+TypeScript only knows to show this information right here because it has an internal definition of exactly
+
+02:05.730 --> 02:07.020
+what a date is.
+
+02:07.260 --> 02:11.670
+In other words, TypeScript knows the properties and methods that a date has, so it can print them
+
+02:11.670 --> 02:12.960
+up in this list right here.
+
+02:13.640 --> 02:16.190
+And I can easily select one and call it like so.
+
+02:16.960 --> 02:21.760
+And then, as we saw just a moment ago, because TypeScript knows what methods a date has and what properties
+
+02:21.760 --> 02:26.980
+it has, if we try to reference one that doesn't exist, we will very quickly get an error message.
+
+02:27.160 --> 02:28.940
+So that's the whole point of types.
+
+02:28.960 --> 02:35.110
+It is a shortcut to say here are the different properties and methods that this value right here has.
+
+02:36.620 --> 02:36.890
+Okay.
+
+02:36.890 --> 02:40.820
+So that's an example of looking at the type that a date object brings up.
+
+02:40.850 --> 02:43.950
+Let's now try creating a plain JavaScript object.
+
+02:43.970 --> 02:46.070
+So let's say something like const person.
+
+02:46.810 --> 02:48.640
+Is going to be an object like so.
+
+02:48.670 --> 02:51.580
+And I'll give this person, how about like just an age of 20?
+
+02:52.240 --> 02:58.090
+If I now hover over that person variable, I'll see a person or person excuse me.
+
+02:58.090 --> 03:03.670
+And then right after that, in this case, I don't get a nice name for the type because I've not actually
+
+03:03.670 --> 03:10.690
+given this object right here, a name, a shortened name, so we can kind of see our definition.
+
+03:10.690 --> 03:13.030
+That of a type kind of holds up here.
+
+03:13.210 --> 03:19.000
+If we don't have a shortened definition of what this object is, then TypeScript is just going to default
+
+03:19.000 --> 03:23.530
+to printing out all the different properties and methods that the object has.
+
+03:23.530 --> 03:26.200
+So in this case, it has just an age that is a number.
+
+03:27.130 --> 03:32.080
+And once again, if we try to reference some property on that variable that doesn't actually exist,
+
+03:32.560 --> 03:34.030
+we're going to get an error message.
+
+03:35.430 --> 03:35.660
+Okay.
+
+03:35.670 --> 03:37.260
+Just one more quick example here.
+
+03:37.770 --> 03:40.350
+So down here, I'm going to try to create a class.
+
+03:40.380 --> 03:41.490
+I'll call it color.
+
+03:41.700 --> 03:43.470
+I'm not going to give it any implementation.
+
+03:43.890 --> 03:46.440
+Now, even if you don't know what a class is, that's totally fine.
+
+03:46.440 --> 03:49.140
+We're going to go into great detail on classes later on.
+
+03:50.510 --> 03:53.530
+I can now use this class to make a new instance of a color.
+
+03:53.540 --> 03:57.860
+So I'll say like say red is new color like so.
+
+03:58.550 --> 04:00.490
+And now, just as we've seen twice before.
+
+04:00.500 --> 04:06.140
+Now, if I hover over read, TypeScript knows that this variable is pointing at an object that is of
+
+04:06.140 --> 04:06.950
+type color.
+
+04:07.220 --> 04:12.020
+That means that this variable right here has access to all the properties and all the methods that a
+
+04:12.020 --> 04:13.430
+color object has.
+
+04:13.820 --> 04:17.420
+In this case, none, because we haven't actually implemented anything here.
+
+04:17.540 --> 04:20.630
+And we can see that if we write out a red and then dot like.
+
+04:20.630 --> 04:24.830
+So there are no properties associated with this class of color.
+
+04:24.830 --> 04:27.020
+So we don't get any autocomplete whatsoever.
+
+04:27.050 --> 04:31.610
+And if I try to reference anything as usual, I'll get a very quick error message here as well.
+
+04:32.910 --> 04:33.420
+Okay.
+
+04:33.450 --> 04:36.660
+So that's just a couple of quick example examples of types.
+
+04:36.660 --> 04:38.220
+So let's take a quick pause right here.
+
+04:38.220 --> 04:43.530
+We're going to wrap up this idea of types with a quick discussion, really quick, I promise, on where
+
+04:43.530 --> 04:46.140
+we're going to use types in a normal project.
+
+04:46.140 --> 04:48.390
+So quick pause and I'll see you in just a minute.

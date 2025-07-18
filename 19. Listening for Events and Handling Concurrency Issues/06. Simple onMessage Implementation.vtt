@@ -1,0 +1,118 @@
+WEBVTT
+
+00:01.130 --> 00:04.350
+We're now going to start to work on the implementation of the on message function.
+
+00:04.370 --> 00:09.200
+Let's first begin by getting a quick reminder of what we really need to do with a ticket created event
+
+00:09.200 --> 00:10.760
+inside of our order service.
+
+00:11.860 --> 00:12.250
+All right.
+
+00:12.250 --> 00:14.230
+So you might recall looking at this diagram right here.
+
+00:14.770 --> 00:17.890
+So we've got the ticket created event coming over to the order service.
+
+00:18.040 --> 00:22.300
+The reason we are listing for this event inside of Order Service is so we can take the information about
+
+00:22.300 --> 00:26.380
+this ticket that was just created and save it in a local tickets collection.
+
+00:26.650 --> 00:30.190
+This is a classic example of data replication between different services.
+
+00:30.220 --> 00:35.170
+We are saving this information about this ticket so that when the order service needs to know some details
+
+00:35.170 --> 00:40.300
+about a ticket, it does not have to do synchronous communication over to the ticket service to learn
+
+00:40.300 --> 00:42.490
+about the different tickets that are available.
+
+00:42.850 --> 00:47.620
+So all we really need to do here is pull off some information about the ticket that was just created
+
+00:47.620 --> 00:50.130
+and save it to our local tickets collection.
+
+00:50.140 --> 00:50.710
+That's it.
+
+00:51.470 --> 00:54.650
+So back inside of our editor, we'll find the on message function.
+
+00:56.060 --> 00:58.910
+We're going to take a look at that data object right there.
+
+00:59.030 --> 01:04.300
+The only properties we really want to persist inside of our order service is title and price.
+
+01:04.310 --> 01:09.620
+And you might recall that by looking at our ticket model inside the order service, again, the only
+
+01:09.620 --> 01:11.960
+thing we really care about right now is title and price.
+
+01:12.740 --> 01:14.300
+So we are going to pull off.
+
+01:15.340 --> 01:18.130
+Title and price from data.
+
+01:19.120 --> 01:21.550
+Well, then use that to build a new ticket.
+
+01:26.370 --> 01:27.420
+And then save it.
+
+01:27.420 --> 01:32.430
+So we'll do an a weight ticket save because we are using the keyword.
+
+01:32.430 --> 01:35.250
+Let's make sure we mark the enclosing function as async.
+
+01:37.800 --> 01:42.300
+And then assuming that all these steps go as expected and that we don't have any air, we're then going
+
+01:42.300 --> 01:44.000
+to want to act that message.
+
+01:44.010 --> 01:47.820
+Remember, when we act, the message that tells not streaming server that we have processed this thing
+
+01:47.820 --> 01:48.960
+and we are good to go.
+
+01:49.110 --> 01:52.950
+So at the very bottom we will do a message dot ec like so.
+
+01:54.350 --> 01:57.080
+Well, that is pretty much it for our first on message function.
+
+01:57.080 --> 01:59.600
+Pretty straightforward now, unfortunately.
+
+02:00.050 --> 02:02.090
+Well, you know how life is.
+
+02:02.120 --> 02:06.080
+Turns out that even though this looks really simple and it looks like everything will work as expected,
+
+02:06.080 --> 02:08.600
+we've got some big issues inside of here.
+
+02:08.720 --> 02:10.280
+So let's take a quick pause right now.
+
+02:10.310 --> 02:14.180
+When we come back, the next video I want to mention the first big issue that we're going to run into
+
+02:14.180 --> 02:17.450
+if we continue with this implementation that we see currently.

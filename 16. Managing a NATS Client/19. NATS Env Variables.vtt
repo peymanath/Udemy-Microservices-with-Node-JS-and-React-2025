@@ -1,0 +1,391 @@
+WEBVTT
+
+00:00.980 --> 00:04.710
+You have spent a very long time on our ticket service and we are almost done with it.
+
+00:04.730 --> 00:06.810
+Just one last thing here.
+
+00:06.830 --> 00:08.960
+I think maybe one more last thing after this.
+
+00:08.960 --> 00:09.570
+We'll see.
+
+00:09.590 --> 00:15.380
+Anyways, right now in my tickets service, I'm going to find CRC and then inside their indexes.
+
+00:15.890 --> 00:21.290
+So inside of indexes, before we start up our express application, you'll recall that we connect through
+
+00:21.290 --> 00:28.940
+the net client and we provide a hardcoded cluster ID right there, a hardcoded client ID and a hardcoded
+
+00:28.940 --> 00:30.770
+URL for our net server as well.
+
+00:31.130 --> 00:35.900
+We went through a decent amount of effort to extract some hardcoded connection variables and whatnot
+
+00:35.900 --> 00:40.700
+into environment variables for our JWT key and the Mongo URI as well.
+
+00:40.700 --> 00:46.730
+So I think we should do something very similar for the cluster ID, client ID and the URL for nets.
+
+00:47.030 --> 00:50.270
+This is just going to make sure that if we ever want to change those settings, it's going to be a lot
+
+00:50.270 --> 00:55.580
+easier to modify an environment variable inside of a config file, then updating our actual source code.
+
+00:56.360 --> 01:02.540
+So let's try to define a couple more environment variables inside of our ticketing deployment file.
+
+01:02.960 --> 01:07.460
+I'm going to find my infra directory and then inside there I'll find my tickets.
+
+01:07.460 --> 01:08.300
+Deployment file.
+
+01:08.330 --> 01:09.200
+Here it is right here.
+
+01:10.890 --> 01:16.350
+So this is where we had previously specified the Mongo URI and JSON web token key environment variables.
+
+01:16.650 --> 01:19.320
+So we're going to add on three more environment variables right here.
+
+01:19.410 --> 01:24.540
+One for our cluster ID, one for the client ID and one for the URL.
+
+01:25.080 --> 01:29.110
+We're going to focus first on the cluster ID and the URL and then we'll take care of the client ID third,
+
+01:29.190 --> 01:31.680
+because that's going to be kind of a special little case.
+
+01:32.500 --> 01:35.200
+So inside the deployment file, I'm going to add in a name.
+
+01:36.180 --> 01:38.040
+Of Nets, Earl.
+
+01:38.730 --> 01:43.340
+And a value of http nets.
+
+01:43.380 --> 01:45.810
+CRV port or two, two, two.
+
+01:46.910 --> 01:48.440
+Next up, I'll put in a name.
+
+01:49.700 --> 01:51.110
+Of Nats.
+
+01:51.530 --> 01:52.310
+Luster.
+
+01:53.000 --> 01:53.660
+ID.
+
+01:54.780 --> 01:56.780
+And the value for this is ticketing.
+
+01:56.790 --> 01:58.530
+We don't actually need quotes on that one.
+
+02:00.580 --> 02:01.750
+All right, so that looks good.
+
+02:02.090 --> 02:03.550
+Now, what about the client ID?
+
+02:03.580 --> 02:05.860
+The client ID is kind of a special case.
+
+02:06.070 --> 02:10.780
+The client ID, remember, needs to be unique for every client that we have connecting to nets.
+
+02:10.930 --> 02:16.240
+So we cannot really have a hardcoded value right here if we expect to be running multiple copies of
+
+02:16.240 --> 02:17.590
+our tickets service.
+
+02:18.250 --> 02:20.770
+The same is true of our deployment file as well.
+
+02:20.770 --> 02:25.180
+We cannot put a hardcoded value inside of here because if we want to run multiple copies of the ticket
+
+02:25.180 --> 02:29.290
+service, they will all try to use that same hardcoded client ID value.
+
+02:29.830 --> 02:34.390
+What we had done previously back on our little test project was to just randomly generate a string and
+
+02:34.390 --> 02:35.350
+throw it inside there.
+
+02:35.710 --> 02:39.670
+That is definitely an option, but I think there might be a better solution here.
+
+02:39.700 --> 02:43.000
+Let me tell you why a random string is not the best thing for a client ID.
+
+02:44.110 --> 02:48.790
+At some point in time, the future, we might want to take a look at the logs on our NAT server to take
+
+02:48.790 --> 02:53.290
+a look at the Nats deployment, take a look at the logs and take a look at the different clients that
+
+02:53.290 --> 02:54.880
+have connected to it over time.
+
+02:55.180 --> 03:00.910
+When we look at all those client IDs, according to Nats, it would be really nice if we could somehow
+
+03:00.910 --> 03:06.160
+match up the ID of each client to an actual run copy of our ticket services.
+
+03:06.400 --> 03:10.960
+So in other words, I kind of want to know where each copy of my ticket service that is connected to
+
+03:10.960 --> 03:17.110
+Nats, what each of those is doing and that's easiest to do if we have some meaningful value inside
+
+03:17.110 --> 03:21.430
+of here for the client ID as opposed to a just completely randomly generated value.
+
+03:22.220 --> 03:27.260
+So how can we get a unique value inside of here that we can use to somehow tie back to each copy of
+
+03:27.260 --> 03:28.640
+the ticket service we are running?
+
+03:28.940 --> 03:33.740
+Well, let's go over to our terminal run command and I'll show you something that would be very effective
+
+03:33.740 --> 03:34.640
+for this purpose.
+
+03:35.330 --> 03:36.590
+So at my terminal, I'm going to do a queue.
+
+03:36.780 --> 03:41.900
+It'll get pods, and I'll see that I've got my running tickets service right there.
+
+03:42.500 --> 03:47.540
+So the name of this pod is unique, and I would never expect to have two pods that are running the ticket
+
+03:47.540 --> 03:49.580
+service with identical names.
+
+03:50.120 --> 03:56.450
+And what's more, if this name right here shows up as an ID inside of my net's logs, I can very easily
+
+03:56.450 --> 04:01.820
+take a look at that ID and say, Oh, well, the client that is connecting with this ID must be this
+
+04:01.820 --> 04:02.690
+pod right here.
+
+04:03.140 --> 04:09.590
+So I think it'd be really nice if we could figure out some way to use the name of a pod as our client
+
+04:09.620 --> 04:10.160
+ID.
+
+04:10.700 --> 04:11.600
+How do we do that?
+
+04:11.840 --> 04:14.390
+Well, back inside of our deployment file, of course.
+
+04:15.020 --> 04:18.530
+Inside of my ticket's deployment file, inside of our end section.
+
+04:18.530 --> 04:21.230
+Once again, I'm going to put in another entry here.
+
+04:21.560 --> 04:25.010
+I'm going to provide a Nats client ID.
+
+04:26.420 --> 04:32.270
+And then for the value right here, we need to somehow tell Kubernetes that we want to take the pods,
+
+04:32.420 --> 04:38.090
+like the pods name, which is randomly generated and use it as the value right here.
+
+04:38.900 --> 04:43.670
+To do so rather than writing out a value we're going to put in value from.
+
+04:44.540 --> 04:50.930
+Then the field ref and then field eth metadata name.
+
+04:53.190 --> 04:57.870
+So now whenever we create a pod to run the ticket service, Kubernetes is going to take a look at the
+
+04:57.870 --> 05:03.570
+Pods name and provide it as an environment variable inside of our container called Nat's client ID.
+
+05:03.810 --> 05:06.420
+And so we could use that it is going to be randomly generated.
+
+05:06.420 --> 05:12.300
+It will be unique, but it also identifies this client inside of some Nats logs or what have you back
+
+05:12.300 --> 05:14.730
+to the actual pod that is running our ticket service.
+
+05:15.590 --> 05:17.690
+But I think that this is a pretty good solution.
+
+05:18.480 --> 05:18.780
+All right.
+
+05:18.780 --> 05:22.050
+So now that we've got all these environment variables, I'm going to save this config file.
+
+05:22.410 --> 05:26.970
+Well, then go back over to indexes and we're going to make sure that we pass into those environment
+
+05:26.970 --> 05:29.730
+variables for the connect statement right here.
+
+05:30.590 --> 05:34.400
+Now once again, remember, TypeScript wants us to make sure that these environment variables actually
+
+05:34.400 --> 05:34.910
+exist.
+
+05:34.910 --> 05:37.760
+So we do have to do some additional checks very similar to these.
+
+05:38.480 --> 05:43.100
+I'm going to copy the Mongo Uri one and paste it down three times.
+
+05:45.620 --> 05:50.030
+And then I'll write out inside of these three copy pasted statements, a check for it, and that's client
+
+05:50.030 --> 05:52.400
+ID, Nats URL, and that's cluster ID.
+
+05:52.850 --> 05:56.960
+So for the first one, here's the first copy of Mongo Uri.
+
+05:56.990 --> 06:00.140
+I'm going to change EMV to Nets client ID.
+
+06:00.290 --> 06:03.110
+I'll change the error right there as well to nets client ID.
+
+06:03.930 --> 06:07.500
+Then I'll go manually to Nat's underscore URL.
+
+06:08.510 --> 06:11.570
+And then the last one was cluster ID.
+
+06:14.010 --> 06:19.230
+So mango your eye on the left or right here to cluster ID make sure that you still have MongoDB three
+
+06:19.260 --> 06:22.110
+and that's client ID, that's URL and that's cluster ID.
+
+06:23.190 --> 06:26.640
+So we can take those different environment variables and throw them into this connect statement.
+
+06:27.150 --> 06:34.590
+I'm going to delete the hardcoded values and replace them with process E and V net's cluster ID.
+
+06:36.790 --> 06:39.370
+Do some more copy pasting just to save myself some time.
+
+06:39.520 --> 06:42.130
+The next one is going to be our next client ID.
+
+06:44.410 --> 06:46.810
+And then finally, that's Earl.
+
+06:46.840 --> 06:47.440
+Like so.
+
+06:49.010 --> 06:51.500
+As usual, we should probably make sure this stuff is all working.
+
+06:51.500 --> 06:52.850
+So I'm going to save this file.
+
+06:53.180 --> 06:54.830
+I'll then go back over to my terminal.
+
+06:55.610 --> 06:59.630
+And I should see my ticket service still successfully connecting to Nats.
+
+06:59.660 --> 07:00.040
+Yep.
+
+07:00.050 --> 07:00.950
+Looks good to me.
+
+07:01.720 --> 07:02.170
+Cool.
+
+07:02.920 --> 07:03.220
+All right.
+
+07:03.220 --> 07:06.170
+So that is pretty much it for our ticket service.
+
+07:06.190 --> 07:08.020
+We have spent a very long time on this.
+
+07:08.560 --> 07:09.910
+There is still one or two things.
+
+07:09.910 --> 07:11.650
+We have to come back to this thing and take care of.
+
+07:11.680 --> 07:16.990
+You might recall that many years ago we had a discussion on concurrency and tracking the version of
+
+07:17.020 --> 07:20.530
+say like this ticket thing to make sure that we don't have concurrent updates.
+
+07:20.530 --> 07:23.800
+So we still have to come back and handle some stuff like that on our ticket model.
+
+07:24.040 --> 07:28.450
+We also are going to eventually come back and add in some listeners to this service as well once we
+
+07:28.450 --> 07:30.280
+have another service publishing events.
+
+07:30.430 --> 07:33.730
+But for right now that is pretty much it for our tickets service.
+
+07:34.270 --> 07:39.850
+Now I know we spent a crazy amount of time on this thing many, many hours, but this is a pretty rock
+
+07:39.850 --> 07:41.140
+solid service right now.
+
+07:41.440 --> 07:45.010
+So we're going to end up using this ticket service as kind of a base.
+
+07:45.010 --> 07:49.870
+We're going to more or less copy paste it, to be totally honest with you, over to our next service
+
+07:49.870 --> 07:50.920
+and use that as a base.
+
+07:50.920 --> 07:55.030
+And now that we understand how all this different stuff works, trust me, the next service we put together
+
+07:55.030 --> 07:56.680
+is going to be a lot faster.
+
+07:56.920 --> 07:59.650
+So pause right here and I'll see you in just a minute.

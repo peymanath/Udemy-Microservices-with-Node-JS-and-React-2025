@@ -1,0 +1,97 @@
+WEBVTT
+
+00:01.830 --> 00:05.710
+In this video, we're going to try to write out a test just to make sure that a user cannot sign up
+
+00:05.710 --> 00:07.320
+with the same email twice in a row.
+
+00:07.410 --> 00:09.960
+So I'm going to go back over to my sign up test file.
+
+00:10.170 --> 00:11.460
+I'm down at the very bottom.
+
+00:11.490 --> 00:18.390
+I'm going to write out a new IT block and I'll give it a description like it disallows duplicate emails.
+
+00:21.720 --> 00:26.760
+Then inside of here we'll attempt to sign up the same email and password combination twice in a row.
+
+00:26.970 --> 00:31.080
+The first request we will expect to give us back a response of 201.
+
+00:31.080 --> 00:35.250
+Which indicates that the signup was successful, as we did back up here.
+
+00:35.460 --> 00:37.890
+Well, then duplicate that request once again.
+
+00:37.890 --> 00:41.160
+And on the second request, we'll just expect to get back a 400.
+
+00:41.160 --> 00:45.690
+Because remember, if an email is already in use, we throw a bad request error, which is going to
+
+00:45.690 --> 00:49.410
+send a 200 or 400 code back to the user.
+
+00:50.420 --> 00:53.330
+So inside that new block will do and await.
+
+00:54.300 --> 00:59.400
+Request on app will make a post request to API users sign up.
+
+01:02.020 --> 01:08.020
+We will send along an email of test at test and a password of password.
+
+01:09.110 --> 01:11.090
+And then finally we'll put on an expectation.
+
+01:11.090 --> 01:14.840
+So in this case, again, for the first request, signup should be successful.
+
+01:14.840 --> 01:16.520
+So we should get back a 201.
+
+01:17.600 --> 01:19.490
+Now we can duplicate that.
+
+01:20.340 --> 01:20.940
+So copy.
+
+01:20.940 --> 01:21.810
+Paste it down.
+
+01:23.300 --> 01:28.490
+And then on the second one, all we're going to expect different is a response of 400 or a status code
+
+01:28.490 --> 01:29.330
+of 400.
+
+01:29.630 --> 01:31.130
+So I'll put in 400 instead.
+
+01:31.880 --> 01:32.870
+Let's save that.
+
+01:33.320 --> 01:34.310
+Check the terminal.
+
+01:36.010 --> 01:36.820
+Here's my test window.
+
+01:36.850 --> 01:37.510
+Here it is.
+
+01:38.020 --> 01:38.830
+Looks good.
+
+01:40.160 --> 01:40.520
+All right.
+
+01:40.520 --> 01:42.740
+There are a couple of more tests I'd like to put together very quickly.
+
+01:42.740 --> 01:45.710
+So quick pause, one or two more tests in the next video.

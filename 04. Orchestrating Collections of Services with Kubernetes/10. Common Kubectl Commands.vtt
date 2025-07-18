@@ -1,0 +1,268 @@
+WEBVTT
+
+00:00.950 --> 00:04.790
+You might recall a little bit ago when we were first talking about Docker, we introduced a couple of
+
+00:04.790 --> 00:06.400
+different, really important commands.
+
+00:06.410 --> 00:10.040
+So we spoke about, say, Docker, PS and exec and logs.
+
+00:10.040 --> 00:14.360
+And I had said that these were really important commands because when we started learning about Kubernetes,
+
+00:14.390 --> 00:17.900
+a lot of these commands translate directly into the Kubernetes world.
+
+00:18.050 --> 00:21.110
+Now we're going to see that in action in this diagram right here.
+
+00:21.110 --> 00:26.210
+I've got a couple of commands from the Docker world, and then they're equivalent over in the Kubernetes
+
+00:26.210 --> 00:26.720
+world.
+
+00:26.990 --> 00:30.860
+To remember Docker in general is just about running individual containers.
+
+00:31.040 --> 00:33.890
+Kubernetes is about running a bunch of containers together.
+
+00:34.310 --> 00:38.420
+Once we start making use of Kubernetes, we're not really going to use the Docker command line tool
+
+00:38.420 --> 00:39.320
+much anymore.
+
+00:39.320 --> 00:43.880
+Instead, we're going to use the command line tool that we use to interact with Kubernetes, which is
+
+00:43.880 --> 00:44.870
+Cube ETL.
+
+00:45.720 --> 00:50.070
+So just as we have a command to list out all of our running containers, we have something very similar
+
+00:50.070 --> 00:52.710
+in the Kubernetes world for listing out all of our different pods.
+
+00:53.160 --> 00:56.460
+We've got something in Docker for running a command inside of a container.
+
+00:56.490 --> 00:58.020
+Same thing for Kubernetes.
+
+00:58.020 --> 01:00.530
+We have something for printing out logs tied to a container.
+
+01:00.540 --> 01:01.910
+Same thing for Kubernetes.
+
+01:01.920 --> 01:04.770
+And then, of course, there's a couple of others that we need to be aware of as well.
+
+01:05.790 --> 01:09.180
+So in this video, we're going to very quickly run through all the commands you see right here.
+
+01:10.390 --> 01:13.540
+First I'm going to do is show you once again how we can create a pod.
+
+01:13.990 --> 01:16.630
+We do so by processing a config file.
+
+01:16.780 --> 01:18.760
+I know I'm not starting off at the very top.
+
+01:18.760 --> 01:21.310
+Let's just jump down here to the towards the bottom.
+
+01:21.640 --> 01:27.550
+So to process a config file and create all the pods designated inside there, we use cube, ctrl, apply
+
+01:27.940 --> 01:30.510
+F and then the name of the config file.
+
+01:30.520 --> 01:32.290
+So I'm going to do that again really quickly.
+
+01:33.340 --> 01:35.020
+Inside my AIDS directory.
+
+01:35.350 --> 01:42.850
+I'll do a little apply chef posts post HTML.
+
+01:43.980 --> 01:45.690
+And that's going to create the pot.
+
+01:46.450 --> 01:48.730
+I can then list out all the different pods with.
+
+01:49.240 --> 01:50.470
+It'll get pods.
+
+01:50.500 --> 01:51.640
+So I'll do that right now.
+
+01:53.470 --> 01:54.520
+There's the pod right there.
+
+01:54.520 --> 01:55.300
+It is running.
+
+01:57.080 --> 02:01.130
+I can run a command inside that pod by using a kettle exec.
+
+02:01.130 --> 02:01.970
+Dash it.
+
+02:02.000 --> 02:05.510
+Then the name of the pod and the command to execute inside their.
+
+02:06.530 --> 02:11.860
+So for example, we could start up a shell inside of a container that has been ran inside of a pod.
+
+02:11.870 --> 02:16.400
+A lot of qualifiers in that sentence with ctl exec i.t.
+
+02:16.730 --> 02:18.950
+Then the name of the pod which is posts.
+
+02:20.180 --> 02:21.730
+And then the command that we want to run.
+
+02:21.740 --> 02:24.660
+So in this case, I could open up a shell with S-H.
+
+02:24.980 --> 02:25.570
+And there we go.
+
+02:25.580 --> 02:28.940
+I've got a shell open inside of the container inside that pod.
+
+02:30.030 --> 02:34.410
+Now remember, a pod can technically run more than one container inside of it at a time.
+
+02:34.500 --> 02:39.960
+If you ever are running multiple containers inside of a pod and run this exact command, cube will prompt
+
+02:39.960 --> 02:43.500
+you and ask you which container you want to run that command inside of.
+
+02:43.650 --> 02:48.270
+But again, you and I, we're only ever going to run one container inside of a pod at a time, so we
+
+02:48.270 --> 02:49.890
+don't really have to worry about that scenario.
+
+02:50.610 --> 02:53.640
+Once we're all done, we can hit exit and get back to our command line.
+
+02:55.500 --> 02:57.570
+Next up to get all the logs out of a pod.
+
+02:57.570 --> 02:59.790
+We'll run two logs, then the pod name.
+
+03:00.120 --> 03:02.520
+So CTL logs.
+
+03:02.610 --> 03:03.300
+Posts.
+
+03:04.010 --> 03:05.420
+And there's all the logs.
+
+03:07.760 --> 03:08.000
+All right.
+
+03:08.000 --> 03:11.970
+Just a couple more very quickly, if we ever want to delete a pod manually for some reason.
+
+03:11.990 --> 03:16.160
+Most common reason that you'll do this is if you want to manually restart, a pod will do.
+
+03:16.490 --> 03:18.500
+It'll delete pod and then the name of it.
+
+03:18.500 --> 03:22.880
+So for example, you've CTL delete pod posts.
+
+03:24.430 --> 03:28.720
+When you run delete, it might take a couple of seconds for the deletion to actually be processed all
+
+03:28.720 --> 03:29.620
+the way up to ten.
+
+03:29.860 --> 03:32.680
+So if it hangs for about 10 seconds or so, that's totally okay.
+
+03:32.710 --> 03:33.880
+Just let it do its thing.
+
+03:34.680 --> 03:37.170
+We can then do a get pods and we'll see.
+
+03:37.170 --> 03:38.400
+There are no pods.
+
+03:39.330 --> 03:44.730
+And then we can recreate that pod very quickly by doing another applied post HTML.
+
+03:46.210 --> 03:49.570
+Now I could do another get pods and the pod is now there again.
+
+03:51.290 --> 03:54.130
+And then finally Cube, it'll describe Pod.
+
+03:54.140 --> 03:57.200
+So this will print out some information about the pod itself.
+
+03:57.440 --> 04:01.880
+Most importantly, it's going to tell us or give us some debug information if we feel as though something
+
+04:01.880 --> 04:03.350
+is going wrong with the pod.
+
+04:03.920 --> 04:08.330
+So we could do a little describe pod posts.
+
+04:10.500 --> 04:13.250
+I'll run that and then we'll see some information here.
+
+04:13.260 --> 04:15.150
+That's kind of all gibberish right now.
+
+04:15.480 --> 04:18.600
+But most importantly, down here at the bottom is a event log.
+
+04:18.930 --> 04:23.190
+So if something is going wrong with a pod, you will very quickly want to describe the pod and take
+
+04:23.190 --> 04:24.660
+a look at the events list.
+
+04:24.660 --> 04:29.100
+And this will tell you about some stuff that is going on with the pod and hopefully give you some debug
+
+04:29.100 --> 04:29.910
+information.
+
+04:31.810 --> 04:32.110
+Okay.
+
+04:32.110 --> 04:32.590
+So that's it.
+
+04:32.590 --> 04:35.260
+That's a couple of very common commands.
+
+04:35.890 --> 04:39.520
+We're going to keep these commands in our back pocket because we're going to use them quite a bit as
+
+04:39.520 --> 04:41.530
+we start to work with Kubernetes more and more.
+
+04:41.900 --> 04:44.110
+Let's pause right here and continue in just a minute.

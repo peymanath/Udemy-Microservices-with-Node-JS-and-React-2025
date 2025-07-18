@@ -1,0 +1,214 @@
+WEBVTT
+
+00:00.740 --> 00:05.120
+Now that we've got a better idea of how fields work inside of a class, let's discuss how they work
+
+00:05.120 --> 00:09.320
+when we are dealing with inheritance as we are with our class car down here.
+
+00:10.290 --> 00:12.930
+I'm going to uncomment everything in the bottom half of this file right here.
+
+00:12.930 --> 00:17.220
+And as soon as I do, you'll notice that we get an error around the new car call right here.
+
+00:17.580 --> 00:18.690
+So here's the issue.
+
+00:18.900 --> 00:21.630
+Our class car extends vehicle.
+
+00:21.930 --> 00:27.960
+Any time we create an instance of something that is a vehicle, we have to provide it a color or a string
+
+00:27.960 --> 00:29.370
+to use as the color.
+
+00:29.940 --> 00:34.530
+So the reason we're seeing this error right here is that we have to pass in a string that will serve
+
+00:34.530 --> 00:35.490
+as the color.
+
+00:36.090 --> 00:39.480
+So we could fix up this error by putting a string in like red like so.
+
+00:39.480 --> 00:41.670
+And as soon as we do that, the error goes away.
+
+00:42.530 --> 00:45.330
+I want to show you something interesting right now.
+
+00:45.350 --> 00:48.560
+Our class car does not have a constructor function.
+
+00:48.950 --> 00:53.900
+That means that whenever we try to create an instance of car, TypeScript is going to automatically
+
+00:53.900 --> 00:57.500
+call the constructor in the parent function right here.
+
+00:58.010 --> 01:03.260
+So even though you don't see any reference to it, whenever we create this car right here, the constructor
+
+01:03.260 --> 01:05.510
+in the parent is being called for us automatically.
+
+01:05.510 --> 01:07.550
+And that's why we have to pass in that string.
+
+01:08.240 --> 01:13.310
+Things are going to be just a little bit different if we define the constructor inside of class car
+
+01:13.310 --> 01:14.060
+as well.
+
+01:14.750 --> 01:16.100
+So let's try that right now.
+
+01:16.610 --> 01:20.690
+I'm going to define the constructor function side of car and I'm going to say that this thing is going
+
+01:20.690 --> 01:25.160
+to have its own property like, let's say, public wheels.
+
+01:25.160 --> 01:28.150
+And this will be maybe like the number of wheels that a car has.
+
+01:28.160 --> 01:30.920
+So I'm going to annotate with the type of number like so.
+
+01:32.330 --> 01:35.720
+Now, as soon as I define this constructor, you'll notice a nasty air inside of here.
+
+01:36.140 --> 01:40.460
+And if I hover over it, it says that the derive class must contain a super call.
+
+01:41.210 --> 01:47.210
+The word super right here is a reference to the superclass or the parent class of car, which is vehicle.
+
+01:47.910 --> 01:52.440
+So whenever we call the constructor of a child class, we are required to call the constructor method
+
+01:52.440 --> 01:53.850
+of the parent as well.
+
+01:54.360 --> 01:57.870
+To do so, all we have to do is call super like so.
+
+01:58.860 --> 02:01.200
+As soon as we do so, we're still going to see an error here.
+
+02:01.560 --> 02:06.780
+So super right here is a reference to the constructor method in the parent.
+
+02:06.960 --> 02:12.750
+And once again, the constructor and the parent wants us to pass in a string so we can make this go
+
+02:12.750 --> 02:15.840
+away once again by putting in some hardcoded string like so.
+
+02:16.200 --> 02:17.730
+But chances are we don't want to do that.
+
+02:17.730 --> 02:23.790
+Chances are we want to have the colour still come in as an argument to our car when we create it.
+
+02:24.390 --> 02:27.600
+So maybe we should take in a second argument to the constructor function.
+
+02:28.910 --> 02:32.450
+That will call color and it's supposed to be a string like so.
+
+02:33.050 --> 02:35.690
+Notice how I did not put the public keyword on here.
+
+02:35.990 --> 02:41.510
+I didn't put public on because we do not want to reassign or create a new field in car of color.
+
+02:42.170 --> 02:44.720
+The field color belongs to vehicle.
+
+02:45.080 --> 02:48.110
+So that's why I did not put on the modifier of public.
+
+02:49.090 --> 02:53.950
+So now when we call the parent class constructor through the super call right here, we're not going
+
+02:53.950 --> 02:55.280
+to pass in a hard coded red.
+
+02:55.300 --> 02:57.280
+Instead, we could pass in the color.
+
+02:58.390 --> 03:02.080
+If we now go back down to the bottom of the file once more, you'll see we've got an error down here
+
+03:02.080 --> 03:02.680
+again.
+
+03:03.160 --> 03:08.740
+So now we are saying that our constructor for CAR has to be given a number of wheels as the first argument
+
+03:08.740 --> 03:10.750
+and a second argument of a string.
+
+03:11.020 --> 03:14.510
+So we can fix up this error by putting in four wheels as the first argument.
+
+03:14.530 --> 03:18.760
+And now the second argument is going to be a string, which is going to pass on through the constructor
+
+03:18.760 --> 03:21.580
+right here into the parent constructor of vehicle.
+
+03:22.220 --> 03:23.300
+And that's pretty much it.
+
+03:24.130 --> 03:26.760
+Now I know we're going through this class stuff really quickly.
+
+03:26.770 --> 03:31.120
+The reason we're going through it so quickly is that basically all the projects we're going to work
+
+03:31.120 --> 03:37.420
+on in this course are 100% focused on using classes to represent logic inside of our application.
+
+03:37.810 --> 03:41.650
+So really, I'm just showing you all this class stuff right now to get you used to some of the very
+
+03:41.650 --> 03:43.030
+basic syntax.
+
+03:43.030 --> 03:47.650
+And we're going to really repeat all these different rules that we're going over in great detail throughout
+
+03:47.650 --> 03:49.420
+all these applications we go through.
+
+03:49.780 --> 03:52.660
+So hopefully you're just absorbing a little bit of the syntax here.
+
+03:52.660 --> 03:54.880
+That's really the only expectation I have.
+
+03:55.700 --> 03:59.330
+Now, having said all that, this is really all we wanted to learn about classes.
+
+03:59.330 --> 04:05.780
+So we've taken a look at methods, constructors, basic inheritance, super calls, modifiers.
+
+04:05.780 --> 04:07.850
+That's pretty much it, the whole ball game.
+
+04:08.150 --> 04:09.710
+So let's have a quick pause right here.
+
+04:09.710 --> 04:14.300
+We're going to do a wrap up on classes in the next video and we'll start working on some really interesting
+
+04:14.300 --> 04:15.080
+applications.
+
+04:15.080 --> 04:16.970
+So I'll see you in just a minute.

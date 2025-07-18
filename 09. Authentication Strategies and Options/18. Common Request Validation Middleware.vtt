@@ -1,0 +1,298 @@
+WEBVTT
+
+00:01.110 --> 00:06.680
+In this video, we're going to take this validation, step right here and extract it into a helper middleware.
+
+00:06.690 --> 00:09.990
+So instead of my middleware directory, I'm going to make a new file.
+
+00:10.730 --> 00:13.000
+And we're going to call this new middleware.
+
+00:13.040 --> 00:16.010
+Validate requests.
+
+00:18.130 --> 00:22.060
+Then inside of here at the very top, we're going to add in a couple of imports right away.
+
+00:22.330 --> 00:25.390
+I'm going to import request response.
+
+00:26.200 --> 00:30.190
+And next function from Express.
+
+00:30.610 --> 00:32.290
+Now, remember, these are types.
+
+00:32.290 --> 00:36.940
+The only reason that we are importing these is to be able to provide some type annotations for TypeScript
+
+00:36.940 --> 00:40.750
+to understand some information about the middleware we are going to be building.
+
+00:41.110 --> 00:45.850
+In effect, it's very similar to the middleware we already put together the air handler one to remember
+
+00:45.850 --> 00:50.290
+we had to import request, response and next function to describe the type of these arguments that were
+
+00:50.290 --> 00:52.060
+going to be flowing into our middleware.
+
+00:53.840 --> 00:59.150
+After that, we'll then import validation results from Express.
+
+01:00.070 --> 01:00.820
+Validator.
+
+01:01.860 --> 01:06.120
+And I'll also get that request validation error.
+
+01:07.480 --> 01:09.700
+From up one directory errors.
+
+01:12.820 --> 01:13.210
+Oop.
+
+01:13.480 --> 01:14.380
+Forgot the path.
+
+01:15.080 --> 01:16.220
+Request validation error.
+
+01:16.220 --> 01:16.910
+That's better.
+
+01:18.950 --> 01:19.250
+All right.
+
+01:19.250 --> 01:21.270
+After that, we can put together our actual middleware.
+
+01:21.290 --> 01:24.320
+So I'm going to export a new function called validate request.
+
+01:28.170 --> 01:30.420
+This thing will be called with req.
+
+01:30.930 --> 01:32.850
+That is a request.
+
+01:33.560 --> 01:35.510
+RAZ That is a response.
+
+01:35.510 --> 01:38.330
+And next that is a next function.
+
+01:38.330 --> 01:41.030
+And I'm going to save this so you can see that entire statement.
+
+01:41.060 --> 01:41.660
+Here we go.
+
+01:42.290 --> 01:47.180
+Now, you might be curious, why does this look different than validate request or semi air handler?
+
+01:47.330 --> 01:50.120
+Remember, air handler was an error handling middleware.
+
+01:50.120 --> 01:52.160
+That is a very different type of middleware.
+
+01:52.400 --> 01:55.910
+Express distinguishes between an air handling middleware and a normal one.
+
+01:56.330 --> 01:59.510
+On the number of arguments that the function accepts.
+
+01:59.660 --> 02:02.030
+So air handler over here is an error handling middleware.
+
+02:02.030 --> 02:03.610
+So it has four arguments.
+
+02:03.620 --> 02:05.360
+It's got that extra air one in there.
+
+02:05.810 --> 02:10.730
+In this case, we're not making a distinct air handling middleware because we're not trying to capture
+
+02:10.760 --> 02:11.120
+errors.
+
+02:11.120 --> 02:13.070
+Instead, we are trying to produce errors.
+
+02:13.070 --> 02:16.100
+We want to throw errors if the request is not valid.
+
+02:16.100 --> 02:17.720
+That's what we're trying to do it inside of here.
+
+02:18.970 --> 02:21.600
+So inside the body of this middleware will say.
+
+02:22.560 --> 02:27.720
+Take a look at any errors that might have occurred using validation results on the incoming request.
+
+02:29.190 --> 02:31.620
+If Aires is not empty.
+
+02:33.700 --> 02:35.530
+So notice the not right there.
+
+02:36.280 --> 02:38.980
+Then we will go ahead and throw a new.
+
+02:40.990 --> 02:45.430
+Request, validation, error and pass in our array.
+
+02:46.210 --> 02:47.200
+Of heirs.
+
+02:49.180 --> 02:53.800
+If we get past this step right here, that means we want to move on to the next middleware in our chain
+
+02:53.800 --> 02:56.740
+or potentially our final route handler.
+
+02:57.100 --> 03:00.490
+So if we get past that statement, we will simply call next.
+
+03:01.240 --> 03:01.930
+Like so.
+
+03:03.800 --> 03:04.100
+All right.
+
+03:04.130 --> 03:05.060
+That's pretty much it.
+
+03:05.510 --> 03:10.010
+So now we can go back over to sign up and sign in and make use of this new middleware.
+
+03:10.580 --> 03:12.050
+Let's first go to sign up.
+
+03:12.500 --> 03:14.570
+Back inside of sign up at the very top.
+
+03:14.570 --> 03:18.680
+I'm going to add in an import or validate request.
+
+03:20.480 --> 03:23.240
+From Malware's validate request.
+
+03:23.660 --> 03:25.820
+I'll collapse my sidebar so you can see that whole line.
+
+03:28.030 --> 03:31.750
+And then all we have to do is make sure that we add this thing in after.
+
+03:32.700 --> 03:34.620
+After we do that validation check.
+
+03:34.720 --> 03:38.880
+Remember, all the middleware is run in a row and they run sequentially in order.
+
+03:39.120 --> 03:44.430
+So if we try to wire up this middleware before we do the actual validation, then we're going to run
+
+03:44.430 --> 03:45.610
+the middleware too early.
+
+03:45.630 --> 03:48.240
+We have to do the validation first and then.
+
+03:50.980 --> 03:53.320
+Handle that possible error right after.
+
+03:53.710 --> 03:56.530
+So we're going to add in validate request right there.
+
+03:57.870 --> 03:58.070
+Okay.
+
+03:58.110 --> 04:01.830
+So now we can remove all the ear check and stuff from the request handler.
+
+04:04.110 --> 04:05.070
+But that looks better.
+
+04:06.070 --> 04:06.190
+Okay.
+
+04:06.280 --> 04:07.870
+We can save the sign up file.
+
+04:08.650 --> 04:13.300
+I'll then go back over to the sign in route handler that we are just working on and we'll do the same
+
+04:13.300 --> 04:14.200
+thing over here.
+
+04:14.650 --> 04:18.520
+So at the very top I will import, validate, request.
+
+04:21.600 --> 04:22.200
+From.
+
+04:23.050 --> 04:24.290
+Up one directory middleware.
+
+04:25.000 --> 04:26.110
+Validate request.
+
+04:29.760 --> 04:32.820
+Then go and add validate request in.
+
+04:34.220 --> 04:36.610
+Now we can delete everything inside of the function.
+
+04:39.010 --> 04:44.350
+And in both files we are no longer making use of validation results or request validation error so we
+
+04:44.350 --> 04:45.910
+can delete both those endpoints.
+
+04:48.750 --> 04:50.790
+I'll go back there to sign up and do the same thing.
+
+04:51.090 --> 04:56.460
+So instead of signup, I'll delete request validation error and the validation result function.
+
+04:58.320 --> 05:00.090
+Well, I'd say that looks a good bit better.
+
+05:00.890 --> 05:05.870
+As I mentioned, we're going to end up using this middleware right here in just about every route handler
+
+05:05.870 --> 05:10.310
+that is a post or a put or something similar across all of our different services.
+
+05:10.550 --> 05:13.250
+So we are going to be reusing this middleware quite a bit.
+
+05:14.000 --> 05:14.820
+Hey, this looks good.
+
+05:14.840 --> 05:16.660
+I'm going to do a very quick test.
+
+05:16.670 --> 05:18.620
+So back over inside a postman.
+
+05:20.210 --> 05:22.010
+I'm going to put in an invalid password.
+
+05:22.010 --> 05:24.560
+So an empty password send it off.
+
+05:24.860 --> 05:25.760
+And yep.
+
+05:25.760 --> 05:27.890
+Looks like everything is still working as expected.
+
+05:29.000 --> 05:33.470
+Going to flip back over a quick pause right here and we'll continue working on sign in in just a moment.

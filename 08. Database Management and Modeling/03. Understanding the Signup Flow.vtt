@@ -1,0 +1,217 @@
+WEBVTT
+
+00:01.150 --> 00:03.560
+Let's continue working on our authentication flow.
+
+00:03.580 --> 00:07.900
+In this video, I want to give you a quick overview of exactly what we are going to have to do inside
+
+00:07.900 --> 00:11.710
+of our routes, sign updates, route handler.
+
+00:11.800 --> 00:15.610
+So we've got a little bit of code inside of here, but it's mostly all related to doing some of that
+
+00:15.610 --> 00:17.530
+validation stuff and whatnot.
+
+00:19.090 --> 00:19.360
+All right.
+
+00:19.360 --> 00:22.120
+So a quick diagram just to make sure it's really clear what we have to do.
+
+00:22.780 --> 00:26.650
+This is similar to a diagram we looked at previously, but I filled in a couple of steps that we have
+
+00:26.650 --> 00:28.570
+to take care of inside of that root handler.
+
+00:28.870 --> 00:33.310
+So at some point in time, our React application is going to make requests to our service.
+
+00:33.970 --> 00:36.130
+The goal this request is going to be to sign up.
+
+00:36.750 --> 00:39.930
+So inside of that request, we're going to have some email and password.
+
+00:40.350 --> 00:44.370
+We're then going to take that email and password and do a couple of checks with it in order to sign
+
+00:44.370 --> 00:45.870
+this user up to our application.
+
+00:47.280 --> 00:52.320
+The first thing we need to do is check to see if a user has ever signed up with this email address before,
+
+00:52.620 --> 00:56.970
+because we're going to make sure that all the different users inside of our app all have unique email
+
+00:56.970 --> 00:57.810
+addresses.
+
+00:58.380 --> 01:03.240
+So if this email address is already in use, we need to stop right away and respond with an error and
+
+01:03.240 --> 01:04.500
+tell the React application.
+
+01:04.500 --> 01:06.060
+Sorry, this email is in use.
+
+01:06.860 --> 01:08.980
+To check and see if the email is already in use.
+
+01:08.990 --> 01:13.160
+We need to take a look at all the users we have saved to our MongoDB database.
+
+01:13.550 --> 01:17.450
+Inside of our database, we are going to have a collection of users.
+
+01:17.690 --> 01:23.450
+Remember, a collection of users is essentially a big object that contains a lot of little objects.
+
+01:23.690 --> 01:26.510
+Those little objects, each of them is going to represent one user.
+
+01:27.890 --> 01:32.690
+In order to access that collection, we have to create a mongoose user model.
+
+01:33.230 --> 01:37.550
+So we're going to create a user model that's going to govern access to that collection and help us run
+
+01:37.550 --> 01:40.070
+queries or create new users or whatever else.
+
+01:40.790 --> 01:44.750
+So when we say that, we need to check and see if a user with this email already exists, that really
+
+01:44.750 --> 01:49.940
+means that we're going to run a query on our database and see if a user with that email is already inside
+
+01:49.940 --> 01:53.000
+there and we run that query through this mongoose user model.
+
+01:55.300 --> 01:59.470
+If there is not already a user with that email, then we're going to move on to the next step.
+
+02:00.430 --> 02:02.920
+We never store passwords in plain text.
+
+02:02.920 --> 02:07.690
+When we receive a password inside the signup request, it will be a plain text password.
+
+02:08.140 --> 02:12.970
+Rather than storing that plaintext password inside of our database, we have to hash it ahead of time.
+
+02:13.360 --> 02:16.050
+If you are not familiar with password hashing, that is okay.
+
+02:16.060 --> 02:21.070
+We'll have a quick follow up video that describes the entire hashing and password storage process.
+
+02:21.250 --> 02:25.540
+Long story short, we're going to do a little bit of processing on that password before we restore it
+
+02:25.540 --> 02:26.170
+inside.
+
+02:27.860 --> 02:32.720
+After that, we're going to create a new user and save them to a MongoDB database.
+
+02:32.720 --> 02:36.140
+And again, that's going to happen through our mongoose user model.
+
+02:37.280 --> 02:42.770
+At that point in time after we successfully save the user, whoever made the request to us is now considered
+
+02:42.770 --> 02:44.030
+to be logged in.
+
+02:45.290 --> 02:51.050
+So to reflect that, we're going to send back to our React application a cookie or a JSON web token
+
+02:51.050 --> 02:55.670
+or something that indicates that this user is now signed in and authenticated.
+
+02:56.030 --> 03:00.620
+We'll have a follow up video to also discuss the actual authentication mechanism that we're going to
+
+03:00.620 --> 03:01.460
+end up using.
+
+03:02.370 --> 03:04.880
+Right now, we're going to focus on these first couple of steps.
+
+03:06.660 --> 03:11.400
+All these initial steps really rely upon creating a mongoose user model so we can work with some data
+
+03:11.400 --> 03:13.200
+inside of our Mongo database.
+
+03:13.740 --> 03:15.770
+That's what we're going to really focus on right now.
+
+03:15.780 --> 03:18.240
+We need to create a mongoose user model.
+
+03:18.840 --> 03:22.860
+Now, I got just unfortunately, a little bit of bad news for you.
+
+03:22.890 --> 03:26.760
+We are using Mongoose and we are also using TypeScript.
+
+03:26.970 --> 03:31.920
+It turns out that TypeScript and Mongoose do not really cooperate all that well.
+
+03:31.950 --> 03:33.180
+I'll be totally honest with you.
+
+03:33.660 --> 03:38.070
+There is a library out there that gets Mongoose and TypeScript to work together a little bit more nicely.
+
+03:38.070 --> 03:41.580
+But I kind of want to limit the number of libraries that we are using for this project.
+
+03:41.580 --> 03:45.660
+So we are going to manually get Mongoose and TypeScript to interact.
+
+03:45.960 --> 03:47.490
+It's not really that hard.
+
+03:48.010 --> 03:49.620
+Just a little bit of configuration.
+
+03:49.620 --> 03:54.450
+But unfortunately it involves writing out a decent amount of code that is kind of challenging to understand
+
+03:54.450 --> 03:55.740
+inside of a single file.
+
+03:56.190 --> 03:57.480
+So we're going to take a quick pause right here.
+
+03:57.480 --> 04:00.960
+We're going to come back the next video and start to write out this mongoose user model.
+
+04:00.990 --> 04:06.060
+I'm going to do my best to make sure that all this code that we write is as crystal clear as can be.
+
+04:06.300 --> 04:10.380
+The good news here is that with the code that we're about to write out, we're going to duplicate throughout
+
+04:10.380 --> 04:14.060
+all these different services, we create about five, six, seven times.
+
+04:14.070 --> 04:19.470
+So even if this first implementation of a model with Mongoose is confusing, well, we're going to get
+
+04:19.470 --> 04:20.880
+a lot of practice doing it.
+
+04:21.570 --> 04:22.440
+So quick pause right here.
+
+04:22.440 --> 04:25.500
+Let's set up that user model with Mongoose in the next video.

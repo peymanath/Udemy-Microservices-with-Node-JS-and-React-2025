@@ -1,0 +1,109 @@
+WEBVTT
+
+00:01.070 --> 00:03.680
+We're going to start working on our ticket service again very shortly.
+
+00:03.680 --> 00:05.810
+But before we do, just a quick reminder.
+
+00:06.170 --> 00:11.810
+If we go back over to our terminal right now and do a little get pods, we will see that we've got our
+
+00:11.810 --> 00:14.480
+Nats deployment or the Nats pod running right there.
+
+00:14.660 --> 00:20.270
+And we've been running a lot of test code and we've been emitting a ton of events over to that Nats
+
+00:20.270 --> 00:23.930
+deployment that probably have a lot of trash data inside them.
+
+00:24.260 --> 00:29.900
+So we had a ton of events like for me, I think I had at least 90 all concerned with that ticket update
+
+00:29.900 --> 00:32.330
+event or the ticket create event, whichever it was.
+
+00:32.660 --> 00:36.250
+And chances are we might have been emitting some data that wasn't really valid.
+
+00:36.260 --> 00:41.960
+I know for certain we had an ID inside that ticket create event of like 1 to 3 and that is definitely
+
+00:41.960 --> 00:43.310
+not a valid ticket ID.
+
+00:43.460 --> 00:48.620
+So it might make a lot of sense for us to restart this Nats pod right here, which will cause all the
+
+00:48.860 --> 00:51.470
+events that we have already emitted to be dumped.
+
+00:51.740 --> 00:55.430
+Remember that Nats by default stores all these events in memory.
+
+00:55.760 --> 01:00.410
+So if we just restart the thing, all the events we've emitted so far get completely dumped and we won't
+
+01:00.410 --> 01:04.340
+have to worry about consuming those kind of non valid events.
+
+01:04.340 --> 01:09.830
+Once we start to handle incoming ticket created events for once we create a real publisher inside of
+
+01:09.830 --> 01:10.940
+one of our services.
+
+01:11.090 --> 01:14.750
+Long story short, let's just restart that thing so I can find a listing.
+
+01:15.740 --> 01:18.530
+I'm going to copy the name and I'll do a little.
+
+01:20.010 --> 01:22.200
+Delete pod and then put in the name.
+
+01:23.420 --> 01:24.530
+That's going to delete the pod.
+
+01:24.560 --> 01:29.690
+The deployment is going to automatically detect that the pod has been deleted and start up a new version.
+
+01:29.930 --> 01:31.410
+So if I do another get pods.
+
+01:31.490 --> 01:32.140
+There we go.
+
+01:32.150 --> 01:33.260
+There's a brand new pod.
+
+01:33.860 --> 01:37.640
+So because we restart the pod nets was clearly restarted.
+
+01:38.350 --> 01:41.590
+We don't have any of the events that we have previously had emitted.
+
+01:41.590 --> 01:45.070
+And so if we start to connect with some new service or something like that, we're not going to get
+
+01:45.070 --> 01:49.750
+a bunch of trash data along that subject or that channel of ticket colon created.
+
+01:50.380 --> 01:54.910
+Now, of course, moving forward in the course, at any point in time, if you are feeling like your
+
+01:54.910 --> 01:59.290
+Nats deployment has a ton of trash data inside of it, you just will repeat these same steps.
+
+01:59.290 --> 02:04.480
+You'll do a delete pod, then just verify that a new one was created by the deployment.
+
+02:05.320 --> 02:06.100
+So that's good.
+
+02:07.300 --> 02:08.160
+Another quick pause.
+
+02:08.170 --> 02:09.760
+Work on tickets in just a moment.

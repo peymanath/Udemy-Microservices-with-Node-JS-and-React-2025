@@ -1,0 +1,676 @@
+WEBVTT
+
+00:01.330 --> 00:02.940
+Our index handlers put together.
+
+00:02.950 --> 00:07.260
+So let's write out a quick test or two just to make sure that this thing is working as expected.
+
+00:07.270 --> 00:12.550
+Instead of my test directory, I'll make a new file of index tests at the very top.
+
+00:12.550 --> 00:16.000
+I'm going to add in a couple of different imports for some things that we're definitely going to need
+
+00:16.000 --> 00:16.810
+inside of here.
+
+00:17.170 --> 00:20.530
+So first, we probably need request from super test.
+
+00:21.100 --> 00:25.990
+We probably need our express application from up to directories app.
+
+00:26.560 --> 00:30.430
+And then we are probably going to have to create some different orders and tickets.
+
+00:30.430 --> 00:33.910
+So I'm going to import the order model and the ticket model as well.
+
+00:34.900 --> 00:37.660
+I'll get order first from up to directories.
+
+00:37.660 --> 00:38.950
+Models order.
+
+00:40.830 --> 00:42.330
+And same thing for ticket.
+
+00:46.220 --> 00:48.220
+I'll then write out a single test case here.
+
+00:48.230 --> 00:52.130
+Really just going to do one single test where we're going to make sure that we can find a list of orders
+
+00:52.130 --> 00:52.940
+successfully.
+
+00:53.390 --> 00:57.050
+So I'll put together an ID statement and I'll give it a description.
+
+00:57.050 --> 01:03.860
+Something like it fetches orders or a particular user.
+
+01:07.820 --> 01:11.780
+Testing out this route handler is going to be a little bit more complicated than it might seem at first
+
+01:11.780 --> 01:12.350
+glance.
+
+01:12.440 --> 01:14.890
+The only reason for that is that we write out a test.
+
+01:14.900 --> 01:19.430
+We probably want to make sure that we only find orders that belong to the user who is making the request.
+
+01:19.910 --> 01:24.650
+In addition, we're going to make sure that when we ever we get a response, we also fetch and supply
+
+01:24.650 --> 01:26.510
+the associated ticket as well.
+
+01:26.990 --> 01:29.090
+So let me show you how we're going to ride out this test.
+
+01:29.090 --> 01:31.970
+I'm going to write a couple of comments just to guide us as we go through it.
+
+01:32.300 --> 01:36.680
+So inside of here, I'm going to first create three tickets.
+
+01:36.680 --> 01:39.470
+So we're going to make three separate tickets, say them to the database.
+
+01:39.830 --> 01:44.210
+We're going to create these tickets using the ticket model right here directly, because remember,
+
+01:44.210 --> 01:48.140
+we do not have any kind of request handler or anything like that inside of our app right now that we
+
+01:48.140 --> 01:49.770
+can use to manually create a ticket.
+
+01:49.790 --> 01:52.220
+The only way we can create a ticket is through the ticket model.
+
+01:52.850 --> 01:59.990
+After that, we're then going to create one order as user number one.
+
+02:00.650 --> 02:04.490
+And then create two orders as user number two.
+
+02:05.030 --> 02:08.810
+So for these three tickets, we're going to create three separate orders.
+
+02:09.050 --> 02:13.910
+One ticket is going to be reserved by user number one, and two tickets will be reserved by user number
+
+02:13.910 --> 02:14.450
+two.
+
+02:15.910 --> 02:20.980
+We're then going to make a request and try to fetch all the different orders or specifically user number
+
+02:20.980 --> 02:21.520
+two.
+
+02:22.320 --> 02:24.870
+So I'm going to write out a quick comment for that, I'll say.
+
+02:26.270 --> 02:27.650
+Make requests.
+
+02:28.530 --> 02:31.020
+To get orders for user number two.
+
+02:31.260 --> 02:35.370
+And then when we get that list of orders, we're going to write out an expectation to make sure that
+
+02:35.370 --> 02:40.410
+we got the two orders we had created right there, but not the first order that we had created for user
+
+02:40.410 --> 02:42.360
+number one, because that's really the key to this request.
+
+02:42.360 --> 02:46.500
+Handler We want to make sure that we only fetch orders for the user who is making the request.
+
+02:46.830 --> 02:55.590
+So the actual expectation down here is to make sure we only got the orders for user number two.
+
+02:56.880 --> 03:00.720
+Now, the only reason I'm writing all these comments is that this test is going to be pretty large in
+
+03:00.720 --> 03:01.110
+nature.
+
+03:01.110 --> 03:02.390
+There's going be a lot of code here.
+
+03:02.400 --> 03:06.360
+We could definitely try to figure out some way to split this into multiple separate tests, but I think
+
+03:06.360 --> 03:09.300
+just writing it out all inside of one test is going to be just fine.
+
+03:10.030 --> 03:10.250
+Okay.
+
+03:10.270 --> 03:11.770
+So with all that in mind, let's get to it.
+
+03:11.770 --> 03:15.100
+First thing we're going to do is create three tickets using our ticket model.
+
+03:15.460 --> 03:19.360
+We could write out the ticket build method right here three times.
+
+03:19.360 --> 03:23.770
+Instead, I'm going to create a little helper function just to make it a little bit easier and concise
+
+03:23.770 --> 03:25.210
+to create these three tickets.
+
+03:25.210 --> 03:28.210
+So right above the block, I'll write out Build Ticket.
+
+03:32.430 --> 03:35.280
+And then inside of here, I'm going to create a ticket.
+
+03:37.890 --> 03:39.210
+With tickets built.
+
+03:40.720 --> 03:42.760
+I'll give it a title of concert.
+
+03:43.510 --> 03:44.860
+In a price of 20.
+
+03:45.710 --> 03:47.690
+Well, then do an a wait ticket.
+
+03:47.900 --> 03:48.560
+Save.
+
+03:49.960 --> 03:52.120
+And then return the ticket itself.
+
+03:52.630 --> 03:55.330
+I'll make sure that I mark the enclosing function as a sync.
+
+03:56.640 --> 04:01.080
+And now down inside of my actual test, I can call that bill ticket function three times.
+
+04:01.680 --> 04:03.330
+So I'll do ticket one.
+
+04:04.100 --> 04:06.050
+Is a wait filled ticket.
+
+04:07.580 --> 04:11.510
+And then copy paste that down twice and I'll change the names to take it to.
+
+04:12.290 --> 04:13.310
+And Ticket three.
+
+04:14.500 --> 04:14.770
+All right.
+
+04:14.770 --> 04:15.370
+Not that bad.
+
+04:15.370 --> 04:16.720
+So there's our three tickets.
+
+04:17.620 --> 04:23.410
+Next up, we're going to try to create our three different orders, one as user one and two as user
+
+04:23.410 --> 04:23.920
+two.
+
+04:24.370 --> 04:28.120
+Definitely going to want to be able to make follow up requests as user number two.
+
+04:28.150 --> 04:32.320
+And that means that we're going to end up having to store the cookie that we get back from calling that
+
+04:32.320 --> 04:37.090
+global sign in function so we can make a follow up request as user number two later on.
+
+04:37.750 --> 04:42.910
+So right above that first comment, I'll say user one is global sign in.
+
+04:43.240 --> 04:45.940
+We don't actually have to make a follow up request as user one.
+
+04:45.940 --> 04:51.010
+Nonetheless, I'm going to store this in a variable just so we can really understand where we are using
+
+04:51.010 --> 04:52.300
+each of these different users.
+
+04:53.570 --> 04:56.510
+Then User two will also be global sign in.
+
+04:56.990 --> 05:01.430
+So now we can very easily make requests with as either user one or user number two.
+
+05:03.810 --> 05:04.020
+Okay.
+
+05:04.050 --> 05:06.720
+So now we're going to create an order as user number one.
+
+05:07.170 --> 05:12.630
+We're going to make sure that we do this making a request through our express application as opposed
+
+05:12.630 --> 05:15.330
+to creating an order directly with the user model.
+
+05:15.540 --> 05:19.830
+The reason for that is that, remember, it's kind of hard for us to extract the ID of a particular
+
+05:19.830 --> 05:22.980
+user directly from this cookie that we just created.
+
+05:22.980 --> 05:28.350
+So it's going to be a lot easier to kind of correlate the orders right here that are being created along
+
+05:28.350 --> 05:29.300
+with the follow up request.
+
+05:29.310 --> 05:32.490
+If we just use a cookie directly as opposed to creating the.
+
+05:33.530 --> 05:34.370
+Different.
+
+05:35.440 --> 05:37.180
+Orders using the order model.
+
+05:38.490 --> 05:38.760
+Okay.
+
+05:38.760 --> 05:41.430
+So first we'll do an await request to app.
+
+05:42.120 --> 05:44.880
+We're going to do a post to API orders.
+
+05:45.640 --> 05:47.080
+And we'll set our cookie.
+
+05:49.200 --> 05:50.340
+To a user one.
+
+05:51.910 --> 05:57.160
+And we're going to send along with this a ticket ID of ticket one ID.
+
+05:58.630 --> 06:01.150
+And then we're going to expect to get a201 out of that.
+
+06:01.150 --> 06:05.080
+So we should be able to successfully reserve ticket one for user one.
+
+06:06.830 --> 06:07.250
+All right.
+
+06:07.250 --> 06:08.650
+So that's it for user number one.
+
+06:08.660 --> 06:11.360
+We're now going to repeat this process twice for user number two.
+
+06:11.750 --> 06:15.710
+I'm going to just copy that entire block right there and then paste it down here twice.
+
+06:17.960 --> 06:23.840
+Then for user two's first request, I'll make sure that I update the cookie to user two and user two's
+
+06:23.840 --> 06:26.840
+first request is going to try to reserve ticket.
+
+06:27.710 --> 06:28.340
+To.
+
+06:30.330 --> 06:33.660
+Then on the second one, we'll update the cookie to user two.
+
+06:34.260 --> 06:38.700
+And in this one, we're going to try to reserve ticket three like so.
+
+06:40.590 --> 06:40.860
+All right.
+
+06:40.860 --> 06:44.300
+So now, in theory, our entire, entire data model is complete.
+
+06:44.310 --> 06:47.940
+We should have everything properly associated and saved inside of our database.
+
+06:47.940 --> 06:53.100
+So now we can make a request to get all the orders for user number two and then write out some expectation
+
+06:53.100 --> 06:55.080
+about the data that we get back in response.
+
+06:55.710 --> 06:59.780
+So we'll put inside of Here Comes Response is a wait request to app.
+
+07:00.630 --> 07:04.170
+We want to make a request to the index handler we just put together.
+
+07:04.170 --> 07:07.290
+So that will be a get request to API orders.
+
+07:07.410 --> 07:14.100
+So we'll do a get to API orders and we really want to make sure that we make this request as specifically
+
+07:14.100 --> 07:15.120
+user number two.
+
+07:15.120 --> 07:18.690
+So we will set our cookie to user to.
+
+07:22.110 --> 07:24.150
+We're going to expect to get back at 200.
+
+07:24.270 --> 07:28.350
+And then we'll take a look at the response and make sure it's got the appropriate information inside
+
+07:28.350 --> 07:28.770
+of it.
+
+07:29.440 --> 07:34.510
+So right now, how about we just do a console log of response body and then we'll figure out how to
+
+07:34.510 --> 07:36.370
+best write out some expectations.
+
+07:37.090 --> 07:38.260
+I'm going to save this.
+
+07:38.290 --> 07:41.020
+Let's flip back over to our terminal and see how we're doing.
+
+07:43.400 --> 07:43.820
+All right.
+
+07:43.820 --> 07:45.110
+So looks good so far.
+
+07:45.140 --> 07:47.240
+I don't see any errors around the index test.
+
+07:47.240 --> 07:52.430
+And I do see a console log right here that definitely has only two orders inside of it.
+
+07:52.730 --> 07:56.030
+And inside of each of these orders, I see the embedded ticket as well.
+
+07:56.360 --> 07:58.400
+So let's say this is off to a good start.
+
+08:00.220 --> 08:00.720
+Okay.
+
+08:01.060 --> 08:04.720
+So let's now go back over and let's start to write out an expectation or two.
+
+08:05.920 --> 08:10.330
+So I'm going to write out expect response body to have length.
+
+08:12.860 --> 08:13.360
+Two.
+
+08:13.970 --> 08:16.430
+So that's going to make sure that we only got back two tickets.
+
+08:16.700 --> 08:20.210
+In addition, we should probably make sure that the we got back to orders.
+
+08:20.210 --> 08:23.780
+We should probably make sure the two orders we got were the correct orders as well.
+
+08:24.380 --> 08:30.380
+So I'm going to try to save a reference to the response we get back when we create these two orders.
+
+08:30.380 --> 08:35.390
+So we know the IDs of those two orders and we can write out some kind of comparison or expectation and
+
+08:35.390 --> 08:37.070
+make sure that we got the two correct ones.
+
+08:37.840 --> 08:39.010
+So I'm going to write out.
+
+08:40.090 --> 08:41.680
+Response one.
+
+08:43.950 --> 08:49.620
+In response to now calling these responses response one and response two.
+
+08:49.650 --> 08:54.510
+Yeah, it would technically work, but that's kind of confusing to see response one, response two and
+
+08:54.510 --> 08:56.790
+then another variable down here called response.
+
+08:56.790 --> 08:59.760
+So instead we're going to de structure just the data.
+
+08:59.760 --> 09:04.860
+We care about these responses and as we structure it, we're also going to rename the variable as well.
+
+09:04.890 --> 09:05.970
+Let me show you what I mean.
+
+09:06.680 --> 09:11.300
+For the first request right here for user number two, I'm going to delete response one.
+
+09:11.390 --> 09:14.930
+And the only thing we care about out of here is the body property, right?
+
+09:14.930 --> 09:17.570
+Because that's the actual order that we are being sent back.
+
+09:18.140 --> 09:19.670
+Same thing on the second one as well.
+
+09:19.970 --> 09:25.670
+But we cannot just have body in both cases, so we need to somehow structure these things and simultaneously
+
+09:25.670 --> 09:27.560
+rename them at the same time.
+
+09:28.040 --> 09:32.990
+To do so, we're going to put in body, then a colon, and then order one.
+
+09:34.160 --> 09:36.200
+And order to like so.
+
+09:37.320 --> 09:38.490
+So this is two steps in.
+
+09:38.490 --> 09:43.320
+One, we are de structuring out the body property off the response we get back from the request.
+
+09:44.330 --> 09:48.200
+And we are simultaneously renaming that body property to order one.
+
+09:48.650 --> 09:52.550
+So now we've got a variable of order one that we can access in the rest of this test.
+
+09:52.760 --> 09:56.840
+And it's going to be equal to the response we got back where the body the response we got back from
+
+09:56.840 --> 09:58.130
+this first request right here.
+
+09:58.520 --> 10:01.820
+So order one really should be well in order object.
+
+10:01.820 --> 10:07.250
+And we can confirm that very easily if we just do a console log down here of order one.
+
+10:07.700 --> 10:11.750
+I'm going to save the file, pull it back over and we'll take a look at what gets console logged.
+
+10:12.470 --> 10:12.920
+So.
+
+10:12.920 --> 10:13.220
+Yep.
+
+10:13.220 --> 10:14.080
+There we are right there.
+
+10:14.090 --> 10:15.680
+That is definitely my order.
+
+10:16.860 --> 10:17.280
+Okay.
+
+10:17.280 --> 10:22.560
+So now we can delete that console log and write out some expectations to make sure that we got the correct
+
+10:22.680 --> 10:24.600
+orders back inside of our response.
+
+10:25.410 --> 10:27.240
+So I'll do an expect response.
+
+10:27.240 --> 10:27.930
+Top body.
+
+10:28.840 --> 10:29.950
+At zero.
+
+10:30.490 --> 10:34.030
+I want to take a look at the ID and I want to make sure that it's equal.
+
+10:35.090 --> 10:36.650
+To order one's ID.
+
+10:40.940 --> 10:42.140
+I'll then copy paste that.
+
+10:42.170 --> 10:48.850
+On this next one, I'll update order body to one and I want to make sure that is equal to order two's
+
+10:48.860 --> 10:49.490
+ID.
+
+10:51.140 --> 10:52.770
+I'm going to save that flip back over.
+
+10:53.950 --> 10:54.810
+And there we go.
+
+10:54.820 --> 10:55.840
+Everything's passing.
+
+10:56.410 --> 10:56.740
+All right.
+
+10:56.740 --> 10:59.560
+A little bit of a longer test here, but it definitely works.
+
+10:59.890 --> 11:04.330
+Optionally, we can also take a look at the ticket that was embedded on both these as well.
+
+11:04.840 --> 11:08.200
+So if we wanted to do that, we could write out an exact four response.
+
+11:08.200 --> 11:11.170
+Body zero ticket ID.
+
+11:12.190 --> 11:13.570
+We'll make sure that equals.
+
+11:16.140 --> 11:17.160
+Ticket to side.
+
+11:17.190 --> 11:18.520
+And then the next one will be ticket three.
+
+11:18.540 --> 11:23.700
+ID is specifically going to be ticket two because order one had a reference to ticket two.
+
+11:24.560 --> 11:25.910
+So we put inside of here.
+
+11:25.940 --> 11:27.620
+Ticket to ID.
+
+11:28.570 --> 11:30.490
+And then I'll do another copy paste there.
+
+11:30.520 --> 11:32.530
+Update it to body at one.
+
+11:32.680 --> 11:35.170
+Make sure the second ticket inside their.
+
+11:35.940 --> 11:39.300
+As an ID equal to ticket three ID.
+
+11:40.280 --> 11:41.260
+All right, one last test here.
+
+11:41.270 --> 11:41.930
+So I'll save the file.
+
+11:41.930 --> 11:42.860
+Flip back over.
+
+11:43.580 --> 11:45.860
+And we're looking good as usual.
+
+11:45.860 --> 11:51.050
+We might want to just make this fail just to make sure all the tests are actually working and it's actually
+
+11:51.050 --> 11:52.430
+reloading this file properly.
+
+11:52.430 --> 11:54.980
+So I'll find one of the expect for the status code.
+
+11:54.980 --> 11:56.360
+Change it to a 500.
+
+11:57.250 --> 11:58.300
+We run the test.
+
+12:00.490 --> 12:02.080
+And okay, definitely looks good.
+
+12:02.080 --> 12:04.150
+So I'll change that back over to 200 again.
+
+12:04.150 --> 12:08.050
+I'm just doing that to make sure that the test suite is actually updating and it's actually properly
+
+12:08.050 --> 12:09.010
+running our test.
+
+12:09.830 --> 12:10.130
+All right.
+
+12:10.130 --> 12:12.190
+Well, that's it for our index route handler.
+
+12:12.200 --> 12:13.430
+Now, I apologize for the length.
+
+12:13.430 --> 12:17.660
+This video could have been a little bit shorter, but I figured might as well get it all done in just
+
+12:17.660 --> 12:18.620
+one single video.
+
+12:18.950 --> 12:22.580
+So let's take a pause right here, and we're going to take a look at our next route handler in just
+
+12:22.580 --> 12:23.120
+a moment.

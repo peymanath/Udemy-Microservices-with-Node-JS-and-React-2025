@@ -1,0 +1,175 @@
+WEBVTT
+
+00:01.000 --> 00:04.180
+Now that we've seen the four different types of resources that we're going to have floating around our
+
+00:04.180 --> 00:08.500
+app, we're going to take a look at some of the different services that we're going to design to manage
+
+00:08.500 --> 00:09.580
+each of these things.
+
+00:09.730 --> 00:13.090
+So in total, we're going to end up with five different services.
+
+00:13.420 --> 00:16.930
+We're going to have an authentication service which we will call simply off.
+
+00:17.170 --> 00:21.430
+This service is going to be charge of everything related to a user authentication.
+
+00:21.430 --> 00:25.120
+So the sign up process, sign in, sign out and so on.
+
+00:26.090 --> 00:28.490
+Next up, we're going to have a tickets service.
+
+00:28.490 --> 00:33.320
+As you guess, this is going to be related to any kind of ticket creation or editing.
+
+00:33.740 --> 00:36.530
+This ticket service is going to know everything about a given ticket.
+
+00:36.530 --> 00:37.950
+So it's going to know its price.
+
+00:37.970 --> 00:41.030
+It's going to know whether or not a ticket can be updated and so on.
+
+00:42.120 --> 00:45.760
+Next we will have an order service very similar to tickets.
+
+00:45.780 --> 00:51.270
+The order service will be in charge of creating a ticket or editing a ticket in any way whatsoever.
+
+00:52.470 --> 00:54.730
+Next up, we're going to have an exploration service.
+
+00:54.750 --> 00:56.720
+This is going to be a very simple service.
+
+00:56.730 --> 00:59.400
+It's going to watch for any time an order gets created.
+
+00:59.580 --> 01:04.800
+Any time an order is created, it's then going to attempt to cancel that order after 15 minutes has
+
+01:04.800 --> 01:08.430
+elapsed if a user has not already entered in some payment information.
+
+01:09.790 --> 01:12.000
+And then finally we'll have a payment service.
+
+01:12.010 --> 01:15.790
+And once again, as you'd guess, this is going to handle credit card payments.
+
+01:16.120 --> 01:20.920
+If a user enters in some credit card information and we successfully charge their card, we're going
+
+01:20.920 --> 01:24.700
+to mark the accompanying order that is tied to that payment as succeeding.
+
+01:24.850 --> 01:30.400
+Otherwise, if for some reason the order is canceled or if the order times out, whatever else, we're
+
+01:30.400 --> 01:32.950
+going to make sure that we mark a order as failed.
+
+01:32.950 --> 01:35.230
+And the accompanying payment is failed as well.
+
+01:36.470 --> 01:40.670
+Now, one thing you'll notice right away is that we're essentially creating a separate service to manage
+
+01:40.670 --> 01:42.590
+each type of resource.
+
+01:42.770 --> 01:48.560
+We have four types of resources, so user ticket order charge, and we have five different services
+
+01:48.560 --> 01:50.390
+with the exception of expiration.
+
+01:50.390 --> 01:56.000
+Right here we are directly creating one exact service to manage each type of resource.
+
+01:56.540 --> 01:58.380
+Now, is this the best approach?
+
+01:58.400 --> 02:00.800
+Is this something we should do for every microservices app?
+
+02:00.980 --> 02:03.500
+Well, the answer is probably not.
+
+02:03.800 --> 02:08.750
+It really comes down to what kind of app you're trying to build, how many different types of resources
+
+02:08.750 --> 02:13.460
+you have inside of your application, and the amount of business logic or special handling that is attached
+
+02:13.460 --> 02:15.590
+to different every different type of resource.
+
+02:16.010 --> 02:21.080
+So in the context of a course, just to keep this app somewhat simple and straightforward and somewhat
+
+02:21.080 --> 02:26.210
+easy to understand, it makes a lot of sense for me to show you how to create one service to manage
+
+02:26.210 --> 02:27.740
+each type of resource.
+
+02:28.070 --> 02:32.690
+But there might be a very different approach that you need to take on your own personal application.
+
+02:32.690 --> 02:37.580
+When you start making use of this microservices approach in particular, you might start thinking about
+
+02:37.580 --> 02:41.810
+how you could create a service to handle each different feature of your application.
+
+02:42.080 --> 02:47.450
+So you might end up with a single microservice to handle, just say, ticket and order creation.
+
+02:48.390 --> 02:53.040
+A separate one to handle incoming payments and handle all aspects of payment.
+
+02:53.040 --> 02:59.010
+So, for example, making sure that you mark a order as being completed and handle that incoming payment
+
+02:59.010 --> 03:05.100
+and then you might have that expiration service tied in to that kind of tickets and ordering thing because
+
+03:05.100 --> 03:07.200
+it's all kind of very tightly coupled together.
+
+03:07.350 --> 03:12.870
+The point here is that it really doesn't always it should not be your default to say, Oh, here's the
+
+03:12.870 --> 03:15.910
+type of resource I'm going to create a single service to manage it.
+
+03:15.930 --> 03:19.800
+Instead, it really comes down to your application and you're going to have to put in some thought on
+
+03:19.800 --> 03:22.000
+how you're going to design the different services for it.
+
+03:22.020 --> 03:25.170
+That's just something I want to throw out there, just to make sure it's really clear that even though
+
+03:25.170 --> 03:30.090
+in this course you and I are creating one service per type of resource, maybe that doesn't always make
+
+03:30.090 --> 03:30.990
+a ton of sense.
+
+03:31.710 --> 03:31.980
+All right.
+
+03:31.980 --> 03:35.460
+Just one more quick kind of design video right after this one.
+
+03:35.460 --> 03:37.800
+So one more pause and I'll see you in just a minute.

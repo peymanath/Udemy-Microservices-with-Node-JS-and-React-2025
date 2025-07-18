@@ -1,0 +1,358 @@
+WEBVTT
+
+00:01.280 --> 00:03.000
+I'm inside of my setup file.
+
+00:03.020 --> 00:05.810
+I'm at the very bottom and I'm taking a look at that sign in function.
+
+00:05.930 --> 00:09.770
+We had originally created this function to be used back inside of our service.
+
+00:09.860 --> 00:15.710
+The goal of the function was to come up with some email and password, then make a request to sign up
+
+00:15.710 --> 00:16.970
+with that email and password.
+
+00:17.150 --> 00:21.080
+We then took the cookie out of the response and return the cookie from the function.
+
+00:21.680 --> 00:26.360
+Now this function right here, we're just fine inside of our off service because the service had a route
+
+00:26.360 --> 00:27.890
+handler for signing up.
+
+00:28.640 --> 00:32.340
+Unfortunately, the same thing is not going to work inside of our tickets service.
+
+00:32.360 --> 00:33.170
+The ticket service.
+
+00:33.170 --> 00:37.520
+At no point in time is ever going to have a route like this where we're going to try to create some
+
+00:37.520 --> 00:39.290
+kind of account for the user.
+
+00:39.800 --> 00:43.580
+So unfortunately, we are not going to be able to use this kind of approach right here to somehow get
+
+00:43.580 --> 00:44.300
+a cookie.
+
+00:45.000 --> 00:49.320
+You might be thinking, hey, during our test suite or for the ticket's test suite, let's just make
+
+00:49.320 --> 00:53.040
+a request over to the service to sign up for an account and we could get a cookie that way.
+
+00:53.400 --> 00:57.990
+Well, we definitely do not want to set up any kind of inter-service dependency while we are running
+
+00:57.990 --> 00:58.470
+tests.
+
+00:58.470 --> 01:02.580
+In other words, when we're running tests for the ticket service, we should not try to reach out and
+
+01:02.580 --> 01:07.680
+make requests to anything else inside of our application whatsoever under any circumstance.
+
+01:08.070 --> 01:11.400
+All tests we run side of here should be 100% self contained.
+
+01:11.700 --> 01:16.650
+So in short, the code we have right here is just not going to work to somehow get a cookie.
+
+01:17.220 --> 01:21.870
+But we still need to have some ability to kind of fake being signed in inside of our test environment
+
+01:21.870 --> 01:23.200
+while we're running these tests.
+
+01:23.220 --> 01:24.720
+So how are we going to do that?
+
+01:25.140 --> 01:30.090
+Well, remember this overall function, the whole goal of it is to really just return a cookie.
+
+01:30.180 --> 01:33.600
+And inside that cookie is the JSON web token.
+
+01:34.860 --> 01:37.340
+So with that in mind, I want to go back over to the browser.
+
+01:37.350 --> 01:41.970
+I want to try to sign up for our application once again, and I want to take a look at that cookie that
+
+01:41.970 --> 01:44.730
+gets returned to us when we successfully sign up.
+
+01:45.150 --> 01:46.590
+So back inside my browser.
+
+01:47.660 --> 01:50.450
+I'm going to navigate to our application at ticketing dev.
+
+01:50.840 --> 01:52.910
+You'll notice I am not currently signed in.
+
+01:53.850 --> 01:55.560
+I'm going to go in attempt to sign up.
+
+01:55.980 --> 01:59.190
+And before I sign up, I'm going to open up my network request tab.
+
+02:00.650 --> 02:04.400
+I'm then going to enter in some random email address and a password.
+
+02:05.840 --> 02:11.420
+After I sign up, I can see the sign up request and then I see two requests to current user.
+
+02:11.660 --> 02:13.580
+We do not really need to make two requests.
+
+02:13.580 --> 02:17.450
+That is a bug that we're going to fix up a little bit later on when we go back to the React application
+
+02:17.450 --> 02:17.990
+again.
+
+02:18.620 --> 02:22.070
+But what's more relevant, I want to take a look at those current user requests.
+
+02:22.490 --> 02:23.930
+So I'll click on either one.
+
+02:24.350 --> 02:28.550
+I'm going to go to the headers tab and I'll take a look at the request headers.
+
+02:29.210 --> 02:33.830
+Under request headers is the cookie that is being sent from my browser up to the server.
+
+02:34.280 --> 02:35.810
+So remember this thing right here?
+
+02:35.810 --> 02:38.660
+That is what actually identifies us to the server.
+
+02:38.840 --> 02:43.910
+If we could just take that information right there and send it to the server in any arbitrary request,
+
+02:43.910 --> 02:46.280
+we will be considered to be authenticated.
+
+02:46.640 --> 02:51.920
+So ultimately, that cookie that we just saw on the browser is what we want to return from this function.
+
+02:52.520 --> 02:57.980
+So rather than trying to obtain a real cookie by going through the signup process, what if we could
+
+02:57.980 --> 03:03.950
+somehow fabricate a cookie or just make one on our own in this function and then return it?
+
+03:04.430 --> 03:06.020
+Well, that's exactly what we're going to do.
+
+03:06.290 --> 03:09.920
+We're going to build our own cookie up from scratch inside of here.
+
+03:10.040 --> 03:14.600
+We're then going to return it from this function, and then we can use that cookie to sign into our
+
+03:14.600 --> 03:18.020
+application while we were running our tests for tickets.
+
+03:19.740 --> 03:23.310
+Now this process is going to be just a little bit complicated, but to be honest with you, it's going
+
+03:23.310 --> 03:26.520
+to build upon everything that we've already done around authentication.
+
+03:26.520 --> 03:28.290
+So this is really all the same stuff.
+
+03:28.290 --> 03:31.050
+We are just doing some of these steps by hand instead.
+
+03:32.190 --> 03:37.980
+The first thing I want to do is take the actual cookie data inside of here and just give you a quick
+
+03:37.980 --> 03:40.230
+reminder of what's actually inside of here.
+
+03:40.650 --> 03:45.600
+So I'm going to copy everything after express colon equals.
+
+03:45.600 --> 03:47.880
+So it will probably start with an e y.
+
+03:47.910 --> 03:49.860
+I'm going to take everything to the end.
+
+03:50.880 --> 03:51.870
+I'm going to copy that.
+
+03:52.700 --> 03:55.720
+And then we're going to go to website that we took a look at a while ago.
+
+03:55.730 --> 03:57.830
+Base64 DD Code.org.
+
+03:58.610 --> 04:02.450
+I'm going to paste that cookie information side of here and then decode it.
+
+04:03.280 --> 04:06.460
+So the cookie data is encoded in base 64.
+
+04:07.370 --> 04:13.010
+When we decode it and get back some actual plain text, what we get back is a JSON object.
+
+04:13.010 --> 04:14.990
+So this is not a JavaScript object right here.
+
+04:14.990 --> 04:22.520
+This is JSON data, it has the key of JWT and then the value for that is our actual JSON web token.
+
+04:23.860 --> 04:27.650
+So with all this in mind, here's what we have to do back inside of sign in.
+
+04:27.670 --> 04:30.370
+Let's write out some comments just to guide ourselves.
+
+04:31.060 --> 04:32.500
+I'm going to delete everything inside there.
+
+04:32.530 --> 04:33.820
+I'll then replace it.
+
+04:34.660 --> 04:35.980
+With a couple of comments.
+
+04:35.980 --> 04:40.840
+The first thing I'm going to do is build a JSON Web token payload.
+
+04:41.230 --> 04:48.430
+So remember for us, the payload is going to have or be an object that has an ID, an email, and was
+
+04:48.430 --> 04:49.270
+there anything else inside there?
+
+04:49.270 --> 04:53.470
+I think there is technically also the issue that time, but really for you and I, we really just care
+
+04:53.470 --> 04:55.030
+about the ID and the email.
+
+04:55.870 --> 04:58.000
+So all we really have to do is build up that object.
+
+04:58.000 --> 04:58.900
+That's pretty much it.
+
+05:00.290 --> 05:03.020
+After that, we're going to create the.
+
+05:04.100 --> 05:05.210
+Jason Webb token.
+
+05:05.980 --> 05:11.050
+We're going to create the JSON web token by running that same kind of JWT sign function that we had
+
+05:11.050 --> 05:15.310
+put together back when we were doing our authentication stuff back in the auth middleware.
+
+05:15.760 --> 05:21.340
+Remember, when we create a JSON web token, we have to include or make use of a JSON web token key.
+
+05:21.340 --> 05:24.970
+And we already defined that up here inside of our before all statement.
+
+05:28.410 --> 05:31.920
+We're then going to create or kind of build up this session object.
+
+05:33.230 --> 05:38.960
+So that really just means take the JSON web token we just generated and stick it into an object where
+
+05:38.960 --> 05:43.030
+it has a key of JWT and then a value of the JSON web token we just built.
+
+05:43.040 --> 05:44.240
+That's all that really means.
+
+05:44.480 --> 05:45.770
+So pretty much just build an object.
+
+05:45.770 --> 05:49.250
+It looks like JWT my JWT.
+
+05:51.040 --> 05:55.090
+We're then going to turn that session into JSON.
+
+05:56.610 --> 06:04.920
+And then after that, we're going to take JSON and encode it as base 64 as we just saw because we had
+
+06:04.920 --> 06:09.700
+to run that thing through the Base 64 Decode tool when our data is actually set inside the cookie.
+
+06:09.720 --> 06:14.130
+The cookie session middleware is going to encode it as base 64, and that's why it turns up as that
+
+06:14.130 --> 06:15.690
+kind of long string as characters.
+
+06:16.850 --> 06:19.580
+And then finally, we're going to return a string.
+
+06:22.120 --> 06:26.030
+That's the cookie with the encoded data.
+
+06:26.060 --> 06:31.270
+So what I mean by this right here will remember in order to actually send this cookie along, here's
+
+06:31.270 --> 06:35.650
+the cookie right here, we have to take the cookie data or the real session data itself.
+
+06:35.890 --> 06:39.820
+And we're going to set it on this key right here of express colon ssh equals.
+
+06:40.030 --> 06:42.550
+And then that's going to be our encoded cookie data.
+
+06:42.550 --> 06:45.520
+So basically just build up a string that looks like that right there.
+
+06:46.400 --> 06:46.670
+Okay.
+
+06:46.670 --> 06:48.830
+So we definitely have our steps laid out for us here.
+
+06:48.860 --> 06:52.550
+Now, I know a lot of this stuff might seem a little bit daunting, but to be honest with you, the
+
+06:52.550 --> 06:55.220
+code for this is going to be super straightforward.
+
+06:55.220 --> 06:56.570
+Really super straightforward.
+
+06:56.570 --> 06:57.470
+It's me, basically.
+
+06:57.470 --> 07:00.710
+Exactly each step you see right here, each in turn.
+
+07:01.100 --> 07:05.090
+And as soon as we put this thing together, we're going to have a foolproof way of simulating ourselves
+
+07:05.090 --> 07:06.920
+being authenticated in the test environment.
+
+07:07.310 --> 07:08.320
+Okay, quick pause here.
+
+07:08.330 --> 07:09.800
+Build this up in just a moment.

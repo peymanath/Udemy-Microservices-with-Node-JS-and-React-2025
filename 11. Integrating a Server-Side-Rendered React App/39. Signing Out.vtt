@@ -1,0 +1,229 @@
+WEBVTT
+
+00:00.590 --> 00:05.330
+In this video, we're going to create a new page that will allow a user to sign out of the application.
+
+00:05.900 --> 00:10.310
+As a quick reminder, in order to sign out, we need to make a request to our service.
+
+00:10.550 --> 00:13.070
+We've got a sign out route handler.
+
+00:13.070 --> 00:18.470
+So all we really have to do is make a post request to API users sign out and that will sign our user
+
+00:18.470 --> 00:18.860
+out.
+
+00:19.680 --> 00:21.840
+There's something else really important I want to mention.
+
+00:21.870 --> 00:28.930
+The request to sign out must be coming from inside of our component or inside of some component.
+
+00:28.950 --> 00:33.720
+If we try to make this sign out request from inside of a get initial props, that request is going to
+
+00:33.720 --> 00:38.760
+be issued by the server and the server doesn't really care or doesn't really know what to do with any
+
+00:38.760 --> 00:39.470
+cookies.
+
+00:39.480 --> 00:43.860
+When we try to sign a user out back inside of that sign out root handler.
+
+00:44.070 --> 00:49.290
+Remember, we are resetting the user session and so we're going to send back a cookie whenever we make
+
+00:49.290 --> 00:51.410
+a request from get initial props on the server.
+
+00:51.420 --> 00:55.440
+If any cookie gets returned to us, we're not really doing anything with it whatsoever.
+
+00:55.620 --> 01:00.210
+So we need to make sure that this request always comes from the user's browser in order to sign out
+
+01:00.210 --> 01:00.930
+correctly.
+
+01:01.050 --> 01:06.210
+And that means that we need to make the request from a component as opposed to from a get initial function.
+
+01:07.020 --> 01:07.380
+Okay.
+
+01:07.380 --> 01:10.470
+So let's create a new page inside of our directory.
+
+01:11.710 --> 01:14.860
+Called Sign out dogs inside of here.
+
+01:14.860 --> 01:21.190
+We're going to get our user request hook and we're also going to get the use effect function from React.
+
+01:21.940 --> 01:23.890
+So I'm going to get use effect.
+
+01:25.360 --> 01:33.640
+From React and I'll get use request from up to directories books use request.
+
+01:34.630 --> 01:36.310
+Well, then export a component.
+
+01:39.660 --> 01:43.920
+So inside of here, whenever this component is displayed, I want to just return a message to the user
+
+01:43.920 --> 01:47.010
+and say something like signing you out.
+
+01:48.760 --> 01:53.010
+We're then going to immediately as soon as this component is rendered, we're going to use the use effect
+
+01:53.020 --> 01:55.840
+choke to try to make a request to sign the user out.
+
+01:56.050 --> 02:00.340
+Once the user is signed out by making use of user request right here, we're then going to navigate
+
+02:00.340 --> 02:02.920
+the user back to our main landing page.
+
+02:03.190 --> 02:04.230
+So that's the general idea.
+
+02:04.240 --> 02:05.800
+That's how we're going to accomplish this.
+
+02:07.510 --> 02:13.000
+So I'm going to first set up a request function or a do request function by using user request.
+
+02:13.480 --> 02:19.420
+So remember we get back a do request function whenever we call use request.
+
+02:20.230 --> 02:23.680
+And to use request, we have to provide a couple of different arguments.
+
+02:23.830 --> 02:28.450
+We have to provide that URL, the method and a body if one is required.
+
+02:28.450 --> 02:33.490
+And then we can optionally also provide on success if we want to have the ability to respond to a successful
+
+02:33.490 --> 02:34.210
+request.
+
+02:34.850 --> 02:36.380
+So in our case, our URL.
+
+02:37.840 --> 02:40.480
+Will be API users sign out.
+
+02:41.620 --> 02:45.730
+The method will be post the body is going to be an empty object.
+
+02:45.990 --> 02:51.070
+It really wasn't maybe the best idea to have sign out be tied to a post request, but that's how we
+
+02:51.070 --> 02:51.550
+ended up.
+
+02:51.550 --> 02:52.930
+So it's what we're doing.
+
+02:53.970 --> 02:55.950
+And we'll define an on success.
+
+02:58.030 --> 03:03.130
+Now as we saw previously back over inside of sign in and sign up inside of on success.
+
+03:03.130 --> 03:07.090
+As soon as we successfully make this request, we want to navigate the user over to the root route.
+
+03:07.090 --> 03:10.810
+So we're going to do something very similar back over to what we did, back over inside of sign in and
+
+03:10.810 --> 03:11.470
+sign up.
+
+03:11.470 --> 03:14.650
+So we want to call the router, push and navigate to our root root.
+
+03:15.940 --> 03:16.480
+Back over here.
+
+03:16.480 --> 03:21.940
+I'll do a router, push to our root route after we successfully sign out and I'll make sure that I also
+
+03:21.940 --> 03:25.900
+import router from next router at the top.
+
+03:28.190 --> 03:31.490
+Then finally we need to make sure we call do request at some point in time.
+
+03:32.820 --> 03:35.010
+So I'm going to set up use effect.
+
+03:37.160 --> 03:41.450
+I only want to run this thing at one time, so I'm going to put it in an array or see a second argument
+
+03:41.450 --> 03:42.140
+of an array.
+
+03:42.710 --> 03:45.320
+And inside of here I will call, do request.
+
+03:47.110 --> 03:48.040
+And that should be it.
+
+03:50.290 --> 03:50.500
+Okay.
+
+03:50.560 --> 03:53.080
+I'm going to save this flip back over.
+
+03:54.270 --> 03:55.680
+I'm going to refresh the page.
+
+03:55.680 --> 04:01.770
+And now in theory, if I take a look at my application inside of Chrome console and I see my cookie
+
+04:01.770 --> 04:07.200
+right there, I should be able to click on sign out, get navigated over, get automatically redirected
+
+04:07.200 --> 04:08.220
+to the landing page.
+
+04:08.220 --> 04:12.420
+I should see that I'm not signed in anymore and the cookie cookies should be cleared as well.
+
+04:12.470 --> 04:14.340
+It looks like that is exactly what occurred.
+
+04:15.100 --> 04:18.040
+Now I should be able to sign up again just to test this once more.
+
+04:20.060 --> 04:20.810
+I'll sign up.
+
+04:21.350 --> 04:22.040
+Sign out.
+
+04:22.580 --> 04:23.380
+Cookies reset.
+
+04:23.390 --> 04:26.330
+I got redirected to the landing page and I no longer signed in.
+
+04:26.690 --> 04:27.410
+Perfect.
+
+04:28.500 --> 04:28.800
+All right.
+
+04:28.800 --> 04:33.000
+Well, I think that's it for the authentication aspects of this client side application.
+
+04:33.240 --> 04:36.390
+So let's take a quick, quick pause right here and continue in just a moment.

@@ -1,0 +1,499 @@
+WEBVTT
+
+00:01.130 --> 00:06.050
+In this section, we're going to start to really get a better idea of what was really occurring on our
+
+00:06.050 --> 00:06.710
+terminal.
+
+00:07.530 --> 00:10.380
+When we executed that Docker build command.
+
+00:10.680 --> 00:14.910
+We're going to walk through each of these steps and not really analyze the structure of each of them,
+
+00:14.910 --> 00:19.040
+but really analyze the effect that they had on the image that we were building.
+
+00:19.050 --> 00:24.150
+So to get started, I first want to talk a little bit about the output that we saw in our terminal when
+
+00:24.150 --> 00:26.360
+we executed the Docker build command.
+
+00:26.490 --> 00:27.540
+So first things first.
+
+00:27.540 --> 00:29.010
+Why do we use Docker build?
+
+00:29.010 --> 00:33.480
+Well, this is a new command that we have not used before tied to the Docker CLI.
+
+00:33.540 --> 00:35.460
+Remember what we said a little bit ago?
+
+00:35.460 --> 00:40.380
+When we create our Docker file, we then feed it into the Docker client which turns around and gives
+
+00:40.380 --> 00:44.910
+your file off to the Docker server and that's what builds your usable image.
+
+00:45.840 --> 00:51.690
+So when we ran Docker build out, that was us giving our Docker file off to the Docker CLI.
+
+00:52.020 --> 00:56.700
+The build command is what we use to take a Docker file and generate an image out of it.
+
+00:57.000 --> 01:01.440
+The dot right here is specifying what is called the build context.
+
+01:01.440 --> 01:06.900
+The build context is essentially the set of files and folders that belong to our project.
+
+01:06.900 --> 01:11.400
+It's a set of files and folders that we want to kind of encapsulate or wrap in this container.
+
+01:11.400 --> 01:16.200
+And we'll see some better examples of exactly what the build context is used for later on throughout
+
+01:16.200 --> 01:22.110
+the course, as our Docker builds, start to get a little bit more complex after running that command,
+
+01:22.110 --> 01:25.770
+we then very quickly saw a whole bunch of outputs start to scroll on by.
+
+01:25.800 --> 01:30.210
+The first thing I want you to notice here is that for every line of configuration that we put into our
+
+01:30.210 --> 01:33.900
+Docker file, we got an additional step added to this flow.
+
+01:33.900 --> 01:38.280
+So I see step one of three corresponds to the first line of our Docker file.
+
+01:38.610 --> 01:44.610
+I see step two of three corresponding to the second line and that you can guess the third one down here.
+
+01:44.610 --> 01:48.090
+Step three of three corresponded to the third line of the Docker file.
+
+01:49.560 --> 01:54.030
+Now with the very first step where we said from Alpine, the first thing that occurred was that Docker
+
+01:54.030 --> 01:59.910
+server looked at our local build cache and it checked to see if it has ever downloaded an image called
+
+01:59.910 --> 02:00.930
+Alpine before.
+
+02:00.960 --> 02:02.720
+In our case, it probably hasn't.
+
+02:02.730 --> 02:07.110
+So the first thing that occurred was that Docker server reached out to the Docker hub, which you'll
+
+02:07.110 --> 02:11.160
+recall is a repository of existing Docker images that are free for public use.
+
+02:11.160 --> 02:15.120
+And it downloaded that image, the image called Alpine.
+
+02:15.300 --> 02:20.370
+So complete means, yep, it was successfully downloaded and well, it really tells you that very clearly
+
+02:20.370 --> 02:20.730
+right here.
+
+02:20.730 --> 02:23.340
+Downloaded newer image for Alpine latest.
+
+02:24.150 --> 02:26.100
+So that first step right there, kind of boring.
+
+02:26.100 --> 02:30.420
+We basically just downloaded an initial starting image to use as a base.
+
+02:30.450 --> 02:34.020
+Things started to get a little bit more interesting on step number two right here.
+
+02:34.080 --> 02:39.450
+So there's a couple of lines of code or output right here that I want you to really take a very good
+
+02:39.450 --> 02:40.110
+look at.
+
+02:40.500 --> 02:45.300
+You'll notice the first line right here says Running in and then an ID.
+
+02:45.540 --> 02:46.590
+So that's very key right there.
+
+02:46.590 --> 02:50.730
+I want you to remember that for just a second and then a little bit lower.
+
+02:50.730 --> 02:57.210
+You'll notice that it says removing intermediate container and it printed out the exact same ID that
+
+02:57.210 --> 02:58.740
+we saw back up there.
+
+02:58.860 --> 03:03.150
+So it looks like this ID right here is the ID of a container.
+
+03:03.270 --> 03:04.690
+But what container?
+
+03:04.710 --> 03:06.240
+We'll dive into that in just a second.
+
+03:06.240 --> 03:11.070
+When we look at a diagram that's going to kind of explain this flow, you'll notice that we also saw
+
+03:11.070 --> 03:16.350
+some very similar output down here for step three as well, where it said running in blah, blah, blah.
+
+03:16.350 --> 03:21.210
+And then very shortly after that, removing intermediate container one.
+
+03:21.210 --> 03:25.560
+The last thing I want to point out here is that for step number one up here, you'll notice that there
+
+03:25.560 --> 03:28.920
+is no kind of like intermediate container printout.
+
+03:29.010 --> 03:34.710
+So it appears that for every instruction that we added to the Docker file, the size, the first one,
+
+03:34.740 --> 03:39.390
+it appears that some like container of sorts was created.
+
+03:39.510 --> 03:45.150
+So that in mind, let's flip over to a diagram and really walk through what just occurred.
+
+03:46.540 --> 03:47.430
+All right.
+
+03:47.440 --> 03:51.820
+Now, I know we're going through this stuff like really intense and in-depth, but honestly, getting
+
+03:51.820 --> 03:57.520
+a very fundamental or solid understanding of this doctor build process is really going to help you understand
+
+03:57.520 --> 03:58.330
+doctor in general.
+
+03:58.330 --> 04:00.280
+That's why we're going through so much detail.
+
+04:01.420 --> 04:05.350
+So in this diagram, we've got a container on the right hand side, we've got the alpine image on the
+
+04:05.350 --> 04:08.670
+bottom left, and then our series of three commands over here.
+
+04:08.680 --> 04:13.840
+So the first thing we did was specify from Alpine and as we saw that basically went out and downloaded
+
+04:13.840 --> 04:16.030
+the Alpine image off of Docker Hub.
+
+04:16.120 --> 04:20.740
+Remember that an image has a file system snapshot and some startup command.
+
+04:20.740 --> 04:24.820
+And at this point we don't really know what the startup command for Alpine is, but we don't really
+
+04:24.820 --> 04:25.720
+care that much.
+
+04:26.890 --> 04:30.310
+The next line was the run APK Add update.
+
+04:30.310 --> 04:34.150
+Reedus So here's exactly what happened behind the scenes.
+
+04:34.420 --> 04:40.480
+When Docker Server saw this line of configuration right here, it looked back at the last step that
+
+04:40.480 --> 04:41.410
+just occurred.
+
+04:41.410 --> 04:48.280
+So it looked back at this step, the from Alpine step, it looked at the image that came out of that
+
+04:48.280 --> 04:49.270
+previous step.
+
+04:49.360 --> 04:53.170
+The image that came out of the previous step was the Alpine image.
+
+04:53.830 --> 04:59.260
+Then on the run line right here, it took that image and created a new container out of it.
+
+04:59.260 --> 05:06.010
+So in memory we very temporarily got a brand new container created at the very start of step number
+
+05:06.010 --> 05:06.550
+two.
+
+05:06.550 --> 05:09.880
+And that's what this running in, blah, blah, blah right here means.
+
+05:09.880 --> 05:15.070
+It means that it created a temporary container out of the image that was sourced during the previous
+
+05:15.070 --> 05:15.700
+step.
+
+05:15.820 --> 05:22.300
+So we can kind of imagine that we took the entire file system snapshot from the Alpine image and we
+
+05:22.300 --> 05:28.390
+stuffed it into this very temporary container that was created just for the second step right here or
+
+05:28.390 --> 05:29.650
+the second instruction.
+
+05:30.350 --> 05:36.590
+After creating this temporary container, this command right here, the command that we just added on.
+
+05:37.680 --> 05:42.810
+Was executed inside that container as its primary running process.
+
+05:43.530 --> 05:49.080
+So we took that run command, we took that line or that full command right there, and we executed it
+
+05:49.080 --> 05:51.530
+as a process inside of the container.
+
+05:51.540 --> 05:56.610
+So this is this containers primary running process, as we said in the last video.
+
+05:56.640 --> 06:01.050
+APK is a package manager that is built into the alpine image.
+
+06:01.230 --> 06:06.960
+So this command executed inside the container and while it executed, it went through the process of
+
+06:06.960 --> 06:08.400
+downloading Redis.
+
+06:08.400 --> 06:09.690
+That's what happened right here.
+
+06:09.720 --> 06:13.650
+It downloaded and installed Redis and a couple of dependencies for Redis.
+
+06:13.890 --> 06:21.210
+So you can imagine that during that installation process we maybe got some like new folder on this containers
+
+06:21.960 --> 06:23.070
+hard drive right there.
+
+06:23.070 --> 06:25.350
+Maybe it was something called simply Redis.
+
+06:25.710 --> 06:28.650
+Now I want this to represent the readers program.
+
+06:28.650 --> 06:33.420
+It didn't install it in the root directory or anything like that, but let's just imagine that APK had
+
+06:33.510 --> 06:34.770
+downloaded and installed.
+
+06:34.770 --> 06:38.040
+Read this onto this containers a little hard drive right here.
+
+06:38.250 --> 06:46.170
+So we now have a container that has a file system snapshot that contains the newly installed copy of
+
+06:46.170 --> 06:46.860
+Redis.
+
+06:47.430 --> 06:50.040
+Now look at what happened immediately after that.
+
+06:50.040 --> 06:53.610
+After that container or after that package was installed.
+
+06:53.610 --> 06:56.070
+We then stopped that container.
+
+06:56.220 --> 07:02.700
+We took a file system snapshot of that container and then we stopped it entirely.
+
+07:03.930 --> 07:08.010
+So we're saying right here, that temporary container that was just created, we stop it and we then
+
+07:08.010 --> 07:15.330
+take its current file system snapshot and we save it as a temporary image with this ID right here.
+
+07:15.390 --> 07:22.080
+So the output of everything inside of step number two is a new image that contains just the changes
+
+07:22.080 --> 07:23.610
+that we made during this step.
+
+07:23.700 --> 07:29.370
+So we can now kind of imagine that this ID right here, this is the ID to a very temporary image.
+
+07:29.370 --> 07:32.970
+So I'm now going to update the image down here on the top left hand side.
+
+07:33.120 --> 07:36.810
+And I'm going to say that is the 38s image.
+
+07:36.810 --> 07:42.630
+And inside that image, it now has a installed copy of Redness.
+
+07:45.080 --> 07:48.490
+And we also threw away that intermediate container.
+
+07:48.500 --> 07:51.170
+So that is the end result of step number two.
+
+07:51.260 --> 07:55.650
+In total, we created a temporary container out of the alpine image.
+
+07:55.670 --> 08:02.510
+We executed this command inside that container, and then we took that containers file system and saved
+
+08:02.510 --> 08:04.400
+it as a temporary image.
+
+08:04.400 --> 08:09.590
+So we now have this very temporary file system snapshot right here that has Redis included.
+
+08:10.580 --> 08:16.580
+Then we move on to step number three where we execute CMD right here so that you can imagine what happens
+
+08:16.580 --> 08:17.090
+here.
+
+08:17.510 --> 08:18.620
+With CMD.
+
+08:18.650 --> 08:22.490
+We're going to look at the image that was generated during the previous step.
+
+08:22.700 --> 08:28.010
+So in this case, the image that was taken from the previous step is this three eight EC image.
+
+08:28.280 --> 08:35.240
+We create a new very temporary container out of it, and when we make that container, we take the images
+
+08:35.240 --> 08:38.090
+file system snapshot and stuff it into this container.
+
+08:38.240 --> 08:44.000
+And then with the CMD, this is setting the primary command or the primary process of the container.
+
+08:44.000 --> 08:47.240
+So the container does not actually execute reddest server.
+
+08:47.240 --> 08:52.100
+It doesn't execute this command, it just tells the container, hey, look, just so you know, if you
+
+08:52.100 --> 08:57.230
+were to ever run for real, you should be running red a server as your primary command.
+
+08:58.530 --> 09:02.190
+So the container is told this is supposed to be your intermediate or something.
+
+09:02.220 --> 09:04.170
+This is supposed to be your primary command.
+
+09:04.170 --> 09:11.610
+And then it shuts down that container and it takes a snapshot of its file system and its primary command.
+
+09:11.700 --> 09:15.390
+So the end result is successfully built, this ID right here.
+
+09:15.420 --> 09:20.590
+This is the final image that was created out of this entire series of steps.
+
+09:20.610 --> 09:25.110
+So in step number three, at the very end, we remove the intermediate container.
+
+09:25.200 --> 09:31.830
+We take a snapshot of its file system and its primary command, and then we save it as an output, as
+
+09:31.830 --> 09:34.890
+an image with an ID of fc60.
+
+09:35.100 --> 09:37.770
+So here is the container, the very temporary one.
+
+09:37.770 --> 09:40.320
+We take a snapshot of its file system.
+
+09:41.940 --> 09:44.010
+So I'm going to put it over here.
+
+09:44.010 --> 09:49.650
+And we also take a snapshot of it's running primary command or not running primary command, but primary
+
+09:49.650 --> 09:52.710
+command that should be executed when the container starts up in the future.
+
+09:52.950 --> 09:58.980
+And so we specify the start up command as a server, and then we save that entire thing as an image
+
+09:58.980 --> 10:01.980
+with the ID of FC six zero.
+
+10:02.690 --> 10:06.090
+And so the end result is this right here.
+
+10:06.110 --> 10:12.950
+The end result is our image with that ID that has our full file system snapshot with Redis installed
+
+10:12.950 --> 10:15.740
+and a startup command that has been specified.
+
+10:16.340 --> 10:16.970
+All right.
+
+10:16.970 --> 10:19.970
+So at long last, that is the full story.
+
+10:19.970 --> 10:22.020
+That is what happened with the Docker file.
+
+10:22.040 --> 10:26.900
+Now, the real takeaway that I want you to understand here is that basically along every step along
+
+10:26.900 --> 10:31.700
+the way, not basically every step, but really every step along the way with every additional instruction,
+
+10:31.700 --> 10:35.900
+we essentially take the image that was generated during the previous step.
+
+10:36.110 --> 10:38.390
+We create a new container out of it.
+
+10:38.390 --> 10:42.830
+We execute a command in the container or make a change to its file system.
+
+10:43.520 --> 10:45.350
+We then look at that container.
+
+10:45.350 --> 10:52.370
+We take a snapshot of its file system and save it as an output for the next instruction along the chain.
+
+10:52.370 --> 10:57.890
+And then when there is no more instructions to execute, the image that was generated during that last
+
+10:57.890 --> 11:02.420
+step is output from the entire process as the final image that we really care about.
+
+11:03.430 --> 11:03.970
+Whoo!
+
+11:04.060 --> 11:05.680
+So that's a lot of information.
+
+11:05.680 --> 11:08.890
+So let's take a quick pause right here and we'll continue in the next section.

@@ -1,0 +1,184 @@
+WEBVTT
+
+00:01.520 --> 00:03.860
+Now installed and initialized ductile.
+
+00:04.010 --> 00:08.720
+Now we're going to use ductile with a series of different commands to load up some contacts to connect
+
+00:08.720 --> 00:10.520
+to that new cluster that we just created.
+
+00:11.300 --> 00:16.520
+The first thing we have to do is install some context onto our local machine about that new cluster.
+
+00:16.820 --> 00:21.350
+So this is the command we're going to run right here, dactyl Kubernetes cluster, kube config save
+
+00:21.350 --> 00:23.330
+and then the name of your cluster.
+
+00:23.720 --> 00:28.430
+To get the name of your cluster, you can go back over to the Kubernetes dashboard, click on Kubernetes
+
+00:28.430 --> 00:31.700
+on the left hand side, and it's going to be whatever is listed right there.
+
+00:31.700 --> 00:33.650
+So in my case, it'll be simply ticketing.
+
+00:35.310 --> 00:37.890
+So I'm going to run that command right there.
+
+00:38.820 --> 00:40.020
+Back at my terminal.
+
+00:41.110 --> 00:44.050
+And I'm going to replace that cluster name with ticketing.
+
+00:46.560 --> 00:50.790
+Once I run that command, I'll be told that some credentials have been added to my cube config file,
+
+00:50.790 --> 00:53.100
+which is where all of our different contexts get saved.
+
+00:53.460 --> 00:56.880
+And then it automatically sets my context to my cluster.
+
+00:57.060 --> 01:02.370
+So if I now issue any commands against Cube CTL, they will be ran against the cluster that is running
+
+01:02.370 --> 01:03.450
+on digital ocean.
+
+01:03.930 --> 01:06.360
+For example, I can do acute CTL, get pods.
+
+01:07.430 --> 01:09.110
+I don't see that absolutely nothing is running.
+
+01:09.110 --> 01:14.480
+Even if I am running some pods right now on my local machine or on my local Kubernetes cluster.
+
+01:15.460 --> 01:19.930
+I could also a little bit more proof here would be get nodes and that will list out all the different
+
+01:19.930 --> 01:21.100
+nodes that are connected.
+
+01:21.310 --> 01:25.570
+So I've got three nodes right now that are connected to my digital ocean cluster and naturally on my
+
+01:25.570 --> 01:28.150
+local machine, I only have one at most.
+
+01:29.430 --> 01:34.200
+Now, of course, at some point in time, we will want to swap back to our local machine context or
+
+01:34.200 --> 01:38.790
+perhaps if you're running everything on Google Cloud, as I showed you earlier on inside the course,
+
+01:38.790 --> 01:41.910
+you might be or want to swap back over to that context.
+
+01:43.110 --> 01:48.480
+So to do so you can list out all the different contexts you have access to with Kube CTL config view.
+
+01:49.400 --> 01:50.630
+So we'll do that right now.
+
+01:53.720 --> 01:56.330
+And that's going to list out a lot of connection information.
+
+01:56.660 --> 01:59.990
+What we are really looking for here is a section called context.
+
+02:00.690 --> 02:02.300
+So here it is right here, context.
+
+02:02.600 --> 02:06.110
+And then there are a couple of options and each of them have a name.
+
+02:06.440 --> 02:08.330
+That name is what we care about.
+
+02:08.540 --> 02:14.660
+So to connect to my digital ocean cluster, that is the name or the context that I want to use.
+
+02:14.870 --> 02:21.020
+If I want to swap back to using my local Kubernetes cluster that I'm running on my machine, I can either
+
+02:21.020 --> 02:25.430
+use a cluster or a context name of Docker desktop or Docker for desktop.
+
+02:25.430 --> 02:26.510
+Either one is fine.
+
+02:27.280 --> 02:34.300
+So if I want to swap back to my local cluster, I'll do a CTL config use context and then the name the
+
+02:34.580 --> 02:35.470
+CTL.
+
+02:36.380 --> 02:37.730
+Was it config?
+
+02:38.700 --> 02:41.790
+Use context and then the name of Docker desktop.
+
+02:42.660 --> 02:48.380
+If I now do a I'll get nodes, I'll see just one node, my Docker desktop node.
+
+02:49.120 --> 02:54.040
+As a quick reminder, if you are using Docker desktop as opposed to using Docker Toolbox or something
+
+02:54.040 --> 02:59.130
+like that, you can always go to that tray icon and select your context from right here as well.
+
+02:59.140 --> 03:00.190
+A little bit easier.
+
+03:00.220 --> 03:03.130
+I just want to show you the kind of behind the scenes way of doing this stuff.
+
+03:04.110 --> 03:06.420
+So I can swap back over to my digital ocean.
+
+03:08.180 --> 03:09.470
+Do another get pods.
+
+03:09.500 --> 03:12.560
+Once again, no pods because I'm not running anything on there just yet.
+
+03:13.280 --> 03:13.550
+Okay.
+
+03:13.550 --> 03:19.160
+So again, we are not going to deploy anything directly to our cluster by connecting to it and then
+
+03:19.160 --> 03:23.150
+applying anything, we're always going to rely upon our GitHub workflow.
+
+03:23.360 --> 03:28.340
+The only reason I'm showing you how to connect directly to the cluster is that you can do some debugging,
+
+03:28.370 --> 03:31.010
+try to pull logs, stuff like that.
+
+03:31.790 --> 03:36.680
+So now that we understand how to connect to that cluster manually, we're going to repeat a pretty similar
+
+03:36.680 --> 03:42.350
+process by creating a new GitHub workflow, where we're going to connect to that cluster that we just
+
+03:42.350 --> 03:44.000
+created by using Dactyl.
+
+03:44.300 --> 03:49.340
+We're then going to make sure that after we merge a pull request, we then attempt to apply all of our
+
+03:49.340 --> 03:52.460
+different config files for Kubernetes, all that kind of stuff.
+
+03:53.000 --> 03:56.630
+So a quick pause and let's get started on that process in just a moment.

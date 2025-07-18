@@ -1,0 +1,349 @@
+WEBVTT
+
+00:01.170 --> 00:03.600
+The next thing we're going to do is fix up a couple of tests.
+
+00:03.630 --> 00:06.870
+Now, these are specifically tests around our different route handlers.
+
+00:06.900 --> 00:08.350
+Let's go back over to our terminal.
+
+00:08.370 --> 00:10.010
+We're going to take another look at our test suite.
+
+00:10.020 --> 00:13.950
+We're going to run all the tests inside of our order service, and we will see that a couple are failing.
+
+00:14.850 --> 00:17.190
+So back at my terminal, here's my test suite.
+
+00:17.190 --> 00:22.170
+Inside the order service, we are currently filtered and only running tests with the name listener inside
+
+00:22.170 --> 00:23.260
+the test file name.
+
+00:23.280 --> 00:28.440
+So I'm going to undo that filter by pressing W and then A to run all tests.
+
+00:30.070 --> 00:34.960
+So we're going to see that these tests around our different handlers are going to fail pretty catastrophically.
+
+00:35.440 --> 00:38.860
+And if we take a look at each of these, you'll notice, as I mentioned, the last video is because
+
+00:38.860 --> 00:43.690
+we are building tickets without providing an ID at some point in time when we are working all the on
+
+00:43.690 --> 00:47.770
+all these listeners and all these events, we said that we needed to make sure that we had consistent
+
+00:47.770 --> 00:50.710
+IDs being used between the ticket service and the order service.
+
+00:50.710 --> 00:57.370
+So we had required that whenever we called ticket build, we had to provide an ID property inside of
+
+00:57.370 --> 00:57.750
+our test.
+
+00:57.760 --> 01:01.540
+We still have some code where we are creating tickets without providing an ID.
+
+01:01.570 --> 01:05.230
+So all we really have to do is go around to our different route handler test files.
+
+01:05.230 --> 01:09.430
+Whenever we build a ticket, we have to include a randomly generated ID.
+
+01:09.460 --> 01:10.480
+That's pretty much it.
+
+01:12.240 --> 01:17.400
+So inside my order service, I'm going to find our roots directory.
+
+01:18.410 --> 01:23.220
+I'm going to find the test folder inside there and I'll open up, delete tests.
+
+01:24.320 --> 01:28.970
+So inside of you right away, we're going to see some errors around building a ticket right here and
+
+01:28.970 --> 01:29.780
+right here.
+
+01:30.920 --> 01:36.980
+In both cases, all you have to do is use Mongoose to generate a brand new random ID and assign it to
+
+01:36.980 --> 01:38.120
+the ticket build.
+
+01:38.300 --> 01:39.020
+That's it.
+
+01:39.350 --> 01:40.340
+So at the very top.
+
+01:41.290 --> 01:44.020
+We will import mongoose from mongoose.
+
+01:45.270 --> 01:54.690
+Then inside the build method I'll add in an ID which will be mongoose types object id to hex string
+
+01:54.690 --> 01:55.320
+like so.
+
+01:57.730 --> 02:01.960
+Now we're going to have to duplicate this line right here into pretty much all four of these test files.
+
+02:01.960 --> 02:04.240
+So I'm going to copy this line.
+
+02:05.230 --> 02:09.550
+And then we're going to go around to these four files and paste that line everywhere that we build a
+
+02:09.550 --> 02:10.060
+ticket.
+
+02:10.860 --> 02:16.680
+So first I'm going to scroll down a little bit lower in this file, find the next error and I'll paste
+
+02:16.680 --> 02:17.760
+in the ID like so.
+
+02:18.430 --> 02:20.540
+And that is it for the delete test file.
+
+02:20.560 --> 02:21.400
+I'll fix it up.
+
+02:21.760 --> 02:23.350
+So I'm going to save this and close it.
+
+02:25.210 --> 02:29.110
+Next up, we'll move on to the next test file of index tests.
+
+02:31.030 --> 02:34.390
+At the very top, I will import Mongoose.
+
+02:36.090 --> 02:36.990
+From Mongoose.
+
+02:37.530 --> 02:38.230
+And then once again.
+
+02:38.250 --> 02:39.570
+Paste in that ID.
+
+02:41.910 --> 02:42.040
+Okay.
+
+02:42.150 --> 02:43.230
+That is it for this file.
+
+02:43.230 --> 02:47.370
+So I'll save it and close it onto the new test file.
+
+02:47.760 --> 02:52.230
+We've already imported Mongoose at the top, so we're going to scroll through here, find every location
+
+02:52.230 --> 02:54.630
+where we build a ticket and paste in that ID line.
+
+02:55.080 --> 02:56.700
+There's one right there.
+
+03:00.220 --> 03:01.120
+Here's to.
+
+03:04.000 --> 03:05.200
+And here's three.
+
+03:05.470 --> 03:09.460
+So three locations in this file where we are going to paste in the ID thing.
+
+03:10.810 --> 03:12.360
+Hey, that is it for the new test file.
+
+03:12.370 --> 03:13.420
+So close that one.
+
+03:13.420 --> 03:17.410
+And then finally onto show test us once again at the very top.
+
+03:17.410 --> 03:18.670
+I will import Mongoose.
+
+03:21.350 --> 03:22.940
+And then I'll paste in the ID.
+
+03:24.390 --> 03:25.380
+There's one right there.
+
+03:25.380 --> 03:29.290
+One more error little bit down right here pasted in.
+
+03:29.310 --> 03:31.830
+Let's to inside the show test file.
+
+03:32.920 --> 03:33.910
+So let's save this.
+
+03:34.890 --> 03:38.690
+Let's file down and then go back over to our terminal and see how our tests are doing.
+
+03:39.960 --> 03:44.370
+It looks like we still have a couple of failures, but these are failures related to our route handlers.
+
+03:44.640 --> 03:49.500
+As I mentioned, we went through our different events inside the common module just a little bit ago
+
+03:49.500 --> 03:54.060
+and we said that all of our different events had to include a version property inside of our different
+
+03:54.060 --> 03:54.720
+route handlers.
+
+03:54.720 --> 04:00.150
+Right now we have several locations where we are publishing events, but we are not including any version
+
+04:00.150 --> 04:00.780
+property.
+
+04:00.780 --> 04:03.930
+And so that's what we're seeing from the delete handler right now.
+
+04:03.930 --> 04:08.340
+We are getting an error from TypeScript that distinctly says, hey, you have to include a version of
+
+04:08.340 --> 04:12.570
+property whenever you are trying to publish a order canceled event.
+
+04:13.140 --> 04:14.020
+So that's pretty much it.
+
+04:14.040 --> 04:18.750
+We just have to go around to two different handlers and make sure that we include that version property.
+
+04:19.740 --> 04:21.030
+Let's take care that right now.
+
+04:21.520 --> 04:23.310
+So inside the roots directory I'll find delete.
+
+04:25.150 --> 04:26.480
+So here's the delete route.
+
+04:26.500 --> 04:28.720
+HANDLER It's the one that's going to cancel in order.
+
+04:29.980 --> 04:32.830
+Here's where we publish an event and if we mouse over this.
+
+04:32.830 --> 04:36.550
+Yep, it pretty much just says we have to include a version, as we said that we would.
+
+04:36.550 --> 04:42.400
+Any time we publish this event, the version is going to come off the order that we are canceling.
+
+04:43.150 --> 04:46.900
+So remember, the entire idea here is that a lot of our different records, we're going to include these
+
+04:46.900 --> 04:49.720
+version flags as the primary means of concurrency control.
+
+04:49.720 --> 04:53.110
+It's what's going to make sure that we process all these different events in the correct order.
+
+04:53.440 --> 04:57.460
+So if there is some other service out there that's going to eventually listen to the order cancelled
+
+04:57.460 --> 05:03.100
+event, it's going to use the version field of this order to make sure that the event gets processed
+
+05:03.100 --> 05:04.120
+in the correct order.
+
+05:05.100 --> 05:07.080
+So we're going to take this order that we just canceled.
+
+05:07.110 --> 05:10.710
+We're going to take its version property and just include it inside the event.
+
+05:10.920 --> 05:15.060
+We'll throw in version is going to be order version like so.
+
+05:17.390 --> 05:22.850
+There's one other event that we are currently publishing that's inside of the handler of new toys.
+
+05:23.830 --> 05:25.690
+This is where we create a new order.
+
+05:26.320 --> 05:29.620
+And if we scroll down a little bit, we can see where we are publishing that event.
+
+05:29.950 --> 05:30.970
+Here it is right here.
+
+05:32.000 --> 05:32.900
+They're publishing the event.
+
+05:32.900 --> 05:36.290
+And once again, we're just not including the version when we said we would do so.
+
+05:37.580 --> 05:41.510
+So throw in version is order dot version.
+
+05:42.520 --> 05:43.390
+And that's it.
+
+05:45.770 --> 05:46.940
+It's Let's save this.
+
+05:46.940 --> 05:50.000
+At this point in time, all of our tests should now be working.
+
+05:50.030 --> 05:54.140
+So I'm going to go back over to my terminal, and I should see that all the tests inside of my order
+
+05:54.140 --> 05:55.640
+service are up and running.
+
+05:55.760 --> 05:56.570
+Fantastic.
+
+05:57.570 --> 05:57.890
+Okay.
+
+05:57.900 --> 06:02.220
+So as I mentioned, this is just kind of going around and fixing a couple of odds and ends.
+
+06:02.220 --> 06:05.430
+And I just want to make sure that the goal of all this stuff was really crystal clear.
+
+06:05.700 --> 06:07.890
+So at this point, we're in a pretty good state.
+
+06:07.890 --> 06:13.680
+I would say that our order service is reasonably processing incoming events related to tickets.
+
+06:14.070 --> 06:17.330
+So we're now going to start to move back over to our tickets service.
+
+06:17.340 --> 06:21.960
+We're going to start to investigate some other issues between the ticket service and the order service,
+
+06:21.960 --> 06:25.380
+specifically around making sure that we actually reserve tickets properly.
+
+06:25.380 --> 06:30.360
+And while a ticket is reserved, we need to also make sure that a user cannot edit a tickets title or
+
+06:30.360 --> 06:30.990
+price.
+
+06:31.230 --> 06:33.540
+So a couple more kind of business rule things.
+
+06:33.540 --> 06:35.730
+Let's start to tackle this stuff in the next video.

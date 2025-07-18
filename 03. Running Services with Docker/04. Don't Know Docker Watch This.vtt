@@ -1,0 +1,82 @@
+WEBVTT
+
+00:01.530 --> 00:04.690
+In the last two videos, we spoke about Docker and Kubernetes.
+
+00:04.710 --> 00:08.950
+Now, at this point time, I don't know if you're taking this course with background knowledge of Docker.
+
+00:08.970 --> 00:12.360
+In other words, if you're taking this course, I don't really want to assume that you know about anything
+
+00:12.360 --> 00:13.020
+about Docker.
+
+00:13.020 --> 00:17.460
+But I'm also kind of assuming that if you're here taking a course about microservices, maybe you know
+
+00:17.460 --> 00:18.630
+something about Docker.
+
+00:18.660 --> 00:19.490
+I don't know.
+
+00:19.500 --> 00:21.900
+The point is, I don't really know what your skill level is.
+
+00:22.110 --> 00:25.290
+So to accommodate for that, here's what we're going to do inside this course.
+
+00:25.530 --> 00:30.630
+If you do not know anything about Docker or if you just need a quick refresher on it, no problem.
+
+00:30.810 --> 00:32.310
+There is appendix section.
+
+00:32.310 --> 00:33.750
+So a section of videos.
+
+00:33.750 --> 00:38.250
+Towards the end of the course, they're going to walk you through installing Docker and teach you about
+
+00:38.250 --> 00:40.320
+some of the basics around Docker as well.
+
+00:40.650 --> 00:44.790
+So if you don't know anything about it or if you just need a quick refresher, then stop this video
+
+00:44.790 --> 00:45.420
+right now.
+
+00:45.420 --> 00:49.830
+Go to that appendix section and find the collection of videos over there that will teach you about the
+
+00:49.830 --> 00:50.880
+basics of Docker.
+
+00:51.120 --> 00:54.420
+Once you get through all that stuff, come back here and we'll continue on.
+
+00:55.410 --> 00:57.240
+Same thing kind of applies to Kubernetes.
+
+00:57.240 --> 01:00.870
+I don't really know if you're familiar with Kubernetes as you're taking this course or not.
+
+01:00.960 --> 01:04.770
+So we're just going to say that if you don't know anything about Kubernetes, we're going to walk through
+
+01:04.770 --> 01:05.760
+some of the basics.
+
+01:05.940 --> 01:09.660
+We're going to go through the basics of Kubernetes and the following coming videos rather than going
+
+01:09.660 --> 01:11.820
+through it in appendix section, however.
+
+01:11.970 --> 01:14.160
+So if you don't know anything about Kubernetes, no problem.
+
+01:14.160 --> 01:16.530
+Just stay tuned and we'll go through it together as well.

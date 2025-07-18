@@ -1,0 +1,205 @@
+WEBVTT
+
+00:00.810 --> 00:05.130
+In this video, we're going to follow up on a raise by discussing a very similar data structure called
+
+00:05.130 --> 00:06.030
+a tuple.
+
+00:06.210 --> 00:10.860
+And you'll sometimes also hear this pronounced as tuple, totally up to you, either tuple or tuple.
+
+00:11.460 --> 00:12.810
+Either way, you want to do it.
+
+00:12.810 --> 00:15.810
+So as usual, definition examples and so on.
+
+00:16.260 --> 00:16.500
+All right.
+
+00:16.500 --> 00:18.000
+So first off, quick definition.
+
+00:18.210 --> 00:23.550
+So when we are working with a tuple or a tuple, we have something that looks very similar to an array,
+
+00:23.550 --> 00:24.720
+very, very similar.
+
+00:24.840 --> 00:29.790
+But the big difference here is that we are going to have every element inside of this array looking
+
+00:29.790 --> 00:33.600
+thing represent one specific property about some record.
+
+00:33.840 --> 00:39.300
+So whereas an array tells us a bunch of different records or organizes a collection of different records,
+
+00:39.330 --> 00:44.580
+a tuple usually contains multiple different properties to describe one single thing.
+
+00:45.340 --> 00:50.320
+And as a follow up to that, usually inside of a tuple, we will mix and match many different types
+
+00:50.320 --> 00:51.520
+of data inside there.
+
+00:52.030 --> 00:53.770
+So let's take a look at a quick example.
+
+00:54.250 --> 00:54.610
+All right.
+
+00:54.610 --> 00:57.970
+I want you to imagine that we've got some object, like the one you see right here.
+
+00:58.180 --> 01:02.890
+And the goal of this object is to represent a drink, like, in this case, soda or pop, whatever you
+
+01:02.890 --> 01:04.060
+want to refer to it as.
+
+01:04.450 --> 01:10.150
+So maybe inside this object, we have a color property that is a string of brown carbonated, that is
+
+01:10.150 --> 01:16.210
+a boolean of true and sugar that is meant to represent the sugar content of the soda in grams.
+
+01:16.210 --> 01:17.650
+So that will be a number here.
+
+01:17.740 --> 01:22.870
+So as you might guess, this would represent maybe like Coca-Cola or Pepsi or something like that.
+
+01:23.560 --> 01:28.600
+So representing a drink or a soda with an object like this, I think makes a lot of sense if you're
+
+01:28.600 --> 01:30.910
+coming particularly from a JavaScript background.
+
+01:31.060 --> 01:37.090
+We've got one object to represent one drink, and this object has some properties that describe what
+
+01:37.090 --> 01:38.950
+is going on with this singular drink.
+
+01:39.680 --> 01:40.580
+Now, just for fun.
+
+01:40.580 --> 01:45.320
+I want to take this object right here, and I just want to try to represent it with a slightly different
+
+01:45.320 --> 01:46.280
+data structure.
+
+01:46.640 --> 01:50.210
+Let's try to represent this object with an array instead.
+
+01:50.480 --> 01:51.680
+So how can we do that?
+
+01:52.070 --> 01:55.220
+Well, maybe we would say that we would take each of these values.
+
+01:55.220 --> 01:56.480
+So, like Brown.
+
+01:57.300 --> 01:58.110
+True.
+
+01:59.250 --> 02:00.630
+And then 40.
+
+02:01.020 --> 02:03.420
+And stick them into this array like so.
+
+02:04.230 --> 02:09.270
+So now we have a slightly different looking data structure that still represents a drink.
+
+02:10.080 --> 02:14.400
+In turning this into this array right here, we have lost a little bit of information.
+
+02:14.490 --> 02:19.470
+In other words, you and I, as developers, can very easily look at a object declaration like this
+
+02:19.470 --> 02:22.770
+right here and very quickly understand the colors.
+
+02:22.770 --> 02:25.770
+Brown carbonated is true and sugar is 40.
+
+02:26.280 --> 02:31.590
+When we start to represent this object as an array, we've lost those different property labels on here.
+
+02:31.710 --> 02:37.110
+And so you and I, as developers, would have to memorize the fact that the first element inside this
+
+02:37.110 --> 02:39.960
+array is supposed to be a string representing the color.
+
+02:40.290 --> 02:45.030
+The second element is supposed to be a boolean representing whether or not the drink is carbonated.
+
+02:45.480 --> 02:49.440
+And then the third element inside there is a number representing these sugar content.
+
+02:50.160 --> 02:55.260
+So the big difference between representing this as an object and something that looks like an array
+
+02:55.260 --> 03:01.890
+is really just that loss of information in these labels no longer is our code really self labeling.
+
+03:01.920 --> 03:05.580
+Instead, we have to kind of memorize the order of properties inside of here.
+
+03:06.310 --> 03:08.480
+So this is exactly what a tuple is.
+
+03:08.500 --> 03:14.890
+We have what looks like an array and we put in our property values into that array in a very specific
+
+03:14.890 --> 03:15.460
+order.
+
+03:15.940 --> 03:17.920
+So the ordering part is really critical.
+
+03:18.070 --> 03:23.800
+If we start to arbitrarily swap around elements inside of here, we are no longer going to understand
+
+03:23.800 --> 03:26.830
+which different value represents which property.
+
+03:27.370 --> 03:32.530
+So if you and I have memorized like as developers, that this array is always supposed to tell us the
+
+03:32.530 --> 03:39.070
+color, then the carbonation and then the sugar content, and we swap some elements inside of here and
+
+03:39.070 --> 03:40.420
+we don't have those labels.
+
+03:40.450 --> 03:45.640
+Now, this is kind of a meaningless record because we're now trying to indicate that our color is 40,
+
+03:46.090 --> 03:48.970
+carbonation is true, and sugar content is brown.
+
+03:49.240 --> 03:54.610
+So when we work with a tuple, we have a fixed series of elements or a fixed order, I should say.
+
+03:55.560 --> 03:55.850
+All right.
+
+03:55.860 --> 03:56.970
+Now, let's take a quick pause right here.
+
+03:57.000 --> 03:58.300
+We're going to come back the next section.
+
+03:58.320 --> 04:02.230
+Get some more examples around tuples and start to write out some code around them.
+
+04:02.250 --> 04:04.590
+So a quick pause and I'll see you in just a minute.

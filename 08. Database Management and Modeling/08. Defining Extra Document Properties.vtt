@@ -1,0 +1,247 @@
+WEBVTT
+
+00:00.840 --> 00:03.150
+In this video, we're going to start to solve issue number two.
+
+00:03.180 --> 00:08.640
+Remember, this issue number two was related to the fact that the set of properties that we pass in
+
+00:08.670 --> 00:14.070
+to create a new user document are different than the properties that actually exist on that document.
+
+00:14.400 --> 00:19.260
+Behind the scenes, we might add in, say, a created at or in updated at property.
+
+00:19.950 --> 00:21.650
+So let's figure out how we're going to solve this.
+
+00:22.130 --> 00:27.770
+After that, we'll then start to reflect on some that kind of strange syntax that we saw around that
+
+00:27.770 --> 00:28.340
+right there.
+
+00:28.340 --> 00:30.950
+And the any and the any right there.
+
+00:31.710 --> 00:31.950
+Okay.
+
+00:31.950 --> 00:35.580
+So to solve this issue, issue number two, we're going to create another interface.
+
+00:35.790 --> 00:39.030
+So after the two that we already put together, I'm going to put another comment in here.
+
+00:39.030 --> 00:41.910
+I'm going to say an interface that describes.
+
+00:43.860 --> 00:45.000
+The properties.
+
+00:45.910 --> 00:48.610
+That a user document has.
+
+00:49.350 --> 00:52.880
+So these interfaces, if you really sit down and read it, they really make a lot of sense.
+
+00:52.880 --> 00:56.000
+We've got one that describes what it takes to create a user.
+
+00:56.570 --> 01:02.900
+We've got another one that describes what the entire collection of users looks like, or at least methods
+
+01:02.900 --> 01:08.510
+associated with the user model, and then an interface that describes what properties a single user
+
+01:08.510 --> 01:09.140
+has.
+
+01:10.590 --> 01:12.150
+So I'm going to write out to Interface.
+
+01:13.480 --> 01:16.180
+We're going to call this one user doc.
+
+01:17.040 --> 01:20.520
+Like I say, extents mongoose dot document.
+
+01:21.980 --> 01:27.110
+So once again, we're going to say that the definition of what a user document is make all the different
+
+01:27.110 --> 01:29.330
+properties that a normal document has.
+
+01:29.750 --> 01:31.640
+And we're going to add a couple more on top.
+
+01:31.940 --> 01:36.860
+So in this case, we're going to say that an instance of a user is going to have an email that is a
+
+01:36.860 --> 01:39.590
+string and a password that is a string.
+
+01:42.330 --> 01:45.030
+So those are the properties that a single user has.
+
+01:45.420 --> 01:50.690
+If we ended up adding in additional properties or if Mongoose automatically added those properties in,
+
+01:50.700 --> 01:52.030
+this is where we would list them.
+
+01:52.050 --> 01:58.600
+So we would list out something like created at that's a string and updated at that is a string as well.
+
+01:58.620 --> 02:02.430
+But in our case, we are not telling Mongoose to add in these properties for us right now.
+
+02:02.430 --> 02:03.570
+So I'm going to remove those.
+
+02:03.570 --> 02:07.050
+But again, if we had those extra properties, that is where we would add them.
+
+02:09.820 --> 02:10.090
+Okay.
+
+02:10.090 --> 02:11.350
+So now we've put this together.
+
+02:11.560 --> 02:17.080
+We're now going to take this interface and we're going to apply it down at the very bottom.
+
+02:19.610 --> 02:22.040
+So where we are creating our user right here.
+
+02:22.760 --> 02:23.630
+Or the user model.
+
+02:23.630 --> 02:26.810
+I'm going to replace the any right there with user doc.
+
+02:28.830 --> 02:30.630
+I'm also going to go back up.
+
+02:33.410 --> 02:35.570
+To where we define the interface for user model.
+
+02:36.050 --> 02:40.460
+So we've now got an interface that describes what a single user looks like, which means when we call
+
+02:40.460 --> 02:44.660
+built, rather than returning any right here or saying that we are going to return any.
+
+02:44.690 --> 02:49.750
+We're going to instead indicate that we are going to return an instance of a user or a user document.
+
+02:49.760 --> 02:52.130
+So I'm going to replace that any with user doc.
+
+02:52.890 --> 02:56.250
+I'm going to replace the any right there with user doc as well.
+
+02:58.880 --> 02:59.020
+Okay.
+
+02:59.090 --> 03:01.850
+So let's now go down to the very bottom and we'll do a quick test.
+
+03:02.860 --> 03:05.080
+I'm going to once again create a new user by doing it.
+
+03:05.080 --> 03:08.680
+A user build and I'll pass in an email of.
+
+03:10.010 --> 03:10.820
+Whatever.
+
+03:12.320 --> 03:14.150
+And a password of whatever.
+
+03:15.500 --> 03:20.990
+So now if I hover over user right here, I'm being told that I got back an instance of user doc.
+
+03:23.290 --> 03:28.750
+So now if I try to print out or access properties on here, I can access things like user email.
+
+03:28.960 --> 03:31.510
+I can also access user password.
+
+03:31.870 --> 03:37.480
+If we did not have this interface correctly set up user doc right here, we would not be able to access
+
+03:37.480 --> 03:38.650
+these properties safely.
+
+03:38.740 --> 03:44.290
+So for example, let's say that we actually did want to add in this idea of a created at time or created
+
+03:44.290 --> 03:45.490
+or updated at time.
+
+03:45.520 --> 03:50.410
+If we write out to user updated at TypeScript is going to complain and say, hey, that property doesn't
+
+03:50.410 --> 03:55.420
+exist even if we know that that mongoose is going to add in this property automatically for us.
+
+03:55.810 --> 03:59.680
+So to tell TypeScript that, Hey, it's okay if we want to access this thing, all we would have to
+
+03:59.680 --> 04:06.400
+do again, go back up to the user doc interface and say updated at is going to be a string like so.
+
+04:07.410 --> 04:10.440
+And if we go back down now, that error has gone away.
+
+04:12.240 --> 04:12.450
+Okay.
+
+04:12.510 --> 04:12.930
+So that's it.
+
+04:12.930 --> 04:14.910
+That's how we solve issue number two.
+
+04:15.630 --> 04:18.610
+So I'm going to delete this extra stuff right here.
+
+04:20.380 --> 04:23.890
+I'm going to go back up to the interface and delete that updated at.
+
+04:24.890 --> 04:26.000
+And save the file.
+
+04:27.200 --> 04:30.110
+We're going to take a quick pause right here when we come back in the next video.
+
+04:30.140 --> 04:31.600
+One last thing I want you discuss.
+
+04:31.610 --> 04:35.050
+What is the goal of these little brackets right here?
+
+04:35.060 --> 04:36.770
+So down on mongoose model.
+
+04:36.800 --> 04:38.270
+Also up here.
+
+04:38.390 --> 04:40.460
+And I think that was the only other location.
+
+04:40.460 --> 04:42.650
+So what's the goal of those little English brackets?
+
+04:42.890 --> 04:47.180
+This is going to be a lecture that's mostly just about TypeScript, because this really is some TypeScript
+
+04:47.180 --> 04:48.090
+syntax right here.
+
+04:48.110 --> 04:51.410
+I just want to give you a little bit of backstory on what the goal of those things are and why we had
+
+04:51.410 --> 04:52.280
+to add them in.

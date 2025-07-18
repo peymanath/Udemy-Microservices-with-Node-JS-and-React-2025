@@ -1,0 +1,223 @@
+WEBVTT
+
+00:00.550 --> 00:03.160
+We've now spent a pretty good amount of time learning about gnats.
+
+00:03.160 --> 00:07.150
+And I would say that you pretty much know the basics of what you need to know to really make use of
+
+00:07.150 --> 00:08.650
+it inside of some application.
+
+00:08.950 --> 00:12.250
+Now, at this point, I want to take a look at the code that we've written out inside this listener
+
+00:12.250 --> 00:13.630
+file in the publisher file.
+
+00:13.630 --> 00:18.430
+And I just want to point out that there is a lot of boilerplate inside of here to just get to the point
+
+00:18.430 --> 00:21.250
+where we can actually receive a message and do something with it.
+
+00:21.550 --> 00:27.670
+So in total, we essentially have 42 lines of code where only just about one line, really just this
+
+00:27.670 --> 00:34.750
+right here has some logic related to really running some information or processing some incoming event.
+
+00:34.900 --> 00:39.930
+This line really is the only one where we receive some event data and do something with it.
+
+00:39.940 --> 00:44.710
+So it took us 41 lines to get one line of essentially business logic put together.
+
+00:45.420 --> 00:48.480
+Now eventually we're going to have a lot of listeners inside of our application.
+
+00:48.480 --> 00:51.280
+There are going to be many different kinds of events we have to listen to.
+
+00:51.300 --> 00:56.730
+And as you can imagine, we do not want to write out this entire 41 lines of setup for every different
+
+00:56.730 --> 00:58.590
+event that we're going to try to deal with.
+
+00:58.830 --> 01:00.060
+So with that in mind.
+
+01:01.180 --> 01:02.260
+Starting this video.
+
+01:02.290 --> 01:08.170
+We're going to try to refactor a lot of this logic around publishing and receiving messages to make
+
+01:08.170 --> 01:10.660
+it a lot easier to publish and receive.
+
+01:11.270 --> 01:15.740
+We're going to write out an initial implementation to make all the stuff a lot easier inside of this
+
+01:15.740 --> 01:17.470
+test project that we're currently working on.
+
+01:17.480 --> 01:22.340
+And eventually we're going to move all this logic over to our common module so we can use it across
+
+01:22.340 --> 01:23.720
+all of our different services.
+
+01:24.600 --> 01:28.860
+Let's first begin by getting a better idea of exactly how we're going to make this stuff more reusable
+
+01:28.860 --> 01:29.550
+in nature.
+
+01:30.060 --> 01:33.270
+So we're going to first begin on the listener side of things.
+
+01:33.540 --> 01:35.670
+We're going to create a class called Listener.
+
+01:35.700 --> 01:38.100
+This is going to be an abstract class.
+
+01:38.130 --> 01:41.190
+Remember, abstract classes are not meant to be used directly.
+
+01:41.220 --> 01:43.920
+Instead, we're going to subclass them in order to use them.
+
+01:44.250 --> 01:46.170
+I'll show you more and what that means in just a moment.
+
+01:46.200 --> 01:50.280
+Right now, let's just take a look at the properties that we're going to define inside this class.
+
+01:50.820 --> 01:56.250
+The entire goal of class is to essentially automate as much of all this stuff as possible.
+
+01:57.810 --> 02:00.890
+So inside this class, we're going to have a property called SUBJECT.
+
+02:00.900 --> 02:04.440
+This is going to be a string that's going to be the name of the channel that we're going to listen to.
+
+02:05.070 --> 02:06.840
+We're going to have an on message function.
+
+02:06.840 --> 02:11.250
+This is where we're going to actually run our business logic or implement the business logic.
+
+02:12.120 --> 02:17.580
+We're going to make sure that our class listener receives a stan client to use to listen for incoming
+
+02:17.580 --> 02:18.600
+events and whatnot.
+
+02:19.050 --> 02:21.390
+We're going to make sure this thing has a cute group name.
+
+02:21.930 --> 02:24.660
+We're going to make sure that it has an equate property.
+
+02:24.870 --> 02:30.210
+We discussed the goal of this manual act mode right here, and as we saw there is that automatic 32nd
+
+02:30.210 --> 02:30.810
+time out.
+
+02:30.810 --> 02:35.220
+But it turns out that when we create the subscription, we can also customize that 30 seconds.
+
+02:35.220 --> 02:41.070
+So we might for some listeners want to customize that equate down to maybe 5 seconds or so.
+
+02:41.070 --> 02:45.720
+So we'll make sure that we add in some properties just to allow ourselves to customize that window of
+
+02:45.720 --> 02:48.240
+how long we have to acknowledge an incoming message.
+
+02:49.030 --> 02:54.050
+We'll make a method that's going to make it a lot easier to create these options right here.
+
+02:54.070 --> 02:56.140
+So essentially just wrap up those lines of code.
+
+02:56.530 --> 03:00.040
+We'll have a listen method, which is where we're going to actually set up our subscription.
+
+03:00.040 --> 03:04.270
+And then finally, a helper method that will call parse message that is going to take a look at the
+
+03:04.270 --> 03:05.270
+incoming message.
+
+03:05.310 --> 03:08.390
+Figure out what kind of data is inside there and parse it in some way.
+
+03:08.410 --> 03:14.530
+So essentially like this right here, more or less where we pulled out the data and then we figured
+
+03:14.530 --> 03:20.710
+out whether or not that data was a string or a buffer and eventually parse that data into actual object
+
+03:20.710 --> 03:22.780
+from the string or the JSON that is.
+
+03:23.820 --> 03:27.570
+So I'm very purposefully just going through these properties very quickly right now because once we
+
+03:27.570 --> 03:30.030
+start writing some code, they will all make a lot more sense.
+
+03:31.070 --> 03:36.290
+Lastly, I want to mention is what we really mean by abstract class and why these two properties are
+
+03:36.290 --> 03:37.520
+labeled as abstract.
+
+03:37.820 --> 03:41.970
+So the real idea here is that we're not going to use the class listener directly.
+
+03:41.990 --> 03:47.750
+Instead, we are going to subclass this listener into things like ticket created listener and order
+
+03:47.750 --> 03:48.710
+updated listener.
+
+03:48.920 --> 03:52.610
+And then inside these subclasses, we're going to put together some different options to make sure that
+
+03:52.610 --> 03:58.370
+it listens specifically for, say, a ticket created event or in order updated event.
+
+03:58.940 --> 04:03.320
+So in other words, we're going to customize the subject that we're listening to in the subclass, and
+
+04:03.320 --> 04:08.450
+we're also going to customize the on message method inside the subclass as well to make sure that when
+
+04:08.450 --> 04:14.510
+we receive some event inside of a ticket created versus order updated, we can do some business logic
+
+04:14.510 --> 04:19.220
+or do some appropriate processing for it to get created event or in order updated event.
+
+04:19.670 --> 04:21.080
+So that's the general idea.
+
+04:21.380 --> 04:24.130
+So for right now, really just going to focus on creating class listener.
+
+04:24.140 --> 04:28.790
+We'll then take a look at how we can somehow subclass it into something that's more usable.
+
+04:29.220 --> 04:30.220
+Okay, quick pause right here.
+
+04:30.230 --> 04:32.330
+Let's start putting this thing together in just a moment.

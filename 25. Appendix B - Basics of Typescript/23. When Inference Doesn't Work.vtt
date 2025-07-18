@@ -1,0 +1,244 @@
+WEBVTT
+
+00:00.830 --> 00:04.820
+In this video, we're going to look at the final case in which we will make use of type annotations.
+
+00:04.820 --> 00:09.920
+So this will be whenever we have a variable where its type cannot be reasonably inferred, even if the
+
+00:09.920 --> 00:13.340
+declaration and initialization are on the same line.
+
+00:13.850 --> 00:16.880
+This is really going to be a very big corner case right here.
+
+00:16.880 --> 00:21.530
+Nonetheless, I just want you to understand when we want to use type annotations, so let's try to get
+
+00:21.530 --> 00:22.940
+through this example really quickly.
+
+00:23.360 --> 00:27.380
+I'm going to flip back over to my editor and at the very bottom once again, I'm going to add in a new
+
+00:27.380 --> 00:29.810
+section down here and I'll say this is the third case.
+
+00:29.810 --> 00:37.220
+This is when we have a variable whose type cannot be inferred correctly.
+
+00:38.760 --> 00:42.390
+For this example, we're going to create a array of numbers called numbers.
+
+00:42.420 --> 00:46.500
+I'm going to give it values like negative ten, negative one and 12.
+
+00:47.190 --> 00:50.520
+I'll then declare a variable called number above zero.
+
+00:51.030 --> 00:52.080
+So here's the idea.
+
+00:52.110 --> 00:54.060
+I want to iterate through the numbers array.
+
+00:54.240 --> 00:59.370
+If we find a number that is greater than zero, I want to assign it to number above zero.
+
+00:59.910 --> 01:03.270
+Otherwise I want to assign false to number above zero.
+
+01:03.840 --> 01:08.550
+So that means that we're going to have two different types of values being assigned to this variable.
+
+01:08.880 --> 01:11.940
+Now, this is some kind of bad code we're writing right here.
+
+01:11.940 --> 01:14.220
+I really don't recommend taking this approach in general.
+
+01:14.250 --> 01:17.760
+However, there are scenarios where you might need to do something like this.
+
+01:18.030 --> 01:22.020
+Doing it with a number and a boolean doesn't make a lot of sense, but there might be other cases like
+
+01:22.020 --> 01:27.750
+maybe you're trying to find a user's favorite piece of media and maybe possible choices for media are
+
+01:27.750 --> 01:32.910
+like a blog post or an image or a book or a movie or something like that.
+
+01:33.210 --> 01:38.910
+So if we had something like, you know, users favorite media, it would possibly make sense to assign
+
+01:38.910 --> 01:41.340
+some different type of values to this variable.
+
+01:42.160 --> 01:44.230
+So this is kind of where this scenario is going to come up.
+
+01:44.830 --> 01:45.160
+All right.
+
+01:45.160 --> 01:48.760
+So we're going to say that by default, a number above zero is going to be false.
+
+01:48.760 --> 01:54.220
+And then if we ever find something above zero inside this array, we need to assign that number to number
+
+01:54.220 --> 01:54.880
+above zero.
+
+01:54.910 --> 01:56.110
+So let's write this code out.
+
+01:56.410 --> 01:57.670
+So I'll say four.
+
+01:57.670 --> 02:01.120
+Let equals zero is less than number length.
+
+02:03.290 --> 02:04.370
+C++.
+
+02:04.670 --> 02:12.260
+And then if numbers that I is greater than zero will say number above zero is going to be that number.
+
+02:12.270 --> 02:13.730
+So that's going to be numbers at I.
+
+02:14.170 --> 02:17.900
+As soon as we put that in, we're going to see an error message and I definitely would expect to see
+
+02:17.900 --> 02:18.410
+this.
+
+02:18.950 --> 02:24.140
+So type inference already kicked in right here on this line of code we assigned false to number above
+
+02:24.140 --> 02:24.620
+zero.
+
+02:24.620 --> 02:28.760
+So TypeScript very correctly thinks that this is supposed to be of type boolean.
+
+02:29.090 --> 02:32.990
+Then on this line of code right here, we're trying to assign something that is definitely a number
+
+02:32.990 --> 02:34.100
+to that variable.
+
+02:34.100 --> 02:39.110
+So the error is that we're trying to assign a number to a variable that is supposed to reference a boolean.
+
+02:40.220 --> 02:42.610
+So this is one of the downsides of type inference.
+
+02:42.620 --> 02:43.940
+Type inference kicked in here.
+
+02:43.940 --> 02:48.890
+It did its job, but it didn't really understand the intent of our code or what we're trying to do.
+
+02:49.970 --> 02:54.770
+So because type inference is marking this variable, as always, B being a boolean, our code won't
+
+02:54.770 --> 02:55.880
+work as is.
+
+02:55.910 --> 03:01.220
+So to fix this, we could add in a type annotation, so we could add in something that says Colon.
+
+03:02.300 --> 03:03.680
+And then Boolean.
+
+03:04.450 --> 03:06.160
+Or number like.
+
+03:06.160 --> 03:08.430
+So this character right here is the pipe.
+
+03:08.440 --> 03:10.480
+It is not an ele, it's not an eye.
+
+03:10.510 --> 03:13.660
+Is a character right above the return key on your keyboard.
+
+03:14.680 --> 03:17.660
+You can picture this as being like an ore statement.
+
+03:17.680 --> 03:24.370
+So this is saying that number above zero is going to be either a Boolean value or it might be a number
+
+03:24.370 --> 03:25.900
+one of the two.
+
+03:26.380 --> 03:31.600
+So any time that we need to express kind of like an or statement with our types, we will have to use
+
+03:31.600 --> 03:35.170
+a type annotation type inference won't work correctly.
+
+03:36.690 --> 03:41.430
+So by using this type annotation, TypeScript now understands that we can assign a value of type Boolean
+
+03:41.430 --> 03:44.130
+or a value of type number to this variable.
+
+03:44.310 --> 03:47.490
+And if we mouse over that variable, it'll be reflected right there as well.
+
+03:48.280 --> 03:48.520
+All right.
+
+03:48.520 --> 03:53.710
+So like I said, this is kind of a bad code example, but we could kind of easily imagine some other
+
+03:53.710 --> 03:58.630
+scenarios where we might have to express a single variable that has possibly different types.
+
+03:58.630 --> 04:03.460
+And we definitely are going to add some code that looks like this in a future project in this course.
+
+04:03.460 --> 04:08.470
+So we'll see this kind of scenario of where we have to add in a type annotation, but with the kind
+
+04:08.470 --> 04:09.940
+of more practical approach.
+
+04:10.570 --> 04:10.840
+All right.
+
+04:10.840 --> 04:11.530
+So that's pretty much it.
+
+04:11.530 --> 04:15.910
+So we now have taken a look at the three different cases where we definitely will have to use a type
+
+04:15.910 --> 04:16.690
+annotation.
+
+04:16.930 --> 04:18.190
+So let's now take a quick pause.
+
+04:18.190 --> 04:23.650
+We're going to move on in the next video and talk about type annotations and inference around functions
+
+04:23.650 --> 04:25.030
+and objects as well.
+
+04:25.030 --> 04:26.170
+Where is that diagram right here?
+
+04:26.170 --> 04:27.310
+Functions and objects.
+
+04:27.310 --> 04:31.300
+And we're going to get through these other approaches really quickly because we just had to do some
+
+04:31.300 --> 04:34.270
+like really original work in this variable section.
+
+04:34.270 --> 04:36.580
+So a quick pause and I'll see you in just a minute.

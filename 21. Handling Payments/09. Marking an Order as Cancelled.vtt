@@ -1,0 +1,289 @@
+WEBVTT
+
+00:00.940 --> 00:02.930
+We've got a listener put together for order created.
+
+00:02.950 --> 00:05.440
+We're now going to repeat that same process for order cancelled.
+
+00:05.560 --> 00:09.670
+The only thing we're going to do inside the order cancelled listener is update the status of the order
+
+00:09.670 --> 00:11.750
+that we had previously saved to cancelled.
+
+00:11.770 --> 00:12.880
+That's pretty much it.
+
+00:13.210 --> 00:17.500
+Then whenever a user makes a request to pay an order or essentially create a charge, we're going to
+
+00:17.500 --> 00:21.430
+check to see if the order they are trying to pay for has a status of cancelled or not.
+
+00:21.460 --> 00:24.550
+And of course, if it has a status of cancelled, we will reject the payment.
+
+00:24.580 --> 00:25.510
+That's pretty much it.
+
+00:26.020 --> 00:27.760
+Let's get started on this order.
+
+00:27.760 --> 00:28.960
+Cancelled listener.
+
+00:30.800 --> 00:34.040
+Hey, back inside my listeners directory, I'll make a new file of order.
+
+00:34.640 --> 00:35.540
+Canceled.
+
+00:37.810 --> 00:38.500
+Listener.
+
+00:39.660 --> 00:42.480
+And this listener is going to look very similar to the one we just put together.
+
+00:42.480 --> 00:43.980
+So let's just get right to it.
+
+00:44.280 --> 00:47.070
+At the very top, we will import our order.
+
+00:48.630 --> 00:55.320
+Cancelled events are subject M and the listener base class from our common module.
+
+00:57.400 --> 00:59.590
+I'll then export a new class of order.
+
+01:00.160 --> 01:01.630
+Cancelled listener.
+
+01:03.100 --> 01:08.770
+That will extend listener and we'll plug in our order cancelled event.
+
+01:10.730 --> 01:13.310
+We can then set up our subject as subjects.
+
+01:14.090 --> 01:15.050
+Order cancelled.
+
+01:16.180 --> 01:17.650
+Assign it a value as well.
+
+01:18.940 --> 01:21.760
+After that, we will import our Q group name.
+
+01:25.260 --> 01:26.460
+From Cue group name.
+
+01:28.890 --> 01:30.240
+And then assign that in the body.
+
+01:30.240 --> 01:32.010
+So cute group name is.
+
+01:33.460 --> 01:34.010
+You.
+
+01:34.030 --> 01:35.170
+Group name.
+
+01:36.770 --> 01:37.340
+As usual.
+
+01:37.340 --> 01:38.600
+You know what comes next?
+
+01:38.630 --> 01:40.340
+Async on message.
+
+01:40.970 --> 01:46.160
+We're going to receive a data object that has type order cancelled event.
+
+01:48.510 --> 01:50.760
+And then our message, which is of type message.
+
+01:50.970 --> 01:53.040
+And again, let's import our message type.
+
+01:55.290 --> 01:56.040
+At the top.
+
+01:59.850 --> 02:00.410
+Okay.
+
+02:03.430 --> 02:07.500
+Now let's take a look at what data is available to us, just as a really quick reminder on the order
+
+02:07.510 --> 02:08.800
+cancelled event object.
+
+02:08.800 --> 02:11.590
+So I'll do a command click on order cancel event at the very top.
+
+02:12.160 --> 02:15.250
+So it's like we are told the ID of the order that was cancelled.
+
+02:15.250 --> 02:19.660
+We're also given a version and then presumably, well, the status is going to be cancelled.
+
+02:20.080 --> 02:23.530
+So all we have to do is take a look in our collection of orders.
+
+02:23.710 --> 02:28.570
+We're going to try to find some order with the given ID and the appropriate version number as well.
+
+02:29.200 --> 02:31.150
+And we're going to update its status to cancelled.
+
+02:31.150 --> 02:32.650
+That's pretty much all we have to do.
+
+02:34.990 --> 02:39.490
+So instead of on message, we're going to begin by making a query and trying to find the appropriate
+
+02:39.490 --> 02:40.660
+order for that.
+
+02:40.660 --> 02:42.340
+We, of course, need our order model.
+
+02:44.050 --> 02:45.550
+So I will import order.
+
+02:46.870 --> 02:48.280
+From up to directories.
+
+02:48.280 --> 02:49.360
+Order at the top.
+
+02:52.960 --> 02:58.480
+And we can find an order as a wait order, find one.
+
+02:58.510 --> 03:02.050
+The reason we're using a find one here, you might remember we ran into this a little bit ago.
+
+03:02.050 --> 03:05.440
+When we make this query, we want to find a record with the appropriate ID.
+
+03:05.470 --> 03:10.360
+So the ID that is listed inside this data object and the appropriate version as well, just make sure
+
+03:10.360 --> 03:12.730
+that we are processing all these events in the correct order.
+
+03:13.030 --> 03:17.410
+Now, with the order itself, it doesn't really make a big difference to worry about the version too
+
+03:17.410 --> 03:22.510
+much, because remember around in order, all we really have is the order created in the order cancelled.
+
+03:22.510 --> 03:23.350
+That is it.
+
+03:23.530 --> 03:28.570
+There's not really any ordering of events per say, because if we fail to find the order at all, that
+
+03:28.570 --> 03:33.430
+means that, well, we probably have not correctly processed that create order event just yet.
+
+03:33.790 --> 03:38.500
+And if we find the correct order, it doesn't really matter what the version is, because there's never,
+
+03:38.500 --> 03:42.490
+ever going to be any intermediate update events inside there either.
+
+03:44.060 --> 03:48.020
+So we don't strictly need the version thing this time around, but we're going to include it anyways
+
+03:48.020 --> 03:52.610
+just to possibly prepare our code for some particular new event that we might introduce into our app
+
+03:52.610 --> 03:56.780
+at some point in time in the future of something like maybe order updated or something like that.
+
+03:56.780 --> 04:01.130
+So if we ever had some kind of update event, that's when the version starts to get really important.
+
+04:01.670 --> 04:05.270
+So we're going to write out some code here that's just going to assume possibly at some future point
+
+04:05.270 --> 04:08.210
+in time, we might have the ability to update and order.
+
+04:10.090 --> 04:10.510
+Okay.
+
+04:10.510 --> 04:12.040
+So four, find one right here.
+
+04:12.310 --> 04:18.250
+We'll try to find some appropriate ID of underscore ID and will come from data ID and then our version
+
+04:18.250 --> 04:20.890
+will be data version minus one.
+
+04:22.780 --> 04:28.210
+Once again, we might want to extract this, find one helper method into a separate function inside
+
+04:28.210 --> 04:29.740
+of our model file itself.
+
+04:29.980 --> 04:32.560
+I'll leave that up to you if you want to go through that process.
+
+04:34.350 --> 04:37.230
+So after we've got our order, well, then make sure that we actually did find an order.
+
+04:37.230 --> 04:42.690
+So if there is no order, let's throw a new error and just say order not found.
+
+04:44.760 --> 04:48.000
+And then otherwise we'll update the status of this order manually.
+
+04:49.210 --> 04:50.570
+To update the status manually.
+
+04:50.570 --> 04:56.840
+We need to import the status or the order status enum from our common module.
+
+05:00.450 --> 05:06.240
+Well, then do an order set of status to order status not cancelled.
+
+05:07.910 --> 05:09.070
+And then we can save the order.
+
+05:09.080 --> 05:10.520
+So I'll do in a wait order.
+
+05:10.790 --> 05:11.330
+Save.
+
+05:12.000 --> 05:14.640
+And naturally, right after that, we will act the message.
+
+05:16.710 --> 05:17.790
+And that's pretty much it.
+
+05:21.370 --> 05:21.730
+All right.
+
+05:21.730 --> 05:26.530
+So at this point, we could definitely write a test here, but very much like the last listener we put
+
+05:26.530 --> 05:28.810
+together, not super necessary.
+
+05:28.810 --> 05:32.290
+So once again, we will write a test, but it is 100% optional.
+
+05:32.290 --> 05:34.630
+So if you don't want to write the test, no problem whatsoever.
+
+05:34.990 --> 05:38.410
+We'll take a pause right here, come back in the next video, go through the optional test and then
+
+05:38.410 --> 05:39.310
+move on from there.

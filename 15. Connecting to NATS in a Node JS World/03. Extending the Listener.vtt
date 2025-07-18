@@ -1,0 +1,298 @@
+WEBVTT
+
+00:00.800 --> 00:05.300
+We've now got our abstract class listener, which is going to make it a lot easier to create listeners
+
+00:05.300 --> 00:08.770
+for all the different kinds of events that are going to be flowing around our application.
+
+00:08.780 --> 00:12.260
+So let's take a look at how we're going to actually use this thing as a quick reminder.
+
+00:12.260 --> 00:19.220
+Right now, our publisher file is publishing events on a channel or with a subject of ticket colon created.
+
+00:19.670 --> 00:24.050
+So let's make a listener kind of like this one right here, a ticket created listener.
+
+00:24.440 --> 00:29.780
+To do so, we are going to extend the listener class and then just define those three abstract properties
+
+00:29.780 --> 00:30.590
+inside of it.
+
+00:30.590 --> 00:33.020
+Subject on message and cue group name.
+
+00:34.610 --> 00:36.980
+So back over inside, my editor at the very bottom.
+
+00:38.190 --> 00:40.110
+I'll define a class called.
+
+00:41.260 --> 00:49.000
+Ticket created listener And this is going to be extending the listener abstract class as soon as we
+
+00:49.000 --> 00:49.460
+write that out.
+
+00:49.480 --> 00:50.560
+We're going to get some ears here.
+
+00:50.560 --> 00:55.960
+So again, this is TypeScript telling us that if we want to extend listener, we have to define on message
+
+00:55.990 --> 00:57.820
+queue, group, name and subject.
+
+00:58.120 --> 01:02.800
+So remember using these abstract class things is really fantastic because TypeScript is going to help
+
+01:02.800 --> 01:05.110
+you implement parts of your code for you.
+
+01:06.260 --> 01:07.850
+Let's first take care of subject.
+
+01:07.850 --> 01:10.310
+So this will be the name of the channel that we want to listen to.
+
+01:10.340 --> 01:16.190
+In our case, it is Ticket Colon created again because inside of our publisher, that is the channel
+
+01:16.190 --> 01:18.020
+that we are publishing information to.
+
+01:19.540 --> 01:21.430
+Next up is our cue group name.
+
+01:22.000 --> 01:26.500
+Remember, the only requirement here is that it is some consistent value because we are essentially
+
+01:26.500 --> 01:32.410
+joining a Q group with other services and whenever an event comes in, the message will be randomly
+
+01:32.410 --> 01:36.820
+distributed to one of the instances or one of the listeners inside that Q group.
+
+01:37.270 --> 01:40.440
+So let's imagine that we are creating this listener of ticket created.
+
+01:40.450 --> 01:42.300
+How about inside of our payment service?
+
+01:42.310 --> 01:46.030
+We've not yet put it together, but we'll assume that we are writing out this listener inside there.
+
+01:46.390 --> 01:50.830
+So I'm going to try to join a queue group name of payments service.
+
+01:52.510 --> 01:55.420
+And then finally we'll implement implement on message.
+
+01:56.050 --> 02:00.460
+On message is going to receive our event data or the actual data coming out of the event.
+
+02:00.460 --> 02:03.760
+And it's also going to receive the event itself as the second argument.
+
+02:04.150 --> 02:05.500
+So I'll put in on.
+
+02:06.490 --> 02:07.480
+Message.
+
+02:10.190 --> 02:14.360
+This thing is going to receive our event data which is of type any for right now.
+
+02:14.570 --> 02:16.940
+We're going to provide a better type for that in just a moment.
+
+02:16.940 --> 02:18.560
+But right now, any is totally fine.
+
+02:19.350 --> 02:22.020
+And then the actual message as the second argument.
+
+02:23.030 --> 02:26.720
+So then inside of here we could run whatever business logic we want to run.
+
+02:26.720 --> 02:31.940
+We can try to take the data, handle it in some fashion, update something in our database or whatever
+
+02:31.940 --> 02:32.840
+we need to do.
+
+02:33.410 --> 02:35.690
+So right now, I'll just do a console log and say.
+
+02:37.270 --> 02:38.350
+Event data.
+
+02:39.830 --> 02:41.240
+And the console log out the data.
+
+02:41.780 --> 02:44.480
+Now, one other quick thing inside of on message.
+
+02:44.480 --> 02:47.330
+We're presumably going to have some business logic inside of here.
+
+02:47.330 --> 02:52.490
+And if the business logic fails for any reason, remember, we want to just allow this message to time
+
+02:52.490 --> 02:57.620
+out, to fail, deliver essentially so that Nat's attempts to re deliver it automatically at some point
+
+02:57.620 --> 02:58.580
+in time the future.
+
+02:59.700 --> 03:05.850
+So if everything goes correctly, where you are going to call message back and acknowledge the message.
+
+03:05.880 --> 03:10.200
+Otherwise, if something goes poorly, we are not going to act the message and just allow the message
+
+03:10.200 --> 03:10.950
+to time out.
+
+03:11.310 --> 03:17.160
+So if right now we'll assume that everything inside of here goes correctly and we'll do a message like
+
+03:17.160 --> 03:17.610
+so.
+
+03:18.250 --> 03:22.150
+So that is what's going to actually mark this message as successfully having been parsed.
+
+03:24.580 --> 03:26.050
+So let's save this now.
+
+03:26.050 --> 03:29.830
+To actually use it, we're going to need to create an instance of ticket created listener.
+
+03:30.490 --> 03:37.270
+And remember this Things constructor was defined inside of our listener and the constructor requires
+
+03:37.270 --> 03:39.940
+us to provide a pre initialized client.
+
+03:39.940 --> 03:43.270
+So it should be a client that is already connected to our net server.
+
+03:44.040 --> 03:48.330
+We already went through that process of creating a client and connecting it up at the top of the file.
+
+03:48.330 --> 03:49.620
+So let's go up there right now.
+
+03:51.400 --> 03:52.850
+So this is where we create our client.
+
+03:52.870 --> 03:55.630
+We then attempted to connect and we listen for the Connect event.
+
+03:57.660 --> 04:01.590
+We still want to keep around all the on clothes stuff to make sure that we clean up our connection.
+
+04:01.830 --> 04:06.180
+But we do not need to create this option stuff because we have already gone ahead and implemented all
+
+04:06.180 --> 04:07.620
+this inside that listener class.
+
+04:07.620 --> 04:09.450
+So I'm going to delete that options block.
+
+04:10.190 --> 04:12.440
+I'm going to delete the subscription that we created.
+
+04:13.280 --> 04:16.970
+And I'll delete where we actually handled messages inside the subscription.
+
+04:18.040 --> 04:23.650
+So now instead to do pretty much everything we were doing previously, we should only have to call new.
+
+04:24.530 --> 04:26.900
+Tickets created listener.
+
+04:28.250 --> 04:31.250
+And pass in our nats client of Stan.
+
+04:34.440 --> 04:38.280
+Then after that, we're going to make sure that we tell this thing to start listening for incoming data.
+
+04:38.280 --> 04:41.760
+And we do so by calling that listen method.
+
+04:42.690 --> 04:45.990
+So we'll create the instance and call listen on it like so.
+
+04:47.620 --> 04:48.490
+And that should be it.
+
+04:48.520 --> 04:49.600
+So let's save this.
+
+04:50.080 --> 04:52.750
+We're going to flip back over to our terminal and see how we're doing.
+
+04:54.090 --> 04:54.810
+All right.
+
+04:55.350 --> 04:57.810
+So looks like everything was created.
+
+04:58.500 --> 05:03.090
+So we have received some message right here of ticket created on our payment service.
+
+05:03.600 --> 05:07.110
+And there's the event data from the on message method.
+
+05:08.230 --> 05:12.110
+So now, in theory, we should be able to also publish a new event.
+
+05:12.810 --> 05:14.460
+And have it show up down here as well.
+
+05:14.970 --> 05:15.270
+Yep.
+
+05:15.270 --> 05:16.270
+There it was right there.
+
+05:16.290 --> 05:20.100
+I know it's kind of hard to see if I clear that console at the command k and then republish.
+
+05:20.280 --> 05:22.620
+I will see it up here in one of these two windows.
+
+05:23.800 --> 05:24.070
+All right.
+
+05:24.070 --> 05:26.650
+Well, I'd say that this is definitely a lot easier to read.
+
+05:26.650 --> 05:31.470
+And eventually, maybe not right now, but eventually a lot easier to understand as well.
+
+05:31.480 --> 05:36.520
+So any time that we want to receive an event or somehow handle incoming events, all we really have
+
+05:36.520 --> 05:41.440
+to do is implement a class like this right here, list out the subject, a queue group name, and then
+
+05:41.440 --> 05:41.950
+define this.
+
+05:41.950 --> 05:47.230
+On message and on message will eventually be called with some data and message itself.
+
+05:48.310 --> 05:49.140
+So this looks pretty good.
+
+05:49.150 --> 05:51.210
+But still one or two other things I want to improve.
+
+05:51.220 --> 05:53.230
+So quick pause right here and I'll see you in just a minute.

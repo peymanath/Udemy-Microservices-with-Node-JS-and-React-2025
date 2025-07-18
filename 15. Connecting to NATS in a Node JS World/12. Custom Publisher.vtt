@@ -1,0 +1,424 @@
+WEBVTT
+
+00:01.250 --> 00:03.350
+I'm inside of our publisher file.
+
+00:03.350 --> 00:08.090
+Inside of here we are creating some piece of data and then publishing it off to the net server.
+
+00:08.420 --> 00:11.990
+Now, when we take a look at this published code, it definitely works right now.
+
+00:12.140 --> 00:16.700
+But I want you to really imagine all the locations where we could very easily make a typo and not really
+
+00:16.700 --> 00:18.740
+have anything to catch that typo.
+
+00:19.160 --> 00:24.680
+If I take a look at this data object, I could very easily accidentally define price as a string like
+
+00:24.680 --> 00:27.020
+dollar sign 20 instead of title.
+
+00:27.020 --> 00:29.180
+I could very accidentally put in name.
+
+00:30.090 --> 00:32.190
+On the subject of ticket created right here.
+
+00:32.190 --> 00:37.440
+I could very accidentally put in ticket created, which is a different channel as far as Nat streaming
+
+00:37.440 --> 00:38.520
+server is concerned.
+
+00:39.060 --> 00:43.500
+So even though this code is very simple right now and easy to understand, there's an incredible number
+
+00:43.500 --> 00:48.330
+of locations where we could very easily make a typo that would be rather hard to catch when we start
+
+00:48.330 --> 00:49.620
+to deploy a service.
+
+00:50.720 --> 00:55.850
+So in this video, we're going to start to put together a publisher based class very similar to the
+
+00:55.850 --> 00:58.130
+base listener class we already put together.
+
+00:58.520 --> 01:03.770
+The entire goal of all this is to get TypeScript to check our code and make sure that whenever we try
+
+01:03.770 --> 01:08.090
+to emit some kind of event or some data, it has the correct structure, the correct properties, the
+
+01:08.090 --> 01:13.670
+correct types, and make sure that whenever we actually publish that data, we provide a valid subject
+
+01:13.670 --> 01:15.050
+name inside of here as well.
+
+01:15.080 --> 01:20.120
+That is the goal of all the stuff we are trying to get TypeScript to help us out and make sure we don't
+
+01:20.120 --> 01:22.460
+make these silly typos at this point.
+
+01:22.460 --> 01:25.670
+Just as a side comment, this all might seem really unnecessary.
+
+01:25.670 --> 01:28.370
+You might be thinking, Stephen, when am I going to make a typo?
+
+01:28.490 --> 01:33.530
+Well, remember on a microservices project, the kind of underlying assumption here is that you're going
+
+01:33.530 --> 01:38.690
+to be working on a microservices project with a team, and so you need something in place to make sure
+
+01:38.690 --> 01:43.550
+that your teammates do not make mistakes just as much as you need to make sure that you are not going
+
+01:43.550 --> 01:44.420
+to make a mistake.
+
+01:44.750 --> 01:48.950
+It is very easy for people in a team to just very slightly miscommunicated.
+
+01:48.950 --> 01:53.300
+On whether some property name is title or name you never know.
+
+01:54.000 --> 01:54.260
+Okay.
+
+01:54.270 --> 01:58.350
+So long story short, we're going to write out some code that looks very, very similar, almost identical
+
+01:58.350 --> 02:00.110
+to the base listener class.
+
+02:00.120 --> 02:01.560
+It's going to be an abstract class.
+
+02:01.560 --> 02:07.110
+We're going to try to have some coupling or checking using a subject and some other kind of argument
+
+02:07.110 --> 02:08.780
+thingamajig or something like that.
+
+02:08.790 --> 02:10.620
+Let's just get to it and start writing some code.
+
+02:11.890 --> 02:16.660
+Inside of my events directory, I'll make a new file called Base Publisher.
+
+02:19.120 --> 02:19.720
+Yes.
+
+02:20.890 --> 02:21.460
+Inside of here.
+
+02:21.460 --> 02:23.470
+I'm going to immediately add in a couple of imports.
+
+02:23.470 --> 02:24.730
+I'm going to get Stan.
+
+02:25.570 --> 02:27.220
+From Node Nat streaming.
+
+02:28.040 --> 02:31.730
+And I'm going to get our big list of subjects from subjects.
+
+02:33.680 --> 02:35.570
+I then want you to find an export.
+
+02:35.570 --> 02:39.050
+An abstract class called publisher.
+
+02:39.890 --> 02:44.600
+I want this to be a generic class because this is how we're going to eventually enforce some type of
+
+02:44.600 --> 02:49.130
+checking on the subject for all the different subclasses of publisher we put together.
+
+02:49.890 --> 02:51.480
+So this is going to be a generic class.
+
+02:51.480 --> 02:54.240
+We're going to accept some type that we're going to refer to as T.
+
+02:56.540 --> 02:58.280
+And it's going to extend event.
+
+02:59.580 --> 03:01.650
+Let's define that event interface right above.
+
+03:03.260 --> 03:08.390
+So in order to be an event, you must have a subject, and the subject must be one of the subjects listed
+
+03:08.390 --> 03:10.280
+out inside that subject's enum.
+
+03:12.290 --> 03:15.490
+You must also have a data property and its type can be any.
+
+03:15.500 --> 03:20.450
+We don't really want to enforce any specific data type around this base interface.
+
+03:21.460 --> 03:22.780
+It's now inside a publisher.
+
+03:22.810 --> 03:26.350
+We're going to do something very similar that we did inside of our listener, where we're going to say
+
+03:26.350 --> 03:30.220
+that this thing has a couple of different abstract properties, so we're not going to use this publisher
+
+03:30.220 --> 03:30.990
+directly.
+
+03:31.030 --> 03:33.240
+Same way we did not use the listener directly.
+
+03:33.250 --> 03:38.200
+We are going to subclass publisher and have different publishers that are meant to publish different
+
+03:38.200 --> 03:39.220
+kinds of events.
+
+03:40.440 --> 03:44.160
+So we're going to define an abstract property of subject.
+
+03:44.900 --> 03:46.820
+And this must be equal to.
+
+03:47.710 --> 03:51.760
+Be it custom type right here or the generic types subject property.
+
+03:54.130 --> 03:59.410
+Our publisher is also going to need a copy of the Nats client that hopefully has already been initialized
+
+03:59.410 --> 04:00.520
+inside of our application.
+
+04:00.790 --> 04:02.740
+So we'll make sure this thing has a constructor.
+
+04:04.070 --> 04:08.750
+Where we're going to receive some client type nets.
+
+04:11.110 --> 04:13.150
+I'll make sure that I update the client property.
+
+04:14.560 --> 04:15.520
+And I'll make sure.
+
+04:16.090 --> 04:16.420
+Sorry.
+
+04:16.420 --> 04:16.600
+Not.
+
+04:16.600 --> 04:17.440
+Not Stan.
+
+04:17.470 --> 04:19.150
+That's such an easy thing to forget.
+
+04:19.300 --> 04:19.930
+Who came up with that?
+
+04:19.930 --> 04:21.220
+They should really should just call it client.
+
+04:21.220 --> 04:22.480
+But I digress.
+
+04:22.510 --> 04:25.780
+We'll also make sure that our class has a property of client as well.
+
+04:27.090 --> 04:28.230
+We'll say client.
+
+04:29.680 --> 04:30.700
+Will be of type.
+
+04:32.010 --> 04:32.670
+Stan.
+
+04:33.060 --> 04:36.480
+I'm going to make sure this thing is marked as private just so no one else tries to reach in and mess
+
+04:36.480 --> 04:37.500
+around with it at all.
+
+04:38.930 --> 04:39.190
+Okay.
+
+04:39.200 --> 04:43.730
+So now we need a function that is going to actually start to publish some information just as we had
+
+04:43.730 --> 04:47.240
+the and function inside of our base listener class.
+
+04:47.360 --> 04:48.470
+Remember, listen right here.
+
+04:48.470 --> 04:52.160
+This is what actually reached out with the Stan client and created a subscription.
+
+04:52.190 --> 04:55.250
+We want to have a function very similar to that inside of our publisher.
+
+04:55.370 --> 05:01.040
+And the goal of this function is going to be to take some data or like an event data and publish it
+
+05:01.040 --> 05:02.510
+off to the NAT streaming server.
+
+05:02.930 --> 05:05.930
+So we're going to define a function called publish.
+
+05:06.730 --> 05:12.400
+This thing is going to take some data that we want to publish and its type is going to be of type T
+
+05:12.430 --> 05:13.150
+data.
+
+05:16.920 --> 05:22.200
+Then inside of here, we're going to make use of our Nat's client very similar to how we did back over
+
+05:22.200 --> 05:24.060
+here inside of our publisher file.
+
+05:24.270 --> 05:27.010
+We're going to call publish on that client.
+
+05:27.030 --> 05:30.990
+We're going to provide the subject that we want to provide this or publish this data as and then the
+
+05:30.990 --> 05:32.550
+data as the second argument.
+
+05:32.820 --> 05:36.360
+So inside of here, we'll say this client publish.
+
+05:38.960 --> 05:42.440
+The subject that we want to publish this event, too, is going to be the subject property.
+
+05:42.800 --> 05:49.610
+So this subject and the data that we want to be publishing is the data argument data like.
+
+05:49.610 --> 05:53.630
+So now there is an optional third argument here of a callback function.
+
+05:54.020 --> 05:56.810
+We're going to come back and work with this callback function in just a little bit.
+
+05:56.810 --> 06:02.090
+But right now, whenever it gets executed, after we publish this event, let's just do a console log
+
+06:02.090 --> 06:04.370
+of event published.
+
+06:04.640 --> 06:08.660
+And like I said, we'll eventually come back and do something a little bit more with the callback.
+
+06:09.420 --> 06:09.720
+All right.
+
+06:09.720 --> 06:14.400
+So believe it or not, that is pretty much it for this abstract publisher base class.
+
+06:14.940 --> 06:17.970
+It's now just the same as what we were doing with our listener.
+
+06:18.420 --> 06:20.950
+This is the definition of what a publisher is.
+
+06:20.970 --> 06:25.860
+We're now going to subclass the publisher into something that can actually publish very specific kinds
+
+06:25.860 --> 06:28.680
+of events, such as a ticket created event.
+
+06:30.520 --> 06:38.560
+So inside of my events directory, I'm going to make a new file called Ticket Related Publisher TS.
+
+06:40.490 --> 06:44.180
+Inside of here at the very top, we will import the publisher.
+
+06:45.100 --> 06:48.160
+We just created from base publisher.
+
+06:50.120 --> 06:54.380
+I will also import the ticket created events.
+
+06:55.520 --> 06:58.040
+From ticket created event.
+
+06:59.270 --> 07:01.950
+And then finally I'm going to get our subjects in some.
+
+07:04.760 --> 07:06.200
+From subjects.
+
+07:07.570 --> 07:12.280
+Then inside of here, we're going to export a class called Ticket Created Publisher.
+
+07:12.730 --> 07:14.440
+And it's going to extend.
+
+07:15.510 --> 07:16.260
+Publisher.
+
+07:17.470 --> 07:21.250
+And because we are making use of publisher, remember publisher is a generic class, which means we
+
+07:21.250 --> 07:22.900
+have to provide a type argument.
+
+07:22.900 --> 07:26.770
+So the type of event that we're trying to publish here is a ticket created event.
+
+07:26.770 --> 07:30.040
+So we'll stick in ticket related events like so.
+
+07:34.000 --> 07:36.640
+Then we're going to define the subject.
+
+07:36.970 --> 07:40.240
+If we hover over this, as a matter of fact, it'll tell us we have to define the subject.
+
+07:42.650 --> 07:44.150
+Very similar to what we did inside the listener.
+
+07:44.150 --> 07:47.540
+We're going to say that the subject must always be of type subjects.
+
+07:48.020 --> 07:52.910
+Ticket created and the actual value for it must be subjects to get created.
+
+07:54.120 --> 07:55.290
+And that's pretty much it.
+
+07:55.590 --> 07:58.020
+We do not have to define a published function here.
+
+07:58.020 --> 08:01.500
+We already define the published function inside the publisher base class.
+
+08:02.430 --> 08:04.110
+So how would we actually make use of this?
+
+08:04.140 --> 08:05.700
+Well, this video is running a little bit long.
+
+08:05.700 --> 08:06.870
+Let's take a quick pause right here.
+
+08:06.870 --> 08:10.860
+We'll come back to the next video and then see how we actually make use of this custom publisher.

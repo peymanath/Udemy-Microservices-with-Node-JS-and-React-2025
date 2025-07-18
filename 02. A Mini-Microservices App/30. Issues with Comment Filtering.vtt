@@ -1,0 +1,361 @@
+WEBVTT
+
+00:01.240 --> 00:04.840
+Now that we've got a better idea of what this feature is, we're going to take a look at a couple of
+
+00:04.840 --> 00:06.570
+different ways of implementing it.
+
+00:06.580 --> 00:07.780
+So let's get to it.
+
+00:08.020 --> 00:11.890
+The first thing I want to do is just give you a very quick review on how our system works right now.
+
+00:11.920 --> 00:17.270
+So at present we have the post service comments and query whenever a user submits a comment.
+
+00:17.290 --> 00:22.810
+The comment service is going to emit an event over to the event bus of comment created.
+
+00:23.440 --> 00:28.930
+The event bus is then going to take this event and send it out automatically to all the different services
+
+00:28.930 --> 00:32.770
+inside of our app, including the comment service like so.
+
+00:34.880 --> 00:40.220
+Now at present the post service and Common Service, although they receive this event, they don't actually
+
+00:40.220 --> 00:41.640
+process it in any way.
+
+00:41.660 --> 00:43.370
+They just say, okay, here's an event.
+
+00:43.370 --> 00:44.360
+I don't really care.
+
+00:44.690 --> 00:47.360
+The query service, however, does do some processing.
+
+00:47.810 --> 00:52.730
+The query service is going to take this event and use it to understand this new comment that was just
+
+00:52.730 --> 00:55.700
+created and it stores it inside of some local data structure.
+
+00:55.940 --> 00:58.520
+So again, that's what's going on inside of our system right now.
+
+00:58.670 --> 00:59.900
+I know we just did this.
+
+00:59.900 --> 01:04.220
+And so it's kind of me repeating myself to tell you what's going on, but it's really critical for you
+
+01:04.220 --> 01:08.420
+to understand this flow because the options are about to go through for implementing this new feature
+
+01:08.420 --> 01:10.370
+are going to be pretty darn complex.
+
+01:10.490 --> 01:12.980
+So with that having been said, let's get to it.
+
+01:12.980 --> 01:15.260
+Let's take a look at option number one.
+
+01:16.680 --> 01:17.750
+So an option number one.
+
+01:17.760 --> 01:19.920
+I first want you to take a look at this diagram.
+
+01:20.040 --> 01:23.340
+You'll notice that I've added in a new moderation service right here.
+
+01:23.340 --> 01:28.440
+So this is going to be a service that is in charge of taking a look at a comment and deciding whether
+
+01:28.440 --> 01:30.750
+or not it should be approved or rejected.
+
+01:31.080 --> 01:35.430
+You'll also notice in this diagram I have removed the post service entirely.
+
+01:36.030 --> 01:38.040
+That is not because we're going to delete the post service.
+
+01:38.040 --> 01:41.340
+I just removed it for clarity so you can better understand this diagram.
+
+01:41.340 --> 01:46.290
+This whole idea of comments and moderation, whatnot, really doesn't have anything tied to the post
+
+01:46.290 --> 01:47.340
+service whatsoever.
+
+01:48.080 --> 01:48.440
+Okay.
+
+01:48.440 --> 01:54.140
+So in this idea with option number one, we're going to have a sort of chain going on where we're going
+
+01:54.140 --> 01:57.530
+to have the incumbent service emit an event saying that a comment was just created.
+
+01:57.740 --> 02:02.060
+The moderation service will then emit an event saying that the comment was moderated and then finally
+
+02:02.060 --> 02:04.130
+the query service will persist, that comment.
+
+02:04.130 --> 02:06.230
+So let's take a look at exactly what would occur.
+
+02:06.830 --> 02:11.060
+So once again, we're going to have a user submitting a comment to the comment service.
+
+02:11.540 --> 02:16.190
+The comment service will then immediately persist information about that comment as it is doing it right
+
+02:16.190 --> 02:16.700
+now.
+
+02:16.910 --> 02:22.310
+So it'll create some new record with, say, an ID and some content and probably the post ID as well.
+
+02:22.310 --> 02:25.220
+But we'll just ignore that for right now because it's not a relevant property.
+
+02:26.510 --> 02:27.590
+As soon as it persists.
+
+02:27.590 --> 02:34.550
+That new comment, the comment service will then continue to emit an event over to the event bus of
+
+02:34.550 --> 02:35.630
+comment created.
+
+02:35.960 --> 02:38.030
+So it's going to throw this over to the event bus.
+
+02:38.300 --> 02:44.720
+And the event bus in turn is going to send that event out to all of our different services as it is
+
+02:44.720 --> 02:46.010
+doing right now.
+
+02:48.790 --> 02:54.250
+Now with option number one, we're going to say that the only service that cares about and created is
+
+02:54.250 --> 02:56.320
+going to be the moderation service.
+
+02:56.320 --> 03:00.850
+So we're going to say with option number one, ferry service no longer cares about that event.
+
+03:01.330 --> 03:05.560
+So functionally, only the moderation service is going to process common created.
+
+03:06.370 --> 03:11.590
+The Moderation Service will take a look at the content of this comment and decide whether or not to
+
+03:11.590 --> 03:13.300
+approve it or reject it.
+
+03:13.690 --> 03:17.630
+So we'll say that in this case because content does not have the word orange.
+
+03:17.650 --> 03:20.770
+The moderation service will approve this comment.
+
+03:21.250 --> 03:26.110
+So to tell all the other services that this comment has just been approved, we'll have the moderation
+
+03:26.110 --> 03:32.170
+service emit a brand new event that we're going to introduce right now called the Comment Moderated
+
+03:32.170 --> 03:32.800
+Event.
+
+03:33.710 --> 03:38.750
+The data of this event is going to have all the information about this comment along with the status
+
+03:38.750 --> 03:39.820
+of the comment as well.
+
+03:39.830 --> 03:42.170
+So in this case, we'll say status approved.
+
+03:44.030 --> 03:45.960
+The moderation service will emit this.
+
+03:45.980 --> 03:47.540
+It'll go over to our event bus.
+
+03:48.540 --> 03:52.890
+And once again, it'll be sent to all of the different services inside of our app.
+
+03:56.980 --> 04:00.700
+Now, the only service that probably cares about this event will be the query service.
+
+04:00.850 --> 04:03.820
+The query service will listen for comment moderated.
+
+04:04.120 --> 04:07.750
+It's going to take all the information out of that data property and persistent.
+
+04:08.050 --> 04:12.820
+The query service will now know the ID of the comment, its content and its status.
+
+04:13.610 --> 04:14.360
+As well.
+
+04:14.690 --> 04:15.380
+Like so.
+
+04:17.200 --> 04:20.810
+So now anytime someone makes a follow up request the query service, they will see.
+
+04:20.830 --> 04:24.190
+Okay, here is a comment and its status is approved.
+
+04:24.820 --> 04:30.820
+So let's talk about the pros and cons of this approach, because there are very much some very big negatives
+
+04:30.820 --> 04:31.420
+to it.
+
+04:32.410 --> 04:38.110
+The big negative to this approach is the fact that there is some delay between a user submitting a comment
+
+04:38.110 --> 04:41.350
+and that comment actually being persisted by the query service.
+
+04:42.330 --> 04:45.300
+So I want you to think back to the mockup we were looking at just a moment ago.
+
+04:45.330 --> 04:47.620
+A comment truly has three states.
+
+04:47.640 --> 04:53.940
+It can be approved as it is right here, rejected or pending moderation.
+
+04:54.060 --> 04:57.120
+I want you to really think about that pending moderation state.
+
+04:57.570 --> 05:04.230
+Right now, we are really assuming that this entire approval process by the moderation service is instantaneous
+
+05:04.230 --> 05:10.590
+in nature, but it is entirely possible that maybe at some point down the line we decide that rather
+
+05:10.590 --> 05:16.140
+than just checking to see if a comment has the word orange in it, maybe instead we rely upon a human
+
+05:16.140 --> 05:17.580
+to moderate these comments.
+
+05:17.940 --> 05:22.080
+A human cannot process comments or moderate them instantaneously.
+
+05:22.110 --> 05:28.440
+It might take a person several seconds, minutes, hours, even days to read a comment and decide whether
+
+05:28.440 --> 05:30.480
+or not to approve it or reject it.
+
+05:30.780 --> 05:36.060
+So think about what would happen if our moderation service took a long time to run.
+
+05:36.790 --> 05:40.630
+Let's go through this scenario again and assume that it's going to take some amount of time for the
+
+05:40.630 --> 05:43.420
+moderation service to actually process a comment.
+
+05:44.350 --> 05:46.630
+So once again, a user is going to submit a comment.
+
+05:46.930 --> 05:53.230
+Comments service will persist that and the comment service will emit this event and that event is going
+
+05:53.230 --> 05:59.350
+to be sent on over to the moderation service where it's then going to await actual moderation.
+
+06:00.790 --> 06:04.030
+Now, at that point in time, we're essentially paused in this workflow.
+
+06:04.030 --> 06:06.280
+Nothing else is going to happen any time soon.
+
+06:06.700 --> 06:11.950
+And so in this scenario, well, that might sound okay, but I want you to really think about the user
+
+06:11.950 --> 06:16.180
+experience, what happens to a user as they are actually using our application.
+
+06:16.690 --> 06:22.090
+Think about what would happen if a user typed in some comment right here and clicked on submit and then
+
+06:22.090 --> 06:24.610
+critically refresh the page.
+
+06:24.850 --> 06:30.250
+When a user refreshes the page after submitting a comment, they expect to see the new comment listed
+
+06:30.250 --> 06:35.770
+on here immediately, or at least something that says, Hey, your comment is awaiting pending or pending
+
+06:35.770 --> 06:37.690
+moderation or something similar.
+
+06:38.420 --> 06:44.300
+So with the approach we're discussing right now, we are saying that after a user refreshes their page,
+
+06:44.300 --> 06:48.620
+they are not going to immediately see that comment from the query service right away because it's going
+
+06:48.620 --> 06:54.590
+to take some amount of time for the moderation service to actually process that thing and then tell
+
+06:54.590 --> 06:56.840
+the query service that there's this new comment.
+
+06:57.270 --> 07:02.720
+So the downside of option number one is that this entire flow could potentially result in a user not
+
+07:02.720 --> 07:06.860
+seeing the information that they just submitted very, very easily.
+
+07:07.340 --> 07:12.050
+Now, I want you to understand that this idea of a user making a change and then not seeing that immediately
+
+07:12.050 --> 07:16.810
+reflected, that's something that's going to come up all the time in this idea of microservices.
+
+07:16.820 --> 07:20.060
+So this is a very big thing that we're going to discuss quite a bit throughout the course.
+
+07:20.180 --> 07:25.310
+But just in this scenario, because of the possibility of the moderation service being ran by an actual
+
+07:25.310 --> 07:27.860
+human, we're kind of exacerbating that problem.
+
+07:28.950 --> 07:32.950
+So I think that option number one has a definite and immediate downside to it.
+
+07:32.970 --> 07:35.520
+So as you can imagine, we're not going to go with option number one.
+
+07:35.850 --> 07:37.140
+Now, let's take a quick pause right here.
+
+07:37.170 --> 07:41.430
+We're then going to take a look at options two and three much more quickly now that we understand some
+
+07:41.430 --> 07:43.560
+of the general issues that we're going to run into.

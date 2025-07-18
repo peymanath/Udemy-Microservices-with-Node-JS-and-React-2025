@@ -1,0 +1,334 @@
+WEBVTT
+
+00:01.720 --> 00:03.310
+We've got our title in our price.
+
+00:03.310 --> 00:06.670
+It is time to submit this to our back end tickets service.
+
+00:06.880 --> 00:10.060
+As a quick reminder, let's take a look at the ticket service itself.
+
+00:10.060 --> 00:16.540
+So here is my tickets folder CRC directory routes and inside there is the new file.
+
+00:16.930 --> 00:20.470
+This is the route handler that we want to make a request to to create a new ticket.
+
+00:20.740 --> 00:26.800
+So we have to make a post request to API tickets and we have to include the title and the price.
+
+00:27.430 --> 00:31.990
+If anything is wrong with the title in price that is provided, then our API is going to send back an
+
+00:31.990 --> 00:33.400
+error to us automatically.
+
+00:35.000 --> 00:39.140
+So let's take a look at how we have made requests from inside of a component in the past.
+
+00:39.170 --> 00:44.180
+Now, keep in mind that this is a different kind of request that we are making right now, as opposed
+
+00:44.180 --> 00:47.090
+to the initial prop stuff we were discussing just a moment ago.
+
+00:47.480 --> 00:52.160
+The get initial prop function, which we were working on inside of our landing page, was all about
+
+00:52.160 --> 00:55.980
+fetching some data that is required to show this component on the screen.
+
+00:56.000 --> 00:58.100
+So just to render it for the very first time.
+
+00:58.580 --> 01:03.410
+But right now, we are talking about making a request from inside of a component itself.
+
+01:03.920 --> 01:09.530
+So we had actually created a little helper hook to help us out with this process inside of our hooks
+
+01:09.530 --> 01:10.070
+directory.
+
+01:10.070 --> 01:12.170
+We've got that use request hook.
+
+01:12.740 --> 01:16.940
+So this is a custom hook we put together just to make making a request, handling errors, all that
+
+01:16.940 --> 01:19.100
+kind of stuff really easy and straightforward.
+
+01:20.470 --> 01:26.380
+When we call the user request, we are going to provide a URL, a method, a body and an on success
+
+01:26.380 --> 01:27.220
+callback.
+
+01:27.340 --> 01:29.500
+So those are all inputs to the hook.
+
+01:31.270 --> 01:36.970
+Then as the output from the hook, we get back a function called due request and a little bit of JS
+
+01:37.180 --> 01:40.660
+called ere's the D request right here.
+
+01:40.660 --> 01:44.860
+That is a function that we're going to call to actually invoke or run the request.
+
+01:45.900 --> 01:47.200
+Ires is a little block of J.
+
+01:47.400 --> 01:52.680
+X that's going to capture all the airs that might be coming back from our API and then render them out
+
+01:52.680 --> 01:54.780
+as a nice little block of x.
+
+01:57.530 --> 02:02.390
+The other thing I want to mention is that the on success callback that we're going to also pass in here
+
+02:02.390 --> 02:06.670
+is going to be coupled with the data that we got back from the API request as well.
+
+02:06.690 --> 02:08.750
+That's going to become relevant in just a little bit.
+
+02:10.120 --> 02:11.530
+So this is the user request.
+
+02:11.830 --> 02:15.910
+We're going to use this once again inside of our tickets, new component.
+
+02:16.090 --> 02:19.450
+We're going to make sure that we provide the appropriate URL, blah, blah, blah, all that stuff.
+
+02:19.450 --> 02:24.040
+And then eventually, after users submits our form, we will call the do request function that we are
+
+02:24.040 --> 02:25.360
+returning it from the hook.
+
+02:26.150 --> 02:28.640
+So back inside of our component at the very top.
+
+02:30.160 --> 02:34.900
+Let's import use request from up to directories.
+
+02:35.720 --> 02:37.850
+Books use request.
+
+02:39.910 --> 02:42.220
+Then right after all of our state stuff.
+
+02:43.460 --> 02:49.460
+We're going to take the due request function and any errors that might have occurred from user request.
+
+02:51.470 --> 02:55.970
+And we'll put in some options to the hook itself just to customize the request that we're going to eventually
+
+02:55.970 --> 02:56.510
+issue.
+
+02:56.540 --> 02:59.110
+The first will put in our URL as we just saw.
+
+02:59.120 --> 03:01.940
+We want to make a request to API tickets.
+
+03:03.460 --> 03:09.560
+Our method is going to be post and notice that it is lowercase post right here, not all uppercase.
+
+03:09.580 --> 03:14.620
+That's because we are really just taking that method right there and looking up the appropriate method
+
+03:14.620 --> 03:16.790
+on the Axios library object.
+
+03:16.810 --> 03:18.640
+So Axios method right there.
+
+03:22.030 --> 03:23.740
+Next up, we have to provide the body.
+
+03:23.740 --> 03:25.760
+So this is the data we want to send along.
+
+03:25.780 --> 03:28.750
+In this case, it's going to be our title and the price.
+
+03:29.980 --> 03:32.440
+And then finally ah, on success callback.
+
+03:32.890 --> 03:37.020
+Right now I'm just going to do a console log of how about the data that we get back?
+
+03:37.060 --> 03:39.910
+So I'll receive that data which will really be the ticket.
+
+03:39.910 --> 03:43.690
+So I'll just call it ticket and I'll console.log the ticket like so.
+
+03:46.040 --> 03:47.090
+So there's our hook.
+
+03:47.120 --> 03:50.730
+So now we're going to make sure that at some point in time we call that due request function.
+
+03:50.750 --> 03:55.550
+We'll also make sure that we display that little block of errors inside of our form as well.
+
+03:56.090 --> 03:59.930
+Remember that by default, when our component first is created, Iris is going to be empty.
+
+03:59.960 --> 04:04.200
+It is only once we actually make a request that we're going to have that request fail.
+
+04:04.220 --> 04:05.850
+That airs is going to contain some JSX.
+
+04:06.440 --> 04:10.790
+So we can really show errors inside of all of our JSX down here at all times.
+
+04:11.450 --> 04:14.780
+And it's only going to become visible when there actually are some errors.
+
+04:15.260 --> 04:18.170
+So we'll just throw an errors right above the button like so.
+
+04:20.540 --> 04:22.760
+Next up, we're going to find our form element.
+
+04:22.910 --> 04:26.120
+And whenever someone submits this thing, well, we're going to make our request.
+
+04:26.780 --> 04:28.190
+They'll put in an on submit.
+
+04:29.130 --> 04:29.790
+Handler.
+
+04:30.360 --> 04:34.110
+I'm going to make a helper function with a matching name called Simply on Submit.
+
+04:35.570 --> 04:38.060
+Then at right above r on blur.
+
+04:39.570 --> 04:40.710
+I'll make on submit.
+
+04:43.340 --> 04:45.920
+I can receive the event object.
+
+04:47.910 --> 04:49.110
+And called Prevent.
+
+04:50.150 --> 04:51.110
+Default on it.
+
+04:52.100 --> 04:55.130
+And after that, I will call due request.
+
+04:57.180 --> 04:58.100
+All right, so that should be it.
+
+04:58.110 --> 05:01.380
+This should create an actual ticket on our API.
+
+05:01.470 --> 05:03.270
+So let's save this and give it a shot.
+
+05:05.130 --> 05:06.040
+I'll flip back over.
+
+05:06.060 --> 05:11.520
+I'm going to refresh the page just because sometimes personally for me it feels like next doesn't always
+
+05:11.520 --> 05:14.370
+quite capture the refreshes or whenever I save a file.
+
+05:14.370 --> 05:16.680
+So I'm just in the habit of refreshing the page anyhow.
+
+05:17.400 --> 05:19.220
+I'll go ahead and enter in a title.
+
+05:19.230 --> 05:24.660
+So how about first client ticket and a price of 20?
+
+05:25.090 --> 05:25.920
+We'll submit that.
+
+05:26.340 --> 05:27.080
+And there we go.
+
+05:27.090 --> 05:30.660
+There's the console log from the on success callback.
+
+05:30.810 --> 05:35.890
+And if I take a look at my network request tab, I should see a request to our tickets endpoint.
+
+05:36.370 --> 05:37.950
+It looks like everything is good to go.
+
+05:40.210 --> 05:43.680
+Now we can see all the relevant details about the ticket inside of on success.
+
+05:43.690 --> 05:45.310
+We're going to need those in just a moment.
+
+05:45.610 --> 05:48.130
+But right now, one other thing I want to test out really quickly.
+
+05:48.130 --> 05:51.250
+What happens if we provide some invalid inputs?
+
+05:51.640 --> 05:55.290
+A very easy, invalid input we could put in here is a negative price.
+
+05:55.300 --> 05:59.560
+Remember our request handler checks to make sure that the price provided is greater than zero.
+
+06:00.160 --> 06:03.490
+So let's try putting in -20, submitting that.
+
+06:04.030 --> 06:07.300
+And I'm told very quickly, price must be greater than zero.
+
+06:07.900 --> 06:10.030
+How about if we put in a string of characters?
+
+06:10.030 --> 06:15.130
+So like I said inside of that on our callback, we were not really handling the case in which we got
+
+06:15.130 --> 06:17.560
+a not a number out of parsing this price.
+
+06:17.560 --> 06:21.280
+And I had said that we're going to just really delegate all the validation off to our back end.
+
+06:21.580 --> 06:24.340
+So if we try to submit this well, we get the same thing.
+
+06:24.340 --> 06:28.540
+Price must be greater than zero, essentially telling the user, Hey, this is supposed to be a number.
+
+06:29.270 --> 06:30.650
+We could also take out the title.
+
+06:31.390 --> 06:33.190
+And we're told title is required.
+
+06:34.120 --> 06:35.860
+I'd say this works pretty well.
+
+06:36.290 --> 06:40.480
+Now that we are successfully creating a ticket, we need to decide what we want to do with the user
+
+06:40.480 --> 06:42.250
+after the ticket is created.
+
+06:42.580 --> 06:44.320
+Let's take a look at that in just a moment.

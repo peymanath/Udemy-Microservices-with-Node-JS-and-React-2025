@@ -1,0 +1,205 @@
+WEBVTT
+
+00:01.350 --> 00:04.920
+In the last video, we wrote out a little bit of code, but it's got one little issue.
+
+00:04.950 --> 00:07.950
+We've got a really long type annotation on this function right here.
+
+00:08.250 --> 00:13.140
+I think you can easily imagine that if we had several other functions inside this file that all expected
+
+00:13.140 --> 00:17.880
+to be called with Old Civic, we would have to repeat this type annotation right here several times
+
+00:17.880 --> 00:20.400
+over, and that would be a lot of duplicate code.
+
+00:20.850 --> 00:24.240
+So to fix this, we're going to create an interface inside this file.
+
+00:24.780 --> 00:29.040
+I'm going to go up to the very top and I'm going to define an interface by writing out the interface
+
+00:29.040 --> 00:33.030
+keyword and then a name for the new type that I am creating.
+
+00:33.360 --> 00:38.940
+Remember, any time we create an interface, we are creating a new type, a type in the same way that
+
+00:38.940 --> 00:42.060
+a number is a type or a string or a boolean or so on.
+
+00:42.840 --> 00:45.420
+So I'm gonna create an interface called Vehicle.
+
+00:46.720 --> 00:51.010
+Whenever we create an interface, we're always going to use a capital letter on the leading edge of
+
+00:51.010 --> 00:51.610
+the word.
+
+00:52.310 --> 00:56.720
+You'll also notice I'm using kind of a generic term right here, so I'm not creating an interface called
+
+00:56.720 --> 01:01.460
+like Civic or an interface called Old Civic or New Civic or anything like that.
+
+01:01.640 --> 01:07.670
+Instead, I'm creating a very generic name right here to describe what different properties a vehicle
+
+01:07.670 --> 01:08.690
+might have.
+
+01:09.530 --> 01:13.520
+So then inside these curly braces, I'm going to list out the different property names that I expect,
+
+01:13.520 --> 01:16.940
+an object that is a vehicle to have, and they're different types.
+
+01:17.450 --> 01:22.340
+So in order to be a vehicle, you must have a name property that is a string.
+
+01:22.880 --> 01:25.580
+You must have a year property that is a number.
+
+01:25.940 --> 01:29.600
+And you must have a broken property that is a boolean like so.
+
+01:30.760 --> 01:34.630
+So once again, we have now created a new type inside of our application called Vehicle.
+
+01:34.780 --> 01:39.820
+And in order to be a vehicle, you have to have these properties and they must have these different
+
+01:39.820 --> 01:40.450
+types.
+
+01:41.270 --> 01:45.980
+So we can now think of vehicle right here as being kind of like a variable of sorts that refers to a
+
+01:45.980 --> 01:46.520
+type.
+
+01:47.000 --> 01:52.280
+So rather than writing out this really long form type annotation right here, I can delete that full
+
+01:52.280 --> 01:57.680
+annotation and replace it with just vehicle like so.
+
+01:58.930 --> 02:01.120
+So what are we saying here by putting this code in?
+
+02:01.420 --> 02:07.780
+We are now saying that in order to call it a print vehicle function, you must pass in an object that
+
+02:07.780 --> 02:11.380
+meets the specifications provided by the vehicle interface.
+
+02:11.860 --> 02:17.140
+In other words, to call this function, you must provide an object that has a name, that is a string
+
+02:17.440 --> 02:19.360
+a year that is a number and broken.
+
+02:19.360 --> 02:20.290
+That is a boolean.
+
+02:21.130 --> 02:24.610
+The old civic object satisfies each of those requirements.
+
+02:24.610 --> 02:27.970
+It has a name that's a string year, that's a number and broken, that is a boolean.
+
+02:28.210 --> 02:32.410
+So we are allowed to pass in old civic to print vehicle.
+
+02:32.770 --> 02:36.670
+You'll notice that down here where we actually call a print vehicle, there is no error and no warning
+
+02:36.670 --> 02:38.020
+or anything like that.
+
+02:39.070 --> 02:43.510
+So as soon as we added in the statement, TypeScript did a little bit of checking for us.
+
+02:43.690 --> 02:46.030
+A little process went on behind the scenes.
+
+02:46.570 --> 02:51.580
+TypeScript took a look at the argument we provided and it said, okay, we need to look at that old
+
+02:51.580 --> 02:55.210
+civic object and make sure that it satisfies this interface.
+
+02:55.210 --> 02:59.350
+We need to make sure that Old Civic has all the appropriate property names and types.
+
+02:59.980 --> 03:04.960
+And so behind the scenes, TypeScript looped through all these different properties and made sure that
+
+03:04.960 --> 03:09.610
+Old Civic had each of those different property names and the appropriate value for each one.
+
+03:10.470 --> 03:15.630
+If I change any of these types right here and assign a different type, like, let's say instead of
+
+03:15.630 --> 03:18.540
+broken, I'm going to put in like just a one, like.
+
+03:18.540 --> 03:22.020
+So as soon as I do that, you'll notice we get an error message down here.
+
+03:22.830 --> 03:29.100
+So TypeScript is telling us that in order to pass in Old Civic, we have to have a broken property that
+
+03:29.100 --> 03:33.990
+is a boolean, but we have a broken property that is a number and that's why we're seeing an error.
+
+03:34.470 --> 03:38.490
+So if I change that one back to true, everything works again.
+
+03:39.060 --> 03:44.670
+Likewise, if I misspell any of the property names inside this object, like, let's say, is broken
+
+03:44.670 --> 03:45.390
+instead.
+
+03:45.810 --> 03:49.320
+Now our object can no longer be considered to be a vehicle.
+
+03:49.590 --> 03:50.850
+Remember to be a vehicle.
+
+03:50.850 --> 03:52.970
+We have to have a broken property.
+
+03:52.980 --> 03:57.940
+But I provide a property that is is broken because those property names are different.
+
+03:57.960 --> 04:03.300
+TypeScript will not allow me to pass in old civic into the print vehicle function.
+
+04:04.180 --> 04:08.380
+And if I hover over that air right there, it's going to tell me very plainly down towards the bottom
+
+04:08.380 --> 04:15.250
+of this air right here, it says Property broken is not present inside the object I provided, but it
+
+04:15.250 --> 04:17.230
+is required to be a vehicle.
+
+04:17.930 --> 04:23.180
+So once again, if I change is broken back over to broken, everything works again.
+
+04:24.310 --> 04:24.530
+Okay.
+
+04:24.580 --> 04:30.550
+So this right here is some of the like very basic interaction or definition of what an interface is.
+
+04:30.820 --> 04:31.930
+So let's take a quick pause right here.
+
+04:31.930 --> 04:36.010
+We're going to come back to the next video and start to expand on this example just a little bit more.

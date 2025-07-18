@@ -1,0 +1,178 @@
+WEBVTT
+
+00:01.560 --> 00:03.600
+Our ticket created publisher is put together.
+
+00:03.600 --> 00:08.460
+So we're now going to go over to our roots directory, find the new route handler.
+
+00:09.780 --> 00:10.770
+Inside of here.
+
+00:10.770 --> 00:15.510
+Like we just said, right after creating the ticket and saving to the database, we then want to publish
+
+00:15.510 --> 00:16.320
+an event.
+
+00:16.680 --> 00:19.980
+So let's import the publisher into this file and publish an event.
+
+00:21.260 --> 00:21.950
+At the very top.
+
+00:21.950 --> 00:26.390
+We're going to import our ticket created publisher.
+
+00:27.230 --> 00:29.960
+From up one directory events publishers.
+
+00:29.960 --> 00:31.580
+Ticket Created Publisher.
+
+00:34.680 --> 00:34.900
+Okay.
+
+00:34.980 --> 00:36.450
+Well, then go down towards the bottom.
+
+00:36.990 --> 00:39.540
+And then right after we do that ticket save call.
+
+00:40.430 --> 00:41.300
+We will.
+
+00:42.670 --> 00:44.590
+New ticket created.
+
+00:46.090 --> 00:46.870
+Publisher.
+
+00:48.210 --> 00:51.090
+When we call this, we need to pass in the active nets clients.
+
+00:51.090 --> 00:52.980
+We do not have that inside of our project yet.
+
+00:52.980 --> 00:57.360
+So we have not actually established a connection to nets at any point in time inside of here, but we
+
+00:57.360 --> 00:58.590
+will do that very shortly.
+
+00:58.590 --> 01:02.790
+So for right now, I'm just going to throw in client and I'm going to assume that I will come back and
+
+01:02.790 --> 01:04.170
+fix that up in just a moment.
+
+01:05.040 --> 01:08.130
+Well, then call it publish and pass in an object.
+
+01:09.960 --> 01:14.430
+So if we take a look at this thing or the air on that object, it will give us a reminder on all the
+
+01:14.430 --> 01:15.850
+properties we have to provide.
+
+01:15.870 --> 01:19.620
+So we need to throw in an ID title price and user ID.
+
+01:19.920 --> 01:22.770
+Now, there's a little quick note on this I want to throw out there.
+
+01:22.800 --> 01:26.580
+The ID naturally has to be pulled directly off this ticket model.
+
+01:27.090 --> 01:29.460
+So we have to do something like ticket ID.
+
+01:30.360 --> 01:38.130
+But for the other attributes such as title price and user ID, you might be a little tempted to emit
+
+01:38.130 --> 01:43.800
+the title and price directly off the request body and the user id directly off of req.
+
+01:43.800 --> 01:47.730
+Current user ID because hey, it's all the same information, right?
+
+01:47.970 --> 01:50.930
+In other words, you might want to put inside of here just title.
+
+01:50.940 --> 01:56.190
+So pulling the title from the request body as opposed to referencing the tickets title.
+
+01:57.530 --> 02:00.350
+Again, you might think these are really the same exact titles.
+
+02:00.470 --> 02:02.760
+The title right here is the same as the title on the ticket.
+
+02:02.780 --> 02:04.080
+Well, not necessarily.
+
+02:04.100 --> 02:08.390
+Remember that with Mongoose we can implement some pre and post save hooks.
+
+02:08.630 --> 02:11.870
+We can do some validation or sanitization on these values.
+
+02:12.050 --> 02:18.020
+So the value that came in off the request body is not necessarily the same as what actually got saved
+
+02:18.020 --> 02:19.100
+to the database.
+
+02:19.610 --> 02:25.070
+So I really recommend pulling the title or all these relevant attributes directly off of the ticket
+
+02:25.070 --> 02:29.720
+that we just saved to the database, as opposed to pulling the title and price off the request body.
+
+02:29.720 --> 02:32.690
+Because again, they might actually be different values.
+
+02:34.110 --> 02:36.480
+So we're going to put in the title off the ticket.
+
+02:37.050 --> 02:39.360
+We'll put in the price also off the ticket.
+
+02:40.640 --> 02:44.120
+I'll put in the user ID also off the ticket.
+
+02:47.960 --> 02:50.450
+Now, this is a synchronous call right here.
+
+02:50.450 --> 02:52.420
+So we kind of have a big decision to make.
+
+02:52.430 --> 02:55.210
+Do we want to await this entire operation?
+
+02:55.220 --> 02:59.840
+Do we want to wait for the publish to be completed before we send back response to the user?
+
+03:00.200 --> 03:03.230
+Well, that's kind of an interesting question, and it's something that we're going to discuss in just
+
+03:03.230 --> 03:03.830
+a moment.
+
+03:03.980 --> 03:05.420
+But right now, let's take a quick pause.
+
+03:05.450 --> 03:08.960
+When we come back, the next video we're going to discuss how we're going to create this next client
+
+03:08.960 --> 03:14.240
+inside of our project, because, as usual, it's going to end up being just a little bit more complicated
+
+03:14.240 --> 03:16.160
+than it might seem at first glance.
+
+03:16.400 --> 03:17.660
+So a quick pause right here.
+
+03:17.850 --> 03:19.040
+Continue in just a minute.

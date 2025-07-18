@@ -1,0 +1,358 @@
+WEBVTT
+
+00:01.170 --> 00:05.340
+I'm taking a look at our new ticket route handler and the update route handler.
+
+00:05.340 --> 00:07.800
+And between the two of these, they have pretty similar logic.
+
+00:08.110 --> 00:13.680
+A request comes in, we do some validation, we make some changes to a ticket document, save it, and
+
+00:13.680 --> 00:17.610
+then publish an event that's inside of update, very similar inside of New.
+
+00:17.640 --> 00:18.990
+We do some validation.
+
+00:19.290 --> 00:21.960
+We create a ticket document, save it, publish the event.
+
+00:22.320 --> 00:27.150
+But you might notice a very small difference between these two route handlers, and that is the presence
+
+00:27.150 --> 00:29.880
+of the await keyword on the publisher in each of them.
+
+00:30.270 --> 00:34.350
+So inside of my new route handler, I have the await keyword on ticket created publisher.
+
+00:34.350 --> 00:37.590
+But inside of update I did not place that await keyword.
+
+00:37.920 --> 00:42.780
+This is to highlight a very interesting little issue that we might run into once our application starts
+
+00:42.780 --> 00:43.530
+to scale up.
+
+00:44.070 --> 00:48.600
+So let's take a look at a couple of diagrams and really understand what the presence of that awake keyword
+
+00:48.600 --> 00:49.440
+does for us.
+
+00:50.070 --> 00:52.260
+So here's what goes on behind the scenes inside of our ticket.
+
+00:52.260 --> 00:53.220
+Created Handler.
+
+00:53.930 --> 00:56.030
+So inside there, we're going to create a ticket document.
+
+00:56.450 --> 00:59.630
+We're then going to await that ticket being saved to the database.
+
+01:00.020 --> 01:06.200
+And because we've got that awake keyword on the ticket, save call right here, that means we're going
+
+01:06.200 --> 01:11.390
+to essentially sit around and wait for that record to be saved to the database before we continue execution
+
+01:11.390 --> 01:12.200
+of this function.
+
+01:12.940 --> 01:16.120
+So after everything gets saved, then we move on to the publisher.
+
+01:16.740 --> 01:20.550
+And because we've got the awake keyword on that publisher, we're going to wait for the event to be
+
+01:20.550 --> 01:20.850
+published.
+
+01:20.850 --> 01:24.450
+And that's and then eventually we're going to send a response off to the user.
+
+01:25.350 --> 01:29.820
+Now let's start to think about what would happen if something went wrong with this event publishing
+
+01:29.820 --> 01:34.470
+process, or for that matter, if something went wrong with saving the record to the database as well.
+
+01:35.590 --> 01:40.900
+So because we've got the awake keyword on there, if anything goes wrong with either saving the record
+
+01:40.900 --> 01:43.180
+to the database or publishing the event.
+
+01:44.460 --> 01:49.500
+If we ever throw an error of any sorts from either of those lines of code, that air is going to be
+
+01:49.500 --> 01:52.230
+caught and handled by our air handling middleware.
+
+01:52.680 --> 01:56.700
+So the air handling middleware is going to inspect that air, come up with some likely response or good
+
+01:56.700 --> 01:58.500
+response and send it back to the user.
+
+01:58.890 --> 02:02.460
+The point is, if anything goes wrong, the user is going to know about it.
+
+02:03.220 --> 02:08.130
+Let's think about what would happen inside of our update handler, which does not have the a keyword
+
+02:08.160 --> 02:09.180
+on the publisher.
+
+02:09.920 --> 02:10.940
+In that scenario.
+
+02:11.330 --> 02:12.380
+Here's what would go on.
+
+02:12.380 --> 02:13.880
+So here's the update handler.
+
+02:14.120 --> 02:17.120
+We have some logic inside there to make an update to the ticket document.
+
+02:17.120 --> 02:20.780
+We then await saving the ticket to the document database.
+
+02:21.860 --> 02:25.820
+So in that scenario, once again, if anything goes wrong with saving the ticket, well, air is going
+
+02:25.820 --> 02:28.530
+to be thrown and it will be caught by our error handling middleware.
+
+02:28.550 --> 02:31.970
+But then right after that, we try to publish an event to Nats.
+
+02:32.690 --> 02:36.500
+And then immediately after that, because we do not await that publish.
+
+02:36.500 --> 02:41.810
+So immediately after we attempt to publish that event, we then send a response directly to the user.
+
+02:42.740 --> 02:48.170
+So we can really imagine inside this update handler, this line of code runs and then essentially in
+
+02:48.170 --> 02:52.460
+the next microsecond, we then immediately send a response back to the user.
+
+02:53.290 --> 02:58.180
+That means that if anything goes wrong with publishing this event to Nets, we don't get any opportunity
+
+02:58.180 --> 03:00.910
+to tell the user that some error occurred with the request.
+
+03:02.360 --> 03:07.010
+So what starts to get really interesting, however, is whether we actually need to tell the user that
+
+03:07.010 --> 03:09.170
+something went wrong with a published event.
+
+03:09.380 --> 03:13.850
+If we think about this really back inside the new request handler, it might sound like a pretty obvious
+
+03:13.850 --> 03:14.140
+thing.
+
+03:14.150 --> 03:19.610
+Hey, let's await the event to be published so that the user knows, hey, everything went as expected.
+
+03:19.910 --> 03:22.880
+But does a user really care about this event being published?
+
+03:22.910 --> 03:27.620
+All we're really doing here is adding in some arbitrary latency latency to our request, as we have
+
+03:27.620 --> 03:32.870
+to await our net's client to reach out to the that server, publish the event and get some response
+
+03:32.870 --> 03:34.820
+that says, Hey, event published successfully.
+
+03:36.660 --> 03:40.290
+So this really does add in some tiny bit of latency to the request.
+
+03:40.740 --> 03:43.400
+Now, what's way more relevant than all this stuff, though?
+
+03:43.410 --> 03:49.320
+Whether or not we await for the request or not is, well, what really happens behind the scenes if
+
+03:49.320 --> 03:51.030
+publishing an event fails?
+
+03:51.900 --> 03:53.300
+Let's expand on that a little bit more.
+
+03:53.310 --> 03:57.150
+I want to show you another diagram that's going to kind of show you that this entire idea of whether
+
+03:57.150 --> 04:02.850
+or not we await publishing the event is not super relevant because there's actually a way bigger issue
+
+04:02.850 --> 04:04.320
+for us to start to think about.
+
+04:05.230 --> 04:05.560
+Okay.
+
+04:05.560 --> 04:06.550
+So here's the diagram right here.
+
+04:06.550 --> 04:07.300
+A little bit crazy.
+
+04:07.300 --> 04:09.730
+It is similar in nature to several we've already looked at.
+
+04:09.880 --> 04:14.080
+So we're going to again imagine that we are thinking about some kind of banking application where we
+
+04:14.080 --> 04:17.410
+have a transaction service and an accounts service as well.
+
+04:18.070 --> 04:20.650
+So request is going to come in to the transaction service.
+
+04:20.950 --> 04:25.180
+It will then be handled by some kind of route handler to create a transaction.
+
+04:26.730 --> 04:31.620
+And we can imagine that this handler probably has some very similar logic inside of it to our ticket
+
+04:31.620 --> 04:32.160
+creation route.
+
+04:32.160 --> 04:36.050
+Handler request is going to come in, it's going to be validated, processed.
+
+04:36.060 --> 04:41.790
+There's going to be some code to add a transaction to a database, presumably into some kind of transaction
+
+04:41.790 --> 04:42.480
+collection.
+
+04:42.750 --> 04:46.140
+And then immediately after that, we're going to attempt to emit an event.
+
+04:47.180 --> 04:51.290
+That event will go over to that streaming server, float over to the account service and so on.
+
+04:51.740 --> 04:56.690
+So again, I want to think about what would happen if something failed with emitting this event right
+
+04:56.690 --> 04:57.170
+here.
+
+04:57.350 --> 04:59.360
+How would we somehow communicate that back to the user?
+
+04:59.360 --> 05:01.850
+What would the real impact on the application be?
+
+05:02.350 --> 05:03.920
+So here's what we're going to imagine.
+
+05:04.650 --> 05:07.290
+We successfully saved the transaction to the database.
+
+05:07.290 --> 05:13.440
+And then just before we are able to emit an event describing the fact that the transaction was created,
+
+05:13.440 --> 05:16.080
+what would happen if we lost our network connection?
+
+05:17.980 --> 05:23.620
+Well, if we can really think about it in terms of some banking application, we would have a very critical
+
+05:23.620 --> 05:25.210
+data integrity issue.
+
+05:25.720 --> 05:28.030
+Think about what the user experience would be here.
+
+05:28.060 --> 05:30.490
+A user would make a request to deposit some money.
+
+05:31.470 --> 05:36.600
+We would then save a line item inside of some database saying that a deposit was accepted and that they
+
+05:36.600 --> 05:37.970
+deposited $70.
+
+05:37.980 --> 05:40.380
+So that is firmly inside the database.
+
+05:40.830 --> 05:45.480
+But then we never emit this event describing the fact that the transaction was created, and that means
+
+05:45.480 --> 05:48.630
+that the user's account balance never gets updated.
+
+05:49.480 --> 05:55.420
+So on the user side, they would essentially submit some money or deposit some money, $70 in this case.
+
+05:55.510 --> 05:58.870
+They could probably then go to some transaction summary page.
+
+05:58.900 --> 06:03.190
+Something lists all the different withdrawals and deposits they have ever made, and we would probably
+
+06:03.190 --> 06:06.700
+tell them that they have successfully deposited $70.
+
+06:07.030 --> 06:12.490
+But because we never communicated this event successfully over to the account service, the user's account
+
+06:12.490 --> 06:15.610
+balance never gets updated to plus 70.
+
+06:15.790 --> 06:20.830
+So the user would see that they deposited $70, but their account balance would potentially still be
+
+06:20.830 --> 06:21.520
+zero.
+
+06:21.730 --> 06:25.980
+And as you could imagine, a user would look at this and say, What the heck is going on?
+
+06:25.990 --> 06:31.030
+You're telling me that I deposited $70, but my account doesn't actually have $70 inside of it.
+
+06:32.070 --> 06:36.810
+So as you can see, it's not really so much a question of, hey, how are we going to somehow tell the
+
+06:36.810 --> 06:38.550
+user that publishing this event failed?
+
+06:38.550 --> 06:41.880
+Or do we want to add in that extra latency to the request?
+
+06:41.970 --> 06:43.230
+That's kind of irrelevant.
+
+06:43.260 --> 06:49.020
+What's really relevant here is how do we somehow capture the fact that we failed entirely to emit this
+
+06:49.020 --> 06:53.650
+event and that we've got this critical data integrity issue between our two different services?
+
+06:53.670 --> 06:55.530
+That's the real question here.
+
+06:56.160 --> 06:58.310
+Now we understand this kind of big problem.
+
+06:58.320 --> 06:59.460
+Let's take a quick pause.
+
+06:59.460 --> 07:02.730
+We're going to come back to the next video and talk about one way of solving this.

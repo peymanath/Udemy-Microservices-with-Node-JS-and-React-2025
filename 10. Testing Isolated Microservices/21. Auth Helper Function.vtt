@@ -1,0 +1,427 @@
+WEBVTT
+
+00:00.920 --> 00:05.900
+As I mentioned, three or four times now in the last two videos right here, the code, we have to sign
+
+00:05.900 --> 00:08.060
+up and then get the cookie and make a follow up request.
+
+00:08.060 --> 00:08.960
+Definitely works.
+
+00:08.960 --> 00:14.450
+But remember on Future Services, we're going to have to be making authenticated requests a ton in all
+
+00:14.450 --> 00:15.890
+of our different test files.
+
+00:15.890 --> 00:19.550
+And if we have to go through the same setup every single time, that's going to get really old really
+
+00:19.550 --> 00:20.110
+quickly.
+
+00:20.120 --> 00:25.100
+So in this video, we're going to build a little helper function that's going to allow us to very easily
+
+00:25.100 --> 00:29.960
+sign up for some account and then make a follow up request using that account's cookie.
+
+00:30.700 --> 00:34.750
+So to put this little helper function together, I'm going to find the test directory.
+
+00:34.990 --> 00:37.180
+I'll find the setup file inside there.
+
+00:37.870 --> 00:41.010
+We're going to write out a global function inside this file.
+
+00:41.020 --> 00:43.750
+So this is going to be a function assigned to the global scope.
+
+00:43.750 --> 00:46.810
+So we can very easily use it from all of our different test files.
+
+00:47.140 --> 00:49.950
+You do not have to use a global function for this.
+
+00:49.960 --> 00:55.000
+I am just doing it for convenience so I do not have to add in very repetitive import statements into
+
+00:55.000 --> 00:56.920
+all of my different test files at the top.
+
+00:57.370 --> 01:02.080
+If you do not want to use a global function, you could always create a separate file inside this text
+
+01:02.080 --> 01:06.490
+directory and call it something like Off Helper or something like that, and put the function we're
+
+01:06.490 --> 01:10.760
+about to write inside there and export it and then import it into any relevant test file.
+
+01:10.780 --> 01:15.940
+So again, I am only making this into a global function or a global scope function just for ease of
+
+01:15.940 --> 01:16.240
+use.
+
+01:16.240 --> 01:17.020
+That is it.
+
+01:17.320 --> 01:22.090
+The other thing I want to mention is that this global sign in function or sign up function is not going
+
+01:22.090 --> 01:27.820
+to be available inside of our normal application code because we are going to define it inside the setup
+
+01:28.330 --> 01:28.820
+file.
+
+01:28.840 --> 01:32.620
+It will only be available inside of our app in the test environment.
+
+01:33.790 --> 01:34.060
+All right.
+
+01:34.060 --> 01:40.090
+So I'm going to go down to the bottom and I'm going to create a globally scoped function called in.
+
+01:41.570 --> 01:43.670
+I'm going to mark this thing as being async.
+
+01:45.530 --> 01:48.140
+You'll notice I get an air right away from signing right here.
+
+01:48.710 --> 01:52.670
+That's because TypeScript is saying, hey, on the global variable or the global scope.
+
+01:52.670 --> 01:56.930
+In Node.js, there is no function called sign in or no property called sign in.
+
+01:57.080 --> 01:58.520
+We're going to fix that up in just a moment.
+
+01:58.520 --> 02:01.550
+But for right now, let's put together some implementation for this thing.
+
+02:02.380 --> 02:06.130
+So inside of here at the very top, I'm going to define some email.
+
+02:08.720 --> 02:10.070
+And some password.
+
+02:11.810 --> 02:13.940
+Now we're going to try to authenticate with.
+
+02:14.950 --> 02:17.470
+So after getting the email and password right there.
+
+02:17.500 --> 02:23.710
+Well, then attempt to make a request off and sign up as this user with that email and that password.
+
+02:24.480 --> 02:29.070
+So inside of here, I'm going to say const response is a weight.
+
+02:29.220 --> 02:30.840
+We'll make a request to our app.
+
+02:32.260 --> 02:35.500
+I'm going to make a post request to API users sign up.
+
+02:37.190 --> 02:41.060
+I'm going to send along the email and the password.
+
+02:42.060 --> 02:46.830
+And then again, it is not required for us to make an expectation about the response or the status code
+
+02:46.830 --> 02:47.550
+that comes out of this.
+
+02:47.550 --> 02:52.710
+But I'll do it anyways just to make sure that the sign up went as expected.
+
+02:52.710 --> 02:54.930
+So I'm going to expect to get back a201.
+
+02:55.740 --> 02:56.220
+Right away.
+
+02:56.220 --> 03:00.300
+We are getting an air out of request right here because we have not imported it into this file.
+
+03:00.600 --> 03:03.270
+Let's go up to the top and import request very quickly.
+
+03:04.100 --> 03:08.420
+So at the top I will import request from super test.
+
+03:09.270 --> 03:13.770
+You'll notice now that we are also finally making use of the app import that we had added in previously.
+
+03:15.430 --> 03:15.670
+Okay.
+
+03:15.700 --> 03:16.840
+So now back down here.
+
+03:17.410 --> 03:21.520
+We're going to once again take a look at that response and pull our authentication cookie out of it.
+
+03:22.030 --> 03:25.030
+We'll say down here, Collins, cookie is response.
+
+03:25.030 --> 03:27.520
+Dot, get set, cookie.
+
+03:29.230 --> 03:34.990
+Now we want to take that cookie right there and somehow make it really easy to use inside of some follow
+
+03:34.990 --> 03:35.800
+up request.
+
+03:36.130 --> 03:37.890
+There's definitely two ways we could do this.
+
+03:37.900 --> 03:40.420
+We could either simply return the cookie.
+
+03:41.080 --> 03:46.900
+And if we did that, then back inside of any given test file, all we'd really have to do is replace
+
+03:46.900 --> 03:48.460
+all of that stuff right there.
+
+03:49.520 --> 03:52.400
+And that it's something like.
+
+03:53.440 --> 03:54.100
+This.
+
+03:57.390 --> 03:58.890
+Now, of course, we are getting an error around.
+
+03:58.890 --> 03:59.310
+Sign up.
+
+03:59.310 --> 04:00.630
+We'll fix that in just a moment.
+
+04:00.630 --> 04:02.820
+But this is definitely one way to handle this.
+
+04:03.060 --> 04:07.830
+So any time we need to make an authenticated request, we'll get some cookie and then we can make our
+
+04:07.830 --> 04:12.330
+follow up request, just making sure that we set that cookie properly on the request itself.
+
+04:12.780 --> 04:15.000
+Well, I think that this is totally appropriate right here.
+
+04:16.370 --> 04:16.610
+Okay.
+
+04:16.640 --> 04:19.190
+So I'm going to go back over to the setup file.
+
+04:19.220 --> 04:20.270
+I'm going to save this.
+
+04:21.330 --> 04:25.740
+We're going to make sure that we tell TypeScript that there is a global sign in property.
+
+04:26.100 --> 04:28.350
+So to do so, I'm going to go up to the top of the file.
+
+04:29.770 --> 04:34.990
+And up here, I'm going to write out a little bit of TypeScript code just to tell TypeScript that there
+
+04:34.990 --> 04:37.510
+is some global property called Sign Up.
+
+04:37.900 --> 04:40.450
+So we're going to write out Declare Global.
+
+04:41.340 --> 04:42.690
+Namespace node.
+
+04:42.690 --> 04:45.330
+JS make sure you've got capital JS on there.
+
+04:46.180 --> 04:47.800
+Interface Global.
+
+04:49.040 --> 04:53.480
+So notice that this looks very similar to that little interface augmentation that we did previously
+
+04:53.480 --> 04:55.160
+when we were working with Express.
+
+04:55.670 --> 05:00.170
+So inside of this global interface, which has already been defined, we are just adding some additional
+
+05:00.170 --> 05:01.160
+properties to it.
+
+05:01.770 --> 05:06.380
+We're going to say that there is an additional property that is called sign in.
+
+05:08.530 --> 05:09.850
+So I'll put sign in.
+
+05:10.580 --> 05:15.410
+Well then say that this is going to be a function that is going to return a promise.
+
+05:16.490 --> 05:21.220
+And that promise is going to resolve itself with a cookie.
+
+05:21.230 --> 05:24.350
+And to be precise on what a cookie is, it's an array of strings.
+
+05:24.890 --> 05:30.230
+So we're going to say that this promise is going to eventually resolve itself, which we resolve with
+
+05:30.230 --> 05:31.250
+a value of.
+
+05:32.160 --> 05:32.820
+Type.
+
+05:34.740 --> 05:35.730
+Array of string.
+
+05:36.330 --> 05:39.990
+So that's how we indicate a promise that's going to resolve with some kind of value.
+
+05:41.260 --> 05:41.530
+Okay.
+
+05:41.530 --> 05:42.770
+So we can now save this.
+
+05:42.790 --> 05:44.380
+I'm going to go back down to the bottom.
+
+05:45.480 --> 05:47.940
+And you'll notice that era has now gone away completely.
+
+05:48.700 --> 05:50.890
+I'll go back over to current user.
+
+05:51.620 --> 05:54.170
+You'll notice that I made a little mistake in the name of the function right here.
+
+05:54.170 --> 05:54.590
+Over here.
+
+05:54.590 --> 05:55.700
+I called it sign up.
+
+05:55.700 --> 05:59.480
+But over inside the test or the setup file, I called it sign in.
+
+05:59.480 --> 06:00.920
+Either one is totally fine.
+
+06:01.070 --> 06:04.100
+Technically, we are doing a sign up operation as opposed to sign in.
+
+06:04.670 --> 06:08.510
+Maybe even a better name for this would be something like Get cookie or get off cookie.
+
+06:08.660 --> 06:10.010
+We'll just stick with sign in.
+
+06:10.010 --> 06:11.060
+That's good enough for now.
+
+06:12.950 --> 06:13.070
+Now.
+
+06:13.100 --> 06:14.870
+I'm still getting an air out of that.
+
+06:15.890 --> 06:17.000
+Why is that?
+
+06:17.930 --> 06:20.120
+So I'm pretty sure that this is an issue.
+
+06:20.150 --> 06:21.020
+Oh, excuse me.
+
+06:21.050 --> 06:21.590
+Global.
+
+06:21.800 --> 06:22.400
+Sign in.
+
+06:23.750 --> 06:24.500
+My mistake.
+
+06:25.330 --> 06:25.930
+All right.
+
+06:26.110 --> 06:26.860
+There we go.
+
+06:27.340 --> 06:31.630
+So again, we are using this global thing right here just to avoid an additional import statement at
+
+06:31.630 --> 06:32.160
+the top.
+
+06:32.170 --> 06:36.880
+Again, if you don't like this, just go ahead and move that sign in function to a separate file and
+
+06:36.880 --> 06:38.500
+then import it into the test file.
+
+06:39.560 --> 06:40.980
+All right, so let's save this.
+
+06:41.000 --> 06:42.500
+I'm going to flip back over to my terminal.
+
+06:43.170 --> 06:44.280
+Check my tests.
+
+06:45.490 --> 06:46.720
+And we are good to go.
+
+06:47.390 --> 06:47.720
+All right.
+
+06:47.720 --> 06:48.680
+So that's pretty much it.
+
+06:49.040 --> 06:53.540
+So now we can start to take that sign in function and we're going to eventually move it around to a
+
+06:53.540 --> 06:54.980
+couple of other services.
+
+06:54.980 --> 06:57.500
+So we eventually put together and start to test as well.
+
+06:58.330 --> 06:58.540
+Kids.
+
+06:58.630 --> 06:59.420
+This looks pretty good.
+
+06:59.440 --> 07:03.340
+I would like to put together one last test around current user and make sure that if we make a request
+
+07:03.340 --> 07:05.450
+while not authenticated, we get back.
+
+07:05.470 --> 07:09.070
+Undefined or null is what it should be as our current user.
+
+07:09.070 --> 07:09.970
+In response.
+
+07:10.090 --> 07:12.370
+Let's take care of that last test in just a moment.

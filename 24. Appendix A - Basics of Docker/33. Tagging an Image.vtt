@@ -1,0 +1,232 @@
+WEBVTT
+
+00:00.630 --> 00:06.210
+At this point, we have the ability to create a new custom image out of our Docker file and we can do
+
+00:06.210 --> 00:07.500
+so by running Docker.
+
+00:07.500 --> 00:13.570
+Build the output from all that is this very last line right here that says Successfully built.
+
+00:13.590 --> 00:14.550
+Blah, blah, blah.
+
+00:14.700 --> 00:17.550
+This is the ID of the image that was just created.
+
+00:17.550 --> 00:23.910
+So we can now create a container out of this image by copying the ID and running Docker run and then
+
+00:23.910 --> 00:25.470
+placing the ID in there.
+
+00:25.560 --> 00:31.350
+Now, when we run this command, an instance of our image will be created, we'll get a new container,
+
+00:31.350 --> 00:35.550
+and inside that we're going to be running an instance of a server.
+
+00:35.730 --> 00:37.770
+So I'll hit enter and there we go.
+
+00:37.770 --> 00:38.880
+We've got our copy of Redis.
+
+00:38.880 --> 00:41.070
+And again, all the warnings you can totally ignore.
+
+00:42.240 --> 00:46.590
+Now, one thing I want to point out here is that having to execute Docker run and then paste in that
+
+00:46.590 --> 00:50.910
+ID, I don't have any more, but having to paste in that ID is kind of a pain and it sure was a lot
+
+00:50.940 --> 00:56.610
+nicer earlier in the course when we were able to do stuff like just simply Docker Run, Redis or Docker
+
+00:56.610 --> 00:58.050
+Run, Hello World.
+
+00:58.050 --> 01:04.290
+In those cases we didn't have to memorize an ID to use so we can actually do the same by slightly changing
+
+01:04.290 --> 01:06.780
+the form of the Docker build command.
+
+01:06.930 --> 01:08.220
+Here's what we're going to do.
+
+01:09.110 --> 01:14.240
+We are going to run Docker Build and then we're going to add on this little argument right here that
+
+01:14.240 --> 01:20.390
+is going to tag the image that is created and make it a lot easier to refer to it by a name that you
+
+01:20.390 --> 01:22.850
+and I can customize the convention for.
+
+01:22.850 --> 01:24.230
+This is.
+
+01:25.250 --> 01:30.200
+Your Docker ID a slash the name of the project that you're working on.
+
+01:30.230 --> 01:31.070
+A colon.
+
+01:31.070 --> 01:35.480
+And then the version which traditionally is going to be latest whenever you are building the newest
+
+01:35.480 --> 01:36.770
+version of an image.
+
+01:36.770 --> 01:39.560
+But in general, that is supposed to actually be a version.
+
+01:39.560 --> 01:44.540
+So traditionally a number or for the latest version of your image, you simply say latest.
+
+01:45.110 --> 01:46.850
+Now, this is a convention right here.
+
+01:46.850 --> 01:51.770
+You're going to see all projects in Docker trying to follow this convention as much as possible.
+
+01:52.470 --> 01:57.410
+You might be wondering why some other images that we've been able to use have more simplified names
+
+01:57.410 --> 02:02.750
+like Simply Redis or Hello World or Busy Box?
+
+02:02.990 --> 02:05.480
+Well, all those are community images.
+
+02:05.480 --> 02:10.910
+They are images that have been created by people in the community and kind of open source for very popular
+
+02:10.910 --> 02:11.570
+use.
+
+02:11.780 --> 02:17.300
+Any time that you are creating an image of your own, you're always going to prefix it with your Docker
+
+02:17.300 --> 02:17.960
+ID.
+
+02:18.650 --> 02:21.140
+All right, so let's give this a shot and see how it works.
+
+02:21.350 --> 02:28.250
+So I'm going to flip back over to my terminal and we are going to execute Docker, build dash t.
+
+02:29.500 --> 02:30.670
+Your Docker ID.
+
+02:30.700 --> 02:31.840
+So for me, it's even greater.
+
+02:31.840 --> 02:34.120
+For you, it's probably going to be something else.
+
+02:34.830 --> 02:38.180
+Slash whatever you want the name of the project to be.
+
+02:38.190 --> 02:39.600
+So I'm going to use Redis.
+
+02:39.630 --> 02:41.610
+You can do Reddit's, you can do Reddit server.
+
+02:41.610 --> 02:44.940
+Really, anything goes here, a colon.
+
+02:44.940 --> 02:47.310
+And I'll say specifically latest.
+
+02:47.490 --> 02:52.510
+And then don't forget, after all that stuff, we still have to put in that dot at the very end.
+
+02:52.560 --> 02:58.050
+Still need to specify that build context, which again is the source of all the files and folders that
+
+02:58.050 --> 03:00.810
+are going to going to be used to build your container out.
+
+03:01.110 --> 03:05.640
+One quick reminder, we're not really doing a lot with this build context yet, but we will use it for
+
+03:05.640 --> 03:07.380
+something later on in the course.
+
+03:08.130 --> 03:08.490
+All right.
+
+03:08.490 --> 03:11.310
+So once you got all that in there, we'll run that.
+
+03:11.310 --> 03:17.370
+And then the output down here says successfully built the image ID, but then it tagged it as this name.
+
+03:17.520 --> 03:23.610
+And so now we can start up a container out of this image by running Docker Run and then using the name
+
+03:23.610 --> 03:30.720
+that we just provided of Stephen Grider or whatever your tag is, slash Redis and then you do not have
+
+03:30.720 --> 03:32.850
+to actually specify the version on the end.
+
+03:32.880 --> 03:36.270
+You can simply leave it as your docker ID slash redis.
+
+03:36.270 --> 03:40.980
+If you don't put on the version on the end, then the latest version of the container or the latest
+
+03:40.980 --> 03:43.350
+version of the image will be used by default.
+
+03:44.320 --> 03:45.040
+So I'll run that.
+
+03:45.040 --> 03:48.100
+And sure enough, we get our Docker image running.
+
+03:48.900 --> 03:49.590
+All right.
+
+03:49.590 --> 03:54.570
+So one last quick kind of nitpick thing that I want to throw out here, just because you might see some
+
+03:54.570 --> 03:59.610
+documentation that looks a little bit confusing, technically, the version number on the very end here,
+
+03:59.640 --> 04:01.700
+this is technically the tag.
+
+04:01.710 --> 04:07.260
+Now, the entire process of what we just did is known as tagging the image, and even the argument we
+
+04:07.260 --> 04:08.630
+used was dashed right here.
+
+04:08.640 --> 04:14.300
+So we call this process tagging the image, but technically just the version on the end is the tag.
+
+04:14.310 --> 04:18.360
+Everything else on here is actually like the repository or the project name.
+
+04:18.360 --> 04:20.070
+So just a little bit of a nitpick.
+
+04:20.070 --> 04:21.810
+I just want you to be aware of that.
+
+04:22.350 --> 04:22.710
+All right.
+
+04:22.710 --> 04:23.610
+So that's pretty much it.
+
+04:23.610 --> 04:26.250
+Let's take a quick break and we'll continue in the next section.

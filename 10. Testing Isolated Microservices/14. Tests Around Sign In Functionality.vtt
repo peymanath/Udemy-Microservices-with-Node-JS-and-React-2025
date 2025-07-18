@@ -1,0 +1,328 @@
+WEBVTT
+
+00:01.760 --> 00:05.640
+In this video, we're going to write out a couple of tests around our sign in request handler.
+
+00:05.660 --> 00:09.080
+Now, we're not going to really run into anything too interesting around these tests.
+
+00:09.080 --> 00:12.380
+It's going to be pretty much pretty similar to what we just went through for sign up.
+
+00:12.380 --> 00:15.080
+So if you are already bored with testing, that is fine.
+
+00:15.080 --> 00:16.880
+You can feel free to skip over this video.
+
+00:16.910 --> 00:17.870
+Otherwise, stick around.
+
+00:17.870 --> 00:21.860
+We're going to write out just one or two quick tests just to make sure that this thing works correctly.
+
+00:21.860 --> 00:22.910
+So let's get to it.
+
+00:23.210 --> 00:26.780
+We're going to once again follow the same pattern of the creation of the test file.
+
+00:26.780 --> 00:32.060
+So because we want to make a test around sign into us, we'll go into the same directory, find the
+
+00:32.060 --> 00:33.710
+underscore, underscore test folder.
+
+00:33.760 --> 00:38.480
+Inside there, I'll make a new file called Sign in Test Tests.
+
+00:39.420 --> 00:40.080
+At the very top.
+
+00:40.080 --> 00:42.980
+We'll then put in the exact same boiler plate we had in the last test file.
+
+00:42.990 --> 00:46.500
+So we'll import request from super test.
+
+00:47.750 --> 00:51.800
+And our app from up to directories app.
+
+00:52.800 --> 00:57.270
+All right, let's very quickly open up that sign in route handler and try to figure out what we should
+
+00:57.270 --> 00:59.220
+really be trying to test inside of here.
+
+01:00.480 --> 01:04.380
+Well, we could write out some more tests around making sure that we've got some validation put together.
+
+01:04.380 --> 01:06.540
+If you want to do that, I will leave it up to you.
+
+01:06.570 --> 01:11.730
+You can really just take the exact same tests that we wrote for the last root handler and move them
+
+01:11.730 --> 01:12.120
+over.
+
+01:12.150 --> 01:16.080
+The only thing you'll need to change is we don't really have any requirements around the password being
+
+01:16.080 --> 01:17.640
+of some particular length.
+
+01:18.090 --> 01:22.350
+So just keep in mind that if you copy paste those tests over, you might have to update some the tests
+
+01:22.350 --> 01:24.180
+around validation of the password.
+
+01:25.570 --> 01:31.180
+So the things we might attempt to test is to make sure that if we try to log in as someone who has never
+
+01:31.180 --> 01:35.680
+signed up before or essentially with an email that's never been used, then we should probably see a
+
+01:35.680 --> 01:37.570
+response with the status code of 400.
+
+01:38.360 --> 01:43.070
+We should also probably try to sign in with an incorrect password and expect to also see a 400.
+
+01:43.400 --> 01:47.510
+And then finally, if we attempt to sign in with some legit credentials, then we should once again
+
+01:47.510 --> 01:50.060
+see that hat cookie in the header.
+
+01:50.480 --> 01:53.210
+So let's try to write out some tests for those three cases.
+
+01:53.210 --> 02:00.110
+The case in which we reuse an email in which we use an email that does not exist and in which everything
+
+02:00.110 --> 02:01.010
+goes successful.
+
+02:01.520 --> 02:04.370
+So for the very first one, we'll say it.
+
+02:05.160 --> 02:06.450
+Bale's win.
+
+02:07.710 --> 02:10.260
+A email that does not.
+
+02:11.940 --> 02:13.620
+Exist is supplied.
+
+02:16.980 --> 02:18.150
+So then inside of here.
+
+02:19.220 --> 02:21.030
+We will do and await.
+
+02:21.410 --> 02:23.270
+Will make a request to our app.
+
+02:24.050 --> 02:27.590
+We're going to do a post request to API.
+
+02:28.700 --> 02:29.550
+Let me look up that route.
+
+02:29.570 --> 02:31.760
+Handler I can't remember if we called it author users.
+
+02:31.880 --> 02:33.050
+It looks like its users.
+
+02:33.080 --> 02:35.240
+API users sign in.
+
+02:37.120 --> 02:39.340
+And we'll send along whatever email.
+
+02:41.600 --> 02:44.300
+And whatever password, they just have to be valid.
+
+02:46.050 --> 02:50.910
+Then we will expect to get back at 400 because we are trying to sign in with an account that does not
+
+02:50.910 --> 02:51.630
+exist.
+
+02:52.120 --> 02:53.190
+Okay, let's save that.
+
+02:53.790 --> 02:55.170
+We'll go back over to our terminal.
+
+02:55.800 --> 02:56.340
+You'll notice that.
+
+02:56.340 --> 02:58.290
+Now we've got a second file inside of here.
+
+02:58.500 --> 03:02.850
+And it looks like all the tests inside of that sign in test file are now working correctly.
+
+03:03.330 --> 03:04.020
+Very good.
+
+03:05.240 --> 03:05.540
+All right.
+
+03:05.540 --> 03:06.770
+So now the next one will do.
+
+03:06.800 --> 03:11.750
+We're going to attempt to sign into an existing account with the incorrect password.
+
+03:12.230 --> 03:19.880
+So I'll do another block and I'll say it fails when an incorrect password is supplied.
+
+03:22.990 --> 03:27.820
+Now in this case, we need to make sure first that there is actually an account for us to sign into.
+
+03:28.120 --> 03:34.120
+So we need to first go over to our sign up route, create a new account, and then attempt to sign into
+
+03:34.120 --> 03:35.530
+it with an incorrect password.
+
+03:35.920 --> 03:39.790
+So in this case, we'll do and await request over to app.
+
+03:40.150 --> 03:44.740
+We'll make a post to API users sign up in this case.
+
+03:47.100 --> 03:49.080
+We'll send along some valid credentials.
+
+03:55.190 --> 04:00.530
+And I will expect that after signing up with these valid credentials, I get back a 201 because remember,
+
+04:00.530 --> 04:03.470
+that's what we send back after someone signs up for an account.
+
+04:06.260 --> 04:09.590
+Then after that, we're going to attempt to sign in.
+
+04:10.310 --> 04:14.480
+We also want to make sure we collect the response that comes back and we're going to inspect that response
+
+04:14.480 --> 04:16.790
+and make sure that there is some set cookie header on there.
+
+04:17.360 --> 04:19.490
+So we will do a weight.
+
+04:22.350 --> 04:30.600
+Requests with that will make a post to API users sign in in this case and we're going to send along
+
+04:30.600 --> 04:31.650
+the same email.
+
+04:33.200 --> 04:34.820
+What an incorrect password.
+
+04:34.950 --> 04:37.430
+I'll put in some gibberish like so.
+
+04:39.560 --> 04:42.140
+And then I'm going to expect to get a 400 back.
+
+04:44.830 --> 04:45.190
+Okay.
+
+04:45.220 --> 04:47.320
+Let's save that bullet back over.
+
+04:50.300 --> 04:52.130
+And looks good.
+
+04:53.620 --> 04:53.870
+Okay.
+
+04:53.950 --> 04:55.430
+So now let's just do one more.
+
+04:55.450 --> 04:58.420
+We're going to handle the case in which we sign up for an account.
+
+04:59.190 --> 05:01.680
+And then attempt to sign in with a correct password.
+
+05:01.680 --> 05:06.000
+And again, on the response we get back from the sign in, we should be able to take that response and
+
+05:06.000 --> 05:08.910
+say that we've got some actual cookie being set.
+
+05:09.960 --> 05:11.040
+They'll do it.
+
+05:11.900 --> 05:13.670
+Responds with a cookie.
+
+05:14.440 --> 05:17.200
+When given valid credentials.
+
+05:21.120 --> 05:25.470
+So for this, we can save a little bit of time by just taking everything out of the body of the previous
+
+05:25.470 --> 05:26.130
+test.
+
+05:26.220 --> 05:28.530
+It's going to take the sign up and the sign and stuff.
+
+05:29.560 --> 05:31.690
+I'm going to paste it down inside this new test.
+
+05:33.220 --> 05:34.570
+Fix some indentation.
+
+05:36.710 --> 05:41.840
+I'm going to make sure that the sign in request right here has the valid password or the correct password.
+
+05:41.840 --> 05:43.700
+So my correct password is password.
+
+05:43.700 --> 05:44.960
+So I'll update that string.
+
+05:46.090 --> 05:49.900
+I'll make sure that I update that status code right there, because now that we're providing a correct
+
+05:49.900 --> 05:53.140
+password, I'm going to expect to get back a response with the 200.
+
+05:53.890 --> 06:00.340
+And then finally we're going to get the response and we're going to make sure that that set cookie header
+
+06:00.340 --> 06:00.910
+is defined.
+
+06:00.910 --> 06:03.100
+So we'll do another expect response.
+
+06:03.100 --> 06:07.960
+Target set cookie to be defined.
+
+06:11.230 --> 06:11.640
+All right.
+
+06:11.650 --> 06:14.380
+Another save, another flip over to our terminal.
+
+06:16.610 --> 06:18.800
+And after a brief pause, we are good to go.
+
+06:19.670 --> 06:20.930
+Well, this is fantastic.
+
+06:20.930 --> 06:25.640
+So let's take a quick pause right here and move on to testing our next root handler.

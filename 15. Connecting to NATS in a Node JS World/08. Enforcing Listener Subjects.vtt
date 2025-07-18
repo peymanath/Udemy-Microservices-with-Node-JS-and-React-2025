@@ -1,0 +1,376 @@
+WEBVTT
+
+00:02.200 --> 00:02.590
+All right.
+
+00:02.590 --> 00:06.010
+This video is where things are going to get just a little bit nasty because we're going to write out
+
+00:06.010 --> 00:08.170
+a little bit of crazy typescript code.
+
+00:08.200 --> 00:12.280
+The syntax is going to be a little bit weird, but I'm pretty sure that once you see it all in action,
+
+00:12.280 --> 00:13.810
+it's going to make a lot of sense.
+
+00:14.140 --> 00:19.780
+So our goal here is to somehow get TypeScript to understand that it needs to make sure that the subject
+
+00:19.780 --> 00:24.670
+we have listed right here matches up with the type of data that we provide right there.
+
+00:24.970 --> 00:26.230
+So how are we going to do this?
+
+00:26.260 --> 00:29.770
+Well, we're going to go back over to our base listener file.
+
+00:30.550 --> 00:35.090
+Inside the space listener at the very top, we are going to define yet another interface.
+
+00:35.110 --> 00:39.190
+This interface is going to describe a very generic kind of event.
+
+00:39.900 --> 00:42.750
+So we're going to find an interface called event.
+
+00:43.260 --> 00:48.360
+We're going to say that if something is an event, it's going to have a subject and the subject is going
+
+00:48.360 --> 00:51.630
+to be one of the possible values out of our subject's enum.
+
+00:52.350 --> 00:54.390
+So I'm going to import subject at the top.
+
+00:58.060 --> 00:59.560
+From subjects.
+
+01:01.310 --> 01:03.920
+And excuse me, it's subjects not subject singular.
+
+01:04.400 --> 01:08.690
+Then for the subject property inside this event interface we'll put in these subjects.
+
+01:09.170 --> 01:13.400
+So for an object to be considered to be an event, it must have a subject property.
+
+01:13.400 --> 01:16.640
+That is one of the possible values listed inside of subjects.
+
+01:17.490 --> 01:21.780
+Well, then say that this thing is also going to have a data property and its type is going to be any.
+
+01:22.020 --> 01:25.410
+This might be a bit mysterious right here, right now, but trust me, it's going to make sense in just
+
+01:25.410 --> 01:25.950
+a moment.
+
+01:26.980 --> 01:32.950
+So here's the kind of crazy typescript part of code that unfortunately we can't really escape when we
+
+01:32.950 --> 01:33.810
+define listener.
+
+01:33.820 --> 01:36.850
+We're going to set this thing up as a generic class.
+
+01:36.850 --> 01:41.050
+So I'm going to put inside of here t extends event.
+
+01:42.240 --> 01:45.630
+This means that whenever we try to make use of a listener in any way.
+
+01:45.630 --> 01:50.700
+So in other words, whenever we try to extend it, we're going to have to provide some custom type to
+
+01:50.700 --> 01:51.180
+this.
+
+01:51.750 --> 01:55.800
+This generic type right here can be thought of as like an argument for types.
+
+01:55.800 --> 02:00.630
+So we can now refer to type T everywhere inside of our class definition.
+
+02:01.420 --> 02:05.560
+So this is how we're going to set up some pairing and make sure that TypeScript understands that it
+
+02:05.560 --> 02:10.480
+needs to make sure that we've got a match between the subject and data inside of our actual listener.
+
+02:11.110 --> 02:15.160
+To do so, we're going to refer to this type T right here, and we're going to say that the subject
+
+02:15.160 --> 02:21.010
+that is provided must be exactly equal to whatever subject was provided on this argument.
+
+02:21.010 --> 02:23.560
+So we'll say T at subject.
+
+02:25.180 --> 02:28.240
+And then inside the on message function, we're going to update this.
+
+02:28.240 --> 02:31.100
+And rather than saying that the first argument is going to be of type any.
+
+02:31.120 --> 02:35.890
+Instead we're going to say it is going to be of type T at data like so.
+
+02:38.400 --> 02:38.500
+Okay.
+
+02:38.580 --> 02:42.070
+So at this point, if you do not understand this little part right here.
+
+02:42.090 --> 02:42.870
+Absolutely.
+
+02:42.870 --> 02:43.200
+Totally.
+
+02:43.200 --> 02:43.770
+Okay.
+
+02:44.100 --> 02:48.420
+What really matters here is that you understand the end result and how this is going to get TypeScript
+
+02:48.420 --> 02:51.450
+to check and make sure that we've defined all of our listeners correctly.
+
+02:51.810 --> 02:54.390
+So that is all we really have to do inside this based listener.
+
+02:54.660 --> 02:59.190
+We're now going to go back over to our custom ticket created listener and see how we actually make use
+
+02:59.190 --> 02:59.790
+of this.
+
+03:00.560 --> 03:01.970
+So let's open that up right now.
+
+03:03.560 --> 03:05.660
+So over here we're now getting an air from listener.
+
+03:05.660 --> 03:08.900
+And the reason is that now listener is a generic class.
+
+03:08.900 --> 03:12.020
+So we have to provide a argument for type T.
+
+03:12.880 --> 03:17.260
+So our argument in this case, we want to put it in a type to listener right here that describes the
+
+03:17.260 --> 03:20.170
+event that we expect to receive inside this listener.
+
+03:20.800 --> 03:22.570
+That is the interface we just put together.
+
+03:22.570 --> 03:28.330
+We expect our listener to deal with something like this, something that has a subject of to get created
+
+03:28.330 --> 03:30.370
+and has this structure of data inside of it.
+
+03:31.220 --> 03:34.160
+So inside of our custom listener, we are going to import.
+
+03:35.280 --> 03:38.010
+Ticket created event at the top.
+
+03:39.070 --> 03:40.600
+From ticket created events.
+
+03:41.590 --> 03:44.620
+And then we will provide that as the generic type to listener.
+
+03:46.790 --> 03:49.580
+And now we're going to start to see some errors start to light up.
+
+03:49.940 --> 03:53.720
+So as soon as we put that in, we are now getting an air out of subject right here.
+
+03:54.140 --> 03:59.140
+If we hover over it, it says that we assigned type string or something of type string to subject.
+
+03:59.150 --> 04:04.400
+But if we are trying to actually implement listener correctly, then we need to make sure that subject
+
+04:04.400 --> 04:06.140
+is of type subjects.
+
+04:06.440 --> 04:07.640
+Ticket created.
+
+04:09.190 --> 04:13.750
+So this is the first sign right here that we've got TypeScript engaged in helping us make sure that
+
+04:13.750 --> 04:15.640
+we write out a listener correctly.
+
+04:16.340 --> 04:20.800
+The reason this is working is that we are providing the ticket created event as the generic type to
+
+04:20.810 --> 04:23.090
+listener back inside of our listener.
+
+04:23.210 --> 04:29.180
+We are saying that whatever subject is provided on this subclass must match up to whatever type was
+
+04:29.180 --> 04:31.460
+provided on this type.
+
+04:31.460 --> 04:32.000
+Arguments.
+
+04:32.000 --> 04:33.110
+Subject Property.
+
+04:33.260 --> 04:41.090
+So long story short, subject right here must be exactly equal 100% of the time to the subject we provided
+
+04:41.090 --> 04:41.930
+right here.
+
+04:43.730 --> 04:49.020
+So to get this air to go away, we have to import once again the subject's name.
+
+04:49.580 --> 04:53.270
+So I'm going to import subjects from subjects.
+
+04:54.820 --> 05:01.240
+I'm then going to annotate this thing subject as being of type subjects dot ticket created.
+
+05:02.330 --> 05:08.390
+That's the type annotation and I'm going to set its actual value to subjects ticket created.
+
+05:09.250 --> 05:11.620
+Why do we have to provide the type invitation right here?
+
+05:11.950 --> 05:13.870
+Well, if we delete it, we're going to get an error again.
+
+05:13.900 --> 05:18.460
+The reason for that is that TypeScript thinks that we might try to change the value of subject at some
+
+05:18.460 --> 05:19.500
+point in the future.
+
+05:19.510 --> 05:22.180
+So essentially TypeScript is afraid that we will do something like this.
+
+05:22.330 --> 05:26.320
+Subject is some other value, possibly even a value out of that.
+
+05:26.320 --> 05:29.260
+Enum like subjects dot order updated.
+
+05:29.990 --> 05:35.450
+By providing this type annotation right here, this makes sure that we can never change the value of
+
+05:35.450 --> 05:37.170
+subject to anything else.
+
+05:37.190 --> 05:40.250
+It must always be equal to the value of ticket created.
+
+05:41.200 --> 05:42.280
+If we only.
+
+05:43.290 --> 05:44.640
+Provide the assignment.
+
+05:44.940 --> 05:51.150
+Subject can be of type anything inside of subjects so it can be any of the possible cases inside of
+
+05:51.150 --> 05:51.900
+subjects.
+
+05:52.290 --> 05:53.530
+And again, that's not what we want.
+
+05:53.550 --> 05:57.330
+We want to make sure that it is always exactly equal to ticket created.
+
+05:58.960 --> 06:04.300
+If you come from the world of Java, not JavaScript, but plain Java, this would be a good location
+
+06:04.300 --> 06:05.890
+to make use of the final keyword.
+
+06:05.920 --> 06:10.420
+Unfortunately, we do not have final in the world of TypeScript, so we do not get to take advantage
+
+06:10.420 --> 06:10.990
+of that.
+
+06:12.170 --> 06:12.440
+Okay.
+
+06:12.440 --> 06:15.080
+So now we have made a good improvement here.
+
+06:15.380 --> 06:18.620
+We no longer have to write out a plain string inside of our listener.
+
+06:18.620 --> 06:22.730
+And again, plane strings are always a place where we can make a typo very easily.
+
+06:23.330 --> 06:28.490
+So now we always have to refer to the subject, and that means that we only ever have to write out the
+
+06:28.490 --> 06:33.830
+exact name of a subject exactly one time that is going to dramatically reduce the possibility of us
+
+06:33.830 --> 06:36.200
+making a typo around the name of some subject.
+
+06:36.230 --> 06:37.760
+So that is very, very good.
+
+06:38.590 --> 06:43.510
+In addition, TypeScript is also always going to make sure that we provide a subject right here exactly
+
+06:43.510 --> 06:48.130
+equal to whatever subject was listed inside of the ticket created event interface.
+
+06:48.550 --> 06:52.630
+So if we try to change this, for example, to the order updated.
+
+06:54.370 --> 06:55.540
+Case on the enum.
+
+06:55.540 --> 06:57.580
+Once again, TypeScript is going to yell at us.
+
+06:57.580 --> 07:00.610
+It's going to say, Hey, you try to provide the wrong subject.
+
+07:01.120 --> 07:05.110
+So now we've got a pretty good system here to make sure that TypeScript is going to ensure that we put
+
+07:05.110 --> 07:06.700
+in a valid subject.
+
+07:08.170 --> 07:08.270
+Hey.
+
+07:08.320 --> 07:12.640
+So this looks good, but we still need to make sure that TypeScript does some type checking around this
+
+07:12.640 --> 07:17.620
+data argument right here, because we still can reference properties on it, such as name and cost that
+
+07:17.620 --> 07:18.970
+don't actually exist.
+
+07:19.120 --> 07:20.650
+So one last step to put together.
+
+07:20.650 --> 07:22.510
+Let's take a look at it in the next video.

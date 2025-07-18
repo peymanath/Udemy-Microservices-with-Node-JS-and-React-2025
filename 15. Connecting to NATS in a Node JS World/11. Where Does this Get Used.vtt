@@ -1,0 +1,133 @@
+WEBVTT
+
+00:01.780 --> 00:02.350
+At this point.
+
+00:02.350 --> 00:05.270
+We've got several different files inside of our little test project.
+
+00:05.290 --> 00:09.460
+As I've said several times, we're going to eventually take the code out of this test project and merge
+
+00:09.460 --> 00:10.800
+it into the common module.
+
+00:10.810 --> 00:15.220
+But you might be kind of curious what code is going to go into the common module and what code we're
+
+00:15.220 --> 00:19.070
+going to eventually write inside of one of our services, such as the ticket service.
+
+00:19.100 --> 00:21.640
+So let's take a look at a quick diagram just to answer that question.
+
+00:22.650 --> 00:26.910
+So inside of our common module, we are going to define our big list of subjects.
+
+00:26.910 --> 00:31.740
+So this is going to be all the possible channels that we can emit events to inside of our net streaming
+
+00:31.740 --> 00:32.280
+server.
+
+00:32.760 --> 00:37.260
+We're also going to define our space listener class inside there as well.
+
+00:37.710 --> 00:42.840
+We'll also define the interfaces describing all the possible events that we can emit and the data that
+
+00:42.840 --> 00:44.520
+is expected for each of them.
+
+00:45.400 --> 00:49.300
+We're then going to import these things into each of our different services.
+
+00:50.170 --> 00:56.680
+So for example, if we eventually have a payment service, we're going to import in subjects listener
+
+00:56.680 --> 00:58.630
+and say ticket update event.
+
+00:58.750 --> 01:04.210
+And inside the payment service, we are going to define our custom listener because presumably whenever
+
+01:04.210 --> 01:09.850
+our payment service receives this event or receives this message of ticket created, the payment service
+
+01:09.850 --> 01:15.670
+is going to want to run some very custom logic, the very custom business logic inside of on message.
+
+01:15.940 --> 01:20.560
+So ticket created listener something like this will be defined inside of one of our services, whereas
+
+01:20.560 --> 01:27.310
+our list of subjects the base listener class are going to be and the ticket created event are all going
+
+01:27.310 --> 01:30.640
+to be defined inside the custom or common library.
+
+01:31.590 --> 01:35.550
+The nice thing about this approach is that all of our different services are going to have the exact
+
+01:35.550 --> 01:38.580
+same definition of what different subjects there are.
+
+01:39.180 --> 01:43.860
+They're all going to share the exact same definition of what events there are and what the structure
+
+01:43.860 --> 01:45.420
+of all those events look like.
+
+01:46.410 --> 01:49.140
+They of course are all going to share the same kind of logic around listener.
+
+01:49.140 --> 01:53.670
+But what's much more relevant is that they all have the exact same definition of the list of events
+
+01:53.670 --> 01:56.190
+and the structure of those events as well.
+
+01:56.310 --> 02:01.350
+So this is what is going to really make sure that we do not have some engineer creating the order,
+
+02:01.350 --> 02:06.450
+update the listener and accidentally trying to emit some kind of order update event with an invalid
+
+02:06.450 --> 02:07.110
+structure.
+
+02:07.470 --> 02:12.540
+It is absolutely critical that all of our different services have the exact same definition of what
+
+02:12.540 --> 02:16.590
+subjects are available and the event structure for each of those as well.
+
+02:17.870 --> 02:20.780
+So that's why we were putting all this stuff inside of our common module.
+
+02:21.680 --> 02:21.980
+All right.
+
+02:21.980 --> 02:23.360
+So now we answer this question.
+
+02:23.390 --> 02:24.440
+Let's take a pause right here.
+
+02:24.440 --> 02:28.940
+When we come back, the next video, we're going to start to do a refactor to our publisher as well.
+
+02:28.940 --> 02:32.020
+So right now, our publisher is still kind of stuck in the past.
+
+02:32.030 --> 02:37.460
+I want to kind of refactor it to have something that looks a little bit more similar to our base listener
+
+02:37.460 --> 02:39.920
+and the ticket created listener as well.
+
+02:39.920 --> 02:44.570
+So something to just make it a little bit easier to publish some events and make sure that whatever
+
+02:44.570 --> 02:48.920
+we are publishing has a valid subject name and some valid data as well.

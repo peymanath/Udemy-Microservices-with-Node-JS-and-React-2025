@@ -1,0 +1,220 @@
+WEBVTT
+
+00:00.660 --> 00:04.400
+In this section, we're going to start working on the Node.js web application.
+
+00:04.410 --> 00:09.060
+If you are not familiar with Node.js or you don't know any JavaScript and you don't want to know any
+
+00:09.060 --> 00:10.770
+JavaScript, that is totally fine.
+
+00:10.770 --> 00:15.720
+You can pause the video right now, skip to the next section where I will have a text link for you to
+
+00:15.720 --> 00:18.060
+download the two files that you're going to need.
+
+00:18.060 --> 00:21.000
+So totally fine if you don't want to write any JavaScript at all.
+
+00:21.390 --> 00:25.080
+Otherwise, stick around and we'll get started on this tiny web application.
+
+00:25.530 --> 00:28.770
+So to get started, I'm going to first flip back over to my terminal.
+
+00:28.800 --> 00:32.460
+You'll notice that I'm still inside of that Redis image directory.
+
+00:32.610 --> 00:38.550
+I'm going to go up one directory and then I'll make a new project folder and we will call this How about
+
+00:38.550 --> 00:40.140
+simple web?
+
+00:40.140 --> 00:44.070
+Because it's going to be a rather simple, straightforward web application.
+
+00:44.460 --> 00:50.040
+I'll then change into that directory and then I'm going to again start up my code editor inside there.
+
+00:51.680 --> 00:57.170
+Now a quick reminder, I was able to use the code command right here because I've set up Visual Studio
+
+00:57.170 --> 00:59.240
+code to be executed for my command line.
+
+00:59.240 --> 01:01.490
+So if you don't have that set up, totally fine.
+
+01:01.490 --> 01:06.800
+All you really need to do right now is open up your code editor based on that simple web directory that
+
+01:06.800 --> 01:07.790
+we just created.
+
+01:08.510 --> 01:13.430
+Then inside of here, we're going to create first a file called Package.
+
+01:14.250 --> 01:20.550
+Dot JSON inside this file, we're going to put together a little bit of configuration to describe how
+
+01:20.550 --> 01:22.440
+our node application is going to work.
+
+01:22.440 --> 01:23.220
+Exactly.
+
+01:24.210 --> 01:27.210
+I'm going to first begin by placing a set of curly braces.
+
+01:28.870 --> 01:33.160
+And then inside there, I'm going to place a key wrapped in double quotes.
+
+01:34.180 --> 01:38.950
+And the first section we're going to put together is going to list out all of the different dependencies
+
+01:38.950 --> 01:41.410
+that our application needs to run correctly.
+
+01:42.130 --> 01:46.560
+Notice how I'm wrapping the word dependencies inside of a set of double quotes.
+
+01:46.570 --> 01:50.860
+I've got a colon afterwards, and then I open up a curly brace object.
+
+01:51.920 --> 01:57.380
+Then inside that set of curly braces, I will put down another set of double quotes.
+
+01:57.800 --> 02:02.930
+And I'm going to say that in order for our application to work correctly, we need a copy of Express.
+
+02:03.170 --> 02:08.360
+I'll then put down a colon and then for the version, I'm just going to put a star to say we can use
+
+02:08.360 --> 02:10.220
+any version of Express out there.
+
+02:10.220 --> 02:11.030
+We don't care.
+
+02:12.880 --> 02:18.490
+After that, I'm then going to put a comma on this line right here and then I'll add in one more section.
+
+02:18.520 --> 02:23.050
+This is going to be a section that we will call scripts, and this will contain some of the different
+
+02:23.050 --> 02:25.990
+scripts that you can run to get our application up and running.
+
+02:26.530 --> 02:30.160
+I'm going to open up another set of curly braces, just like we did a second ago.
+
+02:30.400 --> 02:34.510
+I'll put a set of double quotes and we're going to create a script called Start.
+
+02:34.780 --> 02:40.320
+Any time that someone runs the START script, we are going to execute Node Index.
+
+02:40.600 --> 02:46.480
+JS Like, so this right here is going to be what ultimately starts up our server and gets it running.
+
+02:47.230 --> 02:49.990
+All right, so that's it inside of the package JSON file.
+
+02:49.990 --> 02:54.370
+So we have specified a dependency and we've created a single script.
+
+02:54.550 --> 02:56.920
+I'm now going to make sure that I save the file.
+
+02:58.300 --> 03:03.130
+And then I'm going to close it and create a second file inside the same directory.
+
+03:03.460 --> 03:07.060
+And the second file I will call index JS.
+
+03:08.730 --> 03:14.730
+So inside of here, we're going to first begin by requiring in the Express library that we just marked
+
+03:14.730 --> 03:15.840
+as a dependency.
+
+03:19.890 --> 03:24.600
+I'll then use the Express library to create a new app like so.
+
+03:25.530 --> 03:29.130
+And then we are going to set up one single root handler.
+
+03:29.130 --> 03:31.560
+We're going to say app get.
+
+03:32.430 --> 03:38.850
+I'll pass in a string with a forward slash as a second argument, I'll pass in an arrow function that
+
+03:38.850 --> 03:45.660
+gets called with a request in response object and open up a function body after placing a function arrow.
+
+03:46.380 --> 03:52.080
+Then inside of here we'll do resend and we're going to send back a message of Hi there.
+
+03:52.830 --> 03:58.230
+So now any time someone visits the root root of our application, we are going to immediately send back
+
+03:58.230 --> 04:00.270
+a string that says simply, Hi there.
+
+04:00.270 --> 04:05.670
+And so ultimately when we run our application, my expectation is that in the browser we should be able
+
+04:05.670 --> 04:08.130
+to visit this running web application and see.
+
+04:08.130 --> 04:09.810
+Hi there up here on the screen.
+
+04:11.260 --> 04:15.650
+Now, the last thing we have to do is set up our application to listen on a port.
+
+04:15.670 --> 04:22.000
+So down at the bottom of the file, I'll say listen and I'll specify the port that we are going to be
+
+04:22.000 --> 04:26.830
+listening to as 8080 as a second argument.
+
+04:26.860 --> 04:29.080
+I'll pass in an arrow function like so.
+
+04:29.650 --> 04:34.900
+And then finally, after the app starts listening to this port correctly, we will print out a little
+
+04:34.900 --> 04:39.760
+message that says Listening on port 82, 80, like so.
+
+04:40.960 --> 04:43.390
+And then I'm going to make sure that I save this file.
+
+04:44.080 --> 04:44.470
+All right.
+
+04:44.470 --> 04:45.240
+So that's pretty much it.
+
+04:45.250 --> 04:50.920
+We've got our packaged JSON file that defines some configuration around our project, and we've got
+
+04:50.920 --> 04:54.160
+the indexed JS file that contains the actual server logic.
+
+04:54.340 --> 04:56.230
+So we're going to take a quick pause right here.
+
+04:56.230 --> 04:59.680
+When we come back, the next section, we're going to start talking about how we're going to put together
+
+04:59.680 --> 05:00.770
+our Docker file.
+
+05:00.790 --> 05:03.010
+So a quick break and I'll see you in just a minute.

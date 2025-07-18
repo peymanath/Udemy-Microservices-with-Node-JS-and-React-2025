@@ -1,0 +1,139 @@
+WEBVTT
+
+00:00.910 --> 00:05.590
+All right, my friends, many videos ago I told you that we were going to spend a lot of time learning
+
+00:05.590 --> 00:07.400
+the basic syntax of TypeScript.
+
+00:07.420 --> 00:11.710
+We've now gone through all that basic stuff, and we've got a reasonable understanding of some of the
+
+00:11.710 --> 00:13.210
+low levels of TypeScript.
+
+00:13.240 --> 00:17.830
+But I think it's very fair to say that we still don't really understand how to build an application
+
+00:17.830 --> 00:18.400
+with it.
+
+00:18.640 --> 00:22.810
+So starting this video, we're going to work on our first application and throughout the rest of this
+
+00:22.810 --> 00:26.080
+course, all we're going to focus on is design patterns.
+
+00:26.350 --> 00:31.060
+We're going to learn how to use TypeScript effectively inside of an application and how to leverage
+
+00:31.060 --> 00:33.640
+its features to write really reusable code.
+
+00:33.940 --> 00:37.720
+So let's talk about what we're going to build for our first application.
+
+00:38.410 --> 00:38.860
+All right.
+
+00:38.860 --> 00:41.530
+So here it is, Mockup.
+
+00:42.130 --> 00:42.400
+All right.
+
+00:42.400 --> 00:45.370
+So we're going to make a very basic little Web application.
+
+00:45.640 --> 00:48.310
+So this is going to be something that's going to run inside of your browser.
+
+00:48.760 --> 00:52.960
+Our application is going to randomly generate two different entities.
+
+00:53.230 --> 00:57.190
+It's going to randomly generate a user and randomly generate a company.
+
+00:57.700 --> 01:01.870
+Now, when I say randomly generate, all I mean is that we're going to have a user with a randomly generated
+
+01:01.870 --> 01:05.170
+name and last name and age and stuff like that.
+
+01:05.500 --> 01:10.120
+And our company will have a random name and a random business and some stuff like that as well.
+
+01:11.370 --> 01:16.170
+Every user in every company is going to have a location property tied to it as well.
+
+01:16.170 --> 01:19.050
+So this is going to be like a longitude and latitude.
+
+01:19.870 --> 01:25.000
+After we generate the user and the company, we're going to use that location to show them as markers
+
+01:25.000 --> 01:27.100
+on a Google map inside the browser.
+
+01:27.460 --> 01:31.980
+So this marker right here, I know it's kind of hard to see what these colors might represent the user
+
+01:31.990 --> 01:34.810
+and this over here might represent the company.
+
+01:35.510 --> 01:41.210
+So the entire goal of this application is to get you more familiar with classes and how to understand
+
+01:41.210 --> 01:47.420
+how to make use of interfaces really effectively to get some amount of code reuse on the applications
+
+01:47.420 --> 01:48.140
+you work on.
+
+01:48.170 --> 01:49.070
+That's the whole goal.
+
+01:49.070 --> 01:54.620
+And like I said, that's pretty much the whole goal of the entire course understanding classes and interfaces.
+
+01:55.280 --> 01:55.550
+All right.
+
+01:55.550 --> 01:59.210
+So now that we understand what's going on here, we're going to do just a tiny bit of setup inside this
+
+01:59.210 --> 02:03.090
+video in order to actually get some typescript code running inside the browser.
+
+02:03.110 --> 02:06.590
+Very easily, we're going to use a tool called parcel bundler.
+
+02:06.980 --> 02:11.210
+This is a command line tool that we're going to use in place of node.
+
+02:11.570 --> 02:16.730
+Parcel bundler is all about getting some TypeScript executed inside the browser very easily, so it's
+
+02:16.730 --> 02:18.950
+going to automate a lot of tooling for us.
+
+02:19.310 --> 02:23.870
+We will eventually learn how to set up a TypeScript project manually, but for right now, we're going
+
+02:23.870 --> 02:26.270
+to start off nice and easy using parcel.
+
+02:26.900 --> 02:30.470
+So to set up parcel, all we have to do is run this command at our terminal.
+
+02:30.770 --> 02:36.890
+So I'm going to flip over to my terminal right now and I'll do an NPM install dash G parcel dash bundler
+
+02:36.890 --> 02:37.580
+like so.
+
+02:39.020 --> 02:42.650
+This is going to take a minute or two to install, so I'm going to let it do its thing and I'll join
+
+02:42.650 --> 02:44.360
+back up with you in just a minute.

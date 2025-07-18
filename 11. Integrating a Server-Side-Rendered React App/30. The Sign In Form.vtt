@@ -1,0 +1,187 @@
+WEBVTT
+
+00:00.800 --> 00:03.760
+In this video, we're going to start to work on our sign in page.
+
+00:03.770 --> 00:07.100
+Now, the sign in page is going to be basically identical to sign up.
+
+00:07.340 --> 00:10.460
+The only big difference is here is pretty much the label at the very top.
+
+00:10.460 --> 00:12.800
+So it needs to say sign in instead of sign up.
+
+00:13.040 --> 00:16.760
+And the only other big difference is going to be the URL that we make our request to.
+
+00:16.790 --> 00:21.890
+We need to make a request to API user sign in as opposed to API users sign up.
+
+00:22.370 --> 00:26.750
+Now, if this was a course that was focused on React JS, I would probably show you how to create a
+
+00:26.750 --> 00:29.540
+single reusable component to display both these forms.
+
+00:29.540 --> 00:34.340
+But because React isn't really our focus here, we're really just going to pretty much copy, paste,
+
+00:34.340 --> 00:38.120
+sign up and then change the label and the URL that we're making the request to.
+
+00:38.150 --> 00:39.080
+That's pretty much it.
+
+00:39.380 --> 00:40.400
+So let's get to it.
+
+00:41.180 --> 00:42.290
+Back inside my editor.
+
+00:43.740 --> 00:45.330
+I'll find the pages directory.
+
+00:45.600 --> 00:47.940
+You'll notice I still have banana jars inside of here.
+
+00:47.940 --> 00:49.110
+I'm going to delete banana.
+
+00:49.110 --> 00:50.730
+That was just a quick little test.
+
+00:51.440 --> 00:53.990
+I'll then go ahead and make a copy of Sign Up.
+
+00:54.950 --> 00:58.310
+So I can either attempt to duplicate it if your editor has that option.
+
+00:59.180 --> 00:59.540
+For me.
+
+00:59.540 --> 01:02.840
+I'm going to go ahead and copy it and paste the file directly in there.
+
+01:03.110 --> 01:04.520
+So here's a copy of Sign Up.
+
+01:05.090 --> 01:07.430
+I'll then rename that to sign in.
+
+01:09.020 --> 01:14.570
+Then inside of the sign and file, all we really have to do is find where we make our request or set
+
+01:14.570 --> 01:15.800
+up the user request hook.
+
+01:16.010 --> 01:19.100
+I'll change the URL right here to sign in.
+
+01:21.600 --> 01:26.700
+And then I'll go down to my ex and I'll change sign up to sign in.
+
+01:27.240 --> 01:30.660
+I think we probably also need to update the button at the bottom.
+
+01:31.050 --> 01:33.540
+We need to make sure that says sign in as well.
+
+01:34.530 --> 01:35.760
+And I think that should be it.
+
+01:36.410 --> 01:37.430
+So I'll save this.
+
+01:38.090 --> 01:39.290
+I'm going to flip back over.
+
+01:40.510 --> 01:44.230
+And now I should be able to navigate to off sign in.
+
+01:45.270 --> 01:46.650
+And there's our sign in form.
+
+01:47.830 --> 01:52.420
+So at this point in time, I would encourage you to make sure that your application tab go to cookies,
+
+01:52.420 --> 01:53.930
+make sure you don't have any cookie.
+
+01:53.950 --> 01:56.080
+So right now, I'm definitely not authenticated.
+
+01:56.380 --> 02:00.910
+I'll then go over to the network tab and I'm going to attempt to sign in with an account that I created
+
+02:00.910 --> 02:01.720
+in the past.
+
+02:01.930 --> 02:07.720
+Now, if you do not remember any valid email address or password combination that you have created before,
+
+02:07.780 --> 02:10.300
+make sure you go back over to sign up really quickly.
+
+02:10.450 --> 02:12.070
+Sign up for a new account.
+
+02:13.540 --> 02:15.310
+With some credentials you can remember.
+
+02:15.790 --> 02:19.210
+Go and clear your cookie and then come back over to sign in.
+
+02:20.660 --> 02:24.080
+So I remember my credentials that I set up way long ago.
+
+02:24.110 --> 02:30.470
+I created a account with Test ten at Test and a password of password.
+
+02:31.020 --> 02:33.310
+So now if I go to network, I should be able to click on sign in.
+
+02:33.320 --> 02:34.730
+See the request is issued.
+
+02:34.760 --> 02:39.440
+I got redirected back to the main page and I am now considered to be signed in and I can further confirm
+
+02:39.440 --> 02:44.270
+that by going to application, looking at my cookie list and making sure I've got my cookies set as
+
+02:44.270 --> 02:44.750
+well.
+
+02:45.670 --> 02:46.990
+Well, that's pretty much it for sign in.
+
+02:47.020 --> 02:48.280
+Yeah, not that bad.
+
+02:48.550 --> 02:52.390
+As I've said many times, the first time that we go through a lot of these different topics, it takes
+
+02:52.390 --> 02:53.350
+forever.
+
+02:53.350 --> 02:57.640
+But then once we kind of get the idea of what's going on, put it together, the rest starts to go really
+
+02:57.640 --> 02:58.210
+quickly.
+
+02:59.280 --> 02:59.670
+All right.
+
+02:59.670 --> 03:00.520
+So that looks pretty good.
+
+03:00.540 --> 03:04.650
+We've got sign up, sign in and our content on the landing page.
+
+03:04.800 --> 03:09.240
+But of course, now we need to make sure that our header gets created as well.
+
+03:09.270 --> 03:11.640
+So let's take a stab at that header in the next video.

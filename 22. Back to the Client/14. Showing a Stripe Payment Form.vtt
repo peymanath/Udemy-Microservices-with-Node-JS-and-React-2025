@@ -1,0 +1,145 @@
+WEBVTT
+
+00:01.210 --> 00:05.980
+I just watched my timer count down to zero, eventually hit zero and then updated automatically over
+
+00:05.980 --> 00:07.150
+to order expired.
+
+00:07.330 --> 00:10.180
+So I'd say that the timer is working out pretty well.
+
+00:10.810 --> 00:16.090
+Now, the last thing we have to do on this order show page is make sure we have a pay button whenever
+
+00:16.090 --> 00:16.970
+a user clicks on pay.
+
+00:16.990 --> 00:21.460
+We need to show this little pop up right here where the user will enter in their credit card, expiration
+
+00:21.460 --> 00:22.690
+number, all that stuff.
+
+00:23.230 --> 00:26.510
+Remember that you and I are not going to be responsible for this form.
+
+00:26.530 --> 00:31.310
+Instead, we're going to make use of a library from Stripe that's going to show this form automatically.
+
+00:31.330 --> 00:35.020
+It's going to handle the credit card, expiration date, data, all that stuff.
+
+00:35.290 --> 00:38.890
+Once a user submits all that, it's going to give back to us a token.
+
+00:39.250 --> 00:43.630
+You might remember discussing that token along with Stripe when we were putting together our payment
+
+00:43.630 --> 00:44.260
+service.
+
+00:44.590 --> 00:49.660
+So after our user submits this thing, we're going to get back a token on the React side of our application,
+
+00:49.840 --> 00:52.810
+and we will make a post request off to our payment service.
+
+00:52.810 --> 00:56.800
+And the payment service will then be responsible for billing the user's credit card.
+
+00:58.810 --> 01:02.760
+Now to actually show this model, we're going to install a library off of AMPM.
+
+01:02.770 --> 01:05.380
+So let's go take a look at the documentation for that right away.
+
+01:06.350 --> 01:11.300
+At 9 p.m., I'm going to do a search for React strip checkout.
+
+01:13.710 --> 01:14.970
+Here's the first result.
+
+01:15.740 --> 01:18.860
+And so if you want to, you can definitely take a look at the documentation here.
+
+01:19.100 --> 01:21.500
+It is pretty easy and straightforward to use.
+
+01:21.830 --> 01:26.540
+All we really have to do is import this library as strip checkout.
+
+01:27.600 --> 01:30.450
+We're then going to show it as though it were a react component.
+
+01:30.870 --> 01:35.880
+At a very minimum, we have to provide a callback function to the token prop that is going to be invoked
+
+01:35.880 --> 01:41.010
+any time a user submits their payment information and this thing gets a token back from the Stripe API.
+
+01:41.610 --> 01:45.780
+So we are going to provide this callback right here that's going to receive that token and that's where
+
+01:45.780 --> 01:48.420
+you and I are going to make our post request to our payment service.
+
+01:49.170 --> 01:54.930
+The other required property is the stripe key, that is the published publishable key which we can get
+
+01:54.930 --> 01:56.640
+from our Stripe dashboard.
+
+01:57.090 --> 02:02.670
+So if you go back to your Stripe dashboard at Dashboard Stripe, you can find developers on the left
+
+02:03.240 --> 02:07.020
+API keys, and that is the publishable key right there that we want.
+
+02:09.830 --> 02:14.000
+Those are the two required properties, but there are several other properties that we probably want
+
+02:14.000 --> 02:14.720
+as well.
+
+02:16.300 --> 02:19.360
+So you can see a big list of all the other properties we can pass in.
+
+02:20.080 --> 02:24.220
+The other one that you and I are probably going to want to provide is a mount that's going to make sure
+
+02:24.220 --> 02:28.690
+that we get the user's credit card authorization for a very specific amount of money.
+
+02:29.400 --> 02:32.430
+We might also want to pass in the email of the user as well.
+
+02:32.640 --> 02:36.720
+If we pass in the email, that's just going to make sure that the form kind of pre populates the user's
+
+02:36.720 --> 02:40.560
+email as opposed to require them to enter in their email again separately.
+
+02:41.410 --> 02:41.650
+All right.
+
+02:41.650 --> 02:43.690
+So with this in mind, let's go over to our terminal.
+
+02:43.690 --> 02:48.340
+We're going to install react stripe checkout and then make use of it inside of our order show component.
+
+02:49.370 --> 02:52.610
+So back at my terminal, I'll change into our client directory.
+
+02:53.310 --> 02:56.820
+And then do an NPM install for react stripe checkout.
+
+02:59.850 --> 03:00.150
+Okay.
+
+03:00.180 --> 03:01.440
+I'm going to let it do its thing.
+
+03:01.470 --> 03:06.090
+We'll come back together in the next video and make use of that inside of our order show component.

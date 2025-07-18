@@ -1,0 +1,376 @@
+WEBVTT
+
+00:01.200 --> 00:02.010
+Ari Sandler.
+
+00:02.010 --> 00:05.190
+Angela is looking great and we've got some tests around creating a new church.
+
+00:05.190 --> 00:06.660
+So what's next?
+
+00:06.990 --> 00:11.070
+Well, I want to point out that there's kind of a gap inside of our application right now at this point
+
+00:11.070 --> 00:17.100
+in time, after we create a charge on the Stripe API, we don't really have any way of relating an order
+
+00:17.100 --> 00:19.560
+to a charge at some point in time in the future.
+
+00:19.590 --> 00:24.000
+In other words, after we create the actual charge, we don't have any kind of data structure that we
+
+00:24.000 --> 00:29.070
+could come back to in, say, a day, a month, a week, a year and say, hey, did someone pay for
+
+00:29.070 --> 00:29.730
+this order?
+
+00:30.360 --> 00:33.810
+So we're going to start to create a new collection inside of our payment service.
+
+00:34.230 --> 00:37.320
+Inside this collection, we're going to store a list of different payments.
+
+00:37.470 --> 00:43.800
+The only goal of a payment is to relate an order and a charge that we created on the Stripe API.
+
+00:44.190 --> 00:48.390
+So this is a collection that we're going to use to keep track of which orders have actually been paid
+
+00:48.390 --> 00:48.840
+for.
+
+00:49.320 --> 00:53.730
+You and I are not really going to make use of this payments model at any point in time inside of our
+
+00:53.730 --> 00:54.090
+app.
+
+00:54.390 --> 00:56.190
+So in other words, we're not really going to read from it.
+
+00:56.190 --> 00:58.970
+We're not really going to show any information from it or anything like that.
+
+00:58.980 --> 01:03.000
+I'm only showing you how to create this payments collection in case you want to build something in the
+
+01:03.000 --> 01:08.340
+future, like, say, a dashboard to show your users a list of all the orders that they have successfully
+
+01:08.340 --> 01:10.260
+paid for or something like that.
+
+01:12.400 --> 01:15.250
+So this is going to require us to build up a new mongoose model.
+
+01:15.250 --> 01:18.580
+And then any time that we create a charge inside of our request.
+
+01:18.610 --> 01:23.680
+HANDLER So essentially right here, right after that, we're going to create a new payment object,
+
+01:23.680 --> 01:25.750
+and it's just going to save that for a given order.
+
+01:25.750 --> 01:26.620
+We have paid for it.
+
+01:26.620 --> 01:29.590
+And here's the ID of the stripe charge.
+
+01:30.100 --> 01:31.090
+That's pretty much it.
+
+01:31.210 --> 01:34.150
+So it will be a pretty simple and straightforward thing to put together.
+
+01:34.150 --> 01:35.920
+So let's get started on it right away.
+
+01:36.310 --> 01:40.300
+Inside of my models directory, I'm going to make a new file of payments.
+
+01:41.270 --> 01:43.430
+At the very top, we will import Mongoose.
+
+01:44.680 --> 01:45.490
+As usual.
+
+01:46.360 --> 01:48.340
+Well then create our three interfaces.
+
+01:49.360 --> 01:51.430
+So a payment adders.
+
+01:54.170 --> 01:58.700
+A payment dock that is going to be extending magazine document.
+
+02:00.560 --> 02:02.360
+And then a payment model.
+
+02:03.520 --> 02:06.190
+And that's going to extend magazine model.
+
+02:07.370 --> 02:08.420
+It is a generic.
+
+02:08.420 --> 02:09.770
+We'll stick in payment, doc.
+
+02:11.400 --> 02:11.620
+Oh.
+
+02:11.640 --> 02:12.600
+Little typo there.
+
+02:13.320 --> 02:13.890
+Here we go.
+
+02:15.390 --> 02:17.700
+So let's start off first with our payment address interface.
+
+02:17.700 --> 02:19.890
+What properties are we going to provide to a payment?
+
+02:20.160 --> 02:26.430
+Like I said, the only real goal of this payment object is to tell us about or to somehow relate together
+
+02:26.430 --> 02:29.310
+an order and a charge that is pretty much it.
+
+02:29.550 --> 02:36.030
+So on the payment object, we're just going to store the ID of the order and then we'll also store the
+
+02:36.030 --> 02:37.380
+ID of the charge.
+
+02:37.380 --> 02:38.640
+That's all we're going to store.
+
+02:38.820 --> 02:42.360
+So it's just going to relate these two things together and is going to be the presence of this payment
+
+02:42.360 --> 02:45.180
+that indicates that we have successfully paid for a given order.
+
+02:46.190 --> 02:53.300
+So on the payment adders right here, I'll say that this thing has a voter ID that is a string and a
+
+02:53.330 --> 02:55.400
+stripe ID that is a string.
+
+02:59.820 --> 03:01.950
+Next up on the payment dock interface.
+
+03:01.950 --> 03:05.880
+So this is going to be the list of properties that a payment has pretty much just the same thing.
+
+03:05.880 --> 03:07.110
+So order ID.
+
+03:09.360 --> 03:12.690
+That is a string and stripe ID that is a string as well.
+
+03:13.080 --> 03:16.110
+Now, do we want a payment to have a version number?
+
+03:16.140 --> 03:19.530
+Should this thing have a version for keeping track of all that concurrency stuff?
+
+03:19.770 --> 03:22.770
+Well, I would say in general, yes, probably.
+
+03:22.770 --> 03:27.570
+But for our application, we are essentially creating a payment one time and then never updating it,
+
+03:27.570 --> 03:30.060
+never changing any properties tied to it whatsoever.
+
+03:30.480 --> 03:34.710
+The whole idea of a version number was really to keep track and make sure we processed events in a correct
+
+03:34.710 --> 03:40.650
+order as a given record changed because our payment record is never going to change because it's really
+
+03:40.650 --> 03:43.090
+just got that order ID and stripe ID and that's it.
+
+03:43.110 --> 03:49.050
+I really don't need a version number because this thing simply isn't going to change over time, and
+
+03:49.050 --> 03:53.670
+I'm never going to expect to have to emit no events and have to make sure that they are processed in
+
+03:53.670 --> 03:54.780
+some given order.
+
+03:55.230 --> 03:57.780
+So in this case, no version is really required.
+
+03:58.260 --> 04:02.880
+Now having said that, it I would say that it is good practice to just include a version everywhere
+
+04:02.880 --> 04:07.050
+for every record, even if you don't think you're going to need it right away because you might need
+
+04:07.050 --> 04:08.700
+it at some point in time in the future.
+
+04:09.150 --> 04:12.510
+And if you decide to add it in the future, well, that means you got to go around to all of your different
+
+04:12.510 --> 04:15.780
+events related to this record and add in that version property.
+
+04:16.020 --> 04:17.220
+So this is really up to you.
+
+04:17.220 --> 04:21.240
+But in the case of this application, I know that I'm not going to make use of the version property,
+
+04:21.240 --> 04:22.950
+so I'm just not going to include it.
+
+04:24.740 --> 04:26.700
+So then finally onto our payment model.
+
+04:26.720 --> 04:31.370
+As usual, we're going to say this thing has a build property or build method that's going to receive
+
+04:31.370 --> 04:32.960
+some orders of type.
+
+04:34.130 --> 04:38.690
+Payment matters, and it's going to give back to us a payment doc.
+
+04:40.400 --> 04:41.770
+Let's then create our schema.
+
+04:41.780 --> 04:44.000
+So I'll make a payment schema.
+
+04:45.330 --> 04:47.610
+This will be a new mongoose schema.
+
+04:48.940 --> 04:51.610
+And then inside of here, we'll say this thing is going to have an odor ID.
+
+04:52.820 --> 04:53.990
+It is required.
+
+04:55.260 --> 04:58.110
+And its type is going to be string with a capital S.
+
+04:58.910 --> 05:00.350
+And then a stripe I.D. as well.
+
+05:01.140 --> 05:02.130
+Required.
+
+05:02.920 --> 05:05.470
+And its type will also be stirring with the capital S.
+
+05:08.950 --> 05:14.110
+As usual, we will also define that, transform property, make sure we strip off that ID, all that
+
+05:14.110 --> 05:14.950
+kind of stuff.
+
+05:15.650 --> 05:19.900
+So as the second argument right here, we'll put in transformers me to Jason.
+
+05:19.910 --> 05:21.560
+There we go transform.
+
+05:23.370 --> 05:30.810
+This thing will be called with our document and the return value, and as usual we will set red ID equal
+
+05:30.810 --> 05:36.870
+to red underscore ID and then we will delete off the red dot underscore ID property.
+
+05:39.490 --> 05:39.670
+Yet.
+
+05:39.700 --> 05:41.290
+Nothing too surprising so far.
+
+05:42.480 --> 05:46.680
+Now that we've got our scheme up put together, we're going to define the build method on their.
+
+05:49.130 --> 05:50.270
+So I'll define.
+
+05:51.410 --> 05:53.210
+Payment schema.
+
+05:53.660 --> 05:54.890
+Dot Statics.
+
+05:54.890 --> 05:56.150
+Dot build.
+
+05:59.320 --> 06:05.170
+This will be a function that takes in some attributes of type payment adders and then we will return
+
+06:05.170 --> 06:07.570
+a new payment.
+
+06:09.370 --> 06:12.490
+And we'll take all those adders and just essentially pass them through.
+
+06:16.240 --> 06:16.640
+Yet.
+
+06:16.690 --> 06:20.440
+And then finally we'll create the actual payment model at the very bottom and then export it.
+
+06:20.680 --> 06:21.790
+So payment.
+
+06:23.200 --> 06:25.090
+Is Magoo's model.
+
+06:25.850 --> 06:26.530
+He meant.
+
+06:28.100 --> 06:29.450
+Eden the payment schema.
+
+06:30.160 --> 06:32.350
+Let's not forget that this thing is a generic.
+
+06:32.350 --> 06:37.960
+So we're going to specify as well our payment dock and the payment model interfaces.
+
+06:42.590 --> 06:46.130
+And then at the very bottom, we can finally export the payment model itself.
+
+06:46.130 --> 06:48.080
+So export payment.
+
+06:49.020 --> 06:49.650
+Like so.
+
+06:51.130 --> 06:52.270
+And that's pretty much it.
+
+06:54.790 --> 06:58.960
+Now that we've got this thing put together back inside of a handler, right after we create our charge,
+
+06:58.960 --> 07:02.680
+we can create a new instance of a payment and save it to our database.
+
+07:02.680 --> 07:06.480
+And again, the whole goal of this thing is to just say, yeah, we paid for the given order.
+
+07:06.490 --> 07:11.980
+So now at some point in time in the future, we could do a lookup or say a given order ID and decide
+
+07:11.980 --> 07:13.930
+whether or not that order has been paid for.
+
+07:14.600 --> 07:18.190
+Let's take a pause right here and implement that last little step in the next video.

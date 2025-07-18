@@ -1,0 +1,220 @@
+WEBVTT
+
+00:01.420 --> 00:02.740
+Time for our very last test.
+
+00:02.740 --> 00:07.270
+So we're going to make sure that we have the ability to successfully reserve a ticket inside this test.
+
+00:07.270 --> 00:09.400
+We do still have to do a little bit of setup.
+
+00:09.400 --> 00:13.870
+We need to make sure that there is a ticket inside the database that is free and not reserved.
+
+00:13.870 --> 00:17.950
+So we're going to first create a ticket, save it to the database, and then make a request in attempt
+
+00:17.950 --> 00:18.940
+to reserve it.
+
+00:19.600 --> 00:20.920
+So we'll first create a ticket.
+
+00:22.290 --> 00:27.060
+With our tickets built, I'll give this a title of concert and a price of 20.
+
+00:28.040 --> 00:29.690
+And then we can save that ticket.
+
+00:34.510 --> 00:37.590
+After the ticket has been saved, we can then make a request in attempt to reserve it.
+
+00:37.600 --> 00:41.230
+So it will be a request very similar to what we wrote just a moment ago.
+
+00:41.260 --> 00:47.530
+The only difference is we will expect to get back a status code of 201, which indicates that the order
+
+00:47.530 --> 00:48.790
+has actually been created.
+
+00:50.600 --> 00:53.030
+So we'll do and await request to app.
+
+00:54.000 --> 00:55.260
+You want to make a post?
+
+00:56.210 --> 00:57.800
+Two API orders.
+
+00:59.930 --> 01:05.930
+Not send just yet we want to set that's better set our cookie to global sign in just to make sure we
+
+01:05.930 --> 01:06.920
+are authenticated.
+
+01:08.400 --> 01:10.440
+Then we can send along the ticket ID.
+
+01:11.310 --> 01:14.670
+So ticket ID is that tickets ID.
+
+01:14.910 --> 01:17.250
+So make sure we put in ticket ID.
+
+01:19.370 --> 01:24.800
+And then finally, we will expect this to resolve with a201 indicating that the order was created.
+
+01:25.370 --> 01:26.270
+So let's save that.
+
+01:27.260 --> 01:30.690
+Go back over to our terminal and it looks like it is passing.
+
+01:30.710 --> 01:35.570
+Just to make sure it is passing for the correct reasons, I will flip back over, change that expectation
+
+01:35.570 --> 01:37.160
+to a 400.
+
+01:37.190 --> 01:42.410
+Just to make sure that if we have an incorrect expectation here, the test does fail and yet looks good.
+
+01:42.410 --> 01:47.570
+So we expected a 400, but we actually got a 201, which means that the ticket was actually saved in
+
+01:47.570 --> 01:49.220
+theory to the database successfully.
+
+01:50.060 --> 01:53.420
+I'm going to change that back to 201 and we should be green again.
+
+01:54.370 --> 01:54.700
+Cool.
+
+01:55.180 --> 01:58.470
+Now, naturally, we could kind of do a follow up on this test right here.
+
+01:58.480 --> 02:03.100
+We could try to write out something that says, Hey, let's reach into the order collection, make sure
+
+02:03.100 --> 02:04.660
+there are no orders inside there.
+
+02:04.660 --> 02:09.100
+And then after making the request, take another look at the order collection and assert that there
+
+02:09.100 --> 02:10.870
+is at least one order inside.
+
+02:11.560 --> 02:12.700
+Our request handler.
+
+02:13.600 --> 02:16.090
+Right here actually does send the order as well.
+
+02:16.210 --> 02:19.330
+So we could potentially also get the response back.
+
+02:19.420 --> 02:23.440
+Take a look at the order that was created and attempt to find it inside of our order collection.
+
+02:23.440 --> 02:27.610
+So a lot of different ways we can improve upon this to make sure that the order truly is saved to the
+
+02:27.610 --> 02:28.330
+database.
+
+02:28.330 --> 02:32.260
+But again, for right now, a201 is kind of good enough for me.
+
+02:32.410 --> 02:36.910
+I've got a reasonable degree of certainty that if I get down to this line of code, I have successfully
+
+02:36.910 --> 02:38.590
+executed the save.
+
+02:39.230 --> 02:43.640
+But again, we might end up coming back and changing this code in the future, and some other engineer
+
+02:43.640 --> 02:45.750
+might accidentally do that right there.
+
+02:45.770 --> 02:51.260
+They might comment out everything and then maybe it removed sending back the order.
+
+02:51.290 --> 02:56.150
+So if we save this our order, our test would still pass successfully, even though our code is definitely
+
+02:56.150 --> 02:57.940
+not doing the right thing per say.
+
+02:58.370 --> 03:01.670
+So if you want to, you could definitely add in that extra little check to make sure that everything
+
+03:01.670 --> 03:03.410
+truly is working as expected.
+
+03:03.410 --> 03:08.030
+But right now, I think this is good enough for me, just we don't spend a ton of time writing tests.
+
+03:08.590 --> 03:08.650
+Okay.
+
+03:08.720 --> 03:11.150
+So that's it for tests around our new route handler.
+
+03:11.800 --> 03:16.450
+Now I want to point out once again, I know writing Tess is sometimes a little bit of a pain, but it
+
+03:16.450 --> 03:18.760
+was super critical to do in this case.
+
+03:19.150 --> 03:24.580
+Right now, we don't really have any way of manually testing our order service in any kind of development
+
+03:24.580 --> 03:25.450
+environment.
+
+03:25.480 --> 03:30.320
+The order service itself doesn't have any functionality tied to it for creating a ticket.
+
+03:30.340 --> 03:35.910
+We don't have any way to somehow load up a order or a ticket into the order service.
+
+03:35.920 --> 03:41.440
+And so we would have not been able to make sure that the order could somehow reserve a ticket successfully.
+
+03:41.470 --> 03:45.850
+If we launch this thing inside of our Kubernetes cluster right now and started sending requests to it
+
+03:45.850 --> 03:46.750
+through Postman.
+
+03:46.870 --> 03:48.880
+So this really is a scenario we're writing out.
+
+03:48.880 --> 03:51.010
+Some tests is strictly mandatory.
+
+03:51.010 --> 03:57.010
+It has to be done because we just otherwise don't know if this route handler is working as expected.
+
+03:57.990 --> 03:58.260
+All right.
+
+03:58.260 --> 03:59.610
+So now we've got this put together.
+
+04:00.090 --> 04:05.030
+We still do have to take care of some event related stuff, and we still got a couple of other route
+
+04:05.040 --> 04:06.070
+handlers to get through.
+
+04:06.090 --> 04:07.650
+So, as usual, a quick pause.
+
+04:07.650 --> 04:08.970
+Come back in just a moment.

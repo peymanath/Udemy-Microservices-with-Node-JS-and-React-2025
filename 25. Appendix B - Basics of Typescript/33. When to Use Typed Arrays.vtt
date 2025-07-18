@@ -1,0 +1,52 @@
+WEBVTT
+
+00:00.780 --> 00:01.320
+In this video.
+
+00:01.320 --> 00:04.970
+We're going to do a quick wrap up on arrays and discuss when we're going to use them.
+
+00:04.980 --> 00:07.740
+Well, pretty simple and straightforward, as you might guess.
+
+00:07.740 --> 00:13.050
+We're going to use an array in TypeScript any time we want to represent a collection of records, usually
+
+00:13.050 --> 00:14.850
+with some very similar type about them.
+
+00:15.270 --> 00:17.730
+Now, this might seem like a silly lecture to put in here.
+
+00:17.730 --> 00:22.320
+Like, I'm sure you've got a good idea of when to use a raise, but it turns out that there is another
+
+00:22.320 --> 00:28.560
+very similar data structure in TypeScript, very similar to arrays called tuples or tuples.
+
+00:29.070 --> 00:31.110
+So we're going to talk about tuples in just a second.
+
+00:31.110 --> 00:35.910
+And they're going to look very similar to arrays, but with some distinct little differences about them.
+
+00:36.300 --> 00:40.650
+So right now, I just want you to understand that we're going to continue to use arrays any time we
+
+00:40.650 --> 00:43.710
+want to represent a collection of different records.
+
+00:44.430 --> 00:44.640
+All right.
+
+00:44.640 --> 00:45.570
+So let's take a pause right here.
+
+00:45.570 --> 00:49.350
+When we come back in the next section, we're going to start discussing tuples and how they're just
+
+00:49.350 --> 00:51.300
+slightly different from arrays.
+
+00:51.300 --> 00:53.430
+It's a quick pause, and I'll see you in just a minute.

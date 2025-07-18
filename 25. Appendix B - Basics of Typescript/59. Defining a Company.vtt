@@ -1,0 +1,241 @@
+WEBVTT
+
+00:00.730 --> 00:04.930
+Now that we've put our user together, we're going to repeat the same process and create a second file
+
+00:04.930 --> 00:07.960
+to represent a company inside of our application as well.
+
+00:08.440 --> 00:12.580
+So to get started inside of my QQ directory, I'll make a new file called Company.
+
+00:13.090 --> 00:14.830
+It's inside of here.
+
+00:14.830 --> 00:20.710
+I'm going to once again import the Faker module from Faker and I'll define a new class and immediately
+
+00:20.710 --> 00:22.780
+export it called company.
+
+00:23.610 --> 00:27.270
+So let's think about what different properties we might want a company to have.
+
+00:27.660 --> 00:32.640
+Well, I think that maybe if we go back over to the documentation for Faker one more time, remember
+
+00:32.640 --> 00:34.100
+we have that company section.
+
+00:34.110 --> 00:39.300
+So we've got different properties in here like say company name and we've got catch phrase and some
+
+00:39.300 --> 00:40.560
+other stuff like that as well.
+
+00:41.010 --> 00:46.380
+So let's have every company have a company name property that will be a string and a catch phrase property
+
+00:46.380 --> 00:47.670
+that will be a string as well.
+
+00:48.090 --> 00:53.520
+In addition, we'll also have a company have a location that will be a latitude and longitude and that's
+
+00:53.520 --> 00:55.680
+going to represent their physical location in the world.
+
+00:55.680 --> 00:58.710
+So we can eventually represent them as a marker on our map.
+
+00:59.570 --> 00:59.780
+Okay.
+
+00:59.780 --> 01:00.500
+So back over here.
+
+01:00.500 --> 01:06.200
+We'll do a company name that is a string, and then we'll do a catch phrase.
+
+01:07.510 --> 01:08.530
+That is a string.
+
+01:09.640 --> 01:15.340
+We'll also do a location that is going to be an object with a latitude property that is a number and
+
+01:15.340 --> 01:16.210
+a longitude property.
+
+01:16.210 --> 01:17.620
+That is the number as well.
+
+01:19.800 --> 01:24.810
+Now, one thing I want to mention here is that calling the company name, company name is really not
+
+01:24.810 --> 01:25.740
+necessary.
+
+01:25.770 --> 01:29.180
+I think a much more ideal property name here would be name like so.
+
+01:29.190 --> 01:34.170
+But I just want to give it some differentiation from our user who had a name property as well.
+
+01:34.830 --> 01:39.510
+So just to make a little bit more stark difference between a company and a user, I'm going to have
+
+01:39.510 --> 01:41.820
+the company have a property of a company name instead.
+
+01:43.070 --> 01:43.280
+All right.
+
+01:43.280 --> 01:47.240
+So now, once again, we can define our constructor function, which is where we're going to initialize
+
+01:47.240 --> 01:48.710
+all those different properties.
+
+01:49.190 --> 01:51.140
+So I'll say this company name.
+
+01:53.270 --> 01:55.730
+Will be faker company.
+
+01:56.690 --> 01:58.190
+Company name like.
+
+01:58.190 --> 02:00.920
+So let me collapse the sidebar so we can see that whole line.
+
+02:04.670 --> 02:10.910
+We can then do our catch phrase, which will be fake or company catchphrase.
+
+02:12.390 --> 02:16.140
+And then finally we can also initialize our latitude and longitude as well.
+
+02:16.650 --> 02:22.380
+Remember, like we just discussed, this right here does not initialize the location property.
+
+02:22.380 --> 02:25.570
+It just tells TypeScript here's what location will be.
+
+02:25.590 --> 02:31.740
+So if we try to assign a value directly to this location, that we'll get an error message because location
+
+02:31.740 --> 02:34.050
+is undefined inside the constructor.
+
+02:34.590 --> 02:38.730
+So we have to initialize the location, property and everything inside of it.
+
+02:38.910 --> 02:46.680
+And one easy way to do that is to say this location is going to be an object with properties lat and
+
+02:46.680 --> 02:47.460
+ln g.
+
+02:49.980 --> 02:55.040
+Outside of here we can once do again do faker dot address dot latitude.
+
+02:55.820 --> 03:00.950
+Make sure you get the comma at the end of the line and then faker address dot longitude as well.
+
+03:00.950 --> 03:01.790
+And once again.
+
+03:02.890 --> 03:04.270
+Don't forget the parentheses.
+
+03:04.840 --> 03:05.020
+All right.
+
+03:05.020 --> 03:07.220
+We're seeing the same areas as before.
+
+03:07.240 --> 03:11.620
+We are trying to take a string because that is what we get back from faker and assign it to a property
+
+03:11.620 --> 03:12.880
+that is supposed to be a number.
+
+03:13.150 --> 03:15.100
+So once again, we have to do a parse float.
+
+03:18.050 --> 03:19.910
+And a Pars float.
+
+03:23.070 --> 03:23.970
+And that's it.
+
+03:25.780 --> 03:26.080
+All right.
+
+03:26.080 --> 03:27.310
+So I think we're all set here.
+
+03:27.310 --> 03:28.750
+We already got that export statement.
+
+03:28.750 --> 03:33.880
+So now we can import this into our indexed file, create an instance of a company really quickly, and
+
+03:33.880 --> 03:36.040
+just make sure everything works as expected.
+
+03:36.370 --> 03:42.280
+So back inside of indexes, I will import company from company.
+
+03:43.390 --> 03:49.030
+And then underneath our user, I'll say company is going to be a new company like so.
+
+03:50.200 --> 03:53.200
+And I'll do a console log of that company.
+
+03:56.850 --> 03:58.900
+Then as a quick test, I'll flip back over to my browser.
+
+03:58.920 --> 04:02.640
+My live reload already kicked in and I can see that console.log right here.
+
+04:03.030 --> 04:08.430
+So I'll expand company and I'll see that I've got a really great catch phrase, persistent directional
+
+04:08.430 --> 04:14.250
+function and my company name is King Group once again really should not be calling that property company
+
+04:14.250 --> 04:14.760
+name.
+
+04:14.760 --> 04:18.660
+Just name would be much more appropriate because we already know that it is a company we're working
+
+04:18.660 --> 04:19.140
+with.
+
+04:19.590 --> 04:23.790
+However, once again, we want to just differentiate the company from the user which had a name property.
+
+04:24.640 --> 04:28.060
+And once again, I've got a location with the latitude and longitude as well.
+
+04:28.830 --> 04:29.130
+All right.
+
+04:29.130 --> 04:29.850
+So that's pretty much it.
+
+04:29.880 --> 04:33.450
+We've created a class to represent our user and our company.
+
+04:33.840 --> 04:35.370
+So let's take another quick pause right here.
+
+04:35.370 --> 04:39.420
+When we come back, the next section, we're going to start working on getting a Google map to display
+
+04:39.420 --> 04:40.500
+on our screen as well.
+
+04:40.500 --> 04:42.270
+So we'll see you in just a minute.

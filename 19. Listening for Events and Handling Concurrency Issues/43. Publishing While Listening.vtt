@@ -1,0 +1,397 @@
+WEBVTT
+
+00:01.460 --> 00:03.350
+All right, my friends, let's open up that common module.
+
+00:03.350 --> 00:05.570
+We're going to make the two updates we just discussed.
+
+00:05.680 --> 00:07.460
+Well, first start off inside of our base listener.
+
+00:07.700 --> 00:12.020
+So inside the base listener class, I'm going to find the private client property and I'm going to change
+
+00:12.020 --> 00:13.400
+it to a protected.
+
+00:14.940 --> 00:16.670
+I'm also going to go over to the publisher.
+
+00:16.680 --> 00:18.070
+So you're a space publisher.
+
+00:18.090 --> 00:19.920
+This thing also gets a client.
+
+00:20.250 --> 00:22.710
+And inside there, we had marked the client as private.
+
+00:22.860 --> 00:24.270
+We don't have to.
+
+00:24.420 --> 00:26.810
+We don't have to change this private thing over to protect it.
+
+00:26.820 --> 00:30.960
+But there might be a scenario at some point in time in the future where maybe we want to get access
+
+00:30.960 --> 00:33.790
+to the client inside of a subclass of publisher.
+
+00:33.810 --> 00:38.970
+So not not important, not required right now, but it's entirely possible that we might want to use
+
+00:38.970 --> 00:40.280
+this at some point time in the future.
+
+00:40.290 --> 00:45.360
+So just thinking forward, I'm also going to change this thing to protected as well.
+
+00:46.620 --> 00:46.810
+Okay.
+
+00:46.950 --> 00:48.270
+So that's those two changes.
+
+00:48.900 --> 00:53.220
+So now we're going to go over to our ticket updated event and make sure that it says that there's going
+
+00:53.220 --> 00:56.010
+to be an order ID attached to this thing as well.
+
+00:56.820 --> 00:59.040
+So here's my ticket updated event file.
+
+00:59.070 --> 01:01.380
+I'm going to add in order ID.
+
+01:01.800 --> 01:06.870
+I'm going to make it as optional because it is possible that we are going to update a ticket and that
+
+01:06.870 --> 01:09.180
+it will not have a defined order ID.
+
+01:10.080 --> 01:13.080
+So I'll put in an order ID and that's going to be a string.
+
+01:15.860 --> 01:17.240
+Now a quick question here.
+
+01:17.240 --> 01:20.240
+Should we add in the order ID property to ticket created?
+
+01:20.540 --> 01:24.800
+Well, when we first create a ticket, it is definitely not going to be initially assigned to an order
+
+01:24.800 --> 01:25.670
+whatsoever.
+
+01:25.880 --> 01:30.180
+And that's just something that cannot happen and is very unlikely to happen inside of our application.
+
+01:30.260 --> 01:36.170
+So me personally, I would not add in in order ID property to the ticket created event because the order
+
+01:36.170 --> 01:40.010
+ID, even if we provide it would always be set to null or undefined.
+
+01:40.370 --> 01:41.810
+But that's just me, you might say.
+
+01:41.810 --> 01:45.310
+Hey, I want to make sure that all my events look really consistent as much as possible.
+
+01:45.320 --> 01:46.460
+So if you wanted to.
+
+01:46.490 --> 01:47.240
+Sure, go ahead.
+
+01:47.240 --> 01:49.220
+Add in order ID to the ticket, create an event.
+
+01:49.220 --> 01:51.200
+But again, for me, not a requirement.
+
+01:52.370 --> 01:52.620
+Okay.
+
+01:52.640 --> 01:54.470
+So we made our changes to the common module.
+
+01:54.590 --> 01:59.450
+Now, as usual, we're going to commit those changes, publish them, and then update the version of
+
+01:59.450 --> 02:02.360
+the common module used inside of our tickets service.
+
+02:05.540 --> 02:06.440
+Back at my terminal.
+
+02:06.440 --> 02:11.990
+I'll change into the Amen module and do that end PM run pub.
+
+02:16.280 --> 02:18.080
+And after a second or two.
+
+02:19.010 --> 02:20.330
+We should be published.
+
+02:23.110 --> 02:26.290
+I'll then go back over to my ticket service.
+
+02:27.410 --> 02:30.770
+I'll do an NPM update or my common module.
+
+02:32.220 --> 02:34.770
+Naturally the name of your module is going to be slightly different.
+
+02:38.800 --> 02:39.760
+Bolt looks good.
+
+02:39.760 --> 02:43.870
+And then while we are doing updates, I'm also going to update the version used inside the order module
+
+02:43.870 --> 02:44.530
+as well.
+
+02:44.560 --> 02:48.730
+Now when we update this version, it might result in us seeing an error or two when we go back over
+
+02:48.730 --> 02:49.690
+to the order service.
+
+02:49.690 --> 02:54.700
+But I think it's just easier for us to update all of our services simultaneously while we're doing this
+
+02:54.700 --> 02:55.360
+update.
+
+02:55.390 --> 03:01.120
+So really quickly, I'm also going to go over to orders and do an update of that common module as well.
+
+03:07.890 --> 03:08.250
+Okay.
+
+03:08.280 --> 03:08.940
+Very good.
+
+03:09.480 --> 03:12.210
+Now back inside of my order created listener.
+
+03:12.330 --> 03:15.640
+We finally get to enjoy the fruits of all the changes we just made.
+
+03:15.660 --> 03:19.740
+So, first off, inside of here, we do not need the import for that wrapper at the top, so I'll delete
+
+03:19.740 --> 03:20.160
+that.
+
+03:23.060 --> 03:27.860
+Then down here, when we create the publisher, rather than reaching out to some other file or other
+
+03:27.860 --> 03:33.260
+class, we should be able to just access the client property on our listener itself.
+
+03:33.830 --> 03:37.490
+So I should be able to write in this client and have everything work.
+
+03:37.910 --> 03:42.500
+Now, if you write in this client and you get an error, chances are TypeScript is still taking a look
+
+03:42.500 --> 03:44.960
+at the old version of your common module.
+
+03:44.990 --> 03:49.790
+So if you see an error right there, the first thing to do is to either restart your editor or if you're
+
+03:49.790 --> 03:56.600
+using Visual Studio code, remember you can hit a mand shift p search for reload window.
+
+03:58.300 --> 04:01.720
+Run that that's going to reboot the TypeScript type checker.
+
+04:01.720 --> 04:03.730
+And now hopefully that error is going to go away.
+
+04:04.090 --> 04:06.910
+If you still see an error, then there's probably something else going on.
+
+04:06.940 --> 04:09.340
+You'll want to take a look at the error and figure out what's happening.
+
+04:11.260 --> 04:11.510
+Okay.
+
+04:11.530 --> 04:12.130
+So that's it.
+
+04:12.130 --> 04:14.860
+We've now got our publisher being initialized inside of here.
+
+04:15.130 --> 04:18.370
+We're passing through the client that the listener is using.
+
+04:18.550 --> 04:19.210
+Awesome.
+
+04:19.810 --> 04:24.220
+Now, above all, this is actually a really good example of how we can have a listener that publishes
+
+04:24.220 --> 04:25.480
+its own events.
+
+04:25.630 --> 04:27.280
+It's pretty much the formula for it.
+
+04:27.310 --> 04:29.770
+We're just going to import the publisher into the listener.
+
+04:30.030 --> 04:33.220
+An instance of the publisher, provide the client and then publish an event.
+
+04:33.220 --> 04:34.060
+Simple enough.
+
+04:35.280 --> 04:36.570
+It's not the last thing we're going to do.
+
+04:36.600 --> 04:37.900
+We've created our publisher.
+
+04:37.920 --> 04:39.750
+Now it's time to actually publish our events.
+
+04:40.080 --> 04:42.330
+So we'll chain on a publish at the very end.
+
+04:43.700 --> 04:47.030
+And then we'll publish information about the ticket that we had just saved.
+
+04:47.600 --> 04:51.590
+So if we forget, we can always mouse over and we will be told about all the different properties we
+
+04:51.590 --> 04:52.490
+have to provide.
+
+04:52.730 --> 04:56.420
+So ID version, title, blah, blah, blah, all that stuff.
+
+04:56.420 --> 04:57.710
+So we'll just throw it all in.
+
+04:57.950 --> 05:02.450
+Now just, you know, we could probably just solve this by throwing in the entire ticket.
+
+05:03.100 --> 05:07.480
+But I think there might be one or two properties that are not quite similarly named here.
+
+05:08.890 --> 05:12.040
+I think order ID is not quite lining up.
+
+05:12.340 --> 05:16.810
+All I mean to say here is that we in many places throughout this course, we could have just thrown
+
+05:16.810 --> 05:19.330
+in an entire bottle to publish functions and whatnot.
+
+05:19.360 --> 05:22.210
+But you'll notice that I have not really been doing that, instead have been listing out all the different
+
+05:22.210 --> 05:23.420
+properties one by one.
+
+05:23.440 --> 05:28.030
+I personally like to list out all the properties just to make sure that I'm kind of using or picking
+
+05:28.030 --> 05:30.280
+everything appropriately off of the model.
+
+05:31.050 --> 05:32.160
+Just a quick side note.
+
+05:32.810 --> 05:33.040
+Okay.
+
+05:33.060 --> 05:36.150
+So for the ID, we'll get our ticket ID.
+
+05:37.770 --> 05:38.250
+Price.
+
+05:38.250 --> 05:39.420
+Ticket price.
+
+05:40.520 --> 05:41.300
+Or title?
+
+05:41.300 --> 05:42.680
+Ticket title.
+
+05:43.860 --> 05:44.860
+What else is there?
+
+05:44.880 --> 05:46.350
+We need our user ID.
+
+05:50.610 --> 05:51.510
+Order ID.
+
+05:55.010 --> 05:57.860
+And I think that is about a version.
+
+05:57.890 --> 05:58.080
+Yep.
+
+05:58.130 --> 05:58.880
+Version.
+
+06:02.320 --> 06:03.010
+There we go.
+
+06:05.460 --> 06:05.820
+Okay.
+
+06:05.820 --> 06:06.770
+So that looks good.
+
+06:06.780 --> 06:08.220
+We're now publishing our event.
+
+06:09.340 --> 06:11.020
+And one other thing I want to mention here.
+
+06:11.020 --> 06:16.570
+You'll recall that in the past we discussed that if we do not put the awake keyword right here, we're
+
+06:16.570 --> 06:20.650
+kind of assuming that the entire published action is just going to go through successfully.
+
+06:20.770 --> 06:24.400
+So we might want to make sure we put on the weight right here because that's going to make sure that
+
+06:24.400 --> 06:28.150
+if anything goes wrong with the publish, then we're going to throw an error on this line of code and
+
+06:28.150 --> 06:29.110
+never go down to.
+
+06:30.720 --> 06:32.970
+So that would probably be desirable in this case.
+
+06:33.690 --> 06:34.010
+Okay.
+
+06:34.020 --> 06:35.040
+So let's save this.
+
+06:35.070 --> 06:36.000
+That's pretty much it.
+
+06:36.600 --> 06:40.860
+We'll take a quick pause right here and then hopefully do some kind of manual test or something similar
+
+06:40.860 --> 06:41.820
+in the next video.

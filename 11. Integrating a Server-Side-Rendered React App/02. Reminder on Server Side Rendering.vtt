@@ -1,0 +1,163 @@
+WEBVTT
+
+00:01.230 --> 00:05.180
+We've now taken a look at the four different pages that we're going to create for this React application.
+
+00:05.190 --> 00:09.390
+Remember, over time, we're going to add in a couple more pages to this thing for all the ticketing
+
+00:09.390 --> 00:10.530
+features and aspects.
+
+00:10.530 --> 00:15.120
+But right now our backend only supports authentication, so we're going to build out the React app to
+
+00:15.120 --> 00:16.530
+support authentication.
+
+00:17.130 --> 00:17.580
+All right.
+
+00:17.580 --> 00:21.030
+So quick discussion on how we're going to actually build this thing.
+
+00:21.300 --> 00:24.540
+Now on this diagram right here, this is a diagram we had seen previously.
+
+00:24.540 --> 00:29.400
+This is how a normal traditional React application works in a development setting.
+
+00:29.520 --> 00:35.700
+So in a development setting, we'll be running some kind of normal React app or really a React app development
+
+00:35.700 --> 00:36.240
+server.
+
+00:36.720 --> 00:41.910
+Any time a user types in a URL to their browser that's going to point them to a React application.
+
+00:41.910 --> 00:47.010
+We're going to probably end up making at least two requests, but usually probably end up making three.
+
+00:47.520 --> 00:53.220
+The very first request is going to fetch us an HTML file that is pretty much empty except for some very
+
+00:53.220 --> 00:54.810
+basic script tags inside of it.
+
+00:55.290 --> 00:57.360
+The browser will load up that HTML file.
+
+00:57.630 --> 01:00.690
+It's going to see that some different script tags are listed inside there.
+
+01:00.690 --> 01:05.370
+And so the browser will make a follow up request, possibly several requests to get some additional
+
+01:05.370 --> 01:11.340
+JavaScript files that will be made to the Create React app development server that's going to respond
+
+01:11.340 --> 01:14.100
+with the JavaScript files that the browser is asking for.
+
+01:14.250 --> 01:18.930
+The browser will then execute all that JavaScript code or react application will start up and the React
+
+01:18.930 --> 01:23.160
+app will possibly decide that it needs to make some follow up requests to fetch some data.
+
+01:23.190 --> 01:28.080
+And so it might make a request to say the order service to get a list of orders.
+
+01:28.590 --> 01:32.640
+The Order Service will then respond with that data and then the React app will take that data and render
+
+01:32.640 --> 01:34.470
+some actual content on the screen.
+
+01:34.860 --> 01:41.100
+So again, at least two, probably three or more requests just to show some content to a user.
+
+01:42.360 --> 01:47.130
+So rather than taking this traditional approach, we're going to be using server side rendering instead
+
+01:47.700 --> 01:49.500
+in a server side rendering approach.
+
+01:49.620 --> 01:53.940
+The browser is going to make a request to our next JS development server.
+
+01:53.940 --> 01:58.530
+Next JS is the framework we're going to use to implement the server side rendering stuff very easily.
+
+01:59.160 --> 02:05.010
+The next JS development server is then going to internally make a couple of requests off to different
+
+02:05.010 --> 02:07.380
+services to fetch some data.
+
+02:07.380 --> 02:11.700
+So it might make a request over to the order service or the ticketing service to get a list of orders,
+
+02:11.700 --> 02:13.050
+ticketing, whatever else.
+
+02:13.860 --> 02:17.010
+The next jazz development server is then going to take that data.
+
+02:17.010 --> 02:23.010
+It's going to build out a full HTML document, a document that has a ton of content rendered into it.
+
+02:23.010 --> 02:28.500
+So perhaps some HTML to list out some orders or HTML to list out some tickets or whatever else.
+
+02:28.980 --> 02:34.650
+It's then going to take that HTML and send it back to the user's browser all in one single request.
+
+02:36.380 --> 02:39.290
+So there's several reasons we are making use of server side rendering here.
+
+02:39.320 --> 02:45.290
+The first reason, and to be blunt, the most the most important reason for the context of this application
+
+02:45.290 --> 02:49.210
+is I want to show you how to set up server side rendering in the context of microservices.
+
+02:49.220 --> 02:53.990
+That's really why we are using next JS here, but there's several other reasons to do this.
+
+02:53.990 --> 02:58.220
+First off, a user is going to see some content up here on the screen much more quickly.
+
+02:58.610 --> 03:03.140
+Number two, a user is going to be able to see content more quickly, particularly if they're on a mobile
+
+03:03.140 --> 03:03.740
+device.
+
+03:03.740 --> 03:08.600
+So if a user is on a mobile device, they might not be able to load up all the JavaScript effectively
+
+03:08.600 --> 03:13.970
+or in any timely fashion if we have a lot of complicated stuff going on in the screen.
+
+03:14.690 --> 03:20.780
+And finally, server side rendered applications tend to fare a lot better with search engine optimization.
+
+03:21.110 --> 03:26.330
+So these are all fantastic reasons to implement server side rendering inside of a kind of ticket purchasing
+
+03:26.330 --> 03:28.190
+or e-commerce type application.
+
+03:28.930 --> 03:29.260
+All right.
+
+03:29.260 --> 03:32.180
+So now that we've got a quick reminder on how we're going to implement all this.
+
+03:32.200 --> 03:33.010
+One more pause.
+
+03:33.010 --> 03:37.960
+Come back in the next video and we're going to do some initial setup of next JJ's inside of our project.

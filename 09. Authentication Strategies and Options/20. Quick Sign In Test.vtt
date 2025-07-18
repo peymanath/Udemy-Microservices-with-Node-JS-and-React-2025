@@ -1,0 +1,106 @@
+WEBVTT
+
+00:00.910 --> 00:04.990
+Our sign in wrote Handler is now looking pretty good, so let's do a very quick test of it.
+
+00:05.080 --> 00:07.300
+I'm going to flip back over to Postman.
+
+00:08.930 --> 00:11.980
+I'm going to change my route right here to sign up.
+
+00:11.990 --> 00:16.460
+So from this point on, we do need to make sure that we have some email and password combinations that
+
+00:16.460 --> 00:21.110
+we can actually remember because we need to sign up and then sign in with the same email and password.
+
+00:21.500 --> 00:27.440
+So I'm going to put in an email, my personal favorite, which is test, test and a password of simply
+
+00:27.440 --> 00:28.070
+password.
+
+00:30.100 --> 00:31.720
+Well, then go ahead and send that.
+
+00:33.160 --> 00:33.460
+And.
+
+00:33.460 --> 00:34.960
+All right, I have my account.
+
+00:36.140 --> 00:39.320
+I'll now change my route up here to sign in.
+
+00:40.310 --> 00:44.720
+And I'm going to send in a request with the same exact email and password.
+
+00:46.220 --> 00:46.550
+Awesome.
+
+00:46.550 --> 00:52.100
+So I got back the user that I am now signed in as and in theory we should have also gotten back a brand
+
+00:52.100 --> 00:54.350
+new cookie right here when we signed in.
+
+00:56.550 --> 01:00.120
+We can also test on the invalid cases as well, even though we really already did that.
+
+01:00.120 --> 01:02.580
+So for example, I could put in an empty password.
+
+01:03.000 --> 01:03.270
+Nope.
+
+01:03.270 --> 01:03.920
+Doesn't work.
+
+01:03.930 --> 01:08.430
+I could put in a valid password, but one that does not match my existing one.
+
+01:09.210 --> 01:11.350
+So if I send that in, I get invalid credentials.
+
+01:11.370 --> 01:12.180
+That looks good.
+
+01:12.810 --> 01:16.440
+I can also try to enter in an email that doesn't actually exist.
+
+01:16.440 --> 01:22.170
+So email of test one at test and I get the same invalid credentials.
+
+01:23.860 --> 01:24.050
+Okay.
+
+01:24.130 --> 01:25.450
+So I'd say that looks pretty good.
+
+01:25.870 --> 01:29.500
+Well, we've got sign in all complete and sign up all complete.
+
+01:29.830 --> 01:32.170
+Still have a little bit to do around authentication.
+
+01:32.170 --> 01:35.800
+Now, as a reminder, as we're going through this stuff, we're going to be putting it all together
+
+01:35.800 --> 01:37.560
+more quickly and more quickly.
+
+01:37.570 --> 01:42.340
+So we're going to go through the create or semi, the current user, a route handler to figure out whether
+
+01:42.340 --> 01:43.540
+or not someone has signed in.
+
+01:43.720 --> 01:47.050
+And we're also going to put together a log out handler as well.
+
+01:47.050 --> 01:50.470
+And both those are going to be put together pretty darn quickly.
+
+01:50.620 --> 01:53.350
+So quick pause right here and we'll continue in just a minute.

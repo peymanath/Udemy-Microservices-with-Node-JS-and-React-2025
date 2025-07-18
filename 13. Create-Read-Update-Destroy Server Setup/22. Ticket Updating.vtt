@@ -1,0 +1,331 @@
+WEBVTT
+
+00:00.900 --> 00:05.220
+We're now going to move on to our last root handler, which is going to deal with updating a ticket.
+
+00:05.250 --> 00:09.330
+So a user is going to make a request to API tickets and then the idea of the ticket they're trying to
+
+00:09.330 --> 00:09.930
+update.
+
+00:09.960 --> 00:14.010
+That's going to be a put request and we're going to expect that they include the title and price that
+
+00:14.010 --> 00:15.690
+they want to update that ticket with.
+
+00:16.300 --> 00:21.790
+Now there's going to be some kind of restrictions on this handler that you would probably expect.
+
+00:21.820 --> 00:25.960
+In other words, you're not going to be able to access this handler if you are not authenticated.
+
+00:25.990 --> 00:30.200
+In addition, only the user who owns a ticket should be able to update it.
+
+00:30.220 --> 00:33.340
+So we're going to have to add in a couple of different checks to watch for those things.
+
+00:33.850 --> 00:37.570
+Now, some of the tests that we've written out for these other handlers have been kind of simple and
+
+00:37.570 --> 00:38.500
+basic in nature.
+
+00:38.500 --> 00:41.170
+And at the end of the day, were they really required?
+
+00:41.290 --> 00:42.340
+Maybe not.
+
+00:42.370 --> 00:45.730
+Maybe we went a little bit overboard in testing some of those other things.
+
+00:46.150 --> 00:52.990
+But this put test or this update one, these tests are going to be super critical, not right now.
+
+00:52.990 --> 00:57.280
+But later on inside this project, we're going to start to add in those other services for dealing with
+
+00:57.280 --> 00:59.320
+orders and payments and some other stuff.
+
+00:59.380 --> 01:04.830
+There's going to be some super critical logic around whether or not a user is allowed to update a ticket.
+
+01:04.840 --> 01:09.130
+And so having some tests in place to make sure we've written out that business logic correctly is going
+
+01:09.130 --> 01:10.420
+to be very important.
+
+01:10.600 --> 01:12.400
+They're not going to write out those tests just yet.
+
+01:12.400 --> 01:16.150
+They're not going to make any sense right now until we create those other services in the future.
+
+01:17.090 --> 01:21.230
+Having said all that, let's go and put some test together for this update route handler.
+
+01:22.680 --> 01:25.210
+So back inside my editor, I'll find the test directory.
+
+01:25.230 --> 01:27.360
+We'll make a new file in there of update.
+
+01:27.360 --> 01:28.710
+Test us.
+
+01:30.720 --> 01:31.650
+At the very top.
+
+01:32.040 --> 01:36.210
+Let's import request from duper test.
+
+01:37.460 --> 01:41.240
+And we'll get app from up up app.
+
+01:42.650 --> 01:44.810
+After that, let's write out some test descriptions.
+
+01:44.810 --> 01:46.550
+So what do we really care about here?
+
+01:47.030 --> 01:51.200
+Well, a lot of the obvious things that we've kind of carried over or implemented already for tests
+
+01:51.200 --> 01:52.370
+on these other routes.
+
+01:52.400 --> 01:57.410
+First off, if a user asks for some ID right here that doesn't actually exist or some ticket ID that
+
+01:57.410 --> 01:59.810
+doesn't exist, let's return a404.
+
+01:59.960 --> 02:05.030
+If a user tries to make an update to a ticket while they're not logged in, let's return a41 to say
+
+02:05.030 --> 02:05.880
+that is forbidden.
+
+02:05.900 --> 02:09.350
+If a user tries to update a ticket they don't own, let's do a41.
+
+02:09.470 --> 02:14.270
+If the user doesn't provide a title or a price 400 invalid request.
+
+02:14.480 --> 02:18.290
+And then finally, if a user does everything right, so they're signed in, they own the ticket and
+
+02:18.290 --> 02:19.970
+they provide a valid title and price.
+
+02:19.970 --> 02:22.880
+We should make sure that the actual ticket does get updated.
+
+02:23.000 --> 02:25.950
+So a couple of different statements in total.
+
+02:25.970 --> 02:32.300
+So first, it returns a four for if the provided ID does not exist.
+
+02:34.920 --> 02:40.200
+I'm going to copy paste that down a couple of times like so, and I'll just update the description for
+
+02:40.200 --> 02:40.920
+each of these.
+
+02:41.220 --> 02:49.650
+So in the next one, how about returns a401 so forbidden, not allowed if the user is not authenticated.
+
+02:51.160 --> 02:51.730
+On the next one.
+
+02:51.730 --> 02:53.410
+How about returns a 401.
+
+02:53.410 --> 02:56.800
+If the user does not own the ticket?
+
+02:58.540 --> 02:59.080
+After that.
+
+02:59.080 --> 03:02.350
+How about returns a 400?
+
+03:03.380 --> 03:05.930
+If the user provides an invalid.
+
+03:08.090 --> 03:10.100
+Title or price.
+
+03:10.220 --> 03:14.700
+On previous tests, we tried to test these things separately or in separate tests, essentially.
+
+03:14.720 --> 03:17.450
+This time around, we're just going to combine it all into one single test.
+
+03:18.480 --> 03:20.250
+I'm going to paste one more it down here.
+
+03:20.250 --> 03:23.310
+And this will be our happy path, so to speak.
+
+03:23.310 --> 03:27.990
+So the case in which everything goes right, it will say it updates the ticket.
+
+03:29.390 --> 03:31.370
+Provided valid inputs.
+
+03:34.120 --> 03:38.500
+Now, a lot of people out there, a lot of software engineers have a little bit more rigorous requirements
+
+03:38.500 --> 03:40.000
+over descriptions than I do.
+
+03:40.030 --> 03:42.970
+I am really not super picky around test descriptions.
+
+03:43.000 --> 03:46.750
+There's definitely some people out there who are going to look at these descriptions and say it is really
+
+03:46.750 --> 03:48.520
+unclear what you're doing with this test.
+
+03:48.790 --> 03:49.870
+That's totally fine.
+
+03:49.870 --> 03:54.160
+If you are someone who really feels strongly about test descriptions, feel free to change these.
+
+03:54.190 --> 03:56.260
+No issue whatsoever but me personally.
+
+03:56.260 --> 03:57.070
+I'm okay with these.
+
+03:57.070 --> 03:59.080
+I really understand what they are trying to convey.
+
+04:00.360 --> 04:00.630
+All right.
+
+04:00.630 --> 04:01.140
+Let's go ahead.
+
+04:01.140 --> 04:04.200
+And how about first, let's deal with the 404.
+
+04:05.000 --> 04:07.400
+So I want to make a request though.
+
+04:07.400 --> 04:09.560
+Await request to EP.
+
+04:09.800 --> 04:15.710
+I want to do a put to API tickets and then once again, we need to specify an ID right here.
+
+04:15.830 --> 04:20.270
+So once again, as we saw in the last couple of videos, we have to generate a valid ID.
+
+04:21.310 --> 04:23.590
+For that, I'm going to import Mongoose at the top.
+
+04:27.000 --> 04:28.200
+I'll make up an idea right here.
+
+04:28.200 --> 04:30.180
+So, mongoose types.
+
+04:31.120 --> 04:32.410
+Object ID.
+
+04:33.120 --> 04:36.090
+And I want to make a new object ID specifically.
+
+04:36.510 --> 04:41.970
+And then off of that I'm going to get or invoke to hex string.
+
+04:44.480 --> 04:48.320
+Then instead of single quotes right here, let's put in some back ticks.
+
+04:48.390 --> 04:50.270
+Now I can reference ID inside their.
+
+04:52.060 --> 04:58.120
+So along with this put request, I'm going to try to include a valid title to update this thing to any
+
+04:58.120 --> 04:59.050
+valid price.
+
+05:00.360 --> 05:03.560
+But I'm not going to be logged in or excuse me, I should be logged in.
+
+05:03.570 --> 05:07.170
+So let's make sure we also tag on a set cookie.
+
+05:11.210 --> 05:12.860
+And then we will expect.
+
+05:13.650 --> 05:16.320
+To get a 404 because that ticket does not exist.
+
+05:17.200 --> 05:21.220
+As usual, if we run this test right now, it will pass because we don't even have a handler for this
+
+05:21.220 --> 05:21.610
+thing.
+
+05:21.610 --> 05:24.400
+So I won't worry about actually executing this test just yet.
+
+05:24.430 --> 05:27.910
+Right now, let's just go ahead and fill in one or two other tests.
+
+05:28.360 --> 05:32.020
+So how about the next one returns a41 at the user is not authenticated.
+
+05:32.470 --> 05:36.670
+So for this, well, we can really just copy the exact same logic we had right above.
+
+05:37.510 --> 05:38.530
+I'm going to paste it in.
+
+05:40.880 --> 05:46.040
+And then instead of expecting a four or four are going to expect a41 and I'm going to make sure that
+
+05:46.040 --> 05:48.290
+I am not authenticated in this case.
+
+05:51.840 --> 05:52.170
+All right.
+
+05:52.170 --> 05:56.670
+So I think that's good enough to get started and to really implement any of these other tests.
+
+05:56.670 --> 06:00.600
+We might want to try to attempt at least a little bit of implementation first.
+
+06:00.840 --> 06:01.920
+So let's save this.
+
+06:02.310 --> 06:05.250
+I'm just going to flip back over to my terminal, make sure that these tests are at least running.
+
+06:05.250 --> 06:07.050
+Who knows how many are going to pass or fail?
+
+06:07.680 --> 06:08.460
+Good enough.
+
+06:08.490 --> 06:09.750
+So quick pause right here.
+
+06:09.750 --> 06:13.860
+We'll start to put together the implementation in the next video and start to fill out a couple more
+
+06:13.860 --> 06:14.400
+tests.

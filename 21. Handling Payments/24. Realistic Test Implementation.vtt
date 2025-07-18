@@ -1,0 +1,322 @@
+WEBVTT
+
+00:01.340 --> 00:03.260
+All right, my friends, I think we now have a plan.
+
+00:03.260 --> 00:07.940
+So when we create the order instead of our test file, we're going to randomly generate a amount or
+
+00:07.940 --> 00:09.080
+the price for the order.
+
+00:09.380 --> 00:14.700
+Then when that goes off to the Stripe API, it should have some amount for that very specific amount.
+
+00:14.720 --> 00:18.710
+Well then later on inside the test file it request a list of the ten most recent charges.
+
+00:18.710 --> 00:23.690
+We should be able to then iterate through that list of ten charges and find a charge with that same
+
+00:23.690 --> 00:25.250
+randomly generated amount.
+
+00:25.670 --> 00:28.730
+Now, the one thing to keep in mind here is something that's going to make our lives just slightly,
+
+00:28.730 --> 00:29.810
+slightly difficult.
+
+00:29.900 --> 00:34.010
+Remember that inside the order we are providing a price that is in units of dollars.
+
+00:34.280 --> 00:39.350
+But for the charge that gets sent off to the Stripe API, it's going to be in units of cents.
+
+00:39.680 --> 00:41.750
+So we are going to generate a price.
+
+00:41.750 --> 00:45.500
+And then when we try to find it inside of our list of charges, we just have to remember to multiply
+
+00:45.500 --> 00:48.620
+that price by 100 to go from dollars over to cents.
+
+00:49.190 --> 00:51.740
+Okay, so let's get to it inside of my test.
+
+00:51.740 --> 00:52.940
+Right above the order.
+
+00:54.500 --> 00:56.780
+I'm going to randomly generate a price.
+
+00:57.260 --> 00:58.550
+So I will do a math.
+
+00:58.790 --> 00:59.390
+Random.
+
+01:00.120 --> 01:02.670
+Times 100,000.
+
+01:03.910 --> 01:07.060
+And I'm going to wrap that with a math flaw.
+
+01:07.880 --> 01:11.660
+Well then provide the price as the price property for the order itself.
+
+01:11.870 --> 01:14.540
+And naturally, I can condense that down to just price.
+
+01:16.930 --> 01:23.320
+So now whenever our route handler creates the charge with the Gest API or the Stripe API, it's going
+
+01:23.320 --> 01:27.010
+to put that randomly generated amount inside there, times 100.
+
+01:27.810 --> 01:32.790
+So after we make that request, we're then going to write out some code right here to get a list of
+
+01:32.790 --> 01:35.190
+the ten most recent charges we have created.
+
+01:35.460 --> 01:40.830
+And inside that list, we will try to find a charge with a price equal to or an amount equal to price
+
+01:40.830 --> 01:41.970
+times 100.
+
+01:42.600 --> 01:45.210
+So how do we list out all the ten most recent charges?
+
+01:45.210 --> 01:47.730
+Well, we were just looking at the API for a moment to go.
+
+01:48.900 --> 01:52.020
+So we're going to use Stripe charges list.
+
+01:52.380 --> 01:55.260
+And if we want to, we could put in the optional limit amount right there.
+
+01:55.260 --> 01:58.260
+So limit is the number of recent charges we want to get.
+
+01:58.260 --> 02:00.960
+The default is ten, but that can go up to 100.
+
+02:03.210 --> 02:07.710
+Then one thing for you to be aware of is that in the response we get back from that call, the list
+
+02:07.710 --> 02:10.860
+of charges is going to be nested on this data property.
+
+02:10.950 --> 02:12.540
+So we're going to take a look at the data property.
+
+02:12.540 --> 02:16.470
+We will iterate through that thing, take a look at each charge and try to find one with the correct
+
+02:16.470 --> 02:17.100
+amount.
+
+02:19.200 --> 02:20.640
+So after we make our request.
+
+02:21.750 --> 02:29.670
+Well, then define Stripe charges and that will be a wait stripe that charges that list.
+
+02:29.940 --> 02:33.180
+And again, if we wanted to, we could increase the limit here, say up to 50.
+
+02:34.150 --> 02:39.280
+The limit that we use right here really just comes down to how often we expect to be running multiple
+
+02:39.280 --> 02:41.350
+copies of this test suite at the same time.
+
+02:41.560 --> 02:46.630
+If for some reason we are running ten copies of this test suite at the same time, if we rely upon the
+
+02:46.630 --> 02:52.090
+default value of ten right here as opposed to 50, then it's possible that when we go to fetch our list
+
+02:52.090 --> 02:55.940
+of charges, we might accidentally push out the charts that we are looking for.
+
+02:55.960 --> 03:01.150
+So by increasing this to 50, it pretty much reduces the chance of that to near zero.
+
+03:03.070 --> 03:07.300
+Now we're going to iterate over Stripe charges data and try to find the appropriate charge.
+
+03:07.900 --> 03:08.800
+So I'll say.
+
+03:09.700 --> 03:11.110
+Stripe charge.
+
+03:12.480 --> 03:19.470
+Is Stripe charges data fined and for every charge.
+
+03:20.870 --> 03:26.540
+I want to iterate over each one and I'm going to return true for the first charge that has an amount
+
+03:26.540 --> 03:32.900
+property because remember they have the amount property equal to our price times 100.
+
+03:34.420 --> 03:38.380
+So I'm going to return charge amount equal to.
+
+03:39.230 --> 03:41.090
+Price times 100.
+
+03:42.670 --> 03:48.270
+So now we should be able to expect that Stripe charge to be defined.
+
+03:50.640 --> 03:54.480
+So right now, this test is really just going to make sure that we create a charge with the appropriate
+
+03:54.480 --> 03:55.710
+amount assigned to it.
+
+03:56.130 --> 03:57.210
+Let's now save this.
+
+03:58.120 --> 04:00.490
+And go back over to our terminal and see how we're doing.
+
+04:03.020 --> 04:06.500
+You'll notice that it takes a little bit longer to run that test file now because we are reaching out
+
+04:06.500 --> 04:07.940
+to the real Stripe API.
+
+04:08.300 --> 04:10.190
+But it does look like our test passed.
+
+04:10.220 --> 04:10.850
+Awesome.
+
+04:11.870 --> 04:15.800
+Now, if we want to try to make this thing fail, we could go back over to our handler itself.
+
+04:15.800 --> 04:17.060
+So here's the route handler.
+
+04:18.050 --> 04:22.070
+I'll go down to our code where we create the charge and I'll comment that out.
+
+04:22.880 --> 04:25.160
+So now we are not creating a charge at all.
+
+04:25.160 --> 04:29.780
+And that means that when we try to go to get our list of most recent charges, we should not find one
+
+04:29.780 --> 04:31.070
+with the appropriate price.
+
+04:31.340 --> 04:33.380
+And of course, that should make our test fail.
+
+04:33.890 --> 04:34.790
+And there we go.
+
+04:36.850 --> 04:37.060
+All right.
+
+04:37.060 --> 04:38.150
+Well, this definitely works.
+
+04:38.170 --> 04:40.870
+Now, if we wanted to, I'm going to uncomment that, by the way.
+
+04:42.380 --> 04:46.370
+Now, if we wanted to back inside of our test file, we could take a deeper look at the Stripe charge
+
+04:46.400 --> 04:49.010
+object and make some more assertions about it.
+
+04:49.190 --> 04:52.270
+So, for example, we could make sure that it has the appropriate currency.
+
+04:52.280 --> 04:56.770
+We can make sure that it's got the correct somehow inspect the token or something like that.
+
+04:56.780 --> 04:59.110
+Maybe you just take a look at the currency would be enough.
+
+04:59.120 --> 05:03.080
+So I'll do an expect stripe charge dot currency.
+
+05:03.840 --> 05:05.520
+To equal USD.
+
+05:06.550 --> 05:10.540
+It is possible for strike charge to be undefined, by the way, because we are using a fine statement
+
+05:10.540 --> 05:10.980
+right here.
+
+05:10.990 --> 05:15.460
+So once again, right after strip charge, we'll put in the exclamation to tell TypeScript, don't sweat
+
+05:15.460 --> 05:15.670
+it.
+
+05:15.700 --> 05:19.780
+We technically are checking to make sure that the value is defined on the line right above.
+
+05:19.780 --> 05:22.840
+TypeScript just doesn't really know how to interpret that line.
+
+05:24.770 --> 05:26.000
+So I'll save that and run it.
+
+05:27.530 --> 05:28.400
+And.
+
+05:29.630 --> 05:30.320
+There we go.
+
+05:31.500 --> 05:31.800
+All right.
+
+05:31.800 --> 05:36.330
+So again, it is really up to you whether you want to use a mocked version of Stripe or if you want
+
+05:36.330 --> 05:37.560
+to use the real version.
+
+05:37.710 --> 05:41.820
+Personally, I like to use the real version because even though it's a little bit slower, well, really
+
+05:41.820 --> 05:46.800
+a lot slower to run, it definitely is far more realistic and it makes sure that my code is working
+
+05:46.800 --> 05:47.940
+as expected.
+
+05:48.360 --> 05:53.940
+The other nice thing here is that we can add in a different token, so maybe a completely invalid token,
+
+05:53.940 --> 05:57.300
+and we can make sure that our route handler handles that in some appropriate fashion.
+
+05:57.810 --> 06:02.670
+It might be kind of hard to test out an invalid token if we were mocking out the API because we might
+
+06:02.670 --> 06:07.800
+not really know how to interpret a response from the API or how the API is really going to respond if
+
+06:07.800 --> 06:09.330
+we give an invalid token.
+
+06:10.480 --> 06:10.780
+Okay.
+
+06:10.810 --> 06:12.640
+So that is it for a more realistic test.
+
+06:12.640 --> 06:15.130
+So we'll take a pause right here and move on in just a moment.

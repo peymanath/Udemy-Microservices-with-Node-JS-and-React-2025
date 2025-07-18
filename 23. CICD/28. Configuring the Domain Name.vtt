@@ -1,0 +1,268 @@
+WEBVTT
+
+00:00.730 --> 00:04.090
+I have now purchased the ticketing app for XYZ domain.
+
+00:04.270 --> 00:09.790
+I'm now on the named Cheap Configuration page where I can make changes to how this domain name behaves.
+
+00:10.300 --> 00:13.210
+On this page, there's really just one setting that we want to change.
+
+00:13.360 --> 00:18.940
+We're going to find something around name servers or DNS servers depending upon the provider you purchase
+
+00:18.940 --> 00:20.200
+your domain name from.
+
+00:20.200 --> 00:23.830
+This setting is going to be somewhere slightly different by default.
+
+00:23.830 --> 00:27.220
+You're probably using some kind of basic or preset DNS.
+
+00:27.430 --> 00:32.710
+We are going to update this to a setting of custom DNS and then we're going to enter in three custom
+
+00:32.710 --> 00:33.700
+name servers.
+
+00:34.610 --> 00:38.420
+The first one we are going to enter here is ns one digital ocean.
+
+00:39.960 --> 00:48.150
+And as to digital ocean dot com or then going to add one more and put in GNS three digital ocean dot
+
+00:48.150 --> 00:48.600
+com.
+
+00:49.800 --> 00:53.400
+I'll then click the green checkmark on the right hand side to save those changes.
+
+00:54.390 --> 00:59.370
+And after a quick refresh, this should eventually say, yeah, something like that right there.
+
+00:59.370 --> 01:01.860
+So we should have one, two and three digital ocean.
+
+01:04.070 --> 01:08.300
+Once we've made those changes, we're then going to go back over to our Digital Ocean Dashboard.
+
+01:08.900 --> 01:12.890
+We're going to find the networking tab once again and then click on domains.
+
+01:13.990 --> 01:17.100
+We'll enter in our domain name right here, the one you just purchased.
+
+01:17.110 --> 01:18.760
+So for me, it is going to be.
+
+01:20.270 --> 01:22.610
+Ticketing app, product X, Y, Z.
+
+01:23.300 --> 01:24.890
+I'm going to enter in right there.
+
+01:28.260 --> 01:28.970
+There we go.
+
+01:28.980 --> 01:30.240
+And then add domain.
+
+01:33.310 --> 01:38.500
+Once we add that domain, we're going to be prompted for a couple of different settings so we can add
+
+01:38.500 --> 01:41.740
+in some new records to customize exactly how this domain name behaves.
+
+01:43.660 --> 01:45.970
+We are going to enter in two additional records.
+
+01:46.450 --> 01:49.970
+The first record we're going to add in is going to be an A record.
+
+01:50.000 --> 01:52.420
+So I'm going to enter in and at right there.
+
+01:53.240 --> 01:58.610
+And then going to click on this will direct to box and I'm going to click on my load balancer that was
+
+01:58.610 --> 01:59.480
+just created.
+
+01:59.510 --> 02:03.920
+Now if you forget the name of your load balancer, you can always open up that networking tab once again
+
+02:04.190 --> 02:06.170
+and go over to the Load Balancers tab.
+
+02:06.800 --> 02:10.560
+The name of my load balancer is a7b0 AF.
+
+02:11.520 --> 02:15.250
+So on this dropdown I'm going to find a7b, a0f.
+
+02:15.270 --> 02:16.440
+There it is right there.
+
+02:17.690 --> 02:21.620
+And then going to change the time to life down to 30 seconds.
+
+02:22.700 --> 02:23.920
+And I'll create the record.
+
+02:26.140 --> 02:28.050
+After that, we're going to create one other record.
+
+02:28.060 --> 02:30.070
+I'm going to click on See Name at the top.
+
+02:30.580 --> 02:31.840
+I'll then enter in w.
+
+02:31.840 --> 02:32.860
+W w.
+
+02:33.710 --> 02:38.840
+And then four is an alias of we're going to put in that like so.
+
+02:39.650 --> 02:44.040
+I then go to change the time to live also to 30 seconds and create the record.
+
+02:45.290 --> 02:46.430
+And that should be it.
+
+02:47.300 --> 02:52.510
+So now we need to go back over to our ingress engine X config file and we need to make sure that we
+
+02:52.510 --> 02:56.890
+tell it that whenever it's running in production mode, we want it to watch for requests coming in to
+
+02:56.890 --> 03:01.810
+a domain of ticketing app, product, XYZ or whatever your domain name is.
+
+03:02.670 --> 03:05.070
+So for that, I'm going to go back over to my editor.
+
+03:07.750 --> 03:12.160
+I'm going to find my ingress service file inside of the prod directory.
+
+03:12.700 --> 03:16.630
+Then on the host right here, we're going to delete ticketing, dot dev or whatever host you were using
+
+03:16.630 --> 03:19.420
+locally and will replace it with our new domain name.
+
+03:19.900 --> 03:23.230
+We're also going to add in w w to the very start as well.
+
+03:23.230 --> 03:26.020
+We should have w w w your domain name.
+
+03:26.810 --> 03:31.160
+We're then going to save this file and we're going to go through that exact same series of changes that
+
+03:31.160 --> 03:35.930
+we go through or the same flow where we have to commit these changes, push it up to our dev branch,
+
+03:35.930 --> 03:38.750
+create the pull request, and approve the polar request.
+
+03:39.670 --> 03:40.930
+The back over at my terminal.
+
+03:41.200 --> 03:44.050
+I'll do a get status while on the dev branch.
+
+03:44.440 --> 03:47.560
+I'll make sure that I've got the change to the k aids directory.
+
+03:48.800 --> 03:51.320
+I'll then add the change and commit it.
+
+03:54.240 --> 03:55.830
+I'll push it up to GitHub.
+
+03:59.070 --> 04:03.030
+And then after I pushed it, I'll go over to GitHub itself and create a new pull request.
+
+04:05.340 --> 04:05.460
+Okay.
+
+04:05.600 --> 04:07.340
+So over on GitHub.
+
+04:08.900 --> 04:10.310
+I'll go to my polar request tab.
+
+04:11.010 --> 04:12.750
+I will create a new request.
+
+04:13.520 --> 04:16.790
+And again, we want to go from Dev into the master branch.
+
+04:17.550 --> 04:19.490
+So I should be able to take a look and make sure that.
+
+04:19.490 --> 04:21.680
+Yep, I've got my domain name inside there.
+
+04:22.590 --> 04:23.910
+I'll create the pull request.
+
+04:25.870 --> 04:29.800
+They're not going to be any tests that are going to run because we don't have any tests around our infra
+
+04:29.800 --> 04:30.520
+directory.
+
+04:30.670 --> 04:33.250
+So we should be able to merge this request right away.
+
+04:35.610 --> 04:39.720
+After we merge the request, we can then go up to our actions tab.
+
+04:40.630 --> 04:44.800
+We should see our workflow or deploy manifests running right now.
+
+04:45.160 --> 04:46.510
+So I'm going to click on that.
+
+04:47.920 --> 04:49.210
+I'll click on the build tab.
+
+04:50.170 --> 04:53.830
+And then we should see once again doctor being installed configured.
+
+04:54.370 --> 04:56.680
+We should then be applying all of our manifests.
+
+04:56.680 --> 05:00.790
+So there's the big application right there and it looks like everything is green.
+
+05:01.580 --> 05:03.690
+So we're now going to wait for a little bit.
+
+05:03.710 --> 05:08.270
+It usually takes about maybe ten, 15 minutes for all the changes that we just made to that domain,
+
+05:08.300 --> 05:10.580
+domain name to actually go live.
+
+05:10.760 --> 05:12.020
+In theory, it should be faster.
+
+05:12.020 --> 05:14.990
+But I'm going to tell you, you should probably wait about ten or 15 minutes.
+
+05:15.560 --> 05:19.760
+After that, we're then going to try to navigate to our domain name inside the browser and make sure
+
+05:19.760 --> 05:21.080
+that we can see our application.
+
+05:21.590 --> 05:23.220
+So I'm going to wait for a couple of minutes right now.
+
+05:23.240 --> 05:26.240
+I'll come back the next video and we're going to test out our domain.

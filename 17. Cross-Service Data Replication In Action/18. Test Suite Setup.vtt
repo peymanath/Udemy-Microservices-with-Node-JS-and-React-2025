@@ -1,0 +1,160 @@
+WEBVTT
+
+00:00.810 --> 00:04.950
+As I mentioned at the end of the last video, we've got this request handler put together, but really
+
+00:04.950 --> 00:06.470
+no idea if it works or not.
+
+00:06.480 --> 00:10.460
+So in this video, we're going to start to set up our order service to run some number of tests.
+
+00:10.470 --> 00:15.380
+Then in the next video, we'll write out some tests around this new request handler to get started inside
+
+00:15.400 --> 00:19.890
+my CRC directory of the Order Service, I'm going to create a new folder called Test.
+
+00:20.740 --> 00:24.210
+I'll then go back over to my tickets service.
+
+00:24.220 --> 00:25.090
+Here it is right here.
+
+00:26.080 --> 00:27.910
+I'm going to find the test directory inside there.
+
+00:27.940 --> 00:30.490
+I'll find the setup file inside of that.
+
+00:30.820 --> 00:35.920
+I'm going to copy that setup file and take it over to the orders test directory that we just created
+
+00:36.190 --> 00:37.180
+and paste it in.
+
+00:38.180 --> 00:39.890
+All right, so here's the setup file.
+
+00:40.430 --> 00:42.860
+Immediately I'm seeing a couple of errors from it.
+
+00:43.070 --> 00:46.400
+We got some stuff around Gest and before all and whatnot.
+
+00:46.700 --> 00:51.350
+Once again, this is coming from B's code, just not understanding that we have already installed all
+
+00:51.350 --> 00:52.300
+this just stuff.
+
+00:52.310 --> 00:55.400
+So I'm going to do another quick reload of this window.
+
+00:57.510 --> 00:59.610
+And those errors should then go away.
+
+00:59.790 --> 01:00.060
+Yep.
+
+01:00.060 --> 01:00.750
+That's better.
+
+01:01.480 --> 01:06.310
+Just a reminder to reload the window you hit command shift p or on windows control shift p and you can
+
+01:06.310 --> 01:09.010
+search for reload window and run that command.
+
+01:10.710 --> 01:14.460
+We're going to do a quick scan over this file and make sure that we don't have any code inside of here
+
+01:14.460 --> 01:17.880
+related to the test service that needs to be replaced or updated.
+
+01:18.120 --> 01:19.520
+So I'm looking inside of here.
+
+01:19.530 --> 01:22.220
+We've got two import statements, so we ended up not using inside this file.
+
+01:22.230 --> 01:23.610
+I'm going to clean those up really quick.
+
+01:24.470 --> 01:24.590
+Okay.
+
+01:24.650 --> 01:26.570
+We still want to have the ability to sign in.
+
+01:27.110 --> 01:29.540
+We definitely still want to mock and that's rapper.
+
+01:29.540 --> 01:33.140
+So we're going to have to pull over that underscore underscore MOX Directory from the test service we
+
+01:33.140 --> 01:33.950
+had put together.
+
+01:34.890 --> 01:36.830
+We're still on all the MongoDB stuff.
+
+01:36.890 --> 01:41.720
+Still want to clear out our collections and still want to make sure that we have the ability to sign
+
+01:41.720 --> 01:43.180
+in and sign up and whatnot.
+
+01:43.190 --> 01:44.750
+So I'd say everything inside of here.
+
+01:44.990 --> 01:46.190
+Good to copy paste.
+
+01:46.940 --> 01:50.180
+Let's make sure we also pull over that underscore underscore box folder.
+
+01:50.210 --> 01:55.190
+So back inside of ticket service, I'll find the CRC directory that underscore underscore box.
+
+01:55.190 --> 02:00.200
+I'm going to copy that entire directory and then paste it into the order's source directory as well.
+
+02:01.370 --> 02:01.500
+Yeah.
+
+02:01.610 --> 02:02.360
+That looks good.
+
+02:03.650 --> 02:07.230
+Let's go over to our terminal really quick and just make sure that we can run our test suite.
+
+02:07.250 --> 02:11.080
+We don't have any tests inside of here just yet, so just is probably going to throw an error.
+
+02:11.090 --> 02:14.900
+But I just want to make sure that we don't get any other commands when we try to run our tests.
+
+02:16.620 --> 02:21.840
+So at my terminal, I'll change into this new order's service and then remember to run our test suite
+
+02:21.870 --> 02:23.700
+is and PM run test.
+
+02:25.830 --> 02:26.220
+All right.
+
+02:26.220 --> 02:27.120
+Well, let's say that's reasonable.
+
+02:27.120 --> 02:28.980
+No test found exiting with code zero.
+
+02:29.850 --> 02:30.640
+Well, it's a good start.
+
+02:30.640 --> 02:31.870
+So let's take a pause right here.
+
+02:31.870 --> 02:35.800
+We'll start to write out our tests around this new route handler in the next video.

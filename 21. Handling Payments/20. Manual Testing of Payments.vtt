@@ -1,0 +1,364 @@
+WEBVTT
+
+00:01.270 --> 00:05.560
+We've now got some code inside of here to actually create a charge and build a user's credit card.
+
+00:05.560 --> 00:09.020
+So they're not going to try to test this out manually before we test out manually.
+
+00:09.040 --> 00:11.860
+However, I want you to understand something about the Stripe API.
+
+00:12.280 --> 00:15.430
+Right now, if I go back over to my Stripe dashboard, here it is right here.
+
+00:15.610 --> 00:19.630
+I'm currently operating my stripe account in what is called test mode.
+
+00:20.020 --> 00:23.710
+So if you look at the very bottom left hand side, you're going to see something down here that says
+
+00:23.740 --> 00:28.000
+viewing test data and you'll see that little toggle around several different locations.
+
+00:28.450 --> 00:33.120
+While your account is in test mode, you are not actually working with any real money whatsoever.
+
+00:33.130 --> 00:35.020
+And so we can try to make API requests.
+
+00:35.020 --> 00:39.910
+We can pretend that we are building a user's credit card, but in the end, no money is moving around
+
+00:39.910 --> 00:40.780
+whatsoever.
+
+00:41.140 --> 00:46.330
+It's only once we decide that we want to take our application public, deploy it, that we will want
+
+00:46.330 --> 00:50.080
+to toggle off test mode, which is a little bit of an involved process.
+
+00:50.080 --> 00:52.210
+It involves verifying a banking account.
+
+00:52.300 --> 00:55.750
+A couple of other steps, which is something we're not going to go through because it really starts
+
+00:55.750 --> 00:57.700
+to get into kind of the money side of things.
+
+00:59.240 --> 01:02.780
+So how are we going to actually test this out while our Stripe account is in the test mode?
+
+01:03.200 --> 01:07.760
+Well, at a very practical level, what we really need to do here is first, create a ticket.
+
+01:07.940 --> 01:13.160
+We then have to create an order and then we have to try to make a request to this payment's endpoint.
+
+01:13.980 --> 01:17.490
+But how are we going to make a request to this payment standpoint without a token?
+
+01:17.880 --> 01:20.480
+Well, once again, our account is in test mode right now.
+
+01:20.490 --> 01:24.430
+Our stripe account is in test mode while our account is in test mode.
+
+01:24.450 --> 01:29.580
+There is a very special token that we can provide that will always succeed with the Stripe API.
+
+01:29.730 --> 01:34.860
+In other words, there's kind of like a secret escape hatch of sorts or a little shortcut, a very specific
+
+01:34.860 --> 01:38.610
+token that we can provide that is always going to lead to a successful charge.
+
+01:38.820 --> 01:43.200
+And that is how we can test and make sure that our code here can successfully build a credit card.
+
+01:43.830 --> 01:45.990
+I'll show you exactly what that token is in a moment.
+
+01:46.020 --> 01:48.160
+First, let's kind of do a little bit of setup.
+
+01:48.180 --> 01:49.710
+We're going to create a ticket.
+
+01:49.710 --> 01:52.500
+We'll create an order and then eventually create a payment.
+
+01:53.650 --> 01:55.300
+So over inside of man.
+
+01:56.480 --> 01:58.940
+As usual, I will first make sure that I am signed in.
+
+01:59.240 --> 01:59.530
+Yep.
+
+01:59.540 --> 02:00.440
+Looks like I am.
+
+02:01.430 --> 02:03.320
+I'm then going to create a new ticket.
+
+02:03.590 --> 02:05.510
+The post request to API tickets.
+
+02:06.110 --> 02:07.000
+I'll send that off.
+
+02:07.010 --> 02:08.060
+There's my ID.
+
+02:08.090 --> 02:09.410
+I'm going to copy the ID.
+
+02:10.540 --> 02:12.940
+I'll then create an order for this ticket.
+
+02:13.390 --> 02:17.380
+So a post request to API orders will enter in my ticket id right there.
+
+02:18.510 --> 02:19.410
+Send that off.
+
+02:20.340 --> 02:21.960
+And here is my new order.
+
+02:23.170 --> 02:27.970
+I'm going to take that ID and do keep in mind that we now have a 62nd window to actually purchase this
+
+02:27.970 --> 02:28.240
+order.
+
+02:28.240 --> 02:31.060
+So we do have to kind of write out some code here rather quickly.
+
+02:31.510 --> 02:33.910
+Chances are we'll go over that 62nd timer.
+
+02:33.940 --> 02:34.540
+No problem.
+
+02:34.540 --> 02:37.360
+We can just go through the process of creating another ticket and in order.
+
+02:38.070 --> 02:39.270
+So I can open up a new tab.
+
+02:39.270 --> 02:43.140
+I'm going to make a post request to HTTPS ticketing.
+
+02:44.960 --> 02:48.290
+Dot dev slash API slash payments.
+
+02:49.940 --> 02:55.490
+Under headers, I'll enter in content type of application JSON.
+
+02:57.200 --> 02:59.150
+Her body all enter raw.
+
+02:59.180 --> 03:01.330
+I'll make sure Jason is selected on the right.
+
+03:01.340 --> 03:03.650
+And then remember, we are required to provide.
+
+03:04.400 --> 03:07.370
+An order ID and that token.
+
+03:08.420 --> 03:09.110
+Before the order.
+
+03:09.110 --> 03:09.650
+I'd.
+
+03:11.480 --> 03:16.580
+I'll paste in the order ID that I just copied a moment ago from our previous request to create the order.
+
+03:17.610 --> 03:19.020
+And then for the token.
+
+03:21.180 --> 03:25.860
+Normally this token value would come from the Stripe library running inside of our browser.
+
+03:25.860 --> 03:29.940
+So this would be something that's going to take the user's actual credit card and give us back a token.
+
+03:29.940 --> 03:33.150
+But in this case, we have not done anything around the browser just yet.
+
+03:33.360 --> 03:35.670
+So this is where that little shortcut comes into play.
+
+03:36.030 --> 03:40.650
+We're going to enter into a very special token here that is always going to work 100% of the time or
+
+03:40.650 --> 03:42.360
+stripe accounts that are in the test mode.
+
+03:42.480 --> 03:45.090
+And this very special little token is.
+
+03:46.130 --> 03:47.120
+T okay.
+
+03:47.150 --> 03:48.710
+Underscore Visa.
+
+03:48.980 --> 03:50.600
+So again, this is always going to work.
+
+03:50.600 --> 03:54.710
+We can build it for just about whatever money we can imagine, and the request should always succeed.
+
+03:56.230 --> 03:58.990
+All right, so now we should be able to send this request off.
+
+03:59.140 --> 04:02.020
+And chances are it's been over 60 seconds.
+
+04:02.020 --> 04:05.950
+So I suspect that our order has probably expired by this point in time.
+
+04:06.340 --> 04:08.400
+We could send the request anyways and see what happens.
+
+04:08.410 --> 04:12.580
+And as a matter of fact, yep, it looks like my order has been canceled because I have left that timeout
+
+04:12.580 --> 04:14.350
+window at 60 seconds right now.
+
+04:14.650 --> 04:18.730
+So I do have to very quickly go through the process once again of creating a ticket and then order and
+
+04:18.730 --> 04:20.170
+then I'll update the order ID.
+
+04:21.530 --> 04:22.940
+So I'm going to make another ticket.
+
+04:23.970 --> 04:25.110
+There's my ID.
+
+04:25.650 --> 04:27.150
+I'll then make another order.
+
+04:29.350 --> 04:30.820
+I'll take the order ID.
+
+04:32.030 --> 04:35.060
+And then provide that to the payments API.
+
+04:36.210 --> 04:37.410
+So I'll now send this off.
+
+04:38.030 --> 04:39.110
+And I get back success.
+
+04:39.110 --> 04:39.650
+True.
+
+04:39.680 --> 04:45.170
+Which in theory means that we have now successfully charged some amount of money via Stripe.
+
+04:45.930 --> 04:51.360
+So that means that this call right here worked, as expected, to actually verify that it worked as
+
+04:51.360 --> 04:51.840
+expected.
+
+04:51.840 --> 04:56.850
+We should be able to go over to our stripe dashboard and take a look at all the different charges we
+
+04:56.850 --> 04:58.110
+have created over time.
+
+04:59.160 --> 05:03.810
+So back on the stripe dashboard on the left hand side, I'll go to payments, and I should see a payment
+
+05:03.810 --> 05:05.640
+right there for $15.
+
+05:06.000 --> 05:06.300
+Yep.
+
+05:06.300 --> 05:08.670
+So that's the payment that I just created 2 seconds ago.
+
+05:09.430 --> 05:13.540
+That definitely means that we are able to create a charge and build some money to our users.
+
+05:14.310 --> 05:15.600
+Well, I'd say this looks pretty good.
+
+05:15.630 --> 05:17.790
+We've now verified that this works correctly.
+
+05:18.000 --> 05:20.370
+Let's also make sure that it works incorrectly as well.
+
+05:20.370 --> 05:23.550
+So let's try providing a different token and just seeing what happens.
+
+05:26.510 --> 05:29.360
+I will once again create a ticket very quickly.
+
+05:31.800 --> 05:33.990
+I will create an order out of that ticket.
+
+05:35.940 --> 05:36.950
+Here's my order.
+
+05:38.660 --> 05:43.460
+And I'll create a payment using that order ID and this time around, rather than using that little fake
+
+05:43.460 --> 05:46.490
+always works token I'll put in some gibberish like so.
+
+05:47.260 --> 05:50.830
+So if I now send this off, I'll see an air of something went wrong.
+
+05:50.860 --> 05:56.410
+And if I go to my terminal window running scaffold, I should see an error being thrown from the stripe
+
+05:56.410 --> 05:57.130
+library.
+
+05:57.520 --> 05:57.840
+Yep.
+
+05:57.850 --> 05:59.170
+Here's the error right here.
+
+06:01.630 --> 06:05.050
+Now, if you do not see an error right here, that is totally okay.
+
+06:07.020 --> 06:11.810
+However, we will want to make sure that we at least see an error as the message right here.
+
+06:11.820 --> 06:16.320
+And the reason I say that you might not see an error at your terminal is just in case you did not put
+
+06:16.320 --> 06:21.240
+a console.log into our final version of that error handler middleware that we put together.
+
+06:22.800 --> 06:23.170
+Okay.
+
+06:23.190 --> 06:24.610
+Well, I'd say this looks pretty good.
+
+06:24.630 --> 06:28.980
+We are now able to build some money to a user and we've gone through it with some manual testing, but
+
+06:28.980 --> 06:32.400
+we should probably try to add in some kind of automated test as well.
+
+06:32.580 --> 06:35.160
+Let's take a look and figure out how we could do that in just a moment.

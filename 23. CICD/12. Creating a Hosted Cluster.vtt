@@ -1,0 +1,154 @@
+WEBVTT
+
+00:01.670 --> 00:05.630
+Hopefully you have now signed up for a digital ocean account once you're at the screen right here.
+
+00:05.660 --> 00:08.480
+We're then going to create a new Kubernetes cluster.
+
+00:08.780 --> 00:12.500
+So as soon as we create this cluster, that is when you're going to start being billed for some amount
+
+00:12.500 --> 00:13.100
+of money.
+
+00:13.340 --> 00:14.270
+Just keep that in mind.
+
+00:14.270 --> 00:19.340
+If you ever walk away from this course, you do need to come back to this digital ocean dashboard and
+
+00:19.340 --> 00:21.260
+terminate the cluster and I'll show you how to do that.
+
+00:21.260 --> 00:22.340
+It is very easy.
+
+00:23.030 --> 00:25.040
+First, of course, we do have to create the cluster.
+
+00:25.040 --> 00:29.210
+So I'm going to find the green create button at the top right hand side and we're going to create a
+
+00:29.210 --> 00:29.960
+cluster.
+
+00:33.730 --> 00:36.490
+We're then going to be prompted with a series of different questions.
+
+00:37.120 --> 00:38.840
+First, Kubernetes version.
+
+00:38.860 --> 00:40.870
+You can use any version you see right here.
+
+00:40.900 --> 00:42.610
+Best to just leave it at the default.
+
+00:43.600 --> 00:45.280
+Next up is the data center region.
+
+00:45.910 --> 00:48.620
+Pricing between regions is identical with digital ocean.
+
+00:48.640 --> 00:50.350
+I'm pretty sure I could be wrong on that.
+
+00:50.350 --> 00:53.280
+At the end of the day, the region that you select doesn't make a big difference.
+
+00:53.290 --> 00:56.660
+Just make sure you select something that is physically close to you in the world.
+
+00:56.680 --> 01:00.340
+It's just going to reduce latency a little bit as you're trying to work with the cluster.
+
+01:02.000 --> 01:04.430
+For VPC network, we can leave that at the default.
+
+01:04.910 --> 01:09.440
+And then the only setting here that really makes a difference for us right now is the cluster capacity.
+
+01:09.650 --> 01:14.480
+So this is where we are going to add in some number of nodes or essentially virtual machines to run
+
+01:14.480 --> 01:15.680
+all of our different pods.
+
+01:16.310 --> 01:20.090
+By default, you should see something that says standard nodes right here.
+
+01:20.950 --> 01:23.990
+And have the $10 a month option selected.
+
+01:24.010 --> 01:24.870
+That's what we want.
+
+01:24.880 --> 01:27.610
+We want the $10 a month node selected right here.
+
+01:28.600 --> 01:31.370
+We're then going to make sure we have at least three nodes.
+
+01:31.390 --> 01:35.590
+You technically can get away with two, but you might have a hard time running our application with
+
+01:35.590 --> 01:36.490
+only two nodes.
+
+01:36.520 --> 01:38.470
+I would really recommend sticking it with three.
+
+01:40.350 --> 01:42.770
+So you can see that we're going to be paying about $30 a month.
+
+01:43.190 --> 01:45.680
+Now, you might recall the diagram was showing you just a moment ago.
+
+01:45.680 --> 01:47.330
+I said $40 a month over here.
+
+01:47.360 --> 01:52.070
+Well, we're going to also pay $10 for a load balancer as well, $10 a month.
+
+01:52.100 --> 01:53.990
+That's where the extra $10 comes from.
+
+01:56.050 --> 02:00.200
+Then going to go down to the very bottom and we can set a name for our cluster.
+
+02:00.220 --> 02:01.950
+You will be given a default name right here.
+
+02:01.960 --> 02:05.160
+I do recommend you update it to something that just makes sense to you.
+
+02:05.170 --> 02:07.780
+So for me, I'm going to call it simply ticketing.
+
+02:09.590 --> 02:11.480
+Well, then go ahead and create the cluster.
+
+02:13.670 --> 02:14.900
+And that's pretty much it.
+
+02:15.500 --> 02:20.060
+When you first create the cluster, it's going to take some number of minutes for it to first boot up.
+
+02:20.300 --> 02:21.920
+So you're going to see a little progress bar up here.
+
+02:21.920 --> 02:24.410
+And they're quoting me about 4 minutes or so.
+
+02:24.560 --> 02:25.300
+Who knows?
+
+02:25.310 --> 02:28.940
+So we're going to take a pause right here and just let this thing do its stuff.
+
+02:29.120 --> 02:33.410
+We'll come back the next video once everything is completed, setting up and we're going to make sure
+
+02:33.410 --> 02:38.150
+that we can deploy our application to it through a GitHub deployment pipeline.

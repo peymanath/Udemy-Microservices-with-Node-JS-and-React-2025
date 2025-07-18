@@ -1,0 +1,139 @@
+WEBVTT
+
+00:01.710 --> 00:06.570
+We've got our script in a pretty good spot, so I'm now going to commit this file by going to the green
+
+00:06.570 --> 00:09.690
+button on the top right hand side and commit new file.
+
+00:12.040 --> 00:12.190
+Okay.
+
+00:12.250 --> 00:14.410
+So we've now got this new workflow put together.
+
+00:14.440 --> 00:19.360
+Now, any time that we emerge in April, we should see it that we are going to build a new image and
+
+00:19.360 --> 00:20.650
+push it off to Docker Hub.
+
+00:21.040 --> 00:25.000
+To test this out right now, we can go back over to that polar request we had already created.
+
+00:25.770 --> 00:27.930
+So here's the one I made a little bit ago.
+
+00:29.930 --> 00:32.870
+This definitely contains a change to our service.
+
+00:33.140 --> 00:37.490
+So as soon as we merge this, we should see that new workflow that we just put together run for the
+
+00:37.490 --> 00:40.310
+first time, build the image, and push it to Docker Hub.
+
+00:41.310 --> 00:45.060
+So to really test this out, we'll go down to the bottom, merge the pull request.
+
+00:47.840 --> 00:49.700
+And then after merging it.
+
+00:51.210 --> 00:55.440
+We should be able to go to the very top, go to actions.
+
+00:58.740 --> 01:01.380
+We're going to see a new entry in the list of actions right here.
+
+01:01.380 --> 01:04.170
+So it looks like it's running by deploy auth workflow.
+
+01:04.410 --> 01:07.650
+I'm going to click on that and then click on build on the left hand side.
+
+01:09.390 --> 01:11.340
+I'll then see the log of everything it's going through.
+
+01:11.340 --> 01:14.970
+So it looks like it's already built up the image and the time that it took me just to click over here.
+
+01:15.690 --> 01:17.370
+It looks like it then logged into what?
+
+01:17.370 --> 01:18.540
+Docker successfully?
+
+01:20.560 --> 01:25.300
+And then finally it looks like it is in the process of pushing the image off to Docker Hub.
+
+01:25.690 --> 01:30.370
+At this point, if you see any errors during that step or that step right there, the log in, specifically
+
+01:30.370 --> 01:32.490
+the log in, see any errors around that?
+
+01:32.500 --> 01:35.470
+Chances are there is a typo inside of your script.
+
+01:35.500 --> 01:37.300
+So I would encourage you to go back, double check it.
+
+01:37.300 --> 01:42.790
+Also make sure that you set up the Docker username and password secrets inside the repo successfully
+
+01:42.790 --> 01:43.420
+as well.
+
+01:44.650 --> 01:44.890
+All right.
+
+01:44.890 --> 01:50.470
+So it's been a while now, but hopefully this little darker push step will eventually go through.
+
+01:50.500 --> 01:52.430
+I'm not going to make you sit here and watch this.
+
+01:52.490 --> 01:53.500
+Let's take a pause right here.
+
+01:53.500 --> 01:56.020
+Hopefully the next video, I'll be able to come back and confirm that.
+
+01:56.020 --> 01:57.710
+Yeah, everything got pushed off.
+
+01:57.730 --> 01:58.720
+Oh, sure enough.
+
+01:58.720 --> 01:59.380
+There we go.
+
+01:59.740 --> 02:00.520
+It got pushed.
+
+02:00.850 --> 02:01.990
+So it looks like that's it.
+
+02:01.990 --> 02:06.160
+I've built up the image and pushed it off to Docker Hub, so that is awesome.
+
+02:06.160 --> 02:07.440
+It is great progress.
+
+02:07.450 --> 02:09.940
+We've now got our new image off on Docker Hub.
+
+02:10.210 --> 02:16.390
+Now all we have to do is figure out how to somehow tell our Kubernetes cluster to use this new image
+
+02:16.390 --> 02:17.650
+we have just built.
+
+02:17.890 --> 02:19.930
+We also, of course, have to make sure.
+
+02:21.240 --> 02:24.870
+That we reapply or we apply this infrared directory at some point as well.
+
+02:25.170 --> 02:30.000
+So really two more steps and we can make sure that the service is up and running inside of our cluster.

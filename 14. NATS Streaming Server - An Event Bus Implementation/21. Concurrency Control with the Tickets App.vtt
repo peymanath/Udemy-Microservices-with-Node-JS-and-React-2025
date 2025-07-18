@@ -1,0 +1,493 @@
+WEBVTT
+
+00:00.560 --> 00:05.750
+At the end of the last video, I said that all this last transaction number stuff around the transaction
+
+00:05.750 --> 00:10.160
+service was going to work somewhat similarly for our ticketing application as well, specifically the
+
+00:10.160 --> 00:11.120
+tickets service.
+
+00:11.120 --> 00:15.680
+So we had just been working on a little bit ago, I said that we were going to see how this stuff worked
+
+00:15.680 --> 00:19.850
+with the ticket service later on, but I realized it probably made a lot more sense to just show you
+
+00:19.850 --> 00:24.590
+how all this idea of a last transaction number or a version number of sorts is going to work with our
+
+00:24.590 --> 00:28.190
+ticketing application right away while all this stuff is still fresh in our minds.
+
+00:28.310 --> 00:32.600
+So quick example here of how this stuff is going to work with our tickets service.
+
+00:33.470 --> 00:37.250
+So we're going to follow the exact same pattern we saw in this diagram back over here.
+
+00:37.370 --> 00:41.210
+We're going to assume a request is going to come in to the service that owns that resource.
+
+00:41.240 --> 00:45.290
+We're going to save that resource and then emit an event describing that change.
+
+00:46.510 --> 00:52.270
+Now, one service in our application that really cares about the price of a ticket is the orders service
+
+00:52.270 --> 00:53.530
+and the orders database.
+
+00:53.560 --> 00:58.210
+We haven't worked on the order service just yet, but right now just understand that the Order Service
+
+00:58.210 --> 01:02.800
+is going to need to know the price of every single ticket, and it's also going to need to know any
+
+01:02.800 --> 01:04.630
+time that price changes as well.
+
+01:05.230 --> 01:10.030
+So we're going to imagine that request is going to come in to our ticket service to first create a ticket
+
+01:10.030 --> 01:12.400
+and then update that ticket over time.
+
+01:12.520 --> 01:17.200
+And we're going to imagine what would happen if there is some issue with the ordering of these events
+
+01:17.200 --> 01:20.260
+that are going to be issued from creating and then updating the ticket.
+
+01:20.590 --> 01:24.280
+The first off, let's imagine what happens when we make these requests.
+
+01:24.820 --> 01:29.440
+So request number one, we're going to try to create the ticket with a price of $10 that will flow in.
+
+01:29.440 --> 01:32.650
+We'll process that and we'll make an update to our tickets database.
+
+01:32.830 --> 01:36.970
+We're going to say that the ticket that we create is going to have an ID of queue.
+
+01:38.030 --> 01:39.620
+An initial price of ten.
+
+01:39.920 --> 01:44.480
+And then very similar to that transaction or last transaction number stuff that we had, whenever we
+
+01:44.480 --> 01:48.440
+create a ticket, we're going to apply a version number to this thing as well.
+
+01:48.440 --> 01:51.860
+So we're going to say that this is a version one of this record.
+
+01:52.760 --> 01:54.440
+Well, then emit an event.
+
+01:56.120 --> 01:57.310
+We'll write out over here.
+
+01:57.460 --> 02:00.610
+So it'll probably have a name of something like a ticket created.
+
+02:01.210 --> 02:03.850
+And then inside the event we'll provide the ID of the ticket.
+
+02:04.240 --> 02:08.590
+Q The price of ten and the version number as well.
+
+02:10.200 --> 02:15.480
+And so that will presumably be sent off immediately over to our net server and then that event will
+
+02:15.480 --> 02:17.280
+show up inside of our order service.
+
+02:17.330 --> 02:22.980
+Let's imagine that before that event is even emitted, maybe the user instantaneously follows up with
+
+02:22.980 --> 02:27.870
+two additional requests to change that ticket price and very, very quick succession.
+
+02:29.070 --> 02:33.390
+So we're going to imagine instantly after creating this ticket, a user then submits a request to update
+
+02:33.390 --> 02:34.230
+the price of it.
+
+02:35.300 --> 02:39.170
+We're going to say fine ticket, says Q and set its price to $50.
+
+02:39.320 --> 02:43.190
+So we will process that change inside of our database, change the price to $50.
+
+02:43.190 --> 02:47.840
+And then as soon as we make any change whatsoever to this record, we're going to increment that version
+
+02:47.840 --> 02:48.380
+number.
+
+02:48.380 --> 02:52.370
+So because we just changed this price, we'll now increment its version number to two.
+
+02:53.820 --> 02:57.930
+And then, just as we saw previously, well, then fabricate an event.
+
+02:59.210 --> 03:00.800
+Describing the change we just made.
+
+03:01.280 --> 03:08.390
+So we'll give this a type of something like ticket updated an ID of Q it's new price and we'll also
+
+03:08.390 --> 03:09.950
+put on there the version as well.
+
+03:09.950 --> 03:11.150
+So now it's version two.
+
+03:11.330 --> 03:12.980
+I think you can see where this is going.
+
+03:12.980 --> 03:16.100
+So we're now going to have the last request come in very short order.
+
+03:17.090 --> 03:17.300
+Okay.
+
+03:17.300 --> 03:17.510
+Fine.
+
+03:17.510 --> 03:17.810
+Tickets.
+
+03:18.050 --> 03:19.880
+Q update is price to 100.
+
+03:20.030 --> 03:20.710
+Very good.
+
+03:20.720 --> 03:26.330
+Well then automatically update the version because we made a change to this record and now we will also
+
+03:26.360 --> 03:27.230
+emit an event.
+
+03:28.830 --> 03:35.700
+Of ticket updated ID of season Q Price is now 100 and version is three.
+
+03:38.010 --> 03:38.300
+Okay.
+
+03:38.310 --> 03:41.470
+So now we're going to imagine that these events get thrown off to the net streaming server.
+
+03:41.490 --> 03:45.210
+Of course, they're going to be handled or thrown over to Nats one at a time.
+
+03:45.210 --> 03:49.410
+So in other words, with the first request as soon as possible, we're going to throw that event over.
+
+03:49.410 --> 03:54.030
+And then with the second request a little bit later, it will then be that one and then the third one.
+
+03:54.040 --> 03:57.600
+And we can imagine that these all get thrown over sequentially in the correct order.
+
+03:57.600 --> 04:02.100
+But just for the sake of this diagram, let's imagine they all just kind of show up in a big batch to
+
+04:02.100 --> 04:03.060
+that streaming server.
+
+04:03.820 --> 04:08.470
+So then we want to process these events inside of our order service because like I said, the order
+
+04:08.470 --> 04:12.340
+service needs to know the exact price of a ticket at any given time.
+
+04:13.230 --> 04:17.730
+So let's imagine that these events get processed, possibly very much out of order.
+
+04:17.730 --> 04:21.870
+So once again, maybe the first event of creating the ticket goes to service a.
+
+04:22.720 --> 04:28.900
+For instance, a and then the first update goes to B, and once again, we'll assume that this request
+
+04:28.900 --> 04:33.040
+right here or this event to create the ticket is fails for whatever reason.
+
+04:33.040 --> 04:35.500
+So we're going to wait 30 seconds for that thing to be processed.
+
+04:35.500 --> 04:39.580
+So I'm going to throw it back over by Nats and it's eventually after 30 seconds, it's going to be sent
+
+04:39.580 --> 04:42.130
+back over to one of our order service instances.
+
+04:42.790 --> 04:47.590
+So now this order Service B has received this event and it's saying update the ticket.
+
+04:47.590 --> 04:52.030
+Well, at this point in time, we don't have anything inside of our database about this ticket.
+
+04:52.090 --> 04:55.180
+So we might write out some code inside there to say, try to find this ticket.
+
+04:55.180 --> 04:59.950
+If we can't find a ticket with the ID queue, then just don't acknowledge the event.
+
+04:59.950 --> 05:03.280
+Maybe throw an error for logging purposes and just don't acknowledge it.
+
+05:03.550 --> 05:06.250
+So then after 30 seconds, this thing is going to time out.
+
+05:06.250 --> 05:09.700
+So again, we'll imagine it goes back over to our server.
+
+05:12.310 --> 05:12.670
+All right.
+
+05:12.670 --> 05:17.230
+After 30 seconds have passed, we're now going to give a shot at processing a ticket created once again.
+
+05:17.770 --> 05:20.470
+So to get created, well, let's go and create the ticket.
+
+05:20.470 --> 05:22.590
+So we'll stick in an ID of queue.
+
+05:23.480 --> 05:25.850
+A price of ten and a version of one.
+
+05:26.330 --> 05:26.920
+So that's it.
+
+05:26.930 --> 05:28.880
+We've now processed that event.
+
+05:28.880 --> 05:32.300
+We can acknowledge it and we essentially forget it ever happened.
+
+05:33.590 --> 05:37.820
+So now we need to process the second event and the third event.
+
+05:37.970 --> 05:43.520
+So let's now say the second one goes over to listener A and this third one goes to V.
+
+05:44.750 --> 05:49.150
+Once again, let's assume that something goes wrong with processing number two right here.
+
+05:49.160 --> 05:54.080
+So that thing is going to eventually time out after 30 seconds and now be right here is going to try
+
+05:54.080 --> 05:55.400
+to process this event.
+
+05:55.400 --> 06:01.160
+So in this case, we are going to write code inside of our order service to say fine ticket sees queue,
+
+06:01.790 --> 06:08.060
+take a look at its version and only update this thing if the version of the record saved in our database
+
+06:08.060 --> 06:11.210
+is equal to two because we are trying to apply update three.
+
+06:11.210 --> 06:15.560
+That means version two must have already been applied to process this update.
+
+06:15.710 --> 06:18.170
+So in this case we would find ticket queue.
+
+06:18.380 --> 06:22.340
+We would see that its version is one, which means we have not yet processed two.
+
+06:22.340 --> 06:25.160
+So once again, we could throw an error, we could log something.
+
+06:25.160 --> 06:28.520
+At any rate, we are not going to acknowledge this message.
+
+06:28.520 --> 06:33.950
+We're going to allow this thing to time out and hopefully eventually be delivered to one of our services.
+
+06:34.740 --> 06:41.640
+So then after 30 seconds or so Nats is going to try to re deliver ticket or event to we'll find.
+
+06:41.700 --> 06:48.450
+Q The version we have in our database is one, we have an update record right here for two awesome everything
+
+06:48.450 --> 06:49.140
+lines up.
+
+06:49.230 --> 06:50.460
+So I'll update to two.
+
+06:50.490 --> 06:53.520
+The price is going to go to 50 and we are happy campers.
+
+06:53.640 --> 06:57.390
+And after some point in time, we're going to get this third one find.
+
+06:57.720 --> 06:58.800
+Q There it is.
+
+06:58.950 --> 07:00.420
+We have version two.
+
+07:00.450 --> 07:02.790
+We're getting a update to go to version three.
+
+07:02.820 --> 07:03.240
+Awesome.
+
+07:03.240 --> 07:04.200
+Everything lines up.
+
+07:04.230 --> 07:05.110
+We'll update that.
+
+07:05.130 --> 07:06.600
+Update the price to 100.
+
+07:06.600 --> 07:08.250
+And once again, we're good to go.
+
+07:09.480 --> 07:11.790
+So that's exactly what we're going to do in our application.
+
+07:11.790 --> 07:14.490
+All we have to do is add in this little version flag.
+
+07:14.560 --> 07:16.080
+We're going to add it to the service.
+
+07:16.080 --> 07:19.940
+That is the canonical service that manages any given resource.
+
+07:19.950 --> 07:24.750
+So if we're talking about tickets, our ticket service is going to manage this version flag.
+
+07:25.110 --> 07:31.110
+This is going to be the only location where the version is ever going to be directly updated everywhere
+
+07:31.110 --> 07:31.470
+else.
+
+07:31.470 --> 07:37.440
+So every other service that depends upon processing updates in response to this record is never going
+
+07:37.440 --> 07:39.030
+to lead the ticket service.
+
+07:39.030 --> 07:43.710
+In other words, we would never, ever expect the order database to somehow have a version of for while
+
+07:43.710 --> 07:46.050
+the ticket database is still at a version of three.
+
+07:47.700 --> 07:53.550
+So every other service, because these other services are not the ones directly in charge or directly
+
+07:53.550 --> 07:58.440
+responsible for the definition of a ticket will always have an equal or lagging version for this record.
+
+07:58.710 --> 08:04.350
+And again, we're only ever going to increment it on this primary service that manages this resource
+
+08:04.350 --> 08:07.320
+whenever we make a change to one of the attributes inside of here.
+
+08:08.030 --> 08:09.110
+Now, quick note.
+
+08:09.110 --> 08:12.620
+If managing this version stuff sounds really daunting.
+
+08:12.620 --> 08:13.250
+Absolutely.
+
+08:13.250 --> 08:13.850
+Do not sweat.
+
+08:13.850 --> 08:19.130
+It turns out that MongoDB and Mongoose actually have a lot of stuff built in to handle this versioning
+
+08:19.130 --> 08:20.210
+stuff for us.
+
+08:20.450 --> 08:24.290
+The only reason we're going through all this discussion is that you understand what this version stuff
+
+08:24.290 --> 08:24.680
+is for.
+
+08:24.710 --> 08:28.730
+It turns out that when we go to implement it, it's actually going to be really easy and straightforward,
+
+08:29.120 --> 08:35.000
+but it's going to handle just about every conceivable scenario where we might throw some events.
+
+08:35.930 --> 08:41.510
+At these order services or whatever else, and the service crashes or times out or the database isn't
+
+08:41.510 --> 08:45.920
+available or not sends it to a service that isn't actually running and so on.
+
+08:46.220 --> 08:50.690
+The only thing that we really have to worry about here, and this is something we'll discuss later on
+
+08:50.690 --> 08:56.600
+is the case in which we try to process some event and we just repeatedly, repeatedly fail it over and
+
+08:56.600 --> 09:00.530
+over again because it is for some reason completely unprocessed, unprocessed, civil.
+
+09:00.530 --> 09:02.300
+And that's something we will discuss later on.
+
+09:02.300 --> 09:07.310
+But for any kind of transient failure, like a broken connection or something like that, or we're getting
+
+09:07.310 --> 09:12.500
+events out of order, this process, this idea of versioning is always going to fix it.
+
+09:13.380 --> 09:13.890
+Okay.
+
+09:13.920 --> 09:18.870
+I apologize for the billionth time for these long videos, but I'm just trying to do the biggest knowledge
+
+09:18.870 --> 09:19.920
+dump I can.
+
+09:20.250 --> 09:23.160
+We're pretty much at the done all done with all this kind of.
+
+09:23.950 --> 09:24.970
+Theory stuff.
+
+09:25.060 --> 09:28.600
+So now for real, we're going to take a pause, go back to the next video.
+
+09:28.630 --> 09:33.130
+We're going to add in just a little bit more code to get understanding of this one last big feature
+
+09:33.130 --> 09:33.940
+in Nats.
+
+09:33.940 --> 09:37.840
+And then we'll be able to start implementing all this inventing stuff inside of our application.
+
+09:38.080 --> 09:38.530
+Woohoo!
+
+09:38.560 --> 09:39.700
+Okay, quick Buzz.
+
+09:39.700 --> 09:40.480
+See you in a minute.

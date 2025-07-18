@@ -1,0 +1,253 @@
+WEBVTT
+
+00:01.270 --> 00:03.460
+Onto our last row handler of delete.
+
+00:03.490 --> 00:07.890
+Now, when a user makes a delete request, we're not going to actually delete the underlying order.
+
+00:07.900 --> 00:11.320
+Instead we're going to update its status over to cancelled.
+
+00:11.380 --> 00:13.950
+So remember, a order has many different statuses.
+
+00:13.960 --> 00:17.050
+We can take a look at them inside of our order file in the models directory.
+
+00:17.380 --> 00:18.910
+So we've got order status right there.
+
+00:18.910 --> 00:20.230
+If we do a command, click on it.
+
+00:20.230 --> 00:25.960
+We'll go to the definition of that enum so this thing can be created a waiting payment complete or cancelled.
+
+00:26.320 --> 00:30.250
+So when we say that we're going to delete an order again, we're not actually deleting it out of the
+
+00:30.250 --> 00:30.760
+database.
+
+00:30.760 --> 00:33.190
+Instead, we're just marking it as canceled.
+
+00:33.640 --> 00:34.630
+Now then mind.
+
+00:34.660 --> 00:37.690
+Does it still make sense to have this be a delete request?
+
+00:37.900 --> 00:39.460
+Maybe not really.
+
+00:39.460 --> 00:42.880
+A delete request kind of implies that we're actually deleting a resource.
+
+00:42.880 --> 00:44.650
+We're not really deleting a resource here.
+
+00:44.650 --> 00:50.230
+Instead, maybe it would make more sense to make this a put or a patch to say that we are updating a
+
+00:50.230 --> 00:54.010
+property and it just happens that we are updating the property over to cancelled.
+
+00:54.010 --> 00:58.630
+So maybe it's not the best to say that this is going to be a delete.
+
+00:58.660 --> 01:00.760
+Nonetheless, it's what we're going to do.
+
+01:02.000 --> 01:02.300
+Okay.
+
+01:02.300 --> 01:08.330
+Anyways, back over to our editor inside of our Roots Directory, we're going to find that delete file.
+
+01:09.150 --> 01:13.950
+So inside of here, the logic we're going to write out is going to look very similar to what we did
+
+01:13.950 --> 01:15.330
+back inside of show.
+
+01:15.370 --> 01:18.090
+So you can make sure that a user is authenticated.
+
+01:18.180 --> 01:21.660
+We're going to make sure that we find some order inside of our database.
+
+01:21.870 --> 01:26.310
+We're also going to make sure that the user who is making this request owns this order as well.
+
+01:26.490 --> 01:27.290
+And that's pretty much it.
+
+01:27.300 --> 01:31.590
+After we find that do those checks, we can then update the order status and we're all complete.
+
+01:32.190 --> 01:34.050
+So first off, couple of imports at the top.
+
+01:35.700 --> 01:37.320
+I'm going to import order.
+
+01:38.470 --> 01:40.840
+From up one directory models order.
+
+01:40.930 --> 01:45.790
+We probably also need that order status enum so we can properly set it to cancel it as well.
+
+01:46.180 --> 01:48.970
+It's also get order status.
+
+01:50.110 --> 01:52.660
+We need a couple of different middle words from our common module.
+
+01:52.660 --> 01:55.900
+So I'll add in an import four require off.
+
+01:56.680 --> 01:59.080
+From our common module.
+
+02:00.290 --> 02:02.420
+And I think that should probably be it for right now.
+
+02:02.930 --> 02:06.860
+So inside the root handler itself, I'll apply the require auth middleware.
+
+02:08.440 --> 02:09.940
+Then inside the root handler.
+
+02:10.810 --> 02:14.710
+First we're going to pull off the order ID off of the request parameters object.
+
+02:14.950 --> 02:16.690
+So we'll get order ID.
+
+02:18.000 --> 02:19.260
+From rec dot params.
+
+02:19.590 --> 02:23.670
+And then, like I just said, same thing we just did inside of show find the order.
+
+02:24.550 --> 02:28.990
+Make sure we found an order, make sure the user owns the order, and then finally apply the update.
+
+02:29.870 --> 02:33.440
+So we'll do an order is a wait order.
+
+02:34.600 --> 02:36.520
+Not find by ID.
+
+02:38.540 --> 02:40.310
+And we'll pass in the order ID.
+
+02:42.450 --> 02:43.860
+Then if there is not order.
+
+02:43.860 --> 02:47.550
+So if we did not find one, let's throw a new not found air.
+
+02:49.250 --> 02:56.870
+In addition, if the order does exist but the owner of the order so the user ID is not equal to recurrent
+
+02:56.870 --> 02:59.540
+user exclamation id.
+
+02:59.990 --> 03:01.520
+Then we should also forbid this.
+
+03:01.520 --> 03:06.500
+So we'll throw a new not authorized air.
+
+03:07.950 --> 03:10.140
+Let's add imports for these two errors.
+
+03:10.710 --> 03:13.590
+Up at the top, we'll find our common module and add in.
+
+03:13.590 --> 03:15.120
+Not found error.
+
+03:15.150 --> 03:17.670
+Not authorized error.
+
+03:20.400 --> 03:23.280
+Then after that, we'll go ahead and make our update to the order.
+
+03:23.280 --> 03:25.590
+So we're all we really have to do here is update the status.
+
+03:25.590 --> 03:26.610
+That's pretty much it.
+
+03:26.610 --> 03:31.950
+So order status is going to be order status got canceled.
+
+03:33.570 --> 03:34.530
+Well, then save it.
+
+03:35.780 --> 03:36.920
+And that's pretty much it.
+
+03:38.180 --> 03:38.930
+At the very bottom.
+
+03:38.930 --> 03:41.840
+We'll then send back the updated order like so.
+
+03:42.700 --> 03:48.790
+If this was really a delete handler, we should technically also send back specifically a status of
+
+03:48.790 --> 03:51.220
+204, which indicates that a record was deleted.
+
+03:51.400 --> 03:55.310
+So if you really want to follow these delete semantics, we should have the two of four there.
+
+03:55.330 --> 03:59.890
+Again, we're not really deleting a record per se, we're cancelling it, but we're kind of pretending
+
+03:59.890 --> 04:01.690
+as though that's kind of a delete.
+
+04:02.140 --> 04:06.670
+Again, I think maybe I kind of made a mistake here now that I'm going through this stuff, really,
+
+04:06.670 --> 04:09.910
+maybe it would have been made a lot more sense to make this into a patch.
+
+04:09.910 --> 04:12.430
+But this is a let me just be clear.
+
+04:12.430 --> 04:14.560
+This is a really small nitpick on my side.
+
+04:14.560 --> 04:15.810
+Super not critical.
+
+04:15.820 --> 04:16.330
+You know what?
+
+04:16.330 --> 04:17.630
+I'm just going to stop complaining about it.
+
+04:17.650 --> 04:21.670
+We'll stick with a delete method and a status of 204 and just say it's good enough.
+
+04:22.580 --> 04:23.550
+All right, so let's save this.
+
+04:23.570 --> 04:25.730
+We do naturally need to make sure that it all works.
+
+04:25.730 --> 04:28.400
+So now that we've got the implementation put together, a quick pause.
+
+04:28.400 --> 04:29.390
+Come back in the next video.
+
+04:29.390 --> 04:31.250
+Write out a quick test or two.

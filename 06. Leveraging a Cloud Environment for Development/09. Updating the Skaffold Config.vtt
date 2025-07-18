@@ -1,0 +1,235 @@
+WEBVTT
+
+00:00.760 --> 00:03.160
+We are almost done with this remote cluster setup.
+
+00:03.160 --> 00:05.770
+We just have to go through a handful of additional steps.
+
+00:05.770 --> 00:09.430
+So I listed the steps out right here just so it's really clear exactly what we have to do.
+
+00:10.710 --> 00:15.060
+As a quick reminder, we're going to use Google Cloud Built to build all of our images from now on.
+
+00:15.300 --> 00:19.290
+So we spoke about that when we were taking a look at this diagram right here.
+
+00:19.680 --> 00:23.940
+So Google Cloud Build is going to be in charge of building all of our images using our source code in
+
+00:23.940 --> 00:25.250
+their accompanying Docker file.
+
+00:25.260 --> 00:29.640
+And again, the reason we are doing this is because Google Cloud Build can generally build these images
+
+00:29.640 --> 00:34.470
+more quickly than we can on our local machine, particularly as we get on to some stuff later on where
+
+00:34.470 --> 00:37.300
+we're going to be downloading some rather large dependencies.
+
+00:37.340 --> 00:39.000
+You'll see why when we get to that point.
+
+00:40.490 --> 00:45.890
+After that, we're going to update our scaffold YAML file to tell it to use Google Cloud Build.
+
+00:45.920 --> 00:47.660
+That's going to be a very, very easy update.
+
+00:47.660 --> 00:48.020
+Don't worry.
+
+00:48.020 --> 00:49.190
+That's not challenging at all.
+
+00:50.180 --> 00:55.100
+After that, we're going to make sure that we set up Ingress Engine X on our Google Cloud Cluster.
+
+00:55.100 --> 01:00.560
+So we set up Ingress Engine X on our local cluster, but none of that configuration carries over to
+
+01:00.560 --> 01:02.120
+the cluster that we just created.
+
+01:02.150 --> 01:07.310
+We have to go through those same initialization commands that we ran a while ago on our local machine.
+
+01:08.940 --> 01:14.130
+After that, we're going to update our host file again yet again, because we need to make sure that
+
+01:14.130 --> 01:17.970
+whenever we go to ticketing dev, we no longer go to our local machine.
+
+01:17.970 --> 01:22.050
+Instead, we want to go to the IP address that's been assigned to our remote cluster.
+
+01:22.290 --> 01:26.700
+And then finally we will go ahead and restart scaffold and we'll start to build all these images and
+
+01:26.700 --> 01:27.660
+all that kind of stuff.
+
+01:28.340 --> 01:29.870
+So let's go through the step by step.
+
+01:30.140 --> 01:32.600
+We're going to first enable Google Cloud build.
+
+01:32.870 --> 01:37.820
+So back at my Google Cloud console, I'm going to go to the menu once again on the top left.
+
+01:38.120 --> 01:42.920
+I'll then scroll down a pretty good bit until I find tools right here.
+
+01:44.000 --> 01:45.470
+A click on Cloud Built.
+
+01:46.420 --> 01:48.130
+And then we'll click on Enable.
+
+01:50.700 --> 01:51.780
+And that should be it.
+
+01:52.200 --> 01:56.400
+Now, this might take a couple of seconds, so we'll just go ahead and let it do its thing while that
+
+01:56.400 --> 01:57.090
+is running.
+
+01:57.180 --> 02:01.850
+Let's go back over to our code editor where we are going to update our scaffolding HTML file.
+
+02:01.860 --> 02:05.160
+And again, we're going to tell it that we want it to use Google Cloud built.
+
+02:06.130 --> 02:07.630
+So I'm going to open up my editor.
+
+02:08.560 --> 02:11.080
+I've already got my scaffold file open right here.
+
+02:12.230 --> 02:14.690
+We're going to make just two small changes inside of here.
+
+02:15.080 --> 02:19.880
+So first off, I'm going to find where we specify the build section and then right after where it says
+
+02:19.880 --> 02:21.200
+local push false.
+
+02:21.200 --> 02:25.610
+I'm going to add in a new section that says Google Cloud Build.
+
+02:26.880 --> 02:29.190
+I'll then specify a project ID.
+
+02:29.640 --> 02:32.640
+Notice that the DH in ID is lowercase.
+
+02:32.760 --> 02:35.550
+And then we're going to enter our project ID right there.
+
+02:35.910 --> 02:40.860
+Now, remember, our actual project ID is not exactly what it says at the top left hand side, it is
+
+02:40.860 --> 02:42.000
+not ticketing diff.
+
+02:42.300 --> 02:47.460
+Instead, we probably got assigned to you probably as well, got assigned an ID randomly and that's
+
+02:47.460 --> 02:49.380
+what you see over here on the right hand column.
+
+02:49.860 --> 02:52.380
+So I'm going to take that ID, copy it.
+
+02:53.140 --> 02:55.570
+And then paste it over at Project ID.
+
+02:58.240 --> 03:01.210
+Then after that, we're also going to update the image.
+
+03:02.340 --> 03:03.240
+Right there.
+
+03:03.810 --> 03:06.540
+So we kind of randomly decided on that name.
+
+03:06.540 --> 03:08.520
+The first part of the image name makes a lot of sense.
+
+03:08.520 --> 03:09.450
+It's our Docker ID.
+
+03:09.450 --> 03:11.910
+But the second part is again, more or less random.
+
+03:13.060 --> 03:17.440
+When we pass this building process off to Google Cloud built.
+
+03:18.310 --> 03:22.300
+So the thing that we were just at this thing right here, it looks like the API has now been enabled.
+
+03:22.330 --> 03:27.100
+Google Cloud Build is going to essentially more or less assign a somewhat random name.
+
+03:27.100 --> 03:28.000
+Let's not really random.
+
+03:28.000 --> 03:30.700
+It is a structured name to the images that it builds.
+
+03:30.910 --> 03:35.500
+So we need to specify the image name that Google Cloud is going to assign to our image when it gets
+
+03:35.500 --> 03:36.040
+built.
+
+03:36.700 --> 03:42.250
+The formats that Google Cloud uses to decide what to call your image is always the exact same format.
+
+03:42.250 --> 03:50.620
+It is always going to be us dot gcr, dot io slash then the name of your project.
+
+03:51.010 --> 03:55.330
+So you're going to put the name of the project ID so you're going to put your project ID the same thing
+
+03:55.330 --> 03:58.120
+we just pasted in a moment ago right after that slash.
+
+03:59.000 --> 04:02.930
+And then after that we'll put in the name of our project directory.
+
+04:02.930 --> 04:04.300
+So in this case it's off.
+
+04:04.310 --> 04:06.080
+So I'll put in off over there.
+
+04:08.660 --> 04:09.620
+And that's it.
+
+04:11.480 --> 04:11.590
+Okay.
+
+04:11.720 --> 04:12.950
+So I'm going to save this file.
+
+04:13.960 --> 04:17.170
+And that's all we should have to change inside of our scaffold e-mail file.
+
+04:18.340 --> 04:22.030
+I'm then going to go back over to my diagram really quickly.
+
+04:22.360 --> 04:25.570
+So we just achieved step one and step two right there.
+
+04:25.810 --> 04:30.180
+So let's take another brief pause and we'll make sure that we do that initial setup of Ingress Engine
+
+04:30.190 --> 04:34.000
+X on our Google Cloud cluster again in the next video.

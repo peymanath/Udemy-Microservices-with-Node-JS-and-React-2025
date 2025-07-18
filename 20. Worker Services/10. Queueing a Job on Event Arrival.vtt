@@ -1,0 +1,283 @@
+WEBVTT
+
+00:01.060 --> 00:05.740
+In our exploration Q file, we have now created our Q and we've defined what we want to do whenever
+
+00:05.740 --> 00:07.180
+we receive a job.
+
+00:07.210 --> 00:11.620
+So in other words, we have taken care of this big thing right here, and we've written out this little
+
+00:11.620 --> 00:12.460
+bit of code.
+
+00:12.490 --> 00:16.630
+We've also added in some code to handle the payload or the data contained inside the job.
+
+00:17.050 --> 00:20.560
+Now, the last thing we have to do is make sure that at some point in time we write out some code that's
+
+00:20.560 --> 00:23.470
+going to actually cue a job or create a job.
+
+00:23.920 --> 00:27.940
+We want to create a job any time we receive the order created event.
+
+00:28.300 --> 00:32.350
+You might recall that a couple of videos ago we already put together our listener for the order created
+
+00:32.350 --> 00:36.940
+event, so we're now going to go into the order created listener that we already put together.
+
+00:37.120 --> 00:42.160
+Whenever we receive that event, we're going to write out some code to, in cue, a job using our Q.
+
+00:43.580 --> 00:44.000
+All right.
+
+00:44.000 --> 00:46.910
+So back inside, my editor, I'm going to find the listeners directory.
+
+00:47.420 --> 00:49.250
+And inside there, I'll find the order it created.
+
+00:49.250 --> 00:49.940
+Listener.
+
+00:51.350 --> 00:54.100
+Then at the very top, I'm going to import the Q that we just made.
+
+00:54.110 --> 00:55.100
+That's expiration.
+
+00:55.130 --> 00:55.700
+Q.
+
+00:56.450 --> 00:59.780
+From up to directories use exploration.
+
+00:59.780 --> 01:00.320
+Q.
+
+01:01.340 --> 01:02.870
+And then inside of on message.
+
+01:02.870 --> 01:06.410
+That's the point at which we are going to want to create a new job and keep it up.
+
+01:06.710 --> 01:12.710
+So to do so we are going to right out await expiration cue dot ad.
+
+01:13.390 --> 01:17.980
+And then inside of this thing as the first argument to add, we're going to put in the payload for this
+
+01:17.980 --> 01:22.180
+job or essentially the information that we want to stick into the job itself.
+
+01:22.770 --> 01:24.210
+We can mouse over that thing.
+
+01:24.210 --> 01:29.040
+And TypeScript is going to tell us that if we want to call the ad function, we have to provide a data
+
+01:29.040 --> 01:32.850
+argument that is essentially the payload that we just said that we were going to provide.
+
+01:33.240 --> 01:38.580
+So for you and I, we have to provide an object that has an order ID property.
+
+01:40.180 --> 01:41.920
+So where's the order ID coming from?
+
+01:41.950 --> 01:46.390
+Well, it's coming from the data object that we are receiving into the on message function.
+
+01:46.600 --> 01:49.870
+So we are receiving the data part of an order created event.
+
+01:50.770 --> 01:52.570
+And that thing has an ID property.
+
+01:52.570 --> 01:55.060
+That is the ID of the order that was just created.
+
+01:55.450 --> 01:56.560
+So we'll say data.
+
+01:56.980 --> 01:58.150
+ID like so.
+
+01:59.930 --> 02:03.620
+Then immediately after that, we will go ahead and take our message.
+
+02:04.260 --> 02:04.970
+The message.
+
+02:06.750 --> 02:11.640
+Now, one thing I want to point out right now, we have not added in any idea of delaying this message
+
+02:11.640 --> 02:13.350
+or this job, anything like that.
+
+02:13.350 --> 02:15.570
+There is no 15 minute delay right now.
+
+02:15.930 --> 02:21.270
+However, I want to test this out as it is and just make sure that if we receive an order created event,
+
+02:21.270 --> 02:27.150
+we can immediately publish a job and then process it in basically the next second.
+
+02:27.180 --> 02:32.340
+Eventually, we will want to have a 15 minute delay between adding the job and processing it.
+
+02:32.340 --> 02:35.040
+But right now, again, let's just get the stuff working.
+
+02:36.160 --> 02:36.580
+All right.
+
+02:36.580 --> 02:37.900
+So how are we going to test this?
+
+02:37.930 --> 02:39.770
+Well, we're going to do a realistic test.
+
+02:39.790 --> 02:43.120
+In other words, we're going to use Postman to create an order.
+
+02:43.270 --> 02:47.410
+But before we can do any of that, we still have to wire up a couple of things inside of our project.
+
+02:48.040 --> 02:53.170
+In particular, we need to make sure that we start up our listener or create an instance of this listener
+
+02:53.170 --> 02:55.150
+inside of our index file.
+
+02:55.180 --> 02:57.280
+We have not done that very basic thing just yet.
+
+02:57.670 --> 02:59.920
+So I'm going to go back over to my index file.
+
+03:02.320 --> 03:03.310
+At the very top.
+
+03:04.400 --> 03:07.580
+I will import the order created listener.
+
+03:09.570 --> 03:13.290
+From events listeners order created listener.
+
+03:17.570 --> 03:19.280
+Then after we connect Annette's.
+
+03:22.070 --> 03:23.360
+We'll create a new instance of that.
+
+03:23.360 --> 03:23.770
+Listener.
+
+03:23.780 --> 03:29.990
+So New Order created listener we're going to pass in our next client, which is natural client.
+
+03:30.780 --> 03:35.010
+And then remember to actually tell this thing to start listening, we have to manually call the listen
+
+03:35.010 --> 03:35.700
+function.
+
+03:36.430 --> 03:37.060
+Like so.
+
+03:38.030 --> 03:39.080
+And that should be it.
+
+03:40.140 --> 03:45.840
+Now when I save this, remember, there might be some events still inside of that streaming server of
+
+03:45.900 --> 03:48.660
+a type or with the subject of order created listener.
+
+03:48.900 --> 03:54.060
+And as soon as this thing starts listening, it's going to listen on a new queue group with a new durable
+
+03:54.060 --> 03:55.170
+subscription name.
+
+03:55.170 --> 03:59.220
+And so it is entirely possible that as soon as we save this file and we start listening, we're going
+
+03:59.220 --> 04:01.500
+to see a couple of events immediately come in.
+
+04:02.070 --> 04:07.140
+However, in the videos before this one I have and chances are you as well, you probably restarted
+
+04:07.140 --> 04:12.330
+your scaffold process and when you restarted scaffold, that probably restarted nets as well.
+
+04:12.330 --> 04:16.320
+So now it's probably dumped all the previous order created events it had.
+
+04:16.320 --> 04:20.910
+But if you did not restart scaffold for any reason a couple of videos ago, then again you might start
+
+04:20.910 --> 04:22.590
+to see a lot of output right away.
+
+04:23.400 --> 04:24.870
+Having said all that, let's just save this.
+
+04:24.900 --> 04:29.040
+Go back over to our scaffold window and see what's going on.
+
+04:30.380 --> 04:30.610
+Yes.
+
+04:30.620 --> 04:31.210
+Back over here.
+
+04:31.210 --> 04:31.510
+I see.
+
+04:31.510 --> 04:33.760
+Connected to nets and nothing else.
+
+04:34.000 --> 04:38.350
+That means that I don't have any events pending inside of that streaming server or any events to backfill
+
+04:38.350 --> 04:39.160
+or anything like that.
+
+04:39.160 --> 04:41.530
+Because, again, I just restarted it a couple of minutes ago.
+
+04:41.860 --> 04:44.560
+If you see a lot of console logs right now, totally fine.
+
+04:45.300 --> 04:48.270
+Now, assuming that you don't see any console logs, let's take a pause right here.
+
+04:48.270 --> 04:53.070
+When we come back, the next video we are going to manually through the process of creating a ticket
+
+04:53.070 --> 04:54.200
+and then creating an order.
+
+04:54.210 --> 04:57.200
+We're going to make sure that an order created event gets published.
+
+04:57.210 --> 05:00.270
+We're going to make sure it gets taught by this listener right here.
+
+05:00.360 --> 05:04.770
+And we'll make sure that we eventually and cue a job and then process that and see a console log of
+
+05:04.770 --> 05:06.360
+I want to publish, blah, blah, blah.
+
+05:07.160 --> 05:09.830
+So let's take a pause and try this all out in just a moment.

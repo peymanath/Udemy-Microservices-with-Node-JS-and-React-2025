@@ -1,0 +1,166 @@
+WEBVTT
+
+00:01.110 --> 00:05.130
+We've got some docker file and a docker ignore wired up to our post service.
+
+00:05.130 --> 00:09.960
+We now need to make sure that we can dock rise all of our other services as well, because all these
+
+00:09.960 --> 00:12.810
+other services are just about identical in nature to posts.
+
+00:12.810 --> 00:16.680
+In other words, they use node and they all have the same startup command of NPM start.
+
+00:16.680 --> 00:20.850
+We can really just use the exact same Docker, ignore and docker file with all the other ones.
+
+00:20.850 --> 00:24.510
+So we're really just going to take those two files and copy paste them all around.
+
+00:25.080 --> 00:27.360
+This is true even of the React project.
+
+00:27.360 --> 00:33.150
+The React project uses Node as a in a base environment, and it also gets started with NPM start as
+
+00:33.150 --> 00:33.630
+well.
+
+00:34.200 --> 00:38.970
+So let's get to it inside my post directory, I'll find the Docker ignore and Docker files.
+
+00:39.660 --> 00:44.400
+I'm going to highlight both them, copy them and I will paste them into query.
+
+00:46.650 --> 00:48.390
+I will paste them into moderation.
+
+00:50.130 --> 00:52.020
+Or pays them into event bus.
+
+00:54.390 --> 00:55.530
+Into comments.
+
+00:56.830 --> 00:58.660
+And finally into client.
+
+01:00.090 --> 01:06.060
+So naturally, if we had all these services being created using different languages or even some kind
+
+01:06.060 --> 01:10.320
+of subtle different environment or something like that, like let's say a different version of Node.
+
+01:10.320 --> 01:12.630
+Or maybe the startup command was different, who knows?
+
+01:12.930 --> 01:15.780
+Then we would want to customize the Docker file for every service.
+
+01:15.780 --> 01:19.620
+But because we were designing this project ahead of time and we had a pretty good idea of what was going
+
+01:19.620 --> 01:21.090
+to happen at some point in time in the future.
+
+01:21.090 --> 01:25.950
+I said, Hey, let's just go ahead and make these Docker files or write each of these projects so we
+
+01:25.950 --> 01:28.020
+can have identical Docker files for each one.
+
+01:28.020 --> 01:32.430
+But again, for a normal project, you would probably end up doing some kind of customization.
+
+01:33.200 --> 01:33.650
+All right.
+
+01:33.650 --> 01:37.730
+So just to make sure that everything works correctly, let's just pick one of these services at random
+
+01:37.730 --> 01:39.710
+and make sure that we can build an image out of it.
+
+01:39.830 --> 01:41.690
+So how about how about the event bus?
+
+01:41.720 --> 01:42.680
+Let's try that out.
+
+01:44.130 --> 01:45.090
+Back at my terminal.
+
+01:45.630 --> 01:49.770
+I'm going to change into the event bus directory and let's just go ahead and try to build an image.
+
+01:49.770 --> 01:51.290
+I don't really expect to see any air.
+
+01:51.300 --> 01:53.970
+We're just doing this to make sure nothing's going to go wrong.
+
+01:54.450 --> 02:00.300
+So inside the event bus directory, I'll do a Docker build dot and of course, if we wanted to, we
+
+02:00.300 --> 02:01.950
+could also tag this.
+
+02:04.200 --> 02:05.130
+So if we wanted to.
+
+02:05.840 --> 02:07.490
+So go ahead and run that command.
+
+02:08.090 --> 02:09.410
+We're going to go through the same steps.
+
+02:09.410 --> 02:11.530
+So we start off with Node as our base image.
+
+02:11.540 --> 02:12.870
+Set up the working directory.
+
+02:12.890 --> 02:15.710
+Copy over packaged JSON, install dependencies.
+
+02:15.800 --> 02:19.880
+Copy over all the other source code from our project and then set up the default command.
+
+02:20.300 --> 02:24.110
+And now we can take either the image ID or just the tag right here.
+
+02:27.460 --> 02:30.580
+Do a Docker run and then put in the image ID or the tag.
+
+02:32.120 --> 02:32.990
+And there we go.
+
+02:34.100 --> 02:34.430
+All right.
+
+02:34.430 --> 02:36.440
+So we've now dollarized, more or less.
+
+02:36.440 --> 02:40.760
+We haven't actually created images out of all these other services, but we certainly have the means
+
+02:40.760 --> 02:41.480
+to do so.
+
+02:41.750 --> 02:47.000
+So we've now more or less Docker ized our entire project, which means we're now going to take a pause,
+
+02:47.030 --> 02:49.890
+come back the next video and start to discuss Kubernetes.
+
+02:49.910 --> 02:53.810
+We're going to start to see how we can use Kubernetes beyond what we just discussed about how it works
+
+02:53.810 --> 02:54.360
+over here.
+
+02:54.380 --> 02:59.210
+A little bit ago, to run all these different containers and get all these containers communicating
+
+02:59.240 --> 03:00.650
+together very easily.

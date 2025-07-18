@@ -1,0 +1,193 @@
+WEBVTT
+
+00:00.850 --> 00:04.600
+The next thing we're going to fix inside of our ticketing service is our test suite.
+
+00:04.630 --> 00:08.770
+We spent a pretty good amount of time writing out some tests out of all of our different route handlers.
+
+00:08.770 --> 00:13.030
+But if we run our test suite right now, we're going to see that just about all of them are failing.
+
+00:13.540 --> 00:17.150
+So I'm going to go back over my terminal inside of my tickets service.
+
+00:17.170 --> 00:19.900
+I'll do an RPM run test to run all my tests.
+
+00:20.850 --> 00:24.180
+And then after a very brief warm up period, we will see.
+
+00:25.640 --> 00:26.450
+There we go.
+
+00:26.480 --> 00:28.070
+A ton of failures.
+
+00:28.370 --> 00:33.980
+Though it looks like the vast majority of these failures are being caused by an access Nats client before
+
+00:33.980 --> 00:34.670
+connecting.
+
+00:35.150 --> 00:39.740
+There are some others inside of here around Mongoose Air, but let me just tell you right now, these
+
+00:39.740 --> 00:43.400
+are essentially being thrown because of the failed Nats client stuff.
+
+00:43.990 --> 00:47.770
+So this all started to fail once we added in the event publishing.
+
+00:47.920 --> 00:49.120
+Why is it failing?
+
+00:49.150 --> 00:50.620
+Well, it's pretty straightforward.
+
+00:51.160 --> 00:56.470
+So whenever we are running our application, like inside of our development Kubernetes cluster, we've
+
+00:56.470 --> 01:00.070
+got our new ticket handler or the update ticket root handler.
+
+01:00.580 --> 01:02.740
+And inside of those, we've got a publisher.
+
+01:03.100 --> 01:06.690
+The publishers need a Nats client whenever they get created.
+
+01:06.700 --> 01:11.230
+So we have some way of actually publishing an event when running our application.
+
+01:11.230 --> 01:14.500
+Normally we have that other Nats wrapper file.
+
+01:14.500 --> 01:17.050
+Inside there is the Nats wrapper Singleton.
+
+01:17.440 --> 01:20.890
+And inside of that, we have our pre initialized Nats client.
+
+01:21.280 --> 01:26.620
+So we take that initialize Nats client, we throw it into the publisher and everything works as expected.
+
+01:27.220 --> 01:31.930
+But in our test environment, well, not quite so nice in our test environment.
+
+01:31.930 --> 01:35.290
+At no point in time do we actually initialize the Nat's client.
+
+01:35.290 --> 01:37.030
+So it is not initialized.
+
+01:37.030 --> 01:41.140
+We have not created a Nats client inside of that Nats wrapper, Singleton.
+
+01:41.950 --> 01:46.110
+However, we still import that thing over into the ticket created publisher.
+
+01:46.120 --> 01:51.430
+We provide it and eventually when our publisher tries to access that client, we throw that nasty error
+
+01:51.430 --> 01:52.810
+message that says.
+
+01:55.180 --> 01:56.140
+Right here.
+
+01:56.870 --> 01:59.450
+Cannot access Nat's client before connecting.
+
+02:00.150 --> 02:01.680
+So how are you going to fix this?
+
+02:02.190 --> 02:04.080
+There's definitely two approaches we can take.
+
+02:04.110 --> 02:09.180
+We can either try to have our test environment actually connect to our net server.
+
+02:09.630 --> 02:14.130
+That's not super ideal because we don't really want to assume that we always have some running at Nats
+
+02:14.130 --> 02:16.860
+event bus whenever we are trying to run our tests.
+
+02:17.040 --> 02:22.800
+That would require us to always be running some copy of Nats on our local machine or some other mechanism
+
+02:22.800 --> 02:23.490
+to run it.
+
+02:23.790 --> 02:25.080
+So not super ideal.
+
+02:25.380 --> 02:28.410
+Maybe there's another way to handle this, and naturally there is.
+
+02:28.980 --> 02:30.180
+But here's what we're going to do.
+
+02:31.350 --> 02:34.740
+We're going to use a fancy little feature inside of jest.
+
+02:34.770 --> 02:39.450
+You might recall that jest is our test runner just as what we are actually running when we execute our
+
+02:39.450 --> 02:42.610
+tests inside the terminal, when we execute our tests.
+
+02:42.630 --> 02:46.890
+We are using the jest test runner and there is also the Jest library running inside of our test suite
+
+02:46.890 --> 02:47.580
+as well.
+
+02:48.240 --> 02:53.700
+Just as a fancy little feature, we essentially redirect import statements while we are running our
+
+02:53.700 --> 02:55.860
+application in the test environment.
+
+02:56.400 --> 03:02.070
+So at some point in time, our new ticket handler attempts to import the Nats wrapper file.
+
+03:02.280 --> 03:04.830
+That's kind of represented by this little white box right here.
+
+03:05.430 --> 03:08.940
+We're going to get just to intercept that import statement.
+
+03:08.970 --> 03:13.470
+It's going to see that this file is trying to import the real Nats wrapper and we're going to instead
+
+03:13.470 --> 03:19.830
+have just kind of redirect that import statement and import a fake copy of the Nats wrapper instead.
+
+03:20.560 --> 03:24.190
+And inside there we will have a fake initialized Nats client.
+
+03:24.310 --> 03:27.520
+Now when I say fake initialized nets client, I really do mean fake.
+
+03:27.520 --> 03:31.090
+We're not going to actually connect to the net server or anything like that.
+
+03:31.300 --> 03:36.580
+We're going to instead kind of trick everything into thinking that this is a real Nets client, but
+
+03:36.580 --> 03:38.260
+in fact not real at all.
+
+03:39.240 --> 03:40.290
+That's the general idea.
+
+03:41.390 --> 03:45.500
+At this point, it seems a little bit weird, I'm sure, but it turns out that the code we have to write
+
+03:45.500 --> 03:48.230
+out to actually implement this stuff is pretty straightforward.
+
+03:48.470 --> 03:51.980
+Let's take a pause right here and figure out how to put this stuff together in the next video.

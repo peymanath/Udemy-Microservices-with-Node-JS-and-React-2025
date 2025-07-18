@@ -1,0 +1,193 @@
+WEBVTT
+
+00:01.820 --> 00:05.240
+We've now created a cluster IP service for the event bus and for posts.
+
+00:05.270 --> 00:07.840
+It's now it's time for us to wire it all up.
+
+00:07.850 --> 00:10.130
+But what do I really mean by that step right there?
+
+00:10.160 --> 00:11.930
+Well, let's go back to our code editor.
+
+00:11.930 --> 00:14.210
+I want to open up our post project once again.
+
+00:14.210 --> 00:17.420
+And I just want to give you a quick reminder about some code that we wrote inside there.
+
+00:17.930 --> 00:22.640
+So back inside, my editor, I will find the post project and the indexed JS file inside.
+
+00:23.180 --> 00:26.600
+I'm then going to scroll down a little bit to where we were creating a new post.
+
+00:27.140 --> 00:33.050
+Right after we created a post, we then made a request out to our event bus and remember to access our
+
+00:33.050 --> 00:33.710
+event bus.
+
+00:33.710 --> 00:37.730
+We had to use a URL of localhost 4005.
+
+00:38.430 --> 00:43.860
+This exact URL right here only worked correctly when we were running the event bus on our local machine
+
+00:43.860 --> 00:45.960
+and not inside of, say, Kubernetes.
+
+00:45.990 --> 00:49.560
+Kubernetes right now technically is on our local machine, but you know what I mean?
+
+00:50.280 --> 00:56.160
+So we can no longer reach out to local host 4005 to get at our event bus, we have to replace this URL
+
+00:56.160 --> 00:57.630
+with some new URL.
+
+00:58.050 --> 00:59.820
+So what is that new URL going to be?
+
+01:00.060 --> 01:04.050
+Well, let's take a look at a diagram that's just going to give you a quick reminder on what our current
+
+01:04.050 --> 01:05.010
+setup looks like.
+
+01:05.490 --> 01:06.900
+So this is what we are doing right now.
+
+01:06.900 --> 01:11.640
+We've got our pod for posts, pod for event bus, and we've got a cluster IP service for each.
+
+01:12.210 --> 01:18.870
+So we need to figure out how we're going to reach over and make a request to this cluster IP service
+
+01:18.870 --> 01:24.360
+and hopefully that thing will forward the request on to the event bus that we want to make a request
+
+01:24.360 --> 01:26.450
+over to that cluster IP service.
+
+01:26.460 --> 01:28.980
+What is the URL we are going to type in?
+
+01:29.520 --> 01:35.190
+The URL that we're going to type in is going to be equal to the name of that cluster IP service.
+
+01:36.580 --> 01:41.170
+The exact name of that cluster IP service we can retrieve by going back over to our terminal and doing
+
+01:41.170 --> 01:43.570
+a CTL get services.
+
+01:44.050 --> 01:47.620
+So the exact name is Event Bus CRV.
+
+01:48.330 --> 01:56.280
+So if we want to reach out to the event bus service service, we are going to make a request to HTTP,
+
+01:56.610 --> 01:59.100
+event bus, CRV.
+
+01:59.760 --> 02:00.540
+And that's it.
+
+02:01.220 --> 02:04.640
+That's how we reach out from one pod to another service.
+
+02:04.760 --> 02:06.380
+We just put in HTTP.
+
+02:06.410 --> 02:09.560
+Then the exact name of the service we want to reach out to.
+
+02:10.300 --> 02:14.860
+Naturally, if we are trying to make a request to a very specific port, we will add that on as well.
+
+02:15.010 --> 02:18.840
+So our event bus service is listing for traffic on port 4005.
+
+02:18.850 --> 02:22.900
+So we would put on Colon 4005 on the very end as well.
+
+02:27.120 --> 02:31.800
+The same exact thing is true if our event bus is trying to reach out to the cluster IP service that
+
+02:31.800 --> 02:33.630
+is pointing at all of our postpaid.
+
+02:34.210 --> 02:39.010
+So our service that's governing all those post pods is posts, cluster IP.
+
+02:40.510 --> 02:43.780
+So this is post cluster IP.
+
+02:45.550 --> 02:50.500
+So if you want our event bus to reach out to that service, it would make a request to.
+
+02:53.330 --> 02:59.870
+Both Lester IP, CRV and then the appropriate port, which in this case is 4000.
+
+03:00.880 --> 03:04.000
+And so that would be going from over here.
+
+03:04.920 --> 03:06.930
+Down to that service.
+
+03:08.450 --> 03:09.400
+That's pretty much it.
+
+03:10.530 --> 03:15.480
+So the takeaway here is that any time that we want to have some communication between pods, we're always
+
+03:15.480 --> 03:18.930
+going to create a cluster IP service for the pod we're trying to reach out to.
+
+03:18.960 --> 03:25.350
+Once we have created that cluster IP service to make a request to it, we're going to write in a URL
+
+03:25.380 --> 03:28.050
+of HTTP and then the name of the service.
+
+03:30.180 --> 03:34.350
+So back on this diagram, when I said wire it all up, I pretty much just mean we need to go around
+
+03:34.350 --> 03:37.110
+inside of our index file in the post project.
+
+03:37.110 --> 03:41.970
+And any time we try to reach out to our event bus, we need to replace local host with the name of the
+
+03:41.970 --> 03:43.950
+service for the event bus.
+
+03:44.340 --> 03:46.770
+And the same is true of our event bus as well.
+
+03:46.800 --> 03:52.500
+If we open up our event bus indexed JS file, remember inside of here we are trying to make requests
+
+03:52.500 --> 03:54.120
+to localhost 4000.
+
+03:54.150 --> 03:57.510
+So rather than putting local host right there, we'll put the name of the service that we are trying
+
+03:57.510 --> 03:58.470
+to reach out to.
+
+04:00.430 --> 04:00.720
+Okay.
+
+04:00.730 --> 04:02.790
+Let's start making these changes in the next video.
+
+04:02.800 --> 04:08.020
+After we make these changes will then rebuild our images and update our deployments so that they are
+
+04:08.020 --> 04:09.310
+running this new code.

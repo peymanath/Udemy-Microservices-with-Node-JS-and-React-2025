@@ -1,0 +1,370 @@
+WEBVTT
+
+00:00.880 --> 00:03.640
+We're not ready to start development of our service.
+
+00:03.670 --> 00:08.080
+Now, remember, a couple of videos ago I told you that we were going to take a very testing heavy approach
+
+00:08.080 --> 00:12.790
+in the development of this application before we worry about setting up any additional tooling around
+
+00:12.790 --> 00:13.880
+testing or anything like that.
+
+00:13.900 --> 00:18.370
+However, I think that we should just make sure that we can do some manual testing using something like,
+
+00:18.400 --> 00:22.960
+say, Postman, just so we can get started with this authentication stuff and continue making some progress
+
+00:22.960 --> 00:23.560
+forward.
+
+00:24.040 --> 00:29.260
+So in this video, we're going to set up a route handler for the root of API users, current user.
+
+00:29.650 --> 00:31.300
+Whenever we make a git request to that.
+
+00:31.420 --> 00:33.790
+Right now we'll just send back some dummy response.
+
+00:33.790 --> 00:36.970
+So maybe some little message like hi there or something like that.
+
+00:37.240 --> 00:40.210
+Well then make sure that we can access that inside of our browser.
+
+00:40.300 --> 00:41.560
+So let's get to it.
+
+00:43.260 --> 00:46.590
+I'm going to first get started by going to my author directory.
+
+00:46.590 --> 00:50.940
+Inside they'll find the CRC folder and then the index file inside of there.
+
+00:51.670 --> 00:55.510
+Then inside there I'm going to add in a git request handler.
+
+00:55.540 --> 00:57.100
+They'll do it in git.
+
+00:57.430 --> 01:02.470
+We want to listen for an incoming request on the root of API users current user.
+
+01:02.920 --> 01:06.280
+So API users current user.
+
+01:06.820 --> 01:10.750
+And I'll add in my callback with rec and rez like so.
+
+01:14.160 --> 01:15.180
+Then inside of here.
+
+01:15.920 --> 01:21.290
+We're going to take that response and we'll send back something like, Hi there for right now.
+
+01:22.030 --> 01:23.230
+Well, then save this file.
+
+01:23.800 --> 01:25.840
+I should then be able to go back over to my terminal.
+
+01:26.800 --> 01:30.460
+And confirm that my observer has automatically restarted.
+
+01:31.200 --> 01:31.440
+Okay.
+
+01:31.470 --> 01:32.310
+So it looks good.
+
+01:32.760 --> 01:38.970
+So now we need to be able to somehow access our running server, specifically our auth pod.
+
+01:39.570 --> 01:44.270
+Remember that to access anything inside of our cluster, we have to set up one of two things.
+
+01:44.280 --> 01:45.600
+We really have two options.
+
+01:45.600 --> 01:50.790
+We can either set up one of those node port services or we can set up that ingress service.
+
+01:51.120 --> 01:57.240
+Remember that ingress is all about having some routing rules tied to engine x, so at any time a request
+
+01:57.240 --> 02:01.050
+comes into our cluster, it'll be handled by that ingress service.
+
+02:01.080 --> 02:04.380
+They'll be routed off to the appropriate service within our cluster.
+
+02:04.650 --> 02:05.840
+So that's what we're going to do right now.
+
+02:05.850 --> 02:10.770
+We're going to add in a little bit of configuration rules to ingress engine X, just as we did on our
+
+02:10.770 --> 02:11.970
+last application.
+
+02:13.420 --> 02:15.880
+Now quick reminder about Ingress and X in general.
+
+02:16.240 --> 02:21.310
+Between the last application and this one, we did not delete ingress and gen genetics or anything like
+
+02:21.310 --> 02:22.690
+that out of our cluster.
+
+02:22.720 --> 02:28.420
+When we stopped our scaffold tool from the last application just a couple of videos ago, we deleted
+
+02:28.420 --> 02:33.640
+all the deployments, services and pods that were listed inside of our project.
+
+02:33.640 --> 02:40.090
+From that last project, we did not delete anything specifically tied to Ingress Engine X beyond our
+
+02:40.090 --> 02:41.500
+set of config rules.
+
+02:41.680 --> 02:47.560
+So in other words, you should not have to reinstall ingress engine x right now unless you for some
+
+02:47.560 --> 02:54.010
+reason reset your cluster between the last application and this one, or manually deleted all the ingress
+
+02:54.010 --> 02:55.870
+engine X stuff or something like that.
+
+02:56.530 --> 03:01.510
+So we should only have to write out a new config file for ingress engine x and that config file will
+
+03:01.510 --> 03:05.170
+be loaded into our existing copy of the ingress engine x controller.
+
+03:05.170 --> 03:08.890
+That is all running or still running, I should say, inside of our cluster.
+
+03:09.480 --> 03:14.320
+As a quick reminder, if you did restart your cluster or reset it or anything like that for any reason
+
+03:14.320 --> 03:20.140
+to get ingress in Gen X reinstalled, all you should to do is come to the documentation page.
+
+03:20.170 --> 03:21.250
+Go to deployment.
+
+03:22.030 --> 03:24.250
+Run the mandatory command right here.
+
+03:25.560 --> 03:31.740
+And then run either the Docker for Mac, this is also the Docker for Windows option or the mini cube
+
+03:31.740 --> 03:32.880
+command right there.
+
+03:33.970 --> 03:34.270
+Okay.
+
+03:34.270 --> 03:36.130
+So once you get that stuff all set up.
+
+03:37.500 --> 03:42.690
+We're going to put together a ingress config file once again, and we're going to make sure that any
+
+03:42.690 --> 03:49.380
+time a request comes in for a request to a root of API users, we're going to send it off to our service.
+
+03:49.560 --> 03:50.880
+So let's do that right away.
+
+03:51.900 --> 03:52.980
+Back inside my editor.
+
+03:52.980 --> 03:55.980
+I'm going to find my infrared directory inside the kids folder.
+
+03:55.980 --> 04:00.630
+Inside there, I'm going to create a new file called Ingress XVII, HTML.
+
+04:01.930 --> 04:07.540
+But inside of here, we're going to write some configuration to tell the Ingress Engine X controller
+
+04:07.540 --> 04:09.850
+exactly how to handle incoming requests.
+
+04:10.330 --> 04:11.800
+So we'll say API version.
+
+04:13.410 --> 04:14.220
+Extensions.
+
+04:14.220 --> 04:15.390
+Slash v one.
+
+04:15.480 --> 04:16.860
+Beta one.
+
+04:18.260 --> 04:19.870
+Find of ingress.
+
+04:21.190 --> 04:25.720
+Metadata are going to give it a name of ingress service.
+
+04:27.040 --> 04:29.140
+We're going to put on an annotation section.
+
+04:29.740 --> 04:32.920
+The first annotation we will add in is Kubernetes.
+
+04:33.220 --> 04:35.740
+I o and double check your spelling on Kubernetes right there.
+
+04:35.740 --> 04:37.630
+Very easy word to mistype.
+
+04:38.980 --> 04:42.580
+Ingress class is engine x.
+
+04:44.890 --> 04:54.130
+And then engine x dot ingress dot kubernetes dot io slash use reg x of true and remember true needs
+
+04:54.130 --> 04:55.090
+to be inside of quotes like.
+
+04:55.090 --> 05:00.910
+So don't forget that that this overall annotation right here is telling Engine X that it should expect
+
+05:00.910 --> 05:04.150
+that some are different paths that we're going to list and the bottom half of the file are going to
+
+05:04.150 --> 05:05.950
+have regular expressions inside them.
+
+05:07.690 --> 05:09.430
+Well, then put together our specs section.
+
+05:10.170 --> 05:13.350
+We're going to have a set of rules, just one rule right now.
+
+05:13.350 --> 05:14.640
+So I'll put in a dash.
+
+05:15.580 --> 05:17.400
+The rules, specify our host.
+
+05:17.880 --> 05:22.140
+Remember that the host right here is going to be a kind of pretend domain name.
+
+05:22.410 --> 05:26.250
+So we're going to put in some made up domain name right there that we're going to be able to connect
+
+05:26.250 --> 05:28.410
+to only from our local machine.
+
+05:28.890 --> 05:32.070
+So whatever domain name that we're going to enter and right there, we're going to make sure we also
+
+05:32.070 --> 05:36.600
+go over and edit our host file as well, just as we did on the last project.
+
+05:37.170 --> 05:41.880
+I'm going to use a made up domain name of tickets that.
+
+05:43.190 --> 05:43.670
+Dev.
+
+05:43.670 --> 05:45.440
+And how about I'll do ticketing?
+
+05:46.680 --> 05:47.390
+Dot dev.
+
+05:47.970 --> 05:51.750
+So this is my made up domain name that is only going to work on my local machine.
+
+05:53.120 --> 05:56.780
+I'll then put in an HTTP section with paths.
+
+05:57.080 --> 05:59.630
+We're going to have one entry inside of here for right now.
+
+06:00.340 --> 06:03.040
+So I'm going to give it a path of slash API.
+
+06:03.070 --> 06:04.060
+Slash users.
+
+06:04.060 --> 06:04.870
+Slash.
+
+06:04.870 --> 06:05.920
+Question mark.
+
+06:06.490 --> 06:07.540
+Parentheses.
+
+06:07.960 --> 06:09.160
+Dot star.
+
+06:10.090 --> 06:15.790
+So that means that any time someone makes a request to our cluster and the request has a path of API
+
+06:15.790 --> 06:22.690
+slash users slash anything, then we're going to send that request on to this listed back end.
+
+06:23.660 --> 06:29.900
+In this case, we want to send it to the service that has a name of CRV.
+
+06:32.050 --> 06:36.910
+Remember that name is coming right there from the service we created just a moment ago inside of our
+
+06:37.420 --> 06:38.230
+Apple File.
+
+06:38.410 --> 06:42.010
+There's the name of the service that we want to send the request to, and we want to make sure that
+
+06:42.010 --> 06:43.870
+we send it to the service on the port.
+
+06:43.870 --> 06:44.800
+3000.
+
+06:45.570 --> 06:50.250
+So we'll do that service name along with a service port of 3000 as well.
+
+06:52.620 --> 06:53.760
+And then I'll save this file.
+
+06:54.830 --> 06:58.880
+Once I save the file, I should be able to go back over to my terminal and see that the Ingress service
+
+06:58.880 --> 06:59.840
+was configured.
+
+07:00.590 --> 07:01.430
+So that looks good.
+
+07:02.090 --> 07:03.550
+Well, let's take a quick pause right here.
+
+07:03.550 --> 07:06.880
+When we come back, the next video, we still have to do a little bit of setup.
+
+07:06.880 --> 07:11.170
+So remember, we have to update our host file on our local machine to make sure that any time we make
+
+07:11.170 --> 07:16.360
+a request to ticketing dev, it redirects that request to our local machine or it stays on our local
+
+07:16.360 --> 07:16.960
+machine.
+
+07:17.500 --> 07:19.300
+So we'll take care of that in just a moment.

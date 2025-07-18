@@ -1,0 +1,232 @@
+WEBVTT
+
+00:00.590 --> 00:04.850
+In the last video, we were able to sign up for the very first time and get back a JSON Web token.
+
+00:05.210 --> 00:10.310
+Now, this right here is not exactly a JSON Web token, but it does kind of technically contain it.
+
+00:10.520 --> 00:14.960
+The value that we're actually looking at is that session object that we just set.
+
+00:14.990 --> 00:22.670
+So in other words, this session object right here that got turned into JSON and then base 64 encoded.
+
+00:22.970 --> 00:27.620
+So to actually get the JSON Web token out of here, we've got to do just a little bit of work.
+
+00:27.680 --> 00:30.620
+Let's go through it just one time just to make sure it's all crystal clear.
+
+00:31.130 --> 00:32.630
+So I'm going to take that value right there.
+
+00:33.910 --> 00:35.020
+I'm going to copy it.
+
+00:35.050 --> 00:37.030
+I'm then going to go over to my browser.
+
+00:37.780 --> 00:42.670
+And I'm going to go to a website called Base 64 decoded dot org.
+
+00:43.150 --> 00:50.020
+This is a little tool that can take a base 64 string and then play or decode it into plain UTF eight.
+
+00:51.820 --> 00:54.460
+So I'll paste in that whole string.
+
+00:54.490 --> 00:55.510
+I'll hit decode.
+
+00:56.050 --> 00:58.870
+And there is our JSON object right there.
+
+00:59.960 --> 01:05.950
+So you'll see that we do have in fact that JWT property and inside that string that is the actual honest
+
+01:05.950 --> 01:07.570
+to god JSON web token.
+
+01:08.400 --> 01:10.680
+So let's play around with that string a little bit, too.
+
+01:10.710 --> 01:12.990
+I'm going to take just the JSON Web token.
+
+01:13.290 --> 01:17.880
+I'm going to copy it and I'll go to yet another website called JWT.
+
+01:18.190 --> 01:23.580
+I Oh, this is a website just to help raise awareness of JSON Web tokens and how they work.
+
+01:23.850 --> 01:28.890
+If you come to JWT, IO and then scroll down a little bit, there's a little tool that you can use to
+
+01:28.890 --> 01:34.680
+take a look at JSON Web tokens and just make sure that they are actually properly encoded, see the
+
+01:34.680 --> 01:36.480
+information inside them and all that stuff.
+
+01:37.120 --> 01:40.810
+So I'm going to take the JSON Web token and put it in on the left hand side.
+
+01:42.230 --> 01:45.770
+I'll then go to the right hand side and down here inside a verify signature.
+
+01:45.800 --> 01:50.390
+We're going to put in the signing key that we wrote into our code just a moment ago.
+
+01:50.390 --> 01:52.400
+So for me it was simply a PDF.
+
+01:53.140 --> 01:55.720
+It's all put in right here, SDF.
+
+01:56.200 --> 01:59.040
+As soon as I do so you'll see that says signature verified.
+
+01:59.050 --> 02:01.780
+So that is the proof that this is a valid token.
+
+02:02.170 --> 02:06.340
+If some malicious user came along and tried to change the information inside of here.
+
+02:06.340 --> 02:09.970
+So let's say they change essentially anything inside of here.
+
+02:09.970 --> 02:11.890
+So I'm going to go ahead and delete a character.
+
+02:12.280 --> 02:15.010
+All of a sudden, it is no longer a valid token.
+
+02:15.250 --> 02:15.760
+We tried it.
+
+02:16.120 --> 02:22.570
+We tried to verify that this was a valid token using that signing signature of SDF and note it failed
+
+02:22.570 --> 02:26.620
+to check which would be assigned to you and I as developers, that someone has messed around with this
+
+02:26.620 --> 02:28.720
+thing and we should no longer trust it.
+
+02:29.580 --> 02:33.480
+As soon as I put in the valid token, once again, the whole thing is valid.
+
+02:34.790 --> 02:39.050
+You'll notice that on the right hand side we can see the payload inside of here very easily.
+
+02:39.110 --> 02:46.220
+Just, you know, you can see this payload even if we have a invalid token or you don't need that signing
+
+02:46.340 --> 02:48.740
+that signing string right there, we can delete that entirely.
+
+02:48.860 --> 02:53.000
+And we could still see all the information inside this payload just fine.
+
+02:53.240 --> 02:57.800
+So remember, with the JSON web token, anyone can see the information inside of it, and it is the
+
+02:57.800 --> 03:02.990
+fact that we can verify that no one has messed around with this information that actually makes it significant.
+
+03:03.590 --> 03:09.380
+We can see the ID of the user, we can see their email and then IAT right here is the issued at time.
+
+03:09.380 --> 03:11.750
+That is when the JSON web token was actually created.
+
+03:12.940 --> 03:13.270
+Okay.
+
+03:13.270 --> 03:14.620
+So that all looks pretty good.
+
+03:16.230 --> 03:17.520
+So now a quick diagram.
+
+03:18.460 --> 03:21.520
+Just want to expand on that signing key just a little bit.
+
+03:21.730 --> 03:23.110
+So we took the payload.
+
+03:23.140 --> 03:28.450
+We took the signing key and we tossed them into our JSON web token library and that spat out our actual
+
+03:28.450 --> 03:29.650
+JSON web token.
+
+03:30.070 --> 03:35.440
+Any time that we are going to receive this JSON Web token inside of another service, when we need to
+
+03:35.470 --> 03:39.790
+see whether or not it is a valid token to decide whether or not this user is actually logged in.
+
+03:39.790 --> 03:44.560
+That means that those other services are going to need to get access to that signing key, because it's
+
+03:44.560 --> 03:49.180
+only with that signing key that we can make sure that a token is actually valid.
+
+03:51.150 --> 03:55.860
+Now the downside here, we're essentially talking about sharing this signing key with all these other
+
+03:55.860 --> 03:56.670
+services.
+
+03:56.910 --> 04:02.190
+If anyone ever got access to that signing key, they could easily manufacture their own tokens that
+
+04:02.190 --> 04:04.260
+our application would think are valid.
+
+04:04.740 --> 04:09.750
+So we essentially need to share the signing key with all of our other services, but we need to make
+
+04:09.750 --> 04:11.970
+sure that no one else gets their hands on it.
+
+04:12.420 --> 04:18.360
+So as you guess, writing out that signing key in plain text, as we are doing right here, is not appropriate
+
+04:18.360 --> 04:18.990
+at all.
+
+04:19.200 --> 04:23.550
+At no point in time unless we are in a development environment just messing around a little bit.
+
+04:23.550 --> 04:26.400
+Do we want to write out that signing key in plain text?
+
+04:26.580 --> 04:33.000
+So we need to figure out some way to extract that signing key, store it securely somehow within our
+
+04:33.000 --> 04:34.170
+overall application.
+
+04:34.320 --> 04:39.750
+And we need to make sure that we can easily share that exact signing key with everything inside of our
+
+04:39.750 --> 04:39.930
+app.
+
+04:39.930 --> 04:44.400
+So all the other different services that are going to eventually receive a JSON web token.
+
+04:45.230 --> 04:48.800
+So this really comes down to a challenge with Docker and Kubernetes.
+
+04:48.950 --> 04:50.030
+Let's take a pause right here.
+
+04:50.060 --> 04:54.050
+When we come back, the next video, we're going to figure out how we can securely share information
+
+04:54.050 --> 04:55.790
+throughout all of our different services.

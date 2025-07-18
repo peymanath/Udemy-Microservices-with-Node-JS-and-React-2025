@@ -1,0 +1,307 @@
+WEBVTT
+
+00:00.760 --> 00:04.390
+In this video, I'm going to show you a slightly better way of writing out this build user function
+
+00:04.390 --> 00:06.520
+so it's not a separate standalone function.
+
+00:06.530 --> 00:11.500
+Instead, we're going to get this thing built in or included with our user model.
+
+00:11.800 --> 00:15.360
+The end goal here, what we're really going for is to kind of cut to the chase.
+
+00:15.370 --> 00:22.930
+What I really want to do is be able to say user built and then pass in an email and a password.
+
+00:23.870 --> 00:27.290
+The nice thing about this approach, if we could get it to work, we no longer have to export.
+
+00:27.290 --> 00:31.550
+A separate thing from this file and create a new user is kind of a natural thing.
+
+00:31.550 --> 00:34.810
+We say user built, build me a new user, create a new one.
+
+00:34.820 --> 00:39.620
+It makes a lot of sense and it possibly even makes more sense than this approach.
+
+00:39.620 --> 00:44.210
+Over here where we say new user, it's just a little bit easier to understand what is going on because
+
+00:44.210 --> 00:46.250
+we've got that build method name in there.
+
+00:46.820 --> 00:49.340
+So that's the refactor or the change we're going to make.
+
+00:49.340 --> 00:55.430
+We're going to figure out how to build in or include this build user function on the user model itself.
+
+00:56.310 --> 01:01.680
+So let me show you how we do that to add in a new method to our user model.
+
+01:01.680 --> 01:06.300
+So really that thing right there, we're going to take a look back at our user schema.
+
+01:07.670 --> 01:13.080
+Right above where we create the new user or the user model, I'm going to write out user schema, dot
+
+01:13.130 --> 01:19.490
+statics, dot build, and then I'm going to assign to that same function that we wrote down a little
+
+01:19.490 --> 01:19.940
+bit ago.
+
+01:19.940 --> 01:24.620
+So this one right here, so we'll say adders is user adders.
+
+01:26.140 --> 01:29.290
+And then return new user with adders.
+
+01:29.800 --> 01:34.570
+I'm now going to remove the old build user and delete it from the export list as well.
+
+01:35.400 --> 01:39.480
+So this is how we get a custom function built into a model.
+
+01:39.510 --> 01:42.780
+We add it to this static property on our schema.
+
+01:43.470 --> 01:46.870
+Now it definitely appears like this works, but let's try to actually use it.
+
+01:46.890 --> 01:47.880
+So a quick test right here.
+
+01:47.880 --> 01:49.470
+I'll say user build.
+
+01:50.830 --> 01:53.500
+And sure enough, I still end up getting an heir.
+
+01:53.890 --> 01:58.570
+So this is yet another point at which getting TypeScript and Mongoose to work together is just a little
+
+01:58.570 --> 01:59.380
+bit awkward.
+
+01:59.620 --> 02:04.030
+TypeScript does not understand what it means to assign a property to the static object.
+
+02:04.330 --> 02:07.260
+If we were making use of JavaScript, everything would work just fine.
+
+02:07.270 --> 02:10.420
+And to be truthful with you, this right here, it is accurate code.
+
+02:10.420 --> 02:11.210
+Everything we have.
+
+02:11.230 --> 02:11.980
+Totally accurate.
+
+02:11.980 --> 02:16.540
+This is how we add a function to a use to a model in Mongoose.
+
+02:16.810 --> 02:21.610
+But TypeScript just doesn't understand that we have to give a little bit more information to TypeScript.
+
+02:21.910 --> 02:24.040
+So let me show you how we're going to fix this.
+
+02:24.490 --> 02:26.410
+I'm going to go back up to the top of the file again.
+
+02:27.040 --> 02:32.770
+I'm going to add in yet another comment and I'm going to say an interface that describes the.
+
+02:35.500 --> 02:39.640
+Properties that a user model has.
+
+02:40.090 --> 02:44.590
+So we're going to write out an interface that's going to essentially tell TypeScript that there's going
+
+02:44.590 --> 02:48.160
+to be a build function available on this user model.
+
+02:48.730 --> 02:52.840
+We're going to say that there is a build function and we're going to tell it what arguments are required
+
+02:52.840 --> 02:54.070
+to call it as well.
+
+02:56.250 --> 02:57.330
+So I'm going to write out.
+
+02:58.060 --> 02:59.080
+Interface.
+
+03:00.090 --> 03:01.320
+User model.
+
+03:02.650 --> 03:04.180
+I'm going to say extends.
+
+03:05.050 --> 03:07.300
+Mongoose model.
+
+03:07.990 --> 03:10.590
+We're going to take a look at this existing interface right here.
+
+03:10.600 --> 03:11.590
+I know there's an error right there.
+
+03:11.620 --> 03:12.230
+Don't worry about that.
+
+03:12.250 --> 03:13.600
+We'll fix it up in just a moment.
+
+03:14.390 --> 03:17.260
+I want to take all the properties that already exist on that interface.
+
+03:17.270 --> 03:21.440
+I want to add them into this new one that we are creating, and I want to add in some new properties
+
+03:21.440 --> 03:22.400
+on top of that.
+
+03:22.850 --> 03:25.770
+And we are getting an air from this right now to fix that air.
+
+03:25.790 --> 03:29.720
+We're going to put in a set of angle brackets and then right any inside there, we're going to come
+
+03:29.720 --> 03:31.870
+back and discuss what's going on with that just a moment.
+
+03:31.880 --> 03:33.680
+But right now, we'll just leave in any.
+
+03:34.690 --> 03:37.600
+Then on this interface, we're going to write in that build method.
+
+03:37.600 --> 03:42.520
+And again, this is going to tell TypeScript about the existence of the build method and what properties
+
+03:42.520 --> 03:43.330
+it accepts.
+
+03:44.230 --> 03:46.030
+So inside of here we'll write out built.
+
+03:46.820 --> 03:48.920
+It's going to take an argument called adders.
+
+03:49.400 --> 03:51.980
+It must be of type user adders.
+
+03:54.910 --> 03:59.860
+And from that we are going to return right now just any.
+
+04:00.920 --> 04:03.680
+We're going to come back and fix up that any as well in just a moment.
+
+04:04.970 --> 04:09.920
+So now that we've got this interface put together, TypeScript can understand about what a real user
+
+04:09.920 --> 04:10.880
+model is.
+
+04:11.180 --> 04:15.170
+All we have to do is really tell TypeScript about the existence of this interface.
+
+04:16.180 --> 04:17.560
+So I'm going to go back down.
+
+04:18.270 --> 04:20.760
+To where we created our mongoose model right here.
+
+04:21.480 --> 04:24.090
+I'm going to put a set of angled brackets after model.
+
+04:24.330 --> 04:27.390
+I'm going to write in any and then user model.
+
+04:27.900 --> 04:31.110
+And as soon as I do so, you'll notice that the air right here changes.
+
+04:32.480 --> 04:37.220
+TypeScript is no longer complaining that we're trying to access a build property on user anymore.
+
+04:37.250 --> 04:40.490
+Instead, it's transferred the heir to the set of early braces.
+
+04:40.700 --> 04:44.690
+So now it's telling us, Hey, if you want to create a new user or if you want to call this build method,
+
+04:44.690 --> 04:47.000
+you must pass in an email and a password.
+
+04:47.270 --> 04:54.440
+So now if I put in an email of test at test and a password of password, those errors go away.
+
+04:55.610 --> 05:00.770
+So we've now told TypeScript about this additional property that the user model is going to have.
+
+05:01.160 --> 05:02.600
+It definitely looks like it works out.
+
+05:03.230 --> 05:08.090
+Now, even though this works, unfortunately, we just introduced a bunch of kind of mystery syntax
+
+05:08.090 --> 05:08.960
+right here.
+
+05:09.810 --> 05:10.890
+Right here.
+
+05:11.130 --> 05:14.010
+And we got that any right there as well.
+
+05:14.740 --> 05:15.910
+So again, it works.
+
+05:15.910 --> 05:20.110
+But well, we've introduced a little bit more confusion and unfortunately this is kind of that stuff
+
+05:20.110 --> 05:24.220
+where as mentioned earlier, we're getting the typescript and mongoose to work together, involves a
+
+05:24.220 --> 05:25.930
+little bit of kind of crazy code.
+
+05:25.960 --> 05:30.550
+It definitely works and we've got some awesome type checking included now, but there's kind of a mental
+
+05:30.550 --> 05:32.710
+cost, so to speak, included with it.
+
+05:33.280 --> 05:37.300
+In addition to that, we have really only solved issue number one right now.
+
+05:37.300 --> 05:43.000
+We have not really solved anything related to issue number two, where we needed to somehow tell TypeScript
+
+05:43.000 --> 05:47.410
+and Mongoose that the set of properties that we pass into creating a new user are different than the
+
+05:47.410 --> 05:49.840
+properties that end up on a user.
+
+05:50.930 --> 05:51.230
+Okay.
+
+05:51.230 --> 05:52.770
+So still a little bit to get through here.
+
+05:52.790 --> 05:55.880
+Right now, I'm going to delete that user build because that was just a quick test.
+
+05:55.910 --> 05:56.870
+I'm going to save this file.
+
+05:56.870 --> 05:59.750
+We're going to take a quick pause and continue again in just a moment.

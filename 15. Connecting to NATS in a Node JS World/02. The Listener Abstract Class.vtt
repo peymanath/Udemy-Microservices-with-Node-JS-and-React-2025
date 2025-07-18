@@ -1,0 +1,475 @@
+WEBVTT
+
+00:01.510 --> 00:05.800
+In this video, we're going to start implementing class listener inside of our little test project.
+
+00:05.830 --> 00:09.880
+Now, between the last video and this one, I want you to notice I added on another abstract property
+
+00:09.880 --> 00:10.960
+here of Q.
+
+00:10.990 --> 00:11.560
+Group name.
+
+00:11.560 --> 00:16.540
+So that means that we're going to have to define an actual value for Q group name inside of our subclasses
+
+00:16.540 --> 00:17.290
+of listener.
+
+00:18.300 --> 00:18.570
+Okay.
+
+00:18.570 --> 00:21.870
+So let's go back over to our editor inside of our listener file.
+
+00:21.900 --> 00:25.050
+We're going to define this listener class at the very bottom.
+
+00:25.500 --> 00:27.480
+We'll eventually move this to its own separate file.
+
+00:27.480 --> 00:29.250
+But for right now, this will work just fine.
+
+00:29.790 --> 00:33.810
+So down here, we're going to create an abstract class called Listener.
+
+00:36.290 --> 00:40.400
+We're going to go through all the properties and add them in one by one, along with some implementation
+
+00:40.400 --> 00:41.150
+for each.
+
+00:41.480 --> 00:43.860
+Let's first take care of this client thing.
+
+00:43.880 --> 00:49.520
+So we want our class listener to have a client property that should be a reference to a pre initialized
+
+00:49.520 --> 00:52.370
+Nats client, so it should be of type stand.
+
+00:52.970 --> 00:58.280
+When I say pre initialized, I mean to say that we should have already connected to Nats successfully.
+
+00:58.280 --> 01:03.800
+So the client we're going to pass in is essentially going to be like that thing right there after we
+
+01:03.800 --> 01:05.270
+have successfully connected.
+
+01:07.890 --> 01:12.600
+So I'm going to assume that this thing is going to have a private property called client and it is going
+
+01:12.600 --> 01:13.920
+to be of type, Stan.
+
+01:14.610 --> 01:17.600
+Now, stand right here, as you'll recall, is Nat's backwards.
+
+01:17.610 --> 01:20.280
+This is what the Nats community calls clients.
+
+01:21.110 --> 01:26.090
+We need to import this standpipe from the Node Nats library at the very top of the file.
+
+01:26.090 --> 01:30.080
+So I'll find no net streaming and I'm going to get the stan type.
+
+01:32.220 --> 01:34.680
+And then back here we now have an error around client.
+
+01:34.680 --> 01:37.800
+It's just saying that we have to find this property, but we never initialized it.
+
+01:38.070 --> 01:41.910
+So let's make sure that we define a constructor function and we're going to make sure that the constructor
+
+01:41.910 --> 01:44.430
+receives a client that we're going to use.
+
+01:44.940 --> 01:46.290
+So I'll define the constructor.
+
+01:46.740 --> 01:51.870
+I'll say this thing is going to receive a client property that is of type Stan and we're going to take
+
+01:51.870 --> 01:53.820
+that and assign it to clients.
+
+01:54.060 --> 01:56.220
+So this client is client.
+
+01:59.020 --> 01:59.250
+Okay.
+
+01:59.320 --> 02:03.970
+Next up, we're going to make sure that we define a group name and a subject.
+
+02:04.000 --> 02:08.800
+These are both going to be abstract properties, which means they must be defined by our subclass.
+
+02:09.480 --> 02:15.930
+So I will put in at the very top of the class abstract subject like.
+
+02:15.990 --> 02:17.610
+So that's going to be a type string.
+
+02:18.430 --> 02:21.310
+An abstract you group name.
+
+02:22.260 --> 02:23.730
+That will be a string as well.
+
+02:26.590 --> 02:27.100
+Yet those are.
+
+02:28.420 --> 02:30.040
+Let's now take care of Kuwait.
+
+02:30.040 --> 02:35.950
+So this will be the number of seconds that we have to listen to a message and ask it before the event
+
+02:35.950 --> 02:37.120
+eventually times out.
+
+02:37.720 --> 02:40.960
+So I'm going to define this as private.
+
+02:41.830 --> 02:42.020
+Act.
+
+02:42.100 --> 02:44.890
+Wait, and let's actually make it protected.
+
+02:46.270 --> 02:49.150
+Instead, which means that the subclass can define it if it wants to.
+
+02:49.540 --> 02:52.060
+And I'm going to default this to be 5 seconds.
+
+02:54.010 --> 02:56.590
+So 5000 milliseconds, 5 seconds.
+
+02:59.100 --> 03:00.870
+Next up, subscription options.
+
+03:00.870 --> 03:04.560
+Our subscription options in total are going to be very similar to the options we had written out up
+
+03:04.560 --> 03:04.930
+here.
+
+03:04.950 --> 03:08.700
+We're just to find them inside of a helper method, just to have one convenient location for them.
+
+03:09.580 --> 03:11.770
+So define subscription options.
+
+03:13.130 --> 03:13.730
+Inside of here.
+
+03:13.730 --> 03:17.390
+We will we will return this client.
+
+03:17.730 --> 03:21.260
+Remember, client is our Nat's library or Nat's instance.
+
+03:22.510 --> 03:23.710
+Subscription.
+
+03:25.550 --> 03:26.450
+Options.
+
+03:28.430 --> 03:30.800
+We're going to chain on a couple of different options to this thing.
+
+03:31.100 --> 03:32.480
+First will say set, deliver.
+
+03:32.480 --> 03:33.920
+All available.
+
+03:34.880 --> 03:38.330
+Remember, that's going to make sure that the very first time our subscription is created, we get all
+
+03:38.330 --> 03:40.730
+messages on this channel that have ever been emitted.
+
+03:41.620 --> 03:43.480
+Well then set manual mode.
+
+03:45.580 --> 03:46.390
+To true.
+
+03:47.840 --> 03:51.740
+We're going to set that equate to this equate.
+
+03:52.130 --> 03:56.240
+So that's how we customize the acknowledgement timeout period, normally 30 seconds.
+
+03:56.240 --> 03:58.460
+But again, we're going to shorten that down to 5 seconds.
+
+03:59.870 --> 04:04.190
+And finally, we will also set up our durable name, the set, durable name.
+
+04:04.190 --> 04:08.810
+And for the durable name, we're just going to end up using the same Q group name.
+
+04:09.200 --> 04:13.460
+So we're going to use the Q group name both as the Q group name and as the durable name, because it
+
+04:13.460 --> 04:15.800
+usually makes a lot of sense to just use the same one.
+
+04:16.190 --> 04:20.030
+It's very rare that we're going to distinctly want these things to be different.
+
+04:20.420 --> 04:24.050
+So for set durable name, we will pass in this dot Q Group name.
+
+04:28.840 --> 04:31.410
+After that, let's put together our listen method.
+
+04:31.420 --> 04:34.630
+So the goal of Listen is to really just set up the subscription itself.
+
+04:34.630 --> 04:39.310
+Whenever we get an incoming message, we're going to parse the message using a parsed message method
+
+04:39.310 --> 04:42.160
+and then eventually call an on message method.
+
+04:44.680 --> 04:47.590
+So inside of a listen right here.
+
+04:49.530 --> 04:51.420
+We're going to first create the subscription itself.
+
+04:51.420 --> 04:57.720
+So Colin's subscription is this client subscribe and we're going to pass it in those three arguments.
+
+04:57.720 --> 05:00.720
+The first one is going to be the subject that we want to listen to.
+
+05:01.260 --> 05:02.580
+So this subject.
+
+05:05.120 --> 05:07.100
+The second is going to be our group name.
+
+05:09.910 --> 05:12.880
+And then the third will be our actual subscription options.
+
+05:12.880 --> 05:15.100
+So we'll call this subscription options.
+
+05:21.320 --> 05:24.530
+That will give us our subscription after we get it.
+
+05:25.460 --> 05:26.690
+We have to start to listen to it.
+
+05:26.690 --> 05:28.940
+So we'll stay on message.
+
+05:30.940 --> 05:35.560
+We're going to receive MSG, which is of type message.
+
+05:36.970 --> 05:37.470
+Inside.
+
+05:37.480 --> 05:41.950
+We'll do just a little bit of logging info just to say, hey, we just received a message so that we
+
+05:41.950 --> 05:45.880
+can more easily see when we receive messages and they're being dealt with inside of our app.
+
+05:46.210 --> 05:47.410
+So I'll do a console log.
+
+05:48.540 --> 05:51.810
+I'm going to put a little new line inside of here because the log that we're going to do is a little
+
+05:51.810 --> 05:52.530
+bit long.
+
+05:53.240 --> 05:57.710
+I'm going to put in a template string so back ticks and we'll say message received.
+
+05:58.500 --> 06:03.660
+We're going to print out the subject of the message that we just got.
+
+06:05.120 --> 06:08.150
+And maybe we should also print out the cue group name for this thing as well.
+
+06:08.150 --> 06:11.900
+Just we understand exactly what group of services receive this message.
+
+06:11.900 --> 06:15.470
+So I will also print out this dot q group name.
+
+06:19.270 --> 06:23.200
+After that, we're going to want to parse the incoming message and pull the data out of it.
+
+06:23.500 --> 06:27.430
+So I'm going to really quickly define our message.
+
+06:28.240 --> 06:29.020
+Down here.
+
+06:29.560 --> 06:33.520
+So remember when we get a message, we have to call that git data method on it that's going to give
+
+06:33.520 --> 06:35.920
+us either a buffer or a string.
+
+06:35.950 --> 06:39.490
+So we're going to make sure that if it is a string, we just pass some data out of it and return the
+
+06:39.490 --> 06:40.270
+result to that.
+
+06:41.030 --> 06:44.930
+So we're going to assume that we're going to receive a message, this thing of message.
+
+06:46.960 --> 06:48.160
+We'll get our data out.
+
+06:48.280 --> 06:51.820
+So message get data.
+
+06:55.470 --> 06:57.210
+Then if we are working with a string.
+
+06:58.490 --> 07:03.530
+Or a buffer because remember, it can be either if we mouse over data right here, we'll handle it appropriately.
+
+07:03.560 --> 07:05.360
+We're going to use a little turn expression to do this.
+
+07:05.360 --> 07:08.780
+So we'll say return type of data equal to string.
+
+07:08.780 --> 07:13.670
+So if it is a string, I want to do either one thing or the other.
+
+07:13.670 --> 07:15.680
+So just a normal ternary expression.
+
+07:15.950 --> 07:20.210
+So if it is a string, let's go ahead and do a JSON parse of data.
+
+07:21.310 --> 07:24.020
+Otherwise, if it is a buffer, we'll handle it appropriately.
+
+07:24.040 --> 07:25.500
+Here's how we would handle a buffer.
+
+07:25.510 --> 07:29.620
+We don't ever expect to get a buffer, but we're going to write some code to handle it just in case.
+
+07:29.860 --> 07:35.300
+So we'll do a JSON parse data to string UTF eight.
+
+07:35.320 --> 07:39.190
+That's how we would parse a buffer and get some JSON out of it.
+
+07:41.110 --> 07:41.380
+Yes.
+
+07:41.510 --> 07:48.410
+So back inside of subscription on, we will call or get pass data and that's going to come from this
+
+07:48.410 --> 07:52.190
+dot pass message and we'll pass in the message.
+
+07:53.660 --> 07:54.800
+Excuse me, MSG.
+
+07:56.390 --> 08:01.850
+And then finally, we are going to assume that there is some kind of on message event or on message
+
+08:01.850 --> 08:05.450
+method that we want to call with this event data that we just passed out of it.
+
+08:05.810 --> 08:12.140
+So I'm going to try to call this dot on message with the parsed data.
+
+08:13.590 --> 08:18.960
+And just for consistency sake, we don't really know what we want to do inside of on messages yet.
+
+08:18.960 --> 08:22.830
+So in addition to the actual data that we're going to throw in there, let's just pass in the entire
+
+08:22.830 --> 08:27.300
+message, the original one as well, just in case we need to get access to some other property off the
+
+08:27.300 --> 08:27.990
+message itself.
+
+08:27.990 --> 08:29.640
+So I'll just pass a message like so.
+
+08:30.440 --> 08:32.210
+We are getting an air out of on message.
+
+08:32.210 --> 08:35.920
+So we do have to define that as an abstract method on our class.
+
+08:35.930 --> 08:40.580
+And again, by it being an abstract method, that means that we must define it inside of a child or
+
+08:40.580 --> 08:41.330
+subclass.
+
+08:41.720 --> 08:46.820
+Well, very quickly define on message at the very top by all of our other properties about, by all
+
+08:46.820 --> 08:48.140
+the other abstract ones.
+
+08:48.560 --> 08:50.120
+So we'll say abstract.
+
+08:51.660 --> 08:52.680
+On message.
+
+08:53.770 --> 08:56.350
+And we're going to assume that this is going to take in some data.
+
+08:56.530 --> 08:58.360
+Right now we'll say that it's of type any.
+
+08:59.490 --> 09:04.410
+And a message of type message and it's going to return void.
+
+09:06.570 --> 09:06.870
+Okay.
+
+09:06.870 --> 09:08.610
+So that is our class listener.
+
+09:09.150 --> 09:13.770
+A lot of code inside of here, but really all we did was kind of massage a lot of the stuff that we
+
+09:13.770 --> 09:14.570
+already wrote out.
+
+09:14.580 --> 09:16.650
+This is all the same stuff we already put together up here.
+
+09:16.650 --> 09:18.960
+We just kind of redistribute it around.
+
+09:19.470 --> 09:20.460
+So let's take a pause right here.
+
+09:20.460 --> 09:24.360
+When we come back, the next video, we're going to take a look at how we can now subclass this thing
+
+09:24.360 --> 09:26.370
+and very easily create a listener.

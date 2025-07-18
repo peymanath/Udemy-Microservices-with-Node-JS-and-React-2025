@@ -1,0 +1,376 @@
+WEBVTT
+
+00:00.550 --> 00:05.110
+In this video, we're going to try to condense down our ad user marker method and ad company marker
+
+00:05.110 --> 00:07.150
+into one single method instead.
+
+00:07.850 --> 00:12.320
+So we're going to first try one approach that is going to look like it's going to work out pretty well,
+
+00:12.320 --> 00:14.180
+but it's going to have a distinct downside.
+
+00:14.210 --> 00:19.520
+Well, then finally refactor into the final good approach that we're going to stick with for this application
+
+00:19.520 --> 00:22.490
+and just about all the future applications we work on as well.
+
+00:22.940 --> 00:26.960
+So to get started, I'm going to find add company marker right here and I'm just going to comment out
+
+00:26.960 --> 00:27.980
+the entire thing.
+
+00:28.220 --> 00:31.820
+We're going to eventually delete this, but I want to just leave the code around for right now.
+
+00:31.820 --> 00:35.840
+Just we can refer back to it if we need to refer to any of the code inside there.
+
+00:36.690 --> 00:39.000
+So now I'm going to focus on add user marker instead.
+
+00:39.390 --> 00:43.770
+To make this method a little bit more generic and indicate that it will work for both a company and
+
+00:43.770 --> 00:47.910
+a user, I'm going to first change the name to be only ad marker like so.
+
+00:48.740 --> 00:51.170
+So here's approach number one to solving our problem.
+
+00:51.470 --> 00:57.710
+I'm going to change the argument type right here to say that we can pass in an instance of a user or
+
+00:57.950 --> 00:58.910
+a company.
+
+00:59.600 --> 01:02.240
+Remember, that is what that little pipe operator means.
+
+01:02.570 --> 01:05.750
+And again, that is the character right above the enter key on your keyboard.
+
+01:05.750 --> 01:09.080
+You'll probably have to hit shift and then like backslash to get that thing.
+
+01:09.970 --> 01:12.900
+Now we might want to update the argument name as well really quickly.
+
+01:12.910 --> 01:16.750
+So I'm going to change the argument name to something like Tappable to indicate that this is something
+
+01:16.750 --> 01:19.990
+that can be mapped or placed on the map as a marker.
+
+01:20.580 --> 01:24.340
+And maybe that argument name doesn't make a lot of sense, but I think it'll work out for now.
+
+01:25.540 --> 01:25.840
+Okay.
+
+01:25.840 --> 01:29.470
+So let's talk about exactly what this or operator does right here.
+
+01:29.470 --> 01:34.240
+We said previously we took a quick glance at this and we just said this means or map able can be or
+
+01:34.240 --> 01:37.780
+this argument can be either an instance of a user or a company.
+
+01:37.780 --> 01:39.640
+But what does that really do?
+
+01:40.000 --> 01:41.080
+It's a quick diagram.
+
+01:41.080 --> 01:42.610
+Back over here.
+
+01:43.590 --> 01:43.770
+All right.
+
+01:43.770 --> 01:48.090
+So in this diagram, we've got an instance of a company and an instance of a user.
+
+01:48.270 --> 01:52.350
+And then I listed out all the different properties that a company has and all the different properties
+
+01:52.350 --> 01:55.920
+that a user has along with their respective types.
+
+01:56.430 --> 02:02.430
+Any time that we use an or operator on an argument, here's what is happening behind the scenes on that
+
+02:02.430 --> 02:05.640
+argument that we get access to inside of this method.
+
+02:05.670 --> 02:11.040
+TypeScript is going to do a little pouring down operation to limit the number of properties that we
+
+02:11.040 --> 02:12.780
+can actually reference on Tappable.
+
+02:13.260 --> 02:18.420
+So any time we use this or Operator, TypeScript is going to take a look at the two different types.
+
+02:18.660 --> 02:26.220
+And it's going to say you can only refer to properties on that argument if they exist in both of these
+
+02:26.220 --> 02:27.240
+different types.
+
+02:28.180 --> 02:30.130
+So TypeScript is going to look at company.
+
+02:30.160 --> 02:32.920
+It's going to look at the property name, company name right here.
+
+02:33.130 --> 02:35.410
+Remember, that's one of the properties that company has.
+
+02:36.100 --> 02:39.640
+TypeScript is then going to say, okay, does user have a company name?
+
+02:39.670 --> 02:41.120
+Nope, it sure doesn't.
+
+02:41.140 --> 02:48.430
+So we are not allowed to refer to company name off of this argument right here.
+
+02:50.110 --> 02:52.210
+TypeScript is then going to look at catch phrase.
+
+02:52.360 --> 02:53.740
+Does user have a catch phrase?
+
+02:53.770 --> 02:54.390
+Nope.
+
+02:54.760 --> 02:56.560
+We are not allowed to refer to that.
+
+02:58.220 --> 03:02.030
+And finally, it's going to go on to location and say, okay, does user have a location?
+
+03:02.300 --> 03:03.470
+Yep, it does.
+
+03:03.710 --> 03:04.220
+And is it?
+
+03:04.400 --> 03:08.030
+It's type A object that has a latitude and longitude that are both numbers.
+
+03:08.240 --> 03:08.600
+Yep.
+
+03:08.600 --> 03:09.490
+Sure is.
+
+03:09.500 --> 03:09.850
+Okay.
+
+03:09.860 --> 03:12.740
+We are allowed to refer to location on that argument.
+
+03:13.800 --> 03:17.940
+TypeScript is then going to take a look at the user type and iterate through all of this things properties
+
+03:17.940 --> 03:18.600
+as well.
+
+03:19.080 --> 03:21.450
+It's going to say, okay, does company have a name?
+
+03:21.630 --> 03:22.860
+Nope, it doesn't.
+
+03:22.950 --> 03:23.280
+Okay.
+
+03:23.280 --> 03:25.350
+We are not allowed to refer to that property.
+
+03:25.950 --> 03:27.200
+Does company have a location?
+
+03:27.210 --> 03:28.340
+Yep, it does.
+
+03:28.350 --> 03:28.680
+Okay.
+
+03:28.680 --> 03:30.150
+We're allowed to refer to that.
+
+03:30.630 --> 03:36.240
+So the result of this or operator right here is that TypeScript is going to limit the number of properties
+
+03:36.240 --> 03:38.550
+that we can refer to on this Tappable thing.
+
+03:39.120 --> 03:47.430
+And you can actually see that in action very easily by writing out my tappable map double.
+
+03:48.500 --> 03:53.080
+Sorry, I got one of those these MacBook pros that is like double typing characters right now.
+
+03:53.090 --> 03:57.110
+Anyways, if you then write out an apple and then a dot, it will list out all the different properties
+
+03:57.110 --> 03:58.640
+that you are safe to refer to.
+
+03:58.640 --> 04:03.230
+And so you'll notice that the only property we can refer to here is location, because that's the only
+
+04:03.230 --> 04:05.900
+commonality between user and company.
+
+04:06.830 --> 04:12.020
+So that's why we are allowed to refer to map able location down here and the same thing for the longitude
+
+04:12.020 --> 04:12.650
+as well.
+
+04:13.130 --> 04:18.890
+But if we had to refer to say a user's name or a company's company name, we would not be allowed to.
+
+04:20.180 --> 04:20.450
+All right.
+
+04:20.450 --> 04:22.640
+So this actually kind of works out pretty well for us, right?
+
+04:22.640 --> 04:26.470
+Because the only thing we really care about is a common property between user and company.
+
+04:26.480 --> 04:30.650
+We only care about location, outlet and location longitude.
+
+04:30.830 --> 04:33.530
+So this definitely does work out for us.
+
+04:34.040 --> 04:37.910
+However, I would suggest that there is still a big downside to this approach.
+
+04:37.910 --> 04:40.550
+This code works, but it's not perfect.
+
+04:40.550 --> 04:41.600
+And here's why.
+
+04:42.650 --> 04:45.590
+Let's start to think about what would happen at some point in time in the future.
+
+04:45.620 --> 04:46.760
+Here's my diagram.
+
+04:47.090 --> 04:47.780
+Here we go.
+
+04:48.050 --> 04:52.100
+So let's think about what would happen in the future if we started to have other things that we want
+
+04:52.100 --> 04:55.520
+to map on our map or show as a marker on the map.
+
+04:56.060 --> 04:58.160
+Right now, we just have user and company.
+
+04:58.430 --> 05:01.100
+But what if we also had something like, I don't know.
+
+05:02.320 --> 05:03.970
+Would be something else we want to show on a map.
+
+05:04.000 --> 05:04.870
+How about, like.
+
+05:05.350 --> 05:08.080
+How about, like, a customization of a company?
+
+05:08.080 --> 05:11.710
+Maybe like a car lot, you know, a place that sells cars.
+
+05:12.160 --> 05:15.070
+And so we would make a new class called Car Lot.
+
+05:15.430 --> 05:15.880
+Maybe.
+
+05:15.880 --> 05:19.900
+We also want to show something that's like, maybe a park.
+
+05:19.930 --> 05:22.990
+So maybe we have a new thing called parks.
+
+05:23.020 --> 05:25.750
+We've got to have a class called Park and so on.
+
+05:26.200 --> 05:30.310
+For every one of these new things that we want to show in our map, we would have to add on an additional
+
+05:30.310 --> 05:32.620
+import statement into maps.
+
+05:32.620 --> 05:36.910
+So I'd have to import park, I would have to import car lot and so on.
+
+05:37.240 --> 05:41.290
+And for every one of these additional things we might want to map, we're going to have to add in an
+
+05:41.290 --> 05:43.720
+additional or case to our method.
+
+05:44.020 --> 05:51.820
+So add marker map able can be a user or a company or a park or a car lot or whatever else.
+
+05:51.820 --> 05:53.380
+And I think you get the idea here.
+
+05:54.060 --> 05:57.120
+So every time we want to expand this repertoire of things we can map.
+
+05:57.120 --> 05:59.190
+We're going to have to do a lot of adding on here.
+
+05:59.190 --> 06:04.560
+And if there is eventually like 30 things we want to map, well, we would have a really huge method
+
+06:04.560 --> 06:05.310
+signature.
+
+06:06.150 --> 06:10.880
+So this is not really a great approach right now, number one, because it's not super scalable.
+
+06:10.890 --> 06:17.850
+And number two, because it's introducing a very tight coupling between our Mapp class and every other
+
+06:17.850 --> 06:21.720
+class we have in our application that we want to show on the map.
+
+06:22.520 --> 06:25.210
+So like I said, this is an a solution.
+
+06:25.220 --> 06:26.090
+It is a solution.
+
+06:26.090 --> 06:26.870
+It would work.
+
+06:26.870 --> 06:29.690
+But I still don't think this is the best way of going.
+
+06:30.140 --> 06:31.600
+So let's take one more quick pause.
+
+06:31.610 --> 06:35.930
+We're going to come back to the next video and finally go to the real solution for this problem.
+
+06:35.930 --> 06:37.580
+So I'll see you in just a minute.

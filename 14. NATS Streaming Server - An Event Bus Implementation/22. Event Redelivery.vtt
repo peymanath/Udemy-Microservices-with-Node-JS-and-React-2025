@@ -1,0 +1,226 @@
+WEBVTT
+
+00:01.010 --> 00:05.500
+With both the custom event bus we put together and Nat streaming that we're using now.
+
+00:05.510 --> 00:09.800
+One thing that was really critical was to make sure that we could handle a service going offline for
+
+00:09.800 --> 00:12.410
+some period of time while the service is offline.
+
+00:12.410 --> 00:15.440
+We're not going to be able to process any events that are being emitted.
+
+00:15.440 --> 00:19.220
+So when this thing might come back online, we need to make sure that we can somehow give it a list
+
+00:19.220 --> 00:20.900
+of all the events it has missed.
+
+00:21.410 --> 00:22.550
+So we got to figure out how to do that.
+
+00:22.550 --> 00:26.360
+With Nat streaming in this video, we're going to first take a look at a kind of naive way of doing
+
+00:26.360 --> 00:30.920
+this and then eventually how we can combine a couple of different options together to come up with a
+
+00:30.920 --> 00:32.030
+ideal solution.
+
+00:33.030 --> 00:37.710
+So whenever we emit or publish an event in that streaming, it's going to be stored internally inside
+
+00:37.710 --> 00:38.520
+of this channel.
+
+00:38.790 --> 00:41.700
+So we might emit something like account deposit 70.
+
+00:41.910 --> 00:46.860
+That's is going to try to deliver that to our service and simultaneously store a copy of that event
+
+00:46.860 --> 00:47.580
+as well.
+
+00:48.440 --> 00:54.950
+We might then also emit this deposit of $40 that will be emitted to the account service and simultaneously
+
+00:54.950 --> 00:56.150
+save to event history.
+
+00:57.010 --> 01:01.720
+So all these events that we ever emit inside of a channel will be automatically saved when we then create
+
+01:01.720 --> 01:06.520
+a subscription at some point in time in the future, we can customize the subscription and tell it to
+
+01:06.520 --> 01:11.500
+somehow grab or get this list of events that have been emitted at some point in the past.
+
+01:11.860 --> 01:14.050
+So let's take a look at exactly how we do that.
+
+01:14.410 --> 01:18.100
+Now to get started, I'm going to first go back over to my terminal and I'm going to close down the
+
+01:18.100 --> 01:19.780
+second copy of The Listener.
+
+01:20.050 --> 01:24.640
+Some things work just a little bit differently if we are running these options with a group.
+
+01:24.670 --> 01:29.320
+So I'm going to remove the queue group very temporarily as we take a look at how we can re deliver these
+
+01:29.320 --> 01:31.060
+events that we missed in the past.
+
+01:31.940 --> 01:34.100
+So I'll make sure that I only have one listener running.
+
+01:34.130 --> 01:35.660
+I'll then go over to my editor.
+
+01:36.230 --> 01:41.060
+I'm going to find that argument we put in the side of Year of Order Service Queue Group and delete it
+
+01:41.070 --> 01:41.840
+right now.
+
+01:44.220 --> 01:44.510
+Okay.
+
+01:44.520 --> 01:49.290
+So now to somehow tell Nat so we want to re deliver or get some messages that have already been delivered
+
+01:49.290 --> 01:49.980
+in the past.
+
+01:49.980 --> 01:54.030
+We're going to add in another subscription option to this list of options.
+
+01:54.540 --> 01:58.980
+I'm going to first get started by doing a command click on subscription options that will take me to
+
+01:58.980 --> 02:03.810
+the type definition file, and then I should be able to scroll down just a little bit and see an interface
+
+02:03.810 --> 02:06.360
+right here of subscription options.
+
+02:06.360 --> 02:10.650
+If you do not see that interface, then you can go back to where we just command, click to and do a
+
+02:10.650 --> 02:14.250
+command click on the interface right here of subscription options.
+
+02:15.470 --> 02:19.280
+So this has the listing of all the different option methods that are available to us.
+
+02:19.550 --> 02:24.350
+We can scroll down a little bit and we're going to see that there are some options like set start at
+
+02:24.350 --> 02:26.750
+sequence, set start time.
+
+02:28.170 --> 02:31.200
+Set start with last received and set deliver all available.
+
+02:31.320 --> 02:37.050
+So these are some different methods that we can call to customize which events we get replayed or resent
+
+02:37.050 --> 02:40.740
+that have been emitted in the past, possibly while our service was offline.
+
+02:41.650 --> 02:44.080
+Let's try out, set, deliver, all available.
+
+02:44.110 --> 02:49.630
+So if we add in this option to our subscription to object that whenever our subscription gets created,
+
+02:49.630 --> 02:55.360
+Nats is going to try to send over all the events that we missed while or before the subscription was
+
+02:55.360 --> 02:57.250
+ever created or while it's been down.
+
+02:58.460 --> 02:58.660
+Okay.
+
+02:58.670 --> 03:03.680
+So back inside my listener file, I'm going to find the options object and I'm going to chain on.
+
+03:05.350 --> 03:08.290
+After doing a little bit of cleanup here just to make this more legible.
+
+03:08.620 --> 03:12.160
+Set deliver all available like so.
+
+03:13.630 --> 03:14.890
+And then going to save this.
+
+03:14.920 --> 03:15.820
+Look back over.
+
+03:16.520 --> 03:21.410
+And now we'll see that the still running list to right here has restarted and it has been sent all of
+
+03:21.410 --> 03:23.570
+the different events that we have emitted over time.
+
+03:24.110 --> 03:30.710
+If I tried to restart this with an RS when the subscription is recreated again on this next startup,
+
+03:30.710 --> 03:32.390
+it gets sent all the events again.
+
+03:32.390 --> 03:37.520
+And so I can restart as many times as I want and every single time I get emitted the big list of events.
+
+03:38.090 --> 03:43.220
+So clearly this is kind of handy for making sure that if a service ever goes down, we can somehow get
+
+03:43.220 --> 03:45.890
+a list of all the events that have been emitted in the past.
+
+03:45.980 --> 03:52.040
+The only downside here is, well, every single time we start up a new listener, because maybe we are
+
+03:52.040 --> 03:56.630
+restarting our service or maybe we are scaling it up or whatever it is we are going to be.
+
+03:56.630 --> 04:02.690
+Re delivered our big list of events after we've been running our application for possibly weeks, months
+
+04:02.690 --> 04:03.320
+or years.
+
+04:03.320 --> 04:08.180
+There might be thousands or hundreds of thousands or even millions of different events saved up.
+
+04:08.570 --> 04:14.270
+So it's not super feasible in the long term to just say that with every subscription, give me all the
+
+04:14.270 --> 04:16.340
+different events that have ever been emitted.
+
+04:16.760 --> 04:19.820
+It could work, but it's not super feasible.
+
+04:20.470 --> 04:25.040
+So we usually do not use this set deliver all available option by itself.
+
+04:25.060 --> 04:29.860
+Instead, we're going to use this option along with one other option that's going to give us some more
+
+04:29.860 --> 04:31.030
+desirable behavior.
+
+04:31.330 --> 04:32.380
+So let's take a pause right here.
+
+04:32.380 --> 04:34.720
+We'll take a look at that other option in the next video.

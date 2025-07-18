@@ -1,0 +1,868 @@
+WEBVTT
+
+00:01.180 --> 00:05.680
+In this video, I want to show you three more possible solutions that will not work to actually solve
+
+00:05.680 --> 00:06.910
+this concurrency stuff.
+
+00:06.940 --> 00:11.530
+Now, for some people listening to this video, these concurrency discussions might be a little bit
+
+00:11.530 --> 00:13.600
+confusing or really vague or boring.
+
+00:13.600 --> 00:17.890
+So if you do not want to hear anything else about concurrency, pause this video right now and go on
+
+00:17.890 --> 00:18.760
+to the next video.
+
+00:18.790 --> 00:22.750
+Otherwise, stick around and I'll show you three more possible solutions you might think of that are
+
+00:22.750 --> 00:23.980
+not going to quite work out.
+
+00:24.520 --> 00:26.080
+So if you're still here, let's get to it.
+
+00:26.800 --> 00:31.450
+So here's another possible solution that is not going to quite work in this possible solution.
+
+00:31.450 --> 00:36.370
+We're going to say that we once again have multiple instances of the account service A and B.
+
+00:37.840 --> 00:42.040
+We're also going to say that A and B have some shared state between the two of them.
+
+00:42.070 --> 00:44.340
+So this might be some shared Reddit server.
+
+00:44.350 --> 00:45.550
+It might be a shared database.
+
+00:45.550 --> 00:47.320
+It might be direct network connections.
+
+00:47.320 --> 00:51.820
+Whatever it is, it is some shared piece of information in the shared state.
+
+00:51.820 --> 00:57.160
+We're going to record the sequence number of every processed event that ever gets processed by A and
+
+00:57.160 --> 00:57.640
+B.
+
+00:58.120 --> 01:03.520
+Then whenever A or B receives an event due process, it will look into the shared state and make sure
+
+01:03.520 --> 01:06.760
+that the previous sequence number has already been processed.
+
+01:07.060 --> 01:09.340
+So let's walk through what this would really look like.
+
+01:09.580 --> 01:12.700
+So we're going to imagine that we get number one, it goes over to service.
+
+01:12.700 --> 01:15.520
+A service will immediately process this event.
+
+01:15.520 --> 01:17.680
+So it's going to deposit $70.
+
+01:18.280 --> 01:22.210
+It will then take that sequence number and put it into the shared store like so.
+
+01:22.970 --> 01:26.390
+Next up, sequence number two, that's a deposit.
+
+01:26.390 --> 01:32.000
+We'll imagine that goes over to B, B is going to then look into this data store and see if the previous
+
+01:32.000 --> 01:33.020
+event sequence number.
+
+01:33.020 --> 01:35.990
+So in this case, number one has already been processed.
+
+01:36.290 --> 01:39.350
+Number one has been processed because it is inside the data store.
+
+01:39.350 --> 01:44.570
+And that means that now Service B can successfully or at least try to process number two.
+
+01:44.600 --> 01:47.690
+So in this case, deposit $40, no problem.
+
+01:48.850 --> 01:53.560
+Well, then take that sequence number and put it in the shared data store and then finally withdrawal
+
+01:53.590 --> 01:54.550
+goes over to a.
+
+01:56.210 --> 02:00.380
+Eight checks to see if number two has been processed because three minus one is two.
+
+02:00.890 --> 02:01.170
+Yep.
+
+02:01.190 --> 02:05.360
+Looks like two's already in there, so we can successfully withdraw the $100 right away.
+
+02:07.110 --> 02:12.630
+So this is a good solution and that it makes sure that we're only ever going to process any event exactly
+
+02:12.630 --> 02:13.380
+one time.
+
+02:13.380 --> 02:18.690
+And we're always going to make sure that we only process any or all of our events in the correct order.
+
+02:18.810 --> 02:20.520
+That's the benefit to the solution.
+
+02:20.790 --> 02:26.670
+The downside is that it requires to process all the events that comes into the services in essentially
+
+02:26.670 --> 02:30.840
+a sequential fashion, which has a really big performance penalty.
+
+02:31.350 --> 02:32.790
+Think about what would happen here.
+
+02:35.170 --> 02:38.590
+If we had actually two accounts instead of just one.
+
+02:38.860 --> 02:46.330
+So let's say that we've got an account for user A that starts off at zero and user B that starts off
+
+02:46.330 --> 02:47.050
+at zero.
+
+02:47.860 --> 02:52.180
+So now this first event right here might be a deposit for user a.
+
+02:53.100 --> 02:59.910
+The next one might be a deposit for user B, so let's now imagine this goes into A and this goes into
+
+02:59.910 --> 03:00.360
+B.
+
+03:02.240 --> 03:03.230
+Now at this point.
+
+03:04.300 --> 03:08.800
+Be down here is going to take a look at this shared store and going to say, has number one been processed
+
+03:08.800 --> 03:09.310
+yet?
+
+03:09.340 --> 03:11.440
+Well, in this scenario, no, we're still waiting.
+
+03:11.830 --> 03:15.340
+And let's imagine that this event fails processing for whatever reasoning.
+
+03:15.340 --> 03:19.150
+Maybe service aide does not have a connection or a connection to the file store.
+
+03:19.180 --> 03:22.570
+Or maybe it's just laggy, or who knows what's going on.
+
+03:22.900 --> 03:27.340
+So we have to essentially wait for this deposit or this event right here to time out over the span of
+
+03:27.340 --> 03:31.360
+30 seconds and eventually be reissued by the Nats server.
+
+03:31.690 --> 03:37.030
+And while we are waiting for that 30 seconds, the deposit for account V right here is going to be held
+
+03:37.030 --> 03:44.170
+up even though this account right here account for user B is completely unrelated from user A.
+
+03:44.740 --> 03:50.530
+So in other words, we are always limited globally for all of our different accounts to only processing
+
+03:50.530 --> 03:55.210
+exactly one update at a time, which is clearly not a great thing.
+
+03:55.210 --> 03:59.170
+It means every single update that we want to make inside of our application, only one update.
+
+03:59.170 --> 04:03.940
+And that means that we are going to be severely constrained in how many or how much processing or how
+
+04:03.940 --> 04:06.460
+many updates we can run at any given point in time.
+
+04:07.030 --> 04:10.360
+So this solution looks good, but it doesn't quite work.
+
+04:10.690 --> 04:15.010
+Let's try to take some elements from the solution, though, and move it forward to another attempt.
+
+04:16.940 --> 04:17.240
+Okay.
+
+04:17.240 --> 04:21.590
+So now in this attempt, we're going to try to directly solve that issue we ran into with the last one.
+
+04:21.590 --> 04:27.350
+So in this case, we're going to say that we're going to track exactly which event or which user each
+
+04:27.350 --> 04:29.330
+event is intended to be processed for.
+
+04:29.750 --> 04:33.800
+So in this case, we're going to say that user gem gets sequenced, number one.
+
+04:35.310 --> 04:37.440
+He's trying to deposit $70.
+
+04:37.950 --> 04:39.420
+So this is going to go off to service.
+
+04:40.260 --> 04:42.750
+We're going to try to process for user Jim.
+
+04:44.130 --> 04:45.110
+A deposit of 70.
+
+04:45.120 --> 04:46.530
+So let's go ahead and make that change.
+
+04:46.530 --> 04:51.870
+And then inside the shared data store, we will say that for user Jim, we have processed his first
+
+04:51.870 --> 04:54.180
+event, so we'll store it like so.
+
+04:55.990 --> 05:01.930
+So then the next event to come in is maybe sequence number one for user Mary, and she is trying to
+
+05:01.930 --> 05:03.250
+deposit $40.
+
+05:04.240 --> 05:08.740
+So because this is the first event for user Mary, we'll just go ahead and immediately deposit that
+
+05:08.740 --> 05:09.240
+40.
+
+05:09.250 --> 05:10.270
+Everything looks good.
+
+05:12.330 --> 05:15.420
+Then inside the shared data store, we will also record.
+
+05:16.270 --> 05:18.250
+We've got Mary's first event.
+
+05:19.130 --> 05:22.410
+Then user Jim is going to have two and three.
+
+05:22.430 --> 05:27.110
+We have processed both those and share them inside this data store.
+
+05:28.440 --> 05:32.330
+So this is very similar, but now each user has their own sequence numbers.
+
+05:32.340 --> 05:34.180
+How does this solve the issue we just ran into?
+
+05:34.200 --> 05:35.580
+Well, let's think through it really quickly.
+
+05:35.580 --> 05:36.840
+I'm going to undo the diagram.
+
+05:39.070 --> 05:43.270
+So we're back to event number one coming into service right here.
+
+05:43.870 --> 05:46.240
+Let's say that we go ahead and process this event.
+
+05:48.060 --> 05:50.820
+And we deposit $70 into User Gym's account.
+
+05:51.450 --> 05:58.500
+So now we're going to have this first event for Mary go over to service fee and simultaneously we'll
+
+05:58.500 --> 06:01.820
+imagine that this deposit for gym goes into service a.
+
+06:01.890 --> 06:06.270
+So now once again, let's say that user Mary's Deposit right here is having some big issues.
+
+06:06.300 --> 06:10.620
+Maybe there's an error in processing, maybe B cannot connect to the file storage.
+
+06:10.620 --> 06:15.450
+Whatever it is, we cannot process this event with the previous solution we just looked at that would
+
+06:15.450 --> 06:17.730
+have held up Jim's deposit as well.
+
+06:17.910 --> 06:22.830
+But because we are accounting sequence numbers separately for different users, this service A is going
+
+06:22.830 --> 06:25.500
+to take a look inside of our shared sequence numbers database.
+
+06:25.500 --> 06:29.220
+It's going to say, okay, for user Jim, we already processed Jim's first event.
+
+06:29.220 --> 06:34.260
+Well, this has an event number of two, so we are definitely safe in processing Jim's second event.
+
+06:34.380 --> 06:36.540
+Let's go ahead and deposit $40.
+
+06:36.540 --> 06:38.580
+So now Jim is up to 110.
+
+06:39.420 --> 06:42.210
+Then Jim can issue his withdrawal.
+
+06:43.250 --> 06:44.240
+Well, once again, look in.
+
+06:44.240 --> 06:44.750
+Okay.
+
+06:44.810 --> 06:47.120
+User Jim, we've done his first and second event.
+
+06:47.120 --> 06:47.930
+We're now on his third.
+
+06:47.930 --> 06:48.230
+Yep.
+
+06:48.230 --> 06:49.460
+Let's go ahead and process it.
+
+06:49.670 --> 06:51.110
+Let's withdraw $100.
+
+06:51.110 --> 06:52.250
+We're now down to ten.
+
+06:52.280 --> 06:53.420
+Everything looks good.
+
+06:53.630 --> 06:59.120
+And in this entire process, we might still be waiting on user Mary's first deposit.
+
+06:59.720 --> 07:04.880
+So with this kind of scenario, we can make sure that one user does not affect another user.
+
+07:05.030 --> 07:09.650
+Now we're talking about users here, but of course, this kind of applies to any kind of resource.
+
+07:09.650 --> 07:13.520
+We can essentially say that any request it's going to modify some type of resource.
+
+07:13.520 --> 07:18.890
+We're going to put all the events related to one kind of owner of that resource into its own kind of
+
+07:18.890 --> 07:19.970
+sequence pool.
+
+07:20.570 --> 07:26.600
+Now, this is a great solution right here, but there is a little issue with the actual implementation.
+
+07:27.380 --> 07:32.000
+We're really talking about giving every user or every kind of owner of something here, its own personal
+
+07:32.000 --> 07:33.260
+little bit of sequence.
+
+07:33.470 --> 07:38.750
+It turns out that with that streaming server to get a restarted sequence, we have to create a totally
+
+07:38.750 --> 07:39.890
+different channel.
+
+07:40.400 --> 07:45.380
+So if we want to do something like this, we would have to have two channels reserved just for Jim,
+
+07:45.380 --> 07:49.970
+and we might give them a name like Account Deposit Jim and account withdrawal Jim.
+
+07:50.420 --> 07:53.240
+We then have to come up with two identical looking.
+
+07:54.010 --> 07:54.850
+Channels.
+
+07:55.780 --> 07:57.500
+Dedicated just to Mary.
+
+07:57.520 --> 08:01.300
+So deposit for Mary and withdrawal for Mary as well.
+
+08:01.300 --> 08:05.710
+That is the only way out of the box with Nat streaming server that we can get those restarted sequence
+
+08:05.710 --> 08:06.370
+numbers.
+
+08:06.730 --> 08:11.070
+And this definitely sounds like, well, hey, whatever, let's just create more channels.
+
+08:11.080 --> 08:15.670
+Unfortunately Nat streaming server, there is a decent amount of overhead in adding more channels to
+
+08:15.670 --> 08:17.370
+be processed out of the box.
+
+08:17.380 --> 08:21.600
+That streaming server is only going to allow you to have 1000 channels by default.
+
+08:21.610 --> 08:25.270
+We can increase that number, of course, or decrease it if we want to.
+
+08:25.270 --> 08:30.160
+But as we create more channels, there's more processing overhead with each one that we create.
+
+08:30.760 --> 08:36.100
+So we are not going to be able to create a separate set of channels for every single user or every type
+
+08:36.100 --> 08:38.680
+of resource that needs its own sequence numbering.
+
+08:39.900 --> 08:44.190
+So this is a solution that definitely looks good, but it's not going to work with net streaming.
+
+08:44.230 --> 08:48.810
+And as a matter of fact, it turns out that this idea of having these different pools or these different
+
+08:48.810 --> 08:53.790
+channels where each one has its own little sequence, it turns out that creating these different sequences
+
+08:53.970 --> 08:57.450
+with any event bus ends up being a lot of processing overhead.
+
+08:57.540 --> 09:00.810
+So you're going to see some resources online that advocate this kind of approach.
+
+09:00.810 --> 09:06.270
+But unfortunately, again, you're going to have a kind of tough time finding an event bus implementation
+
+09:06.270 --> 09:09.600
+that will allow each of these to get their own sequence numbers.
+
+09:10.530 --> 09:10.700
+Okay.
+
+09:10.770 --> 09:14.310
+So, all right, let's take a look at one more possible solution.
+
+09:15.380 --> 09:19.190
+So in this possible solution, we're going to see something that's very similar to the one we just looked
+
+09:19.190 --> 09:23.570
+at, where we're going to work around that limitation of not being able to assign each of our different
+
+09:23.570 --> 09:27.410
+users or kind of owners of resource their own separate sequence numbers.
+
+09:28.130 --> 09:31.550
+Now, the other thing I want to remind you is that I've been showing all these diagrams with the sequence
+
+09:31.550 --> 09:34.090
+number being known somehow to the publisher.
+
+09:34.100 --> 09:37.680
+In reality, the sequence number is not automatically known to the publisher.
+
+09:37.700 --> 09:40.340
+Instead, our publisher is going to publish some event.
+
+09:40.490 --> 09:45.080
+It's going to go over to the NAT streaming server, and only then does it get assigned a sequence number,
+
+09:45.140 --> 09:48.830
+and then after that it will be sent on to whatever listeners there are.
+
+09:50.460 --> 09:55.320
+So in this approach, we're going to start off with this list of events once again, and we're going
+
+09:55.320 --> 09:58.830
+to somehow store each of these events at the publisher.
+
+09:59.100 --> 10:03.510
+So when I say store the event, I literally mean the publishers can have some kind of database where
+
+10:03.510 --> 10:07.200
+it is going to list all the different events that it has dispatched over time.
+
+10:08.800 --> 10:10.780
+As it dispatches each of these events.
+
+10:10.960 --> 10:16.420
+We're going to hope or just kind of pray that after it gets sent over to Nat streaming server, Nat's
+
+10:16.420 --> 10:20.910
+will send back a message and say, Here's the sequence number of the event that you just dispatched.
+
+10:20.920 --> 10:22.330
+So we throw this thing over.
+
+10:22.360 --> 10:26.890
+It would be assigned number one, and then we would hope that Nat String Server will send that number
+
+10:26.890 --> 10:28.600
+one back over to our publisher.
+
+10:28.780 --> 10:34.570
+So then this publisher can say, okay, I dispatched an event, it had sequence of number one and that
+
+10:34.570 --> 10:35.710
+was for user Jim.
+
+10:35.710 --> 10:37.450
+And here's what the actual event was.
+
+10:40.250 --> 10:41.360
+So then this event.
+
+10:42.210 --> 10:45.030
+We'll go on to our services and then be processed.
+
+10:45.510 --> 10:49.770
+So we'll say in this case, okay, let's go ahead and deposit $70 into Jim's account.
+
+10:49.890 --> 10:51.920
+So here's Jim right here, deposit $70.
+
+10:51.930 --> 10:57.720
+And then simultaneously, we're going to make sure that Service A right here stores the ID of the sequence
+
+10:57.720 --> 11:01.320
+number or the sequence the sequence number of the event it just processed.
+
+11:01.320 --> 11:05.190
+So it would store number one to say I just processed number one.
+
+11:08.260 --> 11:11.550
+So now the publisher would move on to say number two.
+
+11:11.920 --> 11:13.210
+Same thing would occur here.
+
+11:13.390 --> 11:15.250
+We're going to dispatch that.
+
+11:15.520 --> 11:19.930
+This thing will be assigned number two, because, remember, we can only get sequence numbers for the
+
+11:19.930 --> 11:21.880
+overall events that go into a channel.
+
+11:23.420 --> 11:28.880
+So hopefully once again, this number two would be sent back over to our publisher and it would save
+
+11:28.880 --> 11:30.170
+that number two right there.
+
+11:31.520 --> 11:33.740
+This would go on to our service.
+
+11:34.130 --> 11:35.600
+We would take a look at Mary.
+
+11:35.630 --> 11:37.580
+We would deposit $40 into her account.
+
+11:37.580 --> 11:40.940
+And we would say the last idea that we processed for this thing was number two.
+
+11:42.580 --> 11:44.650
+So now we move on to user Jim.
+
+11:45.130 --> 11:49.450
+With user Jim, we know that we are making a modification in the user Jim and we know that the last
+
+11:49.450 --> 11:54.550
+time we modified user, Jim was right here because we are storing all these events.
+
+11:54.640 --> 11:59.680
+So we know that the last time we modified user Jim, we had an event with the sequence number of number
+
+11:59.680 --> 12:00.310
+one.
+
+12:00.340 --> 12:02.290
+So we put in the number one right there.
+
+12:02.590 --> 12:05.320
+We would then throw this event once again over to Nats.
+
+12:07.420 --> 12:09.700
+This thing would be assigned a sequence number of number three.
+
+12:09.700 --> 12:14.590
+We would record that back over here and then we would send this event on to one of our listeners.
+
+12:14.920 --> 12:16.420
+And now here's the critical part.
+
+12:17.520 --> 12:22.800
+When Service A takes a look at this and it goes to process it, it would take a look at what the last
+
+12:22.800 --> 12:27.540
+ID was or the last sequence number for an event that modified user Jim.
+
+12:28.370 --> 12:33.560
+Cersei could then look inside the database and make sure that the most recent ID for Jim was number
+
+12:33.560 --> 12:34.060
+one.
+
+12:34.070 --> 12:37.820
+As long as that number one right there and number one right there are equal to each other.
+
+12:37.910 --> 12:40.890
+Then service, they will say, okay, I will process this event.
+
+12:40.910 --> 12:48.140
+I will deposit $40, taking us up to 110 and then record this things ID or sequence number as the last
+
+12:48.140 --> 12:49.340
+sequence processed.
+
+12:50.660 --> 12:52.040
+And now finally we would move on.
+
+12:52.680 --> 12:55.440
+So for user Jim right here, we know that this is about Jim.
+
+12:55.440 --> 12:58.410
+So once again, we'd take a look at the most recent event.
+
+12:59.640 --> 13:01.410
+That thing had a sequence number of three.
+
+13:01.590 --> 13:03.030
+So we'd put that in right there.
+
+13:04.290 --> 13:05.700
+Send this off to nets.
+
+13:06.660 --> 13:09.030
+This would be given sequence number four.
+
+13:09.270 --> 13:11.730
+And then once again, this would go on to our listener.
+
+13:12.660 --> 13:14.340
+So now we're making a modification to user.
+
+13:14.340 --> 13:14.640
+Jim.
+
+13:14.640 --> 13:18.210
+We would make sure the last ID we processed our last sequence number was number three.
+
+13:18.210 --> 13:19.260
+Yep, it was.
+
+13:19.260 --> 13:21.120
+So let's go ahead and apply this update.
+
+13:21.420 --> 13:23.140
+We're going to withdraw $100.
+
+13:23.160 --> 13:27.390
+We're now down to ten and we'll update that sequence ID right there to four.
+
+13:28.510 --> 13:29.560
+And that's the whole idea.
+
+13:30.920 --> 13:36.560
+So we're going to essentially the keys here are to make sure that the publisher understands the IDs
+
+13:36.560 --> 13:42.500
+or the sequences applied to every given event that's going to store those and will know which IDs are,
+
+13:42.500 --> 13:44.490
+which sequences apply to which user.
+
+13:44.510 --> 13:50.420
+Then whenever it dispatches a event tied to that user in the future, it will also attach the sequence
+
+13:50.420 --> 13:52.610
+for the previous event that modified it.
+
+13:53.060 --> 13:55.580
+So now with this whole scenario, imagine what would happen.
+
+13:56.320 --> 13:57.850
+If we simultaneously.
+
+13:58.540 --> 14:00.130
+Kind of rewind here a little bit.
+
+14:00.400 --> 14:01.780
+Let me undo a little bit.
+
+14:02.080 --> 14:04.690
+And let's say that we go back to the scenario where.
+
+14:06.060 --> 14:08.070
+We've got a deposit.
+
+14:09.540 --> 14:10.200
+For Jim.
+
+14:11.390 --> 14:14.090
+And simultaneously a withdrawal as well.
+
+14:15.840 --> 14:16.530
+Like so.
+
+14:17.620 --> 14:21.550
+So in this case, the deposit would have a sequence of three and then four.
+
+14:21.730 --> 14:26.890
+So the most recent event for the withdrawal would have been the three.
+
+14:26.920 --> 14:27.730
+Yeah, there we go.
+
+14:28.060 --> 14:32.950
+So let's imagine what would happen if we accidentally try to process the withdrawal before the deposit.
+
+14:32.950 --> 14:36.940
+In this case, service B would take a look at the ID of the last processed one.
+
+14:36.940 --> 14:37.900
+It was number one.
+
+14:38.380 --> 14:42.910
+But this thing, this event says that the last event or the last sequence number concerned with this
+
+14:42.910 --> 14:44.500
+event was number three.
+
+14:44.620 --> 14:45.910
+One and three are not equal.
+
+14:45.910 --> 14:49.150
+So Service B would refuse to process this event right here.
+
+14:49.150 --> 14:53.800
+It would say, you know what, number one has to be number three has not yet been processed.
+
+14:53.800 --> 14:55.780
+We're going to assume that's going to come in very shortly.
+
+14:55.780 --> 14:59.230
+But until it does, I'm going to refuse to process this event entirely.
+
+14:59.830 --> 15:04.660
+So then we would just essentially sit around and wait eventually, if this thing times out and gets
+
+15:04.660 --> 15:06.640
+sent back over to you, that's no problem.
+
+15:06.670 --> 15:10.840
+We're just going to keep waiting around until eventually sequence number three gets processed.
+
+15:11.140 --> 15:15.970
+When sequence number three gets processed, the one is equal to the last ID processed right here.
+
+15:15.970 --> 15:17.620
+So we'll go ahead and process that.
+
+15:17.620 --> 15:18.580
+We're up to the 110.
+
+15:18.580 --> 15:21.520
+And now finally, we can handle this event right here.
+
+15:23.770 --> 15:24.070
+Okay.
+
+15:24.070 --> 15:27.160
+So this one admittedly is pretty darn confusing.
+
+15:27.670 --> 15:28.520
+Does this work?
+
+15:28.540 --> 15:31.480
+Well, yes and no, not quite.
+
+15:31.750 --> 15:36.580
+The whole problem here, you might have noticed when I drag this thing over, I had said that the publisher
+
+15:36.580 --> 15:37.990
+doesn't actually know the sequence number.
+
+15:37.990 --> 15:40.960
+And so we were going to kind of hope that that sent back the sequence number.
+
+15:40.960 --> 15:45.170
+That does not actually occur when we send an event off to be published by not streaming.
+
+15:45.190 --> 15:46.900
+It's kind of a one way operation.
+
+15:46.900 --> 15:51.100
+We don't really get the ability to somehow reach out to Nats and say, Hey, for that event we published
+
+15:51.100 --> 15:52.900
+a little bit ago, what was the sequence number on?
+
+15:52.900 --> 15:58.420
+It is something that gets published or known only by Nats and we have a pretty tough time to reach in
+
+15:58.420 --> 16:00.930
+and figure out what that sequence number actually was.
+
+16:00.970 --> 16:05.380
+So we can't really somehow reach back and say, Oh yeah, this thing was given a sequence number of
+
+16:05.380 --> 16:05.860
+one.
+
+16:05.860 --> 16:09.970
+So any now any future event tied to a user of Jim.
+
+16:10.840 --> 16:12.760
+In this case, it would have been this one right here.
+
+16:12.760 --> 16:14.890
+The last sequence should have been one.
+
+16:14.890 --> 16:16.560
+That's the part that we can't really solve.
+
+16:16.570 --> 16:20.080
+We can't really store what the last sequence number was for Jim.
+
+16:21.160 --> 16:25.450
+Nonetheless, this does seem like it's getting even closer, even though we are being held up by a little
+
+16:25.450 --> 16:26.980
+technical limitation here.
+
+16:27.790 --> 16:30.670
+So that's it for these three additional possible solutions.
+
+16:30.670 --> 16:33.040
+Once again, I apologize for the duration of this video.
+
+16:33.070 --> 16:37.060
+This was an optional video and I just wanted to throw out these other possible solutions.
+
+16:37.570 --> 16:38.800
+So a quick pause right here.
+
+16:38.800 --> 16:42.220
+We'll take a look at how we're going to actually solve this in the next video.

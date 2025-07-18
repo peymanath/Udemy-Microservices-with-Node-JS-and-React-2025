@@ -1,0 +1,406 @@
+WEBVTT
+
+00:01.760 --> 00:04.430
+So what should we do with the user after they create a ticket?
+
+00:04.460 --> 00:06.950
+Well, I think we don't have to really overthink this.
+
+00:06.980 --> 00:12.020
+Let's say that after a user successfully creates a new ticket on our ticket creation form, let's just
+
+00:12.020 --> 00:14.360
+redirect them back to the list of all tickets.
+
+00:14.360 --> 00:16.010
+So in other words, send them back to the root.
+
+00:16.010 --> 00:16.610
+Root.
+
+00:16.910 --> 00:20.700
+We could definitely also send them to the ticket detail page if we wanted to.
+
+00:20.720 --> 00:22.990
+But again, let's just keep it really simple and straightforward.
+
+00:23.000 --> 00:25.370
+We'll send them back to the root root of our application.
+
+00:25.960 --> 00:31.390
+So to do so, we really want to run some programmatic or automatic navigation on the user.
+
+00:31.390 --> 00:34.630
+We want to redirect them forcibly over to another page.
+
+00:35.110 --> 00:36.700
+We've already done that once before.
+
+00:36.700 --> 00:41.560
+I think on our sign out route or the sign up page inside of our client project.
+
+00:41.920 --> 00:46.960
+So if we take a look at sign out, you might recall that we can import router from next router.
+
+00:47.200 --> 00:52.330
+And then if we ever want to forcibly navigate a user around, we will call router, push and provide
+
+00:52.330 --> 00:54.400
+the new route that we want to navigate them to.
+
+00:54.610 --> 00:55.720
+Well, simple enough.
+
+00:56.430 --> 00:58.770
+So inside of our new ticket component at the very top.
+
+00:59.830 --> 01:03.250
+I will import router from next router.
+
+01:05.350 --> 01:06.820
+Then inside of on success.
+
+01:06.820 --> 01:11.380
+I don't really need that ticket argument anymore so I will delete it and replace the console.
+
+01:11.380 --> 01:12.920
+Log with router.
+
+01:13.180 --> 01:14.410
+Push forward.
+
+01:14.410 --> 01:15.040
+Slash.
+
+01:18.380 --> 01:19.370
+Let's save this.
+
+01:20.150 --> 01:22.610
+I'm going to try to create another ticket really quickly.
+
+01:23.490 --> 01:26.190
+They'll say about redirect ticket.
+
+01:27.000 --> 01:28.350
+With a price of 50.
+
+01:30.140 --> 01:30.950
+Submit it.
+
+01:31.280 --> 01:32.050
+And there we go.
+
+01:32.060 --> 01:33.140
+I get redirected.
+
+01:33.470 --> 01:34.310
+Simple enough.
+
+01:35.410 --> 01:39.430
+Well, as long as we are here, let's get started working on this route.
+
+01:39.430 --> 01:40.030
+Route?
+
+01:40.270 --> 01:44.500
+So remember I had said that we really want to show a list of all the tickets that are available right
+
+01:44.500 --> 01:44.980
+now.
+
+01:45.370 --> 01:50.560
+So this really means that inside of our landing page component, we need to add in some data fetching
+
+01:50.560 --> 01:55.270
+to our get initial props function because this list of all tickets is some data that is required when
+
+01:55.270 --> 01:57.520
+we first display this component to the user.
+
+01:58.170 --> 02:01.200
+So inside of that landing pages get initial press function.
+
+02:01.200 --> 02:06.420
+We're going to add in a request to our ticket service to fetch all the different tickets that a user
+
+02:06.420 --> 02:07.230
+can purchase.
+
+02:08.950 --> 02:10.660
+I'm going to find that index file.
+
+02:10.660 --> 02:12.010
+So here's our landing page.
+
+02:12.520 --> 02:14.350
+I'm going to find the get initial prop function.
+
+02:14.530 --> 02:17.200
+And you might recall something we just discussed a couple of days ago.
+
+02:17.230 --> 02:22.240
+This function now has access to the client, which we are using to make requests during the initial
+
+02:22.240 --> 02:23.530
+rendering process.
+
+02:25.350 --> 02:29.850
+I'm going to remove that return empty object right there, and I'm going to replace it with a little
+
+02:29.850 --> 02:33.060
+bit of code, as you guess, to just fetch our list of tickets.
+
+02:33.980 --> 02:34.940
+We're going to say.
+
+02:36.610 --> 02:42.670
+Data is a weight client docket API tickets.
+
+02:44.980 --> 02:49.390
+Remember that whenever we make use of Axios to fetch some data, which is what this client really is
+
+02:49.390 --> 02:55.000
+right here we get back a big rez or response object on the actual data that we care about is nested
+
+02:55.000 --> 02:56.320
+on the data property.
+
+02:56.320 --> 02:58.060
+So that's why we are doing the structuring.
+
+02:59.330 --> 03:05.270
+After that, I'm then going to return an object with a key of tickets, and it will refer to that data.
+
+03:05.840 --> 03:11.300
+Now, this object right here, everything inside of here is going to be merged into the props that are
+
+03:11.300 --> 03:12.980
+being passed to the landing page.
+
+03:13.310 --> 03:19.430
+So because this object has a key of tickets, we can now receive that prop as tickets inside of the
+
+03:19.430 --> 03:20.660
+actual component.
+
+03:21.290 --> 03:25.550
+And so tickets should be an array of all the tickets that we just fetched from our API.
+
+03:26.290 --> 03:31.900
+Just to test that out inside the landing page component, let's do a console log of tickets.
+
+03:34.470 --> 03:35.940
+I'll save that flip back over.
+
+03:37.720 --> 03:41.980
+And now if you just flip back over, you might see immediately a console.log of undefined.
+
+03:41.980 --> 03:45.340
+But remember sometimes when next is doing it reloads here.
+
+03:45.370 --> 03:47.170
+Doesn't quite work the way you would expect.
+
+03:47.170 --> 03:49.240
+So we're going to reload the page.
+
+03:50.200 --> 03:53.840
+And then you should see a console log right here of all the tickets we have created.
+
+03:53.860 --> 03:59.470
+If you do not, you will probably see them back inside of your terminal in the window that is running
+
+03:59.470 --> 04:00.700
+your scaffold stuff.
+
+04:01.180 --> 04:05.140
+So that console.log would probably have been executed on the server side.
+
+04:05.140 --> 04:07.210
+And you should see the list of all the tickets over there.
+
+04:08.270 --> 04:13.250
+Alternatively, you can always click on that logo which will force a reload of this component and we
+
+04:13.250 --> 04:16.220
+should see the array of tickets right there as well.
+
+04:17.450 --> 04:17.620
+Okay.
+
+04:17.690 --> 04:18.950
+Well, we've got our tickets now.
+
+04:18.950 --> 04:21.260
+We just need to render them out as a list.
+
+04:21.720 --> 04:22.820
+We actually show these tickets.
+
+04:22.820 --> 04:25.850
+We're going to render them actually as a table, pretty much a list.
+
+04:26.090 --> 04:30.170
+So if right now, this table is just really going to have the title and the price of each individual
+
+04:30.170 --> 04:33.530
+ticket, and we'll eventually add in a couple of columns to it over time.
+
+04:35.600 --> 04:40.010
+So inside of landing page, I'm going to remove everything inside of the component right now.
+
+04:40.830 --> 04:42.120
+And I'm going to replace it.
+
+04:42.780 --> 04:45.630
+With some x to display a table.
+
+04:46.140 --> 04:47.460
+I'm going to first put in a div.
+
+04:49.240 --> 04:52.090
+With an H1 of tickets.
+
+04:53.460 --> 04:56.880
+Then I'll put in my table with the class name of table.
+
+04:59.750 --> 05:02.720
+I'm going to give the table a head or a t head.
+
+05:07.170 --> 05:09.630
+Inside the t head will put in a tr.
+
+05:10.530 --> 05:13.670
+And then we will give this thing two separate columns right now.
+
+05:15.120 --> 05:16.350
+A tidal column.
+
+05:17.550 --> 05:19.170
+And a price column.
+
+05:20.020 --> 05:20.830
+Now do double check.
+
+05:20.830 --> 05:26.380
+Make sure you've got table t, head t, r, t t and then all the appropriate closing tags.
+
+05:27.640 --> 05:31.360
+Then right after the HT head, I'm going to put in a PT body.
+
+05:33.410 --> 05:38.510
+And we definitely could right in a loop right here inside the body to loop over all of our different
+
+05:38.510 --> 05:40.900
+tickets and build a little row for each one.
+
+05:40.910 --> 05:46.340
+But just to keep this big block of X right here a little bit easier to read, I'm going to instead create
+
+05:46.340 --> 05:51.500
+a little helper variable up here at the top where I will loop over my array of tickets and build up
+
+05:51.500 --> 05:53.390
+a separate row for each ticket.
+
+05:54.250 --> 05:56.080
+So above our return statement.
+
+05:57.150 --> 05:59.280
+I'm going to add in ticket list.
+
+06:00.850 --> 06:03.820
+This will be the result of mapping over our list of tickets.
+
+06:05.370 --> 06:07.860
+And for each ticket, I'm going to return.
+
+06:10.370 --> 06:11.390
+A TR.
+
+06:14.210 --> 06:19.670
+Whenever we build up a array of different elements, keep in mind that React wants us to provide a key
+
+06:19.670 --> 06:20.420
+property.
+
+06:20.690 --> 06:25.460
+So on the TR itself, I'm going to put on a key prop, and for the key I will provide the ID of the
+
+06:25.460 --> 06:26.120
+ticket.
+
+06:28.120 --> 06:31.300
+Then inside the TR will place one TD.
+
+06:32.300 --> 06:34.370
+To print out the tickets title.
+
+06:35.640 --> 06:36.690
+And a second one.
+
+06:38.890 --> 06:40.540
+For the tickets price.
+
+06:42.780 --> 06:45.420
+And then finally, I'm going to show ticket list.
+
+06:46.720 --> 06:48.310
+Down inside of my body.
+
+06:52.850 --> 06:53.480
+All right.
+
+06:53.570 --> 06:55.100
+So a lot of jokes here.
+
+06:55.130 --> 06:56.090
+Do double check.
+
+06:56.090 --> 06:58.290
+Make sure you don't have any typos or anything like that.
+
+06:58.310 --> 07:01.160
+Once you're sure everything is good to go, we'll save this file.
+
+07:02.360 --> 07:05.780
+Look back over and we should see our list of tickets.
+
+07:06.870 --> 07:10.080
+Again, if you don't see this appear right away, you can always refresh the page and hopefully you'll
+
+07:10.080 --> 07:10.950
+then see it appear.
+
+07:12.100 --> 07:14.050
+Let's say that this is good progress forward.
+
+07:14.590 --> 07:17.860
+So now we're going to take a quick pause right here naturally.
+
+07:17.860 --> 07:22.150
+And after that, we're going to make sure that we create some page to show details about a specific
+
+07:22.150 --> 07:22.660
+ticket.
+
+07:23.080 --> 07:25.570
+And that's really going to look something like.
+
+07:26.500 --> 07:27.460
+This right here.
+
+07:27.460 --> 07:30.190
+So it will be pretty simple and straightforward in nature.
+
+07:30.820 --> 07:36.130
+We're going to make sure we show the title The Price, maybe a status, who knows, and then a button
+
+07:36.130 --> 07:37.600
+to actually purchase the ticket.
+
+07:37.900 --> 07:38.800
+So a quick pause here.
+
+07:38.830 --> 07:41.230
+Get started on that next page in just a moment.

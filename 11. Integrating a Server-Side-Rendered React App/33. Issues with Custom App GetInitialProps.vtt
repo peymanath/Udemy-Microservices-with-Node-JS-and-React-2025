@@ -1,0 +1,337 @@
+WEBVTT
+
+00:01.070 --> 00:05.600
+In the last video, we wrote out some scaffolding for the app component, and then I very abruptly ended
+
+00:05.600 --> 00:07.640
+the video saying, Oh yeah, I get initial props.
+
+00:07.640 --> 00:11.120
+This time round is going to be slightly different or kind of that there was something different this
+
+00:11.120 --> 00:11.870
+time around.
+
+00:12.110 --> 00:16.760
+So remember at this point we've been talking about get initial props as it has been implemented inside
+
+00:16.760 --> 00:18.260
+of our different pages.
+
+00:18.380 --> 00:20.710
+We are not technically working in a page right now.
+
+00:20.720 --> 00:25.400
+Instead, we are working inside of a custom app component that's going to wrap up a page.
+
+00:25.790 --> 00:30.230
+Unfortunately, this is kind of a tough thing to keep in the back of your mind when you're making use
+
+00:30.230 --> 00:30.530
+of next.
+
+00:30.530 --> 00:37.100
+Just the arguments that are provided to the get initial props function for a page are different than
+
+00:37.100 --> 00:41.420
+the arguments that are provided to get initial props for the custom app component.
+
+00:41.870 --> 00:47.840
+So as we just saw inside of a page component, our first argument is some kind of context object.
+
+00:47.840 --> 00:50.090
+And inside there was that rec property.
+
+00:50.090 --> 00:54.470
+That was the request and that was the property that we cared a lot about because it had that set of
+
+00:54.470 --> 00:57.740
+headers that was coming into our application from the user's browser.
+
+00:58.760 --> 01:03.410
+So we really want to make sure that we got access to that rec property so we could use it to eventually
+
+01:03.410 --> 01:05.270
+build up our Axios client.
+
+01:06.430 --> 01:10.570
+When we are defining the JIT initial function for a custom app component.
+
+01:10.570 --> 01:15.970
+However, the rec object is a little bit nested inside of that first argument.
+
+01:15.970 --> 01:19.660
+So again, the first argument is different between these two types of things.
+
+01:19.960 --> 01:22.570
+It's I know kind of a nasty thing, but that's life.
+
+01:22.570 --> 01:25.600
+That's just how the authors of Next decided to put this stuff together.
+
+01:26.260 --> 01:31.120
+So rather than that first argument just being a plain object that has the rec property right directly
+
+01:31.120 --> 01:35.920
+on it, instead the wreck object is nested on this x property.
+
+01:35.950 --> 01:37.900
+Ctcs being short for context.
+
+01:38.800 --> 01:42.670
+Let's do a quick console log here just to kind of verify that this is the case.
+
+01:44.070 --> 01:48.000
+So inside of get initial props, I'm going to receive this first argument that we're going to refer
+
+01:48.000 --> 01:52.950
+to as app context, just to kind of clarify and make it a little bit more obvious that this context
+
+01:52.950 --> 01:58.740
+right here is different than a context inside of that landing pages get initial props.
+
+02:00.870 --> 02:06.180
+Now this app context, if we did a console log of it directly, we would get a ton of information because
+
+02:06.180 --> 02:08.700
+there's a ton of different properties nested inside there.
+
+02:08.940 --> 02:13.440
+So just to make this thing a little bit easier to read, I'm going to only print out the keys of that
+
+02:13.440 --> 02:14.100
+object.
+
+02:14.490 --> 02:22.290
+To do so, I'll do a console log of object keys on app context and then go into return an empty object.
+
+02:23.310 --> 02:24.620
+Okay, let's save this.
+
+02:24.630 --> 02:27.720
+I'm going to go back over my browser and do a hard refresh the page.
+
+02:28.110 --> 02:32.190
+Now, after refreshing this page, if it says that you are not signed in, even though you might be
+
+02:32.190 --> 02:35.160
+really, really, really sure that you are signed in, that is okay.
+
+02:36.370 --> 02:40.240
+And then going to go over to my terminal and now I can see the keys console.log right there.
+
+02:40.720 --> 02:47.740
+So again, on this app context thing, we get app three component router and Ctcs and ctcs is what we
+
+02:47.740 --> 02:51.880
+really care about because nested on there is still going to be that same.
+
+02:52.800 --> 02:57.390
+Wreck property that we want to pass off to our build client function.
+
+02:58.560 --> 02:58.860
+All right.
+
+02:58.860 --> 03:01.380
+So again, that was why we kind of abruptly pause the video.
+
+03:01.410 --> 03:06.030
+It was just so we understood that we have to adjust how we call build client this time around.
+
+03:06.450 --> 03:08.460
+So long story short, here's what we're going to do.
+
+03:08.550 --> 03:12.600
+We're still going to build up a client calling build client.
+
+03:12.600 --> 03:17.430
+But this time around, because we are inside of this custom app component, we're going to instead pass
+
+03:17.430 --> 03:19.800
+in app context dot KCTCS.
+
+03:19.920 --> 03:20.850
+That's pretty much it.
+
+03:22.580 --> 03:27.260
+Once we've got the client put together, we can still use it as usual to attempt to fetch some data.
+
+03:28.080 --> 03:33.390
+So for example I can still do a data is a weight client get.
+
+03:34.600 --> 03:38.410
+To API users aren't user.
+
+03:40.030 --> 03:43.000
+And then I can still just return that data.
+
+03:43.510 --> 03:46.390
+I'm going to make sure I mark the enclosing function as a sync.
+
+03:47.340 --> 03:51.690
+And then for right now, just to make sure that we are executing this function and successfully making
+
+03:51.690 --> 03:54.570
+this call, let's just do a console log of data right here.
+
+03:55.520 --> 04:00.200
+Unfortunately, this awkwardness around app context is not the only thing we're going to have to kind
+
+04:00.200 --> 04:01.270
+of struggle with here.
+
+04:01.280 --> 04:06.080
+So you're going to notice that the application when we refresh it, is not going to really work as expected.
+
+04:06.440 --> 04:11.150
+Right now, I really just want to verify that we are fetching some data and console logging it out.
+
+04:11.910 --> 04:12.950
+Okay, let's save this.
+
+04:13.190 --> 04:17.870
+I'm going to once again flip back over to my browser, do a hard refresh to the page.
+
+04:18.680 --> 04:23.270
+I'll then go back over to my terminal and I should see a console log of current user right there.
+
+04:23.880 --> 04:26.050
+Okay, so we're definitely able to fetch the current user.
+
+04:26.060 --> 04:27.200
+That's good at least.
+
+04:29.560 --> 04:30.310
+So now.
+
+04:30.970 --> 04:33.430
+Let's go back over to our index file.
+
+04:35.370 --> 04:38.430
+So we've now got a get initial props in two locations.
+
+04:38.430 --> 04:42.480
+We have one for our landing page and one for our custom app component.
+
+04:43.250 --> 04:44.960
+I want to do just a quick test here.
+
+04:44.960 --> 04:47.340
+Back inside of the landing pages.
+
+04:47.360 --> 04:48.440
+Get initial props.
+
+04:48.650 --> 04:54.350
+I'm going to put a console log inside of here of landing page like so.
+
+04:55.440 --> 04:56.490
+I'll then save this.
+
+04:57.730 --> 05:00.280
+And then going to refresh my browser once again.
+
+05:01.110 --> 05:02.610
+And then go over to my terminal.
+
+05:03.000 --> 05:07.620
+And when I do say you'll notice that we do not have a console log from the landing pages, get initial
+
+05:07.620 --> 05:09.150
+props function anymore.
+
+05:09.660 --> 05:13.050
+So this is another kind of little awkward thing around the edges.
+
+05:13.050 --> 05:15.630
+And this is kind of what I was alluding to back on that diagram really quick.
+
+05:15.630 --> 05:16.200
+Back over here.
+
+05:16.200 --> 05:16.560
+I'm sorry.
+
+05:16.560 --> 05:18.980
+I know I'm clicking around a ton very quickly.
+
+05:18.990 --> 05:23.520
+So I told you that when we define a get initial props for the app component, we still need to make
+
+05:23.520 --> 05:26.730
+sure that we can have a get initial props tied to an individual page.
+
+05:27.030 --> 05:33.150
+So unfortunately, when we tie get initial props to app component, you get initial functions that we
+
+05:33.150 --> 05:37.470
+tie to an individual page do not get automatically invoked anymore.
+
+05:37.740 --> 05:43.140
+So the reason that we just added in a console log inside of the landing page, get initial props was
+
+05:43.140 --> 05:46.740
+just show you that because we just added one to the custom page.
+
+05:46.740 --> 05:49.500
+Now this old one not getting called anymore.
+
+05:49.980 --> 05:50.700
+Yeah, I know.
+
+05:50.700 --> 05:53.400
+Next is just a little bit awkward sometimes.
+
+05:53.550 --> 05:55.470
+You know, it's it's a great framework.
+
+05:55.470 --> 05:58.440
+And right now you might be thinking, wow, this is like a lot of work.
+
+05:58.440 --> 06:03.000
+Stephen And why are we going through these really intricate steps here just to figure out how to use
+
+06:03.000 --> 06:05.520
+server side rendering on a microservices course?
+
+06:05.520 --> 06:08.070
+I know this is starting to get really off topic.
+
+06:08.980 --> 06:13.360
+But trust me, I really wanted to cover some aspect of server side rendering this course.
+
+06:13.360 --> 06:17.860
+And if we had tried to do all this stuff by hand, we would have been in ten times a world of hurt and
+
+06:17.860 --> 06:19.450
+it would have all been ten times harder.
+
+06:19.450 --> 06:23.170
+So I know that we're running into some awkward challenges here, but trust me, we're almost through
+
+06:23.170 --> 06:23.530
+it.
+
+06:23.710 --> 06:25.660
+Let's just stick together a little bit longer.
+
+06:26.080 --> 06:26.350
+Okay.
+
+06:26.350 --> 06:31.420
+So again, our whole issue here, we definitely need to be able to run, get initial props from both
+
+06:31.420 --> 06:32.200
+locations.
+
+06:32.200 --> 06:37.690
+But as soon as we added it into this new custom app component, our second one or the original one,
+
+06:37.690 --> 06:38.710
+stop getting invoked.
+
+06:38.710 --> 06:39.700
+So quick pause right here.
+
+06:39.700 --> 06:41.890
+We'll figure out how to fix this in just a moment.

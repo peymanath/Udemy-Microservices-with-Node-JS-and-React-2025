@@ -1,0 +1,148 @@
+WEBVTT
+
+00:00.880 --> 00:03.580
+We just got a quick tour of some aspects of Kubernetes.
+
+00:03.580 --> 00:07.420
+And now, as I mentioned, at the end of the last video, I just want to highlight some really important
+
+00:07.420 --> 00:08.920
+pieces of terminology.
+
+00:08.920 --> 00:12.490
+We're going to be using some of these terms quite a bit throughout the rest of this course.
+
+00:12.490 --> 00:14.920
+So just want to make sure that it's really clear what these mean.
+
+00:15.280 --> 00:17.260
+First off, what is a Kubernetes cluster?
+
+00:17.290 --> 00:22.900
+It's a collection of nodes, plus a master to manage all those different nodes effectively.
+
+00:22.900 --> 00:26.050
+It's the entire set of infrastructure that's going to run our code.
+
+00:26.970 --> 00:28.380
+With that in mind, what's a node?
+
+00:28.410 --> 00:33.330
+A node is a virtual machine that's going to run all the different containers that we throw at our Kubernetes
+
+00:33.330 --> 00:33.960
+cluster.
+
+00:34.380 --> 00:38.050
+A single cluster might have many, many nodes assigned to it.
+
+00:38.070 --> 00:39.810
+It might only have one node.
+
+00:39.990 --> 00:45.060
+So right now, on our local computer, we are running a Kubernetes cluster, and by default it has just
+
+00:45.060 --> 00:46.050
+one node.
+
+00:46.290 --> 00:52.440
+But as we start to deploy our application, we might want to start to run multiple many, maybe 310
+
+00:52.440 --> 00:54.060
+1000 different nodes.
+
+00:55.950 --> 00:57.390
+Next up was a pod.
+
+00:57.420 --> 00:59.570
+Remember a pod for you and I?
+
+00:59.580 --> 01:05.220
+In the context of this course, we are going to kind of use the term pod and container interchangeably.
+
+01:05.430 --> 01:07.560
+Technically, they are absolutely not the same thing.
+
+01:07.590 --> 01:12.690
+Technically, a pod is something that kind of wraps up a container and a pod can wrap up multiple different
+
+01:12.690 --> 01:15.840
+containers together, but we are not going to do that inside this course.
+
+01:15.840 --> 01:20.040
+So for you and I, there's really a 1 to 1 mapping between pods and containers.
+
+01:20.040 --> 01:24.360
+So we're probably just going to end up using these terms rather interchangeably.
+
+01:26.690 --> 01:28.190
+Next up was a deployment.
+
+01:28.400 --> 01:33.470
+Deployments are going to monitor a set of identical pods or pods that are meant to run the same container
+
+01:33.470 --> 01:36.620
+inside them if anything ever happens to those pods.
+
+01:36.620 --> 01:41.120
+So, for example, if the pod crashes or just stops running for any reason, the deployment is going
+
+01:41.120 --> 01:44.720
+to see that and automatically restart that pod for us.
+
+01:45.700 --> 01:46.960
+And then finally a service.
+
+01:46.960 --> 01:51.130
+And this is probably going to be one of the most confusing terms that we're going to run into because
+
+01:51.130 --> 01:53.560
+we are in a course about microservices.
+
+01:53.560 --> 01:57.970
+We are creating services that are programs, but then we're also creating services in Kubernetes that
+
+01:57.970 --> 01:59.680
+are something totally different.
+
+01:59.890 --> 02:06.160
+So remember, a Kubernetes service is something that provides a very easy to remember URL so that other
+
+02:06.160 --> 02:11.470
+running pods or containers inside of our cluster can very easily access another pod.
+
+02:12.070 --> 02:15.670
+There are several different types of services, and we're going to highlight and explore these different
+
+02:15.670 --> 02:16.960
+types in due time.
+
+02:17.640 --> 02:22.050
+I'm going to apologize right now because there's probably going to be a lot of confusion as we move
+
+02:22.050 --> 02:26.550
+forward, when I'm going to use the word service and you're going to say, wait, like our application
+
+02:26.550 --> 02:29.850
+service or the Kubernetes service or what service are you talking about?
+
+02:29.850 --> 02:34.620
+So just remember when you hear me say service, it's always in the context of either Kubernetes or some
+
+02:34.620 --> 02:38.130
+actual program that you and I are trying to run, create and develop.
+
+02:39.680 --> 02:39.950
+All right.
+
+02:39.950 --> 02:42.800
+So again, just a quick reminder on these pieces of terminology.
+
+02:42.800 --> 02:45.320
+So with all of that in mind, we're going to take a quick pause right now.
+
+02:45.320 --> 02:49.370
+And then, as I've said two or three times now, we're going to start to implement the float that we
+
+02:49.370 --> 02:51.170
+just discussed in the next video.

@@ -1,0 +1,370 @@
+WEBVTT
+
+00:00.920 --> 00:03.200
+We now created a new GitHub repository.
+
+00:03.200 --> 00:08.330
+We're now going to add in a little bit of code to our GitHub repo itself to make sure that we run our
+
+00:08.330 --> 00:08.690
+tests.
+
+00:08.690 --> 00:14.060
+Any time we create a new poll request to merge code into our master branch, let's take a look at a
+
+00:14.060 --> 00:14.660
+quick diagram.
+
+00:14.660 --> 00:16.220
+Understand how this is going to work.
+
+00:17.150 --> 00:21.170
+So we're going to use a feature on GitHub called GitHub actions on GitHub.
+
+00:21.170 --> 00:25.820
+Any time that you push some code, create a pull, request, pull, request, closed.
+
+00:25.820 --> 00:31.070
+Anytime a repository is forked in a variety of many other events occur, that is going to trigger a
+
+00:31.070 --> 00:33.140
+event internally inside of GitHub.
+
+00:33.500 --> 00:37.910
+And when I say event right here, I'm not talking about an event inside of our Kubernetes cluster,
+
+00:37.910 --> 00:40.610
+I'm talking about an event on GitHub itself.
+
+00:40.970 --> 00:46.670
+Whenever one of these events occurs, we can optionally run a GitHub action, a GitHub action as a little
+
+00:46.670 --> 00:47.330
+script.
+
+00:47.330 --> 00:52.370
+We can put any code inside that script that we want to somehow run commands, run our test, deploy
+
+00:52.370 --> 00:53.000
+our app.
+
+00:53.000 --> 00:55.340
+We can do just about anything you can imagine.
+
+00:55.880 --> 01:00.800
+So we're going to create a GitHub action that is going to trigger any time that we create a pull request
+
+01:00.800 --> 01:02.810
+to merge into the master branch.
+
+01:03.110 --> 01:06.140
+We're also going to make sure that this GitHub action is going to run.
+
+01:06.140 --> 01:11.690
+Any time that we update that pull request as well inside of our GitHub action, we're going to write
+
+01:11.690 --> 01:16.100
+out some code to take a look at each of our individual services and run the test inside them.
+
+01:16.640 --> 01:21.890
+If any of those tests fail for any reason, we're then going to be told on the pull request that we
+
+01:21.890 --> 01:25.190
+have created that something is wrong with our code and that we need to fix it.
+
+01:26.050 --> 01:31.030
+Now, if you want to read more about GitHub actions on your own, you can take a look at the official
+
+01:31.030 --> 01:33.430
+help page on GitHub at Help GitHub.
+
+01:35.080 --> 01:40.540
+If you're going for English actions and you can read a lot of documentation about GitHub actions and
+
+01:40.540 --> 01:41.260
+how they work.
+
+01:41.940 --> 01:45.840
+One of the most popular pages you're going to want to read, or most important, I should say, is events
+
+01:45.840 --> 01:47.130
+that trigger workflows.
+
+01:47.520 --> 01:51.690
+And this will tell you about all the different things that can occur inside of GitHub that is going
+
+01:51.690 --> 01:55.710
+to trigger a GitHub action or essentially run one of these scripts we're going to put together.
+
+01:57.130 --> 01:57.400
+Okay.
+
+01:57.400 --> 01:59.470
+So let's put our first script together right now.
+
+01:59.830 --> 02:02.350
+Back over on a repository on the very top.
+
+02:02.350 --> 02:04.900
+I'm going to go to the tab that says Actions.
+
+02:06.750 --> 02:09.600
+We then get prompted with a couple of different options here.
+
+02:09.600 --> 02:12.480
+We can either make use of one that's already been put together for us.
+
+02:12.480 --> 02:17.160
+We're going to write our own from scratch, so I'm going to find simple workflow and just get set up
+
+02:17.160 --> 02:17.970
+this workflow.
+
+02:18.330 --> 02:22.170
+If you do not see something that says simple workflow or something like that, no problem.
+
+02:22.170 --> 02:24.990
+You can click on any of the existing workflows on there.
+
+02:24.990 --> 02:30.480
+Just on any of them just hit setup, you'll be taken to a page like this and once here we're going to
+
+02:30.480 --> 02:32.290
+highlight everything and delete it.
+
+02:32.310 --> 02:36.750
+So again, doesn't really matter which of those starting points you use, just click on any of them
+
+02:36.750 --> 02:38.550
+and then delete everything inside this file.
+
+02:39.700 --> 02:43.120
+The first thing we're going to do here is rename the file that we are creating.
+
+02:43.720 --> 02:48.700
+We're going to rename this to test HTML because it's going to run the test inside of our project.
+
+02:49.720 --> 02:53.560
+Now inside of this editor right here, we are going to write out some amount of code that's going to
+
+02:53.560 --> 02:55.060
+configure this GitHub action.
+
+02:55.300 --> 02:59.560
+In particular, we're going to write out some configuration that says when we want to run this action
+
+02:59.680 --> 03:03.730
+and then we're going to also write out the script that is actually going to run our tests.
+
+03:04.450 --> 03:08.470
+So in general, this is going to be a little bit of just copy paste, writing out what I write.
+
+03:08.470 --> 03:09.850
+It's a special little syntax.
+
+03:09.850 --> 03:14.140
+It is YAML technically, but the actual options we write in here is just something you're going to learn
+
+03:14.140 --> 03:14.860
+over time.
+
+03:15.370 --> 03:19.420
+The first thing I'm going to do is provide a name for this workflow or this GitHub action.
+
+03:19.810 --> 03:23.380
+I'm going to call it test just to mirror the name of the file.
+
+03:25.570 --> 03:26.980
+Then going to put in here.
+
+03:28.330 --> 03:30.910
+And this autocomplete is really running me through a loop.
+
+03:30.940 --> 03:31.660
+There we go.
+
+03:32.020 --> 03:36.880
+We're going to put in on this on section is going to determine when we are going to run this workflow.
+
+03:37.150 --> 03:41.860
+So this would be where we configure say let's run this GitHub action whenever code is pushed or pull
+
+03:41.860 --> 03:43.420
+requests created or so on.
+
+03:44.180 --> 03:49.160
+For you and I, we want to run this workflow any time a pull request is created.
+
+03:49.520 --> 03:52.910
+So we're going to put in pull request like so, and that's it.
+
+03:53.300 --> 03:57.470
+Now technically, by putting in pull request right here, we're going to trigger this workflow more
+
+03:57.470 --> 04:00.320
+often than if we just create a request.
+
+04:00.470 --> 04:02.420
+When we put in polar request by itself.
+
+04:02.450 --> 04:06.800
+We can go back over this documentation page or events that trigger workflows.
+
+04:08.010 --> 04:10.380
+I'm going to search on here for polar request.
+
+04:11.590 --> 04:12.460
+And there we go.
+
+04:12.960 --> 04:15.430
+So if we write out, just pull request by itself.
+
+04:15.450 --> 04:22.890
+Then technically this workflow is going to run any time that a request is created or updated or reopened
+
+04:23.280 --> 04:27.570
+by just writing up a request that is going to determine when we run the script.
+
+04:29.750 --> 04:33.440
+After that section I then going to put in a jobs.
+
+04:35.130 --> 04:36.300
+Then built.
+
+04:38.350 --> 04:41.440
+And this autocomplete again is really irritating.
+
+04:42.320 --> 04:48.200
+Inside this build section we're going to write out runs on the wound to latest.
+
+04:49.760 --> 04:52.160
+We're then going to put in a step section.
+
+04:53.140 --> 04:53.800
+Inside of here.
+
+04:53.800 --> 04:55.630
+We're going to write out uses.
+
+04:56.600 --> 05:01.340
+And then actions slash checkout at the two.
+
+05:02.190 --> 05:06.900
+So this job section right here is going to define some number of things that we want to do whenever
+
+05:06.900 --> 05:10.440
+a request is created, reopened or updated.
+
+05:10.890 --> 05:15.330
+In particular, we want to start up some kind of virtual machine or really it is a container.
+
+05:16.000 --> 05:21.400
+We are going to be running on the Ubuntu operating system and the first thing we want to do inside of
+
+05:21.400 --> 05:24.070
+our little script is take all the code out of our project.
+
+05:24.070 --> 05:24.910
+That's what this uses.
+
+05:24.910 --> 05:26.080
+Step right here does.
+
+05:27.040 --> 05:31.000
+We're then going to set up a series of commands to run inside of our project.
+
+05:31.420 --> 05:33.270
+So I'm going to put in another array entry here.
+
+05:33.280 --> 05:38.710
+I'm going to say run, and then I'm going to put in a command that is going to run all the tests inside
+
+05:38.710 --> 05:41.080
+of just my auth service.
+
+05:41.110 --> 05:43.120
+We'll start out with just the alt service for right now.
+
+05:43.940 --> 05:47.450
+Inside if you are going to put in CD into the directory.
+
+05:49.330 --> 05:56.470
+And install all the dependencies inside there and run all of our tests and remember to run our tests.
+
+05:56.470 --> 05:58.540
+We put in RPM run test.
+
+05:59.230 --> 06:00.250
+Now there's a little gotcha.
+
+06:00.250 --> 06:02.230
+We cannot just run our test directly.
+
+06:02.320 --> 06:03.490
+I'll tell you why in just a moment.
+
+06:03.490 --> 06:08.440
+So we're going to slightly massage that command and change it to NPM run test colon psi.
+
+06:09.430 --> 06:10.000
+And that is it.
+
+06:10.000 --> 06:11.500
+That's all we're going to do for right now.
+
+06:12.750 --> 06:16.590
+Now the syntax here and understanding what is going on is just a little bit confusing.
+
+06:16.590 --> 06:20.670
+This is one of those things where once you see it in action, it really is going to make a lot more
+
+06:20.670 --> 06:21.270
+sense.
+
+06:22.370 --> 06:23.730
+So the changes we have made here.
+
+06:24.560 --> 06:29.840
+It's going to make sure that whenever we create, update or reopen a pool request, we are going to
+
+06:29.840 --> 06:34.160
+install dependencies into our auth project and run the script inside there.
+
+06:34.680 --> 06:38.120
+If right now, let's just commit this file, let's save it as is.
+
+06:38.210 --> 06:41.690
+We're then going to create a new branch inside of our local git repository.
+
+06:41.720 --> 06:47.750
+Pushed it up to this GitHub repo, open a pull request and then just see what happens on the top right
+
+06:47.750 --> 06:48.110
+hand side.
+
+06:48.110 --> 06:52.100
+I'm going to find the start commit button and then I'll click on Commit New File.
+
+06:54.180 --> 06:54.420
+Okay.
+
+06:54.420 --> 06:58.860
+So we have now created a GitHub action by creating that file and putting a little bit of configuration
+
+06:58.860 --> 06:59.370
+in there.
+
+06:59.880 --> 07:00.810
+Let's take a pause here.
+
+07:00.820 --> 07:01.740
+We come back to the next video.
+
+07:01.740 --> 07:05.640
+We're going to make a very small change to our project on a branch.
+
+07:05.640 --> 07:07.380
+We're then going to commit that, do all that stuff.
+
+07:07.380 --> 07:10.590
+We just discussed the quick pause, and I'll see you in just a minute.

@@ -1,0 +1,223 @@
+WEBVTT
+
+00:01.350 --> 00:03.930
+We just got a reminder on the goal of the Order Service.
+
+00:03.930 --> 00:06.120
+So let's get started on putting this thing together.
+
+00:06.150 --> 00:09.360
+Here's what we're going to be doing inside of this video and the next one or two.
+
+00:09.750 --> 00:13.830
+And the order service is going to be extremely similar in nature to the ticketing service.
+
+00:14.010 --> 00:18.390
+So just about all the code, all the topics we have learned in the last couple of sections are going
+
+00:18.390 --> 00:21.330
+to be 100% applicable to the order service as well.
+
+00:21.630 --> 00:26.190
+This is actually really good news because it means we get to write the order service really quickly.
+
+00:26.190 --> 00:31.170
+It's going to come together in a fraction of the time as what we spend on the tickets service.
+
+00:32.270 --> 00:33.230
+So here's what we're going to do.
+
+00:33.680 --> 00:36.530
+We're going to duplicate a lot of code out of the ticket service.
+
+00:36.560 --> 00:40.400
+We're going to install some dependencies into the order service so we can eventually run some tests
+
+00:40.400 --> 00:41.420
+on our local machine.
+
+00:41.990 --> 00:46.370
+We'll build an image using Docker, create a Kubernetes deployment config file.
+
+00:47.670 --> 00:52.500
+Set up some file sync options inside of our scaffold YAML file to make sure all the changes we make
+
+00:52.500 --> 00:54.870
+inside of orders get synced into our running pod.
+
+00:55.470 --> 00:59.130
+And then finally we're going to set up some routing rules inside the ingress service as well.
+
+00:59.620 --> 01:00.210
+That's it.
+
+01:00.900 --> 01:02.310
+Let's get started right away.
+
+01:02.880 --> 01:07.020
+I'm going to flip back over to my editor and inside of my route ticketing directory, I'm going to make
+
+01:07.020 --> 01:09.510
+a new folder called Orders.
+
+01:11.220 --> 01:16.500
+I'm then going to open up my tickets directory and we're going to copy over a decent number of things
+
+01:16.500 --> 01:18.360
+inside of here, over two orders.
+
+01:19.020 --> 01:20.910
+So I'm going to multi select here.
+
+01:20.940 --> 01:27.690
+I'm going to get my config file package, JSON, package, lock, docker, file, docker, ignore.
+
+01:28.050 --> 01:29.410
+And we'll just start with those.
+
+01:29.430 --> 01:32.940
+So I'm going to copy all that and then paste it into orders.
+
+01:34.990 --> 01:39.730
+I'm then going to go into each of these files very quickly and just make sure that I change any references
+
+01:39.730 --> 01:42.550
+to the tickets service over to orders instead.
+
+01:42.910 --> 01:44.620
+So I'm going to start inside the Docker file.
+
+01:45.010 --> 01:45.940
+No issues here.
+
+01:46.480 --> 01:48.310
+I'm going to go into package JSON.
+
+01:48.790 --> 01:50.850
+It looks like we have a name inside of here of tickets.
+
+01:50.860 --> 01:51.840
+Doesn't really matter.
+
+01:51.850 --> 01:54.430
+Nonetheless, let's update it to say orders instead.
+
+01:55.910 --> 01:58.630
+I don't think there's anything else inside of here that's super relevant.
+
+01:58.640 --> 02:00.320
+So I'm going to save the file and close it.
+
+02:00.530 --> 02:05.300
+And then finally, the config file, definitely nothing super project specific inside of there.
+
+02:06.320 --> 02:10.250
+Next up inside of orders, I'm going to make a new folder called RC.
+
+02:10.940 --> 02:13.640
+We're going to copy over a couple of different things.
+
+02:14.090 --> 02:22.010
+So I'm going to first copy over Nat's wrapper index and app TS from the ticket's CRC directory.
+
+02:23.110 --> 02:27.010
+I'm going to copy those three and paste them into orders.
+
+02:30.280 --> 02:34.420
+If we now open up those three files inside of orders, we're definitely going to see a lot of errors
+
+02:34.420 --> 02:35.610
+throughout these different files.
+
+02:35.620 --> 02:41.290
+So for example, inside of orders, probably going to see some errors around this route stuff probably
+
+02:41.290 --> 02:47.500
+going to see a error or five inside the index file and inside of the Nat's wrapper as well.
+
+02:48.130 --> 02:48.850
+That's okay.
+
+02:48.880 --> 02:52.240
+As soon as we install dependencies, a lot of these errors are going to go away.
+
+02:52.750 --> 02:55.720
+And the ones that don't go away, we're going to fix up on our own.
+
+02:58.770 --> 03:00.510
+So that's all we're going to copy over for right now.
+
+03:00.510 --> 03:05.010
+We will eventually copy over a couple of other files from tickets, but that's good enough for right
+
+03:05.010 --> 03:05.400
+now.
+
+03:06.930 --> 03:13.500
+So onto step two, we're going to install dependencies into the order service on our local machine.
+
+03:13.530 --> 03:17.640
+The reason we're doing this is that we can eventually run some tests inside of here on our local machine
+
+03:17.640 --> 03:21.660
+without having to rely upon any odd or Docker stuff or anything like that.
+
+03:22.020 --> 03:23.790
+So I will go over to my terminal.
+
+03:25.470 --> 03:28.920
+I'm going to open up a new terminal window inside the ticketing project directory.
+
+03:30.380 --> 03:33.890
+Well then change into orders and do an NPM install.
+
+03:35.670 --> 03:41.010
+As we install defenses, we are going to have to redownload that MongoDB memory server binary, which
+
+03:41.010 --> 03:42.630
+usually takes a couple of minutes.
+
+03:42.660 --> 03:42.870
+Yep.
+
+03:42.870 --> 03:43.860
+There it is right there.
+
+03:44.400 --> 03:48.060
+Personally, I'm on a pretty slow internet connection, so it's going to take a little bit.
+
+03:48.450 --> 03:53.820
+So while that's running, let's go ahead and open up another terminal window and build an image out
+
+03:53.820 --> 03:55.050
+of this order service.
+
+03:57.170 --> 04:01.040
+So I'm going to open up another terminal window still inside of orders.
+
+04:02.640 --> 04:09.120
+And I'll run a Docker build dash to even greater orders.
+
+04:09.760 --> 04:14.710
+Naturally you will want to replace it even greater with your docker ID and then a dot.
+
+04:19.830 --> 04:24.870
+That's going to take a moment as well, because the image also has to download and install that MongoDB
+
+04:24.870 --> 04:25.370
+binary.
+
+04:25.380 --> 04:26.270
+Actually it does not.
+
+04:26.280 --> 04:30.960
+I forgot we we listed that inside of the dev dependencies, so that should go a little bit more quickly.
+
+04:31.320 --> 04:36.330
+Regardless, it is going to take just a moment for both the NPM installs and the Docker build right
+
+04:36.330 --> 04:37.200
+here to complete.
+
+04:37.200 --> 04:39.660
+So we'll take a pause right here and continue in just a minute.

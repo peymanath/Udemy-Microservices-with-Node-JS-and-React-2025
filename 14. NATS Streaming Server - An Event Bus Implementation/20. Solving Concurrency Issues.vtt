@@ -1,0 +1,1033 @@
+WEBVTT
+
+00:00.810 --> 00:04.380
+In the last couple of videos, we've looked at a bunch of diagrams that laid out a bunch of different
+
+00:04.380 --> 00:06.200
+solutions to this concurrency stuff.
+
+00:06.210 --> 00:10.680
+So now in this video, we're going to try to come up with some kind of solution to this problem.
+
+00:10.770 --> 00:14.970
+I'm going to tell you right now, this is going to be a long video, but I've kind of planned it with
+
+00:14.970 --> 00:18.510
+a ton of diagrams, so hopefully it should capture your interest for some amount of time.
+
+00:18.810 --> 00:22.260
+So let me first begin by telling you what we're really going to do in this video and how we're going
+
+00:22.260 --> 00:23.790
+to solve this concurrency stuff.
+
+00:24.150 --> 00:25.600
+So I'm going to make a claim here.
+
+00:25.620 --> 00:31.020
+I'm going to say that this entire accounting application that we're trying to fix up with this concurrency
+
+00:31.020 --> 00:33.510
+stuff is just poorly designed.
+
+00:33.510 --> 00:37.470
+And in all the solutions we've looked at so far, we've been trying to figure out how we could somehow
+
+00:37.470 --> 00:41.590
+use Nats to save this concurrency problem or somehow fix it.
+
+00:41.610 --> 00:45.870
+In other words, we've been looking at Nat's and trying to imagine how we could use those sequence numbers
+
+00:45.870 --> 00:48.720
+and so on to somehow properly order these events.
+
+00:49.260 --> 00:53.970
+I'm going to make a big claim here and say that that was actually a really poor approach.
+
+00:54.450 --> 00:57.310
+It's the system itself that is poorly designed.
+
+00:57.330 --> 01:02.260
+In other words, we can't really use knots to somehow save this application or this accounting stuff.
+
+01:02.280 --> 01:06.240
+We need to figure out how to redesign the application itself.
+
+01:07.010 --> 01:10.100
+We need to figure out how to redesign the services inside of it.
+
+01:10.430 --> 01:15.860
+And if we provide a better design to the system, I think you're going to see that a better solution
+
+01:15.860 --> 01:20.630
+for this concurrency stuff is actually going to present itself without even worrying about any of the
+
+01:20.630 --> 01:23.000
+internal features of nets whatsoever.
+
+01:23.510 --> 01:28.070
+So long story short, what we're really going to do in this video is try to redesign this accounting
+
+01:28.070 --> 01:28.730
+service.
+
+01:28.850 --> 01:33.650
+And then at the very end, after we redesign the entire thing, we're going to very quickly see that
+
+01:33.650 --> 01:39.050
+there's actually a pretty easy and straightforward way to solve all this concurrency problem.
+
+01:39.670 --> 01:40.720
+So let's get to it.
+
+01:40.720 --> 01:45.040
+We're going to first try to redesign this accounting application to get started.
+
+01:45.040 --> 01:48.610
+We're going to look at something that looks very unrelated right now.
+
+01:48.610 --> 01:50.110
+I know this looks really unrelated.
+
+01:50.110 --> 01:55.720
+I want to think back in time to that blog post application we worked on in the first section of this
+
+01:55.720 --> 01:56.320
+course.
+
+01:57.250 --> 02:02.110
+So in that application, we had a request handler that would allow us to create a new post.
+
+02:02.110 --> 02:05.440
+So we'd make a request to create a post that would go to the post service.
+
+02:05.440 --> 02:07.990
+The post service would save that post internally.
+
+02:08.050 --> 02:10.750
+It was in memory, but we'll call it a database, whatever.
+
+02:10.780 --> 02:14.360
+We then created an event to describe that post being created.
+
+02:14.380 --> 02:19.180
+We sent that off to a event bus that we had built, and that event eventually flowed on to our query
+
+02:19.180 --> 02:19.840
+service.
+
+02:20.110 --> 02:24.730
+And the goal of that query service was to take a lot of these different events and build up a complete
+
+02:24.730 --> 02:28.120
+picture of all the different posts in comments we had inside of our app.
+
+02:28.940 --> 02:30.550
+The comment service was very similar.
+
+02:30.560 --> 02:32.360
+We made a request to the Common Service.
+
+02:32.660 --> 02:34.340
+We saved it to some database.
+
+02:34.820 --> 02:38.330
+We emitted an event and then it flowed on to the query service.
+
+02:38.930 --> 02:43.880
+So I now want to take this diagram right here and to simplify it a little bit, apply some easier to
+
+02:43.880 --> 02:47.330
+understand terminology in some critical locations.
+
+02:47.930 --> 02:49.010
+So very similar diagram.
+
+02:49.010 --> 02:50.840
+I've just simplified it a pretty good amount.
+
+02:50.870 --> 02:53.540
+I also removed the comments related stuff.
+
+02:53.780 --> 02:55.480
+So here's what was really going on.
+
+02:55.490 --> 03:00.830
+We made a request to create a post that went to the post service and that was the service that was 100%
+
+03:00.830 --> 03:03.500
+responsible for what a post was.
+
+03:03.590 --> 03:08.960
+It knew exactly all the attributes that a post had and was the canonical source to define what a post
+
+03:08.960 --> 03:09.560
+was.
+
+03:10.810 --> 03:15.730
+We stored that information inside of a database and we then emitted some event describing the fact that
+
+03:15.730 --> 03:17.110
+the post was just created.
+
+03:17.590 --> 03:21.220
+We didn't actually send that over to Nats that went to our customer event bus, but essentially that
+
+03:21.220 --> 03:25.240
+eventually got related over to the query service where that event was consumed.
+
+03:26.010 --> 03:28.380
+Now I'm going to even further simplify this diagram.
+
+03:28.380 --> 03:30.500
+I'm going to remove the idea of post entirely.
+
+03:30.510 --> 03:34.980
+I'm going to remove the idea of query service and just put on some more generic terminology.
+
+03:36.250 --> 03:36.760
+Okay.
+
+03:37.330 --> 03:42.430
+Now in here, we've got some really generic terms that's going to describe what we're going to try to
+
+03:42.430 --> 03:46.480
+do over on the accounting service or that accounting application as well.
+
+03:46.990 --> 03:52.450
+So we really want to have in general in a microservices application, we want to somehow make a request
+
+03:52.450 --> 03:54.070
+to modify a resource.
+
+03:54.250 --> 03:58.770
+That request should always go to some service that completely owns that resource.
+
+03:58.780 --> 04:01.330
+In this case, we're imagining it's a resource called XYZ.
+
+04:01.930 --> 04:07.930
+So that service is going to own the definition of what XYZ is when it receives a request to create,
+
+04:07.930 --> 04:10.050
+update or delete this resource.
+
+04:10.060 --> 04:13.180
+Well, those changes will be made in some accompanying database.
+
+04:15.080 --> 04:20.120
+Well, then emit an event describing the fact that the x, y, z resource has changed and that event
+
+04:20.120 --> 04:25.700
+can flow to all the other services inside of our app that need to modify its data based upon this event.
+
+04:26.500 --> 04:31.900
+So I now want to take this kind of flow right here and apply it to the accounting application.
+
+04:32.380 --> 04:36.670
+So when we go back over to the accounting application diagrams that we've been working with, there's
+
+04:36.670 --> 04:38.710
+a couple of things that immediately pop up to me.
+
+04:38.980 --> 04:42.760
+We've been putting tremendous focus on the NAT streaming server.
+
+04:43.480 --> 04:48.550
+And the service that somehow listening to events coming out of it and so respectively, that's really
+
+04:48.550 --> 04:54.400
+a reference to this part of the diagram right here, this yellow box and this gray box down here.
+
+04:54.880 --> 05:00.100
+And our entire design for this accounting application that we've been working with has 100% neglected
+
+05:00.100 --> 05:01.540
+everything over here.
+
+05:01.960 --> 05:09.220
+In other words, we have not even remotely begun to think about what this publisher thing really is,
+
+05:09.220 --> 05:14.380
+where these events are coming from, and the underlying data that these events correspond to.
+
+05:14.920 --> 05:16.100
+So here's what I want to do.
+
+05:16.120 --> 05:21.240
+I want to get a better idea of what service is actually managing these events right here.
+
+05:21.250 --> 05:26.380
+And like I said, as soon as we start to get a better idea of what the service is that's actually omitting
+
+05:26.380 --> 05:30.730
+these events and handling this concurrency stuff is going to get a lot easier.
+
+05:32.180 --> 05:36.830
+So when I look at this publisher, I'm seeing that it's emitting some events kind of concerned with
+
+05:36.830 --> 05:39.050
+account transactions of sorts.
+
+05:39.080 --> 05:44.570
+A transaction, let's imagine, is something that tries to exchange money in or out of an account.
+
+05:45.110 --> 05:50.510
+So if we try to follow the same pattern of something like this right here to describe this accounting
+
+05:50.510 --> 05:53.750
+application, we might end up with something like this right here.
+
+05:55.410 --> 05:58.230
+So down here at the bottom right hand side, we still have an account service.
+
+05:58.230 --> 06:04.140
+We still have the Nats event bus, but now we've got this entire idea of a service that is somehow going
+
+06:04.140 --> 06:10.200
+to receive requests to create a transaction thing, a service that's going to record all these transactions,
+
+06:10.230 --> 06:11.730
+a database for storing them.
+
+06:11.730 --> 06:15.750
+And then any time someone tries to create a transaction, chances are we're going to emit some kind
+
+06:15.750 --> 06:19.110
+of event describing the fact that a transaction was just created.
+
+06:19.560 --> 06:24.870
+And so these events right here that we're going to emit or essentially each of these events right here
+
+06:24.870 --> 06:26.010
+inside this diagram.
+
+06:28.760 --> 06:32.780
+So now let's start to think about how we would actually design this service and have some database to
+
+06:32.780 --> 06:35.570
+store the transactions that people are trying to create.
+
+06:35.840 --> 06:37.790
+So we might end up with something like this right here.
+
+06:38.330 --> 06:42.800
+So in this diagram, we're imagining that someone's logging on to maybe some banking website, as some
+
+06:42.800 --> 06:46.740
+particular user will imagine that it's a user with an ID of C, Z.
+
+06:46.830 --> 06:52.610
+Q And then this user on our banking website is going to use the online banking stuff and eventually
+
+06:52.610 --> 06:56.720
+try to deposit $70, then 40, and then withdraw 100.
+
+06:57.350 --> 07:02.150
+Now, if we really start to follow this pattern or the pattern inside this diagram right here, imagine
+
+07:02.150 --> 07:03.880
+what would really go on behind the scenes.
+
+07:03.890 --> 07:07.790
+Each of these requests would probably flow off to some transaction service.
+
+07:09.240 --> 07:13.470
+And then from there, the transaction service would want to store those in some kind of database.
+
+07:13.680 --> 07:19.800
+And maybe in this database we would store the user ID who made the transaction or who created it, and
+
+07:19.800 --> 07:23.820
+then it would associate with that would be a list of all the transactions that they have created over
+
+07:23.820 --> 07:24.390
+time.
+
+07:24.810 --> 07:27.630
+So the first request would maybe create a record like this right here.
+
+07:27.870 --> 07:29.700
+Maybe the second request.
+
+07:30.420 --> 07:32.220
+Would create a record like so.
+
+07:32.220 --> 07:33.900
+And then the third request, a withdraw.
+
+07:33.900 --> 07:36.600
+One would create a record like that right there.
+
+07:37.440 --> 07:43.230
+And then once again, if we really follow the pattern laid out in this diagram as we store all these
+
+07:43.230 --> 07:48.210
+different records inside this transactions database, we'd probably want to also emit some kind of event
+
+07:48.210 --> 07:51.900
+describing the fact that we had just emitted or created these transactions.
+
+07:52.110 --> 07:54.300
+So let's kind of walk through that process as well.
+
+07:55.110 --> 07:57.070
+So here's our transaction database.
+
+07:57.090 --> 08:01.800
+Transaction service, we're going to want to emit some events describing the fact that these things
+
+08:01.800 --> 08:05.630
+were just created and maybe send them over to say, our custom event bus.
+
+08:05.640 --> 08:08.250
+Or in this case, let's say we're sending out to the NAT streaming server.
+
+08:09.680 --> 08:13.970
+So I want to imagine what an event would look like that would describe these things being created.
+
+08:14.300 --> 08:15.860
+Well, maybe you would look something like this.
+
+08:15.860 --> 08:20.810
+Maybe for the first object right there, the first transaction, we would emit an object or an event
+
+08:20.810 --> 08:23.930
+with a type of transaction created.
+
+08:28.000 --> 08:29.500
+And then inside of here.
+
+08:30.120 --> 08:33.660
+We would probably want to list some information about the transaction that had just been created as
+
+08:33.660 --> 08:34.120
+well.
+
+08:34.140 --> 08:38.490
+So maybe we would say, hey, it was a deposit of $70.
+
+08:38.970 --> 08:42.290
+Maybe the transaction itself has an id of k.
+
+08:42.660 --> 08:45.930
+JF the id cjf.
+
+08:46.970 --> 08:50.540
+And then maybe we also put on, say the users ID as well.
+
+08:50.540 --> 08:55.820
+So like user ID and that is C, C, Q.
+
+08:57.800 --> 09:02.060
+And then maybe kind of interestingly, maybe it would be handy for some reason.
+
+09:02.060 --> 09:02.690
+I don't know.
+
+09:02.690 --> 09:08.660
+Let's just imagine if we also included in this event a description of what this transactions number
+
+09:08.660 --> 09:10.170
+was for this user.
+
+09:10.190 --> 09:14.990
+So we'll say that the very first transaction that a user creates has a number of one, and then the
+
+09:14.990 --> 09:18.050
+next one has a number of two, then a number of three and so on.
+
+09:18.440 --> 09:23.300
+So for this first event, I would give it a number of one.
+
+09:23.480 --> 09:24.050
+So we'll see.
+
+09:24.050 --> 09:29.480
+This is very similar to a sequence number, but it's kind of being determined by this database as opposed
+
+09:29.480 --> 09:31.070
+to gnats or something like that.
+
+09:31.520 --> 09:35.270
+So now we can repeat that process for these other two transactions as well.
+
+09:36.540 --> 09:37.620
+I would create another one.
+
+09:37.620 --> 09:39.540
+This one would be a deposit of 40.
+
+09:39.810 --> 09:41.010
+An ID of five.
+
+09:41.030 --> 09:44.220
+J 25 and a number of two.
+
+09:45.160 --> 09:50.110
+And then finally, this last one would be a withdrawal.
+
+09:52.920 --> 09:53.850
+Of 100.
+
+09:53.970 --> 09:57.870
+Maybe we'll give it an idea as well as well of 1k01.
+
+09:58.230 --> 09:59.400
+And this would be at number three.
+
+09:59.400 --> 10:00.120
+It like so.
+
+10:00.750 --> 10:05.190
+So now these are the three events that we can imagine we would throw over to our event bus and we want
+
+10:05.190 --> 10:08.550
+those to eventually flow on to any services.
+
+10:09.380 --> 10:12.800
+They'll want to somehow watch for new transactions being created.
+
+10:13.500 --> 10:15.780
+And so in our case, that would be the account service.
+
+10:15.960 --> 10:19.440
+So let's now imagine how that account service would really be put together.
+
+10:22.070 --> 10:27.440
+So we've once again got our transactions database, we've got the NAT streaming server, maybe it has
+
+10:27.440 --> 10:33.200
+a channel of transaction created and we can imagine maybe there are two account services listening for
+
+10:33.200 --> 10:34.520
+events from that channel.
+
+10:34.940 --> 10:39.920
+And then these account services, very similar to the query service we had put together earlier, probably
+
+10:39.920 --> 10:44.690
+would have some kind of database for it that would take in a list of all these transactions and then
+
+10:44.690 --> 10:50.930
+prevent or present or calculate a total sum for each user's account balance.
+
+10:51.880 --> 10:56.320
+So I'm going to go and pull those events we just defined over, and we'll imagine what these things
+
+10:56.320 --> 10:58.180
+would do to process these events.
+
+10:59.100 --> 11:03.090
+So we can imagine the first event would flow maybe to a right here.
+
+11:03.390 --> 11:07.530
+So let's just take the information out of this event and store it inside this account's database.
+
+11:07.530 --> 11:13.230
+And here's the part where since we've gone through this really kind of better design of the transaction
+
+11:13.230 --> 11:18.810
+service, you're going to see that these concurrency issues start to fall away and the concurrency issue
+
+11:18.810 --> 11:24.150
+is going to fall away without having to rely upon any fancy features of NATS server.
+
+11:25.950 --> 11:29.460
+So we're going to imagine that we start to process this event right here.
+
+11:29.970 --> 11:30.200
+Okay.
+
+11:30.300 --> 11:33.880
+So let's imagine inside of our accounts database, we've got our user queue.
+
+11:33.930 --> 11:35.130
+That's the person we care about.
+
+11:35.130 --> 11:37.590
+And maybe we've got some other users inside of here as well.
+
+11:37.590 --> 11:40.770
+We don't really care about them, whatever, but they exist inside of here.
+
+11:41.340 --> 11:44.340
+Right now, Cizik has a balance of presumably zero.
+
+11:45.410 --> 11:49.190
+I also want to try to record the last transaction number.
+
+11:49.460 --> 11:54.170
+So this last transaction number is going to be essentially the number of the last transaction that we
+
+11:54.170 --> 11:56.810
+processed when we first create queue.
+
+11:56.840 --> 12:01.160
+They'll start off with the balance of zero and no last transaction number because we've not processed
+
+12:01.160 --> 12:03.140
+any transactions related to them yet.
+
+12:04.070 --> 12:04.790
+It's now a process.
+
+12:04.790 --> 12:07.940
+This thing, it's a deposit of 70, so we'll increment by 70.
+
+12:08.940 --> 12:11.220
+And the number of this transaction was number one.
+
+12:11.220 --> 12:14.220
+So we'll put in the one like so that was simple enough.
+
+12:14.580 --> 12:16.020
+So now we can move on to.
+
+12:17.140 --> 12:18.460
+Our next transaction.
+
+12:19.140 --> 12:20.280
+The one of number two.
+
+12:22.470 --> 12:24.750
+So once again, we're looking at Q.
+
+12:25.490 --> 12:27.890
+It's a deposit of 40, so we'll go up to 110.
+
+12:28.750 --> 12:32.410
+And now our last transaction was created was to sell update land.
+
+12:32.680 --> 12:34.540
+Last transaction number to two as well.
+
+12:35.740 --> 12:37.360
+Now we can move on to the third one.
+
+12:38.560 --> 12:40.350
+In this case, still the user sees.
+
+12:40.360 --> 12:46.790
+Q It's a withdrawal of 100 and the last transaction number is three in this case, or this transaction's
+
+12:46.810 --> 12:47.340
+number is three.
+
+12:47.350 --> 12:51.460
+So we'll update last transactions number to three and subtract 100 off the balance.
+
+12:51.460 --> 12:52.630
+And so we're left with ten.
+
+12:53.380 --> 12:57.190
+And so in this scenario, it definitely looks like everything still works as expected.
+
+12:57.220 --> 12:57.750
+Right.
+
+12:57.760 --> 13:02.860
+We still, at the end of the day, end up with some user with the balance and assuming that all these
+
+13:02.860 --> 13:05.230
+events flow through the way we expect.
+
+13:05.230 --> 13:07.060
+In other words, nothing crashes.
+
+13:07.060 --> 13:09.850
+We don't get any double issue of an event or anything like that.
+
+13:09.850 --> 13:12.550
+It appears that everything works as expected.
+
+13:13.330 --> 13:15.520
+So now let's kind of go through this flow again.
+
+13:15.730 --> 13:19.870
+Well, let's imagine that some of these events are not properly processed.
+
+13:20.200 --> 13:23.830
+In other words, let's imagine that maybe this first event goes to service a.
+
+13:24.680 --> 13:27.650
+And Cersei in that instant crashes entirely.
+
+13:28.040 --> 13:32.330
+So you and I know based upon what we've done with Nats at this point in time, we know that if this
+
+13:32.330 --> 13:38.420
+thing crashes and we don't acknowledge this event for 30 seconds, eventually Nats will reissue it to
+
+13:38.420 --> 13:40.160
+someone else inside this group.
+
+13:40.640 --> 13:45.170
+But for right now, let's just imagine this thing gets sent into service A and it just does not get
+
+13:45.170 --> 13:46.310
+processed right away.
+
+13:46.820 --> 13:50.840
+And then simultaneously maybe event number two right here flows in as well.
+
+13:51.230 --> 13:54.080
+So at this point, this event not going to be processed.
+
+13:54.080 --> 13:55.970
+This event will be processed.
+
+13:56.360 --> 13:57.620
+So now what would happen?
+
+13:58.070 --> 14:00.670
+Well, let's add in a new rule here as well.
+
+14:00.680 --> 14:06.260
+Let's say that because each of these transaction events right here have a number associated with them.
+
+14:06.260 --> 14:11.720
+We only want to process this thing if the last transaction number for this user stored inside of our
+
+14:11.720 --> 14:15.320
+database is equal to that number minus one.
+
+14:16.870 --> 14:19.080
+So once again, this thing is crashed.
+
+14:19.090 --> 14:20.400
+We're just going to forget about it.
+
+14:20.410 --> 14:21.670
+We can't process it right now.
+
+14:21.670 --> 14:23.080
+We have to wait 30 seconds.
+
+14:23.410 --> 14:27.820
+So then this event comes into service B, so service B is going to take a look at it.
+
+14:27.820 --> 14:29.160
+It's going to say, okay, let's see.
+
+14:29.170 --> 14:33.190
+All right, deposit 44, user sees a queue and it's a number of two.
+
+14:33.190 --> 14:34.900
+That's the number of the transaction.
+
+14:35.110 --> 14:40.810
+So now we could set up this service so it looks at its database, finds user, sees queue, takes a
+
+14:40.810 --> 14:44.800
+look at the last transaction number and in this case, it doesn't have one yet.
+
+14:46.460 --> 14:53.570
+So ideally we want to say take a look at this number of to subtract one and that's what user CC Q should
+
+14:53.570 --> 14:55.460
+have for the last transaction number.
+
+14:55.460 --> 14:56.970
+But there's nothing there.
+
+14:56.990 --> 15:01.970
+We don't have a one and because of that, we're going to have service be set up to say, oh, well,
+
+15:01.970 --> 15:04.880
+I guess we haven't processed transaction one yet.
+
+15:04.910 --> 15:06.740
+I'm just going to forget this event.
+
+15:06.740 --> 15:08.900
+I'm just going to pass over it entirely.
+
+15:09.580 --> 15:10.810
+So what just happened?
+
+15:11.020 --> 15:13.260
+Well, we failed to process event number one.
+
+15:13.270 --> 15:18.250
+It will be processed or we will attempt to process process it again, 30 seconds in the future.
+
+15:18.520 --> 15:23.080
+But critically, we didn't process that thing before the second one.
+
+15:23.700 --> 15:28.680
+And that was okay because since we have this number field on here and we are recording the last transaction
+
+15:28.680 --> 15:33.630
+number inside of our clients database, we knew not to attempt to process this second transaction,
+
+15:33.630 --> 15:38.250
+even though it was handled by a totally different service than the one that rejected the transaction,
+
+15:38.250 --> 15:38.970
+number one.
+
+15:39.880 --> 15:44.200
+So we can now imagine that we basically now sit around and we're going to wait 30 seconds for both these
+
+15:44.200 --> 15:47.230
+things to time out and eventually be reissued by Nats.
+
+15:47.860 --> 15:49.510
+So maybe 30 seconds goes by.
+
+15:50.710 --> 15:53.460
+And then that sees that this message never got acknowledged.
+
+15:53.470 --> 15:56.650
+So it's then going to take it and pass it on to service be.
+
+15:57.430 --> 15:59.650
+So now Cyrus B is going to take a look at this thing.
+
+15:59.650 --> 16:03.970
+It's going to say, okay, deposit 70 to user Q and it's a number of one.
+
+16:04.330 --> 16:05.860
+Okay, let's go find Q.
+
+16:06.160 --> 16:07.810
+Well, they don't have a last transaction number.
+
+16:07.810 --> 16:10.330
+Well, that's okay, because this is the very first transaction.
+
+16:10.330 --> 16:14.350
+So we'll set last transaction to one and we'll do our deposit of 70.
+
+16:15.690 --> 16:16.220
+And that's it.
+
+16:16.230 --> 16:18.870
+We've now successfully processed that event.
+
+16:18.990 --> 16:24.570
+So now we can imagine that after those 30 seconds now maybe event number two right here finally gets
+
+16:24.570 --> 16:25.290
+reissued.
+
+16:26.290 --> 16:28.390
+Because it timed out during those 30 seconds.
+
+16:28.540 --> 16:30.440
+Now, once again, we're going to take a look at this thing.
+
+16:30.460 --> 16:34.690
+User sees Q Last transaction recorded of one.
+
+16:34.780 --> 16:36.400
+This one has a number of two.
+
+16:36.640 --> 16:36.900
+Okay.
+
+16:36.910 --> 16:38.320
+Well, two minus one is one.
+
+16:38.590 --> 16:39.130
+Fantastic.
+
+16:39.130 --> 16:39.700
+It lines up.
+
+16:39.700 --> 16:41.590
+It means that we process the first transaction.
+
+16:41.590 --> 16:42.880
+We are now under the second one.
+
+16:42.880 --> 16:45.670
+Let's process this thing and commit it to our database.
+
+16:46.090 --> 16:48.130
+So in this case, we can deposit $40.
+
+16:48.130 --> 16:49.780
+We're now up to 110.
+
+16:51.220 --> 16:54.070
+And then, as usual, we take in this last event.
+
+16:55.250 --> 16:58.260
+Oh, I forgot to update the last transaction number on that second one.
+
+16:58.280 --> 16:59.900
+So now we'll take it in this last event.
+
+17:00.040 --> 17:00.410
+Okay.
+
+17:00.450 --> 17:03.410
+User Q last transaction number of two.
+
+17:03.440 --> 17:05.070
+We are on now on number three.
+
+17:05.090 --> 17:05.390
+Yep.
+
+17:05.390 --> 17:06.110
+All lines up.
+
+17:06.200 --> 17:06.290
+Okay.
+
+17:06.290 --> 17:06.950
+Let's go ahead and do that.
+
+17:06.950 --> 17:08.390
+Withdrawal of 100.
+
+17:08.720 --> 17:10.010
+And now we're down to ten.
+
+17:11.950 --> 17:16.750
+So by adding on this number field right here, we have effectively solved all the different concurrency
+
+17:16.750 --> 17:19.060
+issues we ran through in the last couple of videos.
+
+17:19.210 --> 17:23.290
+This solves the issue where Nats thinks that a client is still alive when it's actually dead.
+
+17:23.470 --> 17:27.670
+This solves the issue where maybe one listener might run more quickly than another.
+
+17:28.090 --> 17:32.830
+This also solves the issue where a listener can fail to process an event and we have to wait a 32nd
+
+17:32.830 --> 17:34.990
+timeout for that event to be reissued.
+
+17:35.380 --> 17:39.400
+This also solves some issues we ran through in the last video as well, where we might have different
+
+17:39.400 --> 17:43.300
+users trying to use the database or commit events at the same time.
+
+17:43.630 --> 17:49.690
+So if we imagine there are other users or other users creating transactions, no problem if there's
+
+17:49.690 --> 17:51.970
+something wrong with this transaction right here.
+
+17:52.000 --> 17:56.770
+In other words, if we're still on transaction number one and waiting for number two to be committed,
+
+17:56.770 --> 18:02.950
+that is not going to prevent user JP four or user can from creating transactions as well.
+
+18:02.980 --> 18:07.910
+It is a per user lockout or again in this case, we don't really want to think about this as per user.
+
+18:07.930 --> 18:11.290
+This entire idea can be used with any arbitrary kind of resource.
+
+18:11.290 --> 18:14.440
+So this entire idea would have worked with, say, comments as well.
+
+18:15.470 --> 18:20.540
+Now at this point, I just want to kind of reflect and say that a lot of this stuff was solved really
+
+18:20.540 --> 18:25.070
+by adding on just that number field but we were not able to add on that number field until we started
+
+18:25.070 --> 18:29.180
+to really understand the service that all these events were going to come from, which in this case
+
+18:29.180 --> 18:30.560
+was the transactions database.
+
+18:30.560 --> 18:31.910
+So the transaction service.
+
+18:33.120 --> 18:37.800
+You might immediately say, Well, Stephen, this is only going to work if we somehow number each of
+
+18:37.800 --> 18:38.730
+these transactions.
+
+18:38.730 --> 18:43.020
+And that would have been easy because presumably we're sticking these transactions in array tied to
+
+18:43.020 --> 18:44.180
+user queue.
+
+18:44.220 --> 18:45.090
+That is true.
+
+18:45.090 --> 18:50.310
+But as you'll see very shortly, we can apply the same methodology to normal records as well.
+
+18:50.580 --> 18:53.940
+So we could use the same methodology with, say, our tickets.
+
+18:55.230 --> 18:55.710
+Service.
+
+18:55.710 --> 18:58.640
+So we just worked on a little bit ago with our ticket service.
+
+18:58.650 --> 19:04.050
+We don't have an array to rely upon or anything like that, but eventually we might want to emit some
+
+19:04.050 --> 19:09.090
+kind of event like say ticket related and tell the outside world that, hey, we just created a ticket
+
+19:09.090 --> 19:10.830
+and here's some information about it.
+
+19:11.160 --> 19:16.560
+So again, we don't really have the benefit or anything like that of working with some numbering of
+
+19:16.560 --> 19:19.910
+these tickets because the ticket is one stand alone record.
+
+19:19.920 --> 19:21.000
+But there are some ways.
+
+19:21.000 --> 19:26.850
+So we can have a very similar approach or the similar idea of numbering updates to the ticket over time,
+
+19:26.850 --> 19:32.070
+and then making sure that those updates are applied sequentially to some other service that relies upon
+
+19:32.070 --> 19:32.460
+it.
+
+19:33.440 --> 19:33.690
+Okay.
+
+19:33.740 --> 19:38.570
+So at this point, you might be sitting there thinking, I'm not quite seeing this stuff.
+
+19:38.930 --> 19:40.040
+Don't sweat it.
+
+19:40.070 --> 19:41.250
+We're going to pause right here.
+
+19:41.270 --> 19:45.260
+We're going to write out a little bit more code just to work with our little test example that we've
+
+19:45.260 --> 19:47.160
+had going on around this accounting stuff.
+
+19:47.180 --> 19:51.830
+We're then going to start to go back over to events inside of our actual ticketing application, and
+
+19:51.830 --> 19:56.780
+you're going to see how this idea of recording a last transaction number of sorts is going to work to
+
+19:56.780 --> 20:00.500
+solve concurrency issues inside of our ticketing application as well.
+
+20:01.070 --> 20:04.670
+So as usual, quick pause right here and I'll see you in just a minute.

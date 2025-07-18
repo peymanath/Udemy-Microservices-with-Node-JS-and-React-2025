@@ -1,0 +1,145 @@
+WEBVTT
+
+00:00.940 --> 00:02.890
+Let's move on to our last big route handler.
+
+00:02.890 --> 00:06.160
+It is sign out inside of our routes directory.
+
+00:06.460 --> 00:07.350
+I'm going to find that file.
+
+00:07.360 --> 00:08.100
+Open it up.
+
+00:08.110 --> 00:12.370
+I'm going to delete the rest send inside there and we're going to add in some code to sign the user
+
+00:12.370 --> 00:12.800
+out.
+
+00:12.820 --> 00:15.370
+So what does it really mean to sign out a user?
+
+00:15.370 --> 00:20.440
+Well, essentially, we're going to send back a header that's going to tell the user's browser to dump
+
+00:20.440 --> 00:23.320
+all the information inside that cookie, just empty it out.
+
+00:23.320 --> 00:25.360
+And that's going to remove the JSON web token.
+
+00:25.360 --> 00:29.890
+That means any time the user makes a follow up request, there will be no token included inside that
+
+00:29.890 --> 00:30.460
+cookie.
+
+00:31.150 --> 00:33.750
+To empty out all the information inside the user's cookie.
+
+00:33.760 --> 00:37.960
+We're going to use the cookie session library once again because remember, that is what is handling
+
+00:37.960 --> 00:39.640
+all of our cookie related stuff.
+
+00:40.120 --> 00:44.650
+I have the documentation for cookie session already up on the screen right here and if I scroll down
+
+00:44.650 --> 00:50.890
+a little bit, says very plainly to empty out a session and destroy all the information side of it,
+
+00:50.890 --> 00:54.220
+we'll set rect session equal to null and that's pretty much it.
+
+00:54.790 --> 01:02.530
+So inside of our post request handler to sign out, we will add in rect session is null and then naturally
+
+01:02.530 --> 01:04.840
+we do still have to send back a response.
+
+01:05.050 --> 01:07.180
+So I'll just send back an empty object.
+
+01:08.170 --> 01:09.040
+And that should be it.
+
+01:10.190 --> 01:11.360
+All right, well, let's save this.
+
+01:11.390 --> 01:14.330
+Go back over to the postman and do a quick test.
+
+01:15.810 --> 01:17.090
+Back inside a postman.
+
+01:17.100 --> 01:21.990
+I still am looking at the tab where I'm making a get request to figure out the current user.
+
+01:22.020 --> 01:25.260
+If I send this off, it looks like I am not logged in right now.
+
+01:25.530 --> 01:32.340
+So I'm going to go back to my first tab where I have the request configured to do a sign in attempt.
+
+01:32.370 --> 01:38.550
+I've got my valid email and password, so I'm going to send that off and now I should be logged in.
+
+01:39.360 --> 01:40.140
+To confirm that.
+
+01:40.140 --> 01:43.080
+I'll go back over to the git tab right here for current user.
+
+01:43.750 --> 01:44.110
+Yep.
+
+01:44.110 --> 01:45.850
+Looks like I am now logged in.
+
+01:46.300 --> 01:50.680
+So now finally, to test out the log out functionality, I'm going to open up yet another tab.
+
+01:51.640 --> 01:57.190
+I'll make a post request to https Poland slash slash.
+
+01:58.020 --> 01:59.940
+And then ticketing.
+
+02:02.000 --> 02:05.480
+Dev API users and sign out.
+
+02:08.500 --> 02:13.240
+I'll go ahead and make sure I just set the header of content high.
+
+02:15.070 --> 02:16.780
+Application slash JSON.
+
+02:18.740 --> 02:20.060
+And I'll go ahead and send that.
+
+02:20.690 --> 02:24.470
+So now I get a response right here of empty object, which is what we would expect.
+
+02:25.460 --> 02:30.470
+If I now go back over to the Get request tab where I try to get the current user, I can send that off
+
+02:30.470 --> 02:32.660
+and now you'll see that I am now logged out.
+
+02:33.170 --> 02:33.590
+All right.
+
+02:33.590 --> 02:35.540
+Well, that's pretty much it for sign out.
+
+02:36.280 --> 02:41.020
+Now, as I mentioned at the end of the last video, when we finished working on Current User, we were
+
+02:41.020 --> 02:44.470
+going to extract some of the logic inside of here into two helper middleware.
+
+02:44.890 --> 02:48.370
+So let's take a pause right here and then start to tackle that in the next video.

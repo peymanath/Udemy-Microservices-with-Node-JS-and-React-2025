@@ -1,0 +1,109 @@
+WEBVTT
+
+00:00.650 --> 00:05.210
+We were able to get that payment modal to appear, but now we need an actual credit card to enter in
+
+00:05.210 --> 00:07.280
+there to actually test out this entire flow.
+
+00:07.310 --> 00:13.400
+Well, luckily, Stripe has our back in the Stripe documentation, which you can find at Stripe slash
+
+00:13.730 --> 00:14.420
+testing.
+
+00:14.780 --> 00:18.470
+We can scroll down on this page a little bit and they're going to list out some credit card numbers
+
+00:18.470 --> 00:23.960
+right here that are always going to work for any given charge on a Stripe account while the Stripe account
+
+00:23.960 --> 00:25.520
+is in the test mode.
+
+00:25.520 --> 00:27.560
+And ours is definitely in the test mode right now.
+
+00:28.010 --> 00:34.700
+So in other words, if we enter in a credit card number of four to 4 to 4 to any three digit CVC and
+
+00:34.700 --> 00:37.640
+any future date, the charge will work as expected.
+
+00:37.850 --> 00:39.350
+So let's try that out right now.
+
+00:40.900 --> 00:43.960
+I'm going to once again recreate my order because it already has expired.
+
+00:45.060 --> 00:47.280
+Well purchase and then pay with card.
+
+00:47.760 --> 00:51.960
+By the way, when we click on pay with card, you might see a ton of airs pop up right here and even
+
+00:51.960 --> 00:53.280
+a couple of warnings.
+
+00:53.490 --> 00:57.090
+All these errors, all the warnings really, truly can be ignored.
+
+00:57.120 --> 01:01.080
+We are not using Stripe in such a critical way that these errors or warnings are going to cause any
+
+01:01.080 --> 01:02.160
+issue whatsoever.
+
+01:03.390 --> 01:08.460
+So now inside this model, I'm going to put in four, two, four, two, four, two, four, two a future
+
+01:08.460 --> 01:11.640
+date and then any three digit CVC.
+
+01:12.240 --> 01:16.950
+I'll then click on pay $20 and we'll see a console.log right there.
+
+01:17.190 --> 01:18.900
+This is our token object.
+
+01:18.900 --> 01:22.110
+This is the thing that's going to allow us to charge a user's credit card.
+
+01:22.470 --> 01:25.500
+The most important piece of information of this is the ID.
+
+01:25.890 --> 01:27.950
+That ID right there is the real token.
+
+01:27.960 --> 01:31.680
+We want to take that value and send it off to our payment API.
+
+01:31.950 --> 01:36.630
+Our payment API can then do a follow up and charge the user's credit card for this amount of money.
+
+01:37.360 --> 01:38.000
+That's pretty much it.
+
+01:38.020 --> 01:42.040
+All we can do now is take that ID, make a post request and we are pretty much good to go.
+
+01:43.840 --> 01:45.520
+All right, so let's take that ID in the next video.
+
+01:45.550 --> 01:46.450
+Make sure we do that post.
+
+01:46.450 --> 01:48.280
+You cost off to the payments API.
+
+01:48.310 --> 01:52.660
+We also need to make sure that we handle the case in which a user pays for this thing before the order
+
+01:52.660 --> 01:53.440
+expires.
+
+01:53.650 --> 01:56.140
+So we're pretty close here to getting this entire flow wrapped up.
+
+01:56.140 --> 01:57.640
+Just a couple more steps.

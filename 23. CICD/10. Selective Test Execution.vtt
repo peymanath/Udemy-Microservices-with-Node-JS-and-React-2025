@@ -1,0 +1,310 @@
+WEBVTT
+
+00:01.470 --> 00:05.430
+Before we move on to deployment, there is one last thing I want to say about us running our tests.
+
+00:05.550 --> 00:10.950
+Right now, whenever we push a change related to any service, we're going to rerun all of our tests.
+
+00:10.950 --> 00:13.560
+So every test inside of every single service.
+
+00:14.040 --> 00:18.150
+This might actually be a little bit wasteful, as if we think about it, because we have built all of
+
+00:18.150 --> 00:20.660
+our services to be very independent in nature.
+
+00:20.670 --> 00:26.400
+If we ever make a change to, say, our service, that in theory should not really break anything inside
+
+00:26.400 --> 00:27.240
+of payments.
+
+00:28.180 --> 00:32.980
+We don't really have any tests that kind of race across services or for that matter, really any code
+
+00:32.980 --> 00:33.610
+either.
+
+00:33.940 --> 00:37.450
+The only thing that really ties these different services together is our common module.
+
+00:37.450 --> 00:42.430
+And in theory, everything inside the common module is being enforced through the type system with TypeScript
+
+00:42.430 --> 00:43.870
+as opposed to any tests.
+
+00:44.640 --> 00:50.190
+So if you wanted to, we could technically make sure that if we push some changes related to the service,
+
+00:50.190 --> 00:53.760
+we only ran tests related to the audit service.
+
+00:53.970 --> 00:59.280
+So in other words, if we change the service, maybe we do not want to run any tests related to payments.
+
+00:59.520 --> 01:05.100
+So in this video, I'm going to show you how to set that up, to set up some kind of test specific running
+
+01:05.100 --> 01:08.460
+or some service specific test is maybe the best way to refer to it.
+
+01:08.580 --> 01:12.960
+We're going to make yet another change to those different config files that we've been putting together.
+
+01:13.620 --> 01:18.630
+Now, we can definitely change those config files directly on GitHub by editing them inside the built
+
+01:18.630 --> 01:22.920
+in editor, but instead let's just pull them down onto our local machine and then make a quick change
+
+01:22.920 --> 01:25.410
+to each of them inside of our text editor instead.
+
+01:27.130 --> 01:31.390
+So first off, back at my terminal, I'm going to change back over to my master branch.
+
+01:31.420 --> 01:33.130
+So that's a get checked out master.
+
+01:33.520 --> 01:37.150
+I'll then pull down the master branch and get all the latest changes.
+
+01:39.190 --> 01:39.650
+Okay.
+
+01:39.700 --> 01:41.710
+After that, I'm going to flip back over to my editor.
+
+01:41.740 --> 01:45.070
+I'm going to find the GitHub file or folder that has been created.
+
+01:45.070 --> 01:47.620
+And inside there are all of our different workflow files.
+
+01:48.410 --> 01:49.840
+Well, didn't start off in sight of tests.
+
+01:49.870 --> 01:51.170
+Author E.M..
+
+01:51.750 --> 01:56.880
+So instead of here, we want to say that we only want to run this job right here if a request has been
+
+01:56.910 --> 02:03.360
+issued and that request contains any changes specifically related to the off directory.
+
+02:04.040 --> 02:07.360
+So to do so we could put in on polar request.
+
+02:07.370 --> 02:11.930
+Then after polar request, we'll put in a colon and then pass.
+
+02:13.060 --> 02:17.290
+And then a dash and then we'll put in off star.
+
+02:17.290 --> 02:18.610
+Star like so.
+
+02:20.450 --> 02:25.430
+This means if there is ever a pull request, a pull request gets reopened or we make an update to an
+
+02:25.430 --> 02:30.790
+existing pull request and the file's changed are inside the off directory.
+
+02:30.800 --> 02:36.170
+So specifically any file inside the directory, if anything inside the directory gets changed, then
+
+02:36.170 --> 02:37.010
+run this job.
+
+02:37.250 --> 02:39.080
+Otherwise don't run anything at all.
+
+02:39.800 --> 02:43.820
+So we can repeat the same process for all of our other workflow files as well.
+
+02:45.010 --> 02:47.500
+So I'm going to take that block right there.
+
+02:47.530 --> 02:48.310
+Copy it.
+
+02:49.340 --> 02:50.420
+I'll go over to our orders.
+
+02:50.420 --> 02:50.930
+One.
+
+02:51.380 --> 02:55.280
+I'm going to overwrite that block, and I'll change the path to orders.
+
+02:57.450 --> 02:58.560
+I'll save the file.
+
+02:59.040 --> 03:00.210
+Go on to payments.
+
+03:02.750 --> 03:03.680
+Save the file.
+
+03:04.160 --> 03:06.020
+And then finally on two tickets.
+
+03:08.880 --> 03:10.530
+Anthro and tickets like so.
+
+03:11.730 --> 03:16.290
+So let's now save all these files, commit the changes, push them up to our master branch.
+
+03:16.590 --> 03:21.000
+We'll then try to make another change to one of our services and then make sure that we only run tests
+
+03:21.000 --> 03:22.560
+related to that service.
+
+03:23.870 --> 03:24.890
+So back at my terminal.
+
+03:25.880 --> 03:29.090
+I'll do a get status and I'll see those four change workflow files.
+
+03:29.720 --> 03:31.010
+I'm going to add all that.
+
+03:31.400 --> 03:33.710
+I'll push it up or commit it first.
+
+03:36.500 --> 03:37.610
+And then push it.
+
+03:43.640 --> 03:45.980
+All right, let's once again now go back over to our dev branch.
+
+03:45.980 --> 03:50.750
+We'll make another change and push it up and take a look at our poll request line, which you check
+
+03:50.750 --> 03:52.580
+out my Deb branch yet again.
+
+03:54.530 --> 03:55.980
+I'm going to go back over to.
+
+03:56.000 --> 03:57.530
+How about our order service?
+
+03:58.190 --> 03:58.820
+The back and side.
+
+03:58.820 --> 03:59.960
+The order service.
+
+04:00.750 --> 04:03.100
+I'll find the Z folder indexed.
+
+04:03.870 --> 04:07.950
+And on that console log that we added in right there, I'm just going to add in another dot to the very
+
+04:07.950 --> 04:08.490
+end.
+
+04:08.520 --> 04:08.940
+That's it.
+
+04:08.940 --> 04:09.600
+That's my change.
+
+04:09.600 --> 04:11.010
+Just one additional period.
+
+04:11.830 --> 04:12.880
+So save the file.
+
+04:13.940 --> 04:15.200
+Back over to my terminal.
+
+04:16.410 --> 04:17.550
+There's the change.
+
+04:17.700 --> 04:18.600
+I'll add it.
+
+04:20.470 --> 04:22.000
+I'll commit it.
+
+04:25.620 --> 04:26.970
+And then push off to Dev.
+
+04:30.210 --> 04:30.510
+All right.
+
+04:30.510 --> 04:34.650
+Once we push that off to the dev branch on GitHub, we'll go back over to our pull request and take
+
+04:34.650 --> 04:37.110
+a look at what different tests are now being executed.
+
+04:38.350 --> 04:40.780
+The back over here on my request tab.
+
+04:41.670 --> 04:42.930
+Upon my request.
+
+04:45.230 --> 04:46.280
+It looks like we're running.
+
+04:46.280 --> 04:51.380
+And you'll notice now that we are only running tests related to services that have been changed inside
+
+04:51.380 --> 04:52.490
+of this request.
+
+04:52.820 --> 04:57.440
+So every single time we push an update, GitHub is going to take a look at all the different files that
+
+04:57.440 --> 05:01.070
+have been changed for the entire pull request, not just the latest commit.
+
+05:01.250 --> 05:05.090
+In this case, we have changed files in both the service and the order service.
+
+05:05.390 --> 05:08.630
+So only tests for off and orders are going to be executed.
+
+05:09.050 --> 05:10.930
+That just make sure that we're not running more tests.
+
+05:10.940 --> 05:11.810
+We need to run.
+
+05:11.990 --> 05:15.380
+Now, of course, maybe you want to run all your tests for every request.
+
+05:15.380 --> 05:16.450
+That is totally fine.
+
+05:16.460 --> 05:21.290
+If that is the case, we could just go back over to that workflow file, which I can't see very easily
+
+05:21.290 --> 05:22.910
+right now because I'm on my dev branch.
+
+05:22.940 --> 05:27.620
+We could just go back over to those workflow files and remove those path files or the path settings
+
+05:27.620 --> 05:28.790
+that we just added in.
+
+05:30.120 --> 05:31.410
+So it looks like all tests are good to go.
+
+05:31.410 --> 05:38.880
+And we did not have to run any tests around our other two services of payments and tickets though good
+
+05:38.880 --> 05:43.110
+little improvement and we're definitely going to use this improvement once we start tackling deployment
+
+05:43.110 --> 05:43.830
+as well.

@@ -1,0 +1,208 @@
+WEBVTT
+
+00:01.170 --> 00:02.950
+We just put together our user request hook.
+
+00:02.970 --> 00:05.790
+Now we're going to use it inside of our signup component before we do.
+
+00:05.820 --> 00:08.150
+In the last video, I realized I made a little mistake.
+
+00:08.160 --> 00:10.980
+So back over inside of our used request hook file.
+
+00:11.130 --> 00:15.620
+I have once again made use of the weight keyword without marking the enclosing function as async.
+
+00:15.630 --> 00:17.970
+So I'm going to throw in that keyword very quickly right away.
+
+00:19.230 --> 00:19.680
+Okay.
+
+00:20.010 --> 00:21.330
+Let's go back over to sign up.
+
+00:22.530 --> 00:23.670
+So back over here.
+
+00:23.700 --> 00:26.730
+I'm going to delete where we get this urs piece of state.
+
+00:28.210 --> 00:31.450
+And I'm going to replace it with a call to this user request hook.
+
+00:31.870 --> 00:37.540
+So when we call user request, we're going to get back in object that remember has the do request function.
+
+00:38.560 --> 00:40.210
+And the heirs property.
+
+00:41.250 --> 00:42.960
+This will come from user request.
+
+00:44.720 --> 00:47.450
+And inside this object we're going to pass off to use request.
+
+00:47.480 --> 00:50.960
+We are going to provide a URL, a method and the body.
+
+00:51.880 --> 00:55.690
+So our URL is going to be API users sign up.
+
+00:56.680 --> 00:58.420
+The method will be post.
+
+00:59.530 --> 01:03.700
+And the body in this case is going to be our email and our password.
+
+01:05.770 --> 01:10.780
+So now we've got a function that we can call to actually execute the request, and we have possibly
+
+01:10.780 --> 01:12.490
+some errors right here.
+
+01:13.260 --> 01:17.190
+So now down inside of on submit, we don't have to write out all this logic right here.
+
+01:17.190 --> 01:20.240
+We already essentially put all this stuff together inside that hook.
+
+01:20.250 --> 01:23.340
+All we have to do is call, do request.
+
+01:23.550 --> 01:24.270
+That's it.
+
+01:26.660 --> 01:29.990
+And then to show any errors that might have occurred during the request.
+
+01:29.990 --> 01:31.760
+We want to show this air's thing.
+
+01:32.500 --> 01:33.610
+Down inside.
+
+01:34.500 --> 01:38.250
+Where he had previously had all this complicated logic stuck directly inside of here.
+
+01:38.250 --> 01:40.320
+We can replace it with just simply errors.
+
+01:40.500 --> 01:44.580
+We do not have to check and see if heirs is defined or anything like that, because by default it will
+
+01:44.580 --> 01:45.600
+be equal to null.
+
+01:47.860 --> 01:49.070
+So let's now save this.
+
+01:50.030 --> 01:52.160
+I'm going to flip back over and do a quick test.
+
+01:55.220 --> 01:57.650
+So I'm going to first put in some invalid input here.
+
+01:57.650 --> 02:00.470
+So invalid email, invalid password.
+
+02:02.180 --> 02:03.530
+And attempt to sign up.
+
+02:03.560 --> 02:04.250
+Look at that.
+
+02:04.250 --> 02:05.240
+It still works.
+
+02:06.290 --> 02:09.530
+Now, if I put in a valid email and a valid password.
+
+02:11.840 --> 02:12.950
+Let's say test.
+
+02:12.950 --> 02:14.480
+Or how about just some gibberish?
+
+02:16.090 --> 02:19.660
+I'll sign up and you'll notice that the request was made successfully.
+
+02:19.660 --> 02:21.520
+If you have open your network request log.
+
+02:21.550 --> 02:22.870
+There is a little bug right now.
+
+02:22.870 --> 02:27.730
+If we submit a request and it is valid or something is invalid and then we make another request that
+
+02:27.730 --> 02:28.460
+is valid.
+
+02:28.480 --> 02:32.650
+We don't clear out the error that we had previously set there so we could take care of that very easily
+
+02:32.650 --> 02:33.940
+by going back over to the hook.
+
+02:34.740 --> 02:36.200
+Back inside of user request.
+
+02:36.570 --> 02:41.310
+We'll say that the instant that someone is trying to make a follow up request, let's just go ahead
+
+02:41.310 --> 02:43.500
+and reset our piece of state.
+
+02:44.010 --> 02:45.780
+So right before making the request.
+
+02:46.540 --> 02:48.550
+I'll do a set errors with NULL.
+
+02:51.730 --> 02:55.660
+So now if I attempt to submit right away, I get an error.
+
+02:55.990 --> 02:59.980
+But if I put in a valid email address and a valid password.
+
+03:01.150 --> 03:03.650
+The error goes away, and I signed up successfully.
+
+03:04.220 --> 03:04.910
+Perfect.
+
+03:05.600 --> 03:10.130
+So again, this little hook that we put together of dear request is just a little time saving thing.
+
+03:10.170 --> 03:13.580
+It's good to make it a little bit easier on some other components that are going to be eventually put
+
+03:13.580 --> 03:17.570
+together to very easily make a request, consume some data out of it, and so on.
+
+03:18.200 --> 03:21.170
+Well, that is pretty much it for our sign up.
+
+03:21.980 --> 03:22.640
+Component.
+
+03:23.030 --> 03:25.820
+We just all have to do one or two quick things.
+
+03:25.820 --> 03:30.950
+For example, we need to make sure that after signing up successfully, we redirect the user over to
+
+03:30.950 --> 03:33.680
+that index page and say something like You are signed in.
+
+03:34.130 --> 03:35.420
+So still a little bit left.
+
+03:35.420 --> 03:37.820
+But for the most part this component is now complete.
+
+03:38.120 --> 03:40.790
+So quick pause right here and we'll continue in just a moment.

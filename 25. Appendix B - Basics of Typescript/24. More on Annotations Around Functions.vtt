@@ -1,0 +1,253 @@
+WEBVTT
+
+00:00.800 --> 00:04.130
+In this video, we're going to continue talking about annotations and inference.
+
+00:04.130 --> 00:08.540
+But rather than focusing on how those features are applied to variables, we're going to instead focus
+
+00:08.540 --> 00:10.940
+on how these features are applied to functions.
+
+00:11.180 --> 00:16.190
+So still talking about working with types, but we're now talking about labeling functions as opposed
+
+00:16.190 --> 00:16.970
+to variables.
+
+00:17.810 --> 00:22.100
+Now you might be thinking that we already spoke about functions a couple of videos ago, but let's pull
+
+00:22.100 --> 00:25.900
+open that code snippet that we wrote back inside my variables file.
+
+00:25.910 --> 00:30.710
+We can scroll down a little bit and see where we added in some type annotation around a function.
+
+00:31.130 --> 00:32.120
+So here's the thing.
+
+00:32.120 --> 00:36.860
+The annotation that we wrote out right here was an annotation for the variable.
+
+00:36.860 --> 00:42.680
+We were telling TypeScript, Hey, we're going to assign a value to this variable that's going to have
+
+00:42.680 --> 00:43.910
+this type right here.
+
+00:43.910 --> 00:45.050
+It's going to be a function.
+
+00:45.050 --> 00:47.600
+It's going to take some argument and have some return value.
+
+00:47.870 --> 00:50.150
+Again, it was modifying the variable.
+
+00:51.310 --> 00:55.250
+So now we're going to be moving on to the right hand side of that equal sign.
+
+00:55.270 --> 01:01.900
+We're now going to focus on how we add annotations to the function itself, how we annotate its input
+
+01:01.900 --> 01:04.990
+arguments and its return values as well.
+
+01:05.970 --> 01:09.000
+So with that in mind, let's flip back over a quick diagram here.
+
+01:09.000 --> 01:14.040
+I want to give you a plain definition on what's going on with annotations and inference around functions.
+
+01:15.330 --> 01:15.600
+All right.
+
+01:15.600 --> 01:16.200
+Here we go.
+
+01:16.440 --> 01:21.210
+So when we talk about type annotations around functions, we are talking about code that we are adding
+
+01:21.210 --> 01:24.480
+in to our project that's going to help TypeScript along.
+
+01:24.990 --> 01:30.180
+The goal of these annotations is to tell TypeScript about the type of arguments that a function will
+
+01:30.180 --> 01:33.720
+receive and the type of value that it will return.
+
+01:34.410 --> 01:39.300
+So again, we are adding in code here to help TypeScript along, very similar to the type annotations
+
+01:39.300 --> 01:40.500
+we are already adding in.
+
+01:40.530 --> 01:44.790
+The big difference here is that we are no longer annotating a variable declaration.
+
+01:45.210 --> 01:48.450
+Instead, we are annotating the function itself.
+
+01:50.390 --> 01:55.070
+Now also with type inference, we still have type inference working around functions as well.
+
+01:55.070 --> 01:59.210
+Remember type inference is that kind of automatic system where TypeScript is going to try to figure
+
+01:59.210 --> 02:00.680
+out what is going on for us.
+
+02:01.280 --> 02:08.060
+This same system applies to functions as well, but there's one big difference type inference only works
+
+02:08.060 --> 02:10.940
+around the return value from a function.
+
+02:11.150 --> 02:16.610
+So TypeScript will try to figure out what value or what type of value you are returning from a function.
+
+02:16.610 --> 02:21.260
+But it will not try to figure out what type of value the arguments are.
+
+02:22.190 --> 02:26.480
+Now both these definitions right here, everything I just said, I feel like it's kind of confusing.
+
+02:26.480 --> 02:30.170
+And I think learning all this function stuff is a lot easier to look at some code snippets.
+
+02:30.380 --> 02:32.080
+So let's flip over to our code editor.
+
+02:32.090 --> 02:35.810
+We're going to write out a single function and annotate it as best we can.
+
+02:36.500 --> 02:36.890
+All right.
+
+02:36.890 --> 02:40.880
+So back inside my code editor, I'll find that annotations directory we had created.
+
+02:41.090 --> 02:43.880
+I'm going to make a new file in there and call it functions.
+
+02:44.300 --> 02:44.810
+Let's.
+
+02:45.790 --> 02:49.300
+So inside of here I want to write out one single function called ADD.
+
+02:49.540 --> 02:54.160
+This is going to be a function that's going to take two numbers as arguments, add them together and
+
+02:54.160 --> 02:55.120
+return the result.
+
+02:55.840 --> 03:00.460
+So I'm going to receive those two arguments as names A and B like so.
+
+03:01.190 --> 03:06.230
+Now, as soon as I add in those arguments, you'll notice I get a little warning if I hover over them
+
+03:06.230 --> 03:07.490
+or just the first one.
+
+03:07.490 --> 03:10.310
+It says here that A has a any type.
+
+03:10.760 --> 03:15.500
+So right now, TypeScript has no idea what type of value A is.
+
+03:15.950 --> 03:21.290
+So to help TypeScript understand what's going on here, we have to have add on a type annotation.
+
+03:22.090 --> 03:27.100
+To do so right after the argument name, we'll put in a colon and then the type of value that A will
+
+03:27.130 --> 03:27.620
+be.
+
+03:27.640 --> 03:29.410
+So in this case, it's going to be a number.
+
+03:30.370 --> 03:31.610
+Same thing for B as well.
+
+03:31.630 --> 03:35.770
+Right after B, I'll put in a colon and then the type of value that B will be.
+
+03:36.310 --> 03:40.990
+So we've now defined a function that's going to take two arguments, A and B, and they're both going
+
+03:40.990 --> 03:41.830
+to be numbers.
+
+03:42.700 --> 03:47.080
+Now the last thing we'll do is add in an annotation for the type of value that the function is going
+
+03:47.080 --> 03:47.830
+to return.
+
+03:48.100 --> 03:51.780
+Remember, we had said that the ADD function was going to add two numbers and return the result.
+
+03:51.790 --> 03:55.480
+So it makes sense that this thing will return a number as well.
+
+03:56.340 --> 04:01.620
+To add in that annotation right after the argument list, I'll put in a colon and then the type of value
+
+04:01.620 --> 04:02.920
+that the function will return.
+
+04:02.940 --> 04:04.140
+In this case, a number.
+
+04:05.750 --> 04:08.810
+As soon as I add that in, you'll see that I get a air right here again.
+
+04:09.200 --> 04:15.230
+This time it's saying that I have a function whose type is neither void or any, and it must return
+
+04:15.230 --> 04:15.950
+a value.
+
+04:16.220 --> 04:20.840
+So all this is saying right here is that we just added in an annotation that said our function was going
+
+04:20.840 --> 04:21.950
+to return a value.
+
+04:21.950 --> 04:25.490
+That is a number, but we don't have any return statement right now.
+
+04:25.490 --> 04:27.890
+We don't have any code to actually return a number.
+
+04:28.190 --> 04:32.420
+And so TypeScript is telling us, hey, your function isn't working as expected.
+
+04:32.780 --> 04:35.720
+So to fix that error, all we have to do is return a number.
+
+04:36.170 --> 04:40.970
+So inside the function I will return A plus B like so, and then that error goes away.
+
+04:42.200 --> 04:42.470
+All right.
+
+04:42.470 --> 04:47.720
+So this is a very basic example right here, but it highlights some really important ideas around type
+
+04:47.720 --> 04:49.100
+annotations for functions.
+
+04:49.100 --> 04:50.450
+So let's take a quick pause.
+
+04:50.450 --> 04:53.960
+We're going to come back the next video and dissect this thing just a little bit more.
+
+04:54.050 --> 04:55.760
+So I'll see you in just a minute.

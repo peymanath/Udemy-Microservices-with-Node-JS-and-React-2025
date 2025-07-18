@@ -1,0 +1,94 @@
+WEBVTT
+
+00:01.310 --> 00:03.800
+One last quick test inside of our current user test file.
+
+00:03.800 --> 00:08.060
+So I want to make sure that if we are not signed in, we get back a current user of NULL.
+
+00:08.060 --> 00:10.100
+So this will be really easy to put together.
+
+00:10.550 --> 00:17.570
+We'll put together another block down here and we'll say it responds with NULL if not authenticated.
+
+00:21.170 --> 00:27.380
+Then we'll get our response from a wait request app.
+
+00:28.270 --> 00:31.780
+I'm going to make a get request to API users current user.
+
+00:32.500 --> 00:37.480
+And then of course this time I'm not going to try to set any cookie because we want to make an unauthenticated
+
+00:37.480 --> 00:38.260
+request.
+
+00:38.800 --> 00:39.880
+I'm going to send that off.
+
+00:40.740 --> 00:44.580
+Even though I am not authenticated, I should still get back a 200.
+
+00:45.000 --> 00:46.500
+Let's make sure that's still the case.
+
+00:47.850 --> 00:51.750
+Then we could take a look at that response body and make sure that current user is no.
+
+00:52.890 --> 00:56.070
+So you could put down expect response dot body.
+
+00:57.580 --> 00:59.230
+Current user two.
+
+00:59.230 --> 00:59.890
+Equal.
+
+01:00.520 --> 01:01.060
+NULL.
+
+01:04.080 --> 01:04.980
+So I'm going to save that.
+
+01:05.790 --> 01:06.990
+Take a look at our tests.
+
+01:08.880 --> 01:09.570
+Very good.
+
+01:10.840 --> 01:11.080
+All right.
+
+01:11.080 --> 01:14.410
+Well, that is pretty much it for testing on our service.
+
+01:14.680 --> 01:17.170
+We've got some tests around all these handlers.
+
+01:17.200 --> 01:21.160
+Now, remember, there are two other types of tests we're going to eventually write as well.
+
+01:21.190 --> 01:25.570
+We're going to eventually start to write tests around our models and around some event handling stuff
+
+01:25.570 --> 01:26.230
+as well.
+
+01:26.410 --> 01:30.880
+But our model in this case, the user model, doesn't really have a lot of logic tied to it compared
+
+01:30.880 --> 01:33.270
+to some other models we're going to eventually put together.
+
+01:33.280 --> 01:36.190
+So I'm not going to worry about writing any tests around the user model just yet.
+
+01:36.340 --> 01:40.510
+In addition, we have not wired up any event stuff to our service just yet, so we're not going to worry
+
+01:40.510 --> 01:41.410
+about that either.
+
+01:41.770 --> 01:44.260
+Let's take a pause right here and continue in just a moment.

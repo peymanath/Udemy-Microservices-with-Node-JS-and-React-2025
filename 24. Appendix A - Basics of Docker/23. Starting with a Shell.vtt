@@ -1,0 +1,103 @@
+WEBVTT
+
+00:01.020 --> 00:05.640
+In the last section we spoke about how we could open up a shell inside of a running container by using
+
+00:05.640 --> 00:13.080
+Docker exec dash it and then passing in Shell or just simply S-H as the command that we want to execute.
+
+00:13.110 --> 00:18.000
+We've been talking about all this in the context of the exact command which we can use to execute an
+
+00:18.000 --> 00:20.370
+additional command inside of a container.
+
+00:20.550 --> 00:26.430
+But if we wanted to, we could also run Docker, run the original Docker run command right here along
+
+00:26.430 --> 00:32.160
+with that flag, and start up a shell immediately when a container first starts up.
+
+00:32.190 --> 00:37.140
+Now, of course, if we start up a shell, right when the container first starts, that's going to displace
+
+00:37.140 --> 00:40.470
+or keep any other typical or default command from running.
+
+00:40.470 --> 00:46.170
+But sometimes it is quite useful to get a empty container with a shell inside of it and just being able
+
+00:46.170 --> 00:49.250
+to poke around and not have any other process running.
+
+00:49.260 --> 00:51.630
+So let's try that out right now at our command line.
+
+00:52.140 --> 00:53.850
+I'm going to flip back over to my terminal.
+
+00:53.970 --> 00:55.710
+I'm going to run at Docker run.
+
+00:55.860 --> 01:00.810
+I'm going to put on the i t so that we can attach to standard in on the process that we're about to
+
+01:00.810 --> 01:01.530
+start up.
+
+01:02.340 --> 01:08.400
+I will run the busy box image and then the pro program or the primary command that we're going to execute
+
+01:08.400 --> 01:10.850
+inside the container will be S-H.
+
+01:11.010 --> 01:14.400
+So this means start up a new container out of the busy box image.
+
+01:14.820 --> 01:21.210
+Run the S-H program, which is a shell and attached to standard in of that program.
+
+01:21.300 --> 01:25.080
+So when I run this, I'll be presented with a command prompt.
+
+01:25.080 --> 01:32.430
+And just like we saw a moment ago, I can run the RLS command, I can ping google.com and hit control
+
+01:32.430 --> 01:33.180
+C to stop it.
+
+01:33.180 --> 01:36.210
+I can echo a message whatever I want to do.
+
+01:36.510 --> 01:40.800
+Again, this is a command that you might be using somewhat frequently any time that you want to poke
+
+01:40.800 --> 01:41.940
+around a container.
+
+01:41.970 --> 01:47.820
+The downside to using Docker run with it and S-H is that chances are you're not going to be running
+
+01:47.820 --> 01:49.220
+any other process.
+
+01:49.230 --> 01:54.540
+It's a little bit more common that you're going to want to start up your container with a primary process
+
+01:54.540 --> 02:00.720
+of like maybe your web server or whatever it might be, and then attach to it a running shell by using
+
+02:00.720 --> 02:03.690
+the Docker exit command, wherever it is right here.
+
+02:04.940 --> 02:08.300
+But I just wanted you to be aware of this alternate use of Docker run.
+
+02:08.630 --> 02:08.970
+All right.
+
+02:08.990 --> 02:11.090
+Now, one last thing I want to cover in the next section.
+
+02:11.090 --> 02:13.490
+So quick break and I'll see you in just a minute.

@@ -1,0 +1,154 @@
+WEBVTT
+
+00:01.050 --> 00:01.380
+Okay.
+
+00:01.410 --> 00:04.080
+Time for a real test of our application.
+
+00:04.110 --> 00:06.020
+So we're going to make a change to our service.
+
+00:06.030 --> 00:08.130
+We're going to commit that to the dev branch.
+
+00:08.130 --> 00:11.280
+We're then going to create a pull request and merge it into master.
+
+00:11.370 --> 00:16.560
+When we merge it into master, GitHub should automatically build our image and tell our Kubernetes cluster
+
+00:16.560 --> 00:20.010
+or specifically the deployment to use that new image.
+
+00:20.250 --> 00:24.990
+Now, as a quick reminder, we have not set up any networking or anything like that around our cluster
+
+00:24.990 --> 00:25.710
+just yet.
+
+00:25.710 --> 00:30.390
+So we will not be able to access our application inside the browser until we do a little bit more setup.
+
+00:30.690 --> 00:35.100
+All we are trying to do right now is make sure that we can make a change to one of our services and
+
+00:35.100 --> 00:37.440
+get that change deployed into our cluster.
+
+00:37.830 --> 00:38.940
+So let's get to it.
+
+00:39.360 --> 00:44.550
+Inside my art service, I'm going to find the indexed file and on that little console log that we had
+
+00:44.550 --> 00:47.280
+added right there, I'm just going to add in a couple more dots.
+
+00:47.280 --> 00:49.860
+So that is the big change that we want to commit.
+
+00:50.840 --> 00:51.730
+So I'll make that change.
+
+00:51.740 --> 00:52.850
+I'm going to save the file.
+
+00:53.420 --> 00:55.190
+I'll then go back over to my terminal.
+
+00:55.730 --> 00:58.670
+I'm going to make sure that I'm on the dev branch.
+
+00:59.770 --> 01:00.850
+On the dev branch.
+
+01:01.390 --> 01:03.250
+I'll take a look at all my pending changes.
+
+01:03.970 --> 01:10.570
+I'm going to add that change, commit it and I'll give it a message of updated startup message.
+
+01:11.640 --> 01:13.740
+I'll then push that up to my dev branch.
+
+01:19.770 --> 01:20.100
+All right.
+
+01:20.100 --> 01:20.820
+Looks good.
+
+01:21.250 --> 01:22.400
+Let's now go over to GitHub.
+
+01:22.410 --> 01:25.830
+We're going to create a pull request and then merge it into master.
+
+01:26.860 --> 01:28.210
+So over on GitHub.
+
+01:29.270 --> 01:30.890
+I'll go to the pool request tab.
+
+01:31.870 --> 01:37.600
+I'm going to create a new pull request and I want to merge everything from Dev into master.
+
+01:40.540 --> 01:41.920
+I'm going to create the pull request.
+
+01:47.560 --> 01:51.850
+And then we're going to wait just a couple of seconds here for all of our tests to be executed.
+
+01:52.890 --> 01:55.740
+After a minute or two, you should see all of your tests pass.
+
+01:55.740 --> 01:58.190
+So in this case, there's really just one check being committed.
+
+01:58.200 --> 02:00.300
+It's just the test on the auth service.
+
+02:00.660 --> 02:02.730
+Now we're going to merge in this pull request.
+
+02:04.020 --> 02:05.070
+I'm going to merge it in.
+
+02:06.090 --> 02:09.900
+And now after merging it, we should be able to go over to our actions tab once again.
+
+02:10.290 --> 02:11.880
+So at the very top actions.
+
+02:12.890 --> 02:15.320
+We're then going to find deploy manifests.
+
+02:15.680 --> 02:19.880
+We're not going to see any changes inside of here just yet because we have not made any changes to any
+
+02:19.880 --> 02:23.240
+of the files inside the manifest directory or really the infra directory.
+
+02:23.750 --> 02:28.520
+However, we did make a change to the OTT service, so we should be able to open up, deploy off.
+
+02:29.400 --> 02:31.860
+And see our deployment script right there.
+
+02:32.370 --> 02:33.750
+I'm going to click on that task.
+
+02:34.020 --> 02:36.690
+I'm going to take a look at the build job inside there.
+
+02:37.370 --> 02:41.870
+And now we should be able to follow through as this goes and builds our image, which is the image of
+
+02:41.870 --> 02:44.720
+the Docker hub and then eventually deploys it into our cluster.
+
+02:45.600 --> 02:46.790
+So I'm going to pause the video right here.
+
+02:46.800 --> 02:51.000
+We're going to come back to the next video and just make sure that the deployment went as expected.

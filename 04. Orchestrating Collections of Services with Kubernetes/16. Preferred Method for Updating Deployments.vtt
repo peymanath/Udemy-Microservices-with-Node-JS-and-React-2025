@@ -1,0 +1,316 @@
+WEBVTT
+
+00:01.150 --> 00:06.250
+In the last video I showed you a method, number one for making changes to a deployment at the very
+
+00:06.250 --> 00:06.860
+end of the video.
+
+00:06.880 --> 00:11.710
+I told you that we would really be well served to not have to specify the version of an image inside
+
+00:11.710 --> 00:13.390
+of our deployment config file.
+
+00:13.480 --> 00:18.220
+The reason for that is that if we have to ever open up this file just to change the version of some
+
+00:18.220 --> 00:21.760
+image, that's always a possibility of introducing some kind of error.
+
+00:21.760 --> 00:25.690
+We could very easily accidentally make a typo somewhere, or we could actually type in the incorrect
+
+00:25.690 --> 00:26.560
+version number.
+
+00:26.920 --> 00:32.260
+And so it would be really great if we could figure out some way to not have to specify the version whatsoever.
+
+00:32.440 --> 00:34.240
+And that's what we're going to do inside this video.
+
+00:35.220 --> 00:35.790
+Okay.
+
+00:35.980 --> 00:40.020
+Let's take a look at a series of steps that are going to outline exactly how this is going to work.
+
+00:41.180 --> 00:42.800
+This is method number two.
+
+00:43.430 --> 00:47.780
+The first thing we're going to do is to make sure that our deployment is using the latest tag in the
+
+00:47.780 --> 00:49.280
+pod spec section.
+
+00:49.850 --> 00:55.220
+So back inside of that config file, we'll find that image version right there and we can change it
+
+00:55.220 --> 00:57.230
+to either latest like so.
+
+00:57.710 --> 01:02.750
+Or remember, if we just leave off that designation entirely, then Docker assumes that we want to use
+
+01:02.750 --> 01:06.350
+latest so we can either put on latest or just leave it off entirely.
+
+01:06.350 --> 01:07.190
+It is up to you.
+
+01:08.720 --> 01:10.070
+Well, then save this file.
+
+01:10.520 --> 01:13.950
+Now, remember, just saving this config file does nothing whatsoever.
+
+01:13.970 --> 01:17.750
+We have to actually take this config file and apply it to our cluster.
+
+01:17.930 --> 01:22.790
+So let's do that right now so that the deployment inside of our cluster understands that it should try
+
+01:22.790 --> 01:24.710
+to use the latest version image.
+
+01:25.780 --> 01:32.680
+So back at my terminal I'm going to make sure that I'm inside that infra k aids directory.
+
+01:34.720 --> 01:36.700
+And there's the deployment file right there.
+
+01:37.120 --> 01:42.370
+So we'll do a little apply chef post dash double HTML.
+
+01:43.780 --> 01:44.050
+Okay.
+
+01:44.050 --> 01:47.620
+So we've now updated our deployment and we've told it to try to use the latest version.
+
+01:47.890 --> 01:55.210
+Now, at this point in time, if you do a little get deployments and you see that we are not running
+
+01:55.210 --> 01:57.020
+one pod, that is totally okay.
+
+01:57.040 --> 02:00.070
+So if you see an error or anything like that right now, don't sweat it.
+
+02:01.030 --> 02:03.430
+Let's now go through the series of steps we have back here.
+
+02:03.730 --> 02:07.120
+So our deployment is now using the latest tag in the pod spec section.
+
+02:07.390 --> 02:10.690
+So now step number two, we are going to go ahead and make an update to our code.
+
+02:11.110 --> 02:13.840
+So let's make an update to our post code base.
+
+02:13.840 --> 02:18.700
+We'll then rebuild the image and then we're going to take that image and push it up to up to Docker
+
+02:18.700 --> 02:19.120
+Hub.
+
+02:20.850 --> 02:22.430
+So I'm going to go back over to my editor.
+
+02:22.440 --> 02:26.100
+I'll find the Post Project Directory and the indexed JS file inside there.
+
+02:27.050 --> 02:29.010
+Here's the change that we made just a moment ago.
+
+02:29.030 --> 02:30.830
+So let's make another change right now.
+
+02:31.760 --> 02:35.780
+I'm going to change the V 20 to maybe version 55.
+
+02:35.810 --> 02:37.760
+Maybe we're just doing huge updates here.
+
+02:37.760 --> 02:38.570
+Who knows what?
+
+02:38.570 --> 02:39.110
+Whatever.
+
+02:39.110 --> 02:40.250
+We've got some change.
+
+02:41.150 --> 02:42.400
+So I'll save that file.
+
+02:42.410 --> 02:45.170
+And then we are going to once again rebuild this image.
+
+02:46.470 --> 02:50.730
+So back at my terminal, I'll go back into our OSS directory.
+
+02:51.830 --> 03:00.140
+And inside there we will rebuild the image with Docker Build Dash TX, your docker id slash posts and
+
+03:00.140 --> 03:01.820
+then a dot at the very end.
+
+03:01.850 --> 03:05.330
+Again to designate that we want to use all the code inside of posts.
+
+03:07.800 --> 03:08.100
+Okay.
+
+03:08.100 --> 03:10.020
+So we've now rebuilt this image.
+
+03:10.620 --> 03:13.710
+You'll notice that we have this implicit version added on of latest.
+
+03:14.100 --> 03:15.720
+So we're now going to take that image.
+
+03:16.900 --> 03:18.820
+And push it up to Docker Hub.
+
+03:20.570 --> 03:23.210
+So back at my terminal, I'll do a Docker push.
+
+03:24.070 --> 03:26.410
+My darker ID posts.
+
+03:29.620 --> 03:33.130
+That's going to take the image that we just built and attempt to push it up to Docker Hub.
+
+03:33.700 --> 03:38.290
+Now, just to save a little bit of time, I already built this thing and pushed it up a moment ago just
+
+03:38.290 --> 03:39.550
+to save time in this video.
+
+03:39.550 --> 03:44.530
+But for you, it's probably going to take a minute or two to actually take all the image data and throw
+
+03:44.530 --> 03:46.510
+it up to Docker Hub, which is totally fine.
+
+03:47.480 --> 03:47.670
+Okay.
+
+03:47.760 --> 03:51.530
+So we've now pushed all these versions or this latest version up to Docker Hub.
+
+03:51.650 --> 03:55.580
+So now we want to somehow tell our deployment to use that latest version.
+
+03:55.880 --> 04:02.120
+To do so, all we have to do is run CTL rollout, restart deployment, and then the name of the deployment
+
+04:02.120 --> 04:02.810
+itself.
+
+04:03.410 --> 04:04.640
+Let's try that out right now.
+
+04:05.670 --> 04:09.900
+I'm going to first get all my deployments just to make sure I recall the name of the deployment.
+
+04:09.930 --> 04:10.860
+There it is right there.
+
+04:11.310 --> 04:13.490
+And they'll do a little.
+
+04:15.340 --> 04:17.080
+Rollout restart deployment.
+
+04:19.370 --> 04:23.000
+And then the name of our deployment is Post Dash Depot.
+
+04:24.930 --> 04:25.230
+Okay.
+
+04:25.230 --> 04:27.660
+So it looks like the deployment has now been restarted.
+
+04:28.140 --> 04:31.230
+So let's now do a get deployments again.
+
+04:32.660 --> 04:34.610
+It looks like we do have one pod running.
+
+04:34.640 --> 04:38.840
+Let's get a list of all of our pods and just make sure that it's using the latest version of our code
+
+04:38.840 --> 04:39.290
+now.
+
+04:39.650 --> 04:40.340
+So we'll do a cube.
+
+04:40.430 --> 04:42.140
+It'll get pods.
+
+04:43.040 --> 04:43.940
+There is our pod.
+
+04:43.970 --> 04:46.470
+It looks like it was created just 18 seconds ago.
+
+04:46.540 --> 04:47.780
+That's definitely a good sign.
+
+04:48.450 --> 04:53.450
+So let's now try to get logs out of this pod and just make sure that we see that v 55 in there just
+
+04:53.450 --> 04:56.240
+to make sure that we are using the latest version of our code.
+
+04:56.750 --> 05:01.310
+So I'll do a little logs and then the name of the pod.
+
+05:02.270 --> 05:02.930
+And there we go.
+
+05:02.930 --> 05:04.220
+There's our 55.
+
+05:04.610 --> 05:05.210
+Awesome.
+
+05:06.990 --> 05:07.290
+Okay.
+
+05:07.290 --> 05:12.380
+So again, two versions or two methods to update the image used by a deployment.
+
+05:12.390 --> 05:16.410
+You've got method number one, which is going to require us to specify a version number inside of our
+
+05:16.410 --> 05:19.470
+config file, which is something that we don't really like to do.
+
+05:19.800 --> 05:22.410
+So instead, I recommend going with this solution right here.
+
+05:22.980 --> 05:28.950
+We're going to just always use the latest tag, make an update to our code, push the image to Docker
+
+05:28.950 --> 05:32.100
+Hub and then run that command and we're good to go.
+
+05:32.100 --> 05:35.070
+Our cluster is now running the latest version of all of our code.
+
+05:36.580 --> 05:36.900
+All right.
+
+05:36.910 --> 05:40.980
+Now that we've got this all put together, one last thing around the world of Kubernetes in just a moment.
+
+05:40.990 --> 05:42.520
+So I'll see you in just a minute.

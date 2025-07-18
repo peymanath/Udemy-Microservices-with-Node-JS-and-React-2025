@@ -1,0 +1,127 @@
+WEBVTT
+
+00:01.070 --> 00:05.000
+Our authentication service is now pretty well tested, so we're going to start to move on to the next
+
+00:05.000 --> 00:06.470
+part of our application.
+
+00:06.890 --> 00:11.450
+In this section, we're going to start to focus on building out the authentication portion, just the
+
+00:11.450 --> 00:14.030
+authentication part of our React application.
+
+00:14.570 --> 00:19.280
+Now, just as we did on our last app, if you do not want to build the React part of this thing, that
+
+00:19.280 --> 00:20.770
+is not a problem whatsoever.
+
+00:20.780 --> 00:25.400
+Maybe you are not familiar with React, maybe you just don't have any interest in the front end, whatever
+
+00:25.400 --> 00:25.700
+it is.
+
+00:25.700 --> 00:28.100
+If you don't want to build your React application, that is okay.
+
+00:28.490 --> 00:34.340
+If you don't want to build the React app, go to the last section or last video in the section and download
+
+00:34.340 --> 00:35.810
+the zip file inside there.
+
+00:36.170 --> 00:41.630
+Now, as a part of that section or that video with that zip file, there will be some text instructions
+
+00:41.630 --> 00:42.890
+for you to follow.
+
+00:42.920 --> 00:48.050
+We're going to have to make a change or two to our Kubernetes deployment to make this React application
+
+00:48.050 --> 00:49.220
+work as expected.
+
+00:49.220 --> 00:54.500
+And so you have to read the instructions inside of that text lecture just to understand how to make
+
+00:54.500 --> 00:55.790
+use of the zip file.
+
+00:56.450 --> 00:56.660
+Okay.
+
+00:56.720 --> 00:59.990
+So with all that in mind, if you want to skip the React stuff, pause the video.
+
+00:59.990 --> 01:00.970
+Now continue on.
+
+01:00.980 --> 01:04.820
+Otherwise stick around and we'll have a brief discussion of this React project.
+
+01:05.690 --> 01:09.260
+The first thing I want to do is highlight the different screens that we're going to try to put together.
+
+01:09.830 --> 01:12.410
+We're going to implement just the authentication part.
+
+01:12.500 --> 01:17.690
+So I want to build out a React application that's going to have a landing page of sorts like this right
+
+01:17.690 --> 01:18.230
+here.
+
+01:18.350 --> 01:22.670
+When a user first comes to our app, we'll go in to show them some text that says You are not signed
+
+01:22.670 --> 01:23.060
+in.
+
+01:23.180 --> 01:27.860
+And the header should have a button that will take the user to a sign up or a sign in page.
+
+01:28.810 --> 01:30.790
+If a user clicks on sign up, great.
+
+01:30.790 --> 01:32.020
+We'll show a sign up form.
+
+01:32.470 --> 01:35.410
+If they click on sign in, great, we'll show a sign in form.
+
+01:35.770 --> 01:40.900
+And then either way, after a user authenticates with our application, we'll then redirect them back
+
+01:40.900 --> 01:42.340
+to the landing page.
+
+01:42.340 --> 01:46.030
+And when they go back to the landing page, we should now instead show something that says you are signed
+
+01:46.030 --> 01:49.030
+in and we'll update the header up here as well.
+
+01:50.540 --> 01:55.370
+So this is going to be a pretty simple, very straightforward application, just meant to deal with
+
+01:55.370 --> 01:56.330
+authentication.
+
+01:56.780 --> 02:00.320
+So now that we understand the scope of what we're building, let's have a quick discussion about some
+
+02:00.320 --> 02:02.060
+of the technologies we're going to use for this.
+
+02:02.060 --> 02:06.140
+Because, remember, we are trying to make use of server side rendering here, which is going to complicate
+
+02:06.140 --> 02:07.940
+things just a little bit.
+
+02:07.940 --> 02:11.150
+So a quick pause and we'll start working on this thing in just a moment.

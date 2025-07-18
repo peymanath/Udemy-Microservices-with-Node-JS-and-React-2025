@@ -1,0 +1,118 @@
+WEBVTT
+
+00:00.970 --> 00:01.600
+In this video.
+
+00:01.600 --> 00:05.530
+We're going to move on to our next big subject, which is type annotations and type inference.
+
+00:05.860 --> 00:10.000
+These are technically two different systems inside of TypeScript, but we're going to talk about them
+
+00:10.000 --> 00:11.740
+in parallel for a very good reason.
+
+00:12.250 --> 00:16.630
+Just to make things a little bit more complicated as well, these two different features apply slightly
+
+00:16.630 --> 00:20.170
+differently to variable declarations, functions and objects.
+
+00:20.590 --> 00:24.550
+So we're going to first talk about type annotations and inference as applied to variables.
+
+00:24.880 --> 00:29.140
+Then we'll take a break and talk about them, applied to functions and then objects and so on.
+
+00:30.160 --> 00:34.150
+For each of these different subjects, we're going to once again go through some plain definition and
+
+00:34.150 --> 00:34.900
+overview.
+
+00:35.140 --> 00:38.460
+Well, then take a look at some different code examples that we're going to write out together.
+
+00:38.470 --> 00:41.080
+You'll notice I swap these two steps right here at this time around.
+
+00:41.080 --> 00:45.310
+So we'll then talk about why we care about this annotation and inference stuff, and then we'll discuss
+
+00:45.310 --> 00:46.180
+when to use it.
+
+00:46.570 --> 00:47.740
+So let's get to it.
+
+00:48.570 --> 00:50.340
+First off, some plain definitions.
+
+00:50.340 --> 00:51.810
+So type annotations.
+
+00:51.810 --> 00:52.590
+What is that?
+
+00:52.860 --> 00:58.710
+A type annotation is some tiny bit of code that you and I are going to write to tell TypeScript what
+
+00:58.740 --> 01:01.260
+type of value a variable refers to.
+
+01:02.600 --> 01:02.900
+All right.
+
+01:02.900 --> 01:06.020
+Now, before expanding on that definition, let's talk about what type inference is.
+
+01:06.020 --> 01:11.690
+So with type inference, TypeScript is going to attempt to automatically figure out what type of value
+
+01:11.690 --> 01:12.920
+a variable refers to.
+
+01:13.580 --> 01:16.790
+And you'll notice that the kind of definition of both of these are very similar.
+
+01:16.790 --> 01:22.370
+In both cases, it's what type of valuable, what type of value a variable will refer to.
+
+01:22.760 --> 01:27.500
+So the interesting thing about type annotations and type inference is that they're kind of at odds with
+
+01:27.500 --> 01:28.130
+each other.
+
+01:28.310 --> 01:34.220
+In one case, you and I are adding in a little bit of code to tell TypeScript what different types we
+
+01:34.220 --> 01:36.530
+are working with, with type inference.
+
+01:36.530 --> 01:39.620
+We are relying upon TypeScript to do that work for us.
+
+01:40.010 --> 01:45.170
+So these two features are a question of Are you and I are going to do everything manually or are we
+
+01:45.200 --> 01:47.030
+going to leave it up to TypeScript?
+
+01:47.060 --> 01:49.100
+That's what the big question here is.
+
+01:49.100 --> 01:53.210
+And that's what what is going to be the big focus of our discussion about, you know, why we care about
+
+01:53.210 --> 01:54.950
+these features and when to use them.
+
+01:55.580 --> 01:56.930
+Now, let's take a quick pause right here.
+
+01:56.930 --> 02:00.680
+We're going to come back to the next video and start taking a look at a couple of different code samples.
+
+02:00.680 --> 02:02.750
+So a quick pause and I'll see you in just a minute.

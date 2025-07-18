@@ -1,0 +1,367 @@
+WEBVTT
+
+00:01.150 --> 00:05.710
+Now that our query service is all put together, we're going to need to make some changes to the React
+
+00:05.710 --> 00:09.720
+application, make sure that it reaches out to the query service to get the data that it needs.
+
+00:09.730 --> 00:16.120
+So right now our React application makes get requests to our post service and get requests to our common
+
+00:16.130 --> 00:20.380
+service directly whenever it needs to show posts or whenever it needs to show comments.
+
+00:20.560 --> 00:22.090
+So that's not what we want anymore.
+
+00:22.090 --> 00:27.640
+Rather than making a request to post or comments, we want the React application to make one single
+
+00:27.640 --> 00:33.220
+request over to query service where it's going to get all the information it needs to show everything
+
+00:33.220 --> 00:36.550
+about our application, all the posts and all the associated comments.
+
+00:37.500 --> 00:41.490
+As a quick reminder, ferry service runs on port 4002.
+
+00:41.580 --> 00:47.130
+So we want to make sure that we go around and update our request to go to Port 4002 and make a get request
+
+00:47.130 --> 00:48.240
+to post.
+
+00:48.870 --> 00:54.340
+The other thing I want to mention very quickly is that right now we are just talking about reading data.
+
+00:54.360 --> 00:57.360
+We're just talking about getting a list of posts to the show, to the user.
+
+00:58.110 --> 01:04.650
+The Post Service and Common Service are still 100% in charge of actually creating comments and creating
+
+01:04.650 --> 01:05.280
+posts.
+
+01:05.490 --> 01:10.590
+So if the React application needs to create a post or create a comment, it will still reach out to
+
+01:10.590 --> 01:12.060
+these services directly.
+
+01:12.360 --> 01:15.840
+All we're talking about right now is getting information to show to the user.
+
+01:16.800 --> 01:17.040
+Okay.
+
+01:17.040 --> 01:18.810
+So let's open up our React application.
+
+01:18.810 --> 01:22.770
+We're going to make sure that we only make that one request directly to the query service.
+
+01:24.790 --> 01:27.700
+So back inside my editor, I'll find the client directory.
+
+01:28.520 --> 01:32.120
+I'll then find CRC and then finally post list.
+
+01:32.860 --> 01:33.910
+Inside a post list.
+
+01:33.910 --> 01:38.800
+This is where we are making a request to get a big list of all of our posts from the post service right
+
+01:38.800 --> 01:39.250
+now.
+
+01:39.760 --> 01:41.020
+That's not what we want anymore.
+
+01:41.050 --> 01:47.020
+We instead want to make a request to localhost 4002 and then still slash posts.
+
+01:47.890 --> 01:48.190
+Again.
+
+01:48.190 --> 01:50.650
+4002 is where our query service is running.
+
+01:51.580 --> 01:56.980
+Let's then do a quick console log of resort data just so we can inspect the information that comes back
+
+01:56.980 --> 01:59.440
+and just make sure that we've got everything we expect.
+
+02:00.990 --> 02:01.210
+Okay.
+
+02:01.230 --> 02:02.370
+I'm going to save this file.
+
+02:02.730 --> 02:06.330
+Go back over to my browser and check out check out the React application.
+
+02:07.400 --> 02:11.010
+You'll notice that my app is automatically refreshed inside my console.
+
+02:11.030 --> 02:12.260
+I'll see that console log.
+
+02:12.980 --> 02:17.600
+So this is the big list of posts and embedded comments we got back from the query service.
+
+02:18.660 --> 02:20.310
+That's the idea of a post.
+
+02:20.670 --> 02:25.680
+Inside is the actual idea of the post, along with the title of the post and then the array of associated
+
+02:25.680 --> 02:26.370
+comments.
+
+02:27.750 --> 02:29.580
+So it looks like it's working correctly right now.
+
+02:29.580 --> 02:31.920
+We are getting all the data that we expect.
+
+02:33.460 --> 02:36.040
+It looks like the application itself is still working as well.
+
+02:36.040 --> 02:40.660
+But if you take a look at the network request log, you'll notice that the React app is still trying
+
+02:40.660 --> 02:42.700
+to make that request to the comments endpoint.
+
+02:42.730 --> 02:47.020
+It's not actually using the list of comments that is embedded inside of your automatically.
+
+02:48.060 --> 02:50.250
+So we still have a quick change or two to make.
+
+02:51.380 --> 02:54.530
+Back inside my editor, I'm going to remove the console log that we just added.
+
+02:55.800 --> 02:58.290
+I'll then go down to rendered posts.
+
+02:59.090 --> 03:02.120
+Remember rendered post is where we iterated over the list of posts.
+
+03:02.120 --> 03:06.740
+So we got back inside that response and we built up a separate card out of each one.
+
+03:07.690 --> 03:12.280
+We then eventually created an instance of the comment list component.
+
+03:13.340 --> 03:17.790
+When we create a comment list, we pass down just the ID of the post that we're currently looking at.
+
+03:17.790 --> 03:23.490
+And then it was up to comment list to make a follow up request and get all the comments associated with
+
+03:23.490 --> 03:26.700
+that post ID that is no longer necessary.
+
+03:26.730 --> 03:32.400
+We now have all the comments that we need directly inside of this post that we are iterating over.
+
+03:33.030 --> 03:37.440
+So rather than passing down the post ID to comment list, we'll just pass down the list of comments
+
+03:37.440 --> 03:38.070
+directly.
+
+03:39.050 --> 03:43.970
+So I'll delete that post ID thing and replace it with comment or comments.
+
+03:45.910 --> 03:47.950
+Is post comments.
+
+03:48.500 --> 03:49.960
+We've already got the list of comments.
+
+03:49.960 --> 03:54.160
+We'll just pass them down directly and then leave it up to comment list to iterate over that list and
+
+03:54.160 --> 03:55.090
+render them out.
+
+03:56.360 --> 03:57.440
+So I'll save this.
+
+03:58.160 --> 04:00.590
+I'm going to go over to my comment list component now.
+
+04:01.100 --> 04:02.240
+Yours comment list.
+
+04:03.040 --> 04:07.810
+And then remember, comment list is currently making requests to get all that data or all that list
+
+04:07.810 --> 04:14.530
+of comments no longer necessary at all so we can delete that state or you state call.
+
+04:15.330 --> 04:17.310
+We can delete batch data.
+
+04:18.840 --> 04:20.970
+And we can delete user effect.
+
+04:24.400 --> 04:28.270
+I'll clean up the import statements at the top so we no longer need Axios.
+
+04:28.300 --> 04:31.270
+We no longer need U.S. state or U.S. effect.
+
+04:34.090 --> 04:37.570
+And then in our props list right here we are no longer receiving post ID.
+
+04:37.570 --> 04:40.150
+Instead, we just received the list of comments.
+
+04:41.420 --> 04:44.540
+It turns out that all the other code we have inside of here is going to work just fine.
+
+04:44.900 --> 04:47.360
+So we take the comments that we receive as a prop.
+
+04:47.840 --> 04:48.890
+We're going to map them.
+
+04:49.160 --> 04:53.060
+We generate an ly for each one and then render those lies inside of a ul.
+
+04:55.090 --> 04:57.460
+So let's go ahead and save this flip back over to the browser.
+
+04:58.140 --> 04:59.190
+And see how we're doing.
+
+04:59.810 --> 05:01.360
+So I can now refresh the page.
+
+05:01.370 --> 05:04.760
+You'll notice that I still see my post right here with the associated comment.
+
+05:05.450 --> 05:09.350
+But I only had to make that one single request over to the query service.
+
+05:10.100 --> 05:13.130
+We can still continue to try to make new posts and comments and whatnot.
+
+05:13.130 --> 05:14.930
+So I'll put in a third post.
+
+05:16.210 --> 05:19.660
+Refresh the page and I'll put in a third comment.
+
+05:20.920 --> 05:23.440
+And submit that and refresh.
+
+05:23.800 --> 05:24.760
+And there we go.
+
+05:25.330 --> 05:28.930
+We've got our second post, second comment and third post with third comment.
+
+05:29.710 --> 05:31.570
+Well, I'd say that this worked out pretty well.
+
+05:32.700 --> 05:35.820
+So we have now introduced a brand new service into our application.
+
+05:35.850 --> 05:39.390
+It is consuming events from these other services.
+
+05:41.380 --> 05:45.340
+And it's using those events to populate some internal store of data.
+
+05:45.520 --> 05:49.270
+And we did all this to make sure that we can minimize the number of requests that are required.
+
+05:49.270 --> 05:54.820
+But more importantly, this really is a demonstration of how we can do some cross service communication.
+
+05:55.480 --> 05:57.640
+There's something really interesting about this approach.
+
+05:57.640 --> 06:00.970
+Remember, I laid out a couple of big benefits to this approach a while ago.
+
+06:01.330 --> 06:06.670
+Back in this diagram, back over here, I said, Hey, our query service is not going to have any dependencies
+
+06:06.670 --> 06:09.520
+like direct dependencies on other services.
+
+06:09.520 --> 06:10.650
+So why is that good?
+
+06:10.660 --> 06:11.920
+Well, watch this.
+
+06:12.220 --> 06:13.900
+If we go back over to our terminal.
+
+06:15.060 --> 06:18.660
+We can now kill 100% the common service.
+
+06:18.660 --> 06:22.770
+That's the Common Service and we can destroy the post service as well.
+
+06:22.800 --> 06:26.730
+So we can pretend that those two services just crashed for who knows what reason.
+
+06:27.180 --> 06:27.990
+But you know what?
+
+06:28.380 --> 06:34.320
+Our query service is still running just fine, so we can still serve up data to users of our application
+
+06:34.320 --> 06:35.820
+without any issue whatsoever.
+
+06:36.160 --> 06:37.260
+So I can refresh this.
+
+06:37.260 --> 06:38.910
+I still see my data up here.
+
+06:40.090 --> 06:44.200
+If I try to create a new post, I will of course get an error because that post service which is in
+
+06:44.200 --> 06:46.150
+charge of creating posts, is not running.
+
+06:46.420 --> 06:52.510
+But I still have a major portion of my application running successfully, and that's all what this independent
+
+06:52.510 --> 06:54.760
+idea of independent services is about.
+
+06:54.790 --> 06:56.260
+We can have some services crash.
+
+06:56.290 --> 06:57.490
+Others are still working.
+
+06:57.490 --> 07:01.360
+And in general, maybe our application will still be in a very usable state.
+
+07:02.550 --> 07:02.910
+All right.
+
+07:02.910 --> 07:03.840
+So this looks good.
+
+07:03.840 --> 07:06.870
+But I do want to add in one last feature to this application.
+
+07:07.050 --> 07:09.750
+So we'll take a quick pause right here, and I'll see you in just a minute.

@@ -1,0 +1,274 @@
+WEBVTT
+
+00:00.740 --> 00:01.460
+In this section.
+
+00:01.460 --> 00:06.110
+We're going to continue looking at the Docker run command or some slight variations of it.
+
+00:06.170 --> 00:09.980
+Now, before I show you the next kind of variation on this command that we're going to look at, I want
+
+00:09.980 --> 00:11.630
+to give you one quick reminder.
+
+00:11.660 --> 00:16.910
+Remember, any time that we execute Docker, run with an image, we not only get that file system snapshot,
+
+00:16.910 --> 00:22.640
+but we also get this default command that is supposed to be executed after the container is created.
+
+00:23.360 --> 00:28.370
+So the variation on Docker run that we're going to look at is going to give you a way to override this
+
+00:28.370 --> 00:29.810
+default startup command.
+
+00:30.720 --> 00:31.620
+Here's how we do it.
+
+00:31.650 --> 00:35.280
+We'll execute Docker, run the image name just like we did before.
+
+00:35.280 --> 00:40.920
+And then after that, we'll supply a alternate command to be executed inside the container after it
+
+00:40.920 --> 00:41.670
+starts up.
+
+00:41.700 --> 00:46.920
+This is an override, so whatever default command is included inside of the image is not going to be
+
+00:46.920 --> 00:47.670
+executed.
+
+00:47.700 --> 00:49.950
+Let's try this out right now and just see how it works.
+
+00:50.460 --> 00:50.790
+All right.
+
+00:50.790 --> 00:56.760
+So I'm going to find my terminal and I'm going to execute Docker run, and then I'm going to specify
+
+00:56.760 --> 00:57.450
+my image.
+
+00:57.450 --> 01:00.030
+We're going to use a different image than what we use before.
+
+01:00.060 --> 01:03.870
+We're going to use an image called Busy Box, and I'll tell you why in just a moment.
+
+01:04.380 --> 01:09.960
+After that, we'll list out the alternate command to execute inside the container after it is created.
+
+01:09.960 --> 01:12.990
+And so I'm going to say that I want to run a command echo.
+
+01:13.020 --> 01:13.920
+Hi there.
+
+01:14.820 --> 01:16.540
+So this right here is the override.
+
+01:16.560 --> 01:19.440
+This is a command that will be executed inside that container.
+
+01:19.470 --> 01:21.450
+The Echo Command is going to print out.
+
+01:21.450 --> 01:23.040
+Hi there, inside my terminal.
+
+01:23.040 --> 01:25.980
+So if this works the way we would expect, I'll see the text.
+
+01:25.980 --> 01:26.460
+Hi there.
+
+01:26.460 --> 01:27.060
+Up here.
+
+01:27.180 --> 01:28.050
+So I'm going to run that.
+
+01:28.050 --> 01:28.860
+And sure enough.
+
+01:28.860 --> 01:34.080
+Yep, we see that we can change the text provided here to the Echo Command as much as we please.
+
+01:34.080 --> 01:39.330
+So I could say by there or I could say, how are you?
+
+01:40.500 --> 01:41.580
+You get the idea.
+
+01:42.960 --> 01:46.080
+Now I want to show you a small variation on that command.
+
+01:46.080 --> 01:49.740
+And this is going to start to make things a little bit more interesting than just kind of echoing.
+
+01:49.770 --> 01:51.120
+Text back over to you.
+
+01:51.360 --> 01:54.600
+I want you to run Docker, run busy box.
+
+01:54.600 --> 01:58.590
+And then the override command that we're going to use this time is going to be LZ.
+
+01:58.980 --> 02:04.170
+If you've never used LZ before, it's going to print out all the files and folders inside of a given
+
+02:04.170 --> 02:04.910
+directory.
+
+02:04.920 --> 02:07.020
+So let's try running this and see what happens.
+
+02:08.640 --> 02:15.480
+So according to our Docker container, when we print out our files and folders, we have been etsi dev
+
+02:15.480 --> 02:18.240
+home proc root system user and var.
+
+02:18.300 --> 02:20.370
+These are all folders right here.
+
+02:20.370 --> 02:25.650
+And if you are on, say, a windows machine right here, these folders might look very strange to you
+
+02:25.650 --> 02:26.970
+and very unfamiliar.
+
+02:27.540 --> 02:34.090
+So in fact, these are folders that are being printed out that are not belonging to you on your computer.
+
+02:34.110 --> 02:37.740
+These are folders that exist solely inside that container.
+
+02:37.920 --> 02:42.210
+I want to remind you about exactly what happens when we create a container out of an image.
+
+02:42.330 --> 02:44.560
+So over here we've got the busy box image.
+
+02:44.580 --> 02:50.790
+It has some default file system snapshot and some presumably default command.
+
+02:51.000 --> 02:56.130
+Who knows what it is off top of my head, but it definitely has this default file system snapshot.
+
+02:56.250 --> 03:01.920
+That busy box image has default folders of bin dev at C home proc root and so on.
+
+03:01.920 --> 03:03.900
+All the ones that you see listed right here.
+
+03:04.110 --> 03:12.120
+So when we create a new container out of that image, we take this file system snapshot, we stick it
+
+03:12.120 --> 03:17.490
+in as the folder for that container, and then the command that we execute is LRS.
+
+03:17.490 --> 03:22.840
+So we list out all the files and folders inside of our harddrive which then prints out bin dev at c
+
+03:22.890 --> 03:24.120
+home proc and route.
+
+03:24.860 --> 03:26.300
+So that's pretty much it.
+
+03:26.330 --> 03:30.770
+Now, one thing you might be a little bit curious about is why we chose to use the busy box image here
+
+03:30.770 --> 03:33.410
+as opposed to the hello world, one that we were using before.
+
+03:34.160 --> 03:37.370
+Well, let's go back over to our terminal really quickly and we're going to try running.
+
+03:37.370 --> 03:39.550
+Hello World with the LZ command.
+
+03:39.560 --> 03:41.090
+So I'll do Docker run.
+
+03:41.090 --> 03:44.270
+Hello World and I'll do LZ right here.
+
+03:44.960 --> 03:48.190
+And you're going to very quickly see that we get a kind of nasty error message.
+
+03:48.200 --> 03:50.870
+Well, let's try doing the echo command and see what happens.
+
+03:51.860 --> 03:52.790
+I'll do Docker run.
+
+03:52.790 --> 03:53.950
+Hello, World Echo.
+
+03:53.960 --> 03:54.890
+Hi there.
+
+03:55.220 --> 03:58.010
+And we get a very similar error message here as well.
+
+03:58.010 --> 03:59.180
+So what's going on?
+
+03:59.450 --> 04:00.770
+Well, here's the issue.
+
+04:01.340 --> 04:07.820
+When we run the alternate commands or those alternate echo and LZ commands with busy box, those commands
+
+04:07.820 --> 04:16.340
+work because LZ and Echo are two programs that exist inside of the busy box file system image.
+
+04:16.340 --> 04:24.080
+Somewhere inside of this folder system right here is a LZ command or an actual LZ executable and a echo
+
+04:24.080 --> 04:25.490
+executable as well.
+
+04:25.490 --> 04:30.860
+And so we can safely execute those commands with busy box because those are programs that exist inside
+
+04:30.860 --> 04:31.970
+this file system.
+
+04:32.240 --> 04:38.510
+However, with our Hello World Program over here, the only thing that exists inside this file system
+
+04:38.510 --> 04:43.220
+snapshot is a single program like one single file.
+
+04:43.220 --> 04:47.960
+And all that thing does is echo out or kind of print out that singular message that we saw when we ran
+
+04:47.960 --> 04:48.800
+that container.
+
+04:49.160 --> 04:54.980
+So these startup commands that we are executing are being based upon the file system, include with
+
+04:54.980 --> 04:55.520
+the image.
+
+04:55.520 --> 05:01.850
+And if we try to execute a command inside the container that uses a program that doesn't or is not contained
+
+05:01.850 --> 05:04.370
+within this file system, we're going to see that error.
+
+05:05.630 --> 05:08.630
+So a little bit more on Docker run command.
+
+05:08.630 --> 05:11.690
+Let's take another quick break right now and continue in the next section.

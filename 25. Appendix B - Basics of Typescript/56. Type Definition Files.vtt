@@ -1,0 +1,247 @@
+WEBVTT
+
+00:00.820 --> 00:05.140
+In the last video we installed the fake module, but we very quickly saw a warning around it.
+
+00:05.380 --> 00:10.330
+So if I hover over this right here, I see something that says could not find declaration file for module
+
+00:10.330 --> 00:10.880
+faker.
+
+00:10.900 --> 00:12.700
+So let's talk about what that's about.
+
+00:13.330 --> 00:14.830
+First off, a quick diagram.
+
+00:15.370 --> 00:15.670
+All right.
+
+00:15.670 --> 00:19.780
+So just to make sure things are really clear, whenever you and I are writing TypeScript code, we are
+
+00:19.780 --> 00:25.540
+free to make use of JavaScript or more precisely, JavaScript libraries as much as we want to.
+
+00:26.140 --> 00:31.960
+So we can install common JavaScript libraries into any TypeScript project using NPM.
+
+00:32.110 --> 00:37.690
+Or we could even reference JavaScript files that you and I write ourselves inside of our project from
+
+00:37.690 --> 00:38.740
+TypeScript code.
+
+00:39.280 --> 00:41.470
+But there's one little caveat here.
+
+00:41.800 --> 00:47.380
+Remember, TypeScript wants to check your code and it checks your code by the use of types.
+
+00:48.060 --> 00:52.350
+TypeScript wants to know all the different functions that you have, what different type of arguments
+
+00:52.350 --> 00:54.990
+they take and what type of value they return.
+
+00:55.260 --> 00:59.250
+And in general, it wants to know all the different types of data that are flowing around your application.
+
+00:59.580 --> 01:03.870
+If TypeScript doesn't have this information, then it cannot completely check your code.
+
+01:04.470 --> 01:09.420
+So when we start to think about using JavaScript code inside of our project, naturally all JavaScript
+
+01:09.420 --> 01:14.100
+code we write or make use of is not going to have any type information attached to it.
+
+01:14.310 --> 01:19.290
+And TypeScript can't really automatically figure out what different types of values are floating around
+
+01:19.290 --> 01:20.400
+JavaScript code.
+
+01:20.880 --> 01:22.350
+So to fix this problem.
+
+01:22.470 --> 01:26.310
+TypeScript has the idea of type definition files.
+
+01:26.760 --> 01:31.260
+You can think of a type definition file as kind of an adapter between TypeScript code that you and I
+
+01:31.260 --> 01:34.440
+write and JavaScript libraries that we try to work with.
+
+01:35.010 --> 01:39.900
+A type definition file is going to tell the TypeScript compiler all the different functions that are
+
+01:39.900 --> 01:45.570
+available inside this JavaScript library, what type of argument they take and what type of value those
+
+01:45.570 --> 01:46.650
+functions return.
+
+01:47.040 --> 01:52.020
+So once again, you can think of these type definition files as like an adapter layer of sorts.
+
+01:53.090 --> 01:57.910
+Sometimes type definition files will be installed automatically when you install a JavaScript library.
+
+01:57.920 --> 02:02.840
+So for example, if you recall that Axios project we worked on at the very start of this course, we
+
+02:02.840 --> 02:06.500
+never did anything related to type definition definition files.
+
+02:06.890 --> 02:11.930
+That's because Axios by default includes a type definition file for us.
+
+02:12.350 --> 02:17.600
+However, right now we are making use of the Faker module, which does not include a type definition
+
+02:17.600 --> 02:18.170
+file.
+
+02:18.800 --> 02:23.720
+So we have to install a type definition file manually if it is not included for us.
+
+02:24.140 --> 02:29.630
+It might sound really challenging to know when a type definition is file is included or not included,
+
+02:29.630 --> 02:33.920
+but basically it's going to be really straightforward if you ever try to make use of a module and you
+
+02:33.920 --> 02:38.600
+see that warning we just saw right here, that means you need to install the type declaration file.
+
+02:40.150 --> 02:44.260
+Once we understand that we need to install that file, it's a really simple process.
+
+02:44.500 --> 02:46.150
+So here's what's going to happen.
+
+02:46.570 --> 02:50.620
+All these type definition files are already publicly available for you.
+
+02:50.650 --> 02:55.030
+I shouldn't say all of them, but the vast majority for popular libraries have already been created.
+
+02:55.390 --> 03:00.610
+So there is already a type definition file out there that has been created by some random person to
+
+03:00.610 --> 03:04.660
+work with the fake library to install that type definition file.
+
+03:04.810 --> 03:08.500
+We're going to reach into a project called Definitely Typed.
+
+03:08.800 --> 03:13.300
+That's the name of the project that includes all these pre created or pre generated type definition
+
+03:13.300 --> 03:18.490
+files in general to get any of these type definition files from definitely typed.
+
+03:18.640 --> 03:24.280
+We're always going to install an NPM module that generally is going to be named something like at types
+
+03:24.280 --> 03:27.730
+slash and then the name of the library that we're trying to make use of.
+
+03:28.060 --> 03:31.030
+So for us, it would be at types slash faker.
+
+03:31.690 --> 03:35.530
+As a quick example, let's try looking up that module on NPM right now.
+
+03:35.920 --> 03:43.420
+So back inside my browser over here at NPM, I can do a search for at types slash faker and I'll see
+
+03:43.420 --> 03:46.120
+the TypeScript definition file appear for that library.
+
+03:47.840 --> 03:49.400
+So we can scroll down a little bit.
+
+03:50.290 --> 03:55.570
+And you'll see some details inside of here where it says very clearly that this file or this project
+
+03:55.570 --> 03:58.870
+has been generated from the definitely typed project.
+
+03:58.960 --> 04:03.670
+So again, definitely typed any time you see that term, they're talking about type definition files
+
+04:03.670 --> 04:05.230
+for JavaScript libraries.
+
+04:06.400 --> 04:06.670
+All right.
+
+04:06.670 --> 04:10.840
+So once again, to fix up this whole big issue, all we have to do is install that type definition file
+
+04:10.840 --> 04:11.620
+for faker.
+
+04:12.190 --> 04:14.470
+So I'm going to flip back over to my terminal one more time.
+
+04:14.920 --> 04:18.970
+I'm going to do an NPM install at types slash faker.
+
+04:20.840 --> 04:25.220
+These files are always extremely small because there's just a little bit of code to describe the different
+
+04:25.250 --> 04:26.390
+types inside that library.
+
+04:26.390 --> 04:33.380
+So once it is installed, we can then start back up parcel once more with parcel index html.
+
+04:34.800 --> 04:39.270
+All right, once that's all done, I can flip back over to my editor and you'll now notice that that
+
+04:39.270 --> 04:40.600
+little warning is gone.
+
+04:40.620 --> 04:43.920
+I still see a warning here saying that fakers declared Bud's values never read.
+
+04:43.950 --> 04:45.060
+That's totally fine.
+
+04:45.300 --> 04:50.370
+More importantly, we got rid of that other error or that other warning around a missing type definition
+
+04:50.370 --> 04:50.910
+file.
+
+04:51.780 --> 04:52.020
+Okay.
+
+04:52.020 --> 04:53.560
+So that's it for type definition files.
+
+04:53.580 --> 04:58.440
+Again, remember, vast majority of the time that you are using a JavaScript project inside of your
+
+04:58.440 --> 05:01.980
+typescript code, you might have to install that type definition file.
+
+05:02.370 --> 05:05.910
+Some JavaScript libraries include the type definition file by default.
+
+05:05.910 --> 05:11.070
+Other ones, like less popular libraries in general, are not going to include it automatically, so
+
+05:11.070 --> 05:12.900
+you will have to install it separately.
+
+05:13.730 --> 05:13.940
+All right.
+
+05:13.940 --> 05:16.700
+So let's take a pause right here and we'll continue in the next video.

@@ -1,0 +1,76 @@
+WEBVTT
+
+00:00.740 --> 00:03.820
+In this video, we're going to start to discuss interfaces in TypeScript.
+
+00:03.830 --> 00:07.880
+So as usual, we'll get a plain definition, some examples and so on.
+
+00:08.270 --> 00:12.200
+As a quick aside here, we're going to spend a pretty good amount of time in TypeScript talking about
+
+00:12.200 --> 00:13.160
+interfaces.
+
+00:13.550 --> 00:19.370
+The interplay between interfaces and classes is how we're going to really get very strong code reuse
+
+00:19.370 --> 00:21.110
+when we are writing TypeScript code.
+
+00:21.410 --> 00:27.020
+So if you understand interfaces really well, it's going to help you design really excellent applications.
+
+00:27.500 --> 00:31.850
+As a matter of fact, the entire second half of this course where we're going to work on a lot of applications
+
+00:31.850 --> 00:36.890
+is really going to come down to understanding how we can get interfaces and classes to work together
+
+00:36.890 --> 00:38.630
+really, really nicely.
+
+00:39.390 --> 00:43.530
+So if you don't understand this first take through interfaces, totally fine, because we're going to
+
+00:43.530 --> 00:45.300
+be discussing them quite a bit.
+
+00:45.720 --> 00:46.080
+All right.
+
+00:46.080 --> 00:48.600
+So with that in mind, let's take a look at a quick definition here.
+
+00:49.110 --> 00:54.540
+So when we have interfaces, we are going to write out some amount of code to define a new type inside
+
+00:54.540 --> 00:55.500
+of our application.
+
+00:55.950 --> 01:01.560
+The goal of this new type is to describe the different property names and the different property types
+
+01:01.680 --> 01:03.330
+that that object has.
+
+01:04.150 --> 01:08.440
+So when we create an interface, we are creating a new type inside of our application, just the same
+
+01:08.440 --> 01:12.260
+way that we have types like string or Boolean or number.
+
+01:12.280 --> 01:14.350
+We're creating another new type.
+
+01:14.350 --> 01:17.440
+It's a custom type that you and I are going to define.
+
+01:18.580 --> 01:21.890
+Understanding interfaces is a lot easier when you have some code in front of you.
+
+01:21.910 --> 01:23.230
+So let's do a quick pause right here.
+
+01:23.260 --> 01:25.900
+Come back in the next video and start to write out some examples.

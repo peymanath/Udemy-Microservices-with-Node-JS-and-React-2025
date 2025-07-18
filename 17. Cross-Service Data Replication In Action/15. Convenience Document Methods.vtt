@@ -1,0 +1,412 @@
+WEBVTT
+
+00:01.540 --> 00:05.650
+We've got this nice query written out right here that will determine whether or not a given ticket is
+
+00:05.650 --> 00:06.550
+already reserved.
+
+00:06.550 --> 00:10.390
+And as I mentioned, at the end of the last video, there's very likely going to be some other scenarios
+
+00:10.390 --> 00:13.690
+where we need to decide whether or not a given ticket has been reserved.
+
+00:13.960 --> 00:16.690
+So we're going to extract this logic into a separate file.
+
+00:16.840 --> 00:20.350
+In particular, we're going to extract it into the ticket model file.
+
+00:20.800 --> 00:22.510
+So I'm going to go back over to model's ticket.
+
+00:24.010 --> 00:27.580
+So we're going to add a new method onto the ticket model.
+
+00:27.610 --> 00:31.870
+This is going to allow us to decide whether or not a ticket has actually been reserved.
+
+00:32.690 --> 00:34.100
+Let me show you how this is going to work.
+
+00:34.310 --> 00:38.240
+I'm going to go down to the interface of ticket doc right here.
+
+00:39.180 --> 00:44.280
+And on the ticket doc interface, we're going to add in some new method that's going to exist on an
+
+00:44.280 --> 00:45.990
+individual ticket document.
+
+00:46.320 --> 00:47.160
+So we're going to say.
+
+00:47.910 --> 00:50.820
+That we're going to add in a new method called is reserved.
+
+00:51.270 --> 00:55.950
+If this thing ever gets called, we're going to return a promise that is going to resolve with a boolean.
+
+00:57.160 --> 01:01.960
+So once we implement this is reserved method, I'm going to flip back over to our handle really quickly.
+
+01:01.960 --> 01:07.570
+Once we implement that method, we will be able to write out some code like is reserved.
+
+01:09.520 --> 01:10.960
+Is a wait ticket.
+
+01:11.290 --> 01:12.720
+Is reserved.
+
+01:12.730 --> 01:13.510
+That is the goal.
+
+01:13.510 --> 01:15.520
+That's what we're going to try to eventually add in.
+
+01:15.880 --> 01:19.570
+So we're going to be able to take a ticket, call a method, and that's going to return to us whether
+
+01:19.570 --> 01:23.170
+or not this has been already assigned to some other valid order inside of our app.
+
+01:23.840 --> 01:26.480
+So inside of that is reserved method that we're going to write in just a second.
+
+01:26.480 --> 01:29.150
+We're going to essentially just run this exact query right here.
+
+01:29.600 --> 01:33.140
+So that's going to make it a lot easier to figure out whether or not a ticket has been reserved and
+
+01:33.140 --> 01:35.750
+really shortened down the code we have inside of this route.
+
+01:35.750 --> 01:37.850
+HANDLER So that's the idea.
+
+01:38.300 --> 01:40.550
+So let's go back over to the ticket model file.
+
+01:41.670 --> 01:43.200
+We're going to go down towards the bottom.
+
+01:44.450 --> 01:49.820
+And right after we define that build method on statics, the static object is how we add a new method
+
+01:49.820 --> 01:52.170
+directly to the ticket model itself.
+
+01:52.220 --> 01:54.080
+So remember, this is the ticket model.
+
+01:54.080 --> 01:57.350
+It's the object that allows us get to get access to the overall collection.
+
+01:57.470 --> 02:03.380
+If we want to add a new method to a document, then we're going to add in a method or a property to
+
+02:03.410 --> 02:08.720
+ticket schema methods is reserved.
+
+02:09.920 --> 02:13.710
+We're going to set the sequel to a keyword function super critical here.
+
+02:13.730 --> 02:17.570
+Please make sure you write out a function keyword instead of an arrow function.
+
+02:19.020 --> 02:25.200
+So by putting in ticket schema methods is reserved, we can now run what you saw just over here a moment
+
+02:25.200 --> 02:25.740
+ago.
+
+02:26.100 --> 02:27.500
+We can do something like this.
+
+02:27.510 --> 02:31.050
+This is how we add a method directly to the ticket document itself.
+
+02:32.690 --> 02:32.930
+Okay.
+
+02:32.960 --> 02:35.910
+So why did we add in a function keyword?
+
+02:35.930 --> 02:38.360
+Well, Mongoose has we've seen several times.
+
+02:38.360 --> 02:43.760
+It's kind of stuck in the ways of old, so to speak, and the old ways of writing JavaScript, I suppose.
+
+02:43.940 --> 02:49.340
+So in order to actually get information about the ticket document that we're operating on, when we
+
+02:49.340 --> 02:52.700
+call this method right here, we're going to access this.
+
+02:52.730 --> 02:54.080
+So inside this function.
+
+02:55.050 --> 02:57.510
+This is equal to the ticket.
+
+02:58.770 --> 03:03.420
+Document that we just called is reserved on.
+
+03:04.350 --> 03:08.370
+So in the context of our new route handler that we were just looking at a moment ago, when we write
+
+03:08.370 --> 03:09.750
+out something like this right here.
+
+03:10.510 --> 03:14.800
+The value of this inside of that function is going to be equal to that ticket document that we just
+
+03:14.800 --> 03:16.750
+found inside the database a moment ago.
+
+03:17.850 --> 03:21.780
+The reason we have to use a function keyword inside of here is because if we use an arrow function,
+
+03:21.780 --> 03:24.960
+it's going to mess around with the value of this inside of the function.
+
+03:24.960 --> 03:26.880
+So that's why we have to use a keyword function.
+
+03:28.180 --> 03:32.830
+We're going to also mark this function as being async so we can use the async await syntax.
+
+03:33.670 --> 03:36.970
+Then inside of here, we're going to write out essentially the same query that we were looking at a
+
+03:36.970 --> 03:38.800
+moment ago inside of our route handler.
+
+03:39.070 --> 03:41.800
+Let's just go and copy paste that thing to save a little bit of time.
+
+03:43.470 --> 03:45.030
+So I'll find the query that we just wrote.
+
+03:46.220 --> 03:47.210
+Here it is right here.
+
+03:47.780 --> 03:49.070
+I'm going to cut that whole thing.
+
+03:50.640 --> 03:54.180
+Go back over to our ticket model file and then paste it inside of here.
+
+03:57.920 --> 04:02.420
+So now inside this function, the ticket document that we were trying to look for is going to be equal
+
+04:02.420 --> 04:04.700
+to this inside this function.
+
+04:04.700 --> 04:07.730
+So we're going to replace ticket with this like so.
+
+04:09.000 --> 04:13.830
+We also need to make sure we import the order model and the order status enum at the top as well.
+
+04:15.000 --> 04:16.110
+So we go to the top.
+
+04:16.440 --> 04:18.630
+I'm going to import order.
+
+04:19.820 --> 04:21.590
+From same directory order.
+
+04:22.100 --> 04:24.560
+And now we could get order.
+
+04:25.450 --> 04:29.290
+Status from our common module inside of here.
+
+04:29.470 --> 04:31.930
+But there's another thing we could do very easily.
+
+04:32.820 --> 04:37.380
+In the context of this order service right here, there are several different files that are going to
+
+04:37.380 --> 04:39.210
+need to access the order status.
+
+04:39.240 --> 04:45.240
+It's a little bit confusing to have the definition of exactly what an order is coming from either the
+
+04:45.240 --> 04:49.260
+order bottle file and then in some cases our common module instead.
+
+04:49.590 --> 04:54.510
+It would make a lot more sense if we could do something like order status like.
+
+04:54.510 --> 04:58.140
+So I think that would just make a little bit more sense because now the implication here is that we
+
+04:58.140 --> 05:02.520
+have one file that has the definition of everything order related inside of our application.
+
+05:02.970 --> 05:07.380
+So rather than having this separate import statement right here, we're going to try to do this.
+
+05:07.380 --> 05:09.570
+So we're going to try to get order status from the order file.
+
+05:10.020 --> 05:14.070
+So in order to write this right here, that means we have to go back over to our order model file.
+
+05:14.870 --> 05:19.460
+We already imported order status over here and we're just going to re export that thing.
+
+05:20.330 --> 05:21.050
+Like so.
+
+05:22.990 --> 05:26.050
+So now if we go back over to the ticket model file, that import is now working.
+
+05:26.290 --> 05:30.820
+So again, the idea here is just to have one source for everything order related.
+
+05:32.730 --> 05:33.000
+Okay.
+
+05:33.000 --> 05:34.320
+Let's get back on track here.
+
+05:34.680 --> 05:36.240
+So now those errors should be gone.
+
+05:37.150 --> 05:38.950
+So inside this is reserved function.
+
+05:38.950 --> 05:41.370
+We should now have our existing order.
+
+05:41.710 --> 05:46.180
+Again, that thing is going to be either some order, document or null if we did not actually find a
+
+05:46.180 --> 05:46.720
+value.
+
+05:47.600 --> 05:48.560
+From is reserved.
+
+05:48.560 --> 05:52.460
+We don't really care necessarily about the order that this ticket is associated with.
+
+05:52.460 --> 05:57.170
+The name of is reserved kind of just implies that we're going to return a billion value of either.
+
+05:57.170 --> 05:57.650
+True.
+
+05:57.680 --> 05:59.320
+Yes, this thing is reserved or false.
+
+05:59.330 --> 06:00.530
+No, it is not reserved.
+
+06:00.530 --> 06:03.740
+And as a matter of fact, that's even what we wrote out inside of our method signature.
+
+06:03.740 --> 06:04.850
+Right, for it as well.
+
+06:04.880 --> 06:08.840
+We said that the promise was going to reserve or be resolve with a boolean.
+
+06:09.980 --> 06:14.240
+So rather than just returning the existing order, we're going to return.
+
+06:15.240 --> 06:17.820
+Not not existing order.
+
+06:18.600 --> 06:21.870
+That's essentially going to take existing order if that thing is equal to null.
+
+06:21.900 --> 06:27.900
+It will be flipped to true by the first exclamation and then flip back to false with the second one.
+
+06:28.600 --> 06:33.610
+And then if existing order is defined, we're going to flip it first to false and then flip it to true.
+
+06:34.030 --> 06:37.630
+So we're just doing that to decide or excuse me, to return a boolean.
+
+06:37.630 --> 06:37.960
+True?
+
+06:37.960 --> 06:38.230
+Yes.
+
+06:38.230 --> 06:39.280
+It is reserved or false.
+
+06:39.280 --> 06:40.120
+No, it is not.
+
+06:41.260 --> 06:42.010
+So that should be it.
+
+06:42.050 --> 06:43.180
+So we're going to save this file.
+
+06:44.580 --> 06:46.980
+We can now go back over to our new route handler.
+
+06:49.770 --> 06:51.000
+And now we can.
+
+06:52.090 --> 06:55.480
+Write out something right underneath that comment where we just had the really long query, we could
+
+06:55.480 --> 07:01.150
+say something like is reserved is a weight ticket, dot is reserved.
+
+07:02.080 --> 07:05.710
+And then on the if statement, we'll say if is reserved.
+
+07:06.410 --> 07:10.640
+Well, I don't know about you, but this is a lot easier to read than what we had before.
+
+07:10.970 --> 07:13.850
+It's not really as clear what it means to be reserved.
+
+07:14.000 --> 07:16.350
+So this comment being right here doesn't really make a lot of sense.
+
+07:16.370 --> 07:18.890
+We might want to move that comment over to the model file.
+
+07:18.920 --> 07:19.670
+I'm going to delete it.
+
+07:19.670 --> 07:21.470
+You could certainly move it over if you wish.
+
+07:21.470 --> 07:24.380
+But this right here, a lot easier to understand what is going on.
+
+07:24.980 --> 07:28.520
+We've got a very well named method that's going to tell us with a simple boolean.
+
+07:28.520 --> 07:28.850
+Yep.
+
+07:28.850 --> 07:30.350
+It's reserved or no, it's not.
+
+07:31.220 --> 07:32.780
+So this is a definite good improvement.
+
+07:33.000 --> 07:35.420
+It's still a little bit to take care of inside of this handler.
+
+07:35.420 --> 07:36.950
+Let's continue in just a moment.

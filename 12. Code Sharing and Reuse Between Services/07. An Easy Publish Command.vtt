@@ -1,0 +1,373 @@
+WEBVTT
+
+00:00.710 --> 00:04.850
+In this video, we're going to write out a little bit more config inside of our package JSON file.
+
+00:05.420 --> 00:08.120
+To get started, I want to find the main flag inside of here.
+
+00:08.120 --> 00:10.460
+By default it is set to indexes.
+
+00:10.580 --> 00:16.970
+This main path right here is defining exactly what file we import whenever we attempt to import this
+
+00:16.970 --> 00:18.050
+overall module.
+
+00:18.080 --> 00:19.370
+Let me give you an example.
+
+00:19.400 --> 00:23.390
+Let's imagine that we install this module into our service.
+
+00:23.540 --> 00:28.580
+Inside of our service, we're going to want to import some code out of common at some point in time.
+
+00:28.580 --> 00:35.990
+So we are going to want to write out something like say import middleware or something from Srg ticketing
+
+00:36.260 --> 00:37.790
+slash common.
+
+00:38.560 --> 00:44.200
+The main flag inside that package, JSON file is going to say what file we tried to reach into when
+
+00:44.200 --> 00:45.970
+we write out this import statement.
+
+00:46.540 --> 00:52.210
+So for you and I, we want to make sure that whenever we try to import this module, we import that
+
+00:52.210 --> 00:55.180
+index JS file inside the build directory.
+
+00:56.140 --> 01:01.630
+So for Maine, we're going to write out a build index as.
+
+01:03.180 --> 01:04.560
+Then very similar to that.
+
+01:04.560 --> 01:06.930
+We're also going to add in a types setting.
+
+01:09.480 --> 01:13.890
+This is used by TypeScript and it tells TypeScript what the main type definition file inside of our
+
+01:13.890 --> 01:14.780
+project is.
+
+01:14.790 --> 01:19.740
+So for you and I, it is the indexed file inside of the build directory.
+
+01:19.740 --> 01:23.630
+So we'll write out build index dots.
+
+01:24.890 --> 01:26.210
+One other setting inside of here.
+
+01:26.210 --> 01:27.740
+We're going to put in files.
+
+01:31.470 --> 01:35.660
+This file setting is going to tell PM what set of files inside of our project.
+
+01:35.670 --> 01:41.580
+We want to make sure 100% gets included inside the final published version of our package.
+
+01:41.850 --> 01:45.540
+So we want to make sure that we publish everything inside of this build directory.
+
+01:45.540 --> 01:50.280
+So inside of files right here, we'll put in a string of dot slash build.
+
+01:50.310 --> 01:52.260
+Da Star Star.
+
+01:54.180 --> 01:56.880
+Well, that is pretty much it for a package shot chase on file.
+
+01:57.180 --> 02:00.900
+We're not going to move on to another little piece of housekeeping right now.
+
+02:00.900 --> 02:05.670
+If we tried to use Git to commit all the files inside of our project, that would include the node modules
+
+02:05.670 --> 02:06.780
+and build directories.
+
+02:06.780 --> 02:11.560
+And we usually do not commit those directories to get so different that prevent that behavior.
+
+02:11.580 --> 02:14.040
+I'm going to create a new file inside the Common Directory.
+
+02:14.340 --> 02:18.030
+I'm going to give it a very special name of Dot get ignore.
+
+02:19.180 --> 02:23.470
+And then inside there I'm going to write out the build folder and node modules folders.
+
+02:26.510 --> 02:30.410
+So again, that's just going to make sure that we do not accidentally commit those directories to get.
+
+02:31.320 --> 02:31.860
+All right.
+
+02:32.820 --> 02:37.860
+Well, let's now take a look at how we would somehow make a change to our project, build it and then
+
+02:37.860 --> 02:39.360
+publish it to NPM.
+
+02:39.990 --> 02:42.430
+Let's first begin with making a very simple change.
+
+02:42.450 --> 02:44.730
+So how about inside of our index file?
+
+02:45.030 --> 02:49.980
+Let's say that we want to actually make this color object available to other things inside of our project.
+
+02:49.980 --> 02:53.070
+So maybe at the bottom we'll do an export default color.
+
+02:54.160 --> 02:55.210
+Well, then save this.
+
+02:55.390 --> 03:01.090
+And now we probably want to somehow publish this change up to NPM or other services can actually make
+
+03:01.090 --> 03:01.750
+use of it.
+
+03:01.780 --> 03:03.090
+So here's what we would do.
+
+03:03.100 --> 03:05.620
+Usually we would go over to our terminal.
+
+03:06.690 --> 03:08.520
+We had find our common directory.
+
+03:09.000 --> 03:13.530
+We could do a get status to take a look at everything we have changed and add it inside there.
+
+03:14.720 --> 03:21.140
+After reviewing all those changes, we could commit them by running a git ad dot and then actually commit
+
+03:21.140 --> 03:22.370
+it with some kind of message.
+
+03:22.790 --> 03:26.720
+So in this case, it'll give it a message of how about something like additional config?
+
+03:29.280 --> 03:33.780
+After committing, I'm then going to increment the version of my package.
+
+03:34.170 --> 03:35.010
+To do so.
+
+03:35.220 --> 03:40.530
+We can either go over to our package JSON file and manually update the version number right there.
+
+03:41.420 --> 03:48.470
+Or alternatively we can run some built in commands include with NPM stuff like NPM version patch.
+
+03:48.770 --> 03:54.380
+If we run NPM version patch and PM is going to automatically open up our package JSON file and update
+
+03:54.380 --> 03:56.600
+that little last version number right there.
+
+03:57.240 --> 04:02.790
+So if I run an inversion patch right now, I get printed out at my terminal 1.5 and if I go back over
+
+04:02.790 --> 04:05.280
+to the package JSON file, it says the same thing.
+
+04:07.030 --> 04:11.560
+We always have to increment the version number any single time we make a change to our package when
+
+04:11.560 --> 04:12.670
+we want to publish it.
+
+04:13.400 --> 04:18.680
+Now which number right here you update comes down to versioning semantics or semantic versioning.
+
+04:18.710 --> 04:22.490
+I'll let you do some separate research or reading on semantic versioning if you're really interested
+
+04:22.490 --> 04:23.000
+in it.
+
+04:23.270 --> 04:27.590
+For you and I, for the purposes of this course, we're just going to update this last version number
+
+04:27.590 --> 04:31.490
+right here any time we make a change, even if it is a breaking change.
+
+04:31.610 --> 04:34.910
+So we're not going to strictly follow semantic versioning or anything like that.
+
+04:37.000 --> 04:41.050
+Once I've incremented the version number, we would then do an NP run build.
+
+04:43.010 --> 04:47.540
+So that's going to build all of our code and then we can publish it with NPM publish.
+
+04:51.510 --> 04:52.380
+And there we go.
+
+04:54.120 --> 04:55.020
+That looks pretty good.
+
+04:55.980 --> 04:57.690
+Now running all those commands.
+
+04:57.690 --> 05:02.070
+In other words, the get at the commit, the version and the publish.
+
+05:02.100 --> 05:05.820
+We're going to have to run those fairly frequently inside this course.
+
+05:05.910 --> 05:11.610
+So just in the context of this course, we're going to add a little script to our package JSON file
+
+05:11.640 --> 05:13.980
+to automate that whole process for us.
+
+05:14.250 --> 05:18.480
+You would not normally do this in a real project whatsoever.
+
+05:18.480 --> 05:22.110
+So what we're going to add inside of here, we would normally not run in a real project.
+
+05:22.110 --> 05:27.210
+We are only going to add it just to make our lives inside this course a little bit easier because we
+
+05:27.210 --> 05:31.500
+are going to have to come back over to this common module several times and make updates to it.
+
+05:32.250 --> 05:36.030
+So let's write out a little command to just make our lives a little bit more straightforward.
+
+05:36.450 --> 05:38.490
+I'm going to add in a new script called Pub.
+
+05:39.920 --> 05:40.910
+Short for publish.
+
+05:41.150 --> 05:44.360
+Any time I run this, I want to add all the changes to get.
+
+05:45.360 --> 05:47.580
+I'm then going to commit those changes.
+
+05:48.560 --> 05:52.640
+I'm going to put in a dash im and then an escaped set of double quotes.
+
+05:53.620 --> 05:56.860
+And I'll give it a very generic update message like updates.
+
+05:58.560 --> 06:01.110
+I'll then do a version patch.
+
+06:02.340 --> 06:04.590
+I'll do a NPM run built.
+
+06:05.780 --> 06:07.700
+And then an MP publish.
+
+06:08.180 --> 06:10.660
+Notice that publish is not NPM run publish.
+
+06:10.670 --> 06:11.900
+It's just NPM publish.
+
+06:11.900 --> 06:12.650
+That's it.
+
+06:14.120 --> 06:14.390
+Now.
+
+06:14.390 --> 06:15.960
+What's so bad about this command?
+
+06:15.980 --> 06:16.870
+Well, it's very simple.
+
+06:16.880 --> 06:18.680
+We are adding all the changes into gate.
+
+06:18.680 --> 06:24.170
+At the same time, we're giving those changes a very generic commit message, which is not good, and
+
+06:24.170 --> 06:27.380
+we are also only ever updating the patch version number.
+
+06:27.770 --> 06:31.550
+So these 3/1 things right here, not super ideal at all.
+
+06:32.320 --> 06:34.510
+So we'd normally not do this in a real project.
+
+06:34.510 --> 06:37.600
+Again, it's just to make our lives in this course a little bit easier.
+
+06:39.250 --> 06:39.450
+Okay.
+
+06:39.460 --> 06:40.420
+Let's save this.
+
+06:40.690 --> 06:42.910
+I'll then go back over to my index file.
+
+06:43.180 --> 06:45.400
+I'll make another little arbitrary change inside of here.
+
+06:45.400 --> 06:46.600
+So how about I'll change?
+
+06:46.600 --> 06:47.500
+Read to 20?
+
+06:48.370 --> 06:49.150
+I'll save the file.
+
+06:49.150 --> 06:51.790
+And then let's imagine we want to publish these changes.
+
+06:52.240 --> 06:57.490
+So with that new script we just put together, all we do is run, NPM run like so.
+
+06:59.060 --> 07:03.860
+That's going to commit version, build, publish all in one little command.
+
+07:05.570 --> 07:07.160
+And after a brief pause.
+
+07:08.070 --> 07:08.340
+Yeah.
+
+07:08.340 --> 07:08.850
+There we go.
+
+07:08.970 --> 07:10.830
+There's my new version of my package.
+
+07:12.230 --> 07:13.400
+All right, so this looks good.
+
+07:13.430 --> 07:17.120
+That is pretty much all the setup we have to do for right now inside this common module.
+
+07:17.360 --> 07:18.620
+Let's take a pause right here.
+
+07:18.620 --> 07:22.790
+When we come back, the next video, we're going to start to move over some of that reusable code from
+
+07:22.790 --> 07:25.670
+our project into the common module.

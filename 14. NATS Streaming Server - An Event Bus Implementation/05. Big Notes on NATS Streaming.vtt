@@ -1,0 +1,454 @@
+WEBVTT
+
+00:01.220 --> 00:04.910
+We've now gotten that streaming server up and running inside of our Kubernetes cluster.
+
+00:05.000 --> 00:09.590
+In this video, I want to give you a quick overview on how Nat streaming server differs from that custom
+
+00:09.590 --> 00:13.670
+event bus we had put together back in our first application, we're going to focus on some high level
+
+00:13.670 --> 00:17.660
+items and then immediately after that, we're going to start to work on a very small, little stand
+
+00:17.660 --> 00:22.850
+alone project to get a better idea of how we interact with that streaming server and some of its different
+
+00:22.850 --> 00:23.630
+properties.
+
+00:23.630 --> 00:24.770
+So let's get to it.
+
+00:25.730 --> 00:27.800
+So we're going to take a look at a couple of different diagrams.
+
+00:27.800 --> 00:31.730
+In every one of these diagrams, I'm going to show you something that our custom event bus so we had
+
+00:31.730 --> 00:36.410
+previously built did and then we'll compare that to how that streaming server behaves.
+
+00:36.770 --> 00:41.900
+The first thing I want to think about is how we communicated events between different things with that
+
+00:41.900 --> 00:43.880
+custom event bus we had previously built.
+
+00:44.330 --> 00:49.070
+So with the custom event bus, we might have had some service that would build up an event.
+
+00:49.070 --> 00:54.380
+And then we use Axios to make a post request directly over to that custom event bus.
+
+00:55.150 --> 01:00.280
+The Custom Event Bus was running a copy of Express, so it listened for incoming post requests.
+
+01:00.310 --> 01:06.400
+It would receive that event and then internally take the event and make its own post request using Axios
+
+01:06.760 --> 01:09.370
+out to some other service inside our application.
+
+01:09.610 --> 01:14.470
+And those other services were running their own copies of Express that would listen for incoming events.
+
+01:15.660 --> 01:21.350
+So this was a very simplistic approach where we basically relied upon the libraries of Axios and Express.
+
+01:21.360 --> 01:22.440
+That was pretty much it.
+
+01:23.400 --> 01:27.960
+Now that we're using that streaming server, however, we're not going to be using Express or Axios
+
+01:27.960 --> 01:29.880
+to share events around our application.
+
+01:29.910 --> 01:35.130
+Instead, we are going to use a client library that is specifically designed to work with Nat streaming
+
+01:35.130 --> 01:35.700
+server.
+
+01:36.270 --> 01:39.960
+The client library that we're going to use is called Node Nat's streaming.
+
+01:40.260 --> 01:43.650
+Let's take a look at the documentation for it on NPM right now.
+
+01:44.250 --> 01:48.240
+I'm going to open up a new browser tab and navigate to NPM chess.com.
+
+01:48.950 --> 01:52.400
+Once here I will look up node nats streaming.
+
+01:55.940 --> 01:57.500
+Here's the documentation for it.
+
+01:57.530 --> 02:02.030
+Now, there's a lot of stuff in here that is just chock full of information.
+
+02:02.030 --> 02:03.980
+There's a lot of stuff going on inside of here.
+
+02:03.980 --> 02:08.510
+And unfortunately, whereas a lot of libraries out there, you can kind of just skim over it and say,
+
+02:08.510 --> 02:12.950
+Oh, yeah, I know what's going on, and then reference it in the future any time some specific problem
+
+02:12.950 --> 02:13.570
+comes up.
+
+02:13.580 --> 02:18.800
+Unfortunately, with this library and that streaming server, it is kind of important to understand
+
+02:18.800 --> 02:22.390
+the internals or how the stuff is really working from the get go.
+
+02:22.400 --> 02:27.470
+So that's why we're going to do a little stand alone project to work just with that streaming server
+
+02:27.470 --> 02:31.610
+by itself and not worry about any services or Kubernetes or anything like that.
+
+02:32.000 --> 02:36.590
+We're going to have this little standalone project just we can understand these very important internal
+
+02:36.590 --> 02:37.340
+mechanics.
+
+02:37.340 --> 02:41.720
+They're going to be critical for us to use to properly communicate data throughout our application.
+
+02:42.580 --> 02:46.210
+The one thing I do want to point out around this documentation right away, if you take a look at the
+
+02:46.210 --> 02:51.370
+basic usage section, you'll notice that to work with this library, we've got a very event based kind
+
+02:51.370 --> 02:52.330
+of architecture.
+
+02:53.590 --> 02:58.990
+So in other words, if you're familiar with event emitter in Node.js or any other kind of eventing library
+
+02:58.990 --> 03:04.390
+where we emit events and listen to them in plain JavaScript code, that is really how this library works.
+
+03:04.510 --> 03:06.430
+So we're going to create some objects.
+
+03:06.670 --> 03:11.440
+We're going to set up event listeners, and we're going to emit events as well.
+
+03:12.140 --> 03:15.710
+It all works with a very heavily callback based kind of infrastructure.
+
+03:15.710 --> 03:20.000
+So unfortunately we are going to be relying quite a bit on callbacks with this library as opposed to
+
+03:20.000 --> 03:22.460
+using async await or anything like that.
+
+03:24.510 --> 03:25.970
+All right, back over to our diagram.
+
+03:25.980 --> 03:30.750
+So we're going to, like I said, be using no net streaming to create events, send them over to that
+
+03:30.750 --> 03:35.430
+streaming server, and then that streaming server is going to send those out to our different services,
+
+03:35.580 --> 03:39.510
+which will be listening for events, also using the node net streaming library.
+
+03:39.510 --> 03:44.820
+So we're not going to have Axios or Express dedicated solely to handling events or anything like that.
+
+03:44.820 --> 03:49.590
+We will of course still use Axios or Express for normal HTTP requests and so on.
+
+03:49.590 --> 03:54.450
+I just mean to say that for all the event related stuff, we're going to be using node nets streaming.
+
+03:56.070 --> 03:56.420
+Okay.
+
+03:56.430 --> 03:57.420
+Second thing here.
+
+03:57.660 --> 03:59.460
+So with our custom event bus.
+
+04:00.230 --> 04:05.000
+Any time we emitted an event, that event was sent over to every single service.
+
+04:05.150 --> 04:06.290
+So for example.
+
+04:07.690 --> 04:11.470
+If we had our ticket service, emit an event of ticket update event.
+
+04:11.680 --> 04:17.290
+We received it on our custom event plus and we send a copy of it off to our order service and whatever
+
+04:17.290 --> 04:17.760
+other service.
+
+04:17.770 --> 04:20.740
+Now of course we didn't actually have these services in our first application.
+
+04:20.740 --> 04:24.700
+I just mean to say if we had to use this custom event plus in our current app, this is how it would
+
+04:24.700 --> 04:25.180
+work.
+
+04:25.600 --> 04:28.580
+So we would receive an event and throw it off to every different service.
+
+04:28.600 --> 04:33.790
+Technically, even the service that had sent it to the event bus, the technically an event or the same
+
+04:33.790 --> 04:37.420
+event went directly back to the ticket service, which was not super useful.
+
+04:38.210 --> 04:41.690
+So as you guess, no doubt streaming is going to be very different in nature.
+
+04:42.630 --> 04:46.740
+That streaming is going to require us to subscribe to specific channels.
+
+04:47.370 --> 04:51.210
+So a channel, we're also going to use the term topic somewhat interchangeably.
+
+04:51.240 --> 04:57.000
+These are essentially types of events or channels of events that we're going to be listening to specifically
+
+04:57.000 --> 04:58.680
+inside of our different services.
+
+04:59.340 --> 05:04.500
+So for example, on the NAT streaming server, we will create a collection of different topics or channels.
+
+05:04.500 --> 05:06.570
+We're going to use that term pretty interchangeably.
+
+05:08.390 --> 05:12.200
+Then whenever we want to emit some kind of event, we will create it inside of one service.
+
+05:12.560 --> 05:16.100
+We will reach out to the node gnat streaming library and we will tell it.
+
+05:16.100 --> 05:22.400
+Publish this event to the ticket colon updated channel so that event will be emitted out of our ticket
+
+05:22.400 --> 05:23.090
+service.
+
+05:23.690 --> 05:29.630
+It will go over to this channel on no net streaming and then the event will be sent along to only the
+
+05:29.630 --> 05:33.050
+services that are listening on that very specific channel.
+
+05:33.050 --> 05:38.420
+So for example, if our order service is listening for events on Ticket Colon updated, then it will
+
+05:38.420 --> 05:39.800
+receive a copy of this event.
+
+05:40.190 --> 05:44.300
+But if some other service, such as, say, payment service, was not listening to that channel, it
+
+05:44.300 --> 05:45.410
+would not receive it.
+
+05:45.650 --> 05:48.320
+So no longer does one event get sent everywhere.
+
+05:48.320 --> 05:54.140
+Instead, we have to specifically say, here are the different topics or channels that we care about.
+
+05:54.880 --> 05:58.840
+These are the different topics or channels that are going to exist, and then we have to specifically
+
+05:58.840 --> 06:03.250
+subscribe to them inside of our different services to actually receive those events.
+
+06:05.300 --> 06:06.920
+All right, onto the next diagram.
+
+06:07.130 --> 06:10.040
+So next thing, back with our custom event bus.
+
+06:10.040 --> 06:14.780
+We had put together a memory store of sorts to store all the different events that were ever emitted.
+
+06:14.810 --> 06:19.520
+So, for example, if we had our ticket service, emit an event again of ticket updated, we would store
+
+06:19.550 --> 06:22.040
+that inside of a in memory array.
+
+06:23.890 --> 06:28.180
+It would of course also be emitted to all of our different services, but we held on to a copy of it
+
+06:28.180 --> 06:28.840
+as well.
+
+06:29.200 --> 06:33.670
+This feature right here was absolutely critical, so we could handle temporary downtime of any given
+
+06:33.670 --> 06:37.810
+service if some service went offline for some very brief period of time.
+
+06:37.840 --> 06:43.090
+It could then come back online and ask for a list of all the different events that had ever been emitted.
+
+06:43.270 --> 06:47.530
+And so we could make sure that some service that was down for some period could come back online and
+
+06:47.530 --> 06:51.220
+fetch or retrieve all the data or events it had missed during that period.
+
+06:52.940 --> 06:54.080
+This is also fantastic.
+
+06:54.080 --> 06:56.380
+For any time we needed to add in a new service.
+
+06:56.390 --> 07:01.340
+So for example, if we decided to create a new service and add it into our application, maybe in this
+
+07:01.340 --> 07:02.870
+case we called it payment service.
+
+07:02.870 --> 07:07.010
+The payment service could then reach out to the event boss and say, Hey, give me a listing of all
+
+07:07.010 --> 07:09.290
+the different events that have ever been emitted.
+
+07:09.530 --> 07:15.560
+So we could then take our big list of events, send them all down, and then the payment service or
+
+07:15.560 --> 07:20.450
+whatever news service this is, would then be magically and suddenly up to date with all the relevant
+
+07:20.450 --> 07:21.530
+data inside of our app.
+
+07:22.210 --> 07:28.810
+So this idea of storing memory or storing events somehow was really critical for handling outages or
+
+07:28.810 --> 07:31.300
+handling any new service we pulled up as well.
+
+07:33.080 --> 07:38.300
+Now streaming server has a very similar idea, but it's way more complex and robust.
+
+07:39.290 --> 07:44.000
+So the net streaming server, it's going to store all the different events that get emitted in memory
+
+07:44.000 --> 07:44.960
+by default.
+
+07:45.320 --> 07:50.180
+However, we can also customize it to store these events inside of flat files stored on a hard drive
+
+07:50.180 --> 07:53.870
+or even inside of a database like MySQL or post grass.
+
+07:54.290 --> 07:59.660
+So again, for example, ticket service could emit an event over to that streaming server.
+
+08:01.230 --> 08:03.080
+It will be stored inside of memory.
+
+08:04.100 --> 08:09.080
+And simultaneously a copy of that event will be sent out to all the relevant services.
+
+08:09.560 --> 08:15.080
+If we then at some point in time bring a payment service or some new service online, it can reach out
+
+08:15.080 --> 08:20.960
+to that streaming server, ask for a copy of all the different events, and that streaming server will
+
+08:20.960 --> 08:24.530
+respond with all the relevant events that it has missed out on.
+
+08:26.410 --> 08:31.540
+So the same thing is true if we decide to store all these events on a flat file, MySQL database or
+
+08:31.540 --> 08:32.710
+post grass as well.
+
+08:33.420 --> 08:35.760
+So I'm not going to go through drawing out the entire diagram.
+
+08:35.760 --> 08:37.200
+I think you get the idea here.
+
+08:38.480 --> 08:43.520
+If we might emit an event over to that streaming server, we can configure it so these these events
+
+08:43.520 --> 08:45.800
+get stored inside of some file or database.
+
+08:46.220 --> 08:51.350
+So now if our NAT streaming server server ever goes offline or has to be restarted, of course it loses
+
+08:51.350 --> 08:52.850
+everything stored in memory.
+
+08:52.880 --> 08:57.470
+But if we stored those events inside of a file or database, then after the Nat streaming server comes
+
+08:57.470 --> 09:00.590
+back online, it could connect to that database or that file.
+
+09:00.620 --> 09:05.150
+Take a look at it and say, Oh, okay, here's all the different events that have ever been emitted.
+
+09:06.360 --> 09:06.620
+Okay.
+
+09:06.690 --> 09:07.380
+So that is it.
+
+09:07.560 --> 09:13.410
+Those are some very high level notes on some critical differences between our event bus and Nats streaming
+
+09:13.410 --> 09:13.960
+server.
+
+09:13.980 --> 09:18.960
+So the big ticket items here are that we're going to use this custom little client library called no
+
+09:18.960 --> 09:20.580
+net streaming to communicate.
+
+09:21.470 --> 09:26.360
+Next up with not streaming, we have to create these things that are called topics or we're also going
+
+09:26.360 --> 09:32.120
+to use the term channels for them and then our services have to specifically subscribe to events from
+
+09:32.120 --> 09:33.290
+these specific channels.
+
+09:34.350 --> 09:40.320
+And then finally, very similar to our custom event, plus we can have Nat streaming server store all
+
+09:40.320 --> 09:45.630
+these events in memory or alternatively store them inside of a file or database as well.
+
+09:46.880 --> 09:50.440
+So now that we understand some of these very core differences, we're going to take a pause right here
+
+09:50.440 --> 09:52.510
+and start writing some code in the next video.

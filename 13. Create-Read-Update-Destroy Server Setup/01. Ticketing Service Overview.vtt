@@ -1,0 +1,175 @@
+WEBVTT
+
+00:01.220 --> 00:05.330
+With our common library all put together, we're now going to start on our tickets service for real
+
+00:05.330 --> 00:06.060
+this time.
+
+00:06.080 --> 00:09.590
+So let's take a look at a couple of diagrams and understand how we're going to design and build this
+
+00:09.590 --> 00:10.040
+thing.
+
+00:10.610 --> 00:10.970
+All right.
+
+00:10.970 --> 00:14.660
+So first off, a listing of the different routes we're going to build into this microservice.
+
+00:14.690 --> 00:16.400
+In total, four different routes.
+
+00:16.670 --> 00:18.560
+One route to retrieve all tickets.
+
+00:18.560 --> 00:20.330
+One to get a ticket with a specific ID.
+
+00:20.360 --> 00:21.290
+One to create a ticket.
+
+00:21.290 --> 00:22.820
+And one to update a ticket.
+
+00:23.300 --> 00:27.920
+You'll notice on creating and updating a ticket, I've said that we're going to include a body that
+
+00:27.920 --> 00:30.080
+has a title that is a string and a price.
+
+00:30.080 --> 00:31.310
+That is a string as well.
+
+00:31.310 --> 00:32.460
+That is not a mistake.
+
+00:32.480 --> 00:34.610
+Our price is going to be communicated as a string.
+
+00:34.610 --> 00:38.840
+There's a specific reason for this, and I'll show you why as we get closer to actually building this
+
+00:38.840 --> 00:41.090
+ticket creation and update functionality.
+
+00:42.510 --> 00:46.710
+As we start to build out this service, we are going to need some location to store all this ticket
+
+00:46.710 --> 00:47.220
+data.
+
+00:47.220 --> 00:52.350
+So the information about the title of the event that we are trying to sell access to the price of the
+
+00:52.350 --> 00:54.630
+ticket and who owns this ticket.
+
+00:54.780 --> 00:58.950
+So our ticket service is going to have its own individual copy of MongoDB.
+
+00:59.160 --> 01:04.140
+This is 100% separate from the MongoDB instance we already created for that service earlier.
+
+01:04.440 --> 01:07.890
+Inside, there will probably end up with some kind of tickets collection.
+
+01:07.920 --> 01:12.660
+And right now, I anticipate that for every ticket we store, we'll probably want to store the title,
+
+01:12.660 --> 01:17.100
+The Price and the ID of the user who created this ticket and presumably owns it.
+
+01:17.550 --> 01:21.810
+We're going to eventually add in some additional properties to every ticket, but these extra properties
+
+01:21.810 --> 01:25.950
+aren't going to make sense until we start to add in one or two other services into our application.
+
+01:27.650 --> 01:29.180
+Now, how are we going to actually create this thing?
+
+01:29.210 --> 01:32.090
+Well, it's going to be very similar overall to the service.
+
+01:33.040 --> 01:34.780
+So we're going to create a package JSON file.
+
+01:34.810 --> 01:40.270
+We're going to install a ton of dependencies, we'll write out a Docker file, start to build the implementation,
+
+01:40.960 --> 01:43.060
+build an image, push it to Docker hub.
+
+01:43.770 --> 01:48.900
+We're going to write out some file to create the deployment and the service for our ticketing stuff.
+
+01:49.570 --> 01:53.200
+We're going to make sure we update that scaffold file to do that file sinking stuff.
+
+01:53.410 --> 01:59.380
+And then finally, we'll also create a file or Kubernetes file for the MongoDB deployment and the service
+
+01:59.380 --> 02:00.010
+as well.
+
+02:00.840 --> 02:02.340
+So this is what we would normally go through.
+
+02:02.370 --> 02:04.470
+Just about every time we want to create a new service.
+
+02:04.620 --> 02:09.390
+But in this course, just to save ourselves a little bit of time and a little bit of headache, we'll
+
+02:09.390 --> 02:11.250
+actually a lot of time, to be honest with you.
+
+02:11.280 --> 02:14.340
+We're going to kind of skip the first three steps or so.
+
+02:14.730 --> 02:15.690
+Let me tell you what I mean.
+
+02:16.440 --> 02:20.790
+These first three steps we essentially already have done inside of our service.
+
+02:21.910 --> 02:26.710
+So rather than creating a raw package based on file listing on all the dependencies, doing the Docker
+
+02:26.710 --> 02:31.170
+file, and then putting together all the code from scratch to create an express server, wire app,
+
+02:31.180 --> 02:32.350
+middleware and so on.
+
+02:32.350 --> 02:37.810
+We're going to pretty much just copy a lot of code directly from our service just to save ourselves
+
+02:37.810 --> 02:38.770
+a little bit of time.
+
+02:39.960 --> 02:43.640
+So we're really going to do a little bit of copying and then we're going to resume from right here.
+
+02:43.650 --> 02:48.750
+We'll build out an initial image and then we'll do the Kubernetes stuff, the scaffold stuff, and so
+
+02:48.750 --> 02:49.140
+on.
+
+02:50.140 --> 02:54.130
+So again, just to save some time on a normal project, we may or may not do this.
+
+02:54.160 --> 02:58.630
+It really depends on what you're building, but it's definitely going to save us time in our case.
+
+02:59.020 --> 03:00.370
+So now we understand what we're going to do.
+
+03:00.400 --> 03:01.130
+Quick pause here.
+
+03:01.150 --> 03:02.800
+Let's get to work in the next video.

@@ -1,0 +1,346 @@
+WEBVTT
+
+00:00.870 --> 00:03.360
+In the last video we started up scaffold for the first time.
+
+00:03.360 --> 00:08.580
+Just, you know, after building my images, I started to be prompted with some error messages, like
+
+00:08.580 --> 00:11.280
+the ones you see right here, something that says Manifest Unknown.
+
+00:11.430 --> 00:13.350
+Not entirely sure why this came up.
+
+00:13.350 --> 00:18.780
+I solved it by just ending scaffold with control C and then starting up scaffold dev once again.
+
+00:18.780 --> 00:21.720
+When I rebooted scaffold, all these error messages went away.
+
+00:21.720 --> 00:24.300
+So you might want to try doing the same thing on your own as well.
+
+00:25.510 --> 00:27.490
+After starting up scaffold a second time.
+
+00:28.450 --> 00:30.070
+When they scroll down here a little bit.
+
+00:31.350 --> 00:35.250
+I started to see some output from each of the different pods that are created.
+
+00:35.640 --> 00:39.180
+So here is some output from client, from query.
+
+00:40.130 --> 00:40.950
+Comments.
+
+00:40.970 --> 00:41.880
+Moderation.
+
+00:41.900 --> 00:44.300
+Event bus hosts and client.
+
+00:44.300 --> 00:48.230
+Again, I think client was stirred up one time, got killed and then restarted again.
+
+00:48.830 --> 00:52.490
+The nice thing about scaffold first, nice thing is that it's going to take all the logs coming out
+
+00:52.490 --> 00:56.010
+of these pods and print them up easily read inside of our terminal.
+
+00:56.030 --> 00:57.110
+That's kind of a nice thing.
+
+00:58.010 --> 01:01.700
+We should still be able to access our application by trying to go to post.
+
+01:02.900 --> 01:04.080
+So I should be able to refresh.
+
+01:04.100 --> 01:04.340
+Yep.
+
+01:04.340 --> 01:05.030
+Looks good.
+
+01:05.360 --> 01:08.030
+Do you remember it that all of our data is stored in memory right now?
+
+01:08.030 --> 01:12.590
+So every single time that we restart these different services, we essentially are dumping all of our
+
+01:12.590 --> 01:12.930
+data.
+
+01:12.950 --> 01:14.510
+We'll fix that up on our next project.
+
+01:14.510 --> 01:16.070
+But right now, that's just the reality.
+
+01:16.760 --> 01:22.340
+Now, in theory, we should be able to open up our code editor, go over to some sub project like let's
+
+01:22.340 --> 01:23.240
+say client.
+
+01:23.570 --> 01:27.230
+I'll open up the CRC folder then the JS file.
+
+01:28.060 --> 01:30.280
+And then maybe I'll make a change to the H one right here.
+
+01:30.280 --> 01:33.370
+So I'll put in create post with a bunch of exclamations.
+
+01:33.850 --> 01:37.750
+I'll then save that file and then go back over to my terminal and see what happens.
+
+01:38.610 --> 01:42.370
+So you'll notice that we got a little bit of output right here from scaffold.
+
+01:42.390 --> 01:45.990
+It's saying, okay, it detected that one file has changed.
+
+01:46.080 --> 01:49.440
+It took that file and threw it into our client pod.
+
+01:50.230 --> 01:55.450
+The client pod then automatically saw that that file changed and it rebuilt our React application.
+
+01:56.080 --> 01:59.560
+So I should be able to go back over to my browser now and see those exclamations like.
+
+01:59.560 --> 02:05.320
+So now I do have a very important note here, something super critical for you to understand.
+
+02:06.620 --> 02:12.350
+Our Recreate React app application is set up through all the Create React app magic and all that stuff.
+
+02:12.380 --> 02:17.090
+Any time it sees a file change like Create React up in general, any time it sees a file change, it's
+
+02:17.090 --> 02:20.540
+going to rebuild the React application and refresh your browser for you.
+
+02:20.780 --> 02:23.390
+That is something that is built into Create React app.
+
+02:23.930 --> 02:29.000
+In addition, all these different node services we put together, such as comments are all being executed
+
+02:29.000 --> 02:35.270
+with node mod and node mod is a tool to restart your project any time it sees a change to a file inside
+
+02:35.270 --> 02:36.320
+of a given directory.
+
+02:36.920 --> 02:42.170
+So right now, all of our different pods, the containers inside them, are using tools that are going
+
+02:42.170 --> 02:48.650
+to restart the given primary process whenever it sees a change to a file inside of that pod.
+
+02:48.770 --> 02:52.370
+There's kind of like two levels of restarting or change detection here.
+
+02:52.370 --> 02:57.560
+First off, if we make a change to one of these files right here, Scaffold is going to see that kick
+
+02:57.560 --> 03:02.480
+in, take the updated file and throw it into a pod and then inside the pod or more specifically, inside
+
+03:02.480 --> 03:03.140
+the container.
+
+03:03.140 --> 03:08.510
+We are running very specific processes like Create, React App or node pod that are seeing changes to
+
+03:08.510 --> 03:15.650
+the files inside of that container and then restarting the primary process of that container.
+
+03:16.340 --> 03:22.010
+Long story short, if you start to write out some node applications or if you have some other kind of
+
+03:22.010 --> 03:27.080
+front end application that does not use something like Node on something to automatically restart your
+
+03:27.080 --> 03:27.860
+application.
+
+03:27.860 --> 03:32.930
+If you just run this directly with Node, for example, then even if Scaffold throws an updated file
+
+03:32.930 --> 03:36.170
+into your pod, it's not going to do you any good inside the pod.
+
+03:36.170 --> 03:41.180
+You still have to have something that's going to see the updated file arrive in the pod and then restart
+
+03:41.180 --> 03:42.380
+the primary process.
+
+03:42.860 --> 03:47.210
+And we usually do that with Node with something like Node one or if you're using React, yeah, you
+
+03:47.210 --> 03:49.340
+just use create React app or something similar.
+
+03:50.610 --> 03:54.930
+So although this refresh stuff is very handy, you still have to make sure you take care of your part
+
+03:54.930 --> 03:55.530
+of the deal.
+
+03:56.350 --> 03:56.680
+Okay.
+
+03:56.680 --> 03:59.530
+So let's try making maybe a change to one of these node services.
+
+03:59.740 --> 04:01.840
+I'll open up Post's indexes.
+
+04:01.960 --> 04:03.400
+Then maybe down here at the bottom.
+
+04:03.670 --> 04:06.210
+Remember, we've got that old console log of 55.
+
+04:06.220 --> 04:08.290
+Let's change it to version 1000.
+
+04:08.290 --> 04:09.820
+How about I'll save that?
+
+04:10.270 --> 04:14.830
+Flip back over to my terminal, and there's the 1000 right there.
+
+04:15.460 --> 04:20.620
+The other thing I want to mention very briefly is that using a change detection or file change detection
+
+04:20.620 --> 04:24.310
+inside of Docker containers traditionally has been a little bit finicky.
+
+04:24.820 --> 04:30.550
+There are some file watchers, so stuff like Node Bond or Create React app where they will not always
+
+04:30.550 --> 04:35.350
+detect changes to files inside of a Create React app or a Docker container.
+
+04:35.600 --> 04:39.760
+So there will be scenarios where you start to change files and you don't see any output whatsoever from
+
+04:39.760 --> 04:40.450
+scaffold.
+
+04:40.450 --> 04:44.590
+You might see that scaffold says, Oh, I'm going to sync a file, but then you might not have anything
+
+04:44.590 --> 04:51.070
+coming out of the pod that says like, Oh, I compiled successfully or I restarted the server or whatever
+
+04:51.070 --> 04:51.580
+else.
+
+04:51.790 --> 04:55.780
+That is a problem that we're probably going to have to deal with on this next application we build on.
+
+04:55.780 --> 04:58.180
+And so I'll give you a couple more notes on that, on how to solve it.
+
+04:58.180 --> 05:01.780
+I just want to throw it out there right now that if you ever feel like you're making changes but they're
+
+05:01.780 --> 05:06.580
+not being reflected, it's probably tied to the fact that we sometimes have challenges detecting file
+
+05:06.580 --> 05:08.260
+changes inside of containers.
+
+05:09.000 --> 05:09.360
+All right.
+
+05:09.360 --> 05:12.210
+So those are just a couple of caveats I want to throw out there really quickly.
+
+05:12.210 --> 05:14.220
+But without a doubt, we can run our application.
+
+05:14.220 --> 05:15.180
+We can make changes to it.
+
+05:15.180 --> 05:19.050
+We don't have to rebuild the image, update, the deployment or any of that stuff manually.
+
+05:20.380 --> 05:26.410
+So now any time that we want to say go work on another project or something, we are just going to stop
+
+05:26.410 --> 05:27.030
+scaffold.
+
+05:27.040 --> 05:29.560
+We're going to stop scaffold by hitting control, see?
+
+05:30.610 --> 05:31.530
+As soon as I do so.
+
+05:31.540 --> 05:35.170
+As I mentioned, Scaffold is going to take a look at all those different config files that we point
+
+05:35.170 --> 05:35.770
+it to.
+
+05:36.070 --> 05:38.560
+It's going to delete all the objects associated with them.
+
+05:38.950 --> 05:44.640
+So now if I do a little get pods, we're going to have no pods found.
+
+05:44.650 --> 05:47.470
+We could do a get deployments.
+
+05:49.510 --> 05:50.470
+Services.
+
+05:50.770 --> 05:53.620
+And we only have the default Kubernetes service right there.
+
+05:53.980 --> 05:58.120
+So this is fantastic for stopping all that stuff running when you don't want to use it anymore.
+
+05:58.810 --> 06:04.000
+And naturally, if we ever want to start development again, a simple scaffold dev and we are good to
+
+06:04.000 --> 06:04.420
+go.
+
+06:06.270 --> 06:06.750
+All right.
+
+06:06.750 --> 06:11.250
+Well, this is a fantastic little tool that we're definitely going to use on our next big application.
+
+06:11.610 --> 06:14.130
+Well, at this point, I think we're all done with this first app.
+
+06:14.130 --> 06:17.060
+I don't have a lot of other things to tell you about it.
+
+06:17.070 --> 06:18.740
+So we're going to start to take a pause right here.
+
+06:18.750 --> 06:20.160
+We're going to come back the next video.
+
+06:20.160 --> 06:24.830
+We're going to start to reflect on some of the really big lessons learned around this application.
+
+06:24.840 --> 06:27.660
+We're going to start to take a look at the next app that we're going to put together.
+
+06:27.660 --> 06:29.970
+So quick pass and I'll see you in just a minute.

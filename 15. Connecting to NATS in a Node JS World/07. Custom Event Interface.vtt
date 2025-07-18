@@ -1,0 +1,121 @@
+WEBVTT
+
+00:01.330 --> 00:05.320
+Now that we've got that subject's genome put together, we're going to put together a interface that
+
+00:05.320 --> 00:10.450
+is going to describe the very distinct coupling between this particular subject and the event data that
+
+00:10.450 --> 00:11.800
+we expect to receive with it.
+
+00:12.130 --> 00:18.190
+So back inside, my editor once again, inside the events directory, I'm going to make a new file called
+
+00:18.460 --> 00:21.940
+Ticket Created Events.
+
+00:22.680 --> 00:23.340
+At the very top.
+
+00:23.340 --> 00:25.620
+We're going to import that enum we just created.
+
+00:27.900 --> 00:29.610
+So subjects from.
+
+00:30.420 --> 00:31.440
+Subjects.
+
+00:32.440 --> 00:39.310
+We're then going to create an export and interface that we're going to call ticket created event.
+
+00:39.700 --> 00:42.470
+So again, this is where we're going to set up this very tight coupling.
+
+00:42.490 --> 00:47.080
+We're going to say that there is going to be a very tight coupling between this very specific subject
+
+00:47.080 --> 00:49.050
+name and this structure of data.
+
+00:49.060 --> 00:53.050
+And we're going to then figure out how to enforce that coupling inside of our actual listener.
+
+00:54.140 --> 00:59.780
+So inside this interface, we're going to say that we expect there to be an event at some point in time
+
+00:59.780 --> 01:02.240
+that indicates that a ticket was just created.
+
+01:02.630 --> 01:09.980
+The subject for this event will be of type subject's ticket created, and the data that we expect to
+
+01:10.010 --> 01:12.380
+see inside that event is going to be an ID.
+
+01:12.380 --> 01:13.280
+That is a string.
+
+01:14.650 --> 01:17.050
+A title that is a string and a price.
+
+01:17.050 --> 01:18.070
+That is a number.
+
+01:19.820 --> 01:23.930
+So again, this is where we set up the coupling between this very specific subject and this structure
+
+01:23.930 --> 01:24.620
+of data.
+
+01:25.070 --> 01:29.480
+We're going to eventually create interfaces just like the one right here to describe all the different
+
+01:29.480 --> 01:32.740
+types of events we eventually expect to have inside of our application.
+
+01:32.750 --> 01:38.600
+So, for example, we might have a ticket updated event, a order created order, cancelled order,
+
+01:38.600 --> 01:43.490
+whatever else, maybe we have a payment success event or payment failed event.
+
+01:43.850 --> 01:48.020
+Every different event we ever expect to have inside our application, we're going to create a different
+
+01:48.020 --> 01:48.830
+interface for.
+
+01:48.830 --> 01:53.450
+And again, that's going to make sure that TypeScript can step in and make sure that we have some matching
+
+01:53.450 --> 01:57.710
+subject and data inside of one of our custom listeners we put together.
+
+01:58.840 --> 01:59.140
+Okay.
+
+01:59.140 --> 02:02.050
+So we've now got the listing of all the possible subjects.
+
+02:02.320 --> 02:06.580
+We've got the interface that describes the coupling of one particular subject with this structure of
+
+02:06.580 --> 02:07.060
+data.
+
+02:07.090 --> 02:12.430
+Now, last thing we have to do is teach TypeScript how to somehow do some verification and make sure
+
+02:12.430 --> 02:16.960
+that when we put our custom listener together, like this one right here, we need to make sure that
+
+02:16.960 --> 02:21.340
+TypeScript understands that it needs to check and make sure that this subject right here matches up
+
+02:21.340 --> 02:24.010
+with the type of data argument we have right there.
+
+02:24.220 --> 02:26.110
+So we'll take care of that in the next video.

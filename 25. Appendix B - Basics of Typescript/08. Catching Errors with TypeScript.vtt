@@ -1,0 +1,361 @@
+WEBVTT
+
+00:00.830 --> 00:05.330
+In the last video, we updated our program, so we print out a nice report about a single To-Do.
+
+00:05.750 --> 00:10.290
+However, when we then ran that program, we saw three undefined inside of our terminal.
+
+00:10.310 --> 00:12.230
+So let's figure out what's going wrong.
+
+00:12.910 --> 00:16.550
+I want you to take a look at these three variable declarations right here.
+
+00:16.570 --> 00:20.020
+In every case, we try to pull some property off that to do object.
+
+00:20.230 --> 00:25.510
+So we try to pull off the property capital ID, capital T title and finished.
+
+00:25.930 --> 00:28.090
+So that's where we made our mistakes.
+
+00:28.360 --> 00:30.310
+Take a look at those property names right there.
+
+00:30.490 --> 00:34.960
+And then I'm going to flip back over to my browser and take a look at the actual property names that
+
+00:34.960 --> 00:37.990
+belong to that title or simply that to do object.
+
+00:38.050 --> 00:43.750
+The actual property names are lowercase ID, lowercase title and it's not finished.
+
+00:43.750 --> 00:45.220
+It's completed.
+
+00:45.860 --> 00:47.330
+So what's the lesson here?
+
+00:47.360 --> 00:53.390
+Well, the lesson is we wrote out some code that had a very nasty bug inside of it, but we were not
+
+00:53.390 --> 00:54.440
+made aware of that bug.
+
+00:54.440 --> 00:59.420
+We didn't even know it existed until we actually executed our program.
+
+00:59.840 --> 01:03.290
+So this right here is exactly what TypeScript is made to prevent.
+
+01:03.470 --> 01:08.510
+TypeScript is going to help us catch errors like these simple typos we just made right here while we
+
+01:08.510 --> 01:13.730
+are still writing code inside of our code editor as opposed to when we actually execute our code.
+
+01:14.430 --> 01:17.360
+So let's start to now make a couple of changes to this file.
+
+01:17.370 --> 01:22.470
+We're going to add in a little bit of basic typescript syntax that's going to help us very easily catch
+
+01:22.470 --> 01:23.850
+the errors that we just made.
+
+01:24.540 --> 01:29.040
+Now, remember, as we start to write out this typescript stuff, we're not really focused on TypeScript
+
+01:29.040 --> 01:29.700
+just yet.
+
+01:29.700 --> 01:31.920
+So like the syntax, don't worry about it too much just yet.
+
+01:31.930 --> 01:34.800
+We're going to go over all the syntax in great detail over time.
+
+01:34.800 --> 01:39.510
+For right now, I just want you to see how TypeScript can help us fix the errors that we just made.
+
+01:40.500 --> 01:43.920
+So I want to focus on this response data object right here.
+
+01:44.350 --> 01:45.840
+You what would have been really nice?
+
+01:45.840 --> 01:50.310
+It would have been great if we had a comment somewhere in here, like maybe right above maybe if we
+
+01:50.310 --> 01:57.000
+had a comment that said response data has properties of and then we just listed the property names out
+
+01:57.000 --> 02:01.170
+and said like ID and title and completed.
+
+02:01.500 --> 02:05.940
+If we had some comment like this right here, then it probably would have been way less likely that
+
+02:05.940 --> 02:10.800
+we would have made those typos because we would have seen some information about that data object or
+
+02:10.800 --> 02:13.350
+that to do right there on the screen right above.
+
+02:13.740 --> 02:18.930
+So this comment right here is essentially what we're going to add in, but in typescript form.
+
+02:19.470 --> 02:21.420
+So I'm going to delete that comment.
+
+02:22.110 --> 02:24.510
+And right above my Axios call.
+
+02:25.490 --> 02:27.890
+I'm going to write out our first little bit of typescript.
+
+02:28.100 --> 02:31.370
+So I'm going to say interface to do.
+
+02:32.220 --> 02:37.530
+I'm going to put down a set of curly braces and then I'm going to write out the three different properties
+
+02:37.530 --> 02:39.000
+that the TDO has.
+
+02:39.450 --> 02:44.250
+And I'm going to also label the type of data that each of those properties reference.
+
+02:44.760 --> 02:49.740
+So I'm going to say ID is a number and I'll put a semicolon at the end of the line.
+
+02:50.370 --> 02:58.380
+I'll say title a colon and then string in a semicolon and then completed, which was a boolean like
+
+02:58.380 --> 02:58.860
+so.
+
+03:00.440 --> 03:00.770
+All right.
+
+03:00.770 --> 03:03.470
+So this is, like I said, our first little bit of typescript.
+
+03:03.470 --> 03:05.870
+This defines something called an interface.
+
+03:06.200 --> 03:10.880
+Interfaces in TypeScript are used to define the structure of an object.
+
+03:11.060 --> 03:15.080
+So, as you might guess, we are saying that inside of our application, there's going to be some kind
+
+03:15.080 --> 03:16.730
+of object called a To-Do.
+
+03:17.090 --> 03:20.600
+And every To-Do is going to have three distinct properties.
+
+03:20.780 --> 03:26.600
+It's going to have one property called ID, it's going to have a title and it's going to have a completed
+
+03:26.600 --> 03:27.650
+property as well.
+
+03:28.400 --> 03:30.230
+The ID is going to be a number.
+
+03:30.320 --> 03:33.740
+Title is going to be a string and completed is going to be ebullient.
+
+03:33.740 --> 03:35.330
+So either true or false.
+
+03:35.780 --> 03:40.640
+I did not make these property names up or excuse me, these types right here up on the fly.
+
+03:40.670 --> 03:45.560
+If you actually go back over to that JSON printout right here, you'll see that ID was in fact, a number
+
+03:45.830 --> 03:48.680
+title was a string and completed was a boolean.
+
+03:49.160 --> 03:54.050
+So I created that interface to tell TypeScript about what type of information we're going to expect
+
+03:54.050 --> 03:55.760
+to receive back from this API.
+
+03:56.240 --> 04:01.010
+Now, you'll notice that at this point in time I'm completely ignoring this user ID property, and that's
+
+04:01.010 --> 04:03.020
+really fine inside of an interface.
+
+04:03.020 --> 04:05.300
+We can't freely ignore properties if we want to.
+
+04:05.330 --> 04:07.580
+We'll go into more detail on that later on.
+
+04:08.560 --> 04:13.600
+So now that I've told TypeScript about this type of object that's going to exist inside of my application,
+
+04:13.780 --> 04:20.080
+I'm going to now go ahead and tell TypeScript that this response data thing right here is going to be
+
+04:20.080 --> 04:21.370
+one of those to DOS.
+
+04:21.970 --> 04:23.710
+So right after response to data.
+
+04:24.560 --> 04:28.010
+I'm going to say as to do like so.
+
+04:28.620 --> 04:33.930
+And then as soon as I do so, I'm going to get three ears right here, light up inside of my editor.
+
+04:34.260 --> 04:37.380
+So this right here, this is what it is all about.
+
+04:37.830 --> 04:44.190
+TypeScript has analyzed our code using the type, annotations or type labeling that we've added into
+
+04:44.190 --> 04:48.270
+this program, and it has found that we might have a possible error.
+
+04:48.360 --> 04:53.910
+So it has now underlined these three properties to tell us, Hey, developer, you might be doing something
+
+04:53.910 --> 04:54.750
+wrong here.
+
+04:54.870 --> 04:59.040
+You need to take a look at this and figure out if this is correct or incorrect.
+
+04:59.890 --> 05:04.390
+So in this case, we would hover over each of these little errors and we'll see a little message right
+
+05:04.390 --> 05:07.720
+here that tells us that exactly what might be going wrong.
+
+05:08.410 --> 05:12.100
+So in this case it says property ID does not exist on a to do.
+
+05:12.130 --> 05:17.920
+Did you mean lowercase ID and that right there, that is the perfect amount of help that we need to
+
+05:17.920 --> 05:19.420
+somehow fix up this code.
+
+05:19.990 --> 05:25.510
+So instead of capital ID, I'll change that to lowercase ID and then that error message goes away.
+
+05:26.200 --> 05:30.190
+Now, just to be totally complete, I'm going to also change the name of the variable to lowercase ID
+
+05:30.190 --> 05:35.380
+as well, just to be consistent and I'll update the console, log down here to lowercase ID as well.
+
+05:36.330 --> 05:38.620
+So now we would repeat the same process with Title.
+
+05:38.620 --> 05:41.800
+I'll mouse over and it says, Did you mean lowercase t title?
+
+05:41.820 --> 05:43.410
+Well, in fact, yep, I did.
+
+05:44.010 --> 05:45.960
+And then finally with finished, I'll mouse over.
+
+05:45.960 --> 05:49.400
+And in this case it just says, Hey, that property just does not exist here.
+
+05:49.410 --> 05:51.480
+You probably meant to reference something else.
+
+05:51.870 --> 05:56.460
+And so once again, this would be my signal as a developer that I probably did something wrong here
+
+05:56.460 --> 06:01.800
+and I need to fix this up so I could go and take a look at my definition of what it to do is once again
+
+06:01.800 --> 06:05.430
+and I'll see, oh, the proper name is completed, not finished.
+
+06:05.910 --> 06:09.330
+And so I'd go back down and update this to be completed.
+
+06:09.330 --> 06:13.290
+And once again I'll change the variable name as well, even though technically I don't have to.
+
+06:14.950 --> 06:16.630
+And completed down here as well.
+
+06:18.040 --> 06:18.250
+All right.
+
+06:18.250 --> 06:23.110
+So now if we save this program again, we can flip back over to our terminal and attempt to run this
+
+06:23.110 --> 06:23.820
+once more.
+
+06:23.830 --> 06:25.270
+So I'll do a node index.
+
+06:25.390 --> 06:26.130
+It's.
+
+06:27.060 --> 06:30.600
+And once I do so, I'll see the correct output at my console.
+
+06:31.360 --> 06:32.380
+All right, perfect.
+
+06:32.710 --> 06:34.150
+So what's the lesson here?
+
+06:34.180 --> 06:39.370
+Well, like I've said several times so far, the goal of TypeScript is to help us catch errors during
+
+06:39.370 --> 06:40.210
+development.
+
+06:40.720 --> 06:44.300
+Notice how we didn't see an error during the compilation phase?
+
+06:44.320 --> 06:47.720
+We didn't see an error with our program when we actually ran our code.
+
+06:47.740 --> 06:54.040
+We saw an error as soon as we define this interface thing and then told TypeScript that this object
+
+06:54.040 --> 06:58.330
+right here was going to have the same structure as what is described by a Tudou.
+
+06:58.690 --> 07:03.070
+As soon as we added that in, we got some feedback while we were writing our code.
+
+07:03.220 --> 07:04.690
+And that was the key.
+
+07:04.690 --> 07:09.010
+That was the signal to you and I as a developer, that we had to fix something up.
+
+07:09.050 --> 07:12.190
+And once again, that is what TypeScript is all about.
+
+07:13.410 --> 07:16.460
+All right, so now we've got a little fix in here and everything's looking a lot better.
+
+07:16.470 --> 07:20.640
+I want to make one more change to this program, so let's take a quick pause right here and we'll continue
+
+07:20.640 --> 07:21.600
+in the next video.

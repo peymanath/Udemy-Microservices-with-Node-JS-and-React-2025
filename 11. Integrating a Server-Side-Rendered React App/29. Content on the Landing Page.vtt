@@ -1,0 +1,121 @@
+WEBVTT
+
+00:00.670 --> 00:05.710
+After a lot of work, we've now finally got this information about whether or not we are signed in inside
+
+00:05.710 --> 00:06.880
+of our landing page.
+
+00:07.280 --> 00:10.480
+The last thing we need to do is take a look at that current user prop.
+
+00:10.480 --> 00:12.400
+If it is equal to null, we need to print out.
+
+00:12.400 --> 00:17.770
+You are not signed in and if it is equal to, well, anything, some kind of object as an ID or email
+
+00:17.770 --> 00:19.210
+inside of it, then we will print out.
+
+00:19.210 --> 00:20.290
+You are signed in.
+
+00:20.590 --> 00:22.930
+So let's flip back over and give this a shot.
+
+00:23.470 --> 00:25.030
+Here's my landing page stuff.
+
+00:26.080 --> 00:29.770
+So I'm going to delete everything that's inside there right now, and I'll put in just a very simple,
+
+00:29.770 --> 00:30.940
+ternary expression.
+
+00:30.940 --> 00:31.900
+So I'm going to return.
+
+00:32.690 --> 00:33.530
+Current user.
+
+00:34.100 --> 00:36.470
+If that thing is defined, I will show.
+
+00:36.470 --> 00:37.850
+How about an h one?
+
+00:39.180 --> 00:41.520
+That says you are signed in.
+
+00:42.560 --> 00:44.000
+Otherwise an H1.
+
+00:45.260 --> 00:48.530
+That says you are not signed in.
+
+00:49.840 --> 00:54.280
+And actually we could probably just return a simple h one and then use the ternary expression inside.
+
+00:54.490 --> 00:55.780
+But I'll leave that up to you.
+
+00:56.850 --> 00:58.890
+So I'm going to save that bullet back over.
+
+00:59.820 --> 01:01.950
+And I will see that I am, in fact, signed in.
+
+01:02.920 --> 01:03.330
+Cool.
+
+01:03.400 --> 01:07.690
+Now, if you want to test this out with us being signed out, well, we don't really have the ability
+
+01:07.690 --> 01:12.970
+to sign out of our application yet, but we can manually tell our application to sign ourselves out.
+
+01:13.000 --> 01:14.290
+Let me show you what I mean.
+
+01:14.710 --> 01:16.630
+Inside of my chrome developer console.
+
+01:16.780 --> 01:21.610
+I'm going to open up the very last little tab over here and find the one marked application.
+
+01:23.110 --> 01:23.770
+Inside of here.
+
+01:23.770 --> 01:26.560
+I'm going to find on the left hand nav cookies.
+
+01:27.740 --> 01:30.440
+I should be able to expand cookies like so.
+
+01:31.430 --> 01:35.570
+Select this domain and it will show the cookie that is set for this domain.
+
+01:36.080 --> 01:38.330
+So I can select that and then clear all.
+
+01:38.600 --> 01:41.960
+And now we should not have any cookie tied to ticketing dev.
+
+01:42.290 --> 01:45.770
+So if I now attempt to refresh, I will see you are not signed in.
+
+01:46.190 --> 01:48.440
+Well, let's say this is looking like it's working out pretty well.
+
+01:49.070 --> 01:53.840
+Okay, well, that's pretty much it for handling this kind of login page or the main landing page.
+
+01:53.840 --> 01:57.020
+We still have to take care of the header and the sign in page as well.
+
+01:57.020 --> 01:58.880
+So still a little bit of work left.
+
+01:59.180 --> 02:01.310
+Quick pause right here and we'll continue in just a moment.

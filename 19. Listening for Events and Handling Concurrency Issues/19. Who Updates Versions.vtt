@@ -1,0 +1,349 @@
+WEBVTT
+
+00:01.180 --> 00:04.660
+We're now going to go back over to our common module and inside of all the different events we have
+
+00:04.660 --> 00:05.500
+created inside of here.
+
+00:05.530 --> 00:09.520
+We're going to make sure that we communicate the version number inside of these things.
+
+00:09.520 --> 00:13.960
+So, for example, in the case of ticket updated, along with some information about the ticket that
+
+00:13.960 --> 00:17.830
+was just updated, we're also going to include this ticket's version number, and that is what is going
+
+00:17.830 --> 00:21.400
+to eventually help us make sure that we process these events in the correct order.
+
+00:21.940 --> 00:26.110
+Before we add in this version number, however, I want to try to answer a question that you might be
+
+00:26.110 --> 00:31.780
+asking yourself right now, and that question might be something like this When should we increment
+
+00:31.780 --> 00:34.840
+or include the version number of a record with an event?
+
+00:34.840 --> 00:36.070
+Should it be all the time?
+
+00:36.070 --> 00:41.020
+Should every single event that ever talks about some record always increment a version number or always
+
+00:41.020 --> 00:41.740
+include it?
+
+00:41.950 --> 00:42.910
+The answer is no.
+
+00:43.240 --> 00:49.360
+We are only going to worry about incrementing or including the version number of a record whenever it
+
+00:49.360 --> 00:55.810
+is the primary service responsible for a record that is emitting an event to describe that record either
+
+00:55.810 --> 00:58.270
+being created, updated or destroyed.
+
+00:59.400 --> 01:03.690
+Now, this rule alone by itself doesn't really make a lot of sense and I don't think really answers
+
+01:03.690 --> 01:04.440
+this question.
+
+01:04.440 --> 01:09.570
+So let me just show you a hypothetical scenario back inside of that blog post application we worked
+
+01:09.570 --> 01:11.460
+on much earlier inside this course.
+
+01:11.460 --> 01:16.290
+And when we walk through this hypothetical scenario, I think you're going to understand this answer
+
+01:16.290 --> 01:17.160
+a little bit better.
+
+01:18.730 --> 01:18.940
+Okay.
+
+01:18.940 --> 01:20.820
+So here's the blogpost application.
+
+01:20.830 --> 01:24.250
+We're looking just at the comment service, moderation and query.
+
+01:24.790 --> 01:26.280
+So remember how this thing worked.
+
+01:26.290 --> 01:30.640
+Whenever a user came to the comment service to create a comment, we would emit an event of comment
+
+01:30.640 --> 01:35.230
+created and that would go over to the moderation service and the query service.
+
+01:36.120 --> 01:41.430
+The Moderation Service would then moderate the comment in some way and it would emit an event of comment
+
+01:41.430 --> 01:45.270
+moderated that was only received by the comment service.
+
+01:45.600 --> 01:50.250
+The comment service then processed that update event and it said, okay, I need to somehow moderate
+
+01:50.250 --> 01:52.620
+this comment or handle the moderation event.
+
+01:52.620 --> 01:55.620
+And it may have made a change to the content of the comment.
+
+01:56.370 --> 02:01.290
+The comment service would then emit a follow up event of comment updated.
+
+02:02.650 --> 02:05.320
+And that would go on down to the query service and the query service.
+
+02:05.320 --> 02:06.180
+Then New OC.
+
+02:06.280 --> 02:07.350
+This thing has been moderated.
+
+02:07.360 --> 02:08.500
+We are all good to go.
+
+02:09.280 --> 02:12.460
+That was the flow of events back inside of that blog post application.
+
+02:12.890 --> 02:17.560
+So now I want to imagine what would happen if we did not follow this rule right here, if we said that
+
+02:17.560 --> 02:22.270
+any old service can increment the version number of a record whenever it felt like it.
+
+02:23.470 --> 02:24.580
+So here's what would happen.
+
+02:25.700 --> 02:30.380
+We can have our common service, and we're going to imagine that this thing is going to publish this
+
+02:30.380 --> 02:36.020
+comment created event, and it's going to include a version number by default, version zero.
+
+02:36.550 --> 02:38.420
+So that's going to go over to the moderation service.
+
+02:39.520 --> 02:40.750
+And query service.
+
+02:41.620 --> 02:46.680
+Now the moderation service will once again do the moderation and then it's going to emit comment moderated.
+
+02:46.680 --> 02:50.010
+And we're going to say for just a moment that we are not going to follow this rule.
+
+02:50.010 --> 02:52.010
+So I'm going to show you what we should not do.
+
+02:52.020 --> 02:54.270
+This is not what we want to do at all.
+
+02:54.840 --> 02:58.830
+So we're going to say that when the moderation service kind of processes this comment, the Moderation
+
+02:58.830 --> 03:02.490
+Service might think, Oh, well, I've kind of done some processing on this comment.
+
+03:02.490 --> 03:04.230
+I've kind of updated it in some way.
+
+03:04.230 --> 03:04.890
+So you know what?
+
+03:04.890 --> 03:06.510
+I'm going to update the version number.
+
+03:06.510 --> 03:09.600
+And again, that's not what we want, but let's just imagine it happens for a second.
+
+03:10.110 --> 03:12.000
+So we'd put on a version number of one.
+
+03:13.320 --> 03:18.300
+So now this event was processed only by the Common Service, remember, that was not processed by the
+
+03:18.300 --> 03:19.260
+query service at all.
+
+03:19.800 --> 03:22.380
+Now the comment service takes a look at that thing.
+
+03:22.380 --> 03:24.000
+It says, okay, the comment was moderated.
+
+03:24.000 --> 03:25.050
+I'm going to process this.
+
+03:25.050 --> 03:30.210
+I'm going to say this comment has been moderated and then eventually emit the comment updated events
+
+03:30.750 --> 03:34.500
+presumably as a part of the comment service processing common moderated.
+
+03:34.500 --> 03:38.340
+It will presumably also see that it has a version number of one.
+
+03:38.610 --> 03:44.460
+And so when Common Service emits comment updated, we're going to assume that in turn it decides to
+
+03:44.460 --> 03:49.410
+take that version number, add one to it, and then emit that as the final update.
+
+03:49.410 --> 03:53.790
+So instead of comment updated, we would imagine that this thing would have a version of two.
+
+03:54.580 --> 03:57.610
+So now think about this solely from the query service perspective.
+
+03:57.610 --> 03:59.890
+We can forget everything else that's going on here.
+
+04:01.270 --> 04:03.880
+And just think about it from the service perspective.
+
+04:04.030 --> 04:08.350
+The service has now seen a event of comet created and had a version of zero.
+
+04:08.350 --> 04:09.790
+So record being created.
+
+04:09.790 --> 04:10.420
+Fantastic.
+
+04:10.420 --> 04:13.360
+Let's save that record internally inside a query service.
+
+04:13.630 --> 04:18.850
+And now the next event that the query service would expect to see should have a version of one.
+
+04:19.210 --> 04:24.280
+But that never comes because the record that tried to say, Hey, here's version one never got received
+
+04:24.280 --> 04:26.050
+or processed by the query service.
+
+04:26.200 --> 04:30.340
+And so the next event that this thing would receive would have a version of two, and the query service
+
+04:30.340 --> 04:34.900
+would say, Oh, I'm missing out on version one, so I'm going to reject version two.
+
+04:35.860 --> 04:39.370
+And not process it until I eventually receive an event of version one.
+
+04:39.400 --> 04:41.740
+Well, naturally, it's never going to receive version one.
+
+04:41.740 --> 04:46.300
+So the query service is now going to be stuck and never be able to process this event right here.
+
+04:47.540 --> 04:52.190
+So all this could have been prevented if we followed this rule right here.
+
+04:52.190 --> 04:56.840
+And we said that only the primary service responsible for record is going to be in charge of incrementing
+
+04:56.840 --> 04:57.830
+a version number.
+
+04:58.250 --> 05:02.840
+So if we apply that rule, we would have said that the common created event right here at the version
+
+05:02.840 --> 05:08.450
+of Zero Moderation Service would have sent back comment moderated and it would have not included some
+
+05:08.450 --> 05:09.500
+incremented version number.
+
+05:09.500 --> 05:11.450
+It can include the version number.
+
+05:11.480 --> 05:12.350
+No problem there.
+
+05:12.350 --> 05:13.610
+It can include the version number.
+
+05:13.610 --> 05:19.660
+But we would definitely not have this other service or this service that is not truly in charge of comments.
+
+05:19.670 --> 05:20.750
+Increment the number.
+
+05:22.280 --> 05:24.220
+Now the common service would receive moderated.
+
+05:24.250 --> 05:25.210
+It would do some processing.
+
+05:25.210 --> 05:26.980
+It would update common internally.
+
+05:27.010 --> 05:30.870
+And now the new version number would be one common service would emit common updated.
+
+05:30.880 --> 05:36.730
+We'd have a version of one and now query service can see version zero, version one, no problem less
+
+05:36.730 --> 05:38.590
+process this right here, version one.
+
+05:39.130 --> 05:45.070
+So long story short, we're going to make sure that only the service that is responsible for a record
+
+05:45.070 --> 05:50.470
+like the actual definition, the true canonical definition of what a record is, is going to be responsible
+
+05:50.470 --> 05:53.410
+for incrementing and including that incremented version number.
+
+05:53.800 --> 05:57.490
+Now, again, this diagram here might be just a little bit misleading because I put the word include
+
+05:57.490 --> 06:00.520
+it is okay if other services include the version number.
+
+06:00.520 --> 06:04.100
+And as a matter of fact, we might want to have them include that version number, as we just saw here
+
+06:04.100 --> 06:05.170
+with the moderation service.
+
+06:05.170 --> 06:05.980
+Totally okay.
+
+06:05.980 --> 06:07.360
+To include the version number.
+
+06:07.360 --> 06:11.450
+What we're really talking about right now is whether or not this other service increments that version
+
+06:11.450 --> 06:11.680
+number.
+
+06:11.680 --> 06:13.420
+And the answer is no, not at all.
+
+06:14.150 --> 06:14.420
+Okay.
+
+06:14.420 --> 06:20.030
+I apologize for the long aside, but as I mentioned, I thought this might be a question you had, especially
+
+06:20.030 --> 06:24.830
+as we go into our common module and start to include the version number on all these different events.
+
+06:25.810 --> 06:29.590
+So let's take a pause right here and actually update this thing in just a moment.

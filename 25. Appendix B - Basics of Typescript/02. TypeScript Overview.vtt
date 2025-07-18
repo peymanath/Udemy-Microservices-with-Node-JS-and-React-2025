@@ -1,0 +1,343 @@
+WEBVTT
+
+00:01.060 --> 00:05.050
+Now that we've gotten through some administrative stuff, we're now going to dive into our first technical
+
+00:05.050 --> 00:07.740
+topic and start to discuss exactly what TypeScript is.
+
+00:07.750 --> 00:09.520
+So what is TypeScript?
+
+00:09.520 --> 00:10.780
+You know, what are we doing here?
+
+00:11.290 --> 00:16.060
+Well, at the end of the day, I want you to imagine that when we write TypeScript code, we are really
+
+00:16.060 --> 00:17.810
+just writing JavaScript.
+
+00:17.830 --> 00:19.090
+That's what's really happening here.
+
+00:19.090 --> 00:21.160
+We're still writing JavaScript.
+
+00:21.280 --> 00:27.490
+All the knowledge you have around JavaScript like arrays, objects, functions and even is 2015 syntax
+
+00:27.490 --> 00:30.910
+like de structuring and arrow functions and classes.
+
+00:30.940 --> 00:34.390
+All that knowledge still applies to the world of TypeScript as well.
+
+00:34.900 --> 00:39.580
+The only thing that we're really doing with TypeScript is adding in a little bit additional syntax to
+
+00:39.580 --> 00:43.120
+our code to handle something called the type system.
+
+00:43.480 --> 00:46.360
+This is what TypeScript is all about, as you might guess.
+
+00:46.360 --> 00:49.900
+And it's what we're going to spend the vast majority of this course learning about.
+
+00:50.830 --> 00:54.670
+So let's get a quick overview on the type system and understand what's going on with it.
+
+00:55.650 --> 00:59.240
+The goal of the type system is to help us catch errors during development.
+
+00:59.250 --> 01:04.380
+In other words, when we're actually writing our code in our code editor, think about how we catch
+
+01:04.380 --> 01:06.570
+errors right now with JavaScript code.
+
+01:07.050 --> 01:10.950
+Let's imagine that you're writing out some amount of JavaScript inside of your editor and maybe there's
+
+01:10.950 --> 01:12.330
+a bug inside of it.
+
+01:12.540 --> 01:14.010
+How would you find that bug?
+
+01:14.660 --> 01:19.220
+Well, really, with JavaScript, the only way to do that is to actually execute your code and see that
+
+01:19.220 --> 01:20.330
+air up here.
+
+01:20.570 --> 01:22.280
+And that's not super efficient.
+
+01:23.040 --> 01:28.590
+So as an improvement to the development workflow, we use the type system to help us catch errors during
+
+01:28.590 --> 01:29.370
+development.
+
+01:29.820 --> 01:35.100
+While you and I are writing our code, TypeScript is going to be constantly analyzing it and looking
+
+01:35.100 --> 01:35.940
+for bugs.
+
+01:36.300 --> 01:41.670
+If it finds any possible bug, it's then going to pop open an error message inside of your code editor
+
+01:41.670 --> 01:44.040
+and tell you, Hey, something might be wrong here.
+
+01:44.860 --> 01:48.940
+And that's going to be essentially be a signal to you as the developer that you might need to fix up
+
+01:48.940 --> 01:49.630
+your code.
+
+01:51.490 --> 01:56.680
+Not to do this air checking the TypeScript compiler is going to use something called type annotations
+
+01:56.680 --> 01:58.180
+to analyze our code base.
+
+01:58.660 --> 02:02.290
+You and I are going to be responsible for adding in these type annotations.
+
+02:02.560 --> 02:07.540
+You can kind of think of these type annotations as being like little comments to describe the purpose
+
+02:07.540 --> 02:11.500
+of our code or the information that is flowing through our program.
+
+02:12.760 --> 02:15.520
+The type system is only active during development.
+
+02:15.520 --> 02:20.980
+So in other words, once we go to deploy our application or even run it inside of our browser in a development
+
+02:20.980 --> 02:24.130
+environment, the entire type system falls away.
+
+02:24.670 --> 02:28.590
+Your browser has no idea what TypeScript is and Node.js.
+
+02:28.600 --> 02:29.320
+Likewise, no.
+
+02:29.320 --> 02:31.840
+JWs has no idea what TypeScript is either.
+
+02:32.110 --> 02:37.000
+So all this extra syntax that we're going to add into our code never makes it into the browser.
+
+02:37.000 --> 02:38.800
+It never makes it into Node.js.
+
+02:38.830 --> 02:43.570
+We're going to first compile our typescript and we're going to get some JavaScript out of that.
+
+02:44.080 --> 02:46.840
+And that JavaScript is what we're going to actually execute.
+
+02:47.900 --> 02:51.650
+Finally, this is something I want to point out just because it's a little bit different than other
+
+02:51.650 --> 02:53.390
+languages that are strongly typed.
+
+02:53.840 --> 02:58.460
+The TypeScript compiler does not do any performance optimization whatsoever.
+
+02:58.970 --> 03:01.100
+Now, this is very different than many other languages.
+
+03:01.100 --> 03:06.800
+In many other languages, the type system can be used to optimize some code that you write using the
+
+03:06.800 --> 03:07.550
+compiler.
+
+03:07.640 --> 03:09.740
+But that is not the case here with TypeScript.
+
+03:11.020 --> 03:11.320
+All right.
+
+03:11.320 --> 03:15.880
+So to kind of help you understand this process here, let's run through the common scenario of how we're
+
+03:15.880 --> 03:20.200
+going to actually write some code and run it inside the browser or with Node.js.
+
+03:20.930 --> 03:24.050
+So you and I are going to write some TypeScript code inside of our editor.
+
+03:24.050 --> 03:28.670
+And remember, we can think of TypeScript as really just being plain JavaScript, but with these type
+
+03:28.670 --> 03:30.320
+annotation things added in.
+
+03:31.420 --> 03:36.580
+Then once we want to actually run our code, we're going to feed that code into the TypeScript compiler.
+
+03:36.850 --> 03:42.790
+This is a command line tool that's going to read our code, check it for any possible errors, and then
+
+03:42.790 --> 03:45.400
+convert it into plain JavaScript.
+
+03:47.080 --> 03:52.420
+You and I are then going to take that JavaScript code and feed it into the browser or into Node.js and
+
+03:52.420 --> 03:53.800
+finally execute it.
+
+03:54.880 --> 03:57.530
+So again, we do not execute TypeScript.
+
+03:57.550 --> 03:59.680
+We always are executing JavaScript.
+
+03:59.770 --> 04:04.060
+And so when I say that you and I are still writing technically JavaScript code, here it is.
+
+04:04.060 --> 04:07.510
+Because the code we're writing it is going to end up as JavaScript.
+
+04:07.510 --> 04:11.170
+Just it has these extra little type annotation things in it.
+
+04:12.460 --> 04:12.730
+All right.
+
+04:12.730 --> 04:17.270
+So to give you a really practical example of this, I want to show you a quick little Web page here.
+
+04:17.290 --> 04:22.210
+This is a In-browser TypeScript compiler, so I'm going to open it up this link inside of a new browser
+
+04:22.210 --> 04:22.840
+tab.
+
+04:23.850 --> 04:26.850
+Now on the left hand side, you're going to see a little bit of typescript code.
+
+04:26.850 --> 04:31.170
+And I know this is kind of cut off right there, but I just want to give you the impression that this
+
+04:31.170 --> 04:34.180
+typescript right here has a bunch of additional syntax in it.
+
+04:34.200 --> 04:34.650
+Right.
+
+04:34.650 --> 04:35.700
+Just take a look at this code.
+
+04:35.700 --> 04:37.530
+We don't need to understand what it does.
+
+04:37.530 --> 04:43.080
+You can tell at just a glance that there's a lot of extra stuff in here and it does not look like normal
+
+04:43.080 --> 04:43.890
+JavaScript.
+
+04:45.280 --> 04:47.620
+So on the left hand side, we've got the typescript.
+
+04:47.650 --> 04:52.750
+This page is going to compile that code and then print out the equivalent JavaScript on the right hand
+
+04:52.750 --> 04:53.440
+side.
+
+04:53.770 --> 04:56.160
+So this is the output from the TypeScript compiler.
+
+04:56.170 --> 05:00.220
+And looking at that, yep, it sure looks like plain JavaScript.
+
+05:01.660 --> 05:02.700
+So I can't say it enough.
+
+05:02.710 --> 05:05.320
+Like I said, I'm going to repeat it many times throughout this course.
+
+05:05.320 --> 05:07.530
+We're still writing JavaScript code.
+
+05:07.540 --> 05:11.830
+We're just adding in little extra pieces of syntax here and there.
+
+05:12.430 --> 05:17.500
+And these extra pieces of syntax are meant to help the TypeScript compiler understand what we're trying
+
+05:17.500 --> 05:20.800
+to do with our code base so it can help us catch errors.
+
+05:20.830 --> 05:21.490
+That's it.
+
+05:21.490 --> 05:23.230
+That's the entire typescript world.
+
+05:24.360 --> 05:24.600
+All right.
+
+05:24.600 --> 05:27.100
+Let's do a quick wrap up on what we learned in this video.
+
+05:27.120 --> 05:30.260
+So, first off, when we write TypeScript, we're still writing JavaScript.
+
+05:30.270 --> 05:33.300
+We're just adding in these extra little type annotation things.
+
+05:34.210 --> 05:38.330
+Secondly, TypeScript has no effect on how our code actually gets executed.
+
+05:38.350 --> 05:42.190
+In other words, there is no performance optimization or anything like that.
+
+05:43.290 --> 05:48.060
+Now, finally, the best way to think of TypeScript, in my opinion, or kind of an effective analogy,
+
+05:48.060 --> 05:52.770
+is to think of TypeScript as being like a friend who is sitting behind you while you are writing code.
+
+05:53.040 --> 05:58.080
+And maybe that friend is looking at every line of code you're writing and helping you catch errors.
+
+05:58.110 --> 06:00.270
+That's what TypeScript is really doing for us.
+
+06:00.300 --> 06:02.880
+It is a helper to help us catch errors.
+
+06:03.210 --> 06:07.860
+It doesn't actually have any impact on the final code that we output or the actual code that we run
+
+06:07.860 --> 06:08.800
+inside the browser.
+
+06:08.820 --> 06:11.280
+It's just there during development.
+
+06:12.460 --> 06:12.600
+Okay.
+
+06:12.760 --> 06:14.380
+So now we've got a better idea of TypeScript.
+
+06:14.380 --> 06:18.130
+Let's take a quick pause right here, and we're going to do a little bit of environment setup in the
+
+06:18.130 --> 06:18.970
+next video.

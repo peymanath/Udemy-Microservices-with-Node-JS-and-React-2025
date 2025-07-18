@@ -1,0 +1,505 @@
+WEBVTT
+
+00:01.620 --> 00:03.270
+The Order service is now all set up.
+
+00:03.270 --> 00:06.570
+So let's start to talk about the initial implementation we're going to work on.
+
+00:06.600 --> 00:10.800
+In total, the order service, like I said, very similar in nature to ticketing.
+
+00:11.070 --> 00:13.680
+We're going to have the list of route handlers you see right here.
+
+00:13.680 --> 00:18.420
+All these handlers are going to eventually be accessed from our front end react application.
+
+00:19.250 --> 00:21.410
+In total, we're going have four different route handlers.
+
+00:21.560 --> 00:26.450
+We're going to have one that's going to essentially serve as an index action and allow a user to get
+
+00:26.450 --> 00:30.170
+a list of all the orders that they have created over time.
+
+00:30.770 --> 00:34.970
+So in other words, once a user starts to order tickets, once they have purchased a couple, I want
+
+00:34.970 --> 00:38.450
+to be able to list out all the different orders that the user is involved in.
+
+00:39.050 --> 00:42.170
+We're going to make sure that in order to access this route.
+
+00:42.870 --> 00:47.580
+Whoever is making the request, they must be logged in or authenticated with our application because
+
+00:47.580 --> 00:50.520
+we're going to retrieve data for the current user.
+
+00:52.540 --> 00:57.670
+We're also going to make sure that we've got essentially the same thing but in a show kind of orientation.
+
+00:57.670 --> 01:03.190
+So if a user tries to make a request to API orders than the ID of an order, we're going to return details
+
+01:03.190 --> 01:04.210
+about that order.
+
+01:04.690 --> 01:08.920
+Once again, we're going to require a user to be authenticated to access this handler.
+
+01:09.010 --> 01:13.720
+And we're also going to make sure that a user can only retrieve details about the order that they own.
+
+01:13.750 --> 01:18.700
+So in other words, I'm not going to be allowed to access an order that was created by a different user.
+
+01:20.620 --> 01:22.930
+Well, then have a handler to create an order.
+
+01:23.140 --> 01:28.030
+So when we create an order, we must provide the ticket ID or the idea of the ticket that we are trying
+
+01:28.030 --> 01:28.870
+to purchase.
+
+01:29.260 --> 01:30.550
+That's going to create an order.
+
+01:30.760 --> 01:35.230
+It's going to give the user some amount of time to then pay that order or provide their credit card
+
+01:35.230 --> 01:41.080
+details, add in a payment, get their credit card charge, and then only then will the user be in ownership
+
+01:41.080 --> 01:42.760
+of the ticket that they were trying to order.
+
+01:43.980 --> 01:47.940
+And then finally we are going to allow a user to cancel an order as well.
+
+01:48.090 --> 01:52.800
+So we will have a delete endpoint that will allow a user to just cancel the order, say, I don't want
+
+01:52.800 --> 01:54.630
+to pay for this thing, don't give it to me.
+
+01:56.630 --> 01:57.950
+That's worth doing in total.
+
+01:58.320 --> 02:01.430
+So with all that in mind, let's go create some root files.
+
+02:01.430 --> 02:05.270
+We're going to put some scaffold code together just to implement these different routes inside of each
+
+02:05.270 --> 02:08.390
+of them, and they'll start to work on the implementation shortly after that.
+
+02:09.750 --> 02:14.430
+So inside my order's directory, I'm going to make a new folder called Routes once again.
+
+02:15.030 --> 02:19.140
+We're going to make some files inside of here that look very similar nature to the ones we had created
+
+02:19.140 --> 02:20.430
+back inside of tickets.
+
+02:20.790 --> 02:24.900
+So we're going to have very similarly named index new show.
+
+02:24.900 --> 02:29.130
+And then instead of update, we will call it delete because we're not going to have the ability to update
+
+02:29.130 --> 02:29.690
+an order.
+
+02:29.700 --> 02:32.370
+We will only have the ability to delete in order.
+
+02:33.470 --> 02:35.120
+So inside of my new roots directory.
+
+02:35.120 --> 02:38.080
+Right here I'll make a indexes.
+
+02:39.420 --> 02:40.890
+A new yes.
+
+02:42.370 --> 02:43.120
+So.
+
+02:44.770 --> 02:45.880
+And delete.
+
+02:49.700 --> 02:55.040
+Then inside the index file that we just created, we're going to write out a little bit of sample code
+
+02:55.040 --> 02:59.480
+just to create a route handler with the appropriate method on it and the appropriate route.
+
+02:59.480 --> 03:03.980
+And we'll copy paste that over to all these different route handlers and then wire them all up inside
+
+03:03.980 --> 03:08.030
+the app file just to get the current import statement errors to go away.
+
+03:08.240 --> 03:12.080
+And after that, we should be able to successfully run this project inside of our Kubernetes cluster
+
+03:12.080 --> 03:13.400
+without getting any errors.
+
+03:13.700 --> 03:17.810
+So inside of index keys at the very top, let's get express.
+
+03:18.980 --> 03:22.370
+Request in response from Express.
+
+03:25.480 --> 03:27.820
+Well then wire that up with a router.
+
+03:27.820 --> 03:29.320
+So express router.
+
+03:32.090 --> 03:37.430
+Now we're inside of index, which means we want to have a get request handler that's watching for requests
+
+03:37.430 --> 03:38.960
+on API orders.
+
+03:38.960 --> 03:42.710
+So I'm going to say router docket API orders.
+
+03:43.880 --> 03:47.930
+And then inside of here, I'll put in our actual root handling function.
+
+03:48.110 --> 03:52.010
+I'm going to mark it as a sink because we're probably going to have to do some async await stuff inside
+
+03:52.010 --> 03:52.520
+of here.
+
+03:53.270 --> 03:58.490
+Well, then put in a request, annotated as request, rez annotated as response.
+
+03:58.850 --> 04:01.100
+And then right now, I'll just do a red send.
+
+04:02.460 --> 04:04.830
+And I'll send back about an empty object.
+
+04:06.060 --> 04:09.240
+And then finally I will export router as.
+
+04:10.930 --> 04:12.880
+Index order router.
+
+04:13.180 --> 04:16.990
+I think we might have used some slightly different terminology back inside of our tickets project or
+
+04:16.990 --> 04:19.060
+a different semantics on the name of the router.
+
+04:19.420 --> 04:19.720
+Oh no.
+
+04:19.720 --> 04:21.940
+I guess we use the exact same OC that works.
+
+04:23.490 --> 04:23.590
+Okay.
+
+04:23.670 --> 04:24.660
+So that's good enough right now.
+
+04:24.660 --> 04:27.540
+So we're going to copy everything inside this index file.
+
+04:28.320 --> 04:32.910
+And then I'm going to go around and paste it to the other three files and then after pasting it, we
+
+04:32.910 --> 04:36.900
+will go into each of the three files and update the method and the root.
+
+04:37.830 --> 04:38.610
+So here's.
+
+04:39.610 --> 04:43.840
+New or simply delete us inside of our order's source roots directory.
+
+04:44.110 --> 04:49.960
+So Paste I will then find new paste and shots and paste.
+
+04:51.700 --> 04:56.200
+So I should now have index delete new and show.
+
+04:57.930 --> 05:01.440
+So let's go through and update the method and the route for each of these.
+
+05:01.470 --> 05:04.640
+I'll first start off inside of Delete, so here's delete as.
+
+05:05.670 --> 05:10.770
+So we'll change the method right there instead of get it will be a delete.
+
+05:11.520 --> 05:15.570
+And as we just saw in this diagram, we want to specify the ID of the order that we're going to try
+
+05:15.570 --> 05:16.270
+to delete.
+
+05:16.290 --> 05:22.080
+So I'm going to replace the root right here with API orders and then order ID.
+
+05:22.110 --> 05:26.610
+The diagram said we are going to have just ID, we're going to call this thing order ID so that inside
+
+05:26.610 --> 05:31.560
+of the actual root handler we access it as a parameter called order ID just makes our code a little
+
+05:31.560 --> 05:32.970
+bit easier to understand.
+
+05:34.510 --> 05:37.590
+After that I will save the delete file and close it.
+
+05:37.840 --> 05:38.700
+One more thing.
+
+05:38.710 --> 05:40.750
+Let's make sure we update that name at the very bottom.
+
+05:41.080 --> 05:44.290
+So I'll change this to delete order router.
+
+05:45.190 --> 05:45.310
+Okay.
+
+05:45.370 --> 05:46.090
+That's better.
+
+05:47.480 --> 05:49.060
+Next up, let's take care of show.
+
+05:49.070 --> 05:54.350
+So instead of shots, we want to make sure we can make a get request to API orders, then the order
+
+05:54.350 --> 05:54.920
+ID.
+
+05:55.490 --> 05:58.100
+So get to API orders.
+
+05:59.540 --> 06:00.140
+Colin.
+
+06:00.140 --> 06:01.130
+Order ID.
+
+06:03.000 --> 06:06.390
+And then we will update that index right there to show instead.
+
+06:07.900 --> 06:09.430
+I will save this and close it.
+
+06:10.610 --> 06:14.780
+And then finally for new we want to be able to make a post request to API orders.
+
+06:15.510 --> 06:19.230
+So inside of new we'll do post to API orders.
+
+06:20.310 --> 06:23.700
+And then I'll change the router name on here as well.
+
+06:25.130 --> 06:25.790
+Do.
+
+06:27.050 --> 06:28.610
+New Order router.
+
+06:30.100 --> 06:34.540
+Now that we've made all these updates, we're going to go back over to our app file and fix up all the
+
+06:34.540 --> 06:35.920
+import statements inside there.
+
+06:36.040 --> 06:39.430
+So inside my order service, I will find APTs.
+
+06:39.850 --> 06:44.350
+We've got these import statements that were just really copy pasted over from all the ticketing stuff.
+
+06:44.440 --> 06:46.360
+So we're going to delete all four of these.
+
+06:47.190 --> 06:50.370
+And then replace them with for imports for the routes we just created.
+
+06:50.580 --> 06:54.960
+So we will do an import delete order.
+
+06:56.060 --> 06:59.390
+Router from roots delete.
+
+07:00.280 --> 07:03.340
+I'm going to then take that import and paste it down.
+
+07:04.040 --> 07:05.000
+Three times.
+
+07:05.780 --> 07:08.390
+And then we'll just go through each of these and update the names.
+
+07:08.630 --> 07:10.490
+So for the next one, we'll get the index.
+
+07:11.560 --> 07:16.060
+So I'll change it to index or to router from roots slash index.
+
+07:17.710 --> 07:19.960
+Next up we'll take care of new.
+
+07:20.200 --> 07:24.280
+So new order router from roots slash new.
+
+07:25.420 --> 07:29.170
+And then finally a show so we'll update this to show.
+
+07:29.630 --> 07:32.860
+Order router from roots slash show.
+
+07:35.350 --> 07:38.890
+And then finally we'll wire these up to our express application.
+
+07:40.070 --> 07:42.980
+I'm going to copy paste these four router names.
+
+07:46.490 --> 07:50.840
+I'll then go down to where we've got the other four routers that we had previously wired up inside of
+
+07:50.840 --> 07:52.140
+here, inside of our ticket service.
+
+07:52.160 --> 07:53.450
+I'm going to delete all those.
+
+07:53.840 --> 07:56.630
+I'm going to write in the four outer names that we just put together.
+
+07:58.380 --> 08:02.730
+And then I'll wrap each of those in an obtuse use call so you'll notice I'm doing some multi select
+
+08:02.730 --> 08:03.520
+magic here.
+
+08:03.540 --> 08:06.900
+Essentially all we need to do is end up with exactly this.
+
+08:06.900 --> 08:07.560
+That's it.
+
+08:08.100 --> 08:11.490
+So app use for delete index new and show.
+
+08:13.280 --> 08:14.210
+And that should be it.
+
+08:15.560 --> 08:15.700
+Okay.
+
+08:15.890 --> 08:20.110
+Once we got that put together, we should have no more errors inside this file.
+
+08:20.120 --> 08:22.490
+So I don't see any errors inside of here whatsoever.
+
+08:23.240 --> 08:24.800
+I'm going to save Apt's.
+
+08:25.590 --> 08:29.250
+And then going to check for errors inside of index toss and Nats wrapper.
+
+08:29.280 --> 08:32.910
+I'm going to make sure I don't have any TypeScript related errors inside my project because at this
+
+08:32.910 --> 08:36.210
+point I really do expect this to successfully run in my terminal.
+
+08:36.600 --> 08:37.530
+So I'm going to go to index.
+
+08:39.180 --> 08:40.630
+I don't see anything wrong inside of here.
+
+08:40.650 --> 08:41.730
+Everything looks good to me.
+
+08:42.470 --> 08:43.610
+And that's rapper.
+
+08:44.030 --> 08:45.270
+No ears inside of here.
+
+08:45.290 --> 08:46.730
+Everything looks good to me as well.
+
+08:47.570 --> 08:47.990
+Cool.
+
+08:48.820 --> 08:50.980
+So I'm going to make sure all those files are saved.
+
+08:51.490 --> 08:55.660
+I should then be able to go back over to my scaffold window and see connected to nets, connected to
+
+08:55.690 --> 08:58.660
+MongoDB and listening on port 3000.
+
+08:59.350 --> 09:04.360
+If you do not see this, if you just see some more errors or if you just see all these same kind of
+
+09:04.360 --> 09:09.130
+watching for changes stuff, then again, remember, you can close out scaffolds.
+
+09:09.400 --> 09:11.650
+You might try rebuilding our image.
+
+09:11.650 --> 09:16.840
+So rebuild the order's image entirely by doing a Docker, build inside the order's project directory
+
+09:16.840 --> 09:18.610
+and then start scaffold back up.
+
+09:20.080 --> 09:24.550
+And the ultimate goal here is to make sure that we see orders saying that it's connected to Nat's MongoDB
+
+09:24.550 --> 09:26.230
+and listing on Port 3000.
+
+09:26.470 --> 09:30.640
+And naturally, if you run into any issues, if you just can't get this thing working, you can always
+
+09:30.640 --> 09:34.800
+take a look at my source code that is attached to this video inside of the zip file.
+
+09:34.810 --> 09:39.880
+Just remember, if you download my zip file, you probably are going to want to update all the package.
+
+09:39.880 --> 09:45.970
+Jason on files from using my common library to whatever your common library is instead.
+
+09:47.430 --> 09:47.660
+Okay.
+
+09:47.670 --> 09:49.640
+So we got our order service in a pretty good spot.
+
+09:49.650 --> 09:53.400
+It is up and running, which means we can now start to work on these different route handlers.
+
+09:53.400 --> 09:55.470
+So let's get started on that in just a moment.

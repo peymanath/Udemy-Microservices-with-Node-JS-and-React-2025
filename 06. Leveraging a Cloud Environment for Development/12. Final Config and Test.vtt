@@ -1,0 +1,334 @@
+WEBVTT
+
+00:00.550 --> 00:01.680
+All right, so this is it.
+
+00:01.690 --> 00:03.010
+This is the moment of truth.
+
+00:03.040 --> 00:06.640
+We're going to restart scaffold at our terminal as soon as we do so.
+
+00:06.640 --> 00:11.380
+Scaffold should attempt to build this image that we listed inside of our scaffold config file using
+
+00:11.380 --> 00:12.610
+Google Cloud built.
+
+00:12.910 --> 00:18.820
+It will then take our off deployment and the ingress service config and apply them to our remote cluster.
+
+00:18.820 --> 00:20.890
+So let's get to it first.
+
+00:20.890 --> 00:22.270
+I'm going to go back over to my terminal.
+
+00:22.300 --> 00:26.350
+I'm going to make sure that I shut down any previous version of Scaffold that might still be running.
+
+00:26.890 --> 00:31.780
+I'll then go to my Kubernetes or Docker window and just make sure I've got the correct context still
+
+00:31.780 --> 00:32.500
+selected.
+
+00:33.350 --> 00:38.900
+And then after that, I'll do a scaffold dev inside of my root project directory.
+
+00:40.950 --> 00:44.760
+So as soon as I do so, scaffold is going to attempt to build our image remotely.
+
+00:45.180 --> 00:48.050
+It's going to try to build it using Google Cloud build.
+
+00:48.060 --> 00:52.800
+So again, as a reminder, all that building stuff is occurring using Google Cloud built.
+
+00:53.100 --> 00:57.960
+We should actually be able to see the image build in process if we hop over to the Google Cloud Build
+
+00:57.960 --> 00:59.400
+dashboard really quickly.
+
+01:00.030 --> 01:04.270
+So if I go back over to a Google Cloud, find the menu on the top left hand side.
+
+01:04.290 --> 01:08.520
+I can then scroll way down this menu to the tools section.
+
+01:09.550 --> 01:12.310
+So here's tools right here and you'll see cloud build.
+
+01:12.700 --> 01:14.200
+I'll then select history.
+
+01:15.290 --> 01:17.570
+And I'll see my build listed right on here.
+
+01:18.720 --> 01:22.590
+If I click on the build itself, you'll see a lot of output from the build process.
+
+01:23.470 --> 01:27.730
+Just about all the output you see right here probably looks identical to the details from when we were
+
+01:27.730 --> 01:29.230
+building these images locally.
+
+01:29.470 --> 01:33.580
+So we'll see stuff inside of here, like setting up that working directory, copying over the package
+
+01:33.760 --> 01:36.640
+JSON file, doing the NPM install and so on.
+
+01:37.480 --> 01:43.750
+Eventually the image gets built and then it's pushed off to our repository of images on Google Cloud.
+
+01:43.870 --> 01:48.700
+So all these images are now being pushed to a Google Cloud repository of images.
+
+01:48.700 --> 01:51.610
+No longer are we making use of Docker hub.
+
+01:53.170 --> 02:00.340
+After this image is built, scaffold is then going to attempt to create our deployment, the service
+
+02:00.340 --> 02:04.900
+and apply our ingress rules to this cluster on Google Cloud.
+
+02:04.960 --> 02:09.250
+So you'll see that the deployment inside of our logs over here was created, there's the service created
+
+02:09.250 --> 02:11.350
+and the ingress was created as well.
+
+02:11.680 --> 02:13.840
+And then eventually we get our console.log.
+
+02:14.640 --> 02:20.700
+So this logging information right here is coming out of our pod, running on a remote virtual machine
+
+02:20.700 --> 02:22.180
+on Google Cloud.
+
+02:22.200 --> 02:24.630
+None of the stuff is running locally anymore.
+
+02:24.660 --> 02:28.020
+And I don't know about you, but that is pretty awesome.
+
+02:28.380 --> 02:29.100
+Pretty cool.
+
+02:29.800 --> 02:34.700
+So now in theory, as we start to add in more pods, more deployments, more everything into our cluster.
+
+02:34.730 --> 02:39.200
+We're not going to start slowing down our local machine anymore because all that stuff is going to be
+
+02:39.200 --> 02:43.040
+created on some local or excuse me, some remote machine.
+
+02:44.570 --> 02:47.930
+Now last thing we need to do is actually test this stuff out in the browser and see if we could still
+
+02:47.930 --> 02:48.740
+connect.
+
+02:49.160 --> 02:53.930
+So I'm going to once again try to visit our URL or our domain that we had set up inside of our host
+
+02:53.930 --> 02:59.000
+file and going to try to get at our users current user route again.
+
+02:59.000 --> 03:01.430
+So API users, current user.
+
+03:02.180 --> 03:03.770
+That's the route that should retrieve.
+
+03:03.800 --> 03:04.610
+Hi there.
+
+03:04.970 --> 03:09.050
+So I'm going to just take that URL paste inside of a new tab.
+
+03:09.290 --> 03:10.490
+I'm going to see that same kind of.
+
+03:10.490 --> 03:12.500
+Your connection is not private again.
+
+03:12.920 --> 03:15.110
+So again, we're just going to ignore this for right now.
+
+03:15.110 --> 03:18.740
+This is related to some nasty setup inside of ingress engine x.
+
+03:19.580 --> 03:22.400
+If you go to advanced once again, we cannot seem to get around this.
+
+03:22.400 --> 03:26.690
+So we're going to use that kind of little workaround command that we spoke about a little bit ago.
+
+03:26.720 --> 03:28.220
+You just type into that window.
+
+03:28.250 --> 03:31.790
+This is unsafe because again, we know what we're doing.
+
+03:32.210 --> 03:35.210
+Rome really isn't happy what we're doing, what we're doing here.
+
+03:35.240 --> 03:36.260
+We'll eventually fix this.
+
+03:36.260 --> 03:37.940
+But right now, let's just get around it.
+
+03:37.940 --> 03:38.720
+So I will type in.
+
+03:38.720 --> 03:40.340
+This is unsafe.
+
+03:41.370 --> 03:42.040
+And there we go.
+
+03:42.060 --> 03:42.580
+I've got high.
+
+03:42.600 --> 03:43.890
+They're appearing on the screen.
+
+03:46.070 --> 03:47.870
+All right, so this looks awesome.
+
+03:49.120 --> 03:50.590
+Well, we've got everything built.
+
+03:50.620 --> 03:55.870
+The last thing I want to mention here is that moving forward in the course, I am probably not going
+
+03:55.870 --> 03:58.780
+to be running all this stuff on the remote cluster.
+
+03:58.810 --> 04:02.500
+Again, this is for people out there who are watching this course who might have a little bit of an
+
+04:02.500 --> 04:03.610
+older machine.
+
+04:04.490 --> 04:08.600
+The reason this is relevant is that in a little bit or in the coming videos, you're going to see that
+
+04:08.600 --> 04:12.860
+my scaffold HTML file will revert back to its previous look.
+
+04:13.070 --> 04:18.530
+So in coming videos you are going to see that I do not have a Google Cloud build in there.
+
+04:18.560 --> 04:21.540
+You're going to see that I've got local push set to false.
+
+04:21.560 --> 04:26.450
+You're going to see that I have an image of Steven Grider auth and so on.
+
+04:26.930 --> 04:30.200
+So in the coming videos, it's really important for you.
+
+04:30.230 --> 04:36.050
+This is up to you to make sure that any time we come into the scaffold HTML file, you put the appropriate
+
+04:36.050 --> 04:37.550
+image name in here.
+
+04:37.760 --> 04:45.380
+So the image name that you should be using is us, GCR IO, then your project ID and then the name of
+
+04:45.380 --> 04:47.450
+the directory or the image that we are building.
+
+04:47.450 --> 04:48.860
+So in this case, simply off.
+
+04:49.370 --> 04:54.680
+So at some point in time in the future, we are going to build an image called orders or an order service.
+
+04:54.680 --> 04:55.280
+When we do.
+
+04:55.280 --> 05:03.500
+So you are going to add inside of here this block, but it will be orders right there and orders right
+
+05:03.500 --> 05:04.260
+there instead.
+
+05:04.280 --> 05:06.130
+So again, that is up to you.
+
+05:06.140 --> 05:10.190
+I may or may not recall or remember to tell you in the relevant videos to do that.
+
+05:12.780 --> 05:17.270
+The other thing I want you to remember is that when we start to put together some other deployment files,
+
+05:17.280 --> 05:21.780
+so if we put together, say, in orders deployment file, you will need to enter in the appropriate
+
+05:21.780 --> 05:23.320
+image name right there as well.
+
+05:23.340 --> 05:28.410
+So you need to enter in us GCR, blah, blah, blah, because what I'm going to be writing in is something
+
+05:28.410 --> 05:31.320
+like that because I'm going to be running the stuff on my local machine.
+
+05:31.320 --> 05:32.370
+So again, I can't say it.
+
+05:32.370 --> 05:36.960
+Enough is up to you to remember to make these changes because I know that some people out there are
+
+05:36.960 --> 05:39.450
+going to unfortunately, maybe not quite remember.
+
+05:39.450 --> 05:41.370
+So again, please just keep that in mind.
+
+05:41.970 --> 05:42.420
+All right.
+
+05:42.420 --> 05:44.220
+Well, it looks like all this stuff is working.
+
+05:44.400 --> 05:48.840
+Now, last thing I want to remind you is that at this point in time, you are now paying in theory,
+
+05:48.840 --> 05:54.270
+you might be chewing through some free credits, but you are in theory, paying for this running cluster.
+
+05:54.270 --> 05:59.400
+So if at some point in time you decide to stop taking this course for any reason, or if you say, hey,
+
+05:59.400 --> 06:04.560
+I'm going to come back to this in like a month or two, then you need to open up the cluster on Google
+
+06:04.560 --> 06:08.880
+Cloud and click on Delete right there and just delete this thing entirely.
+
+06:08.880 --> 06:12.660
+Because as long as this thing is running again, you are paying money for it.
+
+06:12.660 --> 06:15.420
+So don't forget to hop on here and delete the cluster.
+
+06:17.140 --> 06:18.410
+Well, that is pretty much it.
+
+06:18.430 --> 06:21.370
+So now that all this stuff is set up, let's take a quick pause right here.
+
+06:21.370 --> 06:25.240
+And we're going to continue building our actual application in the next video.

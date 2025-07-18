@@ -1,0 +1,286 @@
+WEBVTT
+
+00:00.730 --> 00:03.880
+Let's get a quick reminder on some different aspects of these listeners.
+
+00:03.910 --> 00:06.310
+The first thing we're going to focus on is the Q Group name.
+
+00:06.340 --> 00:07.810
+Let's take a look at a quick diagram.
+
+00:08.870 --> 00:09.140
+Okay.
+
+00:09.140 --> 00:13.400
+So in this diagram, we've got some publisher up here on the top left hand side that's going to eventually
+
+00:13.400 --> 00:14.480
+publish an event of ticket.
+
+00:14.480 --> 00:15.170
+Created.
+
+00:15.200 --> 00:20.270
+On the right hand side is our net streaming server and we're listening inside of our two instances of
+
+00:20.270 --> 00:23.720
+the order service to some channel called Ticket Created.
+
+00:24.530 --> 00:30.080
+When these two order services connected to this channel and created a subscription, they joined a group
+
+00:30.080 --> 00:31.760
+called Orders Service.
+
+00:32.240 --> 00:37.670
+By being a member of this group, that ensures that any time any event comes into this channel, this
+
+00:37.670 --> 00:42.440
+event is only going to be sent to one of the members inside this group.
+
+00:42.680 --> 00:48.830
+So the entire idea behind this was to make sure that we did not have our different services all independently
+
+00:48.830 --> 00:51.980
+processing the same copy of this event at the same time.
+
+00:52.610 --> 00:57.620
+So instead, the Q group makes sure that this event is only going to be sent to either order service
+
+00:57.620 --> 01:00.230
+a or order service be.
+
+01:00.950 --> 01:06.350
+The only requirement of the Q group identifier right here is that it is unique for all the different
+
+01:06.350 --> 01:10.010
+services that are going to create subscriptions inside this channel, number one.
+
+01:10.010 --> 01:12.890
+And number two, it must stay consistent over time.
+
+01:12.890 --> 01:17.000
+So we should not try to randomly generate a group name or anything like that.
+
+01:17.690 --> 01:22.850
+Now the Q group name is one of those little variables or properties right here that's really easy to
+
+01:22.850 --> 01:23.870
+make a typo on.
+
+01:23.990 --> 01:27.320
+So at some point in time, we're going to create another listener inside of our app.
+
+01:28.010 --> 01:31.690
+Let's imagine that it's some other listener inside of some other file.
+
+01:31.700 --> 01:35.960
+And when we did so, we would have to define this group name another time or a second time.
+
+01:36.230 --> 01:39.270
+It would be really easy for us to accidentally make a little typo here.
+
+01:39.290 --> 01:41.010
+Maybe we call it order service.
+
+01:41.030 --> 01:43.790
+Or maybe we call it order service without a dash.
+
+01:43.790 --> 01:46.670
+Or maybe we do a slash instead or a colon or whatever else.
+
+01:47.030 --> 01:52.070
+And so usually, rather than defining the group name as a string directly inside the listener, we might
+
+01:52.070 --> 01:57.290
+be a little bit better off if we define the string somewhere else inside of a project just one time,
+
+01:57.290 --> 02:01.760
+and then import that value into our project or into this listener file.
+
+02:02.860 --> 02:03.760
+So let's try that out right now.
+
+02:03.760 --> 02:08.950
+Let's declare a cougar name in a separate file and then import it into this file again just so we avoid
+
+02:08.950 --> 02:10.270
+making any typos.
+
+02:11.250 --> 02:13.610
+Inside my listeners directory that we just created.
+
+02:13.620 --> 02:15.570
+I'm going to make a new file of Q.
+
+02:15.600 --> 02:17.130
+Group name?
+
+02:17.970 --> 02:18.570
+Yes.
+
+02:20.440 --> 02:23.140
+Then inside there, I'm going to export a concept of Q.
+
+02:23.170 --> 02:24.160
+Group name.
+
+02:25.040 --> 02:28.430
+And I'll hardcoded the value to orders service.
+
+02:30.720 --> 02:31.770
+Save this file.
+
+02:32.340 --> 02:33.720
+Pull it back over to our listener.
+
+02:34.380 --> 02:38.130
+At the very top, I'm going to import you a group name.
+
+02:41.650 --> 02:43.480
+From Cue group name.
+
+02:44.080 --> 02:47.710
+And now I'll reference that variable right there instead of this hard coded string.
+
+02:47.950 --> 02:50.290
+So Q group name.
+
+02:51.510 --> 02:51.750
+Okay.
+
+02:51.750 --> 02:53.820
+So again, just avoiding little typos.
+
+02:54.750 --> 02:58.740
+So let's get a quick reminder now about this data property coming to on message.
+
+02:58.950 --> 03:02.970
+So remember we had said that we're going to create an interface to describe all the different events
+
+03:02.970 --> 03:04.920
+that are going to be flowing throughout our application.
+
+03:05.160 --> 03:09.330
+In this case, that interface we had created was the ticket created event interface.
+
+03:09.540 --> 03:14.400
+We could do a command click on ticket created event anywhere inside this file or a control click if
+
+03:14.400 --> 03:15.270
+you're on Windows.
+
+03:15.980 --> 03:17.060
+And it should.
+
+03:17.880 --> 03:20.160
+Take us to the definition of that interface.
+
+03:21.670 --> 03:27.250
+So all of our event interfaces had the subject property and the data property and data was describing
+
+03:27.250 --> 03:30.790
+the different pieces of data that was going to be contained inside this event.
+
+03:31.120 --> 03:36.580
+So to make sure that we applied some type checking on the data flowing into this on message function,
+
+03:36.940 --> 03:42.070
+we reference the event type interface and then we're saying off that interface, take a look at the
+
+03:42.070 --> 03:42.970
+data property.
+
+03:42.970 --> 03:46.120
+And that's going to be the type of this data argument right here.
+
+03:47.410 --> 03:51.520
+Then finally, last little reminder is this message argument as a second argument.
+
+03:51.760 --> 03:52.780
+So what is the message?
+
+03:52.820 --> 03:56.440
+Remember, this is an object coming from the node net streaming library.
+
+03:56.560 --> 04:00.670
+The message thing is something that tells us about the underlying data coming from the node at streaming
+
+04:00.670 --> 04:01.120
+server.
+
+04:01.120 --> 04:04.330
+But most importantly for you and I, absolute bar none.
+
+04:04.330 --> 04:08.800
+Most important thing about it, if we do a command click on message and go to the type definition,
+
+04:08.800 --> 04:11.320
+you might recall this thing has a method.
+
+04:12.300 --> 04:16.950
+Of EQ, and that was what you and I really, really cared about.
+
+04:17.190 --> 04:22.500
+We call EQ when we have successfully processed a message or an event and that is a signal to node that
+
+04:22.500 --> 04:26.310
+streaming server that we have processed this event and it does not have to worry about trying to send
+
+04:26.310 --> 04:28.410
+it off to another copy of our service again.
+
+04:28.950 --> 04:33.780
+So after we successfully process an event inside of our different listeners, we're always going to
+
+04:33.780 --> 04:35.640
+finish up by calling EQ.
+
+04:36.150 --> 04:41.040
+Now the keyword here is successfully processed, or I guess the keywords successfully processed.
+
+04:41.070 --> 04:44.760
+Only when we successfully process an event do we call EQ.
+
+04:44.850 --> 04:49.920
+Otherwise, if there's some kind of error or something like that, we usually will not be calling EQ
+
+04:49.920 --> 04:54.510
+because an error will usually indicate that we want to try to reprocess this event again.
+
+04:54.510 --> 04:56.790
+And we would do that by just not calling EQ.
+
+04:56.820 --> 05:00.960
+That would cause our event to time out after a couple of seconds and that streaming server is going
+
+05:00.960 --> 05:05.280
+to try to take that event and send it off to another copy of our Service for Reprocessing.
+
+05:06.110 --> 05:06.380
+All right.
+
+05:06.380 --> 05:11.180
+So hopefully that gives you a really good reminder on what's going on inside of our listeners.
+
+05:11.210 --> 05:15.500
+Again, we're going to be writing out the same exact code again and again and again moving forward for
+
+05:15.500 --> 05:16.280
+all these different listeners.
+
+05:16.280 --> 05:19.400
+So just really important that you keep the definitions of all these different things in mind.
+
+05:20.090 --> 05:20.390
+All right.
+
+05:20.390 --> 05:20.950
+Sounds good.
+
+05:20.960 --> 05:22.130
+So let's now take a quick pause.
+
+05:22.160 --> 05:26.000
+We're going to start to implement the body of our on message function in the next video.

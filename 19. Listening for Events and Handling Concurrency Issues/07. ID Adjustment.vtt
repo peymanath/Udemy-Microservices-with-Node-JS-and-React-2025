@@ -1,0 +1,280 @@
+WEBVTT
+
+00:01.770 --> 00:03.720
+Our first on message function has been put together.
+
+00:03.720 --> 00:07.110
+But as I mentioned, there's a little issue with the current implementation.
+
+00:07.260 --> 00:11.970
+So take note of how inside of here we are taking the title in the price of the ticket, using it to
+
+00:11.970 --> 00:14.130
+build a new ticket and just saving that directly.
+
+00:14.160 --> 00:19.680
+I want you to really think about what is going to be happening to the MongoDB record that gets created
+
+00:19.680 --> 00:21.270
+to reflect this ticket.
+
+00:21.300 --> 00:22.770
+Let me give you a little hint.
+
+00:23.810 --> 00:24.170
+All right.
+
+00:24.170 --> 00:28.430
+So this diagram right here, we have created a ticket inside of our ticket service.
+
+00:28.430 --> 00:32.780
+And we're going to imagine that when this ticket right here is created, we emit an event that is then
+
+00:32.780 --> 00:34.520
+received by the Order Service.
+
+00:34.610 --> 00:39.050
+And the Order Service wants to receive that information, take the title and the price, and persist
+
+00:39.050 --> 00:41.570
+it into its own local ticket collection.
+
+00:41.660 --> 00:46.910
+So let's think about what would happen when we insert this ticket with the code that we have currently.
+
+00:47.270 --> 00:51.770
+So with this code right here, without a doubt, we would get the exact same title.
+
+00:52.760 --> 00:53.680
+And the same price.
+
+00:53.690 --> 00:54.830
+No two ways about it.
+
+00:54.980 --> 01:00.980
+But remember, whenever we insert a record into MongoDB, it gets assigned a random ID.
+
+01:01.610 --> 01:05.240
+And so this thing would be given an ID of, well, who knows what?
+
+01:06.270 --> 01:11.970
+This randomly generated ID right here is without a doubt going to be different than the ID that was
+
+01:11.970 --> 01:14.310
+assigned back inside the ticket service.
+
+01:14.760 --> 01:20.460
+That means that we now have two records that are supposed to be mirrors or absolute copies of each other,
+
+01:20.460 --> 01:23.940
+but we have zero consistent identifier between them.
+
+01:24.300 --> 01:31.560
+So if I now asked you to give me the ID or the ticket for ID ABC from the Order Service, you would
+
+01:31.560 --> 01:34.230
+look at your collection of tickets and you would say, You know what?
+
+01:34.230 --> 01:39.270
+I have no idea which of these records matches up with ticket ABC from the ticket service.
+
+01:40.580 --> 01:45.530
+So whenever we are replicating data across services, we want to try to make sure that we are using
+
+01:45.530 --> 01:50.150
+identical or consistent IDs between them, and that's going to make sure that we can identify these
+
+01:50.150 --> 01:53.060
+unique records between all these different services.
+
+01:53.090 --> 01:57.710
+So long story short, we want to make sure inside the order service that this ticket we are creating
+
+01:57.710 --> 02:01.040
+has the exact same ID of ABC.
+
+02:01.730 --> 02:03.470
+So that can be the first thing that we're going to fix up.
+
+02:03.740 --> 02:05.000
+So how are we going to do that?
+
+02:05.300 --> 02:06.920
+Well, unfortunately.
+
+02:07.680 --> 02:10.110
+As usual, just a little bit complicated.
+
+02:11.160 --> 02:14.660
+The first thing we need to do is go and adjust our build function.
+
+02:14.670 --> 02:18.230
+Right now, our build function does not expect to receive an ID.
+
+02:18.600 --> 02:21.000
+Our data object right here has the ID we get.
+
+02:21.120 --> 02:22.070
+Pull that out.
+
+02:22.080 --> 02:22.760
+That's the idea.
+
+02:22.770 --> 02:23.970
+The ticket that was created.
+
+02:24.240 --> 02:28.830
+But if we try to pass that in like so we're going to get an error because the build function does not
+
+02:28.830 --> 02:30.570
+expect to receive an ID.
+
+02:31.670 --> 02:33.890
+So let's go back over to our ticket model file.
+
+02:34.100 --> 02:38.210
+We're going to adjust the build function and make sure that it can receive an ID.
+
+02:39.680 --> 02:41.210
+But here's my ticket model file.
+
+02:42.030 --> 02:44.040
+I'll find my build method.
+
+02:45.000 --> 02:45.930
+Here it is right here.
+
+02:46.940 --> 02:52.550
+And remember the argument of adders right here must conform to the ticket adders interface.
+
+02:52.910 --> 02:56.690
+So to make sure everything lines up, all we really have to do is add the ID property to the ticket
+
+02:56.690 --> 02:57.830
+address interface.
+
+02:57.830 --> 03:00.260
+So at the top of the file I'll find ticket adders.
+
+03:00.260 --> 03:05.690
+I'll say that whenever we try to build a new ticket, we must provide an ID and it must be a string.
+
+03:07.090 --> 03:08.620
+So I will make the area go away.
+
+03:08.650 --> 03:11.560
+But unfortunately, that's not going to really solve the issue.
+
+03:12.690 --> 03:14.190
+So let me tell you why that is.
+
+03:14.190 --> 03:15.570
+One more quick diagram.
+
+03:16.320 --> 03:16.630
+Okay.
+
+03:16.650 --> 03:22.440
+So you might recall that inside of MongoDB, we store all of our records with an underscore ID property.
+
+03:23.150 --> 03:29.090
+So when we eventually load this information up into our ticket service from MongoDB, it still has underscore
+
+03:29.090 --> 03:29.720
+ID.
+
+03:29.750 --> 03:35.210
+It is only when we take this record and turn it into JSON to be transmitted over an event that that
+
+03:35.210 --> 03:39.470
+ID gets converted into normal ID of 1 to 3 instead.
+
+03:42.030 --> 03:46.860
+So right now when we receive that ID inside of our order service, inside that event, it shows up as
+
+03:46.890 --> 03:48.600
+ID of one, two, three.
+
+03:50.380 --> 03:55.570
+And we would like to make sure that when this record gets saved to our order's database, it uses that
+
+03:55.570 --> 03:56.470
+same ID.
+
+03:56.500 --> 04:01.990
+Unfortunately, whenever we save a record with just ID by itself, Mongoose ignores that ID property.
+
+04:01.990 --> 04:05.070
+Instead, Mongoose says, Oh, this thing doesn't have an underscore ID.
+
+04:05.080 --> 04:10.690
+Well then I'm going to give it a randomly generated ID and assign it to the underscore ID property.
+
+04:11.080 --> 04:15.130
+So if we were to take this record right now and save it, we would end up inside of our database with
+
+04:15.130 --> 04:22.990
+ID of 1 to 3 title of concert and then underscore ID of some randomly generated ID.
+
+04:23.780 --> 04:28.970
+So all we really have to do here as the final step need to make sure that when we go and create the
+
+04:28.970 --> 04:33.200
+new instance of the ticket inside the build method, we take that ID.
+
+04:34.330 --> 04:37.570
+And assign it to the new record as underscore ID.
+
+04:38.480 --> 04:40.910
+So back inside of our ticket schema file.
+
+04:41.600 --> 04:43.810
+Here's the model's directory tickets.
+
+04:44.150 --> 04:45.500
+Here's our build method.
+
+04:46.280 --> 04:51.800
+Rather than just passing through that entire adders object and just allowing it to assign the ID property,
+
+04:51.800 --> 04:54.770
+we're going to instead assign all these properties one by one.
+
+04:54.770 --> 04:58.670
+And as we're doing that, we're going to rename the Underscore ID property.
+
+04:59.580 --> 05:04.530
+So I can put in an object and we're going to assign underscore ID from at first ID.
+
+05:05.430 --> 05:07.370
+Then the title from Adders.
+
+05:07.740 --> 05:08.520
+That title.
+
+05:09.430 --> 05:12.400
+And the price from at asked price like so.
+
+05:13.430 --> 05:18.590
+Now the way that I just did this to it renamed the underscore ID property or ID to underscore ID not
+
+05:18.590 --> 05:22.640
+super ideal because now we are relying upon listing out each property in great detail.
+
+05:23.580 --> 05:28.110
+So in other words, if we start to add some different properties to the ticket adders interface, we're
+
+05:28.110 --> 05:31.710
+going to also have to come down to our build method and make sure we assign these properties through
+
+05:31.710 --> 05:32.400
+as well.
+
+05:32.430 --> 05:35.940
+And so that's just a little bit of technical debt, just something to keep in mind.
+
+05:37.150 --> 05:40.510
+All right, so that should be it for massaging this idea around.
+
+05:41.350 --> 05:44.280
+Let's take a quick pause right here and continue in just a minute.

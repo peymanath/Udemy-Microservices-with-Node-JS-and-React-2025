@@ -1,0 +1,292 @@
+WEBVTT
+
+00:00.960 --> 00:04.170
+In the last video, we discussed the pros and cons of option number three.
+
+00:04.170 --> 00:06.360
+So this is the option that we're going to go with.
+
+00:06.390 --> 00:10.830
+There's a lot of changes we need to make in several locations to implement this entire flow.
+
+00:10.830 --> 00:14.190
+So we need to make changes to the content service and the query service.
+
+00:14.340 --> 00:17.370
+We also need to create the moderation service.
+
+00:17.520 --> 00:21.020
+I think we should get started by creating the moderation service for right now.
+
+00:21.030 --> 00:22.440
+It's a good place to get started.
+
+00:22.680 --> 00:26.340
+We're just going to worry about putting together a little bit of boilerplate for the project in this
+
+00:26.340 --> 00:31.200
+video, and in the next video we'll start to add in all these additional events and add in some code
+
+00:31.200 --> 00:32.520
+to handle them as well.
+
+00:32.820 --> 00:33.670
+So let's get to it.
+
+00:33.690 --> 00:36.030
+We're going to create this new moderation service.
+
+00:36.510 --> 00:38.700
+To get started, I'm going to flip back over to my terminal.
+
+00:40.340 --> 00:44.630
+I'm going to open up yet another terminal window, which I've already got right here inside of my blog
+
+00:44.630 --> 00:45.740
+project directory.
+
+00:46.220 --> 00:50.180
+And inside there, I'll make a new folder called Moderation.
+
+00:51.650 --> 00:53.240
+Well, then change into that directory.
+
+00:53.420 --> 00:55.610
+I'm going to maximize this terminal window really quick.
+
+00:55.630 --> 00:56.980
+Just you can see this very easily.
+
+00:56.990 --> 00:58.730
+All the other terminal windows are still running.
+
+00:58.730 --> 01:01.370
+I'm just using a hot key to maximize that one window.
+
+01:02.400 --> 01:06.110
+Inside if you're going to generate a new package json file with npm init.
+
+01:06.300 --> 01:06.870
+Why?
+
+01:08.200 --> 01:12.490
+And then, as we've done several times before, we're going to install a couple of dependencies.
+
+01:13.720 --> 01:15.490
+So I'm going to get Axios.
+
+01:16.570 --> 01:18.430
+Express node.
+
+01:18.940 --> 01:24.160
+And in this case we do not need cause because we are not going to have our front end application make
+
+01:24.160 --> 01:26.710
+any direct request to this moderation service.
+
+01:26.710 --> 01:29.140
+So the course module not required this time around.
+
+01:29.980 --> 01:31.540
+So I'm going to install that stuff.
+
+01:32.240 --> 01:33.590
+And after that's all done.
+
+01:35.430 --> 01:35.950
+There we go.
+
+01:35.970 --> 01:39.370
+I'm going to pop that turtle window back into this tile.
+
+01:39.390 --> 01:40.930
+We're not going to start up the server just yet.
+
+01:40.950 --> 01:44.790
+Let's go and write a little bit of code and we'll come back over and start up that additional service.
+
+01:45.540 --> 01:46.860
+So I'm going to go to my editor.
+
+01:47.570 --> 01:49.670
+Here's the new moderation directory.
+
+01:50.530 --> 01:53.530
+Inside there, I'll make a new file called Index Indexes.
+
+01:55.010 --> 01:56.360
+And then at the very top.
+
+01:57.570 --> 01:59.820
+Let's add in some different require statements.
+
+02:00.480 --> 02:01.860
+So I'm going to get express.
+
+02:04.260 --> 02:05.570
+I'm going to get body parts, sir.
+
+02:09.030 --> 02:10.440
+And I'll get Axios.
+
+02:13.030 --> 02:18.430
+Well, then once again create a new express application and wire up the body parser middleware.
+
+02:18.460 --> 02:20.710
+So I'll make sure I call JSON as a function.
+
+02:23.170 --> 02:23.530
+All right.
+
+02:23.530 --> 02:25.180
+So what does this service really need to do?
+
+02:25.210 --> 02:28.270
+Well, all this service does is watch for events.
+
+02:28.300 --> 02:31.300
+It's just going to watch for that event we mentioned.
+
+02:31.300 --> 02:32.680
+So comment created.
+
+02:32.950 --> 02:37.900
+Whenever we see comment created, the moderation service is going to need to emit the comment moderated
+
+02:37.900 --> 02:38.580
+event.
+
+02:38.590 --> 02:44.440
+So we really just need all we need inside this thing is one root handler, just a single root handler
+
+02:44.440 --> 02:49.690
+for that slash event's endpoint that we already set up previously inside of Comments Query and our post
+
+02:49.690 --> 02:50.680
+service as well.
+
+02:51.380 --> 02:55.250
+So inside of here, we're going to add an app post or events.
+
+02:56.060 --> 02:58.250
+We'll then take our rec and rez like.
+
+02:58.250 --> 03:01.610
+So we'll come back to that root handler in just a moment.
+
+03:01.970 --> 03:05.090
+First, let's make sure that our app actually starts listing on some port.
+
+03:06.690 --> 03:09.330
+Now at this point in time, we've got several different ports in use.
+
+03:09.330 --> 03:17.550
+So as a reminder, we've got 4004 posts, 4001 for comments, 4000, two for what is this, the query
+
+03:17.550 --> 03:18.240
+service?
+
+03:18.240 --> 03:21.390
+And we'll use 4003 for moderation.
+
+03:21.930 --> 03:23.760
+So we will do app dot.
+
+03:23.760 --> 03:24.510
+Listen.
+
+03:25.280 --> 03:26.480
+4003.
+
+03:27.910 --> 03:29.830
+And inside of here, I'll do a console.log.
+
+03:30.960 --> 03:33.150
+Listing on 4003.
+
+03:35.670 --> 03:35.980
+Okay.
+
+03:36.000 --> 03:41.040
+Before putting together any implementation on this post event or post route handler right there, let's
+
+03:41.040 --> 03:45.210
+set up our package JSON file with the script and just make sure that we can run this thing successfully
+
+03:45.210 --> 03:45.990
+at our terminal.
+
+03:46.880 --> 03:48.530
+Here's my package JSON file.
+
+03:48.560 --> 03:52.280
+I will delete that existing test script and replace it with a start.
+
+03:53.200 --> 03:55.990
+And we'll do note index dogs.
+
+03:59.460 --> 03:59.790
+Okay.
+
+03:59.820 --> 04:00.720
+That looks pretty good.
+
+04:01.640 --> 04:03.100
+Let's go and run this project.
+
+04:03.110 --> 04:05.330
+So I'll go back over to my terminal once again.
+
+04:05.780 --> 04:10.610
+I'm going to find that terminal window that's going to be in charge of running our moderation service.
+
+04:10.640 --> 04:11.600
+There it is right there.
+
+04:12.140 --> 04:14.180
+And inside there, I'll do an RPM start.
+
+04:15.590 --> 04:16.010
+Okay.
+
+04:16.040 --> 04:16.720
+There we go.
+
+04:16.730 --> 04:20.580
+So we've now got many different services running for our application.
+
+04:20.600 --> 04:21.280
+Definitely.
+
+04:21.290 --> 04:23.300
+Hey, you know, this is of course, about microservices.
+
+04:23.300 --> 04:27.080
+So yeah, we're going to create a lot of services just to understand how to create them all and get
+
+04:27.080 --> 04:28.160
+them all working together.
+
+04:28.770 --> 04:33.590
+It looks like that is running on Port 4003 and we've got a good start to this moderation service.
+
+04:33.590 --> 04:34.970
+So let's take a quick pause right here.
+
+04:34.970 --> 04:38.870
+When we come back, the next video, we're going to start to add in some implementation for the events
+
+04:38.870 --> 04:45.140
+handler right here and make sure that any time we see an event of type comment created, we do some
+
+04:45.140 --> 04:48.230
+moderation on it and then eventually emit this comment.
+
+04:48.230 --> 04:49.850
+Moderated Event Intern.
+
+04:50.180 --> 04:50.990
+So quick pause.
+
+04:50.990 --> 04:52.310
+Take care of that in just a moment.

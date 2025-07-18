@@ -1,0 +1,145 @@
+WEBVTT
+
+00:01.160 --> 00:04.610
+Now that we've got this order status put together, let's figure out what's going on with this ticket
+
+00:04.610 --> 00:06.110
+doc reference right here.
+
+00:06.440 --> 00:11.060
+So remember, we want to replicate all the different tickets that are being created inside of our ticket
+
+00:11.060 --> 00:13.940
+service over to the order service as well.
+
+00:14.420 --> 00:19.220
+Then on each of our different order documents, we're going to provide a reference over to the ticket
+
+00:19.220 --> 00:22.040
+that this order is trying to allow a user to purchase.
+
+00:23.230 --> 00:26.620
+So in just a moment, we're going to create another model inside of our models directory.
+
+00:26.620 --> 00:31.000
+And this model is going to create this idea of a ticket inside of our order service.
+
+00:31.980 --> 00:36.810
+We're going to access these tickets and associate them with the orders through the population system
+
+00:36.810 --> 00:38.820
+or the reference system in Mongoose.
+
+00:39.180 --> 00:43.770
+Let me very quickly give you an example of how that code or how that mongoose stuff is going to work.
+
+00:44.130 --> 00:46.890
+So there's really three different scenarios we need to worry about here.
+
+00:46.920 --> 00:51.360
+I wrote out the three different scenarios in code rather than the diagram, because the diagram is kind
+
+00:51.360 --> 00:55.740
+of hard to understand when it comes to just strictly code and how we actually write the code out.
+
+00:57.290 --> 01:02.150
+So the three things we need to understand how to do is how to associate an existing order in a ticket
+
+01:02.150 --> 01:02.780
+together.
+
+01:03.580 --> 01:08.280
+How to associate an existing ticket with a brand new order that is about to be created.
+
+01:09.170 --> 01:15.530
+And then finally, how to fetch an order from our database and the associated ticket that is, or the
+
+01:15.530 --> 01:17.180
+ticket that is associated with it.
+
+01:17.540 --> 01:21.650
+So first case right here, how do we associate a existing order and ticket together?
+
+01:21.680 --> 01:24.380
+Well, we're going to pull the ticket in order out of the database.
+
+01:24.740 --> 01:29.570
+We're then going to take that ticket and set it on the ticket, property of the order, and then save
+
+01:29.570 --> 01:30.770
+the order to the database.
+
+01:30.800 --> 01:31.580
+That's pretty much it.
+
+01:31.580 --> 01:34.040
+That's how this ref system works with Mongoose.
+
+01:35.900 --> 01:39.260
+If we want to associate an existing ticket with a new order.
+
+01:39.260 --> 01:43.940
+So this really very much is what we are about to do inside of our new handler.
+
+01:44.600 --> 01:46.610
+We're going to pull the ticket out of the database.
+
+01:46.610 --> 01:48.680
+We're then going to try to build an order.
+
+01:48.980 --> 01:54.200
+And for the ticket property, we're going to assign the ticket that we just pulled out of the database.
+
+01:54.500 --> 01:56.690
+We would then save the order to the database.
+
+01:57.530 --> 01:58.220
+Like so.
+
+02:00.870 --> 02:05.340
+And then finally, whenever we want to figure out what order is associated with what given ticket,
+
+02:05.640 --> 02:07.330
+we'll do a query for an order.
+
+02:07.350 --> 02:11.510
+And on that query, we're going to also add in this little populate method to it.
+
+02:11.520 --> 02:16.590
+So we'll call it populate, provide the name of the record or the key on the order that we want to populate.
+
+02:16.590 --> 02:20.100
+In this case, it is ticket because we are setting that ticket property right there.
+
+02:20.900 --> 02:25.580
+Then when Magus goes and finds this order inside the database, it will also fetch the associated with
+
+02:25.610 --> 02:31.010
+ticket with it as well, and we can then access that ticket off of the order by writing out.
+
+02:31.160 --> 02:32.720
+Order, date ticket.
+
+02:33.510 --> 02:38.490
+So, for example, if we wanted to know the price of the ticket would do order ticket price, if we
+
+02:38.490 --> 02:41.610
+wanted to know the title of the ticket order title ticket.
+
+02:42.090 --> 02:43.050
+And that's pretty much it.
+
+02:44.400 --> 02:48.160
+So to get all this stuff working, we've already set up the order itself correctly.
+
+02:48.180 --> 02:52.180
+We just have to also add in a new model for a ticket as well.
+
+02:52.200 --> 02:53.160
+That's pretty much it.
+
+02:54.000 --> 02:55.320
+So let's pause right here.
+
+02:55.350 --> 02:58.410
+We're going to come back the next video, create a model for our ticket.

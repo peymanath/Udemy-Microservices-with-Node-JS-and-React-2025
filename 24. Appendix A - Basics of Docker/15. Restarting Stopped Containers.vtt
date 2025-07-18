@@ -1,0 +1,187 @@
+WEBVTT
+
+00:00.690 --> 00:05.700
+In the last section we started investigating the life cycle of a container by using the Docker, Create
+
+00:05.700 --> 00:07.320
+and Docker start commands.
+
+00:07.470 --> 00:11.820
+We're not going to start to investigate the status of some of those containers that we've already started
+
+00:11.820 --> 00:15.420
+up on our machine, but have closed down for some particular reason.
+
+00:15.420 --> 00:19.050
+So we can print those all out with Docker dash, dash all.
+
+00:19.350 --> 00:25.320
+You'll notice that I have just one container listed as exited now, whereas before I had like 30.
+
+00:25.470 --> 00:29.580
+The reason for that is that I ran a command between the last video and this one to kind of par down
+
+00:29.580 --> 00:30.090
+that list.
+
+00:30.090 --> 00:33.090
+And of course, I will show you that command in just a second as well.
+
+00:33.450 --> 00:39.090
+So at this point, the only stopped or exited container that I have on my machine is this one right
+
+00:39.090 --> 00:39.630
+here.
+
+00:39.870 --> 00:44.490
+Let's try creating and running and then stopping one more container just to make sure that we're kind
+
+00:44.490 --> 00:45.750
+of on a level footing.
+
+00:45.960 --> 00:48.270
+So I'm going to execute Docker run.
+
+00:48.900 --> 00:50.750
+Busy box echo.
+
+00:50.760 --> 00:51.720
+Hi there.
+
+00:53.050 --> 00:58.750
+If I then do Docker, PS, Dash, Dash all again and then zoom out so I can see this a little bit better.
+
+00:58.750 --> 00:59.440
+There we go.
+
+00:59.470 --> 01:00.550
+I'll see the idea.
+
+01:00.550 --> 01:01.510
+That container.
+
+01:01.510 --> 01:02.590
+I'll see the echo.
+
+01:02.590 --> 01:03.280
+Hi there.
+
+01:03.280 --> 01:06.520
+And I can definitely verify that it's status is definitely excited.
+
+01:06.520 --> 01:11.230
+Right now when a container is exited, we can still start it back up.
+
+01:11.230 --> 01:15.760
+So just because a container stop doesn't mean that it's like dead or cannot be used again.
+
+01:15.760 --> 01:21.970
+We can very easily stop and then start containers again at some point in the future to start a container
+
+01:21.970 --> 01:22.570
+back up.
+
+01:22.570 --> 01:26.470
+We can take its ID and then execute Docker start.
+
+01:27.270 --> 01:29.070
+And paste that ID in.
+
+01:30.240 --> 01:35.310
+Remember that if we use Docker, start without the dash a flag, however, we won't see any output from
+
+01:35.310 --> 01:35.640
+it.
+
+01:35.640 --> 01:40.860
+And so it might be a little bit more useful to do a Docker, start dash and then the ID.
+
+01:41.250 --> 01:46.070
+And when I do that you'll notice that it printed out Hi there again, which is kind of interesting.
+
+01:46.080 --> 01:50.670
+Let's take a look at a diagram to really understand this entire series of commands that we just issued.
+
+01:51.990 --> 01:53.070
+All right, here we go.
+
+01:53.790 --> 01:59.220
+So we've got our busy box image, and at some point in time, we definitely ran Docker Create or Docker
+
+01:59.220 --> 02:05.070
+Run that took our file system snapshot and essentially got a reference to it inside the container.
+
+02:05.280 --> 02:10.290
+We then provided that override command of echo.
+
+02:10.320 --> 02:11.380
+Hi there.
+
+02:11.400 --> 02:15.030
+So that was the primary running command inside the container.
+
+02:15.360 --> 02:22.050
+That command ran it, then completed the container, exited it naturally, and we then ran the Docker
+
+02:22.050 --> 02:23.910
+Start Command a second time.
+
+02:23.910 --> 02:30.870
+What happened was the running process or this primary command was issued a second time inside the container.
+
+02:32.010 --> 02:37.350
+When you have a container that's already been created, we cannot replace that default command.
+
+02:37.350 --> 02:40.080
+As soon as you start it up with the default command, that's it.
+
+02:40.080 --> 02:42.360
+The default command is then in place.
+
+02:42.360 --> 02:49.320
+So we cannot do something like, say, Docker, start dash the ID and then try to replace the default
+
+02:49.320 --> 02:50.010
+command.
+
+02:50.280 --> 02:56.190
+I can't do something like echo by there, so in theory this would be us trying to replace the default
+
+02:56.190 --> 02:56.580
+command.
+
+02:56.580 --> 02:57.630
+Again, can't do that.
+
+02:57.630 --> 03:01.590
+And if we try to run it, let's go into misinterpret the command that we just issued.
+
+03:01.590 --> 03:04.980
+It's thinking that we're trying to start up multiple containers at the same time.
+
+03:05.790 --> 03:11.580
+So once we have started up a container and let it exit, we can start it back up again, which is going
+
+03:11.580 --> 03:16.950
+to re-issue the default command that was used when the container was first created.
+
+03:17.850 --> 03:18.150
+All right.
+
+03:18.150 --> 03:22.050
+Now, it might seem like going over all this lifecycle stuff is kind of unimportant.
+
+03:22.050 --> 03:27.300
+It might seem like I'm going really far into the weeds with it, but trust me, having a solid understanding
+
+03:27.300 --> 03:32.400
+of the lifecycle of a container is going to be so incredibly useful later on when it really comes down
+
+03:32.400 --> 03:36.180
+to figuring out how to troubleshoot these things and debug a running container.
+
+03:36.180 --> 03:39.660
+So I think we got a better idea on the lifecycle of a container.
+
+03:39.660 --> 03:42.600
+So let's take another quick break and continue in the next section.

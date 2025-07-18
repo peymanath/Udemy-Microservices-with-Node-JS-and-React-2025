@@ -1,0 +1,214 @@
+WEBVTT
+
+00:00.690 --> 00:04.480
+In this section, we're going to take another look at a very commonly used command.
+
+00:04.500 --> 00:07.140
+So the command that we're going to look at is Docker.
+
+00:07.140 --> 00:12.960
+PS This command will list all the different running containers that are currently on your machine.
+
+00:12.960 --> 00:15.930
+Let's try running it right now and just seeing what happens.
+
+00:16.470 --> 00:19.320
+I'll flip on over to my terminal and I'll run Docker.
+
+00:19.320 --> 00:25.200
+PS When I run this command you're going to see some headers for a table.
+
+00:25.200 --> 00:30.240
+At present we have no containers running our machine, so we have no entries inside this table.
+
+00:30.930 --> 00:37.110
+At this point we've only been running images or creating containers that run very quickly and then immediately
+
+00:37.110 --> 00:38.010
+close down.
+
+00:38.010 --> 00:45.120
+So for example, when we were running Docker run, busy box and Echo High there, that container starts
+
+00:45.120 --> 00:48.960
+up and then almost immediately exits us back to the command line.
+
+00:49.050 --> 00:54.600
+So if we want Docker PS to be meaningful at all, we have to have some container that is running for
+
+00:54.600 --> 00:56.430
+some longer amount of time.
+
+00:57.510 --> 01:02.670
+In order to get a container running a little bit longer, we could substitute the command that is executed
+
+01:02.670 --> 01:04.320
+when that container starts up.
+
+01:04.380 --> 01:05.970
+So rather than running echo.
+
+01:05.970 --> 01:06.780
+Hi there.
+
+01:06.810 --> 01:12.510
+I'll try Docker run busy box and then I'll do ping google.com.
+
+01:12.990 --> 01:18.090
+This is a command that's going to attempt to ping Google servers and measure the amount of latency.
+
+01:18.390 --> 01:22.680
+It's a command that's going to continue running for a quite a long time.
+
+01:22.680 --> 01:24.120
+So here it is running right here.
+
+01:24.120 --> 01:28.770
+And as you can see, it takes about two or three milliseconds for me to ping Google and get a response
+
+01:28.770 --> 01:29.370
+back.
+
+01:29.460 --> 01:35.550
+This command is going to continue running so we can now run Docker PS in a second window and we should
+
+01:35.550 --> 01:38.430
+see this container up here in the listing.
+
+01:38.820 --> 01:45.930
+I'm going to open up a second terminal window and then I'll execute Docker and when I do so I'll then
+
+01:45.960 --> 01:47.490
+see that running container.
+
+01:47.640 --> 01:49.530
+I'm going to get this on one line really quickly.
+
+01:49.530 --> 01:50.190
+There we go.
+
+01:51.300 --> 01:57.270
+So this is a print up for the container that is currently running that was issued the command of ping
+
+01:57.270 --> 01:58.320
+google.com.
+
+01:58.830 --> 02:04.170
+We also see the containers ID which we can use for a lot of other operations that we'll look into later
+
+02:04.170 --> 02:04.680
+on.
+
+02:04.680 --> 02:07.020
+We'll see the image that was used for the container.
+
+02:07.140 --> 02:09.630
+We can see how long ago it was created.
+
+02:09.630 --> 02:13.440
+We get a status currently it's been up for 24 seconds.
+
+02:13.530 --> 02:17.220
+We'll see a listing of any ports that have been opened for outside access.
+
+02:17.220 --> 02:20.220
+And we're going to talk a lot about ports later on inside this course.
+
+02:20.220 --> 02:25.230
+And at the very end, we'll also see a randomly generated name to identify this container.
+
+02:25.230 --> 02:28.500
+In my case, the randomly generated name was Epic Corrie.
+
+02:29.710 --> 02:35.530
+If I now flip back over to that running ping process, I can press control C on my keyboard to stop
+
+02:35.530 --> 02:35.950
+it.
+
+02:36.040 --> 02:40.450
+So I'll press control C right now and I get kicked back to my command line.
+
+02:40.810 --> 02:47.530
+As you might expect, if I then run Docker a second time, I would not see that container anymore.
+
+02:47.650 --> 02:51.580
+So Docker PS specifically shows running containers.
+
+02:52.120 --> 02:57.310
+We can modify the Docker PS command just a little bit to show all containers that have ever been created
+
+02:57.310 --> 02:58.300
+on our machine.
+
+02:58.450 --> 03:02.530
+To do so, we can execute Docker.
+
+03:02.530 --> 03:03.610
+PS Dash.
+
+03:03.610 --> 03:04.570
+Dash all.
+
+03:05.730 --> 03:06.690
+Now just two dashes.
+
+03:06.690 --> 03:07.380
+There we go.
+
+03:08.280 --> 03:13.050
+When we execute that command, we'll see a listing of all the containers that we have ever created.
+
+03:13.110 --> 03:17.330
+And I'm going to zoom out again, again here really quickly, just so I can see this table.
+
+03:17.340 --> 03:18.000
+There we go.
+
+03:19.230 --> 03:23.850
+So for every one of these containers, these have all been containers that we have started up and then
+
+03:23.850 --> 03:27.840
+have either been shut down on our behalf or shut down naturally.
+
+03:28.170 --> 03:31.950
+So for each one of them, we'll see the container ID Image Command.
+
+03:32.010 --> 03:34.470
+When it was created its current status.
+
+03:34.470 --> 03:36.060
+In this case, they're all exited.
+
+03:36.210 --> 03:40.770
+Any ports that have been opened up again, we'll talk about those later and the randomly generated name
+
+03:40.770 --> 03:41.670
+for each one.
+
+03:42.790 --> 03:47.950
+So in practice we're going to end up using the Docker Command quite a bit to see what containers are
+
+03:47.950 --> 03:49.570
+currently running on our machine.
+
+03:49.600 --> 03:55.210
+One of the most common uses of Docker is not only to see what's running, but also to get the ID of
+
+03:55.210 --> 03:56.140
+a running container.
+
+03:56.140 --> 04:01.240
+Because, like I said, we very frequently want to issue commands on a very specific container, and
+
+04:01.240 --> 04:02.920
+for that we need its ID.
+
+04:03.550 --> 04:03.910
+All right.
+
+04:03.910 --> 04:05.460
+So that's the Docker command.
+
+04:05.470 --> 04:08.620
+Let's take a quick pause right here and continue in the next section.

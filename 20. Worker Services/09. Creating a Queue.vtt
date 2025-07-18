@@ -1,0 +1,430 @@
+WEBVTT
+
+00:00.740 --> 00:04.850
+In this video, we're going to start to wire up the bull library to our exploration service.
+
+00:05.060 --> 00:10.100
+To get started, I'm going to find the CRC directory inside my exploration folder and I'll make a new
+
+00:10.100 --> 00:11.120
+folder inside of that.
+
+00:11.870 --> 00:13.280
+Called cues.
+
+00:13.820 --> 00:19.730
+And then inside of cues, I'll make a new file called Expiration Cue Dots.
+
+00:20.810 --> 00:24.260
+So inside of here, we're going to put together a lot of code related to bull.
+
+00:24.620 --> 00:28.070
+Let me show you a diagram to help you understand exactly what we have to do inside of here.
+
+00:31.210 --> 00:34.720
+So once again, we're going to receive an order created even at some point in time.
+
+00:35.200 --> 00:40.150
+We're going to receive that event and then use this expiration cue thing that we're going to define
+
+00:40.150 --> 00:44.290
+inside of this file to queue up or create a brand new job.
+
+00:44.620 --> 00:49.360
+We can really think of a job as being very similar in nature to an event from that streaming server.
+
+00:50.100 --> 00:54.570
+So we're going to write out some Q code to do a job or essentially publish a job.
+
+00:55.110 --> 00:58.020
+This job is then going to be sent over to the Reddit server.
+
+00:58.020 --> 01:03.120
+And inside of Reddit server, there's going to be a list of different jobs with some very specific type.
+
+01:04.040 --> 01:08.420
+So we're going to make sure that we give a type to this job right here, essentially a string description,
+
+01:08.450 --> 01:12.230
+very similar to how that streaming server has the idea of a subject or a channel.
+
+01:12.860 --> 01:16.670
+The job that we publish is then going to be temporarily stored inside their.
+
+01:19.060 --> 01:21.400
+Until 15 minutes or so have elapsed.
+
+01:21.610 --> 01:27.780
+Once that time has elapsed, Reddit server is then going to take this job and send it back out for expiration
+
+01:27.790 --> 01:28.330
+cue.
+
+01:28.810 --> 01:33.370
+Inside of our expiration cue, we are then going to have a little bit of code that is going to be dedicated
+
+01:33.370 --> 01:35.500
+to processing this incoming job.
+
+01:36.530 --> 01:40.790
+Inside of our processing code, we are probably going to want to emit an event like the one we see right
+
+01:40.790 --> 01:42.740
+here of expiration complete.
+
+01:43.430 --> 01:47.240
+Now, one thing that we're going to have to figure out really quickly here is what information do we
+
+01:47.240 --> 01:49.310
+want to store inside of this job?
+
+01:49.730 --> 01:53.840
+We have to store something inside of here, something that says here is the order that we want to expire
+
+01:53.840 --> 01:55.340
+or something like that.
+
+01:55.850 --> 01:59.090
+Well, really quickly, let's think about this expiration complete event.
+
+01:59.510 --> 02:04.520
+Chances are that when we emit this event, the only thing we need to know is the ID of the order that
+
+02:04.520 --> 02:05.900
+should be getting expired.
+
+02:06.740 --> 02:11.390
+So maybe the order ID, there's not really any other information that we need to include inside this
+
+02:11.390 --> 02:12.300
+event at all.
+
+02:12.320 --> 02:17.030
+It's really just the order ID to say, Hey, this order should now be expired.
+
+02:18.250 --> 02:23.470
+So when we emit or publish our job right here, the only piece of information that we're going to stick
+
+02:23.470 --> 02:29.890
+inside there is going to be the order ID that we eventually want to expire or place inside this event
+
+02:29.890 --> 02:30.580
+over here.
+
+02:32.460 --> 02:32.730
+Okay.
+
+02:32.760 --> 02:33.870
+So now we've seen this diagram.
+
+02:33.870 --> 02:38.160
+Let's go back over to our editor and start to write out some code to put together this kind of setup.
+
+02:39.790 --> 02:45.790
+So inside of that expiration cue file at the very top, I'm going to import queue rumble.
+
+02:47.330 --> 02:50.450
+And then going to use that thing to create a new instance of a Q.
+
+02:50.480 --> 02:51.690
+I'm going to call it expiration.
+
+02:51.710 --> 02:57.380
+Q This is the thing that is going to allow us to publish a job and then eventually process a job as
+
+02:57.380 --> 02:57.830
+well.
+
+02:58.760 --> 03:01.070
+So I'm going to create a variable called expiration cue.
+
+03:02.210 --> 03:06.380
+That's going to be a new Q and then I'm going to give this thing two separate arguments.
+
+03:06.410 --> 03:10.160
+The first argument is going to be the name of the channel, so to speak.
+
+03:10.190 --> 03:14.750
+Now, Bull doesn't really have the idea of or doesn't have a terminology called channel per se.
+
+03:14.780 --> 03:18.680
+I use the term channel just to make you think once again of Nat streaming server.
+
+03:19.130 --> 03:25.190
+So this is going to be essentially the bucket over inside of server that we want to store this job in
+
+03:25.190 --> 03:26.030
+temporarily.
+
+03:26.600 --> 03:31.610
+So I'm going to give my queue a name of order, colon expiration.
+
+03:32.150 --> 03:36.230
+There's nothing special about this format here, and there's nothing special about the words inside
+
+03:36.230 --> 03:36.350
+of it.
+
+03:36.350 --> 03:39.950
+We can have the have it be just a random gibberish of characters if we want it to.
+
+03:40.370 --> 03:43.040
+But in this case, I think order expiration makes a lot of sense.
+
+03:44.360 --> 03:47.420
+Then as a second argument, we're going to put in an options object.
+
+03:47.780 --> 03:52.340
+We're going to add in some options to tell this queue that we want it to connect to the instance of
+
+03:52.340 --> 03:56.800
+the Reddit server that we are running over inside that pod that we had just created through that deployment
+
+03:56.810 --> 03:57.620
+a moment ago.
+
+03:58.400 --> 04:02.840
+So to tell this cue that we wanted to use Redis, we're going to put in Reedus as an object.
+
+04:03.350 --> 04:06.530
+And then inside of here, we're going to specify the host of this Reddit server.
+
+04:07.840 --> 04:12.070
+We can find the host of our red instance if we go back to our infra red directory.
+
+04:13.650 --> 04:16.650
+And take a look at our expiration deployment file.
+
+04:17.070 --> 04:21.030
+So your expiration deployment, you might recall that one of the environment variables we had defined
+
+04:21.030 --> 04:22.980
+was Redis underscore host.
+
+04:23.310 --> 04:26.880
+So that is the host name of the red server that we want to connect to.
+
+04:28.460 --> 04:33.860
+So for the host option right here, we will put in process and be redis underscore host.
+
+04:37.030 --> 04:37.540
+Okay.
+
+04:39.040 --> 04:43.450
+Next up, we're going to do something that is technically optional, but I do highly recommend that
+
+04:43.450 --> 04:47.530
+you do it if you ever make usable on your own, specifically with TypeScript.
+
+04:47.890 --> 04:52.120
+So as we just mentioned, inside this job, we're probably going to have some kind of order ID property
+
+04:52.120 --> 04:56.350
+because that is the information that we want to communicate back over to this point in time when we
+
+04:56.350 --> 04:59.170
+at some point in time to process this job.
+
+04:59.830 --> 05:04.720
+Now, as you've seen with all the eventing stuff, with that streaming server, it is kind of confusing
+
+05:04.750 --> 05:08.740
+to remember all the different properties and their types inside of our event objects.
+
+05:08.950 --> 05:12.070
+And so optionally, but again, I highly recommend you do this.
+
+05:12.070 --> 05:17.020
+We can create an interface that is going to describe the data that we're going to stick into this job.
+
+05:17.530 --> 05:18.520
+So we're going to do that right now.
+
+05:18.520 --> 05:22.600
+We're going to create an interface that's going to say what information we are going to store inside
+
+05:22.600 --> 05:23.620
+of this job thing.
+
+05:24.570 --> 05:28.800
+So to do so at the top of the file, I'm going to create an interface called Payload.
+
+05:30.160 --> 05:32.320
+Nothing special about this name whatsoever.
+
+05:32.350 --> 05:34.070
+It's just a name that I think makes sense.
+
+05:34.090 --> 05:39.070
+It is some payload of information or of some data that we're going to store inside of that job object.
+
+05:39.400 --> 05:42.790
+And then we're going to list out the different properties that are going to be stored inside this job.
+
+05:42.790 --> 05:48.220
+So for us, it will be an order ID and notice that I'm using a lowercase D right here.
+
+05:49.670 --> 05:51.200
+And it will be of type string.
+
+05:53.260 --> 05:57.910
+We will then apply that as a generic type to our queue right here.
+
+05:57.940 --> 06:01.300
+So I'm going to put in the angle brackets and put in payload like so.
+
+06:02.420 --> 06:07.610
+So we've now given TypeScript enough information to understand exactly what kind of data is going to
+
+06:07.610 --> 06:13.640
+be flowing through our queue when we go to start to write out some code to create a new job or to process
+
+06:13.640 --> 06:14.390
+a job.
+
+06:14.450 --> 06:19.310
+TypeScript is going to be able to use this payload interface right here to make sure that we are trying
+
+06:19.310 --> 06:24.950
+to put the right information into the queue and receive the correct type of information from it as well.
+
+06:25.610 --> 06:27.560
+And we can see that in action very easily.
+
+06:28.190 --> 06:32.420
+Right after our queue, we're going to write out some code which is going to be where we're going to
+
+06:32.420 --> 06:34.130
+actually process a job.
+
+06:34.430 --> 06:39.470
+So this is going to be where Rita server sends the job back over to us and we start to process it in
+
+06:39.470 --> 06:40.130
+some way.
+
+06:40.830 --> 06:41.730
+To put that together.
+
+06:41.730 --> 06:43.770
+We're going to write out expiration cue.
+
+06:45.220 --> 06:46.150
+Process.
+
+06:46.330 --> 06:48.760
+And we'll pass it in async function.
+
+06:50.110 --> 06:53.800
+This async function is going to be called with an argument referred to as job.
+
+06:53.800 --> 06:57.010
+And so as you guess, that is this job thing right here.
+
+06:57.580 --> 07:02.830
+Now, the job object itself is similar in nature to that message object that we've seen in the gnat
+
+07:02.830 --> 07:07.720
+streaming server library or the node streaming node, nat streaming, whatever it's called, that library
+
+07:07.720 --> 07:09.220
+with that message object type.
+
+07:09.700 --> 07:12.210
+So this job right here is not our actual data.
+
+07:12.220 --> 07:17.620
+Instead, it is an object that wraps up our data and has some information about the job itself as well.
+
+07:17.620 --> 07:24.460
+So information such as the date when it was initially created or maybe some ID of the job itself or
+
+07:24.460 --> 07:30.610
+whatever else it is, all it inside the job and the data that we are going to send along inside the
+
+07:30.610 --> 07:30.940
+job.
+
+07:30.940 --> 07:34.210
+For us, the order ID is one of the properties inside there.
+
+07:36.140 --> 07:40.730
+So inside of here, you and I are going to eventually want to go into want to publish an event, the
+
+07:40.730 --> 07:42.200
+exploration complete event.
+
+07:42.380 --> 07:44.550
+We do not have any publisher for that right now.
+
+07:44.570 --> 07:47.620
+However, we don't even have an event called exploration complete.
+
+07:47.630 --> 07:50.060
+So right now we'll just do a console log.
+
+07:51.700 --> 07:56.050
+Of I want to publish an exploration.
+
+07:57.590 --> 07:59.900
+Complete event or order.
+
+08:00.860 --> 08:02.580
+And then at the very end of the console log.
+
+08:02.600 --> 08:06.080
+As a second argument, I'm going to try to print out the order ID.
+
+08:06.470 --> 08:11.630
+So we need to somehow reach into this job object, reference the payload we had stuck in there and get
+
+08:11.630 --> 08:13.310
+that order ID property.
+
+08:13.670 --> 08:21.050
+So to do to do so we would write out job data, order ID and you'll notice that I'm getting some autocomplete
+
+08:21.050 --> 08:25.250
+right there from TypeScript specifically because we added in that interface.
+
+08:25.460 --> 08:29.420
+So this is where TypeScript is going to help us understand the information that we are storing inside
+
+08:29.420 --> 08:30.080
+of that job.
+
+08:32.320 --> 08:32.690
+Okay.
+
+08:32.710 --> 08:34.260
+One last step inside this file.
+
+08:34.270 --> 08:38.530
+At the very bottom, we're going to export the actual.
+
+08:39.370 --> 08:44.050
+Q that we just created, so we can actually use it in some other location side of our project.
+
+08:44.380 --> 08:48.430
+So I'll put at the very bottom export curly braces expiration.
+
+08:48.460 --> 08:48.970
+Q.
+
+08:50.650 --> 08:51.110
+Okay.
+
+08:51.520 --> 08:52.180
+That is it.
+
+08:52.870 --> 08:57.550
+Now we will eventually come back and add in a better implementation for the processing step right here
+
+08:57.550 --> 09:01.930
+because naturally, as that console.log says, we actually want to publish this event, but we don't
+
+09:01.930 --> 09:03.940
+have that publisher put together right now.
+
+09:04.540 --> 09:07.240
+Okay, let's take a pause right here and continue in just a moment.

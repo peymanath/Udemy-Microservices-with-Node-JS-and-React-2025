@@ -1,0 +1,451 @@
+WEBVTT
+
+00:01.260 --> 00:05.250
+In the last video we saw that we could re deliver all the events that have ever been emitted, but that
+
+00:05.250 --> 00:07.360
+was probably not the best strategy in the world.
+
+00:07.380 --> 00:13.200
+So in this video, we're going to take a look at a very complementary option to this idea of re delivering
+
+00:13.200 --> 00:15.600
+all events that have been emitted in the past.
+
+00:16.050 --> 00:20.250
+The option we're going to take a look at is something called a durable subscription.
+
+00:20.730 --> 00:25.850
+A durable subscription is going to be created when we give an identifier to a subscription.
+
+00:25.860 --> 00:28.020
+Let's first go and take a look at how we do that.
+
+00:28.170 --> 00:33.510
+Back inside, my editor, I'm going to once again find this option stuff and I'll turn on another method
+
+00:33.510 --> 00:36.150
+called right here of set durable name.
+
+00:36.780 --> 00:38.970
+This is how we create a durable subscription.
+
+00:39.180 --> 00:43.470
+When we call set durable name, we're going to put in a string that's going to serve as the name or
+
+00:43.470 --> 00:45.450
+the identifier for the subscription.
+
+00:45.840 --> 00:51.690
+We're usually going to provide a name that kind of names or is the same name as this overall service.
+
+00:51.690 --> 00:58.260
+So I inside of here would put in something like say order service or accounting service or whatever
+
+00:58.260 --> 00:59.400
+we are trying to build up.
+
+01:00.790 --> 01:03.070
+So what does a durable subscription actually do?
+
+01:03.310 --> 01:08.110
+Well, let's imagine that we create a well subscription with the name or ID of ABC.
+
+01:08.110 --> 01:09.070
+One, two, three.
+
+01:09.460 --> 01:14.110
+When we create that subscription and that's internally inside of the channel that we are subscribing
+
+01:14.110 --> 01:19.480
+to or listening to, is going to create a record listing all the different verbal subscriptions that
+
+01:19.480 --> 01:20.140
+we have.
+
+01:20.840 --> 01:26.600
+Then whenever we emit an event, NASA's going to record whether or not this subscription has received
+
+01:26.600 --> 01:28.700
+and successfully processed that event.
+
+01:29.090 --> 01:33.830
+So let's imagine that we emit event right here, number one, or sequence number one that's going to
+
+01:33.830 --> 01:35.060
+go over to our service.
+
+01:35.510 --> 01:40.790
+And our service might then acknowledge this event and say, okay, I have successfully processed this.
+
+01:41.060 --> 01:46.580
+As soon as that has been successfully processed and that's is going to store a little record next to
+
+01:46.580 --> 01:47.630
+this verbal subscription.
+
+01:47.630 --> 01:51.620
+And it's going to say, okay, ABC one, two, three has processed.
+
+01:55.160 --> 01:56.900
+Event number one successfully.
+
+01:57.640 --> 02:02.410
+So now let's imagine that for some reason our account service goes offline temporarily for some point
+
+02:02.410 --> 02:08.170
+on time, and maybe while it is offline, we then emit events two and three.
+
+02:08.790 --> 02:11.700
+So that service is no longer online to receive this.
+
+02:11.700 --> 02:16.530
+But internally, NASA's going to keep a record of all the different events that ABC one, two, three
+
+02:16.530 --> 02:17.760
+has missed out on.
+
+02:17.760 --> 02:22.890
+So it's going to say, okay, number two right here, ABC one, two, three has not processed this and
+
+02:22.890 --> 02:25.590
+three, ABC one, two, three has not processed this.
+
+02:26.690 --> 02:33.320
+Then whenever our account service comes back online and reconnects with the exact same ID right there,
+
+02:33.320 --> 02:34.550
+it has to be the same.
+
+02:35.030 --> 02:39.140
+Now, this is going to take a look at that subscription ID or the verbal name, and it's going to say,
+
+02:39.140 --> 02:44.270
+okay, for ABC, one, two, three, you have already processed event number one, but you have not
+
+02:44.270 --> 02:45.560
+processed two and three.
+
+02:45.680 --> 02:49.760
+So it will take two and throw it over and it will take three and throw it over.
+
+02:50.090 --> 02:55.610
+And then once the account service processes those, they will be marked as processed.
+
+02:56.440 --> 02:57.310
+And.
+
+02:58.570 --> 02:59.410
+Processed.
+
+03:01.250 --> 03:05.870
+So a durable subscription is really fantastic and making sure that our services never miss out in an
+
+03:05.870 --> 03:11.150
+event and also make sure that we do not erroneously reprocess events in the future, which was kind
+
+03:11.150 --> 03:14.690
+of the downside of this whole set deliver all available option.
+
+03:15.200 --> 03:16.530
+Now, quick question here.
+
+03:16.550 --> 03:21.770
+Do we still need an option of set deliver all available if we are using set terrible name?
+
+03:22.280 --> 03:23.690
+The answer is yes.
+
+03:24.140 --> 03:26.270
+So set, set, deliver.
+
+03:26.270 --> 03:29.510
+All available is going to make sure that the very first time.
+
+03:30.640 --> 03:33.730
+Better subscription is created like, let's say.
+
+03:34.470 --> 03:40.440
+That we emit one and two before our service has ever been created.
+
+03:40.550 --> 03:43.620
+Let's imagine those are kind of sitting in history.
+
+03:44.400 --> 03:45.750
+As kind of records.
+
+03:45.750 --> 03:48.840
+Hey, we already emitted these things at some point in time in the past.
+
+03:49.140 --> 03:53.580
+If we then bring account service online for the very, very first time.
+
+03:54.560 --> 03:57.200
+And it has that option of set deliver all available.
+
+03:57.200 --> 04:02.510
+Then for the first time only Nats is going to make sure that it takes all those events from the past
+
+04:02.510 --> 04:07.400
+and deliver them to that service and add them as being delivered to ABC.
+
+04:07.400 --> 04:08.210
+One, two, three.
+
+04:08.600 --> 04:11.240
+And that is only going to happen for the very first time.
+
+04:11.240 --> 04:12.440
+We create the subscription.
+
+04:12.950 --> 04:17.450
+So this set deliver all available is still a necessity because the very first time we bring the service
+
+04:17.450 --> 04:21.740
+up online, we're going to get all the events that have been emitted in the past, which is fantastic
+
+04:21.740 --> 04:24.050
+because we can make sure that we don't miss out any data.
+
+04:24.050 --> 04:28.580
+But then because we also have the verbal name here, those events we had delivered in the past will
+
+04:28.580 --> 04:29.930
+be marked as delivered.
+
+04:29.930 --> 04:35.750
+So then whenever we restart the account service, let's say we restart this for some reason or we bring
+
+04:35.750 --> 04:37.340
+another subscription online.
+
+04:37.910 --> 04:40.550
+Well, we have already delivered one and two.
+
+04:40.550 --> 04:45.950
+So even though we have set deliver all available, that will be ignored on any restart.
+
+04:46.130 --> 04:49.250
+So this option right here is really just used for the very first time.
+
+04:49.250 --> 04:52.490
+We bring the durable name subscription online.
+
+04:54.150 --> 04:55.530
+All right, let's now save this file.
+
+04:55.530 --> 04:57.750
+We're going to go over to our terminal and test this out.
+
+04:58.020 --> 05:02.700
+I want you to know that when we go and test this out, even though we should only see all of our things
+
+05:02.730 --> 05:07.140
+get re delivered just one time, and then after that we should not get any re delivery because all the
+
+05:07.140 --> 05:10.940
+previously admitted events have been marked as read by this turbo subscription.
+
+05:10.950 --> 05:13.020
+That is not quite what we're going to see.
+
+05:13.020 --> 05:14.580
+So let's just go take a look.
+
+05:15.090 --> 05:15.390
+All right.
+
+05:15.390 --> 05:16.200
+So back over here.
+
+05:16.200 --> 05:17.400
+I'm going to restart this.
+
+05:17.400 --> 05:21.420
+You'll notice that every single time I restart it, I get all these different events re delivered.
+
+05:21.420 --> 05:24.960
+And that is very much contrary to what I just said was going to happen.
+
+05:24.960 --> 05:29.760
+I just said that the very first time we start this thing up, we're going to deliver all available.
+
+05:29.760 --> 05:35.580
+We're then going to set up the subscription name of accounting service and then for any restart, because
+
+05:35.580 --> 05:40.530
+the subscription of accounting service has already gotten everything available, it should not get any
+
+05:40.530 --> 05:41.310
+re delivery.
+
+05:41.310 --> 05:42.900
+So what's going on here?
+
+05:43.260 --> 05:45.510
+Well, this is a little bit of a gotcha.
+
+05:45.870 --> 05:47.430
+Remember, every single time.
+
+05:48.180 --> 05:53.550
+That we restart this terminal window, we are closing out our connection to nets and we are reconnecting
+
+05:53.550 --> 05:56.910
+in that very short window where we close out the entire connection.
+
+05:56.910 --> 06:02.070
+Nats is saying, oh, that client disconnected, that was the client with this subscription or this
+
+06:02.070 --> 06:03.270
+durable subscription.
+
+06:03.750 --> 06:07.710
+Since they disconnected, I guess they're probably never going to come back at any point in time in
+
+06:07.710 --> 06:08.370
+the future.
+
+06:08.370 --> 06:11.190
+So I'm going to wipe out that history of that durable name.
+
+06:11.610 --> 06:16.710
+So for that, just because that very, very small disconnect window Nats is going to say, let's just
+
+06:16.710 --> 06:19.110
+dump this history about that durable subscription.
+
+06:19.530 --> 06:21.000
+They're probably not going to come back.
+
+06:21.000 --> 06:21.600
+Right?
+
+06:22.080 --> 06:25.140
+So that's obviously kind of a big downside to this approach.
+
+06:25.500 --> 06:30.150
+Just because our service goes down for half a second, we're going to throw out that subscription.
+
+06:30.510 --> 06:35.040
+Well, it turns out that we can kind of use one other option we've already spoken about to solve this
+
+06:35.040 --> 06:35.820
+whole issue.
+
+06:36.120 --> 06:39.360
+So we're going to reintroduce our group inside of that.
+
+06:39.360 --> 06:41.220
+Stan, subscribe to remember.
+
+06:41.220 --> 06:42.630
+That's going to be the second argument.
+
+06:43.140 --> 06:44.310
+That's going to be a string.
+
+06:46.040 --> 06:49.250
+And I'll put in my Q group name.
+
+06:50.000 --> 06:50.750
+Like so.
+
+06:51.170 --> 06:57.260
+So by adding in the Q group right here, it's going to make sure that even if we very temporarily disconnect
+
+06:57.260 --> 07:03.590
+all clients or all subscriptions with this durable name, it will not dump the entire durable subscription.
+
+07:04.040 --> 07:08.960
+So just by adding on the Q group, even if all of our different services inside this Q group go down,
+
+07:08.960 --> 07:12.110
+NASA's going to persist that durable name subscription.
+
+07:12.590 --> 07:14.090
+So let's start saving this now.
+
+07:14.120 --> 07:17.390
+I'll then go back over to my terminal the very first time we start up.
+
+07:17.390 --> 07:23.060
+We do get all of our events delivered, but if now I restart this, we're not going to get any re delivery
+
+07:23.060 --> 07:28.460
+because again, by adding in that Q group along with the durable name, it makes sure that every time
+
+07:28.460 --> 07:32.360
+or for some very brief period of time that everything goes offline.
+
+07:32.570 --> 07:35.870
+The durable subscription does not get completely dumped.
+
+07:37.610 --> 07:42.590
+Now at this point, I just want to really highlight how the set deliver all available, this durable
+
+07:42.590 --> 07:44.390
+name and the Q group name.
+
+07:44.660 --> 07:50.900
+These three options really all mesh together extremely well, and they give us the exact behavior that
+
+07:50.900 --> 07:52.670
+we are really, really looking for.
+
+07:52.760 --> 07:56.420
+So we just need to remember that for every subscription we create, we are probably always going to
+
+07:56.420 --> 08:00.710
+use set, deliver all available that we can get all the events that have been emitted in the past.
+
+08:00.980 --> 08:05.450
+We're going to use set durable name to make sure that we keep track of all the different events that
+
+08:05.450 --> 08:09.590
+have gone to this subscription or the SKU group, even if it goes offline for a little bit.
+
+08:09.890 --> 08:14.870
+And then finally, we're going to use this cue group to make sure that we do not accidentally dump the
+
+08:14.870 --> 08:19.760
+durable name, even if all of our services restart for a very brief period of time, and to make sure
+
+08:19.760 --> 08:24.920
+that all these emitted events only go off to one instance of our services, even if we are running multiple
+
+08:24.920 --> 08:25.760
+instances.
+
+08:26.060 --> 08:30.500
+So again, cue group, name, set, deliver, all available and set verbal name, very, very tightly
+
+08:30.500 --> 08:31.640
+coupled options.
+
+08:32.270 --> 08:35.300
+So now very last thing, I want to go in and restart the second listener.
+
+08:35.300 --> 08:39.920
+When we restart the second one, it should not try to get a list of all the previous events because
+
+08:39.920 --> 08:44.060
+all previous events have already been emitted into this durable cue group.
+
+08:45.180 --> 08:47.760
+And finally, I should be able to publish another one.
+
+08:48.120 --> 08:49.980
+Yeah, it still gets received over here.
+
+08:50.640 --> 08:51.960
+All right, so that's pretty much it.
+
+08:51.960 --> 08:53.790
+These three options totally key.
+
+08:53.790 --> 08:56.130
+Deliver all available verbal name and the Q Group.
+
+08:56.890 --> 08:59.380
+Let's take a pause right here and continue in just a moment.

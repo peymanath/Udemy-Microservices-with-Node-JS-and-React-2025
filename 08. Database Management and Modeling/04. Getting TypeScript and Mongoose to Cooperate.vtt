@@ -1,0 +1,262 @@
+WEBVTT
+
+00:00.750 --> 00:04.560
+At the end of last video, I mentioned that getting TypeScript and Mongoose to work together is sometimes
+
+00:04.560 --> 00:05.830
+just a little bit awkward.
+
+00:05.850 --> 00:09.330
+So in this video, I want to outline two big issues that we're going to run into.
+
+00:09.360 --> 00:14.740
+Just so you are aware of why we were going to write out some slightly complicated code in just a moment.
+
+00:14.760 --> 00:17.610
+So here's the big issue that we're going to start to run into.
+
+00:18.240 --> 00:22.890
+First, I want to give you a quick review on some terminology around Mongoose and MongoDB inside of
+
+00:22.890 --> 00:23.610
+MongoDB.
+
+00:23.640 --> 00:26.580
+We organize information into different collections.
+
+00:26.820 --> 00:32.360
+We might have a user collection that will store all the different users who have signed up for our application.
+
+00:32.370 --> 00:34.470
+So in this case, users one through four.
+
+00:34.920 --> 00:40.140
+Each of these can be thought of as little objects that stores some information about a very particular
+
+00:40.140 --> 00:40.740
+user.
+
+00:41.990 --> 00:47.300
+To access all this data, we're going to use Mongoose, and in particular, we are going to create two
+
+00:47.300 --> 00:49.250
+different things inside of Mongoose.
+
+00:49.640 --> 00:53.360
+We are first going to create something called a mongoose user model.
+
+00:53.630 --> 00:58.190
+This is a class that is going to represent the entire collection of users.
+
+00:58.520 --> 01:05.930
+So we will use this user model class to run queries, to create new users, or to do anything that modifies
+
+01:05.930 --> 01:08.390
+or queries the overall collection.
+
+01:09.540 --> 01:12.750
+We are also going to have something called a mongoose user document.
+
+01:12.990 --> 01:15.120
+A user document is also a class.
+
+01:15.300 --> 01:18.330
+It is meant to represent one singular user.
+
+01:18.630 --> 01:24.660
+So we might create an instance of a user document to represent user number two or create a second instance
+
+01:24.660 --> 01:27.750
+or another instance to represent just user number four.
+
+01:28.560 --> 01:33.900
+So again, we've got a user model that represents all of our data and a user document that represents
+
+01:33.900 --> 01:35.490
+just one little thing.
+
+01:37.080 --> 01:40.800
+So at that quick refresher on terminology, here are the two issues that we're going to start to run
+
+01:40.800 --> 01:44.520
+into when we are getting Mongoose and TypeScript to interact with each other.
+
+01:44.910 --> 01:46.470
+So issue number one.
+
+01:47.610 --> 01:51.210
+Is going to come up when we start to create a new user document.
+
+01:51.390 --> 01:56.190
+So this is going to be how we eventually try to create a new user document or a new instance of a user.
+
+01:56.460 --> 02:01.680
+We'll say new user and then pass in some different properties such as email and password.
+
+02:02.830 --> 02:08.770
+Now whenever we try to pass in properties to anything, TypeScript wants to understand the properties
+
+02:08.770 --> 02:12.670
+we are passing in and somehow make sure that you're passing in the correct type of data.
+
+02:13.090 --> 02:18.940
+So TypeScript wants to understand the different arguments that calling new user is going to accept.
+
+02:19.330 --> 02:25.390
+However, Mongoose does not make this easy behind the scenes, or more specifically with the Mongoose
+
+02:25.420 --> 02:28.210
+type definition file that we just installed a little bit ago.
+
+02:28.330 --> 02:33.340
+Whenever we try to create an instance of a user as you're doing right here, it is not going to kind
+
+02:33.340 --> 02:36.790
+of tell TypeScript about the different properties that we are trying to pass in.
+
+02:37.270 --> 02:40.260
+And so, for example, we could make a huge typo inside of here.
+
+02:40.270 --> 02:43.690
+We could accidentally write in hard instead of password.
+
+02:43.690 --> 02:48.700
+And TypeScript is not going to complain because TypeScript is not going to be given enough information
+
+02:48.700 --> 02:54.130
+by Mongoose by default to understand the different types of arguments or the names of these properties
+
+02:54.130 --> 02:55.540
+that we are supposed to pass in.
+
+02:56.450 --> 02:58.970
+So this is issue number one that we are going to run into.
+
+02:59.180 --> 03:01.020
+We have a workaround for this.
+
+03:01.040 --> 03:06.140
+We're going to essentially somehow teach TypeScript about the different properties that this constructor
+
+03:06.140 --> 03:06.740
+expects.
+
+03:06.740 --> 03:07.820
+So we are going to solve this.
+
+03:07.820 --> 03:10.850
+I just want you to be aware that this is something we need to be aware of.
+
+03:12.580 --> 03:12.970
+Okay.
+
+03:13.000 --> 03:14.080
+Issue number two.
+
+03:14.530 --> 03:19.690
+So with issue number two, at some point in time, we are going to create a new user and we might assign
+
+03:19.690 --> 03:22.510
+it some properties like, say, email and password.
+
+03:23.820 --> 03:26.310
+That's then going to give us back a user document.
+
+03:26.310 --> 03:29.970
+So that's, let's imagine right here, a user variable or something like that.
+
+03:30.330 --> 03:35.370
+At some point in time later, we are going to want to access some of the data within this user.
+
+03:35.400 --> 03:38.910
+Let's imagine for a second that we add in a console log of user.
+
+03:38.940 --> 03:45.690
+If we did that, we might end up seeing that this user document has more properties than what we provided
+
+03:45.690 --> 03:46.710
+to a constructor.
+
+03:47.130 --> 03:52.790
+So for example, we might take that email and password and assign them as properties to user.
+
+03:52.800 --> 03:57.750
+But behind the scenes, Mongoose might decide to add in a couple of additional properties as well.
+
+03:57.780 --> 04:02.010
+Properties like let's say a created at timestamp or an updated at timestamp.
+
+04:03.130 --> 04:08.050
+So the properties that we pass into the constructor don't necessarily match up with all the properties
+
+04:08.050 --> 04:10.360
+that are created on the user document.
+
+04:10.720 --> 04:15.970
+This is also an issue with TypeScript because TypeScript wants to know about all the properties that
+
+04:15.970 --> 04:17.410
+exist on the user.
+
+04:17.740 --> 04:23.260
+So we need to somehow tell TypeScript, Hey, look, we're going to pass some properties into the constructor.
+
+04:23.260 --> 04:28.270
+TypeScript But don't worry, there are going to be some other properties that get created behind the
+
+04:28.270 --> 04:30.550
+scenes and assigned to the user as well.
+
+04:30.850 --> 04:34.810
+So we really need to teach TypeScript that there are kind of two different sets of properties.
+
+04:34.810 --> 04:38.680
+There's one set of properties that will be passed to the constructor and there's going to be a second
+
+04:38.680 --> 04:42.940
+set of properties that we should be able to access on the user document that gets created.
+
+04:44.600 --> 04:45.950
+That is issues number one.
+
+04:45.950 --> 04:46.700
+And number two.
+
+04:46.700 --> 04:51.230
+And again, this is some stuff that we're going to have to fight with around Mongoose and TypeScript.
+
+04:51.320 --> 04:54.710
+Now, of course, if we were just writing JavaScript, yeah, we would not really have to worry about
+
+04:54.710 --> 04:55.250
+this.
+
+04:55.460 --> 04:57.350
+But there are some very good reasons.
+
+04:57.350 --> 05:00.050
+So you're using TypeScript on this microservices project?
+
+05:00.050 --> 05:05.510
+We haven't really dove into them just yet, but trust me, you're going to start to see why we are using
+
+05:05.540 --> 05:09.500
+TypeScript very quickly as soon as we start to create our second service.
+
+05:10.550 --> 05:10.820
+All right.
+
+05:10.820 --> 05:12.650
+So now we understand these two big challenges.
+
+05:12.690 --> 05:13.600
+Another quick pause.
+
+05:13.610 --> 05:16.990
+We're going to start to write out some code that's going to solve both these challenges.
+
+05:17.000 --> 05:19.630
+We're going to create our user model and all that good stuff.
+
+05:19.640 --> 05:21.230
+So I'll see you in just a minute.

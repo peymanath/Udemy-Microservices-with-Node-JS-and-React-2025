@@ -1,0 +1,256 @@
+WEBVTT
+
+00:00.600 --> 00:03.600
+We are going to use bootstrap CSS for styling this project.
+
+00:03.600 --> 00:07.890
+So in this video, we're going to focus on installing bootstrap and then wiring it up to our project.
+
+00:08.650 --> 00:10.820
+Bootstrap is a global CSS file.
+
+00:10.840 --> 00:15.730
+In other words, it contains some CSS that is meant to be applied to our entire application and all
+
+00:15.730 --> 00:17.290
+the different pages inside of it.
+
+00:17.650 --> 00:21.640
+The CSS files have to be wired up to Nexus in a very particular fashion.
+
+00:21.640 --> 00:25.210
+So the code we're about to we're about to write is going to look just a little bit strange.
+
+00:25.210 --> 00:27.760
+But trust me, it's the way that we are supposed to do it with next.
+
+00:27.760 --> 00:29.620
+JS So let's get to it.
+
+00:29.740 --> 00:34.770
+I'm going to find that pages directory and inside there I'm going to make a new file called Underscore
+
+00:34.780 --> 00:35.050
+App.
+
+00:35.300 --> 00:38.890
+JS It's very critical that you name this file identical.
+
+00:38.890 --> 00:42.610
+Make sure you have underscore jpgs at the very top.
+
+00:42.610 --> 00:45.130
+We are going to import bootstrap CSS.
+
+00:45.950 --> 00:53.270
+So I'm going to write out imports bootstrap dist CSS, bootstrap dot CSS.
+
+00:53.480 --> 00:58.700
+Now we have not installed bootstrap as an NP module just yet and this line right here is assuming that
+
+00:58.700 --> 00:59.340
+we have.
+
+00:59.360 --> 01:03.450
+So we are going to go back over to our terminal in just a little bit and install bootstrap.
+
+01:03.470 --> 01:05.010
+Until we do this right here.
+
+01:05.030 --> 01:06.950
+This import is not going to work correctly.
+
+01:08.000 --> 01:11.700
+After that, inside this file, we're going to start to write out a little bit a strange code.
+
+01:11.720 --> 01:14.600
+Let's just write it out and I'll tell you what it is doing.
+
+01:14.960 --> 01:16.760
+So we're going to write out export defaults.
+
+01:18.550 --> 01:20.890
+We're going to export a react component.
+
+01:21.010 --> 01:25.780
+This component is going to receive a prop object that has two properties inside of it that we care about
+
+01:25.780 --> 01:26.560
+inside of here.
+
+01:26.830 --> 01:32.380
+So I'm going to do a little bit of structuring and pull out component and page props.
+
+01:32.830 --> 01:38.470
+Now, as usual, it is critical that you capitalize the C on component and have identical spelling and
+
+01:38.470 --> 01:40.810
+capitalization on page props as well.
+
+01:41.470 --> 01:43.030
+We are then going to return.
+
+01:43.780 --> 01:44.500
+Component.
+
+01:45.500 --> 01:48.230
+And spread over page props.
+
+01:49.330 --> 01:50.980
+So what's going on right here?
+
+01:51.190 --> 01:56.350
+Well, behind the scenes, whenever you try to navigate to some distinct page with next G's, next is
+
+01:56.350 --> 01:59.050
+going to import your component from one of these different files.
+
+01:59.050 --> 02:01.990
+In our case, either index JS or banana JS.
+
+02:03.160 --> 02:05.920
+Next does not just take your component and show it on the screen.
+
+02:05.920 --> 02:11.740
+However, instead it wraps it up inside of its own custom default component, and that is referred to
+
+02:11.740 --> 02:13.570
+inside of Nexus as the app.
+
+02:14.340 --> 02:20.640
+What we've done here by defining this underscore as file is we have defined our own custom app component.
+
+02:21.120 --> 02:26.100
+So whenever we try to visit our banana root inside the browser or our root root, which would show our
+
+02:26.100 --> 02:33.630
+index component, next JS is going to import that given component and it's going to pass it into this
+
+02:33.630 --> 02:37.080
+app component right here as this component prop.
+
+02:37.530 --> 02:42.030
+So component right there is going to be equal to either our banana component or the index component.
+
+02:42.510 --> 02:47.070
+And then page props are going to be the set of components that we had been intending to pass to either
+
+02:47.070 --> 02:48.450
+banana or index.
+
+02:48.720 --> 02:53.310
+So long story short, this thing is kind of like a thin wrapper around the component that we're trying
+
+02:53.310 --> 02:54.390
+to show on the screen.
+
+02:54.960 --> 02:56.760
+Why do we have to define this at all?
+
+02:56.790 --> 03:02.460
+Well, if we ever want to include some global CSS into our project, which bootstrap is we can only
+
+03:02.460 --> 03:05.580
+import global CSS into this app file.
+
+03:06.880 --> 03:11.230
+It turns out that as we start to try to visit some other components or other pages, like let's say
+
+03:11.230 --> 03:17.470
+we go to Banana Joe's or the banana route if we go to Banana Next is not going to load up or even parse
+
+03:17.470 --> 03:18.850
+that index file.
+
+03:19.210 --> 03:24.760
+So any CCIS we had imported inside there would be not included inside of our final HTML file.
+
+03:25.360 --> 03:30.460
+So if we have any global CSS that must be included on every single page, it has to be imported into
+
+03:30.460 --> 03:35.470
+this app file because this is the only file that we are guaranteed to load up every single time a user
+
+03:35.470 --> 03:36.670
+comes to our application.
+
+03:37.330 --> 03:42.550
+Okay, so let's save this and then remember, this is not going to work correctly until we actually
+
+03:42.550 --> 03:44.030
+install bootstrap CSS.
+
+03:44.050 --> 03:47.110
+So let's go over to our terminal and install it right now.
+
+03:48.680 --> 03:48.880
+Okay.
+
+03:48.980 --> 03:54.200
+I'm going to go into my client directory and I'll run NPM, install bootstrap.
+
+03:58.050 --> 03:59.040
+And there we go.
+
+03:59.430 --> 04:03.930
+Now, when we install bootstrap, remember we are adding something to our package JSON file.
+
+04:05.470 --> 04:09.030
+Scaffold does not sync changes to that package that chase on file.
+
+04:09.040 --> 04:13.270
+Instead, anytime scaffold detects a change to it, it's going to attempt to rebuild the image.
+
+04:13.390 --> 04:18.310
+So if you now go back over to your window that is running scaffold, chances are you're going to see
+
+04:18.310 --> 04:21.650
+next just trying to rebuild your client image.
+
+04:21.670 --> 04:23.650
+It looks like mine did so right here.
+
+04:24.820 --> 04:29.770
+So he should, in theory, be able to go back over to our browser, reload the page and see bootstrap
+
+04:29.800 --> 04:30.880
+CSS kicking in.
+
+04:31.150 --> 04:35.590
+So if I refresh the page, I will notice now that landing page right here is a distinctly different
+
+04:35.590 --> 04:37.240
+font than what it was before.
+
+04:37.480 --> 04:40.900
+So that means that bootstrap is has been successfully loaded up.
+
+04:41.690 --> 04:46.670
+By the way, if you want to read more about this CSIS global thing and why it exists, you can take
+
+04:46.670 --> 04:48.530
+a look at this URL right here.
+
+04:48.620 --> 04:51.950
+I'm not going to list the whole thing out, but if you want to feel free to pause the video and we'll
+
+04:51.950 --> 04:56.740
+give you a little bit more of a definition or an explanation of why we had to do this inside this app
+
+04:56.750 --> 04:57.230
+file.
+
+04:57.230 --> 05:01.370
+And you can also take a look at some documentation around that custom app component as well.
+
+05:02.570 --> 05:02.900
+All right.
+
+05:02.900 --> 05:03.630
+So this looks good.
+
+05:03.650 --> 05:04.850
+Let's take a quick pause right here.
+
+05:04.850 --> 05:09.290
+When we continue the next video, we're going to start putting together our sign up and sign in forms.

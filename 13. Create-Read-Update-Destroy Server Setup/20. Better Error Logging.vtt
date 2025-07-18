@@ -1,0 +1,298 @@
+WEBVTT
+
+00:00.680 --> 00:04.850
+In the last video, we did a little bit of tricky debugging and we realized that our error handler that
+
+00:04.850 --> 00:09.250
+we had defined inside of our common module wasn't really giving us enough information back.
+
+00:09.260 --> 00:14.180
+If there's ever some kind of error that we weren't really expecting to see, we should really console.log
+
+00:14.180 --> 00:19.130
+it or do something with it so that you and I can review our logs at some point in the future and say,
+
+00:19.130 --> 00:22.070
+Oh, look, something's going wrong that we weren't really expecting.
+
+00:22.400 --> 00:24.260
+So I'm inside of my common module.
+
+00:24.290 --> 00:26.540
+I'm in the middleware directory air handler.
+
+00:27.710 --> 00:31.130
+If we get past this if statement right here, let's log this error.
+
+00:31.130 --> 00:33.440
+So I'm going to do a console error.
+
+00:34.450 --> 00:36.460
+And log out the error that just occurred.
+
+00:38.160 --> 00:39.420
+Well, then save this file.
+
+00:39.660 --> 00:45.700
+So we just made a change to our common module to get that update over to our tickets project.
+
+00:45.720 --> 00:48.990
+We have to rebuild and republish the common module.
+
+00:48.990 --> 00:53.430
+We then have to do an update to the module version inside of our tickets project.
+
+00:53.610 --> 00:57.690
+So it is a little bit of a laborious process, but remember we set up that little script to help us
+
+00:57.690 --> 00:58.170
+out.
+
+00:58.650 --> 01:00.060
+I'm going to close the error handler.
+
+01:01.440 --> 01:02.740
+I'm going to go back over to my terminal.
+
+01:02.760 --> 01:05.490
+I'm going to stop my tests with a control c.
+
+01:06.860 --> 01:07.940
+I'll then go back up.
+
+01:09.120 --> 01:10.950
+Change into my common directory.
+
+01:12.120 --> 01:14.400
+And then I'll run that AMPM run pub.
+
+01:15.150 --> 01:17.370
+So remember, that's going to increment our version number.
+
+01:17.610 --> 01:22.140
+Clean up the build directory, rebuild, do the git, commit all that kind of stuff, and then eventually
+
+01:22.140 --> 01:23.610
+publish it off to NPM.
+
+01:24.680 --> 01:25.000
+Okay.
+
+01:25.010 --> 01:25.550
+There we go.
+
+01:25.590 --> 01:27.740
+I'm version 1.012.
+
+01:27.770 --> 01:31.370
+Now, at this point, you might be only at like 1.0 for something again.
+
+01:31.760 --> 01:34.550
+Every now and then, I make a little mistake after we record a video.
+
+01:34.550 --> 01:36.830
+And so I just happen to be at this version now.
+
+01:37.520 --> 01:37.620
+Okay.
+
+01:37.700 --> 01:40.430
+I'm going to go now back over to my tickets directory.
+
+01:41.460 --> 01:44.700
+And inside of tickets, we now need to update that package.
+
+01:45.000 --> 01:49.260
+So remember the package we can find cyber package JSON file inside of tickets.
+
+01:49.290 --> 01:52.380
+For me I need to update srg tickets.
+
+01:52.380 --> 01:53.070
+Common.
+
+01:53.950 --> 01:56.920
+You're going to find whatever your organization name was instead.
+
+01:57.370 --> 02:00.040
+So we'll do inside of tickets and PM update.
+
+02:00.770 --> 02:02.270
+Your organization name.
+
+02:03.700 --> 02:04.270
+Common.
+
+02:06.580 --> 02:07.510
+So I'll run that.
+
+02:09.170 --> 02:12.920
+And I should see the updated version printed out once it does the install.
+
+02:13.130 --> 02:13.710
+There we go.
+
+02:13.730 --> 02:14.390
+Very good.
+
+02:15.180 --> 02:20.220
+Now we can start our test suite back up and hopefully we're going to end up seeing a better error message
+
+02:20.220 --> 02:24.060
+or some error message for that matter around getting that invalid ID.
+
+02:24.540 --> 02:26.220
+So I'm going to do an AMPM run test.
+
+02:29.990 --> 02:31.910
+And after a brief warm up period.
+
+02:31.910 --> 02:32.760
+There we go.
+
+02:32.780 --> 02:37.550
+So it's way more information than we probably want, but at least it is an error that we are seeing.
+
+02:37.620 --> 02:43.610
+So now if anything goes wrong, we will see it, even if we do not have some custom error built to deal
+
+02:43.610 --> 02:44.260
+with it.
+
+02:45.620 --> 02:49.310
+So now it would be a lot easier for us if we had this originally to take a look at this and say, Oh,
+
+02:49.310 --> 02:53.330
+okay, yeah, we put in some invalid ID, we've got something that looks like that.
+
+02:53.330 --> 02:55.910
+We need a normal real ID.
+
+02:56.970 --> 02:58.080
+So how are we going to fix this?
+
+02:58.440 --> 03:01.080
+Well, let's go back over to our test file.
+
+03:01.600 --> 03:03.630
+So here's show tests.
+
+03:04.140 --> 03:06.300
+I've still got a console.log right here of response body.
+
+03:06.300 --> 03:07.230
+I'm going to clean that up.
+
+03:08.130 --> 03:10.100
+I don't need to get access to the response anymore.
+
+03:10.110 --> 03:11.070
+I'm going to clean that up.
+
+03:12.530 --> 03:17.750
+And I'm going to restore at the very end of that chain the expect or oh for.
+
+03:19.290 --> 03:24.030
+And then going to find this jet right here and we're going to put a real ID inside there.
+
+03:24.180 --> 03:29.910
+We can either try to write out a real ID manually, or alternatively, we could try to generate one
+
+03:29.910 --> 03:30.870
+for ourselves.
+
+03:31.140 --> 03:35.790
+I think it'd be a lot better to use some built in function to generate this ID for us, because to be
+
+03:35.790 --> 03:41.310
+honest with you, kind of easy for us to not get the like 12 or 24 character or whatever it was.
+
+03:41.310 --> 03:42.240
+ID Correct.
+
+03:42.840 --> 03:46.770
+So I'm going to turn the string into a template string by putting in the back ticks.
+
+03:47.130 --> 03:51.480
+I'm going to remove that hardcoded one right there and replace it with some interpolation.
+
+03:51.870 --> 03:55.650
+To generate this ID, we're going to import Mongoose.
+
+03:57.580 --> 03:58.330
+At the top.
+
+04:00.210 --> 04:04.050
+Then inside the function body, I'm going to create a new variable called ID.
+
+04:04.260 --> 04:09.240
+So we're going to use a function that is built into mongoose to generate a normal or a realistic, valid
+
+04:09.240 --> 04:10.470
+looking ID for us.
+
+04:10.500 --> 04:17.940
+So we can say New Mongoose types, object ID, we're going to invoke that and they're going to call
+
+04:17.970 --> 04:19.770
+to hex string.
+
+04:22.710 --> 04:23.340
+Like so.
+
+04:23.820 --> 04:26.520
+And then we'll pass in the ID right there.
+
+04:27.550 --> 04:32.410
+So as you guess, this is a function to generate a valid object ID or then going to toss it into that
+
+04:32.410 --> 04:32.890
+string.
+
+04:32.890 --> 04:37.540
+And no longer should we get some air coming out of Mongoose when we try to make that query and fetch
+
+04:37.540 --> 04:38.710
+the ticket by ID.
+
+04:39.040 --> 04:41.860
+So let's save this and see if our tests are now passing.
+
+04:43.050 --> 04:44.010
+I'll flip back over.
+
+04:45.440 --> 04:46.370
+And there we go.
+
+04:46.610 --> 04:47.330
+I'll set.
+
+04:48.060 --> 04:52.500
+Well, I think you can agree with me that generating the ID with this long statement right here is not
+
+04:52.500 --> 04:53.510
+super ideal.
+
+04:53.520 --> 04:57.690
+If you want to, you could certainly make some kind of helper function and tuck it away inside of some
+
+04:57.690 --> 05:00.150
+utils or helper file inside that test directory.
+
+05:00.150 --> 05:01.710
+But I will leave that up to you.
+
+05:02.390 --> 05:02.780
+All right.
+
+05:02.780 --> 05:05.870
+Well, I think that our show stuff is now pretty much working.
+
+05:05.870 --> 05:07.880
+This is looking pretty reasonable to me at this point.
+
+05:08.030 --> 05:09.410
+So let's take a pause right here.
+
+05:09.440 --> 05:10.670
+Continue in just a moment.

@@ -1,0 +1,313 @@
+WEBVTT
+
+00:01.120 --> 00:01.450
+All right.
+
+00:01.450 --> 00:04.840
+If you're still here watching this video, I'm going to assume that you want to go through the setup
+
+00:04.840 --> 00:09.970
+process and run all of our code in a development environment using Google Cloud, which is going to
+
+00:09.970 --> 00:12.430
+unequivocally solve all of our performance issues.
+
+00:13.400 --> 00:17.330
+Let's first get started with a quick overview of how we are running Kubernetes on our local computer
+
+00:17.330 --> 00:20.030
+right now and how we're going to run it through Google Cloud.
+
+00:20.310 --> 00:23.250
+So this is a diagram of what's going on on our machine at present.
+
+00:23.270 --> 00:24.440
+We got your computer.
+
+00:24.440 --> 00:30.800
+We are running a single Kubernetes node, and on there we could possibly have many different pots.
+
+00:30.830 --> 00:35.570
+At present, we probably only have one pod, that authentication pod, but eventually we're going to
+
+00:35.570 --> 00:36.860
+have many different pods.
+
+00:37.400 --> 00:43.430
+We can open up our browser and access that node using the ingress engine X server we just configured
+
+00:43.430 --> 00:44.930
+in the last couple of videos.
+
+00:45.350 --> 00:46.970
+So that's what's going on right now.
+
+00:47.600 --> 00:52.580
+Here's what's going to happen once we start to move all this stuff out to Google Cloud, your computer
+
+00:52.580 --> 00:56.360
+is still going to be running, say, a browser or something like that, trying to access our different
+
+00:56.360 --> 00:58.460
+pods and test out some code manually.
+
+00:58.910 --> 01:04.460
+But our entire Kubernetes cluster is going to be running on a Google Cloud virtual machine, so no longer
+
+01:04.460 --> 01:07.630
+are we going to be running Kubernetes on your computer whatsoever.
+
+01:07.640 --> 01:10.550
+Instead, we're going to leverage some remote computer.
+
+01:10.850 --> 01:15.200
+So we're going to have a node somewhere out on the cloud that's running all of our different pods.
+
+01:16.840 --> 01:21.280
+And the reason this starts to get really relevant is that you have to really understand what scaffold
+
+01:21.280 --> 01:22.300
+is doing for us.
+
+01:22.330 --> 01:26.800
+You see, scaffold is going to be the real tool that's going to allow us to set everything up on Google
+
+01:26.800 --> 01:29.080
+Cloud very, very easily.
+
+01:29.350 --> 01:33.970
+You might be curious why we're using Google Cloud at all, by the way, as opposed to AWS or something
+
+01:33.970 --> 01:34.510
+like that.
+
+01:34.540 --> 01:40.630
+Well, Scaffold was actually developed by teams at Google, so Scaffold has a very, very tight integration
+
+01:40.630 --> 01:42.100
+with Google Cloud in general.
+
+01:42.100 --> 01:44.560
+That's why we are using Google Cloud in particular.
+
+01:45.850 --> 01:46.270
+All right.
+
+01:46.270 --> 01:49.420
+So here is what's going on behind the scenes with Scaffold.
+
+01:49.750 --> 01:55.240
+We are going to add in some additional configuration to Scaffold and tell it that we wanted to use some
+
+01:55.240 --> 01:59.740
+node hosted on Google Cloud as opposed to a local node on our machine.
+
+02:00.580 --> 02:05.200
+Scaffold, you might recall, is not only going to create all of our different services and deployments
+
+02:05.200 --> 02:09.730
+and all that stuff, it is also in charge very critically of handling changes that we are making to
+
+02:09.730 --> 02:10.810
+our project as well.
+
+02:11.660 --> 02:15.890
+You might recall that there are two types of changes that we can make to a file or a project.
+
+02:15.890 --> 02:21.620
+When we're making use of scaffold, we either make changes to a file that is synched or unlinked.
+
+02:22.100 --> 02:25.100
+So if we go back over to our scaffold config file right now.
+
+02:26.170 --> 02:28.480
+We listed out this sink section right here.
+
+02:28.480 --> 02:33.910
+And this meant that any time that we made a change to a file matching that pattern, just take that
+
+02:33.910 --> 02:37.420
+file and sync it with a corresponding pod inside of our cluster.
+
+02:37.720 --> 02:41.070
+So in that scenario, we were not rebuilding any image or anything like that.
+
+02:41.080 --> 02:44.950
+We were just taking the change file and sticking it directly into a pod.
+
+02:45.910 --> 02:51.100
+So this diagram is laying out that scenario, the case in which you make a change to a sync file.
+
+02:52.110 --> 02:56.580
+So on your computer, you're going to be writing inside of your code editor and at some point in time
+
+02:56.580 --> 02:58.140
+you're going to change async file.
+
+02:58.140 --> 03:00.690
+So in our case, again, that's going to be a typescript file.
+
+03:01.140 --> 03:04.740
+Then whenever we save that file, scaffold will detect that change.
+
+03:05.160 --> 03:11.160
+Scaffold will then be configured to reach out to Google Cloud, to reach out to the node that is running
+
+03:11.160 --> 03:16.470
+this specific pod and take that change file and stick it directly into that pod.
+
+03:16.680 --> 03:18.840
+And that's how updates are going to be processed.
+
+03:19.610 --> 03:24.620
+Now scenario two, where we change a not synched file is a little bit more complicated.
+
+03:24.620 --> 03:27.740
+And that's the real kind of thing I want to show you with these two diagrams.
+
+03:27.740 --> 03:32.570
+I want you to understand what happens when we make a change to a file that will not be automatically
+
+03:32.570 --> 03:33.890
+injected into a pot.
+
+03:35.270 --> 03:39.230
+So let's imagine that we make a change to say, our package JSON file.
+
+03:39.500 --> 03:44.450
+When we change that file, it does not get automatically injected into a pod because we did not list
+
+03:44.450 --> 03:46.310
+it inside the sink section right here.
+
+03:46.730 --> 03:51.770
+Whenever we make a change to the package JSON file, that is a sign that we want to completely rebuild
+
+03:51.770 --> 03:56.870
+our off image and then update some corresponding deployment inside of our cluster.
+
+03:57.720 --> 04:01.800
+That would be scenario number two, where we change an unsent file.
+
+04:02.530 --> 04:06.550
+So on our computer, we're going to open up our editor and we'll make a change to a file that is not
+
+04:06.550 --> 04:07.990
+listed in the sync section.
+
+04:07.990 --> 04:10.360
+Again, something like the package JSON file.
+
+04:10.840 --> 04:14.740
+Scaffold will detect that and it's going to add in an extra step.
+
+04:15.310 --> 04:21.400
+Scaffold is going to reach out to a service that runs inside of Google Cloud called Google Cloud Build.
+
+04:21.880 --> 04:27.670
+This service is all about building docker images, so scaffold is going to take all of our source code
+
+04:27.670 --> 04:33.250
+for your project that's going to upload it to Google Cloud built along with the Docker file for that
+
+04:33.250 --> 04:34.480
+specific project.
+
+04:34.990 --> 04:40.210
+Then on Google Cloud built some builder process is going to build our image for us.
+
+04:40.810 --> 04:45.400
+The whole reason that the image is being built on Google Cloud, it just so we decrease the number of
+
+04:45.400 --> 04:48.070
+resources that are being consumed on your local machine.
+
+04:48.490 --> 04:53.500
+In addition, building the image is going to be a lot faster because Google Cloud servers have extremely,
+
+04:53.500 --> 04:56.110
+extremely fast Internet connections.
+
+04:56.320 --> 05:00.130
+And as you're going to see a little bit later on, we're eventually going to have a couple of projects
+
+05:00.130 --> 05:06.430
+or some projects inside of our project that have very large numbers of dependencies, maybe not very
+
+05:06.430 --> 05:10.540
+large numbers, but we're going to have dependencies that require downloading something like 200 or
+
+05:10.540 --> 05:11.800
+300 megabytes.
+
+05:11.800 --> 05:15.550
+So if you're on a slow computer, it might take or have a slow Internet connection.
+
+05:15.550 --> 05:20.260
+It might take you a long time to redownload all those dependencies any time that we have to rebuild
+
+05:20.260 --> 05:21.070
+an image.
+
+05:22.410 --> 05:26.550
+By making use of Google Cloud built, you are going to be able to install all those dependencies in
+
+05:26.550 --> 05:30.030
+a matter of seconds as opposed to possibly a matter of minutes.
+
+05:30.600 --> 05:36.450
+So Google Cloud Build is going to be in charge of rebuilding all of our images once the image is rebuilt.
+
+05:36.600 --> 05:41.790
+Scaffold will then reach out to the corresponding deployment on our node and tell that deployment that
+
+05:41.790 --> 05:43.560
+there is a new image available.
+
+05:44.300 --> 05:49.640
+The deployment will then restart restart all of our pods using the latest updated image.
+
+05:50.800 --> 05:51.070
+Okay.
+
+05:51.070 --> 05:51.700
+So that's it.
+
+05:51.700 --> 05:53.830
+That's what's going to be going on behind the scenes.
+
+05:54.010 --> 05:57.640
+So in the coming videos, we're going to do a pretty good amount of setup.
+
+05:57.850 --> 06:00.510
+We're going to, of course, have to sign up for a Google Cloud account.
+
+06:00.520 --> 06:01.930
+We're going to create a project.
+
+06:01.930 --> 06:05.230
+We're going to set up a Kubernetes cluster on Google Cloud.
+
+06:05.620 --> 06:10.090
+We're going to configure Google Cloud Build, we're going to configure scaffold.
+
+06:10.090 --> 06:14.080
+Then to use Google Cloud build and this remote cluster as well.
+
+06:14.290 --> 06:16.930
+So it really is a pretty good amount of setup.
+
+06:16.930 --> 06:22.420
+And again, all this stuff is being done so that we can have a development environment running through
+
+06:22.420 --> 06:28.000
+Google Cloud, which in theory should be way faster than local, especially if you're on an older machine.
+
+06:28.900 --> 06:29.160
+Okay.
+
+06:29.200 --> 06:31.690
+So we really do have a good amount of work before us.
+
+06:31.690 --> 06:35.080
+So let's take a pause right here and get started in the next video.

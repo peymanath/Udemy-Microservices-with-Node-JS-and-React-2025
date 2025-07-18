@@ -1,0 +1,256 @@
+WEBVTT
+
+00:00.940 --> 00:03.700
+All this concurrency stuff is actually kind of working out.
+
+00:03.700 --> 00:07.840
+So now to make sure that these listeners are working correctly, we're going to start to write a couple
+
+00:07.840 --> 00:08.950
+of tests around them.
+
+00:09.100 --> 00:13.340
+We're going to first write a test around the ticket created listener inside of all the tests, we're
+
+00:13.340 --> 00:14.590
+going to write around these listeners.
+
+00:14.590 --> 00:19.330
+We're going to essentially repeat the same operation over and over again inside of every test.
+
+00:19.330 --> 00:21.190
+We're going to create an instance of this listener.
+
+00:21.640 --> 00:27.220
+We're then going to fabricate a data object and fabricate a fake message as well.
+
+00:27.580 --> 00:32.320
+We'll then take that fake data object in the fake message, pass it into the on message function, and
+
+00:32.320 --> 00:35.920
+then make sure that the on message function does some appropriate thing.
+
+00:36.130 --> 00:40.180
+So in this case, for the ticket created listener, we're going to make sure that if we pass in some
+
+00:40.180 --> 00:45.790
+valid data object and some valid message, we should end up creating a ticket, saving it to the database,
+
+00:45.790 --> 00:50.530
+and we should also end up calling the messages act, function or knowledge function.
+
+00:51.010 --> 00:53.500
+That's the goal of all these different tests are on the listener.
+
+00:53.620 --> 00:55.420
+Create the listener, call on message.
+
+00:55.420 --> 00:57.490
+Make sure it does something appropriately.
+
+00:58.860 --> 01:01.440
+So to get started, I'm going to find my listeners directory.
+
+01:02.010 --> 01:05.880
+I'll make a new folder of underscore, underscore, test, underscore, underscore.
+
+01:07.330 --> 01:07.990
+Inside of there.
+
+01:07.990 --> 01:13.300
+I'll make a new file of ticket created listener tests.
+
+01:15.600 --> 01:20.670
+Before we add in any import statements into this test file, I would like to just write out a test definition
+
+01:20.670 --> 01:23.820
+and put some comments into it to kind of outline what we really need to do.
+
+01:23.850 --> 01:25.830
+We're going to end up having to write a lot of imports.
+
+01:25.830 --> 01:29.550
+So if you just write the imports right away, we're going to end up with a lot of stuff inside of here
+
+01:29.550 --> 01:31.200
+that might not make a lot of sense.
+
+01:31.200 --> 01:33.480
+So let's just put together a couple of comments first.
+
+01:33.930 --> 01:39.030
+So I want to have a test of something like it creates and saves a ticket.
+
+01:41.200 --> 01:43.930
+That is ideally what our ticket creative listeners are going to do.
+
+01:43.930 --> 01:45.490
+It's going to create and save a ticket.
+
+01:46.120 --> 01:51.910
+The other thing they would do ideally if we provide it some valid data object and message is it's going
+
+01:51.910 --> 01:54.610
+to also EQ the message.
+
+01:56.740 --> 02:01.870
+And to make the sentence here with it kind of read correctly, I'm going to change it to it.
+
+02:01.870 --> 02:03.370
+X the message.
+
+02:07.770 --> 02:11.640
+So again, I want to write out just a couple of comments in both these just to make sure that what we're
+
+02:11.640 --> 02:14.160
+going to do inside of your all to set up is going to make a lot of sense.
+
+02:14.430 --> 02:18.780
+So inside of here, we're going to first create an instance of the listener.
+
+02:20.630 --> 02:23.870
+We're then going to create a fake data event.
+
+02:24.290 --> 02:25.580
+That's going to be our data object.
+
+02:25.580 --> 02:27.730
+It's going to be this argument right here.
+
+02:27.740 --> 02:33.620
+So it's got to be some kind of object that has an ID version titled Price and User ID.
+
+02:36.590 --> 02:41.120
+We're then going to fabricate also a fake message object.
+
+02:42.560 --> 02:44.750
+That's going to be this message argument right here.
+
+02:44.750 --> 02:46.280
+It's supposed to be of type message.
+
+02:46.280 --> 02:50.480
+And remember, message is a type of object coming from the node net streaming library.
+
+02:50.510 --> 02:54.020
+The only thing we care about that message object is for the ACT function.
+
+02:54.020 --> 02:57.830
+It has several other functions on it, but we don't care about them at all and that's actually going
+
+02:57.830 --> 02:59.420
+to be very relevant very quickly.
+
+03:00.740 --> 03:03.710
+After that, we're then going to call.
+
+03:04.930 --> 03:06.760
+The on message function.
+
+03:07.510 --> 03:11.350
+With the data object plus message object.
+
+03:11.950 --> 03:17.470
+And then finally, we're going to write assertions to make sure a ticket was created.
+
+03:18.390 --> 03:19.360
+And that's pretty much it.
+
+03:21.550 --> 03:26.800
+Now down here, the second statement or the second test, as you guess, all these setup steps need
+
+03:26.800 --> 03:28.080
+to be done down there as well.
+
+03:28.090 --> 03:31.720
+So we still have to create an instance of a listener, big data object, blah, blah, blah, all that
+
+03:31.720 --> 03:32.280
+stuff.
+
+03:32.290 --> 03:34.420
+So I could put down all the comments like so.
+
+03:35.490 --> 03:37.860
+And then finally at the very end, add in something else.
+
+03:37.860 --> 03:42.900
+We'll say write assertions to make sure ACH function is called.
+
+03:43.780 --> 03:44.410
+Right away.
+
+03:44.440 --> 03:49.120
+I want you to just notice all these setup comments look identical, and chances are we don't want to
+
+03:49.120 --> 03:50.680
+duplicate all this setup code.
+
+03:50.680 --> 03:56.020
+So rather than setting up all the stuff inside of each individual test, I think it would definitely
+
+03:56.020 --> 04:00.100
+make a lot of sense to make some kind of reusable setup function at the top of the file.
+
+04:00.340 --> 04:02.020
+We could call it simply setup.
+
+04:02.820 --> 04:06.870
+And make it an async function because we'll probably eventually end up doing some async stuff inside
+
+04:06.870 --> 04:07.260
+there.
+
+04:08.010 --> 04:11.790
+And then we can do all of our common setup for both these tests inside the setup function.
+
+04:13.600 --> 04:16.630
+So I'm going to move all these comments around the setup.
+
+04:18.880 --> 04:19.480
+The first three.
+
+04:19.480 --> 04:20.050
+Really?
+
+04:21.640 --> 04:23.260
+Into that set up function.
+
+04:23.800 --> 04:27.850
+That's what we're going to do inside of setup and we'll eventually call setup from inside of our actual
+
+04:27.850 --> 04:28.450
+tests.
+
+04:28.990 --> 04:31.330
+I'll fix up the comments inside the second test as well.
+
+04:33.110 --> 04:33.710
+Here we go.
+
+04:34.830 --> 04:35.100
+Okay.
+
+04:35.100 --> 04:35.640
+So that's it.
+
+04:35.640 --> 04:36.960
+That's the plan for this file.
+
+04:36.960 --> 04:41.550
+And this is the plan that we're going to go through for every lesson listener that we write tests out
+
+04:41.550 --> 04:42.060
+for.
+
+04:42.480 --> 04:46.380
+That's why I wanted to just take a little bit of time to outline what we have to do, because we really
+
+04:46.380 --> 04:50.190
+are going to be repeating these steps many, many times for all of our different listeners.
+
+04:50.920 --> 04:51.960
+So quick pause right here.
+
+04:51.960 --> 04:54.960
+We'll start to put together this setup function in the next video.

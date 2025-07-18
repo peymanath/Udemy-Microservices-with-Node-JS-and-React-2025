@@ -1,0 +1,397 @@
+WEBVTT
+
+00:00.840 --> 00:04.010
+All right, my friends, we've now finished up our first application in this video.
+
+00:04.020 --> 00:07.590
+I want to do a quick review of the very important concepts we learned.
+
+00:07.860 --> 00:13.080
+So the first important thing that we covered was that we wanted to restrict the amount of API surface
+
+00:13.080 --> 00:15.720
+area exposed inside of indexes.
+
+00:16.260 --> 00:21.600
+So in other words, if another engineer opened up our project and only had access to this file right
+
+00:21.600 --> 00:25.320
+here, we want it to limit the number of things that they could do.
+
+00:25.410 --> 00:30.600
+They could only do things that you and I had specifically allowed inside of our application.
+
+00:31.140 --> 00:37.020
+So, for example, another engineer could only create an instance of a user and read its name, property
+
+00:37.020 --> 00:38.010
+and its location.
+
+00:38.670 --> 00:43.530
+Another engineer could only create a company and then reference its company name, catch, phrase and
+
+00:43.530 --> 00:44.280
+location.
+
+00:44.980 --> 00:49.780
+And with a custom map, another engineer could only create an instance of a custom map and then call
+
+00:49.780 --> 00:51.070
+that add marker method.
+
+00:51.460 --> 00:57.220
+And as far as our code is concerned, that's the only thing that other engineers can do inside of here.
+
+00:57.730 --> 01:03.360
+The most important aspect of this was that we wanted to restrict access to that Google map that we created,
+
+01:03.370 --> 01:07.360
+because, remember, the Google map had a ton of different properties associated with it.
+
+01:07.750 --> 01:12.790
+So to make sure that other engineers could not mess with this thing, we added on that private modifier,
+
+01:13.150 --> 01:18.670
+the private modifier means that we can only reference this property from methods inside of the custom
+
+01:18.670 --> 01:19.240
+map.
+
+01:20.040 --> 01:26.760
+So for example, back inside of indexes, if we tried to refer to custom map, Google Map, we got that
+
+01:26.760 --> 01:31.950
+error message that said this is a private property and you cannot access it unless you are inside of
+
+01:31.950 --> 01:33.090
+the class custom map.
+
+01:34.110 --> 01:34.380
+Now.
+
+01:34.380 --> 01:35.520
+I know 100%.
+
+01:35.520 --> 01:36.480
+I know what you're thinking.
+
+01:36.480 --> 01:42.480
+But Steven, other engineers can just open up this file and start calling this or accessing this property
+
+01:42.480 --> 01:44.430
+directly from inside this class.
+
+01:44.460 --> 01:45.790
+Yes, I agree with you.
+
+01:45.810 --> 01:51.960
+Another engineer could open up this file, but the idea here was simply that if we viewed custom map
+
+01:51.960 --> 01:58.110
+as being like a black box or kind of like a mystery thing of sorts, we limited the damage that other
+
+01:58.110 --> 01:59.130
+engineers can do.
+
+01:59.280 --> 02:05.550
+So we just exposed the bare minimum amount of functionality to allow our application to work and nothing
+
+02:05.550 --> 02:06.150
+more.
+
+02:06.720 --> 02:09.450
+So another engineer absolutely can open up that file.
+
+02:09.450 --> 02:14.250
+But if you just kind of view this variable right here by itself, there's only two things we can do
+
+02:14.250 --> 02:14.600
+with it.
+
+02:14.610 --> 02:16.450
+Create an instance and add a marker.
+
+02:16.470 --> 02:16.970
+That's it.
+
+02:16.980 --> 02:17.880
+Nothing else.
+
+02:19.830 --> 02:24.270
+The next big thing we spoke about was our interface inside of Custom Map.
+
+02:24.480 --> 02:27.630
+So we ran into many issues around this ADD marker function.
+
+02:28.050 --> 02:33.450
+We initially saw that we had two different ad marker functions one for business, one for companies
+
+02:33.450 --> 02:34.560
+and one for users.
+
+02:34.740 --> 02:38.940
+And when we had that duplicate definition, well, we had a lot of duplicate code.
+
+02:39.210 --> 02:45.030
+So as an initial approach, we tried to say that ad marker could take many different types.
+
+02:45.330 --> 02:49.770
+So we had ad marker and we said that you could pass in a user or a company.
+
+02:49.770 --> 02:53.850
+And then if we had additional types inside of our application in the future, you could pass those in
+
+02:53.850 --> 02:54.630
+as well.
+
+02:54.900 --> 03:00.270
+And so the bad thing about this approach is that it set up a dependency between custom map and all the
+
+03:00.270 --> 03:03.000
+different things that we would want to map inside of our application.
+
+03:03.240 --> 03:08.070
+So as soon as we started to add in more things that could be represented on the map as a marker, well,
+
+03:08.070 --> 03:13.260
+we had to go back and update custom map, which would have been a very easy time for us to accidentally
+
+03:13.260 --> 03:15.150
+introduce bugs into our application.
+
+03:15.600 --> 03:19.090
+So to fix this problem, we inverted the dependency here.
+
+03:19.110 --> 03:25.530
+We said instead of custom map trying to accommodate all these different classes, we instead say, hey,
+
+03:25.530 --> 03:28.710
+other classes you have to accommodate custom map.
+
+03:29.010 --> 03:34.620
+So inside of custom map at the very top, we put some instructions on how another class or instance
+
+03:34.620 --> 03:38.070
+of the class could be a argument to add marker.
+
+03:38.400 --> 03:40.740
+We did that by defining an interface.
+
+03:41.310 --> 03:44.700
+So that was equivalent to custom map kind of standing up for itself.
+
+03:44.730 --> 03:50.010
+Custom Map got up on a podium and it said to all the other classes inside our application, Hey, other
+
+03:50.010 --> 03:55.620
+classes, if you want to be an argument to add marker, here's what you have to do.
+
+03:55.950 --> 03:59.780
+You have to define a location property that has a latitude as a number longitude.
+
+03:59.790 --> 04:03.720
+That's number marker content that returns a string and color.
+
+04:03.720 --> 04:05.310
+That is a string as well.
+
+04:06.650 --> 04:12.620
+Remember that we did not specifically have to update those classes and tell TypeScript, Hey, I want
+
+04:12.620 --> 04:15.590
+my user to be an instance of Tappable.
+
+04:15.800 --> 04:21.860
+We added this on only way later inside the application, so we did not have to specifically say Hey
+
+04:21.890 --> 04:25.990
+TypeScript, we want user to be an argument to add marker instead.
+
+04:26.000 --> 04:31.310
+As long as we had the correct properties, TypeScript did the appropriate checking for us invisibly
+
+04:31.310 --> 04:32.390
+behind the scenes.
+
+04:32.840 --> 04:38.330
+As soon as we tried to pass in user or company to add marker, TypeScript automatically took a look
+
+04:38.330 --> 04:42.140
+at user and made sure it had the correct properties as long as it did.
+
+04:42.170 --> 04:42.640
+Awesome.
+
+04:42.650 --> 04:43.270
+Thumbs up.
+
+04:43.280 --> 04:45.140
+You can be an argument to add marker.
+
+04:45.560 --> 04:48.320
+So again, the whole idea here was that we wanted.
+
+04:49.270 --> 04:54.940
+Our custom map to tell other classes what they had to do to be an argument.
+
+04:55.810 --> 05:01.300
+Now the pattern you see right here is going to be a pattern that we repeat so many times again and again
+
+05:01.300 --> 05:02.380
+and again and again.
+
+05:02.650 --> 05:07.630
+Remember, I've told you many times that or at least once, I should say that in TypeScript, the big
+
+05:07.630 --> 05:12.550
+thing we want to learn and like the big killer feature of TypeScript is the interplay between classes
+
+05:12.550 --> 05:13.900
+and interfaces.
+
+05:13.900 --> 05:15.950
+And that's exactly what you are seeing right here.
+
+05:15.970 --> 05:16.670
+This right here.
+
+05:16.690 --> 05:21.610
+This is the killer feature of TypeScript, and this is how we're going to write awesome code.
+
+05:22.000 --> 05:27.040
+So just about every project that you and I work on is going to have an identical structure.
+
+05:27.370 --> 05:30.940
+Every typescript file we work on is going to be something like this.
+
+05:31.570 --> 05:35.130
+At the very top, we're going to have a number of interface definitions.
+
+05:35.140 --> 05:37.630
+Maybe it's one, two, three, four, however many.
+
+05:37.630 --> 05:43.360
+And those definitions are going to describe what you have to do to work with the class.
+
+05:44.270 --> 05:46.670
+So our class definition will have a couple of methods.
+
+05:46.670 --> 05:53.060
+And if a given method has to receive some other object to work correctly, rather than specifying that
+
+05:53.060 --> 05:58.910
+other object type, we're going to instead specify an interface so other objects inside our application
+
+05:58.910 --> 06:03.830
+can choose to implement that interface so they can work with this class definition.
+
+06:04.250 --> 06:10.220
+And that's how we're going to get this awesome amount of code reuse and very low coupling between different
+
+06:10.220 --> 06:12.020
+classes inside of our application.
+
+06:13.100 --> 06:14.010
+I can't say it enough.
+
+06:14.030 --> 06:16.280
+We're going to see this pattern again and again.
+
+06:16.280 --> 06:20.000
+This is the whole point of this course is to help you understand this pattern.
+
+06:20.270 --> 06:21.880
+Well, a couple of other things as well.
+
+06:21.890 --> 06:23.510
+But you understand.
+
+06:23.810 --> 06:24.090
+Okay.
+
+06:24.110 --> 06:25.220
+One last big thing here.
+
+06:25.250 --> 06:30.110
+Last thing I want to mention is that if we wanted to, we could help TypeScript give us help.
+
+06:30.320 --> 06:34.550
+So when we start working with this interface stuff, we want to make sure that we start to see errors
+
+06:34.550 --> 06:35.940
+in the correct location.
+
+06:35.960 --> 06:41.660
+So to help TypeScript show us errors in our interface definitions in the correct spot, we can optionally
+
+06:41.660 --> 06:44.120
+choose to implement an interface.
+
+06:44.120 --> 06:50.630
+So inside of user keys we imported the Tappable interface and we told TypeScript very directly in this
+
+06:50.630 --> 06:57.680
+case, Hey TypeScript, we want our class user or an instance of user to be compatible with the Tappable
+
+06:57.680 --> 06:58.490
+interface.
+
+06:58.910 --> 07:04.670
+So to do so, we optionally add on implements map right here and that tells TypeScript we are trying
+
+07:04.670 --> 07:10.520
+to make a user satisfy the Tappable interface by adding that in, TypeScript is going to take a look
+
+07:10.520 --> 07:14.540
+at our user definition and make sure that we are implementing the correct properties.
+
+07:14.840 --> 07:16.730
+Again, 100% optional.
+
+07:16.760 --> 07:21.910
+The only reason we do this is so that we can kind of help other engineers understand what we're doing
+
+07:21.910 --> 07:23.090
+with this class right here.
+
+07:23.390 --> 07:26.990
+So if another engineer saw this statement, they would understand, Oh, okay, I get it.
+
+07:26.990 --> 07:28.850
+We want a user to be malleable.
+
+07:29.270 --> 07:33.290
+The other reason we add this in is so that TypeScript can take a look at the different properties here
+
+07:33.290 --> 07:37.310
+and help us make sure that we add in all the correct properties.
+
+07:38.720 --> 07:38.970
+Okay.
+
+07:39.020 --> 07:39.470
+So that's it.
+
+07:39.470 --> 07:41.570
+That's the three big important things here.
+
+07:41.900 --> 07:46.690
+Once again, inside of indexed, we wanted to restrict API service area.
+
+07:46.700 --> 07:52.670
+Second off, we wanted to use interfaces to set up a type of dependency between the type, the different
+
+07:52.670 --> 07:54.140
+classes inside of our application.
+
+07:54.140 --> 07:59.270
+And then finally we can help TypeScript put errors in the correct location by using this implements
+
+07:59.270 --> 08:00.710
+clause on classes.
+
+08:01.130 --> 08:03.590
+So with all this in mind, let's take a pause right here.
+
+08:03.770 --> 08:07.070
+We're going to go in the next video and start working on our next application.

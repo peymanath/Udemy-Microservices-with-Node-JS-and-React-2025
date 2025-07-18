@@ -1,0 +1,202 @@
+WEBVTT
+
+00:00.970 --> 00:05.530
+Now that we've created a new project, we're going to create a new Kubernetes cluster inside here.
+
+00:05.560 --> 00:08.920
+So to get started, I'm going to find the menu on the top left hand side.
+
+00:09.040 --> 00:11.890
+Then scroll down to Kubernetes engine right here.
+
+00:12.250 --> 00:13.720
+I'll then select clusters.
+
+00:14.860 --> 00:19.000
+And the very first time you come to this page, you're going to see a little message here at the top
+
+00:19.000 --> 00:22.280
+that says Kubernetes cluster API is being enabled.
+
+00:22.300 --> 00:27.250
+It's going to take about three or four or 5 minutes for Google Cloud to give you access to the Kubernetes
+
+00:27.250 --> 00:28.330
+engine pages.
+
+00:28.330 --> 00:32.980
+So you'll probably want to pause this video right now and just let that thing finish up after that goes
+
+00:32.980 --> 00:33.460
+away.
+
+00:33.460 --> 00:36.910
+Well, then find this little pop up right here and click on Create Cluster.
+
+00:38.750 --> 00:42.470
+Well, then be given a couple of different options to create our first Kubernetes cluster.
+
+00:42.950 --> 00:47.150
+Now, just so you know, what we see right here is a very default setup environment.
+
+00:47.150 --> 00:52.250
+So it has a ton of settings hidden behind the scenes and all these menus off to the left hand side.
+
+00:52.790 --> 00:56.570
+Some settings we want to use the defaults for, others we want to change.
+
+00:56.570 --> 00:57.800
+So let's go through setting.
+
+00:57.800 --> 00:58.520
+By setting.
+
+00:59.260 --> 01:03.880
+First off, I'm going to find the name selector right here and I'll change the name to ticketing.
+
+01:06.110 --> 01:07.850
+Dash dev like so.
+
+01:09.000 --> 01:10.800
+Next, I'll find the location type.
+
+01:11.740 --> 01:13.060
+Also liked zone.
+
+01:13.750 --> 01:17.910
+And then for zone, it'll probably have a default setting for you right here.
+
+01:17.950 --> 01:22.480
+Make sure that the zone that is selected is somewhere that is just physically located by you in the
+
+01:22.480 --> 01:23.080
+world.
+
+01:23.440 --> 01:27.760
+For me, I'm in the central US right now, so I'm going to use the default setting of US Central one
+
+01:27.760 --> 01:28.540
+to see.
+
+01:28.720 --> 01:33.250
+But you can absolutely use any zone in here that you wish and it should be one again that is physically
+
+01:33.250 --> 01:34.090
+close to you.
+
+01:35.250 --> 01:38.220
+Then finally down here at the very bottom, I'll find a master version.
+
+01:38.220 --> 01:41.280
+So this is the version of Kubernetes that we're going to use.
+
+01:41.820 --> 01:44.850
+The versions that are listed here are usually pretty laggy.
+
+01:44.850 --> 01:48.810
+So in other words, when a new version of Kubernetes comes out, you will not see it appear in this
+
+01:48.810 --> 01:49.920
+list for quite a while.
+
+01:50.400 --> 01:55.110
+Right now you'll notice that I have versions 31.14 all the way up to 1.15.
+
+01:55.380 --> 02:00.270
+At the time that I'm recording this video, there are much newer versions of Kubernetes around, but
+
+02:00.270 --> 02:01.860
+these are the ones we get access to.
+
+02:02.400 --> 02:06.930
+We want to make sure that we have at least a version in the 1.15 series.
+
+02:07.200 --> 02:09.990
+So at least make sure that you find 1.15.
+
+02:09.990 --> 02:15.180
+You can select the latest version, and if you only have options newer than that, that is totally fine.
+
+02:15.180 --> 02:19.140
+Just make sure no matter what, you've got something that is at least 1.15.
+
+02:21.080 --> 02:24.470
+Then after that, I'm going to find note pools on the left hand side.
+
+02:25.520 --> 02:29.900
+I'm going to click on that thing and we'll see the options update here in the center.
+
+02:31.910 --> 02:33.540
+I'm going to find the size right here.
+
+02:33.560 --> 02:36.980
+It says number of nodes and by default we get three different nodes.
+
+02:37.010 --> 02:42.140
+Remember, each of these different nodes is essentially an environment where our pods are deployments.
+
+02:42.140 --> 02:44.240
+Our services are going to be executed.
+
+02:44.990 --> 02:47.810
+We're going to leave that at the default of three for right now.
+
+02:48.230 --> 02:53.570
+You might recall that on your local machine, we got a pool of one or a node of one that meant that
+
+02:53.570 --> 02:56.540
+we had a single node running on our local machine.
+
+02:56.540 --> 03:00.560
+So already out the gate we've got the opportunity to get a lot more processing power here if we need
+
+03:00.560 --> 03:00.980
+it.
+
+03:01.460 --> 03:04.490
+But we also need to configure exactly what each of those nodes are.
+
+03:04.670 --> 03:07.010
+So on the left hand side, I'll then select nodes.
+
+03:08.440 --> 03:10.810
+And we get a ton of additional settings on here.
+
+03:12.370 --> 03:15.940
+So we're going to go through this machine configuration by default.
+
+03:15.940 --> 03:20.960
+They're selecting a fairly standard virtual machine to run all your different pods.
+
+03:20.980 --> 03:25.180
+This is a little bit more powerful than we need, and you actually end up paying for it as well.
+
+03:25.210 --> 03:29.100
+So we don't need to pay as much money as this in one standard, one cost.
+
+03:29.110 --> 03:33.970
+So I'm going to open that thing up and we can take this down to G one small.
+
+03:34.180 --> 03:37.840
+I would not recommend going down to micro at the very least.
+
+03:38.140 --> 03:41.710
+I would go down to just a small, which costs a fair bit less than the standard.
+
+03:42.800 --> 03:43.250
+And that's it.
+
+03:43.250 --> 03:44.960
+That's the last setting we're going to change.
+
+03:45.410 --> 03:49.100
+So once I've changed that, I'll then click on Create at the bottom left hand side.
+
+03:50.300 --> 03:53.930
+That's then going to start creating this new cluster of three separate nodes.
+
+03:53.960 --> 03:56.270
+It's going to take a couple of minutes for this thing to be created.
+
+03:56.270 --> 03:59.270
+Solve this video right here and we'll just go ahead and let that thing run.

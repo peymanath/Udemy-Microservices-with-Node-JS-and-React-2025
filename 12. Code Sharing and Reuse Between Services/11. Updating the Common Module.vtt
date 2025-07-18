@@ -1,0 +1,322 @@
+WEBVTT
+
+00:01.060 --> 00:02.590
+Bye project has started back up.
+
+00:02.590 --> 00:06.520
+I don't see any distinct errors inside of here or anything like that, so I'm going to go back over
+
+00:06.520 --> 00:08.380
+to my browser and do a quick test.
+
+00:09.680 --> 00:12.440
+I still have my original window open at ticketing Dev.
+
+00:12.470 --> 00:14.510
+Remember, that's how we access our application.
+
+00:14.750 --> 00:19.040
+So I'm going to refresh this and I should still see content up here.
+
+00:19.070 --> 00:19.820
+Looks good.
+
+00:21.180 --> 00:21.420
+All right.
+
+00:21.420 --> 00:23.910
+So that definitely means that everything is working as expected.
+
+00:24.090 --> 00:28.290
+Now, at this point, I would like to very quickly show you how we can very easily make a change to
+
+00:28.290 --> 00:33.450
+something inside of our common module and then reflect those changes inside of our project.
+
+00:34.200 --> 00:39.850
+So let's imagine that we need to make a change to the common module, maybe inside the index file.
+
+00:39.870 --> 00:40.500
+Maybe.
+
+00:40.500 --> 00:40.920
+I don't know.
+
+00:40.920 --> 00:43.110
+We need to add just a simple comment at the top.
+
+00:43.470 --> 00:47.250
+I'll put in a comment up here that says something like re-export.
+
+00:49.210 --> 00:53.230
+Stuff from eres and middle wears.
+
+00:53.410 --> 00:54.310
+Simple enough.
+
+00:55.000 --> 00:59.920
+So now if we wanted to get this change reflected or this update over to our auth project, here's what
+
+00:59.920 --> 01:00.520
+we would do.
+
+01:00.670 --> 01:01.990
+We'd save these changes.
+
+01:02.440 --> 01:04.030
+We would go back over to our terminal.
+
+01:04.840 --> 01:07.740
+We would change into our directory or something.
+
+01:07.780 --> 01:09.040
+Not off, but common.
+
+01:09.610 --> 01:10.900
+We eventually want to be enough.
+
+01:10.930 --> 01:12.490
+Right now we want to be inside a common.
+
+01:12.910 --> 01:15.550
+So we're going to rebuild and publish our project.
+
+01:15.730 --> 01:20.320
+Recall that we put together a little script to automate that entire process for a real project.
+
+01:20.320 --> 01:24.220
+We don't really want to have that script, but again or this course, it's going to save us a decent
+
+01:24.220 --> 01:25.000
+amount of time.
+
+01:25.570 --> 01:27.900
+So I'll do an NPM run pub.
+
+01:28.940 --> 01:32.540
+That'll do the commit, the version, the build, and then the publish.
+
+01:35.800 --> 01:36.910
+And there we go.
+
+01:37.210 --> 01:39.730
+So I'm up to version 1.09.
+
+01:39.760 --> 01:42.670
+Chances are you're not at version 1.9.
+
+01:42.700 --> 01:47.410
+I had to record some of the videos before this several times to get everything kind of working just
+
+01:47.410 --> 01:50.290
+right, and that's why I've got this higher version number here.
+
+01:50.880 --> 01:53.120
+So latest version is 1.9.
+
+01:53.130 --> 01:57.570
+We need to make sure that our auth project now uses version 1.9 as well.
+
+01:58.380 --> 02:00.410
+So we'll change over to auth.
+
+02:02.370 --> 02:05.460
+And then all we really have to do is an NPM update.
+
+02:07.430 --> 02:12.650
+SG tickets slash comment and of course you'll replace SG tickets with your organisation name.
+
+02:13.700 --> 02:14.630
+So I'll run that.
+
+02:17.080 --> 02:19.120
+And very quickly, we will see.
+
+02:19.630 --> 02:20.260
+There we go.
+
+02:20.260 --> 02:21.790
+Version 1.09.
+
+02:22.700 --> 02:25.850
+Now that makes a change as usual to our package chase on file.
+
+02:26.480 --> 02:30.810
+So if we go back over to Scaffold, we're going to see that our image is being rebuilt.
+
+02:30.840 --> 02:34.620
+We're going to be installing all of our dependencies again, which means that we should be getting at
+
+02:34.640 --> 02:37.550
+the latest version of that common module.
+
+02:39.370 --> 02:43.150
+Now I'm going to let this just do its thing here really quick, just so I can verify that this actually
+
+02:43.150 --> 02:43.900
+all occurred.
+
+02:45.010 --> 02:45.970
+Actually, no reason.
+
+02:45.970 --> 02:47.470
+Well, okay, there it goes.
+
+02:48.190 --> 02:50.020
+It always seems like sometimes it takes forever.
+
+02:50.020 --> 02:51.580
+Sometimes it doesn't take any time.
+
+02:51.940 --> 02:52.870
+Okay, simple enough.
+
+02:52.900 --> 02:54.310
+Looks like everything's restarting.
+
+02:54.310 --> 02:58.930
+But how do we actually know that our container is running the correct version of that dependency?
+
+02:59.230 --> 03:04.150
+Well, we could actually kind of go into the container and just verify that everything worked as expected.
+
+03:04.630 --> 03:07.720
+Let me show you how I can open up another terminal window.
+
+03:08.050 --> 03:10.480
+I'm going to do a little get pods.
+
+03:10.990 --> 03:17.020
+I'm going to find the pod running our authentication project, and I'm going to try to start up a shell
+
+03:17.020 --> 03:18.520
+inside of that pod.
+
+03:18.550 --> 03:22.720
+So we're going to access the container inside there and try to take a look at some of the different
+
+03:22.720 --> 03:27.760
+files inside of that container directly just to make sure we're running the latest version of our common
+
+03:27.760 --> 03:28.450
+project.
+
+03:28.930 --> 03:34.690
+So I'm going to copy that pod name and do a CTL exec dash it, then the pod name.
+
+03:34.690 --> 03:36.610
+And then at the very end.
+
+03:38.530 --> 03:41.110
+So I've now got a shell running inside of that container.
+
+03:42.500 --> 03:44.860
+There's the node modules directory inside of there.
+
+03:44.870 --> 03:47.800
+So I want to try to open up that node modules folder.
+
+03:47.810 --> 03:53.750
+I want to find our common module inside there and I just want to print out the package JSON file and
+
+03:53.750 --> 03:56.720
+make sure that we got version 1.9 side there.
+
+03:56.990 --> 03:59.180
+So I will change into node modules.
+
+03:59.870 --> 04:05.420
+I'll then change into my organization inside there, which is SG tickets.
+
+04:05.420 --> 04:07.910
+Again, you'll need to update that organization name.
+
+04:08.890 --> 04:11.110
+Inside of there is the common folder.
+
+04:12.580 --> 04:14.200
+There's the package on file.
+
+04:14.200 --> 04:19.200
+And something is kind of interesting that you'll notice when we install this thing as a dependency,
+
+04:19.210 --> 04:21.700
+we didn't get the Z folder or anything like that.
+
+04:21.700 --> 04:25.720
+All we got was the build directory and all the files inside there because remember we had set up that
+
+04:25.720 --> 04:29.710
+files property inside of our common modules packages on file.
+
+04:30.370 --> 04:35.290
+So now I will cat the package JSON file just to print out all the information inside there.
+
+04:36.540 --> 04:39.600
+And if I scroll up a little bit, I should be able to verify.
+
+04:41.390 --> 04:44.060
+That I've got version 1.09.
+
+04:44.600 --> 04:48.140
+Does that means that my container is running the correct version of this module?
+
+04:48.350 --> 04:50.390
+The updated version 1.9 right there.
+
+04:51.220 --> 04:51.490
+Okay.
+
+04:51.490 --> 04:52.120
+So that's it.
+
+04:52.120 --> 04:53.330
+That's how we do an update.
+
+04:53.350 --> 04:56.830
+Now, of course, you don't actually have to go through the process of verifying that package.
+
+04:56.890 --> 04:57.730
+It's on file.
+
+04:57.760 --> 05:02.620
+All we really have to do is run some changes inside of our common module.
+
+05:02.650 --> 05:05.170
+We're going to run that NPM run pub command.
+
+05:05.290 --> 05:10.870
+We'll do an NPM update inside of our project, and that's pretty much it.
+
+05:10.870 --> 05:11.830
+That's all we have to do.
+
+05:12.940 --> 05:13.910
+So it looks pretty good.
+
+05:13.930 --> 05:15.350
+We've got this common module.
+
+05:15.350 --> 05:20.200
+What's going to make it really easy to create some additional services in the future, such as the ticketing
+
+05:20.200 --> 05:25.000
+one that we're going to start here in just a second and any time we need to make changes to this thing,
+
+05:25.000 --> 05:26.470
+well, we've got a strategy for it.
+
+05:26.860 --> 05:27.190
+All right.
+
+05:27.190 --> 05:28.240
+Enough with lecturing for me.
+
+05:28.240 --> 05:29.500
+I'm kind of rattling on now.
+
+05:29.500 --> 05:30.730
+So pause right here.
+
+05:30.730 --> 05:34.660
+Let's kick off our ticketing service in the next video.

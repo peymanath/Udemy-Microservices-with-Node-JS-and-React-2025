@@ -1,0 +1,271 @@
+WEBVTT
+
+00:01.020 --> 00:04.300
+At this point, there are two ways we could move forward on our order service.
+
+00:04.320 --> 00:09.570
+We can either start to take a look at how we're going to publish some events around orders and listen
+
+00:09.570 --> 00:11.820
+or subscribe to events coming in as well.
+
+00:12.210 --> 00:16.440
+The other direction we can move is to focus first on all of our different route handlers.
+
+00:16.800 --> 00:21.030
+We're going to first implement these route handlers and then we're going to come back to all the event
+
+00:21.030 --> 00:22.020
+related stuff.
+
+00:22.050 --> 00:27.060
+The reason for that is that we still have not really done a deep dive on how we design different events,
+
+00:27.060 --> 00:32.190
+how we communicate them across different services, and how we effectively think about the flows of
+
+00:32.190 --> 00:34.320
+a event through our application.
+
+00:34.680 --> 00:38.430
+So I really want to put together all these different route handlers first, and once we have all that
+
+00:38.430 --> 00:41.490
+completed, well then have to really complete services.
+
+00:41.490 --> 00:46.320
+The ticket service and the order service that need to have a really solid exchange of data through the
+
+00:46.320 --> 00:47.400
+eventing system.
+
+00:47.760 --> 00:51.750
+So at that point, we can have a really deep dive and understand how to get these things to work together
+
+00:51.750 --> 00:52.530
+effectively.
+
+00:53.190 --> 00:57.870
+Now having said that, we still have this comment inside of our new handler, and I would definitely
+
+00:57.870 --> 01:02.010
+not want to forget that we need to come back here and eventually publish an event.
+
+01:02.280 --> 01:06.750
+So as a kind of reminder for that, I'm going to go back over to the test file that we were just working
+
+01:06.750 --> 01:07.140
+on.
+
+01:08.090 --> 01:12.860
+And at the very bottom, I'm going to add in a new test right here, and I'm going to mark it as a test
+
+01:12.860 --> 01:14.870
+that we need to come back and write.
+
+01:14.960 --> 01:17.360
+So I'm going to write out it to do.
+
+01:18.410 --> 01:22.820
+Emits and order related event.
+
+01:23.850 --> 01:27.990
+If I now save this file with that dot to do on there and go back over to my terminal.
+
+01:28.710 --> 01:32.490
+You'll notice that that test is now showing up with this little special purple font.
+
+01:32.490 --> 01:34.980
+And we are also being told there's one to do.
+
+01:35.220 --> 01:40.710
+So this is just to remind us that we need to come back to the new root handler and add in that root
+
+01:40.710 --> 01:42.720
+or see the order created event.
+
+01:43.730 --> 01:44.200
+Okay.
+
+01:44.210 --> 01:45.380
+So that looks good.
+
+01:45.800 --> 01:49.880
+So we will come back to all the event related stuff once these handlers are put together.
+
+01:50.210 --> 01:53.990
+The next root handler we're going to put together is the index root handler.
+
+01:54.890 --> 01:59.630
+So with this index handler, we want to find all the different orders related to the user who is making
+
+01:59.630 --> 02:01.400
+the request and just return them.
+
+02:01.400 --> 02:02.420
+That is pretty much it.
+
+02:02.660 --> 02:03.980
+So let's give this a shot.
+
+02:04.790 --> 02:06.920
+To get started inside my roots directory.
+
+02:06.920 --> 02:08.690
+I'm going to find the index file.
+
+02:09.640 --> 02:11.400
+We've already got some stuff inside of here.
+
+02:11.410 --> 02:16.090
+So all we really have to do is add in a couple of different imports, wire up middleware to and then
+
+02:16.090 --> 02:19.450
+add in some code to fetch all the related orders and send them back.
+
+02:19.990 --> 02:24.070
+This route handler is going to be pretty simple in nature, so let's just get to it right away.
+
+02:24.730 --> 02:29.140
+The first thing we want to do here is to make sure that a user is logged in if they want to access this
+
+02:29.140 --> 02:29.310
+route.
+
+02:29.320 --> 02:34.930
+Handler orders are tied to very specific users and we only want a user to see the orders that they have
+
+02:34.930 --> 02:35.590
+created.
+
+02:35.590 --> 02:40.690
+So it definitely makes sense to say that you should only be able to access this handler if you are authenticated.
+
+02:40.960 --> 02:46.630
+So with that mind at the very top, we'll get started by importing require off from.
+
+02:47.490 --> 02:48.600
+Our common library.
+
+02:49.290 --> 02:52.230
+And then add that as a middleware like so.
+
+02:56.190 --> 02:59.900
+Then if we get inside the body of this request handler, we're definitely going to want to run some
+
+02:59.900 --> 03:04.760
+kind of query over our order collection and find all the different orders that belong to this user.
+
+03:05.520 --> 03:09.630
+To run that query, we're definitely going to have to import our order model at the top of the file.
+
+03:09.630 --> 03:12.360
+So I will import order from.
+
+03:13.200 --> 03:15.150
+Up one directory models.
+
+03:15.880 --> 03:16.480
+Order.
+
+03:19.200 --> 03:21.840
+Then inside of here, right above the resort sent.
+
+03:23.150 --> 03:27.440
+Let's do a orders and we will run our query.
+
+03:28.110 --> 03:31.050
+So to run the query, we're going to write out order, find.
+
+03:31.050 --> 03:35.790
+And then inside of an object, we're going to put in the criteria of what orders we want to search for.
+
+03:36.300 --> 03:41.430
+You'll recall that all of our different orders store a user ID property, and that user ID is the idea
+
+03:41.430 --> 03:43.290
+of the user who owns this order.
+
+03:44.140 --> 03:45.850
+So we're going to do a query.
+
+03:46.920 --> 03:53.120
+And try to find all the orders where the user ID is equal to the ID of the user who just made our request.
+
+03:53.130 --> 03:58.830
+And remember, we are setting all that current user stuff and making sure that is available on the request
+
+03:58.830 --> 04:01.020
+through the required auth and the current user middleware.
+
+04:01.320 --> 04:07.050
+So we should be able to do REC current user exclamation ID.
+
+04:09.120 --> 04:12.660
+So that will get us all our orders now for each of the orders that we fetch.
+
+04:12.690 --> 04:16.060
+We probably want to also include the ticket that the order is for.
+
+04:16.080 --> 04:20.820
+So in other words, we should probably make sure we somehow fetch the ticket and get its title and its
+
+04:20.820 --> 04:23.610
+price and so on, and send those back along with it.
+
+04:24.060 --> 04:27.360
+We're going to do so using that populate system in Mongoose.
+
+04:27.660 --> 04:32.910
+You recall that we took a look at how to fetch a particular order and also simultaneously load up the
+
+04:32.910 --> 04:34.410
+ticket associated with them.
+
+04:34.530 --> 04:36.540
+All we have to do is chain on to the end of this query.
+
+04:36.570 --> 04:39.320
+A dot populate ticket.
+
+04:39.330 --> 04:39.930
+That's it.
+
+04:43.000 --> 04:45.940
+So once we get that list of orders, pretty simple.
+
+04:45.940 --> 04:47.020
+We'll just send it back.
+
+04:47.200 --> 04:50.230
+So resend and I'll send back the orders.
+
+04:50.860 --> 04:51.730
+And that should be it.
+
+04:54.250 --> 04:54.520
+All right.
+
+04:54.520 --> 04:56.010
+So let's save this once again.
+
+04:56.020 --> 05:00.160
+We probably need to make sure that we write out a test to make sure that this works as expected.
+
+05:00.430 --> 05:04.720
+Again, we don't have any code inside of our project right now around creating a ticket.
+
+05:04.720 --> 05:09.790
+So the only way that we can really simulate or test this stuff is through a automated test.
+
+05:10.060 --> 05:15.220
+So we're going to write out a test to create maybe one or two orders and assign tickets to both them
+
+05:15.310 --> 05:19.990
+and then make a request and just make sure that we get the list of orders tied to the user and the associated
+
+05:19.990 --> 05:20.620
+tickets.
+
+05:21.320 --> 05:23.570
+So let's put that test together in just a moment.

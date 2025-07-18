@@ -1,0 +1,337 @@
+WEBVTT
+
+00:01.190 --> 00:04.190
+In this video, we're going to start to write out a config file for a deployment.
+
+00:04.190 --> 00:07.490
+So let's get to it back inside to my code editor.
+
+00:07.490 --> 00:13.610
+I'm going to delete the Post Gamble file if you want to, you can back up this file or just change the
+
+00:13.610 --> 00:15.080
+extension, something like that.
+
+00:15.080 --> 00:17.480
+You want to make sure you don't have this file anymore.
+
+00:17.480 --> 00:22.550
+So if you want to keep a backup, I would encourage you to add on a like old or something like that
+
+00:22.550 --> 00:23.870
+extension to the very end.
+
+00:24.470 --> 00:28.910
+So I'm going to delete that file because we don't want to create an individual pod anymore.
+
+00:29.630 --> 00:35.210
+And then inside my kids directory, I'm going to make a new file called post dash devel.
+
+00:36.680 --> 00:39.890
+The DEP on there indicates that this file is going to create a deployment.
+
+00:39.890 --> 00:41.900
+So devel is just deployment for short.
+
+00:41.900 --> 00:42.560
+That's all.
+
+00:44.220 --> 00:44.760
+Inside of here.
+
+00:44.760 --> 00:47.700
+We're going to write out once again some config to create a deployment.
+
+00:47.730 --> 00:51.780
+And inside this config, we're going to say that we want to run some number of pods that are going to
+
+00:51.780 --> 00:53.370
+run our post image.
+
+00:53.370 --> 00:54.660
+So let's get to it.
+
+00:54.690 --> 00:58.800
+A lot of the code or configuration we're going to write inside of here is going to be very similar to
+
+00:58.800 --> 01:00.690
+the stuff that we just wrote out for a pod.
+
+01:01.750 --> 01:03.730
+We'll first start off with an API version.
+
+01:04.490 --> 01:07.520
+And in this case, we're going to put an APS slash V one.
+
+01:08.030 --> 01:12.470
+So remember, there are certain buckets of different types of objects we have access to.
+
+01:12.650 --> 01:18.020
+In this case, the deployment is inside this bucket of different objects called app slash v one.
+
+01:18.290 --> 01:21.380
+A pod, as you will recall, was inside of just v one.
+
+01:22.420 --> 01:25.150
+Well, then specify the kind of object that we are trying to create.
+
+01:25.360 --> 01:26.320
+So it's a deployment.
+
+01:27.180 --> 01:28.740
+Well, then set up some metadata.
+
+01:28.860 --> 01:31.350
+And in this case, we're just going to assign a name to it.
+
+01:31.620 --> 01:35.670
+So let's say post dash depot, that is going to be the name of my deployment.
+
+01:36.060 --> 01:40.140
+Again, I'm putting on the dash double here so that if I ever print out some logs or something like
+
+01:40.140 --> 01:45.000
+that about all the objects inside my cluster, i'll see devel and know that this is a deployment.
+
+01:46.510 --> 01:48.610
+After that, I'll put in a spec section.
+
+01:49.060 --> 01:52.570
+So this is going to specify exactly how this deployment should behave.
+
+01:53.200 --> 01:56.860
+The first property will designate inside of here is replicas.
+
+01:57.950 --> 01:59.930
+And I'm going to give it a one for right now.
+
+02:00.140 --> 02:04.700
+Replicas is the number of pods that we want to create running some particular image.
+
+02:06.130 --> 02:09.230
+So in this diagram over here, I'm showing three separate pods.
+
+02:09.250 --> 02:11.050
+Right now, we're not going to run three separate pods.
+
+02:11.050 --> 02:13.120
+We're going to run just one by itself.
+
+02:15.470 --> 02:18.980
+Now the next little piece of configuration here is going to be just a little bit mysterious.
+
+02:18.980 --> 02:23.900
+So we'll write it out and then take write out a little bit additional config after that.
+
+02:23.900 --> 02:26.660
+And we'll talk about how these two parts of config kind of work together.
+
+02:27.200 --> 02:28.430
+I'm going to say selector.
+
+02:29.260 --> 02:31.090
+Then match labels.
+
+02:31.900 --> 02:33.850
+And then app posts.
+
+02:35.140 --> 02:39.850
+Remember that inside of a YAML file indentation is a big deal, so you need to make sure that you've
+
+02:39.850 --> 02:43.750
+got one level of indentation on selector, then two and then three.
+
+02:44.880 --> 02:47.350
+So again, we'll talk about what this is in just a second.
+
+02:47.370 --> 02:49.620
+First, we're going to write out another little bit of config.
+
+02:50.330 --> 02:51.500
+I'm going to say template.
+
+02:52.410 --> 02:54.930
+Then metadata labels.
+
+02:57.930 --> 02:59.670
+And then app posts.
+
+03:01.070 --> 03:01.430
+All right.
+
+03:01.430 --> 03:05.840
+So these two sections right here, the selector thing and this metadata thing right here, are really
+
+03:05.840 --> 03:06.800
+working together.
+
+03:06.890 --> 03:09.800
+This might sound really you know, it's funny.
+
+03:09.800 --> 03:11.900
+It might sound like kind of crazy.
+
+03:11.900 --> 03:17.510
+But to be honest with you, a deployment kind of has a hard time figuring out which pods it should manage
+
+03:17.510 --> 03:18.620
+inside of our cluster.
+
+03:18.800 --> 03:23.870
+In other words, if a set of pods get created, we have to somehow give the deployment some information
+
+03:23.870 --> 03:25.880
+and tell it, Hey, these pods over here.
+
+03:25.910 --> 03:27.830
+These are the ones you need to manage.
+
+03:27.830 --> 03:32.390
+And that's what the goal of this selector and metadata labels app thing is all about.
+
+03:32.660 --> 03:37.160
+This selector right here is saying, take a look at all the different pods that have been created.
+
+03:37.400 --> 03:40.970
+Find all the pods with a label of app posts.
+
+03:41.540 --> 03:43.640
+So this right here is what we refer to as a label.
+
+03:43.640 --> 03:48.830
+It's essentially, well, a label, it's a key value pair is just applying some arbitrary information
+
+03:48.830 --> 03:49.610
+to a pod.
+
+03:50.390 --> 03:52.370
+App right here doesn't really have any special meaning.
+
+03:52.370 --> 03:57.020
+We can set up labels with any structure you can imagine, so we can have a label of like that right
+
+03:57.020 --> 03:57.470
+there.
+
+03:59.010 --> 04:03.090
+So in this case, we are telling the deployment that we wanted to find all the different pods with a
+
+04:03.090 --> 04:04.710
+label of app posts.
+
+04:04.980 --> 04:07.200
+And those are the pods that it should be in charge of.
+
+04:08.270 --> 04:14.030
+Then inside this template section, the template is where we specify the exact configuration of a pod
+
+04:14.030 --> 04:15.710
+that we want this deployment to create.
+
+04:16.530 --> 04:20.580
+So this right here is some configuration that is going to be applied to the pod that the deployment
+
+04:20.580 --> 04:21.420
+is going to make.
+
+04:21.840 --> 04:25.740
+We are saying that we want the pod to have a label of app posts.
+
+04:26.130 --> 04:30.660
+So again, this part right here and this part right here are really working together to tell the deployment
+
+04:30.660 --> 04:32.910
+about which pods it should try to manage.
+
+04:34.650 --> 04:36.630
+After that, we'll then set up a spec.
+
+04:37.610 --> 04:38.450
+This back again.
+
+04:38.450 --> 04:43.640
+Everything inside this template thing right here can be really thought of as a pod spec or a pod config
+
+04:43.640 --> 04:46.850
+file, very similar to the pod config file we had just a moment ago.
+
+04:47.150 --> 04:52.040
+So the spec section right here is describing the specification or the configuration options for the
+
+04:52.040 --> 04:53.300
+pod that we're trying to make.
+
+04:54.180 --> 04:56.070
+So we will designate containers.
+
+04:56.070 --> 04:57.600
+We're going to have one container.
+
+04:57.870 --> 04:59.580
+So containers is an array, remember?
+
+04:59.580 --> 05:03.000
+And inside of YAML, we designate an array entry with a single dash.
+
+05:03.720 --> 05:06.240
+We'll say that the container should have a name of post.
+
+05:07.440 --> 05:11.310
+And it should run the image of your docker ID so not mine.
+
+05:11.310 --> 05:12.960
+Whatever your doctor ID is.
+
+05:13.380 --> 05:17.070
+Slash posts and then version 001.
+
+05:17.070 --> 05:17.730
+Like so.
+
+05:18.730 --> 05:19.510
+And that's it.
+
+05:19.870 --> 05:21.640
+That is our deployment config.
+
+05:22.090 --> 05:25.930
+Now, over time, you're going to see that there are many other options or pieces of configuration we
+
+05:25.930 --> 05:27.080
+can specify in here.
+
+05:27.100 --> 05:31.810
+This is about as barebones a configuration as we can get when we are creating a deployment.
+
+05:33.580 --> 05:34.570
+Let's save this.
+
+05:35.050 --> 05:39.220
+And then finally, we're going to go back over to our terminal and we're going to try to apply this
+
+05:39.220 --> 05:40.270
+to our cluster.
+
+05:40.480 --> 05:44.500
+Remember, any time we want to make a change to our cluster, we create those config files and we will
+
+05:44.500 --> 05:49.210
+run that CTL, apply command that we saw that we use just a moment ago to create a pod.
+
+05:49.840 --> 05:58.750
+So to apply this config file, we will run cube, ctrl, apply chef and then post devel yaml.
+
+05:59.920 --> 06:00.670
+And that's it.
+
+06:01.300 --> 06:05.050
+Now, the deployment has been created, but what does that really do for us?
+
+06:05.230 --> 06:06.760
+Well, let's take a quick pause right here.
+
+06:06.790 --> 06:10.690
+We're going to come back the next video and we'll see what creating the deployment really did to our
+
+06:10.690 --> 06:11.350
+cluster.

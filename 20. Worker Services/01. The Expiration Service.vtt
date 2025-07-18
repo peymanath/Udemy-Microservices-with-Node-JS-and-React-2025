@@ -1,0 +1,133 @@
+WEBVTT
+
+00:01.050 --> 00:04.300
+Well, we are all done with our orders and ticket service for now.
+
+00:04.320 --> 00:08.100
+We've got a bunch of publishers, listeners wrote handlers inside of both them.
+
+00:08.400 --> 00:11.520
+At this point, there's definitely a couple of different directions we could go.
+
+00:11.550 --> 00:16.770
+We could go back over to our client project and start to put together the front end for creating orders
+
+00:16.770 --> 00:18.060
+and tickets and all that stuff.
+
+00:18.180 --> 00:21.630
+But for the rest of this course, to be honest with you, we're really going to stick on the back end
+
+00:21.630 --> 00:26.490
+and we're only going to revisit the React application when just about all of our back end stuff is done.
+
+00:26.700 --> 00:28.650
+That is the real focus of this course overall.
+
+00:28.650 --> 00:33.270
+It is really the back end component as opposed to just kind of juggling data in the world of React.
+
+00:34.530 --> 00:37.440
+So on the back and side, what is the next thing we're going to do?
+
+00:37.710 --> 00:44.280
+Well, we're going to take a look at that idea of expiring an order after some period of time.
+
+00:44.790 --> 00:47.880
+So this is going to be referred to as the expiration service.
+
+00:48.210 --> 00:50.970
+This service is going to have one single job.
+
+00:51.210 --> 00:54.140
+It is going to watch for order created coming in.
+
+00:54.150 --> 00:56.700
+So we're going to definitely implement a listener inside there.
+
+00:57.210 --> 01:01.920
+And then after that 15 minute timer or however long we eventually configure it to be, we're going to
+
+01:01.920 --> 01:07.320
+have the expiration service, then publish an event of its own called simply expiration complete.
+
+01:07.830 --> 01:12.930
+The goal of this event right here is to tell the order service that one of its orders has now expired.
+
+01:13.350 --> 01:17.670
+Now, one thing I want to really highlight, that's in this diagram right here, the expiration service
+
+01:17.670 --> 01:20.400
+is not responsible for telling the rest of the world.
+
+01:20.400 --> 01:22.580
+Then order has been canceled.
+
+01:22.590 --> 01:23.580
+That's not his job.
+
+01:23.580 --> 01:26.670
+Its sole purpose is to have that 15 minute timer.
+
+01:26.940 --> 01:32.190
+It is then up to the order service to take a look at this event and decide whether or not it is actually
+
+01:32.190 --> 01:33.600
+time to cancel an order.
+
+01:34.170 --> 01:39.030
+This is really important because when this event comes in to the order service, a user may have already
+
+01:39.030 --> 01:43.650
+paid for an order and we might have not gone over to the expiration service and told it that the order
+
+01:43.650 --> 01:45.810
+was paid for and that it should cancel that timer.
+
+01:47.060 --> 01:53.330
+So all this service really does for us listen to order created emit expiration complete after 15 minutes
+
+01:53.330 --> 01:58.550
+or so the service is going to be pretty straightforward in nature and certainly a lot easier to put
+
+01:58.550 --> 02:00.620
+together than all the other services we put together.
+
+02:00.620 --> 02:01.370
+So far.
+
+02:01.730 --> 02:05.870
+It's not going to have any root handlers, won't have any express server, nothing like that.
+
+02:05.870 --> 02:09.080
+It's really just a listener and a publisher.
+
+02:10.350 --> 02:13.470
+Now, having said all that, of course, there's always some hidden complexity.
+
+02:13.500 --> 02:14.820
+Always, always, always.
+
+02:14.850 --> 02:21.600
+So the real question about the service comes down to how are we going to let that 15 minute timer elapse?
+
+02:21.600 --> 02:25.500
+How are we going to keep track of it, and how are we going to make sure that we emit an event precisely
+
+02:25.500 --> 02:26.670
+15 minutes after?
+
+02:27.000 --> 02:28.220
+Oh, that's a big question.
+
+02:28.230 --> 02:30.390
+We've got a couple of different options available to us.
+
+02:30.390 --> 02:31.590
+So let's take a pause right here.
+
+02:31.590 --> 02:36.360
+We're going to take a look at four or five, I think four different options of how we can implement
+
+02:36.360 --> 02:38.580
+that timer inside the expiration service.

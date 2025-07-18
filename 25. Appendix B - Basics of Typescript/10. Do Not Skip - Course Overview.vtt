@@ -1,0 +1,205 @@
+WEBVTT
+
+00:01.160 --> 00:05.180
+Now that we finished up our first application, I want to give you a quick overview on how this course
+
+00:05.180 --> 00:05.990
+is structured.
+
+00:06.200 --> 00:09.890
+Now, as soon as I say that, you might be looking for the skip button and trying to skip over to the
+
+00:09.890 --> 00:10.830
+next video.
+
+00:10.850 --> 00:12.830
+But I beg you, please stick around.
+
+00:12.830 --> 00:13.730
+Just watch this video.
+
+00:13.740 --> 00:15.980
+I'm going to make it as short as I possibly can.
+
+00:16.010 --> 00:20.360
+It's really important you watch this video because it's going to really frame how you approach and learn
+
+00:20.360 --> 00:21.080
+TypeScript.
+
+00:21.260 --> 00:24.200
+So let me just dive right in so I don't waste any time.
+
+00:25.100 --> 00:25.370
+All right.
+
+00:25.370 --> 00:29.240
+So when we think about learning the TypeScript language, there's really two distinct categories of
+
+00:29.240 --> 00:30.380
+knowledge that we need.
+
+00:30.740 --> 00:34.550
+On the one hand, we need to understand the syntax and features of the language.
+
+00:34.730 --> 00:38.120
+So, for example, we need to understand what an interface is.
+
+00:38.330 --> 00:39.410
+Where do we use an interface?
+
+00:39.410 --> 00:40.370
+How do we use it?
+
+00:40.760 --> 00:44.480
+And we also need to understand the syntax for defining an interface as well.
+
+00:45.340 --> 00:48.250
+So that's kind of like one category of knowledge we have to pick up.
+
+00:48.700 --> 00:52.900
+The other category of knowledge we have to pick up is design patterns using TypeScript.
+
+00:53.170 --> 00:55.890
+So it's not enough to just know what an interface is.
+
+00:55.900 --> 01:01.540
+I want you to understand how to use an interface to actually write some amount of reusable code.
+
+01:02.080 --> 01:04.050
+This is the big focus of this course.
+
+01:04.060 --> 01:06.860
+This is what I really want to focus the entire course on.
+
+01:06.880 --> 01:09.190
+I want you to understand design patterns.
+
+01:09.670 --> 01:14.440
+At the end of the day, the official documentation is actually pretty strong for TypeScript, and you
+
+01:14.440 --> 01:19.420
+could understand some basic syntax and features pretty darn well by reading that documentation.
+
+01:19.930 --> 01:23.290
+So because of that, that's why I want to focus on design patterns.
+
+01:23.740 --> 01:25.150
+So why am I telling you this?
+
+01:25.600 --> 01:26.710
+Well, to be honest.
+
+01:27.570 --> 01:29.100
+The course you're watching right now.
+
+01:29.130 --> 01:33.570
+I've been working on for about six weeks, like six weeks of full time work.
+
+01:33.570 --> 01:40.500
+I've been working on this course and I've recorded about a total of 20 hours of content for this course
+
+01:40.500 --> 01:42.510
+up to this point, like in the last six weeks.
+
+01:42.510 --> 01:44.700
+And I've thrown it all away.
+
+01:44.880 --> 01:45.840
+Why is that?
+
+01:46.200 --> 01:51.300
+Well, I tried to initially design this course to focus 100% on design patterns and just pick up some
+
+01:51.300 --> 01:53.130
+syntax and features along the way.
+
+01:53.400 --> 01:58.950
+And it turns out after all these six weeks of time working on this, it just doesn't work to pick up
+
+01:58.950 --> 02:00.240
+TypeScript in that fashion.
+
+02:00.570 --> 02:05.640
+Honestly, the most effective way to pick up TypeScript correctly or very quickly is to first focus
+
+02:05.640 --> 02:11.790
+on the syntax and features with some kind of like dry, boring lectures and then start to focus on the
+
+02:11.790 --> 02:12.930
+design patterns.
+
+02:13.350 --> 02:14.400
+So here's what we're going to do.
+
+02:14.430 --> 02:19.740
+We're going to focus on the basic syntax and features and then start to move on to some projects where
+
+02:19.740 --> 02:22.230
+we're going to focus on understanding design patterns.
+
+02:22.710 --> 02:26.820
+Now, the reason I'm showing you this and I'm telling you all this stuff is that in the coming videos,
+
+02:26.820 --> 02:32.310
+as we start to focus on syntax and features, some of them are going to be honestly kind of boring.
+
+02:32.390 --> 02:36.300
+Now I'm going to make it as interesting as I can, but when we are just talking about plain syntax,
+
+02:36.300 --> 02:41.340
+we have to work with like tiny little toy examples that just don't reflect the real world a lot of the
+
+02:41.340 --> 02:41.850
+time.
+
+02:42.550 --> 02:44.570
+So I would love to skip over this stuff.
+
+02:44.590 --> 02:49.680
+I would love to just ignore syntax and features, but we have to do it just unequivocally.
+
+02:49.690 --> 02:51.760
+You have to understand the syntax.
+
+02:52.090 --> 02:56.230
+So we're going to blaze through this stuff as quickly as we can, and then we're going to move on to
+
+02:56.230 --> 03:00.400
+the design patterns where we're going to be working on a bunch of projects that will really show you
+
+03:00.400 --> 03:03.340
+how to leverage TypeScript to write reusable code.
+
+03:04.300 --> 03:04.660
+All right.
+
+03:04.660 --> 03:08.920
+So having said all that, as we're going through these early sections around syntax and whatnot, if
+
+03:08.920 --> 03:11.320
+you're getting bored, totally fine.
+
+03:11.320 --> 03:14.110
+Just skip ahead and go take a look at some of the projects.
+
+03:14.350 --> 03:19.030
+If you start working on a project and you realize, Oh my gosh, I've got no idea what's going on here,
+
+03:19.030 --> 03:23.800
+you can always go back and take a look at the lectures on features and syntax and whatnot.
+
+03:24.820 --> 03:26.110
+So thank you for sticking around.
+
+03:26.110 --> 03:28.030
+If you did, let's take a pause right now.
+
+03:28.030 --> 03:32.440
+When we come back in the next video, we're going to dive into our first kind of features and syntax
+
+03:32.440 --> 03:33.520
+style lecture.
+
+03:33.520 --> 03:35.140
+So I'll see you in just a minute.

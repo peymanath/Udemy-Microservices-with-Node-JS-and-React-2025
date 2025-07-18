@@ -1,0 +1,211 @@
+WEBVTT
+
+00:01.080 --> 00:04.610
+We just wrote out two tests to handle validation around our request handler.
+
+00:04.620 --> 00:06.870
+So now we have to do the actual implementation.
+
+00:07.080 --> 00:10.450
+Remember how we are doing validation of incoming requests.
+
+00:10.470 --> 00:13.260
+At the very top we are going to import that library.
+
+00:14.040 --> 00:18.050
+It's typically the body function from express validator.
+
+00:20.330 --> 00:24.890
+We use this body function to validate certain properties on the incoming request body.
+
+00:25.400 --> 00:27.470
+So we're going to wire this thing up as a middleware.
+
+00:27.560 --> 00:31.130
+I'm going to put the validation logic right after require auth.
+
+00:31.130 --> 00:35.660
+If a user is not authenticated, I don't really want to waste any time trying to validate the body.
+
+00:35.930 --> 00:38.450
+So we're going to make sure we put these things right after that.
+
+00:38.450 --> 00:43.490
+If we put it before then we would do the validation and then check to see if the user is authenticated.
+
+00:43.880 --> 00:47.720
+So let's try to essentially fail early and get out as soon as possible.
+
+00:48.790 --> 00:52.270
+So now inside this array, we'll list out all the different properties we want to validate by using
+
+00:52.270 --> 00:53.590
+that body function.
+
+00:54.410 --> 00:55.520
+So I'm going to call Bodhi.
+
+00:56.000 --> 00:58.520
+The first property I want to try to validate is title.
+
+00:59.340 --> 01:01.050
+And in this case, I'm going to make sure.
+
+01:01.750 --> 01:04.300
+That it is not empty.
+
+01:04.570 --> 01:06.790
+So we call not is empty.
+
+01:07.420 --> 01:08.290
+If it is.
+
+01:08.970 --> 01:13.410
+I will return a custom error message of title is required.
+
+01:15.470 --> 01:21.200
+The not is empty check right here is going to handle both the case in which a title is not provided
+
+01:21.200 --> 01:22.970
+and the case in which the title is provided.
+
+01:22.970 --> 01:24.590
+But it is an empty string.
+
+01:26.270 --> 01:29.110
+I remember just doing this validation check right here.
+
+01:29.110 --> 01:33.910
+Doesn't really cause any errors to be thrown or a response to be sent back or anything like that.
+
+01:33.920 --> 01:37.860
+Instead, it's going to set an error on the incoming request.
+
+01:37.870 --> 01:43.120
+It is then up to you and I to inspect that request and somehow respond to it if required.
+
+01:43.540 --> 01:48.490
+We already encoded or handled all that logic back inside of our common module, specifically in that
+
+01:48.490 --> 01:50.080
+validate request middleware.
+
+01:50.290 --> 01:52.150
+So again, we take a look at that request.
+
+01:52.150 --> 01:56.170
+We see if there were any errors, if there were, we then throw that request validation error.
+
+01:57.100 --> 02:02.290
+So we do have to wire up that, validate request middleware right after that validation attempt to make
+
+02:02.290 --> 02:03.400
+sure that all occurs.
+
+02:04.240 --> 02:09.910
+So I will once again find my common module import and I will add in validate request.
+
+02:11.670 --> 02:18.270
+And then after the validation attempt, I will add in validate request.
+
+02:19.560 --> 02:19.900
+Okay.
+
+02:19.920 --> 02:21.270
+So that should be it for the title.
+
+02:21.270 --> 02:22.290
+Let's save this.
+
+02:23.300 --> 02:27.050
+Go back over to our terminal and it looks like that test is now passing.
+
+02:29.970 --> 02:30.420
+Okay.
+
+02:30.600 --> 02:31.320
+Not bad.
+
+02:31.890 --> 02:35.430
+Now we're going to repeat that same process over for the price.
+
+02:36.250 --> 02:39.970
+So as a second element inside this array, I'm now going to add in body.
+
+02:40.300 --> 02:41.620
+I want to look at price.
+
+02:43.020 --> 02:47.850
+And then with this thing, when we ever we enter in a price, I'm going to assume that we were working
+
+02:47.850 --> 02:49.230
+with the US dollars.
+
+02:49.260 --> 02:54.000
+US dollars can have both dollar values and cents or in other words, a decimal.
+
+02:54.270 --> 02:57.720
+So I really want to check and make sure that this is some kind of decimal value.
+
+02:57.720 --> 03:02.220
+And as we saw in our test, we wrote out, we also probably want to validate and make sure that this
+
+03:02.220 --> 03:04.200
+thing is greater than zero as well.
+
+03:04.560 --> 03:09.270
+So to do so, we're going to write in a check right here of is float.
+
+03:11.570 --> 03:14.090
+A float is a number that has a decimal component.
+
+03:14.090 --> 03:17.390
+So this is going to make sure that we are providing a number that has a decimal.
+
+03:18.730 --> 03:20.290
+Or possibly has a decimal.
+
+03:21.120 --> 03:26.180
+As the argument to this, we can provide a balance for this number so we can put in a greater than or
+
+03:26.190 --> 03:28.680
+less than check to put in a greater than check.
+
+03:28.680 --> 03:31.440
+We'll write in standing for greater than.
+
+03:31.950 --> 03:34.560
+And we want to make sure again, this thing is greater than zero.
+
+03:36.340 --> 03:42.580
+So then if we fail that check, let's put it in once again a customer error message and we'll say price
+
+03:42.850 --> 03:45.220
+must be greater than zero.
+
+03:48.040 --> 03:48.670
+All right.
+
+03:49.860 --> 03:50.790
+Let's save this.
+
+03:50.970 --> 03:51.960
+Go back over.
+
+03:52.950 --> 03:56.430
+And it looks like both of our tests around validation are passing.
+
+03:56.490 --> 03:57.300
+Fantastic.
+
+03:58.320 --> 04:00.810
+Well, that really just leaves us with the last case right here.
+
+04:00.810 --> 04:05.280
+We have to actually create a ticket with some valid inputs and make sure it somehow gets saved to the
+
+04:05.280 --> 04:06.960
+database or something like that.
+
+04:06.960 --> 04:09.540
+So let's start to work on that final test in just a moment.

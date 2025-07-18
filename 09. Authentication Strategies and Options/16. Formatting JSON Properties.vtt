@@ -1,0 +1,550 @@
+WEBVTT
+
+00:01.540 --> 00:07.180
+In the last video we established that we want to remap this underscore ID key name just to adjust ID
+
+00:07.210 --> 00:10.510
+and we want to remove password in underscore underscore V.
+
+00:10.810 --> 00:15.520
+We could definitely write out some code directly inside of our response right here, or the response
+
+00:15.520 --> 00:17.440
+we send back whenever a user signs up.
+
+00:17.440 --> 00:22.240
+But that would mean that we have to duplicate that code to any other location where we intend to send
+
+00:22.240 --> 00:24.700
+a user back to whoever made the request.
+
+00:24.820 --> 00:30.160
+So in other words, we would have to duplicate that logic over to current user and probably sign in
+
+00:30.160 --> 00:34.780
+as well because chances are those are root handlers that are going to send back the user who just signed
+
+00:34.780 --> 00:36.490
+in or the one who is signed in.
+
+00:37.090 --> 00:42.100
+So we should figure out a better way or a more reusable way to make sure that we can remap those properties
+
+00:42.100 --> 00:44.230
+and delete some properties as well.
+
+00:45.110 --> 00:51.980
+So to handle this, I want to give you a quick reminder on how JavaScript turns objects into JSON data
+
+00:52.590 --> 00:56.450
+might not seem super relevant when I say that, but trust me, it very much is relevant.
+
+00:57.200 --> 01:01.250
+I'm going to open up a quick JavaScript console inside my browser and just write out a little bit of
+
+01:01.250 --> 01:01.490
+code.
+
+01:01.490 --> 01:03.080
+Just to give you a very quick reminder.
+
+01:03.650 --> 01:09.230
+I'm going to create a new object inside of here called Person, and I'll give them a name of Alex.
+
+01:10.220 --> 01:15.740
+I'm then going to turn that into JSON by doing a JSON string of PHI and passed in person.
+
+01:16.310 --> 01:16.760
+All right.
+
+01:16.760 --> 01:17.670
+No big surprise there.
+
+01:17.690 --> 01:21.890
+As usual, we just are getting the JSON representation of the object person.
+
+01:21.890 --> 01:23.780
+So it's got name of Alex.
+
+01:24.350 --> 01:29.660
+It turns out that we can actually override how JavaScript turns an object into JSON.
+
+01:29.930 --> 01:33.310
+Let me show you how I'm going to define a second person.
+
+01:33.320 --> 01:34.460
+So person to.
+
+01:35.620 --> 01:37.840
+This person is going to have a name of.
+
+01:39.290 --> 01:40.280
+Also, Alex.
+
+01:41.140 --> 01:47.740
+And I'm going to also define a method inside of here called to JSON and notice that it is all capitals
+
+01:47.740 --> 01:48.520
+JSON.
+
+01:49.630 --> 01:50.650
+So here's my method.
+
+01:51.930 --> 01:56.430
+I'm going to make sure I've got the correct number of curly braces so my implementation would go inside
+
+01:56.430 --> 02:03.000
+of here whenever we call JSON string ify on person too, rather than just trying to string ify the entire
+
+02:03.000 --> 02:07.950
+object, JavaScript is going to instead invoke this two JSON method.
+
+02:08.590 --> 02:13.960
+So whatever logic we put inside there, whatever we return from that function right there, is going
+
+02:13.960 --> 02:18.730
+to be the JSON representation of this object as opposed to the default behavior, which is to just string
+
+02:18.730 --> 02:21.100
+ify all the keys and values and so on.
+
+02:21.920 --> 02:23.660
+He wants something really interesting.
+
+02:23.660 --> 02:25.760
+We could return one.
+
+02:26.730 --> 02:33.030
+So now whenever we try to string a fi person to rather than getting back a string with a name of Alex,
+
+02:33.030 --> 02:35.240
+we're going to instead run this method.
+
+02:35.250 --> 02:40.260
+It's going to return one, and so one is going to be our JSON representation of person two.
+
+02:40.740 --> 02:44.700
+So I'll do a JSON string of PHI person to.
+
+02:46.000 --> 02:46.840
+And look at that.
+
+02:46.840 --> 02:52.210
+That is definitely not an accurate representation of the string ified version of Person two, but it's
+
+02:52.210 --> 02:53.710
+what we said we wanted to do.
+
+02:54.310 --> 03:00.580
+So as you guess, well, we can pretty much do something like this right here to make sure that we always
+
+03:00.580 --> 03:06.520
+whenever we send some JSON data tied to a user back to the browser or in a response, we can define
+
+03:06.520 --> 03:10.630
+that to JSON method and then customize exactly what we return.
+
+03:10.870 --> 03:15.610
+So we can remap some properties, we can delete properties and so on.
+
+03:16.090 --> 03:17.250
+So how do we actually do that?
+
+03:17.260 --> 03:19.300
+How do we actually apply this to.
+
+03:20.060 --> 03:21.560
+Our user document right here.
+
+03:21.830 --> 03:26.270
+Well, we're going to go back over to our model directory, find the user file.
+
+03:26.450 --> 03:27.410
+Here it is right here.
+
+03:29.470 --> 03:31.780
+I'm going to go down to where we create our schema.
+
+03:32.760 --> 03:34.830
+I'm going to add in a second argument.
+
+03:35.010 --> 03:36.390
+That's going to be an object.
+
+03:37.300 --> 03:38.410
+Inside of this argument.
+
+03:38.410 --> 03:40.540
+I'm going to add in to JSON.
+
+03:43.010 --> 03:47.510
+To Jason inside of here works a little bit differently than what I just showed you at the console.
+
+03:47.540 --> 03:50.510
+So remember at the console if I go back over to my browser.
+
+03:52.130 --> 03:53.780
+And I deleted that example.
+
+03:54.540 --> 03:55.530
+There we go right here.
+
+03:55.860 --> 04:00.450
+So at the console, we defined a to JSON function tied to an object.
+
+04:01.080 --> 04:04.830
+The same idea is still related or relevant to the world of mongoose.
+
+04:04.860 --> 04:07.710
+It's just implemented slightly, slightly differently.
+
+04:08.310 --> 04:11.370
+So inside this second object right here, we're going to define to JSON.
+
+04:11.370 --> 04:15.300
+And rather than being a function, instead it is going to be an object.
+
+04:15.810 --> 04:19.980
+Inside of here, we're going to define a set of properties that are going to help Mongoose take our
+
+04:19.980 --> 04:22.500
+user document and turn it into JSON.
+
+04:22.770 --> 04:26.790
+So again, it is not quite identical to what I just showed you inside the console where we just defined
+
+04:26.790 --> 04:27.660
+one function.
+
+04:27.660 --> 04:33.570
+Instead, we get this object we can pass in a set of different customization options that describe how
+
+04:33.570 --> 04:35.220
+to turn our document into JSON.
+
+04:35.760 --> 04:40.620
+To see a full list of how we can do that customization, we can do a command click.
+
+04:40.740 --> 04:43.860
+So on your keyboard, hold down command and then click on to JSON.
+
+04:44.400 --> 04:48.150
+This is going to take you to the definition of what to JSON should be.
+
+04:49.020 --> 04:54.150
+We can then do another command click or control click if you are on Windows and click on document to
+
+04:54.150 --> 04:55.410
+object options.
+
+04:56.250 --> 05:01.530
+So these are all the properties we can list out inside that object to somehow customize how our document
+
+05:01.530 --> 05:03.030
+gets turned into JSON.
+
+05:03.630 --> 05:05.660
+So we can set up some different getters.
+
+05:05.670 --> 05:11.640
+We can remove some empty, empty objects and some other stuff inside of here as well.
+
+05:13.980 --> 05:14.380
+Okay.
+
+05:14.400 --> 05:19.020
+So with that in mind, I do want to point out one particular option called transform.
+
+05:19.440 --> 05:25.050
+That's the option we are going to use to kind of massage how our user document gets turned into JSON.
+
+05:25.500 --> 05:30.020
+It is similar in nature to the to JSON function we just saw inside of the browser.
+
+05:30.030 --> 05:32.280
+It just works a little bit differently.
+
+05:32.880 --> 05:36.900
+In particular, take a look at the arguments on here and the documentation right above it.
+
+05:36.930 --> 05:39.390
+The first argument is referred to as Doc.
+
+05:39.720 --> 05:45.030
+This is going to be the actual document or the actual user instance that we are turning into JSON.
+
+05:46.070 --> 05:48.380
+The second argument is referred to as RET.
+
+05:48.500 --> 05:52.130
+RET is short for returned object or something similar to that.
+
+05:52.730 --> 05:57.920
+This is a kind of pre or a attempt at turning this thing into JSON by mongoose.
+
+05:57.920 --> 06:01.370
+So Mongoose is going to try to turn this thing into JSON for us.
+
+06:01.550 --> 06:06.050
+So RET is going to be just the properties that are tied to our user document.
+
+06:06.260 --> 06:09.650
+So for example, just that ID, just the email and just the password.
+
+06:10.250 --> 06:15.410
+If we want to make any further changes to how Mongoose is going to turn this thing into JSON, we are
+
+06:15.410 --> 06:18.770
+going to modify that RET object in place.
+
+06:18.770 --> 06:25.040
+So we are going to directly modify that RET object and whatever direct changes we make to that RET object,
+
+06:25.040 --> 06:28.910
+those changes will be reflected in the final JSON ified version.
+
+06:29.540 --> 06:32.900
+Now a lot of this stuff sounds kind of complicated, so let's just write some code and I think you'll
+
+06:32.900 --> 06:35.060
+get a good idea of what's going on really quickly.
+
+06:35.830 --> 06:35.940
+Okay.
+
+06:36.040 --> 06:38.200
+So back inside my user file.
+
+06:38.870 --> 06:39.590
+We've got to.
+
+06:39.590 --> 06:41.060
+Jason, I'm going to put in.
+
+06:41.910 --> 06:42.840
+Transform.
+
+06:44.450 --> 06:47.300
+We're going to get in arguments of dock and rent.
+
+06:47.300 --> 06:49.610
+So again, this is the actual user document.
+
+06:49.610 --> 06:52.640
+This is the thing that's going to eventually be turned into JSON.
+
+06:52.640 --> 06:55.760
+So we're going to make some direct changes to that thing right there.
+
+06:55.760 --> 06:58.250
+We're not trying to return a new object or anything like that.
+
+06:58.250 --> 07:00.800
+We are making direct changes to that object.
+
+07:01.630 --> 07:07.120
+Let's first try just to just remove the password property because we do not want the password property
+
+07:07.120 --> 07:09.490
+to show up inside of any JSON representation.
+
+07:10.030 --> 07:14.080
+So to do so, we would write out delete ret dot password.
+
+07:15.050 --> 07:18.920
+Now delete right here is a keyword that you do not see very often in JavaScript.
+
+07:19.130 --> 07:23.060
+The delete keyword is going to remove a property off of an object.
+
+07:23.300 --> 07:24.860
+This is normal JavaScript right here.
+
+07:24.860 --> 07:27.290
+This is not typescript or something special like that.
+
+07:27.290 --> 07:31.550
+You can use the delete keyword with normal plain old JavaScript.
+
+07:32.700 --> 07:35.310
+So that will completely remove the password property.
+
+07:36.430 --> 07:37.510
+So let's save this.
+
+07:37.630 --> 07:40.840
+We're going to go and sign up for a new user with Postman once again.
+
+07:40.990 --> 07:45.310
+And you'll see right away that we're not going to get back the password property in our response.
+
+07:46.330 --> 07:46.420
+Okay.
+
+07:46.530 --> 07:47.850
+So back over with Postman.
+
+07:48.790 --> 07:51.580
+I'm going to enter in a new unique email it send.
+
+07:51.700 --> 07:52.810
+And there we go.
+
+07:52.810 --> 07:53.890
+There's my response.
+
+07:54.100 --> 07:56.710
+So you'll now see that we do not have any password inside there.
+
+07:57.250 --> 08:03.400
+So we can now repeat this process to remove, underscore, underscore V and to rename ID as well.
+
+08:04.490 --> 08:10.790
+Let's try removing that underscore underscore V so we could do a delete ret underscore underscore.
+
+08:10.790 --> 08:13.130
+So make sure you've got two right there be.
+
+08:15.210 --> 08:16.170
+I'll save this.
+
+08:16.350 --> 08:18.990
+We'll do just another very quick test.
+
+08:19.020 --> 08:21.300
+So I'll go and create another user.
+
+08:22.400 --> 08:24.980
+But in the unique email and.
+
+08:24.980 --> 08:25.250
+All right.
+
+08:25.250 --> 08:26.960
+That's even looking better now.
+
+08:26.960 --> 08:30.950
+Just, you know, if we look really carefully at the two JSON options that we were just looking at a
+
+08:30.950 --> 08:35.960
+moment ago, that underscore underscore V thing is what is known as a version key.
+
+08:35.960 --> 08:40.760
+So there actually is a separate object or option right here to say that we do not want to include that
+
+08:40.760 --> 08:41.570
+version key.
+
+08:41.570 --> 08:47.540
+So if we wanted to, we could absolutely add that thing or just set version key to false to not include
+
+08:47.540 --> 08:47.870
+it.
+
+08:47.870 --> 08:51.800
+Or alternatively, we could just do what we are doing right here and delete it manually.
+
+08:51.800 --> 08:53.000
+Either one is totally fine.
+
+08:54.490 --> 08:54.850
+Okay.
+
+08:54.850 --> 08:58.570
+So then finally, last thing we need to do is remap that ID property.
+
+08:58.870 --> 09:03.520
+Remember, we need to make changes to this RET object, which means that remapping or renaming that
+
+09:03.520 --> 09:06.440
+property is going to actually require two separate lines.
+
+09:06.460 --> 09:14.280
+So first we're going to set ret ID to whatever the underscore ID property is and then we will delete
+
+09:14.530 --> 09:15.250
+RET.
+
+09:16.010 --> 09:18.080
+Underscore ID like so.
+
+09:19.020 --> 09:19.160
+Okay.
+
+09:19.230 --> 09:20.070
+So let's save that.
+
+09:21.080 --> 09:22.400
+Go back over once again.
+
+09:23.370 --> 09:24.570
+Change that email.
+
+09:26.140 --> 09:27.010
+Send it off.
+
+09:27.490 --> 09:28.310
+And there we go.
+
+09:28.330 --> 09:31.000
+We're now left with simply email and ID.
+
+09:32.510 --> 09:35.060
+So now we don't see any properties that we do not want to see.
+
+09:35.240 --> 09:41.540
+In addition, ID is using the more consistent form of just ID as opposed to underscore ID.
+
+09:42.230 --> 09:43.730
+All right, so that looks way better.
+
+09:43.940 --> 09:47.740
+We're going to end up repeating this approach in several other services as well.
+
+09:47.750 --> 09:50.870
+Any time that we need to take a resource and turn it into plain JSON.
+
+09:51.170 --> 09:51.800
+There's other thing.
+
+09:51.800 --> 09:53.430
+One other thing I want to mention very quickly.
+
+09:53.450 --> 10:00.320
+It is a typical in other words, it is not super common to put together some logic like this inside
+
+10:00.320 --> 10:02.270
+of a model definition file.
+
+10:02.660 --> 10:07.430
+What we're really doing right here is defining how some data inside of our application should be viewed
+
+10:07.430 --> 10:09.440
+or transmitted along the network.
+
+10:09.710 --> 10:14.790
+It is not common to define that inside of something like this right here or inside of our model file.
+
+10:14.810 --> 10:19.280
+Instead, that is more traditionally kind of like a view related responsibility.
+
+10:19.610 --> 10:24.080
+So if we're trying to follow a model view controller kind of concept, what we're doing right here is
+
+10:24.080 --> 10:28.340
+really writing out some view lever like view level logic.
+
+10:28.550 --> 10:32.900
+So again, not the best approach, but for our purposes, this is going to work very easily for right
+
+10:32.900 --> 10:33.350
+now.
+
+10:34.180 --> 10:34.450
+Okay.
+
+10:34.450 --> 10:35.740
+So that's definitely a good improvement.
+
+10:35.770 --> 10:38.680
+Let's take a quick pause right here and continue in just a moment.

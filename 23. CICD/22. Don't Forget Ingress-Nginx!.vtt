@@ -1,0 +1,262 @@
+WEBVTT
+
+00:01.150 --> 00:04.330
+We are just about ready to do a final test of our deployment process.
+
+00:04.330 --> 00:09.560
+But before we do one last little piece of setup, remember, before we make use of ingress engine X
+
+00:09.580 --> 00:14.830
+inside of a cluster, we have to do a little setup command from the ingress engine x documentation.
+
+00:15.160 --> 00:16.390
+So let's go run that right now.
+
+00:16.390 --> 00:20.230
+We're going to execute that command manually against our digital ocean cluster.
+
+00:20.680 --> 00:25.300
+So inside of a new browser tab, I'm going to do a search for ingress engine x.
+
+00:26.350 --> 00:29.110
+I'm going to find the homepage for ingress engine x right here.
+
+00:30.230 --> 00:35.390
+I'll then find the deployment section and then remember there are many different set of commands depending
+
+00:35.390 --> 00:37.190
+upon how we are running our cluster.
+
+00:37.490 --> 00:40.040
+In our case, we are running our cluster on digital ocean.
+
+00:40.170 --> 00:43.040
+I'm going to go to the digital ocean, set up command.
+
+00:43.730 --> 00:44.600
+Here it is right here.
+
+00:45.400 --> 00:46.840
+I will copy that command.
+
+00:47.670 --> 00:49.700
+And then going to go back over to my terminal.
+
+00:49.800 --> 00:55.110
+And before I run the command, I'm going to double check and make sure that my CTL client is connecting
+
+00:55.110 --> 00:57.180
+to my digital ocean cluster.
+
+00:57.950 --> 01:01.790
+Remember, you can verify that either by going to Docker for Windows or Docker for Mac.
+
+01:01.820 --> 01:06.560
+Taking a look at that Kubernetes dropdown and making sure that you're using your ticketing context.
+
+01:07.190 --> 01:09.170
+Alternatively, if you're using mini cube.
+
+01:10.010 --> 01:15.680
+You're going to run those commands of CTL config view that will tell you the name of your digital ocean
+
+01:15.680 --> 01:16.460
+context.
+
+01:16.490 --> 01:19.340
+You can take that name and then run ctrl config.
+
+01:19.370 --> 01:21.650
+Use context and then that context name.
+
+01:22.790 --> 01:28.550
+So once your acute instance is configured appropriately, well then paste in that command and run it.
+
+01:31.330 --> 01:31.660
+All right.
+
+01:31.660 --> 01:33.430
+Looks like everything is being created.
+
+01:33.580 --> 01:34.150
+Very good.
+
+01:35.750 --> 01:39.830
+So after all that stuff gets created, there is one last quick thing we have to do.
+
+01:40.100 --> 01:41.660
+We have made some changes.
+
+01:42.360 --> 01:45.660
+To the structure of our infra directory.
+
+01:45.960 --> 01:49.290
+So we've got all these changes to where all these different files live right now.
+
+01:49.680 --> 01:54.540
+So we need to make sure that we commit these changes and push them up to the master branch so that when
+
+01:54.540 --> 01:59.310
+we eventually merge our new code, well, we'll pull along these changes with it and we will make sure
+
+01:59.310 --> 02:03.030
+that we only deploy the appropriate ingress service file.
+
+02:03.910 --> 02:07.690
+So we are going to commit these changes directly to master and push them up.
+
+02:08.110 --> 02:12.780
+Now, just, you know, when we commit to master and push them up, that is going to cause that works.
+
+02:12.790 --> 02:17.200
+That workflow that we just put together the deployment workflow to run one time.
+
+02:17.850 --> 02:22.710
+So as soon as we push these changes up, specifically these split directories right here, that is going
+
+02:22.710 --> 02:26.550
+to cause a deployment to our digital ocean cluster.
+
+02:27.120 --> 02:30.750
+So we should immediately after committing these and pushing them manually, we should be able to inspect
+
+02:30.750 --> 02:34.050
+our cluster and see a bunch of deployments being created and stuff like that.
+
+02:34.590 --> 02:36.240
+So let's do that manually right now.
+
+02:36.240 --> 02:40.980
+And again, this is one of the only times you're going to manually commit to master and push changes
+
+02:40.980 --> 02:41.790
+to master.
+
+02:42.240 --> 02:46.920
+In general, we are always going to open a pull request instead and use a pull request to merge in changes.
+
+02:48.430 --> 02:48.730
+Okay.
+
+02:48.760 --> 02:51.370
+So back at my terminal, I'm going to check out master.
+
+02:52.840 --> 02:56.080
+I'm going to do a get status and just verify.
+
+02:56.080 --> 02:58.120
+Yep, I got those two directory changes.
+
+02:58.120 --> 03:02.530
+I got some changes to the scaffold yaml file and I moved the ingress service file, two copies of it
+
+03:02.530 --> 03:04.240
+to those two new directories.
+
+03:04.900 --> 03:06.520
+I'm going to add all these changes.
+
+03:07.900 --> 03:12.730
+I'm going to commit them and I'll say, split a eights manifest.
+
+03:14.010 --> 03:15.540
+And then I will push the master.
+
+03:20.100 --> 03:22.560
+And I've got some changes up on Master once again.
+
+03:22.710 --> 03:23.610
+My mistake.
+
+03:23.680 --> 03:27.810
+So once again, I need to do a pull or gin master really quickly.
+
+03:30.470 --> 03:36.110
+I have to author my merge message and now I can do a push to Origin Master.
+
+03:40.410 --> 03:40.770
+All right.
+
+03:40.770 --> 03:41.490
+There we go.
+
+03:41.890 --> 03:44.190
+So now if we go over to GitHub really quickly.
+
+03:45.380 --> 03:48.530
+And take a look at our actions tab once again.
+
+03:50.490 --> 03:54.870
+We're going to see if we click on deploy manifests and deploy auth.
+
+03:54.870 --> 03:59.910
+We should see that there are some changes that have now been submitted, so we should see that split
+
+03:59.910 --> 04:00.960
+infra directory.
+
+04:02.280 --> 04:04.620
+And if we click on that and go to build.
+
+04:05.630 --> 04:11.150
+We should see that we successfully install ductile, that we apply to all of those folders inside of
+
+04:11.150 --> 04:16.340
+our kids and kids directories, and that everything was completed successfully.
+
+04:17.520 --> 04:21.390
+After we verify that everything was executed successfully, we should then be able to go back over to
+
+04:21.390 --> 04:26.370
+our terminal and then get a listing of all the pods running on our digital ocean cluster.
+
+04:26.730 --> 04:33.990
+We should be able to do a K or cube CTL IT pods, and that should run or get a list of all the pods
+
+04:34.140 --> 04:36.060
+that have been created on our cluster.
+
+04:36.480 --> 04:41.240
+Now you'll notice that in my case, I've got some definite errors here, and that's totally okay.
+
+04:41.250 --> 04:43.440
+If you have errors, that is OC as well.
+
+04:43.590 --> 04:47.730
+We're going to first get all of our tooling put together and then we'll worry about doing some troubleshooting
+
+04:47.730 --> 04:50.100
+here and figuring out exactly what is going on.
+
+04:50.970 --> 04:56.100
+All we want to really see right now is that some resources were successful or I shouldn't even say successfully
+
+04:56.100 --> 04:56.580
+created.
+
+04:56.610 --> 05:00.440
+We really just want to see that some pods are attempting to be created.
+
+05:00.450 --> 05:02.130
+That's all we want to see right now.
+
+05:03.100 --> 05:03.460
+All right.
+
+05:03.460 --> 05:10.000
+So now that I have verified that my GitHub action workflow has tried to push some manifests off to my
+
+05:10.000 --> 05:12.160
+cluster, we're going to take a pause right here.
+
+05:12.280 --> 05:17.170
+We're going to come back the next video we're going to test out, making a pull request to our service
+
+05:17.170 --> 05:22.990
+and make sure that we can create a or merge that request and see those changes get deployed to our cluster.
+
+05:23.410 --> 05:27.580
+Once we go through that workflow at least once, we're then going to do some troubleshooting and figure
+
+05:27.580 --> 05:30.790
+out why some of these different pods are failing to be created.

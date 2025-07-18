@@ -1,0 +1,163 @@
+WEBVTT
+
+00:00.990 --> 00:02.280
+I'm inside of our handler.
+
+00:02.280 --> 00:06.180
+So at the very top we're going to import that publisher that we just created and make sure that we publish
+
+00:06.180 --> 00:09.480
+the payment grade event after saving our newly created payment.
+
+00:10.110 --> 00:11.130
+So at the very top.
+
+00:11.720 --> 00:13.340
+I will import my publisher.
+
+00:17.060 --> 00:19.400
+And I'll import that from up one directory.
+
+00:19.430 --> 00:23.450
+Events Publishers Payment Created Publisher.
+
+00:26.680 --> 00:29.980
+Then back down right after our payment save.
+
+00:30.220 --> 00:31.930
+I'm going to create a new instance.
+
+00:32.810 --> 00:34.760
+Of the payment created publisher.
+
+00:35.300 --> 00:39.560
+Don't forget, we do have to provide a Nets client to this thing, and that means we need to also import
+
+00:39.560 --> 00:41.750
+our Nets wrapper at the top of the file as well.
+
+00:42.080 --> 00:43.130
+So at the very top.
+
+00:45.630 --> 00:50.460
+I will also import my nats wrapper from up one directory.
+
+00:50.520 --> 00:51.540
+Nats wrapper.
+
+00:54.350 --> 01:00.260
+Then right after we create the new publisher, I'll stick in the net's wrapper client.
+
+01:01.200 --> 01:06.330
+We have to call publish on their and to publish we have to provide some data for the event itself.
+
+01:06.630 --> 01:10.230
+And so, again, if we forget what we have to provide, we can always mouse over the air and we'll be
+
+01:10.230 --> 01:14.670
+told that we have to be able to provide the ID of the payment that was created, the order ID and the
+
+01:14.670 --> 01:15.780
+stripe ID as well.
+
+01:17.120 --> 01:21.020
+So for ID we will throw in payment ID.
+
+01:22.010 --> 01:25.910
+Or the order ID we could use the order ID that was defined back up here.
+
+01:26.210 --> 01:31.940
+But as best practice, we really like to take information directly off the record that we just saved
+
+01:31.940 --> 01:36.800
+instead because who knows, we might be making some adjustment to the order ID, we might be changing
+
+01:36.800 --> 01:37.730
+it in some fashion.
+
+01:37.790 --> 01:42.470
+Same with the Stripe ID obviously we're not doing that in this case, but it's usually just best practice
+
+01:42.470 --> 01:46.820
+to take information off the record we just saved because we don't know if there's something kind of
+
+01:46.820 --> 01:50.390
+massaging that information before it actually gets stored inside the database.
+
+01:51.680 --> 01:55.280
+So for the order ID while reference payment order ID.
+
+01:56.100 --> 01:58.260
+And then for the strike by the same thing here.
+
+01:58.260 --> 01:59.970
+Payment stripe ID.
+
+02:04.750 --> 02:07.090
+Now again, we might choose to await this.
+
+02:08.070 --> 02:13.200
+If we await this, then we're going to make sure that we await to publish the event before we send a
+
+02:13.200 --> 02:14.100
+response back.
+
+02:14.340 --> 02:18.300
+Alternatively, we could remove the weight and just say, Hey, let's just send back a response as soon
+
+02:18.300 --> 02:23.310
+as possible and we're not going to worry about handling or waiting for the event to be published.
+
+02:25.350 --> 02:26.640
+So I'm going to save it like this.
+
+02:27.120 --> 02:31.650
+And now the very last thing that we might want to do is return some more meaningful data than just a
+
+02:31.650 --> 02:32.100
+success.
+
+02:32.100 --> 02:32.340
+True.
+
+02:32.340 --> 02:33.030
+Right here.
+
+02:33.270 --> 02:39.270
+So maybe instead we should return, let's say maybe the entire payment object or maybe just the payment
+
+02:39.270 --> 02:39.660
+objects.
+
+02:39.660 --> 02:45.180
+ID really in this case, just about any return value is totally fine because we're not really going
+
+02:45.180 --> 02:48.900
+to make use of this information at any point in time inside of our React application.
+
+02:49.110 --> 02:53.310
+So how about for right now, we'll just return the ID of the payment that was created.
+
+02:58.380 --> 03:02.460
+If you want to, you could definitely write out a test around this and make sure that the ID that is
+
+03:02.460 --> 03:06.470
+being sent back is the same as the payment that was actually saved to the database.
+
+03:06.480 --> 03:08.880
+Totally up to you, but I'm not going to worry about it too much.
+
+03:09.770 --> 03:10.180
+All right.
+
+03:10.190 --> 03:10.990
+Well, that's pretty much it.
+
+03:11.000 --> 03:13.970
+That is our payment service, or at least the payment route handler.
+
+03:15.580 --> 03:17.260
+So let's take a pause right here, as usual.
+
+03:17.260 --> 03:18.490
+Continue in just a moment.

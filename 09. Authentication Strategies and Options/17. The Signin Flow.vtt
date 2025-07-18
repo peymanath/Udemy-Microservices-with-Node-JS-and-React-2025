@@ -1,0 +1,394 @@
+WEBVTT
+
+00:00.630 --> 00:03.360
+We have now spent a very long time around sign up.
+
+00:03.360 --> 00:06.240
+But we are all done really for real this time.
+
+00:06.390 --> 00:08.910
+So now going to start to move on to our next route handler.
+
+00:08.910 --> 00:13.290
+And believe me, everything else inside of the service is going to go forward much more, much more
+
+00:13.290 --> 00:13.750
+quickly.
+
+00:13.770 --> 00:16.860
+We've really covered all the really big topics we need to be aware of.
+
+00:16.890 --> 00:19.170
+So now we get to breeze through everything else inside of here.
+
+00:19.620 --> 00:22.980
+So in this video, we're going to start to put together our sign in route.
+
+00:23.250 --> 00:28.830
+So our React application or right now, postman is going to make a request to sign into our application.
+
+00:29.160 --> 00:32.190
+When they do so, they're going to supply an email and password, and then we're going to go through
+
+00:32.190 --> 00:34.200
+the following series of steps.
+
+00:34.950 --> 00:40.440
+We're going to first take a look into our MongoDB database and see if a user with this email exists.
+
+00:40.830 --> 00:45.660
+If the email that was supplied inside the request doesn't exist or is not tied to any user inside of
+
+00:45.660 --> 00:50.850
+our database, then it must be an invalid login request so we will respond with an error immediately
+
+00:50.850 --> 00:51.840
+if that is the case.
+
+00:52.500 --> 00:57.120
+Now, assuming that we do find a user, we're going to compare the passwords of the stored user and
+
+00:57.120 --> 01:00.330
+the supplied password present inside that request.
+
+01:00.330 --> 01:05.400
+And remember, we already put together a method to inside that password service thing or that password
+
+01:05.400 --> 01:07.860
+service class to handle password comparison.
+
+01:08.460 --> 01:11.460
+If the two passwords are identical, then hey, fantastic.
+
+01:11.460 --> 01:13.620
+We'll now consider this user to be logged in.
+
+01:13.980 --> 01:19.680
+So we are going to send them a JSON web token in that cookie using the same kind of strategy as what
+
+01:19.680 --> 01:22.140
+we did back inside of sign up over here.
+
+01:23.630 --> 01:23.890
+Okay.
+
+01:23.900 --> 01:25.740
+So with all that in mind, let's get to it.
+
+01:25.760 --> 01:28.880
+I'm going to flip on over to my sign and file.
+
+01:29.270 --> 01:31.880
+We've already got a little bit of code inside of here already.
+
+01:32.390 --> 01:34.500
+So we'll go ahead and start to augment this.
+
+01:34.520 --> 01:38.570
+The first thing we're going to do is do some validation on the incoming request.
+
+01:39.700 --> 01:42.610
+So I'm going to add in an import statement.
+
+01:43.970 --> 01:45.170
+Poor body.
+
+01:46.940 --> 01:49.160
+From Express Validator.
+
+01:49.160 --> 01:54.770
+Remember, this is a method that can be used as a middleware to validate incoming data on the body of
+
+01:54.770 --> 01:55.940
+this post request.
+
+01:56.450 --> 01:58.160
+So I'm going to put an array inside of here.
+
+01:58.940 --> 02:01.640
+Just to organize these different validation functions.
+
+02:05.620 --> 02:09.460
+We're going to do some very similar validation to what we did back inside of Sign Up.
+
+02:10.480 --> 02:13.360
+So let's do a check for email.
+
+02:14.430 --> 02:16.380
+We'll make sure that it looks like an email.
+
+02:17.550 --> 02:20.160
+And I'll put in a custom message if something is wrong with it.
+
+02:20.160 --> 02:23.220
+So we'll say email must be valid.
+
+02:24.780 --> 02:26.790
+Then as a second entry inside this array.
+
+02:26.790 --> 02:30.390
+So note the comma over here we will put in body.
+
+02:32.040 --> 02:33.660
+And we're going to check the password this time.
+
+02:34.640 --> 02:39.860
+We will go ahead and do that sanitization step of trimming it to remove any spaces on the left or the
+
+02:39.860 --> 02:41.660
+right hand side of the supplied password.
+
+02:42.740 --> 02:47.870
+In this case, we do not need to check to see if the length is valid because our validation rules or
+
+02:47.870 --> 02:50.690
+exactly what a password is might change over time.
+
+02:50.900 --> 02:56.120
+It might be that at some point in the past we allowed passwords all the way up to 30 characters, whereas
+
+02:56.120 --> 02:58.370
+now the limit or the maximum is 20.
+
+02:58.730 --> 03:03.080
+If we just arbitrarily put on some validation, step on the password right here, that would lock out
+
+03:03.080 --> 03:07.310
+any existing users who do not or who have passwords that don't follow these rules.
+
+03:08.750 --> 03:11.900
+We will, however, require that a password is supplied.
+
+03:11.900 --> 03:14.680
+So to check for that, we're going to put in a check right here.
+
+03:15.890 --> 03:20.450
+We're going to look for is or not empty like so.
+
+03:20.870 --> 03:24.590
+So if the password that is supplied is an empty string, this is going to throw an error.
+
+03:25.470 --> 03:27.720
+Well, then put on a custom message once again.
+
+03:28.660 --> 03:34.480
+We'll say something like, you must supply a password that will work.
+
+03:36.310 --> 03:36.550
+Get.
+
+03:36.560 --> 03:37.330
+That looks good.
+
+03:38.140 --> 03:42.610
+So now we'll go down into our actual body down here.
+
+03:43.380 --> 03:45.180
+I'm going to delete that resend for now.
+
+03:46.120 --> 03:49.120
+You'll notice that we are getting an air around rec and rez now.
+
+03:49.150 --> 03:54.040
+That's because TypeScript is no longer doing some type in inference for us, which it was able to do
+
+03:54.040 --> 03:56.680
+when we only had two arguments being passed into post.
+
+03:57.100 --> 04:01.180
+So just as we did before, back inside of sign up, we have to import.
+
+04:02.250 --> 04:08.190
+The types of request and response from Express at the very top and then use those types to annotate
+
+04:08.190 --> 04:09.180
+these arguments.
+
+04:09.180 --> 04:10.170
+The request.
+
+04:12.330 --> 04:13.560
+And response.
+
+04:16.280 --> 04:21.260
+Then inside of here, once again, just like we did back inside of sign up, we need to take a look
+
+04:21.260 --> 04:24.740
+and see if anything went wrong during that validation attempt.
+
+04:25.070 --> 04:30.290
+So we essentially need to duplicate the exact same logic that we've got over inside of our sign up request
+
+04:30.290 --> 04:31.580
+handler right here.
+
+04:32.770 --> 04:35.740
+It's kind of unfortunate to have to duplicate this stuff directly over.
+
+04:35.740 --> 04:40.780
+So as you imagine, this might be a good location or a good time to try to figure out how to make this
+
+04:40.780 --> 04:43.290
+air checking code a little bit more reusable.
+
+04:43.300 --> 04:45.850
+But right now, let's just rewrite the same thing.
+
+04:46.630 --> 04:49.090
+So I'm going to check to see if there are any errors.
+
+04:49.970 --> 04:54.770
+By doing a validation result on the incoming request.
+
+04:55.130 --> 04:59.990
+Validation result is a function that is coming from that express validator library up here.
+
+05:00.780 --> 05:06.300
+So right after, buddy, we're going to make sure we also import validation results.
+
+05:07.700 --> 05:10.790
+That's going to give us back any ears on that request.
+
+05:11.920 --> 05:13.720
+Well, then check to see if it is empty.
+
+05:13.720 --> 05:16.030
+So this thing is not empty.
+
+05:19.410 --> 05:20.690
+Then something's wrong.
+
+05:20.700 --> 05:22.360
+We should throw in air.
+
+05:22.380 --> 05:27.600
+And remember, we put together an air specifically for this purpose inside of our ears directory, there
+
+05:27.600 --> 05:30.780
+is that air we had put together of request, validation, error.
+
+05:31.020 --> 05:34.770
+So let's import that into this file, and then we could throw it from right here.
+
+05:35.480 --> 05:37.970
+So at the top, I'm going to import.
+
+05:39.230 --> 05:46.340
+Request validation error from up one directory errors request validation error.
+
+05:50.110 --> 05:51.160
+Then back down here.
+
+05:51.430 --> 05:51.760
+Okay.
+
+05:51.820 --> 05:57.550
+If the area is not empty, throw new request validation air.
+
+05:57.940 --> 06:01.290
+And remember, the requirement here is we pass in the array of errors.
+
+06:01.300 --> 06:05.170
+We'll pass an errors dot array like so.
+
+06:06.630 --> 06:07.140
+Yes, Alex.
+
+06:07.140 --> 06:07.590
+Good.
+
+06:07.980 --> 06:10.230
+So already we can start to test this out.
+
+06:10.230 --> 06:15.120
+Before we do so, however, let's just make sure that we had already wired this sign in router right
+
+06:15.120 --> 06:19.260
+here up to our express application back inside of the index file.
+
+06:19.590 --> 06:21.420
+So back inside of indexes.
+
+06:22.590 --> 06:27.900
+At the very top, we can double check and just make sure that we did wire up or import that router and
+
+06:27.900 --> 06:30.890
+then make sure that it actually got connected to our express application.
+
+06:30.900 --> 06:31.920
+Yep, definitely did.
+
+06:32.900 --> 06:35.610
+All right, so now we can go back over to Postman.
+
+06:35.630 --> 06:42.200
+We'll try to make a request to API users, sign in and supply a invalid email or password and just verify
+
+06:42.200 --> 06:44.510
+that we're seeing some appropriate validation info.
+
+06:44.950 --> 06:49.070
+As a matter of fact, I just noticed I got a typo right there around supply, so definitely worth doing.
+
+06:49.310 --> 06:51.020
+Very small little test every now and then.
+
+06:51.980 --> 06:54.170
+So I'm going to make a request to API users.
+
+06:54.170 --> 06:56.300
+Sign in.
+
+06:57.990 --> 07:01.530
+And I'll first tried to supply an email that is not valid.
+
+07:04.270 --> 07:04.680
+There we go.
+
+07:04.690 --> 07:05.890
+So email must be valid.
+
+07:06.690 --> 07:08.880
+If I put in an email that is valid.
+
+07:10.160 --> 07:11.990
+But I have an empty password.
+
+07:13.350 --> 07:13.740
+I'll see.
+
+07:13.740 --> 07:15.000
+You must apply a password.
+
+07:15.030 --> 07:15.660
+Very good.
+
+07:16.050 --> 07:20.920
+Now, if we put in some valid email and password, the request is just going to hang.
+
+07:20.950 --> 07:24.000
+And that's because we are not actually responding to the request at any point in time.
+
+07:25.030 --> 07:25.160
+Okay.
+
+07:25.210 --> 07:26.560
+So this looks like a good start.
+
+07:26.560 --> 07:30.790
+But as I mentioned, we've now got some very much duplicated logic inside of here.
+
+07:31.000 --> 07:35.140
+And as you can guess, there's probably going to be many other route handlers inside of our application
+
+07:35.140 --> 07:38.370
+and other services that are going to need to have identical logic.
+
+07:38.380 --> 07:43.420
+So chances are we should try to extract this into some kind of helper middleware that will take care
+
+07:43.420 --> 07:45.550
+of this validation stuff for us automatically.
+
+07:46.090 --> 07:48.160
+Let's take care of that in the next video.

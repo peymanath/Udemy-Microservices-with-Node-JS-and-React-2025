@@ -1,0 +1,352 @@
+WEBVTT
+
+00:01.090 --> 00:05.950
+Now that we have created our exploration and complete event, we can create a publisher to publish this
+
+00:05.950 --> 00:08.110
+event inside of our exploration service.
+
+00:08.380 --> 00:12.550
+It has been just a little bit since we have created a publisher, so let's just get a quick reminder
+
+00:12.550 --> 00:13.270
+on how we do it.
+
+00:13.270 --> 00:15.520
+By taking a look back at our order service.
+
+00:16.060 --> 00:21.310
+Back inside the order service we can find our SC Events Publishers Directory and then inside there,
+
+00:21.310 --> 00:23.740
+maybe just look at our order created publisher.
+
+00:24.510 --> 00:26.130
+So this is how we create a publisher.
+
+00:26.130 --> 00:31.500
+We just make a new class, we extend our publisher base class, and we put in the type of event that
+
+00:31.500 --> 00:32.490
+we want to publish.
+
+00:32.910 --> 00:37.080
+And then for the subject, we just define that using these subjects, and that's it.
+
+00:37.080 --> 00:38.850
+Nothing else, very special about it.
+
+00:39.360 --> 00:46.440
+So let's create one of these for our exploration complete event back inside of the exploration service.
+
+00:47.470 --> 00:48.490
+Inside of exploration.
+
+00:48.490 --> 00:52.480
+I'll find the events directory and inside there I'll make a new folder called Publishers.
+
+00:53.740 --> 00:56.290
+And in there, we'll create a new file of.
+
+00:58.000 --> 00:58.900
+Expiration.
+
+01:00.000 --> 01:01.650
+Complete publisher?
+
+01:02.070 --> 01:02.610
+Yes.
+
+01:05.370 --> 01:09.360
+Then up at the very top, we'll import subjects.
+
+01:10.300 --> 01:13.120
+Publisher and the expiration.
+
+01:14.580 --> 01:17.730
+Complete event from our common module.
+
+01:21.840 --> 01:24.630
+Well, then export a new class.
+
+01:26.930 --> 01:28.100
+Of expiration.
+
+01:29.460 --> 01:30.630
+Complete publisher.
+
+01:32.810 --> 01:33.530
+Come on.
+
+01:33.950 --> 01:34.550
+There we go.
+
+01:35.760 --> 01:42.300
+That's going to be extending publisher and as the generic type, we will stick in the expiration complete
+
+01:42.330 --> 01:43.020
+event.
+
+01:43.170 --> 01:45.190
+These are some really long variable names.
+
+01:45.210 --> 01:49.770
+That's why I'm pausing every single time because I want to make sure that I get the name exactly correct.
+
+01:50.130 --> 01:50.460
+All right.
+
+01:50.460 --> 01:54.540
+As usual, TypeScript says, well, if you want to extend this, you've got to define subject.
+
+01:54.630 --> 01:56.160
+So we'll set up the subject property.
+
+01:56.160 --> 02:01.980
+It will be of type subjects, dot expiration complete, and we will assign that a value of subjects
+
+02:02.550 --> 02:04.020
+expiration complete.
+
+02:07.690 --> 02:09.710
+Now it looks like TypeScript is still unhappy here.
+
+02:10.400 --> 02:11.330
+Oh, I put in subjects.
+
+02:11.330 --> 02:12.730
+Should be just subject singular.
+
+02:12.740 --> 02:13.370
+There we go.
+
+02:13.850 --> 02:14.750
+Now it's happy.
+
+02:15.800 --> 02:16.100
+All right.
+
+02:16.100 --> 02:17.140
+Publisher created.
+
+02:17.150 --> 02:23.870
+So now we can go back over to our cues expiration cue and we'll find our process statement inside there.
+
+02:24.710 --> 02:29.930
+So remember, we go back and reference this diagram whenever we process this job, whenever we receive
+
+02:29.930 --> 02:34.490
+it back from Redis, that is when we are going to want to emit that new event or publish an event of
+
+02:34.490 --> 02:35.750
+expiration complete.
+
+02:35.840 --> 02:39.800
+And we just need to make sure that we take the order ID out of the job itself.
+
+02:40.880 --> 02:43.670
+So the code for this should be pretty easy and straightforward.
+
+02:44.390 --> 02:46.850
+At the very top of our exploration queue file.
+
+02:46.880 --> 02:48.410
+We are going to import.
+
+02:49.510 --> 02:50.410
+Our publisher.
+
+02:57.190 --> 02:57.820
+From.
+
+02:59.230 --> 03:02.560
+Up one directory events publishers.
+
+03:03.360 --> 03:04.980
+Exploration complete publisher.
+
+03:05.580 --> 03:10.200
+And then remember, any time that we try to publish an event, we also have to provide the net's client
+
+03:10.200 --> 03:10.860
+as well.
+
+03:10.980 --> 03:13.920
+So we're going to also import our net's wrapper.
+
+03:15.180 --> 03:20.130
+From up to directories or simply just one directory in this case and that's wrapper.
+
+03:22.030 --> 03:26.620
+So now down inside of our process statement, we can remove that console log.
+
+03:27.760 --> 03:29.050
+And replace it with.
+
+03:30.720 --> 03:34.020
+Publisher is, or actually we don't even really need to assign this to a variable.
+
+03:34.020 --> 03:36.120
+We can write it all out inside just one statement.
+
+03:36.120 --> 03:36.900
+So we'll just do that.
+
+03:36.900 --> 03:37.980
+We'll say new.
+
+03:39.800 --> 03:46.430
+Exploration complete publisher will pass in our nets client and we will publish.
+
+03:49.140 --> 03:53.550
+And as usual, if we forget what we have to provide for publish, we can just mouse over and TypeScript
+
+03:53.550 --> 03:53.970
+will tell us.
+
+03:53.970 --> 03:59.640
+We have to give an order ID so we'll put in an order ID and that order ID is going to come out of our
+
+03:59.640 --> 04:00.180
+job.
+
+04:00.870 --> 04:02.940
+Remember, our job has a data property.
+
+04:02.970 --> 04:07.410
+The data property is going to contain all the information we are storing inside the job, which in this
+
+04:07.410 --> 04:12.810
+case is this payload interface or it is a object matching the payload interface just to be really correct
+
+04:12.810 --> 04:13.230
+here.
+
+04:14.040 --> 04:17.250
+So for order ID, we'll put in job data.
+
+04:17.580 --> 04:18.390
+Order ID.
+
+04:20.750 --> 04:22.100
+And that is pretty much it.
+
+04:22.250 --> 04:27.680
+So now naturally we should try to test this out so we can once again use Postman to manually create
+
+04:27.680 --> 04:32.030
+a ticket, manually create an order, and then we could wait for that full one minute to eventually
+
+04:32.030 --> 04:36.970
+see a expiration complete event get published, but instead just to make everything go really quickly,
+
+04:36.980 --> 04:39.530
+let's go back over to our order created listener.
+
+04:40.160 --> 04:44.240
+So inside of our listeners directory and we're going to do a test of all this stuff, but I'm going
+
+04:44.240 --> 04:48.770
+to comment out the delay right here that's going to cause the job to be processed instantly.
+
+04:48.770 --> 04:53.510
+And so we should see the event of expiration complete processed instantly as well.
+
+04:54.250 --> 04:54.330
+Yeah.
+
+04:54.470 --> 04:57.260
+I'm going to save this and we'll go over to post man and test this all out.
+
+04:58.150 --> 05:00.760
+So inside a post, man, I'm going to once again create a new ticket.
+
+05:01.640 --> 05:02.960
+There's my ticket ID.
+
+05:03.440 --> 05:05.450
+I'll then use that to create a new order.
+
+05:06.180 --> 05:10.610
+They'll put in the ticket ID right there, send it off and I'll go back over to my terminal and take
+
+05:10.610 --> 05:12.620
+a look at the different events that have been published.
+
+05:14.430 --> 05:14.730
+Okay.
+
+05:14.730 --> 05:19.910
+So let's kick off at order created right here from the expiration service.
+
+05:19.920 --> 05:23.880
+We then get the console log that we're going to wait some number of milliseconds to process the job.
+
+05:23.880 --> 05:25.770
+But of course, we just commented out that delay.
+
+05:25.770 --> 05:28.200
+So it's going to be kind of processed immediately.
+
+05:29.350 --> 05:32.710
+So then see some other stuff about a ticket being updated.
+
+05:32.980 --> 05:34.780
+Another ticket updated during ceived.
+
+05:34.780 --> 05:36.740
+And then that's what we're looking for right there.
+
+05:36.760 --> 05:40.810
+Event published to expiration complete from the expiration service.
+
+05:41.140 --> 05:41.740
+Awesome.
+
+05:41.920 --> 05:43.900
+That means that it's all working as expected.
+
+05:44.570 --> 05:48.780
+This looks pretty good and that is pretty much it for our exploration service.
+
+05:48.800 --> 05:49.370
+Pretty simple.
+
+05:49.370 --> 05:50.120
+Straightforward.
+
+05:50.150 --> 05:54.980
+All it really did was take in an event, wait some time, and then publish another one in the future.
+
+05:55.730 --> 05:58.070
+So last thing I'm going to do for the listener.
+
+05:58.070 --> 06:02.120
+I'm going to uncomment that delay and make sure I get a comma right above.
+
+06:03.800 --> 06:04.220
+Well.
+
+06:05.040 --> 06:05.500
+Yeah.
+
+06:05.520 --> 06:06.870
+And it closed all this stuff out.
+
+06:07.320 --> 06:08.340
+We'll take a pause right here.
+
+06:08.340 --> 06:12.720
+And when we come back in the next video, we're going to move back over to our order service and make
+
+06:12.720 --> 06:17.250
+sure that we receive that new ticket or expiration complete event.
+
+06:17.640 --> 06:21.540
+As soon as we get that event, we'll make sure that we mark the accompanying order as expired.
+
+06:22.640 --> 06:23.030
+Cool.
+
+06:23.060 --> 06:26.450
+So a quick pause right here and we'll go back over to the order service in just a moment.

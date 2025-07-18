@@ -1,0 +1,391 @@
+WEBVTT
+
+00:01.040 --> 00:03.380
+Our entire testing pipeline is looking pretty good.
+
+00:03.380 --> 00:06.800
+So we're now going to start to move on to the deployment of our application.
+
+00:07.310 --> 00:11.660
+The first thing we have to do to deploy our application is choose a hosting provider and create a new
+
+00:11.660 --> 00:12.860
+Kubernetes cluster.
+
+00:13.220 --> 00:16.820
+So we need to take a look at some of the different providers that are available, evaluate them, and
+
+00:16.820 --> 00:18.560
+eventually create a cluster itself.
+
+00:19.040 --> 00:23.750
+Before we discuss these providers at all, I do want to mention that a credit card is going to be required
+
+00:23.750 --> 00:26.210
+to move forward with one of these hosting providers.
+
+00:26.420 --> 00:31.820
+Every single one of them requires you to enter a credit card in order to run any kind of workload.
+
+00:32.210 --> 00:34.220
+You will need a credit card, without a doubt.
+
+00:34.850 --> 00:38.600
+In total, we're going to have to pay about a dollar or so to get a domain.
+
+00:38.930 --> 00:42.350
+We're also going to run or cost about $0.72 notice.
+
+00:42.350 --> 00:43.340
+That is sense right there.
+
+00:43.340 --> 00:47.090
+It is not $72 per day to run the cluster itself.
+
+00:47.890 --> 00:53.800
+Now for the provider that we are going to use, you can find coupon codes online and these coupon codes
+
+00:53.800 --> 00:56.490
+are generally worth about $60 or $100 or so.
+
+00:56.500 --> 01:00.640
+So at the end of the day, if you create a new account with the provider that we're going to use and
+
+01:00.640 --> 01:05.440
+you find a coupon code for it, you should probably be able to walk out of this with only paying $1
+
+01:05.440 --> 01:06.970
+for the domain name itself.
+
+01:07.210 --> 01:10.450
+And technically the domain name is somewhat optional.
+
+01:10.450 --> 01:14.890
+If you do not get the domain name, you will not be able to load up our application inside the browser,
+
+01:14.890 --> 01:19.300
+but you will be able to at least deploy it and verify that it is online and running.
+
+01:19.300 --> 01:21.430
+You just won't be able to access it in the browser.
+
+01:22.790 --> 01:22.960
+Okay.
+
+01:23.030 --> 01:26.990
+So with all that in mind, let's take a look at some of the different hosting providers we are going
+
+01:26.990 --> 01:28.010
+to have access to.
+
+01:28.820 --> 01:33.720
+So we're going to very briefly discuss four different providers on each of these providers.
+
+01:33.740 --> 01:35.120
+I really just have two metrics.
+
+01:35.120 --> 01:37.730
+The first is the cost to use this provider.
+
+01:38.420 --> 01:43.880
+And the cost for each of these and is in terms of month and for each month, I'm assuming that we have
+
+01:43.880 --> 01:48.620
+three individual nodes inside of our cluster, so three virtual machines and that each of those has
+
+01:48.620 --> 01:51.170
+two gigabytes of RAM and about one CPU.
+
+01:51.650 --> 01:55.100
+Some of these providers also have some extra costs associated with them.
+
+01:55.100 --> 01:58.640
+And so wherever possible, I included or lumped in some of those costs.
+
+01:59.850 --> 02:01.500
+And some of these providers as well.
+
+02:01.500 --> 02:05.510
+There is no option to get a VM with two gigabytes of RAM and one CPU.
+
+02:05.520 --> 02:10.050
+So I just did my best to kind of round out and figure out something kind of equivalent.
+
+02:10.470 --> 02:14.970
+What I'm trying to say here is that you should not use the exact numbers I've quoted in each of these
+
+02:14.970 --> 02:17.100
+as gospel or the exact value.
+
+02:17.100 --> 02:21.630
+Instead, they are kind of very rough estimates on what we might possibly end up paying.
+
+02:23.150 --> 02:26.720
+So with that in mind, let's take a look at our four hosting providers.
+
+02:27.230 --> 02:32.030
+The four big names out there right now are Digital Ocean eight, AWS, Google Cloud and Azure.
+
+02:33.730 --> 02:34.300
+Reach these.
+
+02:34.300 --> 02:39.100
+You can see very easily that digital ocean by far leads on price and AWS.
+
+02:39.220 --> 02:42.100
+Google Cloud are way more expensive.
+
+02:43.080 --> 02:48.510
+The reason for that is that a US and Google Cloud charged you money just to run a Kubernetes cluster
+
+02:48.510 --> 02:51.000
+without any virtual machines inside of it.
+
+02:51.570 --> 02:56.670
+So remember, whenever we run Kubernetes, we have what is called the master node or the control plane,
+
+02:56.670 --> 02:58.080
+as it's also referred to.
+
+02:58.410 --> 03:03.450
+This is a process that evaluates and watches your cluster and make sure that it is doing everything
+
+03:03.450 --> 03:04.200
+correctly.
+
+03:04.350 --> 03:09.510
+It monitors all the different pods, creates pods, great services, all that kind of good stuff.
+
+03:10.350 --> 03:14.260
+AWS and Google Cloud make you pay money just for that control plane.
+
+03:14.280 --> 03:21.190
+In total, it is $0.01 per hour and that actually really adds up very quickly, $0.01 per hour.
+
+03:21.210 --> 03:22.140
+Let's do the math here.
+
+03:22.140 --> 03:25.320
+So $0.01 or something, not $0.01 $0.10.
+
+03:25.320 --> 03:27.240
+So point one dollars.
+
+03:28.500 --> 03:30.880
+24 hours in a day at times 30 days.
+
+03:30.900 --> 03:36.450
+That is $72 a month that you are paying just to make use of eight of us or Google Cloud.
+
+03:36.720 --> 03:41.520
+That's a lot of money and that's why it's so much more expensive to make use of eight of us or Google
+
+03:41.520 --> 03:44.970
+Cloud for a very small, very simple Kubernetes cluster.
+
+03:46.760 --> 03:51.260
+Now personally, I would like to use Google Cloud because it's pretty darn easy to use.
+
+03:51.290 --> 03:57.110
+The UI is fantastic, monitoring is really easy and so on, but is a little bit more expensive.
+
+03:57.110 --> 04:01.490
+And we've kind of already touched on Google Cloud earlier on inside this course, so we're going to
+
+04:01.490 --> 04:02.930
+throw that out as an option.
+
+04:03.870 --> 04:07.470
+I also want to mention, as are over here really quickly, not to be totally honest with you, I have
+
+04:07.470 --> 04:11.700
+not used Kubernetes with Azure before, so I can't really give you a great opinion.
+
+04:11.820 --> 04:16.860
+I have had some great experiences with Azure in the past with non Kubernetes deployments.
+
+04:17.190 --> 04:21.300
+Nonetheless, I don't really have professional experience with it, so to be honest, we're not going
+
+04:21.300 --> 04:25.050
+to use it inside this course because I can't really do a good job of explaining the pros and cons of
+
+04:25.050 --> 04:25.440
+it.
+
+04:26.400 --> 04:27.900
+That really leaves digital ocean.
+
+04:27.900 --> 04:32.910
+And now from the colors I have here, I bet you can guess which one we're going to use.
+
+04:33.390 --> 04:35.370
+We're going to use digital ocean.
+
+04:35.760 --> 04:40.050
+I know that many people taking this course would love to see a trust me.
+
+04:40.050 --> 04:40.770
+I know.
+
+04:40.770 --> 04:43.530
+I know you want to see a s with Kubernetes.
+
+04:43.530 --> 04:46.410
+But let me just be really, really honest with you.
+
+04:46.590 --> 04:50.820
+This very well might be the first time that you are deploying something with Kubernetes.
+
+04:51.060 --> 04:57.030
+And if you are just getting started with Kubernetes, eight of us is almost definitely the worst possible
+
+04:57.030 --> 04:58.950
+deployment provider out there.
+
+04:59.280 --> 05:00.390
+Almost without a doubt.
+
+05:01.300 --> 05:02.220
+With the US.
+
+05:02.230 --> 05:04.490
+There is an incredible number of options.
+
+05:04.510 --> 05:07.080
+There's an incredible number of setup steps.
+
+05:07.090 --> 05:11.560
+There are incredible number of setup screens, a ton of UI, a ton of settings.
+
+05:11.710 --> 05:17.170
+All of it is extremely mysterious and all the documentation is rather poor.
+
+05:17.680 --> 05:22.390
+In addition, they also provide a Kubernetes offering that is kind of tangled quite a bit with another
+
+05:22.390 --> 05:25.120
+product they offer called a gate.
+
+05:25.120 --> 05:29.400
+And understanding what FAJ does is its own challenge in its own right.
+
+05:29.410 --> 05:35.230
+So if you are getting started with Kubernetes and deployment, I got to be honest with you, AWS is
+
+05:35.230 --> 05:41.200
+a really, really bad decision and I really recommend you try out an easier provider first.
+
+05:41.200 --> 05:46.270
+Just you understand the general process and then you can go and take a shot at a AWS.
+
+05:46.810 --> 05:48.750
+So that is my opinion on AWS.
+
+05:48.760 --> 05:51.010
+I'm sure there are people out there who disagree with me.
+
+05:51.010 --> 05:53.830
+Maybe they say, Hey, learn the hardest thing first or something like that.
+
+05:53.830 --> 05:59.680
+But my opinion is AWS is just a very bad place to get started with Kubernetes.
+
+06:00.350 --> 06:02.660
+So as you can imagine, yep, digital ocean.
+
+06:02.660 --> 06:03.850
+That's what we're going to use.
+
+06:03.860 --> 06:05.480
+It is by far the cheapest.
+
+06:06.080 --> 06:10.070
+It's also extremely easy to use, extremely easy.
+
+06:10.580 --> 06:11.540
+At some level.
+
+06:11.540 --> 06:14.780
+You're not even going to realize that we are running anything with digital ocean.
+
+06:14.780 --> 06:19.010
+It's going to feel like you're just accessing a Kubernetes cluster on your local machine.
+
+06:19.010 --> 06:20.780
+That's how easy it is going to end up being.
+
+06:23.060 --> 06:24.610
+Because we're going to use digital ocean.
+
+06:24.620 --> 06:26.240
+Let's go over to the website right now.
+
+06:26.240 --> 06:30.170
+We're going to make sure that you have an account and that you get signed up for one hook up billing
+
+06:30.170 --> 06:31.370
+and all that kind of stuff.
+
+06:31.960 --> 06:35.490
+So inside of a new browser tab, I'm going to navigate to Digital Ocean.
+
+06:37.110 --> 06:38.690
+And go ahead and sign up.
+
+06:38.700 --> 06:42.690
+And before you sign up, if you want to do it, you can do a quick Google search for something like
+
+06:42.690 --> 06:49.560
+digital ocean at coupon code and you probably are going to be able to find a $100 coupon code that essentially
+
+06:49.560 --> 06:52.200
+gives you $100 of credit with digital ocean.
+
+06:52.620 --> 06:56.040
+So if you want to pause video, go and find a coupon code like that.
+
+06:56.190 --> 06:59.160
+Click on it and then sign up for an account through that coupon.
+
+06:59.610 --> 07:03.150
+Otherwise, if you already have an account or if you just don't care about coupon code, just go ahead,
+
+07:03.150 --> 07:04.050
+create an account.
+
+07:04.050 --> 07:05.280
+And eventually.
+
+07:06.700 --> 07:11.770
+What we want to see is the main landing dashboard, which is going to look a little something like this.
+
+07:12.250 --> 07:15.480
+You might see a whole bunch of welcome screen or something like that.
+
+07:15.490 --> 07:20.200
+Basically, it just makes sure you create an account and get signed in as you sign in.
+
+07:20.230 --> 07:24.610
+You might be prompted to enter some billing information and if you are, make sure you enter your credit
+
+07:24.610 --> 07:25.330
+card number.
+
+07:25.330 --> 07:29.680
+In order to run our cluster, you will need a credit card associated with your account.
+
+07:30.370 --> 07:32.400
+So go ahead through that signup process.
+
+07:32.410 --> 07:33.400
+We're going to pause right here.
+
+07:33.400 --> 07:38.110
+And hopefully by the start of the next video, you'll end up at a screen somewhat similar to this right
+
+07:38.110 --> 07:38.500
+here.
+
+07:38.500 --> 07:40.210
+So I'll see you in just a minute.

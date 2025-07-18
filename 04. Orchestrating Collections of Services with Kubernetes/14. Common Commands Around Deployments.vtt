@@ -1,0 +1,241 @@
+WEBVTT
+
+00:00.940 --> 00:02.410
+We've now created a deployment.
+
+00:02.410 --> 00:06.490
+So now we're going to take a look at a couple of commands we can use to inspect that deployment and
+
+00:06.490 --> 00:08.050
+manipulate it in some fashion.
+
+00:08.440 --> 00:11.980
+The first command we're going to take a look at is it'll get deployments.
+
+00:11.980 --> 00:15.550
+That's going to list out all the running deployments we have on our cluster.
+
+00:16.400 --> 00:22.490
+So I'll do a little bit deployments and we'll see that we have one deployment called Post Dash Depot.
+
+00:24.020 --> 00:30.620
+On here is a red number up to date and available ready is the number of pods that we are trying to create.
+
+00:30.620 --> 00:33.800
+So that's the number on the right of the little slash right there.
+
+00:33.800 --> 00:37.910
+And then on the left hand side is the number of pods that are up and running and ready to receive some
+
+00:37.910 --> 00:39.350
+traffic or do some work.
+
+00:40.130 --> 00:44.870
+We've also got the number of up to date pods because remember, we use deployments to manage updating
+
+00:44.870 --> 00:50.060
+the versions of some code or application running inside these pods and then the number of pods that
+
+00:50.060 --> 00:52.790
+are available and again, ready to do some work for us.
+
+00:54.870 --> 00:58.730
+Of course, we can also now print out the pods we have running inside of our cluster as well.
+
+00:58.740 --> 01:05.610
+We should see one pod that has been created automatically by this deployment so we can do a to get pods.
+
+01:06.150 --> 01:09.660
+And right there is the pod that was created by our deployment.
+
+01:10.020 --> 01:14.820
+Now, very interestingly, if you and I tried to delete this pod that was created by the deployment,
+
+01:14.820 --> 01:18.300
+the deployment is going to see that that pod has mysteriously disappeared.
+
+01:18.300 --> 01:21.030
+And so it's going to attempt to recreate the pod for us.
+
+01:21.330 --> 01:22.770
+Let's try doing that right now.
+
+01:23.250 --> 01:28.740
+I'm going to delete that pod that was created by the deployment with a cube CTL delete.
+
+01:28.770 --> 01:29.370
+Odd.
+
+01:30.110 --> 01:31.670
+And then I'll put in the name of the pod.
+
+01:31.670 --> 01:33.740
+So I'm going to copy paste that name right there.
+
+01:35.120 --> 01:39.080
+Remember the first post right there, just as a reminder, that is the pod that we created in the last
+
+01:39.080 --> 01:41.510
+couple of videos when we were working with pods initially.
+
+01:42.390 --> 01:43.770
+All right, so I'll delete that pod.
+
+01:45.310 --> 01:46.810
+I'm going to have to wait a second or two.
+
+01:48.030 --> 01:51.570
+And after that command is completed, we can then get our pods again.
+
+01:52.940 --> 01:53.780
+And you'll notice.
+
+01:53.780 --> 01:54.320
+Wait a minute.
+
+01:54.320 --> 01:55.820
+We've still got two pods.
+
+01:55.910 --> 01:57.590
+Well, not quite.
+
+01:57.620 --> 02:01.190
+Take a look at the exact name of the pod that we just deleted.
+
+02:01.220 --> 02:06.710
+It was post double, then some ID and then some other part of an ID and then take a look at the next
+
+02:06.710 --> 02:07.610
+one down here.
+
+02:07.820 --> 02:10.850
+You'll notice that the last part of that ID is completely different.
+
+02:10.940 --> 02:14.810
+In addition, the age of this pod right here is only 11 seconds.
+
+02:15.260 --> 02:17.420
+So the instant we deleted the old pod.
+
+02:18.280 --> 02:21.220
+Our deployment automatically created a new one for us.
+
+02:21.460 --> 02:26.320
+So I think you can start to see how using deployments to manage some workloads inside of our application
+
+02:26.320 --> 02:27.770
+are really fantastic.
+
+02:27.790 --> 02:30.760
+If anything starts to go wrong, well, Kubernetes has our back.
+
+02:30.760 --> 02:33.790
+It's going to automatically try to repair our application.
+
+02:35.350 --> 02:36.640
+Now a couple more commands here.
+
+02:36.910 --> 02:39.250
+First off is to describe deployment.
+
+02:39.430 --> 02:42.790
+So we can use this to print out some information about a specific deployment.
+
+02:42.790 --> 02:46.960
+And again, we're going to usually do this any time that we're trying to debug a deployment and figure
+
+02:46.960 --> 02:48.490
+out why it's not working correctly.
+
+02:49.420 --> 02:53.890
+So we can do a little describe deployment.
+
+02:53.890 --> 02:55.720
+And then the name of our deployment was back up.
+
+02:55.720 --> 02:57.640
+Here is Post Dash Depot.
+
+03:00.500 --> 03:03.770
+So you can see there is once again a lot of gibberish information here.
+
+03:03.950 --> 03:05.960
+Over time, a lot of this stuff will start to make sense.
+
+03:05.960 --> 03:08.480
+But right now, well, it's just a lot of information.
+
+03:09.110 --> 03:11.630
+Again, the most important part is the events down here.
+
+03:11.630 --> 03:14.630
+It's going to tell you about what is going on inside of your deployment.
+
+03:16.840 --> 03:22.150
+Next up, we can create a deployment out of a config file using that same QC to apply F command.
+
+03:22.490 --> 03:30.190
+And finally, if we need to delete a deployment, yep, it'll delete deployment so we can do a CTL delete
+
+03:30.190 --> 03:31.090
+deployment.
+
+03:32.210 --> 03:34.010
+Of post double.
+
+03:34.160 --> 03:38.870
+As soon as we delete that deployment, all the associated pods are going to be deleted as well.
+
+03:39.080 --> 03:44.930
+So I should be able to do a little get pods and I'll see that I don't have any pod related to that deployment
+
+03:44.930 --> 03:45.920
+running anymore.
+
+03:46.130 --> 03:50.570
+So the instant the deployment goes away, all the associated pods disappear as well.
+
+03:51.140 --> 03:56.390
+I can then recreate the deployment with the ETL apply chef post dash double.
+
+03:58.490 --> 04:01.340
+Then I'll get my deployments again.
+
+04:01.670 --> 04:01.970
+Yep.
+
+04:01.970 --> 04:02.720
+There it is.
+
+04:04.550 --> 04:05.630
+And my pods.
+
+04:05.990 --> 04:07.730
+And there's the pod created by the deployment.
+
+04:08.440 --> 04:08.830
+Cool.
+
+04:09.850 --> 04:13.600
+Now, while we're looking at our list of plots here, I'm going to delete that old pod that we had created
+
+04:13.600 --> 04:15.520
+manually from a couple of videos ago.
+
+04:15.520 --> 04:21.640
+So I'm going to do a little delete pod pose again just to get rid of that thing, because we usually
+
+04:21.640 --> 04:26.620
+do not create pods manually because if they crash for any reason, then we don't have anything to start
+
+04:26.620 --> 04:27.340
+them back up.
+
+04:28.770 --> 04:31.500
+And once that's deleted, very good.
+
+04:31.500 --> 04:32.940
+We'll go ahead and take a pause right here.
+
+04:32.940 --> 04:35.760
+One last thing I want to show you around deployments in just a moment.

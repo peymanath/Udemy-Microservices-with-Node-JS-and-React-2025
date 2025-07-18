@@ -1,0 +1,364 @@
+WEBVTT
+
+00:01.500 --> 00:04.770
+It looks like everything inside of my deployment process went as expected.
+
+00:05.070 --> 00:08.580
+So I built the image, pushed it off to Docker Hub, restarted the deployment.
+
+00:08.580 --> 00:11.160
+And now if I go back over to my terminal, I should be able to do a.
+
+00:11.520 --> 00:13.140
+It'll get pods.
+
+00:13.770 --> 00:16.470
+I should be able to find the running pod right here.
+
+00:17.270 --> 00:19.940
+And I'm going to try to pull logs from that pod.
+
+00:19.970 --> 00:24.560
+When I pull logs, I should see a startup message that looks identical to the one that we had just authored
+
+00:24.560 --> 00:29.750
+back inside of its index file, though, starting up with about eight dots or so.
+
+00:30.790 --> 00:36.700
+So to pull logs from that pod right there, I'm going to do a little logs and then I'll paste in the
+
+00:36.700 --> 00:37.960
+name of that pod.
+
+00:40.390 --> 00:41.160
+And there we go.
+
+00:41.170 --> 00:44.560
+So we've got starting up with the appropriate number of dots, which means that we have deployed the
+
+00:44.560 --> 00:46.510
+latest version of our service.
+
+00:47.020 --> 00:48.670
+Well, this looks pretty fantastic.
+
+00:49.370 --> 00:54.290
+Now, the last thing we really have to do here, besides a little bit of networking for ingress in Gen
+
+00:54.290 --> 01:00.050
+X, you have to go around to all of our other services and create a very similar deployment file for
+
+01:00.050 --> 01:01.010
+them as well.
+
+01:01.520 --> 01:05.390
+We'll make this change directly on GitHub, so we'll just use the built in GitHub editor.
+
+01:05.420 --> 01:11.030
+We're essentially going to duplicate that deployment off file that we get created just a moment ago.
+
+01:11.540 --> 01:13.970
+So back on GitHub, I'm going to go to my code tab.
+
+01:15.930 --> 01:18.390
+I'm going to find GitHub slash workflows.
+
+01:19.690 --> 01:22.430
+I'm going to open up, deploy, offer HTML.
+
+01:24.020 --> 01:29.840
+And then we're going to copy everything inside of here into about five other files in total, I think.
+
+01:30.720 --> 01:34.710
+So we have to create one for client tickets, payment, all that stuff.
+
+01:34.740 --> 01:35.200
+And you know what?
+
+01:35.220 --> 01:38.790
+Now that I mentioned that using the built in GitHub editor is probably going to be a little bit of a
+
+01:38.790 --> 01:39.260
+pain.
+
+01:39.270 --> 01:44.640
+So how about instead we just copy this and create some YAML files inside of our workflows directory
+
+01:44.640 --> 01:47.880
+inside of our local editor rather than using the GitHub one.
+
+01:48.330 --> 01:53.040
+That just means we're going to have to do another push directly to our master branch, which is okay
+
+01:53.040 --> 01:54.120
+in this case.
+
+01:55.060 --> 01:57.250
+All right, so I'm going to copy everything we see inside of here.
+
+01:57.790 --> 01:59.320
+I'll then go backward to my terminal.
+
+01:59.350 --> 02:01.300
+I'm going to make sure I check out Master.
+
+02:01.510 --> 02:05.140
+And just to be careful, I'm going to pull down all the changes once again.
+
+02:05.740 --> 02:08.260
+Because I keep trying to push after forgetting to pull.
+
+02:10.160 --> 02:11.480
+Then back inside of our Ed.
+
+02:12.560 --> 02:15.290
+We can find that dot github workflows directory.
+
+02:17.190 --> 02:22.530
+So inside of here, we're going to create a collection of different deploy files or client orders,
+
+02:22.530 --> 02:24.650
+tickets, payments and exploration.
+
+02:24.660 --> 02:30.000
+So inside of workflows, I'll make a new file of deploy client HTML.
+
+02:31.290 --> 02:34.180
+I'll make another one of deploy orders.
+
+02:34.910 --> 02:35.550
+Gamble.
+
+02:37.090 --> 02:38.650
+Deploy tickets.
+
+02:41.180 --> 02:42.140
+Deploy.
+
+02:42.950 --> 02:43.760
+Payments.
+
+02:46.400 --> 02:49.010
+And deploy expiration.
+
+02:52.630 --> 02:52.900
+All right.
+
+02:52.900 --> 02:53.860
+So a couple of different files here.
+
+02:53.860 --> 02:58.120
+We're going to have to go through each one and just paste in all that stuff that we just copied and
+
+02:58.120 --> 03:01.030
+make a couple of changes to just a couple of different properties inside there.
+
+03:01.030 --> 03:05.710
+We're pretty much just fixing up the name because we've got a lot of references to off inside the script
+
+03:05.710 --> 03:09.550
+and we just need to update those references to whatever we're actually trying to reference.
+
+03:11.140 --> 03:11.440
+All right.
+
+03:11.440 --> 03:15.100
+So back inside, let's start with how about our client deployment file?
+
+03:15.550 --> 03:17.230
+So deploy client yaml.
+
+03:17.440 --> 03:20.110
+I'm going to paste all that stuff that we just copied inside of here.
+
+03:22.770 --> 03:26.940
+We're then going to go through and replace every reference to auth with client.
+
+03:27.540 --> 03:28.890
+So client.
+
+03:29.930 --> 03:30.710
+Client.
+
+03:32.290 --> 03:33.040
+Client.
+
+03:33.040 --> 03:33.970
+That's three.
+
+03:35.030 --> 03:36.140
+Here is for.
+
+03:37.490 --> 03:38.600
+Years five.
+
+03:39.910 --> 03:41.530
+And here is six.
+
+03:43.800 --> 03:48.390
+So if I do a find inside of here and look for off, I should get no results.
+
+03:50.490 --> 03:52.380
+I'm going to save that file and close it.
+
+03:53.240 --> 03:55.670
+We'll move on to how about expiration next?
+
+03:56.970 --> 04:01.230
+So inside of the deploy expiration file, I'm going to do another paste and we're going to make sure
+
+04:01.230 --> 04:05.190
+that we change six instances of off over to expiration.
+
+04:05.730 --> 04:07.980
+So in this case, I'm going to do a multi select.
+
+04:08.480 --> 04:14.220
+There's one, two, three, four, five and six.
+
+04:14.460 --> 04:16.590
+I'm going to change all six to expiration.
+
+04:18.580 --> 04:22.090
+Once again, I should be able to do a find inside of here for off and find nothing.
+
+04:24.110 --> 04:24.830
+What's next?
+
+04:24.860 --> 04:26.180
+We got our orders.
+
+04:26.180 --> 04:27.710
+File the deploy orders.
+
+04:28.180 --> 04:29.150
+I'll do a paste.
+
+04:29.570 --> 04:32.650
+One, two, three, four, five and six.
+
+04:32.660 --> 04:34.070
+Change them all over to orders.
+
+04:35.790 --> 04:37.400
+Again do a search for auth.
+
+04:37.410 --> 04:38.910
+Make sure I get zero results.
+
+04:42.880 --> 04:44.170
+Onto your payments.
+
+04:44.560 --> 04:45.490
+They'll do a paste.
+
+04:46.260 --> 04:53.110
+One, two, three, four, five and six over two payments as usual, do a search for auth.
+
+04:53.130 --> 04:54.600
+Make sure I got zero results.
+
+04:55.850 --> 04:56.780
+Save that and close it.
+
+04:56.780 --> 05:01.970
+And we are on to our last one, the deploy tickets YAML file, so I'll do another paste.
+
+05:03.770 --> 05:07.700
+One, two, three, four, five and six.
+
+05:08.300 --> 05:10.880
+Change them two tickets, and that should be it.
+
+05:11.210 --> 05:12.280
+One more quick check here.
+
+05:12.290 --> 05:14.630
+Just make sure we don't have the word off inside this file.
+
+05:15.540 --> 05:16.480
+All right, so that should be it.
+
+05:16.500 --> 05:20.730
+Now, at this point, this is another location where I can guarantee you a lot of people are going to
+
+05:20.730 --> 05:25.290
+forget to change the word off inside of one of these files in just about guarantee it.
+
+05:25.560 --> 05:31.500
+So it really would be worth your time to double check the deploy files that we just created, all five
+
+05:31.500 --> 05:35.880
+of them, and just double check, make sure you do not have the word off inside of any of them.
+
+05:36.240 --> 05:40.200
+An easier way to do this would be to do a find on the workflows directory.
+
+05:41.430 --> 05:47.130
+So inside of the workflows folder I can do a search for off and I should only find results inside of
+
+05:47.130 --> 05:49.530
+deploy off and tests off.
+
+05:53.660 --> 05:53.930
+All right.
+
+05:53.930 --> 05:54.800
+So it looks good.
+
+05:55.370 --> 05:58.780
+Now, once again, we're going to commit these changes directly to master and push them up.
+
+05:58.790 --> 06:03.590
+We can then try to make a change to each of these different services, create a PR for all them, merge
+
+06:03.590 --> 06:07.550
+the PR and make sure that all of these changes actually get deployed into our cluster.
+
+06:09.950 --> 06:13.790
+So back at my terminal I'll do a get status while on the master branch.
+
+06:14.000 --> 06:16.400
+I should see the five deploy files we just created.
+
+06:17.220 --> 06:18.570
+I'll add all five them.
+
+06:20.040 --> 06:21.930
+And commit them.
+
+06:27.450 --> 06:28.740
+And then push off.
+
+06:30.530 --> 06:35.240
+Now again, because we are pushing directly to master our workflows are going to immediately run for
+
+06:35.240 --> 06:37.070
+all five of those different files.
+
+06:37.430 --> 06:41.570
+So we should see new deployments or jobs running for all five.
+
+06:41.870 --> 06:45.110
+But in this case, remember, the one thing to keep in mind as well is that we do have a filter in there
+
+06:45.110 --> 06:50.150
+to make sure that we only try to do a deployment or run those workflows if something changed inside
+
+06:50.150 --> 06:51.410
+the respective services.
+
+06:51.650 --> 06:55.340
+So actually, on second thought, we probably won't see any deployments running at all at this point.
+
+06:55.340 --> 07:00.320
+We actually do have to make a change to all five services and commit them, make the pull request,
+
+07:00.320 --> 07:04.130
+merge the pull request to actually trigger a change inside those directories.
+
+07:04.130 --> 07:06.710
+And that finally is going to run our actual workflows.
+
+07:07.340 --> 07:11.420
+So let's take a pause right here and take a shot at that in the next video.

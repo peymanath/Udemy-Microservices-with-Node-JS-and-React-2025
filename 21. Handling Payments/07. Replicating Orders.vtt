@@ -1,0 +1,217 @@
+WEBVTT
+
+00:01.250 --> 00:05.350
+All right, my friends, let's build a listener that's going to listen for the order created event.
+
+00:05.360 --> 00:08.750
+Whenever we receive this, all we have to do is build up a new order and save it.
+
+00:08.750 --> 00:10.490
+So will be pretty straightforward.
+
+00:10.850 --> 00:12.290
+Let's go in and get to it right away.
+
+00:12.590 --> 00:15.890
+Instead of my payment service, I'll find the CRC directory inside there.
+
+00:15.890 --> 00:21.260
+All make a new folder called events and then inside there I'll make another new folder called Listeners.
+
+00:21.980 --> 00:27.080
+Now you might recall every time we made a listener we need a new group name and we've been defining
+
+00:27.080 --> 00:30.470
+that Q Group name inside of a separate file inside the listeners directory.
+
+00:30.470 --> 00:33.710
+Let's do that right now since we know that we're going to need it in a very shortly.
+
+00:33.710 --> 00:39.140
+Anyways, the first file I'm going to create inside of listeners is Q Group Name is.
+
+00:40.190 --> 00:43.010
+But inside of here we will export a cast of Q.
+
+00:43.030 --> 00:44.080
+Group name.
+
+00:44.980 --> 00:48.850
+And we'll sign that the string of payments service.
+
+00:52.720 --> 00:57.040
+Then inside of listeners will make a new file of order created.
+
+00:57.040 --> 00:57.820
+Listener.
+
+00:57.850 --> 00:58.750
+That's.
+
+00:59.580 --> 01:00.240
+Inside of here.
+
+01:00.240 --> 01:02.190
+We're going to make yet another listener.
+
+01:02.370 --> 01:04.640
+We've been through this process so many times.
+
+01:04.650 --> 01:06.330
+Let's just go through it really quickly.
+
+01:06.540 --> 01:09.600
+At the top, we will get our listener base class.
+
+01:10.850 --> 01:16.010
+The order created events and the subjects in them from our common module.
+
+01:17.340 --> 01:19.320
+I'll also get cue group name.
+
+01:21.680 --> 01:24.320
+From the file we just created of Q group name.
+
+01:25.090 --> 01:31.930
+Well, then make a class of order created listener that's going to extend our listener base class and
+
+01:31.930 --> 01:33.280
+we will feed in the order.
+
+01:35.000 --> 01:36.680
+Related event.
+
+01:38.420 --> 01:40.340
+We can then define our subject as subjects.
+
+01:41.600 --> 01:45.200
+Order created and that should be a colon right there.
+
+01:45.200 --> 01:49.040
+And then the actual value for this will be subjects that order created.
+
+01:50.790 --> 01:51.510
+Are you?
+
+01:51.540 --> 01:53.520
+Group name is Q.
+
+01:53.550 --> 01:54.840
+Group name.
+
+01:56.360 --> 01:58.370
+And then finally on message.
+
+02:00.720 --> 02:02.370
+Let's mark this thing as async.
+
+02:03.390 --> 02:08.550
+It's going to receive that data argument that is of type order created event, specifically the data
+
+02:08.550 --> 02:09.180
+property.
+
+02:11.330 --> 02:16.490
+And then our message, which is a type message and I neglected to import message at the top of the file.
+
+02:16.490 --> 02:17.630
+So I will do that right away.
+
+02:19.550 --> 02:23.060
+We'll get message from Node that's streaming.
+
+02:25.680 --> 02:26.070
+All right.
+
+02:26.070 --> 02:30.450
+So now inside of here, well, as you mentioned, all we want to do is extract some information off
+
+02:30.450 --> 02:36.120
+this data object, use it to build a new order, and then save that order and then finally act the message
+
+02:36.120 --> 02:37.710
+that is it, nothing else.
+
+02:38.520 --> 02:42.690
+In order to actually build the order, well, we have to import the order model file we just put together.
+
+02:42.690 --> 02:44.370
+So I will import that right away.
+
+02:46.620 --> 02:48.000
+From up to directories.
+
+02:48.000 --> 02:49.380
+Models order.
+
+02:51.190 --> 02:52.840
+And then inside of on message.
+
+02:54.680 --> 02:57.680
+I'll create an order with order build.
+
+02:59.000 --> 03:02.540
+We'll make sure that we pass through all those different properties that we just said that we would.
+
+03:02.750 --> 03:06.890
+So in total, we need the ID, the order version, user ID, price and status.
+
+03:07.860 --> 03:11.730
+So it will be data, but ID price will be data.
+
+03:11.730 --> 03:14.100
+And remember, this is nested on the ticket property.
+
+03:14.100 --> 03:17.190
+So it will be data, ticket price.
+
+03:18.470 --> 03:20.570
+Status will be data status.
+
+03:22.510 --> 03:25.240
+User ID will be at data user ID.
+
+03:26.250 --> 03:28.140
+And our version as well.
+
+03:28.140 --> 03:29.880
+Data DOT version.
+
+03:32.100 --> 03:32.230
+Yeah.
+
+03:32.250 --> 03:32.990
+We built our order.
+
+03:33.000 --> 03:33.900
+Now we have to save it.
+
+03:33.900 --> 03:36.300
+So in a wait order, save.
+
+03:38.700 --> 03:41.910
+And then assuming that went as expected, we can take our message.
+
+03:41.910 --> 03:42.930
+So a message.
+
+03:44.600 --> 03:45.680
+And that should be it.
+
+03:48.550 --> 03:49.840
+So let's say this looks pretty good.
+
+03:50.780 --> 03:55.370
+Now, I would, as usual, really like to test this out very quickly.
+
+03:55.700 --> 03:57.020
+We're going to make this next video.
+
+03:57.020 --> 03:58.640
+We're going to write out a test for this optional.
+
+03:58.640 --> 04:03.110
+So if you are really tired with testing, no problem, you can skip over it if you want to.
+
+04:03.140 --> 04:06.680
+Otherwise, stick around and we'll go through some testing in the next video very quickly.

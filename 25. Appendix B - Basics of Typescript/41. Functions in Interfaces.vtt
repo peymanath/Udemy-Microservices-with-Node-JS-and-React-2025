@@ -1,0 +1,238 @@
+WEBVTT
+
+00:00.670 --> 00:04.750
+In this video, I want to go over two more pieces of syntax around interfaces.
+
+00:05.020 --> 00:07.780
+So to get started, I'm going to go down to the print vehicle function.
+
+00:08.230 --> 00:13.930
+Inside of here, you'll notice that our implementation now only accesses one property on the vehicle
+
+00:13.930 --> 00:14.680
+argument.
+
+00:14.710 --> 00:17.650
+The only thing we are referencing is the summary property.
+
+00:18.130 --> 00:19.540
+So I got a question for you.
+
+00:19.900 --> 00:23.830
+We are saying that the argument must be a vehicle, it must satisfy.
+
+00:23.830 --> 00:26.230
+This interface is the terminology we would use.
+
+00:26.680 --> 00:33.880
+And we've said earlier that the vehicle must have a name a year broken and the summary function.
+
+00:34.360 --> 00:39.190
+However, our function down here is now only accessing the summary property.
+
+00:39.490 --> 00:45.880
+So here's the question Is it important for us to say that a vehicle must have these properties available?
+
+00:46.480 --> 00:47.830
+I don't think it really is.
+
+00:48.220 --> 00:51.280
+So what happens if I delete those additional properties?
+
+00:52.100 --> 00:53.000
+I can delete them.
+
+00:53.000 --> 00:53.810
+They go away.
+
+00:53.810 --> 00:57.350
+And now you'll notice I do not see any errors inside my file.
+
+00:57.980 --> 00:59.000
+Why is that?
+
+00:59.240 --> 01:05.210
+Well, when I call a print vehicle right here, we are saying that in order to be passed into this function,
+
+01:05.210 --> 01:08.210
+you must satisfy the vehicle interface.
+
+01:08.750 --> 01:13.220
+So we pass in Old Civic and TypeScript behind the scenes does a quick check for us.
+
+01:13.220 --> 01:17.420
+It says, Does this object right here satisfy the vehicle interface?
+
+01:17.810 --> 01:22.880
+So TypeScript is going to go back to the vehicle interface definition and it says in order to be considered
+
+01:22.880 --> 01:27.110
+to be a vehicle, you must have a function called summary that returns a string.
+
+01:27.680 --> 01:34.520
+It then looks at the old civic object and it says, okay, does this object have a summary property
+
+01:34.520 --> 01:37.040
+that is a function that returns a string?
+
+01:37.610 --> 01:38.900
+Yes, it does.
+
+01:39.170 --> 01:42.800
+And that's the only question that gets asked.
+
+01:43.560 --> 01:49.200
+It doesn't matter if we have additional properties on Old Civic, doesn't matter when TypeScript tries
+
+01:49.200 --> 01:51.750
+to decide if old Civic is a vehicle or not.
+
+01:51.750 --> 01:56.340
+It's not going to say, Oh, you've got these extra properties, sorry, you can't be a vehicle.
+
+01:56.520 --> 02:00.600
+It's only going to check to see if it has this list of properties right here.
+
+02:00.750 --> 02:03.150
+If it has that list, awesome.
+
+02:03.150 --> 02:05.790
+It is qualified to be a vehicle.
+
+02:06.940 --> 02:12.370
+So the code we have here still works, but we've got a much more condensed interface definition.
+
+02:13.720 --> 02:15.160
+So here's the important thing here.
+
+02:15.160 --> 02:20.170
+Something I want to point out is like kind of step two of this little refactor, now that our interface
+
+02:20.170 --> 02:26.260
+only has a single function definition in it, do you think the name vehicle is really appropriate here?
+
+02:26.560 --> 02:32.440
+Like is calling an object that has a summary property that is a function that returns a string?
+
+02:32.770 --> 02:35.320
+Does it really seem appropriate to call that a vehicle?
+
+02:35.890 --> 02:37.390
+I would say maybe it doesn't.
+
+02:37.420 --> 02:42.880
+Maybe a more appropriate interface or a name for this interface would now be something like, I don't
+
+02:42.880 --> 02:45.790
+know, reportable or something like that.
+
+02:46.060 --> 02:51.850
+So now we're saying that in order to be considered the type reportable, you must have a function called
+
+02:51.850 --> 02:53.620
+summary that returns a string.
+
+02:54.580 --> 02:59.740
+And so now to fix up our file here, down here inside of print vehicles, there is no more vehicle type.
+
+02:59.740 --> 03:02.080
+So I'm going to replace that with reportable.
+
+03:02.840 --> 03:03.500
+Now just be clear.
+
+03:03.500 --> 03:04.490
+The word reportable.
+
+03:04.490 --> 03:09.970
+I'm kind of meaning to say something that is reportable, has a summary function that returns a string.
+
+03:09.980 --> 03:12.800
+So this is like something that can be reported.
+
+03:14.130 --> 03:14.460
+All right.
+
+03:14.460 --> 03:18.720
+So notice how our definition for the interface is now a lot shorter and a little bit more generic than
+
+03:18.720 --> 03:19.680
+it was before.
+
+03:20.990 --> 03:24.140
+So now back down inside the print vehicle interface or function down here.
+
+03:24.140 --> 03:26.360
+I want to just point out one more thing here.
+
+03:26.540 --> 03:29.360
+Notice how we've got a function called print vehicle.
+
+03:29.630 --> 03:35.180
+It takes an argument called vehicle and it refers to that function or that argument inside the function.
+
+03:35.180 --> 03:37.430
+But once again, I've got a question for you.
+
+03:37.640 --> 03:42.740
+Does anything about this function now really seem like it has anything to do with vehicles?
+
+03:43.430 --> 03:44.960
+I don't think it really does.
+
+03:45.320 --> 03:51.050
+The only thing that this function really does is taken something that can be reported on and then console.log
+
+03:51.080 --> 03:53.240
+a summary about that thing.
+
+03:53.720 --> 03:57.110
+So maybe we should update some of the terminology inside this function.
+
+03:57.350 --> 04:02.330
+Maybe instead of an argument called vehicle, we call this something that's called like, I don't know.
+
+04:03.150 --> 04:04.170
+Reports.
+
+04:04.440 --> 04:05.490
+How about like item?
+
+04:05.640 --> 04:06.870
+Maybe that makes sense.
+
+04:08.620 --> 04:12.520
+And then inside or rather than clean print vehicle, I want to call it maybe something a little bit
+
+04:12.520 --> 04:15.970
+more appropriate, like print summary or something like that.
+
+04:16.060 --> 04:19.330
+And I'm going to update the reference down here as well to be simply print summary.
+
+04:20.770 --> 04:20.910
+Okay.
+
+04:21.070 --> 04:25.810
+So all we've really done here is kind of pointed out how our interface no longer really has anything
+
+04:25.810 --> 04:27.820
+to do specifically with vehicles.
+
+04:27.820 --> 04:31.480
+And so I just decided to rename it into something a little bit more generic.
+
+04:31.810 --> 04:33.910
+And I did the same thing with the function down here.
+
+04:34.840 --> 04:36.150
+So let's take a quick pause right here.
+
+04:36.160 --> 04:40.180
+We're going to come back to the next video and we're going to discuss why this was a very significant
+
+04:40.190 --> 04:43.420
+refactor by adding in just a little bit more code.
+
+04:43.420 --> 04:45.670
+So a quick pause and I'll see you in just a minute.

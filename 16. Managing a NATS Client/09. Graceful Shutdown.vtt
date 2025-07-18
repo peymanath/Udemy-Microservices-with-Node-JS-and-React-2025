@@ -1,0 +1,385 @@
+WEBVTT
+
+00:01.220 --> 00:05.420
+I'm taking a look at the listener file back inside of our Nats test project.
+
+00:05.450 --> 00:10.190
+You'll recall that inside of here we said that any time that our process was about to be stopped, either
+
+00:10.190 --> 00:14.910
+by an interrupt signal or a terminate signal, we tried to close down our client gracefully.
+
+00:14.930 --> 00:16.700
+So we would call stand close.
+
+00:16.910 --> 00:18.650
+The client would then attempt to close.
+
+00:18.650 --> 00:21.290
+Once it did close, it would emit the close event.
+
+00:21.470 --> 00:23.210
+So we captured that close event.
+
+00:23.540 --> 00:28.460
+We said, okay, the thing has been cleaned up successfully, and then we actually exited our process.
+
+00:28.970 --> 00:33.020
+So we're going to do something very similar back inside of our ticketing project as well.
+
+00:33.920 --> 00:36.910
+So let me first show you one way that we could implement this.
+
+00:36.920 --> 00:38.630
+This is not the good way to do it.
+
+00:38.630 --> 00:39.550
+It's not the right way.
+
+00:39.560 --> 00:43.590
+I just want to point out some issues and I'm going to show it to you, because this might be something
+
+00:43.590 --> 00:44.660
+that you would do on your own.
+
+00:45.300 --> 00:47.420
+So I'm going to take stand on clothes right here.
+
+00:47.430 --> 00:48.390
+I'm going to copy it.
+
+00:48.810 --> 00:50.760
+Go back over to Nat's wrapper.
+
+00:51.440 --> 00:53.150
+I'm going to find the Kinect function.
+
+00:54.130 --> 00:57.740
+And then right after that, I'm going to paste in that stand on clothes.
+
+00:57.760 --> 01:01.060
+I do have to change, Stan, to this underscore client, of course.
+
+01:02.340 --> 01:03.720
+I'm also going to go back to listener.
+
+01:03.720 --> 01:06.690
+I'm going to take the two processed on statements at the bottom.
+
+01:07.700 --> 01:08.660
+Copy those.
+
+01:08.900 --> 01:12.050
+Pull it back over to Nat's wrapper and paste them right underneath.
+
+01:12.850 --> 01:18.400
+And then once again, I'll update stand to this underscore client and I'm going to put a exclamation
+
+01:18.400 --> 01:20.430
+or alternatively, we could just do this client.
+
+01:20.440 --> 01:21.880
+That'd be a better way of doing this.
+
+01:23.380 --> 01:23.710
+Okay.
+
+01:23.710 --> 01:26.410
+So this right here would definitely work.
+
+01:26.710 --> 01:32.430
+This would make sure that after we connect, we then attempt to capture any close event.
+
+01:32.440 --> 01:36.580
+And once we capture it, we're going to make sure we do a console.log, say, hey, everything was shut
+
+01:36.580 --> 01:38.140
+down successfully and then exit.
+
+01:38.320 --> 01:43.340
+And we also set up two listeners on the process to make sure there's ever an interrupt or a terminate.
+
+01:43.390 --> 01:45.640
+We are going to go ahead and close everything down.
+
+01:46.000 --> 01:50.200
+So this would definitely work without a doubt, but we do not want to do this.
+
+01:50.200 --> 01:55.870
+The reason why is that we have some method inside of here that is buried inside of some class, inside
+
+01:55.870 --> 02:01.180
+of our project that can possibly cause our entire process to exit entirely.
+
+02:01.980 --> 02:07.380
+We do not ever want to have some method inside of some hidden away file that is going to suddenly cause
+
+02:07.380 --> 02:09.060
+the entire program to exit.
+
+02:09.850 --> 02:15.130
+Definitely bad design right here because we might write this file, we might decide to say put it inside
+
+02:15.130 --> 02:18.970
+of our common module and then use it throughout all of our different services.
+
+02:19.570 --> 02:23.530
+We would then have some shared library that might cause our program to exit entirely.
+
+02:23.560 --> 02:26.980
+Can you imagine what that would be like if Mongoose behaved the same?
+
+02:27.740 --> 02:33.170
+If Magus could just suddenly arbitrarily decide to exit your entire program, that would probably not
+
+02:33.170 --> 02:34.220
+be super ideal.
+
+02:34.580 --> 02:39.020
+So rather than putting code like this hidden away inside of some method, we only ever want to allow
+
+02:39.020 --> 02:45.560
+something to exit our entire program from inside of some more central location, such as our index file.
+
+02:46.330 --> 02:51.580
+So rather than trying to directly exit from inside of Kinect, we're going to instead put together a
+
+02:51.580 --> 02:56.200
+little bit of functionality that's going to allow us to see that the client is attempting to close,
+
+02:56.200 --> 03:00.090
+and then we'll do the actual exit command from inside of indexes.
+
+03:00.790 --> 03:02.920
+So again, this would work, but not ideal.
+
+03:03.800 --> 03:05.060
+So how are we going to fix this?
+
+03:05.090 --> 03:08.240
+Well, essentially, we're just going to take the same code, but we're going to write it out inside
+
+03:08.240 --> 03:09.650
+of our index file.
+
+03:09.920 --> 03:11.630
+So I'm going to cut all that right there.
+
+03:13.780 --> 03:16.020
+And then going to go back to indexes.
+
+03:16.480 --> 03:18.640
+And then right after our connect statement.
+
+03:19.890 --> 03:21.420
+I'm going to paste all that stuff in.
+
+03:22.740 --> 03:24.960
+So we do have to repair a couple of references.
+
+03:25.320 --> 03:27.420
+I'm going to make sure I update this to.
+
+03:28.570 --> 03:30.850
+That's rapper client.
+
+03:31.930 --> 03:33.750
+And then I'll update this right here.
+
+03:33.760 --> 03:38.710
+Both these this client, both of them should now be at nets repr client like so.
+
+03:41.180 --> 03:41.420
+Okay.
+
+03:41.420 --> 03:42.530
+So this is much better.
+
+03:42.530 --> 03:47.030
+So now inside of a very central location inside of our project, we can see that there is a condition
+
+03:47.030 --> 03:49.520
+under which we're going to exit our entire program.
+
+03:50.150 --> 03:56.180
+It would be really nice if we could somehow integrate this into our class, because right now, well,
+
+03:56.210 --> 04:00.770
+you know, this is some very repetitive logic right here that we're probably going to want to duplicate
+
+04:00.770 --> 04:02.180
+between our different services.
+
+04:02.180 --> 04:07.010
+But again, it just would not be great form to hide this way inside of some far away file.
+
+04:07.730 --> 04:12.290
+So this is now the big question here is how do we actually test this stuff and make sure it's working
+
+04:12.290 --> 04:13.250
+as expected?
+
+04:13.280 --> 04:15.680
+Well, let me show you how we can test this very easily.
+
+04:15.710 --> 04:20.600
+The first thing we're going to do is go back over to our terminal and we are going to restart scaffold.
+
+04:20.630 --> 04:24.440
+Now, it's really important that you restart scaffold because if you don't, you're going to run into
+
+04:24.440 --> 04:26.690
+some really strange situation.
+
+04:26.690 --> 04:28.340
+So I'm going to kill scaffold.
+
+04:29.560 --> 04:30.910
+I'm going to see everything deleted.
+
+04:30.940 --> 04:31.930
+I'm going to give those pods.
+
+04:31.930 --> 04:33.070
+Just a moment.
+
+04:34.140 --> 04:35.070
+To get cleaned up.
+
+04:35.070 --> 04:36.930
+So it looks like they're all getting terminated.
+
+04:37.200 --> 04:37.590
+Yep.
+
+04:37.590 --> 04:38.490
+Good enough.
+
+04:38.640 --> 04:40.680
+I'll go ahead and then restart scaffold.
+
+04:43.940 --> 04:46.670
+So it's going to take a second for everything to come back online.
+
+04:48.980 --> 04:50.840
+While that is all booting up.
+
+04:51.350 --> 04:53.300
+Oh there's my connected to Nat's right there, by the way.
+
+04:53.300 --> 04:56.780
+There's my connect connected to MongoDB and listening on Port 3000.
+
+04:57.020 --> 04:59.630
+So everything is now refreshed, all running.
+
+04:59.630 --> 05:01.550
+Let's now try to simulate.
+
+05:02.470 --> 05:05.760
+Scarf or we're going to try to simulate gnats going down.
+
+05:05.770 --> 05:08.230
+We're going to try to just delete the Nets pod entirely.
+
+05:08.230 --> 05:11.950
+That is going to cause the client to emit its own close event.
+
+05:12.460 --> 05:16.450
+So when that thing gets closed, we should then see the process exit entirely.
+
+05:17.990 --> 05:19.370
+So I'm going to go back over to my terminal.
+
+05:19.400 --> 05:20.960
+I'm going to find a new terminal window.
+
+05:21.760 --> 05:23.680
+I'm going to get a listing of all my pods.
+
+05:23.860 --> 05:29.470
+I'm going to find the pod running nets and then do a cube CTL, delete pod, and then put in the name
+
+05:29.470 --> 05:30.370
+of that pod.
+
+05:32.090 --> 05:37.430
+If I now go back over to the primary scaffold window, I will see eventually a console.log of Nats connection
+
+05:37.430 --> 05:37.940
+closed.
+
+05:37.940 --> 05:38.630
+Perfect.
+
+05:39.080 --> 05:43.640
+And then a couple seconds after that for you, it might take several seconds, might take all of up
+
+05:43.640 --> 05:45.190
+to 30 seconds or a minute.
+
+05:45.200 --> 05:48.410
+You should eventually see the container start to back up.
+
+05:49.120 --> 05:54.390
+So we did successfully kill the process inside there by calling process exit.
+
+05:54.400 --> 05:56.170
+So we exited the process.
+
+05:57.480 --> 06:03.090
+Behind the scenes, the pod running our container saw that the primary process of our container exited
+
+06:03.120 --> 06:06.930
+the pod, then automatically decided to restart the container inside there.
+
+06:07.350 --> 06:11.370
+So it restarted the container and that's why we are seeing brand new output right here.
+
+06:12.210 --> 06:12.700
+From TS?
+
+06:12.750 --> 06:18.390
+A.F. We can probably also confirm that the container inside that pod was restarted if we do another
+
+06:18.780 --> 06:20.340
+K or cube CTL.
+
+06:21.070 --> 06:26.130
+Get pods and now we'll see that our tickets deployment right there has had one restart.
+
+06:26.140 --> 06:28.930
+That restart is because we lost our connection to nets.
+
+06:29.730 --> 06:29.940
+All right.
+
+06:29.940 --> 06:31.740
+So let's say this is looking pretty good.
+
+06:32.370 --> 06:36.780
+We are going to exit our process entirely any time that we lose our connection to Nats.
+
+06:36.780 --> 06:38.460
+That is definitely something we want.
+
+06:39.030 --> 06:43.170
+We are also going to make sure that any time that we get this interrupt signal or terminate signal,
+
+06:43.170 --> 06:45.270
+we're going to close down the client manually as well.
+
+06:45.900 --> 06:46.860
+So this looks pretty great.
+
+06:46.930 --> 06:47.920
+Let's take a pause right here.
+
+06:47.940 --> 06:52.230
+We still also have to test and make sure that whenever we create a new ticket, we publish an event
+
+06:52.230 --> 06:52.700
+as well.
+
+06:52.710 --> 06:54.930
+So still a little bit of stuff for us to do.

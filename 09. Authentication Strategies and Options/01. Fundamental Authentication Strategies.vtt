@@ -1,0 +1,430 @@
+WEBVTT
+
+00:01.230 --> 00:04.470
+We are finally to the last step of our sign up process.
+
+00:04.470 --> 00:09.270
+So we are now considering a user to be signed in and that means we need to somehow generate a cookie
+
+00:09.270 --> 00:13.320
+or a JSON web token, something like that, and send it back over to the user.
+
+00:13.320 --> 00:18.660
+And the user should then use that token, that cookie, whatever it is to attempt to access other services
+
+00:18.660 --> 00:22.320
+inside our application and prove that they are actually signed in.
+
+00:22.860 --> 00:28.050
+Now, handling authentication, handling the process of making sure that someone is sending us a request
+
+00:28.050 --> 00:32.760
+who is logged into our application is deceptively challenging in microservices.
+
+00:32.940 --> 00:37.620
+So we're going to first start off with a little disclaimer here, handling it, user authentication.
+
+00:37.620 --> 00:42.930
+So in other words, giving a user a cookie, a JSON web token or something similar and allowing them
+
+00:42.930 --> 00:48.510
+to access other services inside of our app is a challenging problem that is not really solved.
+
+00:48.510 --> 00:52.560
+In other words, there is not really a perfect solution to handling this stuff.
+
+00:52.560 --> 00:58.150
+There is not some strategy where we just say, Oh yeah, use a cookie or use a JSON web token and try
+
+00:58.170 --> 00:59.940
+everything works that doesn't exist.
+
+01:00.480 --> 01:05.400
+So instead, with microservices and in the context of this course, I'm going to try to outline a couple
+
+01:05.400 --> 01:11.310
+of different possible approaches in handling authentication approaches in how we can say, Hey, user,
+
+01:11.310 --> 01:13.500
+here's a cookie, or here's a token of sorts.
+
+01:13.500 --> 01:18.840
+Give this to us in the future and how we can decide whether or not a user truly is authenticated.
+
+01:19.660 --> 01:23.260
+We're going to take a look at these different solutions, and I'm going to eventually show you one that
+
+01:23.260 --> 01:24.400
+is going to work.
+
+01:24.400 --> 01:27.940
+But it is definitely by no means perfect in nature.
+
+01:28.360 --> 01:29.790
+Okay, so enough this disclaimer.
+
+01:29.800 --> 01:30.820
+Let's get to it.
+
+01:31.240 --> 01:31.810
+So.
+
+01:32.720 --> 01:37.100
+I want you to imagine for a second that eventually inside of our application, which remember is all
+
+01:37.100 --> 01:41.510
+about selling tickets and whatnot, that we will eventually have some kind of service called the Order
+
+01:41.510 --> 01:42.170
+Service.
+
+01:42.410 --> 01:46.400
+And inside this order service, the goal is to allow users to purchase a ticket.
+
+01:46.760 --> 01:51.420
+So we can imagine that inside that service, we'll probably have something like ticket purchasing logic.
+
+01:51.440 --> 01:53.870
+It'll probably be a request handler, something like that.
+
+01:54.650 --> 01:58.380
+We could definitely imagine that at some point in time someone's going to send a request to the service
+
+01:58.380 --> 02:00.360
+with the goal of purchasing a ticket.
+
+02:00.450 --> 02:04.680
+Maybe in the body of the ticket, they'll have the ticket ID or the body the request or the ticket ID
+
+02:04.680 --> 02:05.700
+or something like that.
+
+02:05.850 --> 02:10.470
+And of course, along with this request, a user is going to have to prove that they are authenticated
+
+02:10.470 --> 02:11.490
+with their application.
+
+02:11.940 --> 02:16.800
+So along with the request, they're going to have to include some JSON Web token, some cookie or something
+
+02:16.800 --> 02:17.220
+similar.
+
+02:17.220 --> 02:19.890
+Something to say, I am signed in.
+
+02:21.970 --> 02:26.320
+Then inside of our request handler, we are going to have to have some logic to say, is this person
+
+02:26.320 --> 02:27.370
+actually signed in?
+
+02:27.520 --> 02:29.900
+Did they give us a valid JSON web token?
+
+02:29.920 --> 02:33.610
+Did they give us some cookie with some authentication information inside of it?
+
+02:34.260 --> 02:39.060
+And we need to decide whether or not this person who's sending us this request is actually signed into
+
+02:39.060 --> 02:39.630
+our app.
+
+02:40.300 --> 02:45.640
+So this whole discussion we are about to have and this whole disclaimer right here about user authentication
+
+02:45.640 --> 02:49.270
+really comes down to how we answer this question.
+
+02:49.270 --> 02:54.160
+How do we decide whether or not someone is logged in in a microservices app?
+
+02:54.520 --> 02:57.610
+This is way more challenging and deceptive than you would think.
+
+02:57.850 --> 03:00.580
+So again, I'm going to show you two big approaches.
+
+03:00.610 --> 03:02.380
+Here is approach number one.
+
+03:03.020 --> 03:07.350
+Now on this first approach, I've labeled it fundamental option number one.
+
+03:07.370 --> 03:11.570
+The reason I'm putting the word fundamental in here is that I'm going to show you two general approaches
+
+03:11.570 --> 03:12.830
+to general strategies.
+
+03:12.830 --> 03:15.650
+But there are very much variations of each of these.
+
+03:15.980 --> 03:20.150
+At the end of the day, though, all the different strategies out there really come down to two very
+
+03:20.150 --> 03:21.790
+fundamental principles.
+
+03:21.800 --> 03:24.020
+That's why I'm calling this fundamental option number one.
+
+03:24.020 --> 03:28.010
+Again, you're going to find variations of this, but it really comes down to this idea.
+
+03:28.040 --> 03:34.100
+The idea is that we are going to allow individual services to rely on some centralized authentication
+
+03:34.100 --> 03:37.100
+service to decide whether or not a user is logged in.
+
+03:37.920 --> 03:42.020
+So let's again imagine that same scenario where someone's make your request to purchase a ticket.
+
+03:42.030 --> 03:43.740
+It goes into our order service.
+
+03:43.740 --> 03:46.860
+We then need to ask and decide whether or not this person is logged in.
+
+03:47.900 --> 03:53.390
+So to answer that question with fundamental option number one, we might take that JSON web token or
+
+03:53.390 --> 04:00.050
+that cookie or whatever else and send it in some synchronous request off to our authentication service.
+
+04:00.380 --> 04:05.300
+And the authentication service might have some logic to take a look at that JSON web token, that cookie
+
+04:05.300 --> 04:08.360
+or whatever else, and decide if this user is authenticated.
+
+04:08.630 --> 04:12.380
+And so it would be up to the authentication service to send a response back over.
+
+04:12.890 --> 04:17.720
+Now remember, I'm using the term here sync request not in the world of JavaScript, but in the world
+
+04:17.720 --> 04:19.010
+of microservices.
+
+04:19.010 --> 04:24.440
+In the world of microservices, sync request refers to a direct request from one service to another
+
+04:24.440 --> 04:29.060
+one that does not make use of events or event buses or anything like that.
+
+04:31.140 --> 04:36.450
+So the downside of fundamental option number one really shares all the same downsides as synchronous
+
+04:36.450 --> 04:37.770
+communication in general.
+
+04:38.070 --> 04:42.930
+If we put together this kind of solution right here, think about what would happen if the authentication
+
+04:42.930 --> 04:45.760
+service just mysteriously went down one day.
+
+04:45.780 --> 04:51.900
+If that thing crashed or just disappeared all of a sudden, no one, no service inside of our entire
+
+04:51.900 --> 04:54.600
+application can decide if a person is logged in.
+
+04:54.870 --> 05:00.330
+And that means that any request that requires us to decide if a person is authenticated is automatically
+
+05:00.330 --> 05:01.290
+going to fail.
+
+05:01.890 --> 05:07.980
+So by using this fundamental option, number one, well, we are going to be in a world of hurt if anything
+
+05:07.980 --> 05:10.410
+goes wrong with our authentication service.
+
+05:11.390 --> 05:14.660
+That's a very clear downside to fundamental option number one.
+
+05:15.630 --> 05:16.680
+All right, let's move on.
+
+05:16.710 --> 05:19.170
+I'm going to show you some other pros and cons as we go on.
+
+05:19.170 --> 05:21.390
+But right now, let's just go on to the next option.
+
+05:22.010 --> 05:24.110
+Now this is option 1.1.
+
+05:24.110 --> 05:28.850
+So it's really the same as what we're just looking at, just about identical in nature, but we just
+
+05:28.850 --> 05:30.350
+kind of move some stuff around.
+
+05:30.350 --> 05:35.330
+At the end of the day, fundamental option number one is still very, very close to option number one
+
+05:35.330 --> 05:39.200
+because we are still relying upon the service 100% of the time.
+
+05:41.010 --> 05:45.630
+The only reason I'm showing you 1.1 right here is to help you understand that, yes, there are variations
+
+05:45.630 --> 05:46.710
+in these strategies.
+
+05:47.100 --> 05:51.930
+So with this strategy, we would say that any request coming into our application would need to go through
+
+05:51.930 --> 05:56.370
+some central gateway of sorts that would authenticate the incoming request.
+
+05:56.940 --> 06:01.140
+So whenever a user makes a request to purchase a ticket, rather than going directly to the order service,
+
+06:01.140 --> 06:07.080
+we would instead have it flow into some authentication gateway or some authentication service of sorts
+
+06:07.080 --> 06:10.620
+that would inspect that incoming request and decide if the user is authenticated.
+
+06:10.860 --> 06:14.330
+If they are, we would then send the request along to the intended destination.
+
+06:14.340 --> 06:16.290
+Otherwise we would just reject it right away.
+
+06:16.800 --> 06:22.200
+This still shares a lot of the pros and cons of this option number one right here, because we still
+
+06:22.200 --> 06:23.910
+have 100%.
+
+06:24.620 --> 06:27.350
+Reliance on the authentication service.
+
+06:27.350 --> 06:33.050
+In both cases, if this thing ever goes down or if this thing ever goes down, all of a sudden we cannot
+
+06:33.050 --> 06:36.560
+make a single request that requires any kind of authentication.
+
+06:37.040 --> 06:41.630
+Again, I'm only showing you this option 1.1 to say, yeah, there's variations on these things, but
+
+06:41.630 --> 06:43.970
+they are, at the end of the day, very similar in nature.
+
+06:44.870 --> 06:46.940
+Now let's move on to the next option.
+
+06:46.940 --> 06:48.710
+What's really option two?
+
+06:48.740 --> 06:50.570
+What's different approach we could take here?
+
+06:50.960 --> 06:52.220
+Well, here's option number two.
+
+06:54.260 --> 06:55.220
+With fundamental option.
+
+06:55.220 --> 07:01.820
+Number two, we are going to teach each individual service how to decide whether or not a user is authenticated.
+
+07:02.710 --> 07:08.080
+So for example, whenever someone makes a request to purchase a ticket to our order service and inside
+
+07:08.080 --> 07:10.420
+there, we need to decide whether or not this person is logged in.
+
+07:10.750 --> 07:16.810
+Then we will teach this service how to take a look at the request, JSON, web, token, cookie, whatever
+
+07:16.810 --> 07:20.380
+we are using and decide whether or not the user is authenticated.
+
+07:20.860 --> 07:26.710
+So in this scenario, we have no dependency on outside services, no dependency on a gateway, some
+
+07:26.710 --> 07:28.630
+other service or anything like that.
+
+07:28.930 --> 07:33.700
+Everything is wrapped up inside of one single service, and if a user ever makes a request to this thing,
+
+07:33.700 --> 07:38.050
+we will immediately and instantly know whether or not this user is logged in.
+
+07:38.650 --> 07:40.750
+And so the upsides of this approach are very clear.
+
+07:40.750 --> 07:44.780
+We do not have any outside dependency, as we did previously on this service.
+
+07:44.800 --> 07:48.640
+If you give us a token and it's valid, hey, you must be logged in.
+
+07:48.640 --> 07:51.400
+We're good to go and we will process your request.
+
+07:51.970 --> 07:57.100
+So it immediately might seem like fundamental option number two is way better because we don't have
+
+07:57.100 --> 07:58.540
+any outside dependency.
+
+07:59.050 --> 08:02.980
+There is a very clear and immediate downside that you could probably imagine, and that is that we're
+
+08:02.980 --> 08:07.360
+going to end up duplicating this authentication logic between all of our different services.
+
+08:07.780 --> 08:10.080
+I want you to know right now that's not a big deal.
+
+08:10.090 --> 08:15.250
+We could easily move this authentication logic into a shared library that's used among all of our services.
+
+08:15.250 --> 08:19.570
+And so we can really just have very few implementations that get shared all over the place.
+
+08:19.720 --> 08:25.870
+So I'm not really concerned about duplicating any of that logic, but there are some much more larger,
+
+08:25.870 --> 08:30.700
+fundamental, very critical downsides of fundamental option number two.
+
+08:31.090 --> 08:35.740
+And you really need to understand these because these the issues are and fundamental option number two
+
+08:35.770 --> 08:41.770
+is where we are going to start to see that microservices communicating with each other is really, really
+
+08:41.770 --> 08:42.640
+challenging.
+
+08:43.990 --> 08:45.630
+Now this video is running a little bit long.
+
+08:45.640 --> 08:46.690
+So let's take a pause right here.
+
+08:46.690 --> 08:47.740
+We're going to come back the next video.
+
+08:47.740 --> 08:53.290
+And I want to show you the absolute, very critical to understand downsides of option number two, even
+
+08:53.290 --> 08:56.080
+though it looks like it's really great as it stands right now.
+
+08:56.410 --> 08:58.060
+So let's continue in just a minute.

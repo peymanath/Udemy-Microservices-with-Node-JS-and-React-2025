@@ -1,0 +1,250 @@
+WEBVTT
+
+00:01.500 --> 00:03.280
+All right, so let's test out this workflow.
+
+00:03.300 --> 00:05.640
+So we're going to begin on this first step right here.
+
+00:05.640 --> 00:08.850
+We're going to make changes to some service inside of our project.
+
+00:09.270 --> 00:11.340
+In this case, the changes don't really matter all that much.
+
+00:11.340 --> 00:13.440
+I just want to have some change that we can commit.
+
+00:13.860 --> 00:19.320
+But how about we try out going into our service, finding the index file inside there?
+
+00:20.720 --> 00:23.820
+And how about right at the very start of our start function?
+
+00:23.840 --> 00:26.810
+Let's just add in a little console log of starting up.
+
+00:28.180 --> 00:28.600
+That's it.
+
+00:28.600 --> 00:30.190
+That's the change that we want to commit.
+
+00:31.560 --> 00:33.780
+So I'm going to save this file and close it out.
+
+00:34.770 --> 00:35.790
+That's step one.
+
+00:35.790 --> 00:40.440
+And I can move on to step two where we are going to commit that code to a new branch.
+
+00:40.950 --> 00:42.300
+The back over at my terminal.
+
+00:43.860 --> 00:47.820
+I'm going to check out a new branch with git check out.
+
+00:49.000 --> 00:53.770
+Ashby and I'll give this branch a very simple name of Dev Short for development.
+
+00:55.260 --> 00:58.820
+Once I've created that new branch, I'll check my status.
+
+00:59.130 --> 01:00.990
+There's the file that we just changed.
+
+01:01.020 --> 01:07.800
+We're going to add that and commit it with the message of added startup message.
+
+01:10.460 --> 01:10.570
+Yeah.
+
+01:10.610 --> 01:13.670
+So we just changed or committed those changes to a new branch.
+
+01:13.700 --> 01:15.830
+It was a branch that was not the master branch.
+
+01:15.830 --> 01:17.080
+That's the very critical part here.
+
+01:17.090 --> 01:19.490
+We're not going to commit directly to the master branch.
+
+01:20.310 --> 01:22.440
+Now we're going to push that branch up to GitHub.
+
+01:23.040 --> 01:26.370
+So to do so, we'll do a git push origin.
+
+01:31.650 --> 01:32.490
+It looks good.
+
+01:32.940 --> 01:35.610
+It looks like we created a new branch.
+
+01:36.580 --> 01:37.390
+On GitHub.
+
+01:38.090 --> 01:40.460
+So GitHub has now received that updated branch.
+
+01:41.090 --> 01:43.110
+We're now going to log on to GitHub.
+
+01:43.130 --> 01:47.540
+We're going to take a look at a repository and we're going to create a pull request manually to merge
+
+01:47.540 --> 01:49.370
+that branch into our master.
+
+01:49.880 --> 01:51.410
+So back at my GitHub repo.
+
+01:52.090 --> 01:54.100
+I'm going to go to the request tab.
+
+01:55.560 --> 02:00.690
+I can either click on this compare and pull request button right here for Dev or I can create the pull
+
+02:00.690 --> 02:01.740
+request manually.
+
+02:01.890 --> 02:05.670
+I'm going to show how to create it manually because we don't always see this yellow box appear right
+
+02:05.670 --> 02:06.180
+here.
+
+02:06.810 --> 02:08.820
+So I can either click on the first screen one.
+
+02:08.820 --> 02:10.830
+In this case, I'm going to go with new pull request.
+
+02:12.400 --> 02:17.050
+And then going to be prompted with what I am taking code from or which branch I'm going from, which
+
+02:17.050 --> 02:18.550
+branch I'm merging it to.
+
+02:19.090 --> 02:24.100
+So I want to go from my dev branch and merge that into master.
+
+02:24.640 --> 02:27.610
+So I should see in these dropdowns master and then dev.
+
+02:29.370 --> 02:31.290
+I'll then click on Create Pull Request.
+
+02:32.740 --> 02:37.180
+We get prompted to add in a message, so a title for the request itself and then some description right
+
+02:37.180 --> 02:38.950
+here of the changes that we are making.
+
+02:39.280 --> 02:43.990
+So in theory, we would want to put in some description of what just happened or why I'm trying to merge
+
+02:43.990 --> 02:45.100
+this code into master.
+
+02:45.610 --> 02:51.130
+So I might put in a description here that says something like, It would be nice if we had a.
+
+02:52.890 --> 02:56.220
+Message whenever the service started up.
+
+02:57.680 --> 02:59.210
+And I'll create the pull request.
+
+03:01.350 --> 03:06.690
+So once I create that pull request, it triggers a new event on GitHub and that event should trigger
+
+03:06.690 --> 03:09.420
+the GitHub action or that workflow we just put together.
+
+03:09.720 --> 03:14.040
+So after a moment or two, you should see the box down here start to light up or change.
+
+03:14.250 --> 03:17.970
+It should go over to yellow and it should say something like some checks haven't completed yet.
+
+03:18.710 --> 03:21.330
+So that is our GitHub action being executed.
+
+03:21.350 --> 03:25.820
+In theory, it's going to run our tests and give us some output on those tests right here inside this
+
+03:25.820 --> 03:30.050
+window to get more information about what's going on, we can click on details on the right.
+
+03:31.010 --> 03:33.800
+And it's going to take us to some information about the running job.
+
+03:34.370 --> 03:38.090
+So in this case, it has is going through essentially the script we just put together.
+
+03:38.090 --> 03:43.610
+You can see that right now it is running the CD and to off and install and NPM run test command.
+
+03:44.850 --> 03:49.890
+So after it has installed all those dependencies, it's going to run all of our tests and hopefully
+
+03:49.890 --> 03:50.940
+they all pass.
+
+03:51.120 --> 03:53.550
+If they pass, then this step will be resolved successfully.
+
+03:53.550 --> 03:57.570
+Otherwise, if they fail for some reason, well, the overall test suite is going to fail and we'll
+
+03:57.570 --> 04:00.180
+be told about that back inside of our request.
+
+04:00.660 --> 04:03.450
+So looks like in this case all my tests ran successfully.
+
+04:03.450 --> 04:05.220
+So I get a green checkbox right there.
+
+04:05.460 --> 04:08.340
+Green checkbox right here to say everything looks good.
+
+04:09.550 --> 04:12.130
+So if I go back over to the Conversation tab.
+
+04:13.390 --> 04:15.580
+Which is essentially the main polar request tab.
+
+04:15.850 --> 04:20.200
+I'll now see something that says all checks have passed, so that would be assigned to you and I as
+
+04:20.200 --> 04:25.600
+developers, that the changes I just made didn't break anything inside of our app and we should be safe
+
+04:25.600 --> 04:28.870
+to now merge this pull request into our master branch.
+
+04:29.350 --> 04:33.670
+So I could click on merge pull request right there, but I'm not going to right now.
+
+04:33.700 --> 04:37.240
+I want to show you what would happen if one of our tests failed for some reason as well.
+
+04:38.640 --> 04:39.090
+Okay.
+
+04:39.480 --> 04:40.380
+So let's take a pause right here.
+
+04:40.380 --> 04:40.810
+When we come back.
+
+04:40.830 --> 04:45.750
+Next video, we're going to take a look at what happens if one of our test failure fail during this
+
+04:45.750 --> 04:47.280
+pull request process.

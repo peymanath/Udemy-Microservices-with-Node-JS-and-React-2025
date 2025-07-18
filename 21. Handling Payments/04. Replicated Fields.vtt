@@ -1,0 +1,322 @@
+WEBVTT
+
+00:01.340 --> 00:05.120
+At this point, if we do a it'll get odds.
+
+00:05.150 --> 00:08.510
+We should successfully be able to see our payment service up and running.
+
+00:08.510 --> 00:10.760
+So make sure that you see the payment service up and running.
+
+00:10.880 --> 00:12.560
+As long as you see that we are good to go.
+
+00:13.040 --> 00:17.870
+Before we move on, however, I do want to also mention that we have not yet installed any modules directly
+
+00:17.870 --> 00:20.450
+into the payment service on our local machine.
+
+00:20.630 --> 00:25.070
+We have added in some modules or dependencies to be installed inside the pod, but remember we also
+
+00:25.070 --> 00:29.690
+have to install them on our local machine so that TypeScript has access to all the relevant type definition
+
+00:29.690 --> 00:30.380
+files.
+
+00:30.560 --> 00:32.810
+So I am going to change into that payments directory.
+
+00:35.990 --> 00:37.700
+And then do you npm install?
+
+00:39.350 --> 00:39.980
+Very good.
+
+00:40.100 --> 00:40.370
+Okay.
+
+00:40.370 --> 00:41.030
+Well, that is running.
+
+00:41.030 --> 00:44.960
+We're going to go and take a look at a diagram or two just to further understand what the goal of the
+
+00:44.960 --> 00:46.040
+payment service is.
+
+00:46.310 --> 00:50.330
+So right now, we're going to focus on the different events that we're going to listen for inside the
+
+00:50.330 --> 00:53.150
+payment service and the different events that we're going to eventually emit.
+
+00:53.330 --> 00:57.050
+In particular, right now in this video, I really want to think about the different events that we
+
+00:57.050 --> 00:57.980
+are listening to.
+
+00:58.550 --> 01:02.780
+We definitely need our payment service to understand all the different orders that are created inside
+
+01:02.780 --> 01:05.060
+of our app and all the changes that are made to those orders.
+
+01:05.060 --> 01:09.980
+Over time, a user is going to eventually submit requests to try to pay for a very specific order.
+
+01:09.980 --> 01:14.810
+So whenever a user submits a request to pay for an order, we need to understand exactly what order
+
+01:14.810 --> 01:18.080
+they are trying to pay for and we need to be able to validate that payment.
+
+01:18.080 --> 01:20.960
+We have to make sure that it is the correct user trying to submit the payment.
+
+01:20.960 --> 01:24.710
+We have to make sure that the payment is also the correct amount as well.
+
+01:25.510 --> 01:30.280
+So we need to think about how we're going to listen for order created and order cancelled and the data
+
+01:30.280 --> 01:35.860
+that we're going to replicate from those two events into a replicated orders collection inside a payment
+
+01:35.860 --> 01:36.520
+service.
+
+01:37.480 --> 01:41.650
+So in total, just looking at this diagram right here related to orders, we definitely need at least
+
+01:41.650 --> 01:46.300
+two listeners, one to listen for order created, one to listen for order canceled.
+
+01:46.480 --> 01:49.360
+And we also need a mongoose model file as well.
+
+01:50.450 --> 01:54.320
+So we're going to first start to work on that order model file, and we're going to define exactly what
+
+01:54.320 --> 01:56.600
+an order is inside of our payment service.
+
+01:57.410 --> 02:02.300
+Before we go and create that model file, I want to think about what information or what data we are
+
+02:02.300 --> 02:06.230
+going to replicate out of these events and store it inside this order's collection.
+
+02:06.620 --> 02:08.060
+So let's take a look at a quick diagram.
+
+02:10.520 --> 02:10.850
+Okay.
+
+02:10.880 --> 02:15.500
+On the left hand side, I've got the order created event and all the different properties that are contained
+
+02:15.500 --> 02:16.310
+inside of it.
+
+02:16.550 --> 02:20.870
+So we need to think about all these different properties and decide which of these properties we want
+
+02:20.870 --> 02:24.290
+to replicate into the orders collection inside of our payment service.
+
+02:24.830 --> 02:26.570
+So we'll go through these one by one.
+
+02:27.920 --> 02:29.600
+The first property is ID.
+
+02:29.630 --> 02:34.310
+Do we need to store the ID of a order that has been created inside of this order's collection, the
+
+02:34.310 --> 02:35.210
+payment service?
+
+02:35.450 --> 02:37.190
+Well, yes, without a doubt we do.
+
+02:37.430 --> 02:41.900
+You might recall that a little bit ago we discussed how it was really important to accurately replicate
+
+02:41.900 --> 02:45.650
+IDs for a specific record across different services.
+
+02:45.950 --> 02:51.890
+So if we have some ID for an order inside the payment service, that must be the exact same ID as some
+
+02:51.890 --> 02:53.730
+order inside the order service.
+
+02:53.750 --> 02:55.070
+They have to have the same ID.
+
+02:55.100 --> 02:59.270
+Otherwise, we cannot try to find the same record inside both these services.
+
+03:00.950 --> 03:01.190
+All right.
+
+03:01.190 --> 03:02.840
+So next property status?
+
+03:03.020 --> 03:07.730
+Well, we probably want to make sure that we saw the status of an order and update it over time, that
+
+03:07.730 --> 03:12.680
+we know when a order can still be paid for and when it gets canceled once an order is canceled, we
+
+03:12.680 --> 03:15.620
+definitely do not want to accept any payments for it anymore.
+
+03:15.620 --> 03:20.540
+So we need our payment service to store the status of an order that it knows whether or not it should
+
+03:20.540 --> 03:22.010
+reject a payment.
+
+03:25.560 --> 03:25.710
+Okay.
+
+03:25.830 --> 03:27.480
+Next property version.
+
+03:27.690 --> 03:32.430
+Well, as usual, we are using this version flag to make sure that we properly process all different
+
+03:32.430 --> 03:35.190
+events across our services in the correct order.
+
+03:35.370 --> 03:36.420
+So without a doubt, yup.
+
+03:36.420 --> 03:40.740
+We want to make sure that we stored the version flag on orders inside of our payment service to make
+
+03:40.740 --> 03:45.090
+sure that we process all different events related to an order in the correct order.
+
+03:47.740 --> 03:49.090
+Next up, user ID.
+
+03:49.330 --> 03:54.940
+So with user ID right here, that's going to tell us who created the actual order inside of our payment
+
+03:54.940 --> 03:55.320
+service.
+
+03:55.330 --> 03:59.440
+Whenever a user submits a payment, we probably want to make sure that that is the user who originally
+
+03:59.440 --> 04:00.610
+created the order.
+
+04:01.120 --> 04:04.870
+This is going to make sure that one user cannot pay for another user's order.
+
+04:05.500 --> 04:08.860
+So yeah, we should probably make sure that we stored the user ID so that whenever someone tries to
+
+04:08.860 --> 04:11.860
+submit a payment, we make sure that it is the correct person.
+
+04:15.360 --> 04:16.410
+Now, how about expires?
+
+04:16.410 --> 04:17.460
+That expires.
+
+04:17.460 --> 04:20.400
+That is going to tell us when a order expires.
+
+04:20.400 --> 04:25.230
+And in theory, at that point in time, we should not accept any further payments.
+
+04:25.650 --> 04:27.990
+However, we're not going to store expires.
+
+04:27.990 --> 04:33.450
+That expires that is really being used by the expiration service is the expiration service that decides
+
+04:33.450 --> 04:36.420
+whether or not a order should be marked as expired.
+
+04:36.780 --> 04:41.010
+And then that event that eventually gets emitted, the expiration complete event gets processed by the
+
+04:41.010 --> 04:42.270
+orders service.
+
+04:42.270 --> 04:46.800
+So it's really up to the order service to specifically cancel in order.
+
+04:46.800 --> 04:51.240
+And we should not rely upon the payment service to decide whether or not an order is still valid.
+
+04:51.420 --> 04:56.910
+So we are not going to store the expires at flag instead to decide whether or not an order is still
+
+04:56.910 --> 04:58.290
+valid and can be paid for.
+
+04:58.320 --> 05:00.540
+We're going to use the status property right here.
+
+05:00.540 --> 05:01.470
+That was the original goal.
+
+05:01.470 --> 05:05.790
+That status property, the status property is going to tell us what status and order was in.
+
+05:08.120 --> 05:10.190
+Then finally, we've got some information about the ticket.
+
+05:10.980 --> 05:13.660
+Do we want to store the ID of the ticket or the price?
+
+05:13.680 --> 05:18.430
+Well, for the payment service, we probably don't really care about the ID the ticket at all.
+
+05:18.450 --> 05:21.270
+It doesn't really make a difference what ticket we are paying for.
+
+05:21.300 --> 05:26.580
+All that really matters is that, well, we are paying for some specific amount, so I don't really
+
+05:26.580 --> 05:31.020
+care about any information tied to the ticket around its ID or its title or anything like that.
+
+05:31.020 --> 05:35.070
+The only thing we really care about is the price, because that is going to tell us exactly how much
+
+05:35.070 --> 05:36.750
+an incoming payment should be for.
+
+05:36.930 --> 05:41.160
+So we will just take out the price property and store it along with our order.
+
+05:42.450 --> 05:42.870
+That's it.
+
+05:42.870 --> 05:47.440
+That's the replicated information that we're going to store around an order inside of our payment service.
+
+05:47.460 --> 05:49.020
+ID status version.
+
+05:49.020 --> 05:50.250
+User ID price.
+
+05:50.670 --> 05:54.630
+So now that we've got these properties put together, quick pause right here and we'll put together
+
+05:54.630 --> 05:57.090
+our order model file in the next video.

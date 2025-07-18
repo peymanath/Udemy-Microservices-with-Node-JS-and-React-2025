@@ -1,0 +1,292 @@
+WEBVTT
+
+00:01.320 --> 00:04.260
+Let's continue development of our authentication service.
+
+00:04.290 --> 00:08.340
+Now, I've got to be honest with you, in the next coming videos, a lot of the authentication stuff
+
+00:08.340 --> 00:11.200
+we're going to put together is pretty boilerplate.
+
+00:11.220 --> 00:15.990
+In other words, we're going to write out a lot of express and authentication related stuff that is
+
+00:15.990 --> 00:18.620
+not necessarily related to microservices.
+
+00:18.630 --> 00:21.440
+So you might be tempted to skip over a couple of these videos.
+
+00:21.450 --> 00:25.920
+However, I would encourage you to watch them through, even if you are familiar with authentication,
+
+00:25.920 --> 00:30.240
+because we are going to make one or two kind of interesting design decisions that are going to have
+
+00:30.240 --> 00:33.070
+impacts on some of the other services we're going to build down the line.
+
+00:33.090 --> 00:35.460
+So again, I do encourage you to stick around.
+
+00:36.450 --> 00:36.840
+All right.
+
+00:36.840 --> 00:38.520
+So what are we going to do in this video?
+
+00:38.730 --> 00:44.550
+Well, inside of our index file, which is inside the auth service directory right now, we currently
+
+00:44.550 --> 00:46.410
+have some very simple code.
+
+00:46.830 --> 00:49.800
+We're creating our express application and one route handler.
+
+00:50.280 --> 00:54.630
+The first thing that we're going to make very consistent around all of the different services we end
+
+00:54.630 --> 00:57.810
+up creating, is going to be our file and folder structure.
+
+00:58.260 --> 01:03.390
+So we're going to end up creating all of our different route handlers inside their own separate files
+
+01:03.390 --> 01:06.120
+so each handler gets its own separate file.
+
+01:06.600 --> 01:11.910
+So in other words, we are not going to create anything like this right here inside of our index file
+
+01:11.910 --> 01:13.410
+at the root of our project.
+
+01:13.440 --> 01:17.340
+Instead, we're going to create a separate file to set up a route handler like this.
+
+01:17.580 --> 01:22.710
+Again, there's not a particular microservices reason for doing this is just a convention I came up
+
+01:22.710 --> 01:23.040
+with.
+
+01:23.040 --> 01:27.240
+I decided made a lot of sense in this course to keep our code really, really organized.
+
+01:28.110 --> 01:34.560
+So inside my RC directory, I'm going to make a new folder called Roots, and then inside there I'm
+
+01:34.560 --> 01:38.340
+going to create one file for each route handler that I expect to create.
+
+01:38.670 --> 01:43.800
+In total, I think we need four separate route handlers, one for sign up, sign in, sign out and current
+
+01:43.800 --> 01:44.340
+user.
+
+01:45.610 --> 01:49.360
+So I'm going to create those four separate files inside of this roots directory.
+
+01:50.280 --> 01:53.160
+I'm going to first create a new file called Sign In.
+
+01:53.460 --> 01:54.170
+It's.
+
+01:55.400 --> 01:58.610
+I'll do another one called sign outs.
+
+02:00.030 --> 02:02.850
+A third of sign up dates.
+
+02:03.680 --> 02:10.940
+And then finally current dash user, you'll notice I put a dash in here even though the route is just
+
+02:10.940 --> 02:12.140
+current user by itself.
+
+02:12.140 --> 02:15.560
+So this could be a current user could be current dash user.
+
+02:15.560 --> 02:18.860
+I leave it up to you, but I'm going to go with dashes and all my file names.
+
+02:20.700 --> 02:20.910
+Okay.
+
+02:20.910 --> 02:22.650
+So there's our four separate files.
+
+02:22.860 --> 02:25.070
+Each of these files are going to look very, very similar.
+
+02:25.080 --> 02:27.600
+And each of them, we're going to set up a different route handler.
+
+02:28.020 --> 02:31.170
+Now, the way that we're going to set up these route handlers might be a little bit different than what
+
+02:31.170 --> 02:32.160
+you're used to seeing.
+
+02:32.160 --> 02:36.570
+If you're used to seeing Express and working with Express in this fashion right here, that's not quite
+
+02:36.570 --> 02:37.200
+what we're going to do.
+
+02:37.230 --> 02:39.690
+We're going to do something just ever so slightly different.
+
+02:40.230 --> 02:44.400
+So let's go and put together an equivalent route handler for current user.
+
+02:44.850 --> 02:51.900
+I'm going to go back over to the current user file and then at the very top I'm going to import in Express
+
+02:52.380 --> 02:53.970
+from Express.
+
+02:57.300 --> 03:00.300
+I will then create something called a router.
+
+03:00.420 --> 03:02.280
+I'll say express router.
+
+03:03.270 --> 03:08.880
+And then finally I'm going to say Router Doggett and the same route we just put together a moment to
+
+03:08.880 --> 03:12.870
+go so API users parent user.
+
+03:16.100 --> 03:18.920
+And then finally at the bottom, I'll do an export.
+
+03:20.710 --> 03:22.390
+Of Ruiter as.
+
+03:23.240 --> 03:25.580
+Current user router.
+
+03:26.740 --> 03:29.980
+The structure that you see right here is what we're going to be doing inside of all of our different
+
+03:29.980 --> 03:30.940
+root files.
+
+03:31.270 --> 03:32.870
+We're going to import Express.
+
+03:32.890 --> 03:36.970
+We're going to set up a router, which is an object that we can use to associate routes with.
+
+03:37.300 --> 03:41.680
+And then at the very bottom, we're going to export that router and as we do, we're going to rename
+
+03:41.680 --> 03:42.820
+it at the same time.
+
+03:43.240 --> 03:47.680
+The reason we are renaming that export with this router as current user router is that we're going to
+
+03:47.680 --> 03:50.290
+end up with many different routers inside of our application.
+
+03:50.290 --> 03:51.940
+And so they can't all be called router.
+
+03:51.970 --> 03:53.460
+They have to be called something different.
+
+03:53.470 --> 03:56.380
+So we're going to do a little renaming step down here at the bottom.
+
+03:58.080 --> 03:59.310
+Well, then save this file.
+
+03:59.640 --> 04:03.830
+And I want to show you how we're going to associate this router with our express application back inside
+
+04:03.830 --> 04:05.370
+of the index file.
+
+04:05.820 --> 04:07.880
+So I'm going to go back over to indexes.
+
+04:08.490 --> 04:13.380
+I'm going to delete that existing root handler because we've now moved it into a separate file.
+
+04:14.550 --> 04:15.120
+At the top.
+
+04:15.120 --> 04:16.440
+I'm going to import.
+
+04:17.410 --> 04:20.260
+Current user router from.
+
+04:21.700 --> 04:23.740
+Roots aren't user.
+
+04:24.830 --> 04:32.060
+And then to associate that router object with our app, we will write out app dot use current user router
+
+04:32.060 --> 04:32.720
+like so.
+
+04:34.430 --> 04:40.430
+So everything that we just wrote between that current user file right here and this line right here
+
+04:40.430 --> 04:45.620
+and that line right there, we're going to repeat throughout the rest of this course many, many times,
+
+04:45.620 --> 04:48.800
+once for every single different route handler we put together.
+
+04:51.210 --> 04:56.460
+I want to just tell you really quickly, there's no particular reason that we're creating a router over
+
+04:56.460 --> 04:56.950
+here.
+
+04:56.970 --> 05:00.320
+We're not really going to have any one off middleware or anything like that.
+
+05:00.330 --> 05:02.760
+We're not going to really have groups of roots or anything like that.
+
+05:02.790 --> 05:07.710
+I just decided that creating a router object kind of made this code look very easy to understand and
+
+05:07.710 --> 05:08.250
+nice.
+
+05:08.250 --> 05:13.830
+We could just as easily just export a plain function and then associate those functions with our app
+
+05:13.830 --> 05:15.720
+back inside the index file.
+
+05:15.750 --> 05:20.220
+At the end of the day, there are a tremendous number of different ways we can associate routes with
+
+05:20.220 --> 05:21.420
+an express application.
+
+05:21.420 --> 05:25.140
+So I just chose one right here that I thought made sense to me on this project.
+
+05:25.140 --> 05:27.470
+If it doesn't look familiar, that's totally okay.
+
+05:27.480 --> 05:31.410
+I'm pretty sure that you're going to be able to understand what's going on here really, really quickly.
+
+05:31.920 --> 05:35.940
+So now that we've got a good idea of how we're going to write out all of our different route handlers
+
+05:35.940 --> 05:40.710
+across all these different projects, let's continue with our authentication service in the next video.

@@ -1,0 +1,259 @@
+WEBVTT
+
+00:01.070 --> 00:04.700
+In the last video, we did a little bit of an environment set up and now we're ready to start working
+
+00:04.700 --> 00:05.870
+on our first project.
+
+00:05.870 --> 00:07.640
+So let's talk about what we're going to make.
+
+00:08.210 --> 00:08.600
+All right.
+
+00:08.600 --> 00:11.600
+So we're going to start off with a very simple first little application.
+
+00:11.600 --> 00:16.010
+We're going to make a little tiny application that's just going to make a network request to some outside
+
+00:16.010 --> 00:21.440
+API, fetch some data, and then we're going to try to print that data inside of our terminal, and
+
+00:21.440 --> 00:22.070
+that's it.
+
+00:22.790 --> 00:27.800
+And with this first application, I'm not trying to teach you any specific syntax or anything like that.
+
+00:27.800 --> 00:30.980
+I just want to show you why we use TypeScript in general.
+
+00:30.980 --> 00:36.440
+So as we write this program, we're going to accidentally, quote unquote, you know, kind of accidentally
+
+00:36.440 --> 00:39.440
+introduce one or two bugs into our application.
+
+00:39.680 --> 00:44.180
+And then we're going to very quickly see that TypeScript has the ability to help us catch those bugs
+
+00:44.180 --> 00:48.320
+while we are writing our code, as opposed to when we execute our code.
+
+00:48.620 --> 00:53.390
+So again, the point of this application is just to show you the typical workflow of TypeScript.
+
+00:53.390 --> 00:54.230
+That's it.
+
+00:55.120 --> 00:55.330
+All right.
+
+00:55.330 --> 00:58.330
+So with that in mind, let's talk about the flow that we're going to go through to actually build this
+
+00:58.330 --> 00:59.080
+application.
+
+00:59.720 --> 01:03.500
+So step one, we're going to take a look at the API that we're going to use to fetch some data.
+
+01:04.160 --> 01:06.530
+After that, we're going to create a new project directory.
+
+01:06.950 --> 01:13.100
+We're going to create a package JSON file inside there and then install Axios as an NPM module.
+
+01:13.840 --> 01:18.190
+Actually, Axios is a little module that we're going to use just to make a network request.
+
+01:18.370 --> 01:21.280
+If you've never worked with this module before, totally fine.
+
+01:21.640 --> 01:24.030
+Axios doesn't really have anything to do with TypeScript.
+
+01:24.040 --> 01:26.240
+We're just going to use it to make a network request.
+
+01:26.260 --> 01:27.160
+That's it.
+
+01:28.020 --> 01:30.900
+So once we do all that setup, then we'll start to write out some code.
+
+01:32.330 --> 01:32.540
+All right.
+
+01:32.540 --> 01:33.800
+So onto step number one.
+
+01:33.800 --> 01:36.620
+Let's take a look at the API that we're going to use to fetch some data.
+
+01:37.460 --> 01:40.040
+So here's a link to the API right here on the screen.
+
+01:40.220 --> 01:42.080
+Now this is a fake API.
+
+01:42.110 --> 01:47.300
+In other words, it serves up fake data that we can use just for like testing or learning purposes.
+
+01:47.330 --> 01:50.120
+In other words, it's perfect for what we are trying to do right now.
+
+01:50.980 --> 01:55.270
+So I'm going to pull up that documentation inside of a new tab and then scrolling down to a section
+
+01:55.270 --> 01:56.710
+called Resources.
+
+01:59.250 --> 01:59.490
+All right.
+
+01:59.490 --> 02:01.110
+So here's resources right here.
+
+02:01.500 --> 02:06.300
+So these are all the different types of records so we can make a request to or attempt to fetch from
+
+02:06.300 --> 02:07.200
+this API.
+
+02:07.650 --> 02:10.750
+We're going to attempt to fetch this list of to DOS right here.
+
+02:10.770 --> 02:12.990
+So I'm going to click on that slash to DOS Link.
+
+02:13.560 --> 02:17.130
+As soon as I do so, you're going to see a ton of information up here on the screen.
+
+02:17.550 --> 02:21.000
+You'll notice that on my screen, it appears to be very nicely formatted.
+
+02:21.090 --> 02:24.420
+If it looks like a big blob of text on your screen, that's totally fine.
+
+02:24.570 --> 02:28.500
+I've got a little chrome extension to automatically format JSON data for me.
+
+02:29.390 --> 02:35.360
+So if we make a network request to this URL right here, we're going to get back a big list of fake
+
+02:35.360 --> 02:36.500
+To-Do items.
+
+02:37.220 --> 02:37.400
+Now.
+
+02:37.400 --> 02:38.660
+We don't really need this whole list.
+
+02:38.660 --> 02:41.360
+I just want to try to fetch, like, one individual item.
+
+02:41.810 --> 02:48.080
+So to fetch just this first item off the list or the to do with an idea of one, we can modify the URL
+
+02:48.110 --> 02:49.130
+up here slightly.
+
+02:49.550 --> 02:53.600
+So at the very end of the URL, I'll add on slash one like so.
+
+02:55.980 --> 02:59.460
+Once I visit that link, I'll then see a single to do up here on the screen.
+
+02:59.880 --> 03:02.430
+So this is the exact data that we want to fetch.
+
+03:02.670 --> 03:06.930
+I want to fetch this data inside of our application and then just try to print out some information
+
+03:06.930 --> 03:08.350
+from this to do to our terminal.
+
+03:08.370 --> 03:09.900
+Like I said, that's it.
+
+03:11.080 --> 03:11.350
+All right.
+
+03:11.350 --> 03:15.820
+So now that we understand the API we're going to work with will now flip on over to our terminal and
+
+03:15.820 --> 03:17.470
+create a new project directory.
+
+03:18.770 --> 03:22.270
+So over inside my terminal, I'm inside of a workspace directory of sorts.
+
+03:22.280 --> 03:25.370
+You can place this folder anywhere on your machine that you want to.
+
+03:26.990 --> 03:32.030
+I'll make a new project folder inside of here and I'm going to call it Fetch JSON.
+
+03:33.080 --> 03:38.570
+I'll then change into that directory and then I'm going to generate a new package JSON file inside of
+
+03:38.570 --> 03:39.020
+here.
+
+03:39.410 --> 03:43.910
+Remember, packaged JSON files are used to record all the different dependencies that we install into
+
+03:43.910 --> 03:44.690
+a project.
+
+03:45.200 --> 03:49.820
+Normally that's the case for JavaScript projects, but it's the same thing for TypeScript as well.
+
+03:49.850 --> 03:53.240
+We record dependencies inside of a package JSON file.
+
+03:53.970 --> 03:56.460
+So to generate that file, I'll run NPM in it.
+
+03:56.800 --> 03:57.390
+Why?
+
+04:00.110 --> 04:01.730
+That's going to generate that file.
+
+04:01.760 --> 04:04.880
+And now I can safely install that Axios module.
+
+04:04.910 --> 04:08.510
+Remember, Axios is going to be used just to make that network request.
+
+04:09.140 --> 04:12.500
+So to do so, I'll run NPM install Axios like so.
+
+04:15.200 --> 04:18.650
+Now Axios is really small, so this should install rather quickly.
+
+04:19.940 --> 04:25.430
+Once it's all done, well, then open up my code editor inside this folder and we'll start to work on
+
+04:25.430 --> 04:26.300
+our project.
+
+04:27.720 --> 04:28.710
+All right, so here we go.
+
+04:28.740 --> 04:34.140
+I should see inside of here the package JSON file and the node modules directory, which has that Axios
+
+04:34.140 --> 04:36.300
+project or module that we just installed.
+
+04:37.220 --> 04:38.540
+So now we've got everything set up.
+
+04:38.540 --> 04:42.080
+Let's take a quick pause right here and we'll start to write some code in the next video.

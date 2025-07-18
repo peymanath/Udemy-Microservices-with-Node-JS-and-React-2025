@@ -1,0 +1,526 @@
+WEBVTT
+
+00:01.110 --> 00:04.250
+In the last video, we built out our client image on our local machine.
+
+00:04.260 --> 00:07.380
+Now that this has been built, I'm going to push it up to Docker Hub.
+
+00:07.620 --> 00:09.510
+So I'm going to do a Docker push.
+
+00:09.540 --> 00:11.460
+Steven Grider Slash Client.
+
+00:11.760 --> 00:16.590
+Remember, if you are using Kubernetes on Google Cloud, you do not have to run this command.
+
+00:17.470 --> 00:17.590
+Okay.
+
+00:17.680 --> 00:19.420
+So I'm going to run that and let it do its thing.
+
+00:19.870 --> 00:22.690
+While that's running, I'm going to go back over to my terminal where we're going to start to write
+
+00:22.690 --> 00:24.760
+out a pretty good amount of configuration.
+
+00:24.940 --> 00:28.360
+So we want to get our client running inside of our Kubernetes cluster.
+
+00:28.390 --> 00:31.180
+There are a couple of things we have to do to get that happening.
+
+00:31.450 --> 00:36.020
+First off, we need to make sure that we create a new deployment config file inside of our directory.
+
+00:36.040 --> 00:40.150
+This deployment config file is going to be just about identical in nature to the one we already wrote
+
+00:40.150 --> 00:41.950
+out for our authentication deployment.
+
+00:42.860 --> 00:48.290
+We're then going to make sure that we add a config entry to our scaffold YAML file, particularly inside
+
+00:48.290 --> 00:49.580
+this artifact section.
+
+00:49.610 --> 00:52.880
+Remember, the artifact section is going to set up some code syncing.
+
+00:52.880 --> 00:56.510
+So we're going to make sure that any time we make a change to some JavaScript files inside of our client
+
+00:56.510 --> 01:00.890
+directory, those changes get sent into the pod that is running our client image.
+
+01:02.120 --> 01:06.520
+And then finally we want to be able to access this next gen application from inside of our browser.
+
+01:06.530 --> 01:11.150
+So in other words, we need to somehow make requests from outside of our cluster and get them correctly
+
+01:11.150 --> 01:12.380
+routed inside of it.
+
+01:12.890 --> 01:18.140
+You'll recall that we were using Ingress Engine for that, so we've got the Ingress XB file inside of
+
+01:18.140 --> 01:19.280
+our K directory.
+
+01:19.280 --> 01:24.680
+This is where we are listing out all of our config to specify routing rules inside the cluster for incoming
+
+01:24.680 --> 01:26.120
+requests from the outside world.
+
+01:26.600 --> 01:28.430
+So in total, three things for us to do.
+
+01:28.430 --> 01:30.050
+Let's get started right away.
+
+01:30.500 --> 01:32.930
+I'll first begin by going to my K directory.
+
+01:32.930 --> 01:36.890
+Inside there, I'm going to make a new file called client dash devel html.
+
+01:37.280 --> 01:41.690
+Again, the client config file or the client deployment file is going to look just about identical in
+
+01:41.690 --> 01:43.700
+nature to the authentication one.
+
+01:43.700 --> 01:47.930
+Just everywhere we have the word off pretty much just gets changed over to client.
+
+01:47.930 --> 01:49.550
+So let's write this out very quickly.
+
+01:49.850 --> 01:53.270
+I'm going to put in an API version of apps v one.
+
+01:54.430 --> 01:56.110
+A kind of deployment.
+
+01:57.400 --> 02:01.330
+We'll put in a metadata section with the name of client dash devel.
+
+02:02.450 --> 02:06.410
+I'll then put in a spec to describe exactly how this deployment is supposed to behave.
+
+02:07.460 --> 02:13.370
+I'm going to put in replicas of one because I only want to be running a one single pod or my next application
+
+02:13.370 --> 02:15.290
+when we're in this kind of development environment.
+
+02:16.360 --> 02:21.250
+I'll put in a selector with the Match Labels app client.
+
+02:23.110 --> 02:27.190
+Then on the same level of indentation as selector, we'll put in the template.
+
+02:27.190 --> 02:31.630
+And remember this template section describes exactly how every pod that is created and managed by this
+
+02:31.630 --> 02:32.830
+deployment should behave.
+
+02:33.320 --> 02:35.920
+So I going to put in a metadata here as well.
+
+02:37.690 --> 02:40.720
+With labels of app client.
+
+02:41.380 --> 02:43.390
+Remember this metadata section right here?
+
+02:43.390 --> 02:47.800
+And this selector section right here is how the deployment is going to find the set of pods that is
+
+02:47.800 --> 02:48.820
+supposed to manage.
+
+02:50.310 --> 02:56.430
+Then on the same level of indentation as metadata, will put in a spec to describe how every pod should
+
+02:56.430 --> 02:57.090
+behave.
+
+02:58.280 --> 03:01.400
+So we're going to say that every pod is going to have a container section.
+
+03:01.940 --> 03:05.960
+We only want to have one container and we're going to give it a name, a simply client.
+
+03:07.720 --> 03:09.460
+And also the image that we wanted to run.
+
+03:09.460 --> 03:12.850
+So in this case, my Docker ID slash client.
+
+03:13.390 --> 03:17.320
+Quick reminder, if you are making use of Google Cloud for your Kubernetes cluster, you are not going
+
+03:17.320 --> 03:19.800
+to put in this format of image right here.
+
+03:19.810 --> 03:24.040
+Instead, you're going to put in that kind of GCR, IO or something like that.
+
+03:24.340 --> 03:28.600
+You can see the format of that or get a reminder of what the format looks like by going back over to
+
+03:28.600 --> 03:31.780
+your C double file.
+
+03:31.930 --> 03:35.070
+So go back over there and you'll see the format that you are supposed to use.
+
+03:35.080 --> 03:40.540
+It's supposed to be something like GCR, IO or something and then your project ID and then the name
+
+03:40.540 --> 03:43.270
+of the actual pod or image they were trying to run.
+
+03:44.690 --> 03:44.960
+Okay.
+
+03:44.960 --> 03:46.220
+So that is it for the deployment.
+
+03:46.220 --> 03:52.010
+But remember, after getting the deployment, we also need a service to allow requests inside the cluster
+
+03:52.010 --> 03:53.540
+to get access to this pod.
+
+03:53.540 --> 03:56.270
+So we're going to write out that service at the bottom of the file.
+
+03:57.080 --> 03:59.420
+I'll put in a dash, dash, dash at the very bottom.
+
+04:00.090 --> 04:02.260
+And we're going to create our cluster IP service.
+
+04:02.280 --> 04:04.740
+They'll put in an API version of V one.
+
+04:05.580 --> 04:07.380
+A kind of service.
+
+04:08.310 --> 04:11.310
+Metadata with the name of client CRV.
+
+04:14.290 --> 04:15.700
+And then our spec section.
+
+04:16.550 --> 04:22.640
+We're going to add in a selector of app client and remember the selector right here is how the service
+
+04:22.640 --> 04:26.000
+is going to find the pods that it is supposed to govern request to.
+
+04:27.950 --> 04:31.850
+After selector, we'll then specify the list of ports that we want to allow access to.
+
+04:32.800 --> 04:33.760
+We're going to have one port.
+
+04:33.790 --> 04:35.080
+I'll give it a name of client.
+
+04:35.170 --> 04:36.210
+Remember the name here?
+
+04:36.220 --> 04:38.560
+Not super important on the actual port.
+
+04:38.590 --> 04:41.260
+It's really just for logging and reporting purposes.
+
+04:42.450 --> 04:44.430
+Our protocol will be TCP.
+
+04:45.180 --> 04:49.530
+But the port of 3000 and a target port of 3000.
+
+04:49.860 --> 04:51.270
+Why are we using 3000 here?
+
+04:51.300 --> 04:55.770
+Well, as you just saw at your terminal a moment ago, as we started up, our next application in the
+
+04:55.770 --> 05:00.210
+development environment directly on our machine, you saw that next to us by default license on port
+
+05:00.210 --> 05:00.980
+3000.
+
+05:00.990 --> 05:02.550
+So that's why we are putting it here.
+
+05:03.690 --> 05:05.610
+All right, so let's save this file now.
+
+05:05.610 --> 05:10.530
+As soon as we save this file, scaffold is going to detect that we've added a new config file to arcade's
+
+05:10.530 --> 05:11.190
+directory.
+
+05:11.520 --> 05:16.050
+So if we go back over to the terminal window running scaffold, we should see something that says ah
+
+05:16.050 --> 05:19.710
+ha, found this thing and created some deployment and some service.
+
+05:20.190 --> 05:26.670
+Now just, you know, after you apply or after scaffold applies this file, you might see an air, a
+
+05:26.670 --> 05:29.180
+big red air, something it says cannot find.
+
+05:29.190 --> 05:31.410
+Image your docker ID, blah, blah, blah.
+
+05:32.170 --> 05:36.880
+If you see something like that, chances are you have not finished pushing your image.
+
+05:36.880 --> 05:39.880
+The initial bill that we just put together to Docker Hub.
+
+05:40.150 --> 05:45.550
+So if you get that really big error message, all you have to do is stop scaffold with the control,
+
+05:45.550 --> 05:46.090
+see?
+
+05:46.830 --> 05:53.040
+And then start it back up with Scaffold Dev and you'll want to do that after you have pushed the image
+
+05:53.040 --> 05:54.420
+successfully to Docker Hub.
+
+05:56.100 --> 05:58.590
+And then after that we should see our off come back up.
+
+05:58.590 --> 06:02.430
+And very shortly we should see some logs coming from the client as well.
+
+06:04.980 --> 06:05.210
+Okay.
+
+06:05.250 --> 06:07.500
+So that gets at least the pod created.
+
+06:08.070 --> 06:10.350
+But there are still two other things we have to go through.
+
+06:10.560 --> 06:15.210
+Remember, inside of our scaffold HTML file, we have to set up file synching by listing out our client
+
+06:15.210 --> 06:17.160
+project as a build artifact.
+
+06:17.940 --> 06:21.150
+So I'm going to just go ahead and copy the existing block here.
+
+06:22.150 --> 06:23.320
+And paste it down.
+
+06:24.060 --> 06:28.680
+I'm then going to fix our indentation, so I'll find the dashed image.
+
+06:29.440 --> 06:33.520
+And make sure it's on the same level of indentation as image above it.
+
+06:35.250 --> 06:39.960
+I'll then go through this copy paste right here and update off to client.
+
+06:40.320 --> 06:42.240
+I'll update the context to client.
+
+06:42.990 --> 06:47.940
+And then the only other thing we have to change is the directory or the file set to attempt to sync.
+
+06:48.150 --> 06:52.800
+So remember on the Scaffold Project, we're going to be trying to sync JavaScript files and in addition,
+
+06:52.800 --> 06:57.000
+inside this client directory we do not have a ESC folder to watch.
+
+06:57.390 --> 06:59.430
+So we're going to change CRC right here.
+
+07:00.620 --> 07:04.370
+Two star star star James.
+
+07:05.590 --> 07:06.700
+And then we'll save that file.
+
+07:09.950 --> 07:10.140
+Okay.
+
+07:10.220 --> 07:11.330
+Very last step.
+
+07:11.390 --> 07:14.660
+Remember, we need to update our ingress configuration.
+
+07:14.660 --> 07:17.960
+So inside my directory, I'll find the ingress service config file.
+
+07:18.630 --> 07:24.240
+So we need to add in a new path that users can visit and have all requests that go to some particular
+
+07:24.240 --> 07:26.730
+path routed off to our client service.
+
+07:27.580 --> 07:30.010
+So I'm going to add in a new entry at the bottom here.
+
+07:30.790 --> 07:34.470
+Of path slash and then question mark.
+
+07:34.480 --> 07:36.460
+Parentheses star.
+
+07:37.810 --> 07:43.410
+Well, then put in a back end with the service name of client service.
+
+07:44.130 --> 07:47.160
+And a service port of 3000 as well.
+
+07:47.900 --> 07:53.810
+Now something really important to understand here we are listing out inside this path an array of different
+
+07:53.810 --> 07:54.460
+paths.
+
+07:54.470 --> 08:00.080
+Whenever a request comes in to ingress Engine X, it's going to attempt to match the path of that incoming
+
+08:00.080 --> 08:03.530
+request to the paths we've listed out inside of here in order.
+
+08:04.660 --> 08:09.280
+So that means that first the incoming request is going to attempt to be matched against that path right
+
+08:09.280 --> 08:09.750
+there.
+
+08:09.760 --> 08:13.990
+If it does not match that path, it will then be attempted to be matched against this one.
+
+08:14.560 --> 08:20.020
+The one that we just had in in right here is essentially a catch all, if just about any path request
+
+08:20.020 --> 08:20.740
+comes in.
+
+08:20.740 --> 08:23.670
+This little red x right here is always going to capture it.
+
+08:23.680 --> 08:29.230
+So we want to make sure that we always first list out our very particular APIs for our different services.
+
+08:29.230 --> 08:33.880
+And then only if we do not capture a request against any of these different services do we want it to
+
+08:33.880 --> 08:36.070
+eventually be forwarded on to the client service.
+
+08:36.070 --> 08:40.360
+So we're always going to make sure that we list out the client service at the very, very bottom, because
+
+08:40.360 --> 08:45.100
+if we listed at the top, then any incoming request would always be matched against this one, which
+
+08:45.100 --> 08:46.390
+is definitely not what we want.
+
+08:47.500 --> 08:49.130
+So I'm going to save this file as well.
+
+08:49.150 --> 08:53.350
+And now finally, after all that, we should be able to go over to our terminal.
+
+08:54.190 --> 08:56.170
+And in the window running scaffold.
+
+08:56.200 --> 09:00.430
+Hopefully you will now see some output from the client pod.
+
+09:00.560 --> 09:02.110
+Looks like I've got it right here.
+
+09:02.350 --> 09:06.240
+If you are seeing an error message of any sort, by far.
+
+09:06.280 --> 09:09.610
+First thing you want to do is stop scaffold and start it back up.
+
+09:11.310 --> 09:15.570
+After it looks like everything is running or even if you see a warning or something like that, let's
+
+09:15.570 --> 09:16.860
+test this out very quickly.
+
+09:17.280 --> 09:22.800
+To do so, we should be able to go back over to our browser and remember how we access our development
+
+09:22.800 --> 09:24.930
+server or our Kubernetes cluster.
+
+09:24.960 --> 09:27.690
+We're going to go to ticketing dot dev.
+
+09:29.630 --> 09:34.910
+So if I go to ticketing Dev, I will see the next JSP page up here on the screen of landing page.
+
+09:34.940 --> 09:35.570
+Awesome.
+
+09:35.900 --> 09:41.090
+Remember, if you get a security warning, we just want to bypass that because it's chrome jumping in
+
+09:41.090 --> 09:43.010
+when we really don't want it to do so.
+
+09:43.010 --> 09:46.610
+You can either click on advance at the bottom and try to bypass the security warning.
+
+09:46.640 --> 09:49.640
+Chances are, however, there will not be a bypass link inside there.
+
+09:49.640 --> 09:53.930
+So to really bypass that screen, you can type directly onto your keyboard.
+
+09:54.110 --> 09:58.040
+This is unsafe and it should bypass the HTTPS error.
+
+09:59.350 --> 10:00.840
+So now we can see our landing page.
+
+10:00.840 --> 10:05.730
+And if we try to go to banana, we should see the banana page as well.
+
+10:06.800 --> 10:07.120
+Cool.
+
+10:08.060 --> 10:08.480
+All right.
+
+10:08.480 --> 10:09.920
+So now we've got this all wired up.
+
+10:09.920 --> 10:12.260
+Quick pause right here and continue in just a minute.

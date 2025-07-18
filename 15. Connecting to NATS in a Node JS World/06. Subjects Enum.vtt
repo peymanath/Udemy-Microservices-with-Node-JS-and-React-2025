@@ -1,0 +1,169 @@
+WEBVTT
+
+00:00.980 --> 00:05.360
+In this video, we're going to start to add in several pieces of code to make sure that TypeScript can
+
+00:05.360 --> 00:10.910
+make sure that whenever we create a listener, we've got some matching subject and data type argument
+
+00:10.910 --> 00:12.980
+provided inside the on message function.
+
+00:13.640 --> 00:14.730
+So let's get to it.
+
+00:14.750 --> 00:19.190
+The first thing we're going to do inside of our events directory, we're going to create a new file.
+
+00:19.190 --> 00:23.150
+And inside there we're going to put together something that's going to list out all the different valid
+
+00:23.150 --> 00:26.210
+subject names that we ever expect to receive.
+
+00:26.690 --> 00:31.430
+So inside of my events directory, I'm going to make a new file called Simply Subjects.
+
+00:32.810 --> 00:36.710
+Now remember, a subject in the world of gnats is the name of a channel.
+
+00:36.710 --> 00:41.180
+So you can kind of think, think of this as being like an event name or something very similar to that.
+
+00:42.030 --> 00:47.310
+Inside this subject's file, we are going to export an enum called Subjects.
+
+00:47.910 --> 00:52.620
+And if you've never worked with an enum before, it's essentially somewhat similar to an object.
+
+00:52.740 --> 00:57.570
+We're going to list out a couple of properties inside of here, and we're going to then say if something
+
+00:57.570 --> 01:02.430
+is of type subjects, then that means that it is one of the different properties that is listed out
+
+01:02.430 --> 01:03.030
+inside.
+
+01:03.060 --> 01:06.360
+I'll show you an example of it right after we list out some different values inside of here.
+
+01:06.780 --> 01:10.500
+So inside of subjects, we're going to list all the possible subjects we expect to have.
+
+01:10.680 --> 01:13.710
+Well, we definitely expect to have a subject of ticket created.
+
+01:14.880 --> 01:17.920
+And we might eventually have one of say order updated as well.
+
+01:17.940 --> 01:20.070
+We definitely don't yet, but we might at the future.
+
+01:20.100 --> 01:24.680
+So just to give an example, we're going to add this in as a possible subject inside of the cam.
+
+01:25.380 --> 01:28.200
+So I'm going to say ticket created.
+
+01:29.250 --> 01:30.720
+Ticket it created.
+
+01:31.460 --> 01:32.840
+And then order.
+
+01:32.840 --> 01:33.530
+Was it updated?
+
+01:33.530 --> 01:33.920
+Yes.
+
+01:33.920 --> 01:34.670
+Order.
+
+01:36.280 --> 01:37.180
+Updated?
+
+01:37.630 --> 01:39.880
+Is order updated?
+
+01:41.340 --> 01:43.890
+And I'll put a comma after that first entry like so.
+
+01:44.740 --> 01:50.740
+So now just as a quick example of how we would use this enum, we could make a function called print
+
+01:50.740 --> 01:51.610
+subject.
+
+01:52.420 --> 01:55.420
+And we could say that in order to be an argument to this.
+
+01:56.260 --> 02:01.870
+We'll take in some argument called subject, and it must be one of the members or one of the properties
+
+02:01.870 --> 02:05.710
+or types options, whatever you want to call it, listed inside the column.
+
+02:06.380 --> 02:10.430
+So to call print subject, we cannot put in some random string.
+
+02:10.430 --> 02:13.400
+We must put in one of the different options from that enum.
+
+02:13.670 --> 02:15.350
+So to do so, we would write out.
+
+02:16.200 --> 02:20.700
+Subjects dot ticket created like so, and that works just fine.
+
+02:20.970 --> 02:24.270
+Or alternatively, we could do order updated as well.
+
+02:25.590 --> 02:25.910
+Okay.
+
+02:25.920 --> 02:30.240
+So as time goes on and we start to add in more possible events to our application, we're going to come
+
+02:30.240 --> 02:33.270
+back to the subject's file and list them out inside of here.
+
+02:33.540 --> 02:37.290
+This file alone is going to save us a ton of different typos.
+
+02:37.290 --> 02:41.820
+We're going to list out the actual event name or the actual subject that we're going to use with the
+
+02:41.820 --> 02:44.370
+nets as a hardcoded string inside of here.
+
+02:44.400 --> 02:48.840
+And then inside of all of our code, for example, inside of our listener that we just created, rather
+
+02:48.840 --> 02:54.750
+than referring to this hardcoded string right here, where we could very easily make a typo like say
+
+02:54.750 --> 03:01.980
+ticket created instead of the intended ticket colon created, we will instead refer to, say, subject's
+
+03:02.340 --> 03:03.360
+ticket created.
+
+03:04.150 --> 03:08.020
+And again, that's going to help us for making any very simple, straightforward typos.
+
+03:08.290 --> 03:12.070
+So this already is a good improvement, but we're not using it anywhere just yet.
+
+03:12.100 --> 03:13.520
+Let's take a quick pause right here.
+
+03:13.540 --> 03:18.010
+In the next video, we're going to start to come up with this structure that's going to allow TypeScript
+
+03:18.010 --> 03:24.310
+to understand that there is a tight coupling of sorts between a ticket subject or this ticket created
+
+03:24.310 --> 03:28.030
+subject and this event data type of ID title and price.

@@ -1,0 +1,214 @@
+WEBVTT
+
+00:00.620 --> 00:03.540
+We just put together our custom publisher before we test this out.
+
+00:03.560 --> 00:06.170
+I want you to know that I made a little typo in the last video.
+
+00:06.200 --> 00:08.030
+So we're going to go back over to the base publisher.
+
+00:08.940 --> 00:12.250
+So right now we are receiving this data property right here.
+
+00:12.270 --> 00:15.480
+We're taking that data and we are passing it directly off to publish.
+
+00:15.510 --> 00:20.050
+But remember, when we call it publish on the next client, we must be providing a string right here.
+
+00:20.070 --> 00:23.690
+So we're going to take whatever data is provided and turn it into JSON.
+
+00:23.700 --> 00:26.460
+So we'll do a JSON string if I like.
+
+00:26.460 --> 00:27.600
+So that was my mistake.
+
+00:27.600 --> 00:29.910
+I just left off that string of fi function call.
+
+00:31.520 --> 00:31.700
+Okay.
+
+00:31.710 --> 00:32.860
+So now we've got that in there.
+
+00:32.870 --> 00:35.120
+We're going to figure out how to actually run this code.
+
+00:35.360 --> 00:39.920
+Well, we're going to go back over to our publisher TS file inside of our SRC directory.
+
+00:40.780 --> 00:41.380
+Inside of here.
+
+00:41.380 --> 00:44.860
+We're going to import the ticket created publisher that we just put together.
+
+00:44.860 --> 00:46.060
+So that's this thing right here.
+
+00:46.060 --> 00:50.740
+And we're going to use this ticket created publisher to publish an event at the very top.
+
+00:50.740 --> 00:51.940
+I'm going to import.
+
+00:53.960 --> 00:55.340
+Ticket created publisher.
+
+00:58.300 --> 01:01.570
+From events ticket created publisher.
+
+01:03.420 --> 01:04.050
+There we go.
+
+01:06.210 --> 01:09.430
+That downside of our connect statement right after we connect?
+
+01:09.450 --> 01:14.160
+I'm going to comment out the data variable and the publish call that's already in there.
+
+01:14.520 --> 01:19.470
+I'm only commenting that out so we can do a comparison of how hard this code is to understand before
+
+01:19.470 --> 01:20.760
+and after the refactor.
+
+01:21.560 --> 01:23.680
+So we're then going to create an instance of that publisher.
+
+01:23.760 --> 01:27.920
+We'll say publisher is new ticket created publisher.
+
+01:28.630 --> 01:30.520
+We have to pass in a Nats client.
+
+01:30.520 --> 01:34.360
+So that's going to be our standard variable that we had already declared and connected to Nats with.
+
+01:36.040 --> 01:40.540
+And then to actually publish something, we'll call a publisher, publish, and we'll pass on the data
+
+01:40.540 --> 01:41.570
+that we want to publish.
+
+01:41.590 --> 01:43.660
+For this ticket created event.
+
+01:44.140 --> 01:45.500
+As soon as I put in that empty object.
+
+01:45.520 --> 01:47.780
+Notice how TypeScript starts to show some errors.
+
+01:47.800 --> 01:50.320
+So TypeScript is doing some type checking for us.
+
+01:50.350 --> 01:55.150
+It's making sure that whatever data we are trying to publish has the correct properties, so ID title
+
+01:55.150 --> 01:58.430
+and price, and it's going to make sure that they have the correct types as well.
+
+01:58.450 --> 02:00.910
+So it must be a string, a string and a number.
+
+02:01.590 --> 02:04.220
+This check right here is what it is all about.
+
+02:04.230 --> 02:09.000
+This is why we are going through all this extra effort to make sure that we do not try to publish some
+
+02:09.000 --> 02:13.170
+incorrect or invalid data that's then going to be consumed by other services.
+
+02:14.700 --> 02:20.910
+So we'll put in a hardcoded ID title of concert and a price of 20.
+
+02:21.060 --> 02:24.740
+And as soon as I have the correct properties and the correct types, air goes away.
+
+02:24.750 --> 02:27.930
+And that means that we have defined this event successfully.
+
+02:29.630 --> 02:29.960
+Okay.
+
+02:29.990 --> 02:31.130
+Time to test this out.
+
+02:31.400 --> 02:34.730
+I'm going to look at my editor, make sure I don't have any typescript errors from any files.
+
+02:34.940 --> 02:39.560
+I'll then make sure I save all these different files and we'll go back over to our terminal and do a
+
+02:39.560 --> 02:40.340
+quick test.
+
+02:40.850 --> 02:45.440
+And when you go back over to your terminal, I would encourage you to just do a quick restart of the
+
+02:45.440 --> 02:51.020
+publisher and the two listeners, just in case there was some air along the way that caused the connection
+
+02:51.020 --> 02:52.700
+to be messed up or something like that.
+
+02:53.580 --> 02:56.220
+So I'm going to restart my listener.
+
+02:56.580 --> 02:58.650
+I'm going to restart my second listener.
+
+02:58.680 --> 03:00.480
+It looks like those both booted up correctly.
+
+03:00.480 --> 03:03.870
+So if you get any errors, chances are there's something wrong with the implementation right now.
+
+03:04.690 --> 03:08.980
+I'll then go to the window that was doing the publisher and do a run publish.
+
+03:10.380 --> 03:13.620
+So as soon as I start that up, I'll see the console log of even published.
+
+03:14.260 --> 03:18.820
+I then see from one of the listeners that we received some event data and I got the console log in there
+
+03:18.820 --> 03:23.320
+of the event data itself and then the ID, the title and the price.
+
+03:24.110 --> 03:24.590
+Awesome.
+
+03:24.590 --> 03:26.840
+So it looks like the stuff is all working.
+
+03:28.440 --> 03:28.760
+Okay.
+
+03:28.770 --> 03:31.080
+So this is definitely a fantastic improvement.
+
+03:31.080 --> 03:36.480
+And I really cannot understate how important this refactor was, even if it was a little bit painful
+
+03:36.480 --> 03:38.610
+and at times rather confusing.
+
+03:39.510 --> 03:41.570
+There's still a couple of things I want to show you really quickly.
+
+03:41.580 --> 03:45.660
+A couple locations where you can fix up some code and make it a little bit easier to use inside of some
+
+03:45.660 --> 03:47.050
+of our services in the future.
+
+03:47.070 --> 03:49.650
+So quick pause right here and I'll see you in just a minute.

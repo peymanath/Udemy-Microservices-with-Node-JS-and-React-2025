@@ -1,0 +1,193 @@
+WEBVTT
+
+00:00.760 --> 00:02.720
+We got the beginnings of a request handler put together.
+
+00:02.740 --> 00:05.770
+So now we're going to start to implement the first couple of steps in this flow.
+
+00:06.070 --> 00:08.950
+We're going to try to find the order that the user is trying to pay for.
+
+00:08.980 --> 00:12.970
+We'll make sure that the order belongs to this user, and we'll also make sure that the order is not
+
+00:12.970 --> 00:13.820
+yet canceled.
+
+00:13.840 --> 00:15.040
+So let's get to it.
+
+00:16.640 --> 00:22.940
+Back inside my editor, I'm going to remove that resin statement and we will first pull out the token
+
+00:23.300 --> 00:27.020
+and the order ID from the incoming request body.
+
+00:27.500 --> 00:30.290
+We're going to have to refer to these two values right here a couple of times.
+
+00:30.290 --> 00:33.110
+So makes sense to just pull them out of the request body right away.
+
+00:33.890 --> 00:39.020
+And then going to use the order model right here to try to find the appropriate order out of our database.
+
+00:39.860 --> 00:46.140
+They'll say const order is a wait order defined by ID and pass in the order ID.
+
+00:48.260 --> 00:52.880
+Then right away, if we are unable to find the appropriate order, we should throw a not found error
+
+00:52.880 --> 00:55.700
+and say Sorry, we could not find the order you're trying to pay for.
+
+00:56.130 --> 00:57.380
+So if there is no order.
+
+00:58.680 --> 01:01.830
+We'll throw a new, not bound air.
+
+01:05.160 --> 01:10.560
+After that, we'll then check and see if the user who is trying to pay for this thing has the same ID
+
+01:10.590 --> 01:12.870
+as the order's user ID property.
+
+01:13.770 --> 01:14.850
+It will say if.
+
+01:15.890 --> 01:16.250
+Order.
+
+01:16.460 --> 01:22.040
+User ID is not equal to req current user ID.
+
+01:23.030 --> 01:26.880
+And once again, we're getting that little nasty thing from TypeScript where it's saying sorry.
+
+01:26.880 --> 01:28.860
+We don't know if the current user is defined.
+
+01:28.890 --> 01:30.150
+We've been over this several times.
+
+01:30.150 --> 01:34.650
+Remember, require authority has a very stringent check inside of it to make sure that current user
+
+01:34.650 --> 01:35.480
+is defined.
+
+01:35.490 --> 01:38.670
+So I'm going to put the exclamation on there to say TypeScript, don't worry about it.
+
+01:38.670 --> 01:40.920
+We already made sure that current user is defined.
+
+01:41.640 --> 01:46.260
+So if those two ideas are not the same, we should throw probably a not authorized air.
+
+01:46.860 --> 01:50.820
+They'll throw a new not authorized air.
+
+01:52.640 --> 01:55.460
+And we should also import that air from our common module as well.
+
+01:55.490 --> 01:58.400
+I did not get that on the initial pass of all these imports.
+
+01:58.790 --> 02:01.910
+So I'll throw in a not authorized air.
+
+02:07.010 --> 02:10.520
+And then finally, we want to make sure that the order is not yet canceled.
+
+02:11.030 --> 02:12.050
+They'll say if.
+
+02:13.910 --> 02:19.400
+Order status is equal to order status.
+
+02:21.290 --> 02:22.430
+That canceled.
+
+02:23.450 --> 02:26.390
+And let's throw a new bad request.
+
+02:27.550 --> 02:28.060
+Air.
+
+02:28.510 --> 02:32.430
+And we're making use of the odor status in right there, which is coming from our common module.
+
+02:32.440 --> 02:34.990
+Let's add in import for that at the very top as well.
+
+02:36.230 --> 02:40.010
+So up at the top from our common module, we'll get our order status.
+
+02:44.700 --> 02:49.680
+Whenever we throw a bad request air, we also have to provide a reason to say, Hey, here's why you
+
+02:49.680 --> 02:50.760
+made a bad request.
+
+02:50.790 --> 02:58.560
+So I'll give this a reason of something like cannot pay for an expired or how about canceled order?
+
+03:01.780 --> 03:06.130
+So if we get past those three checks right there, then we'll say, okay, fine, you can pay for this
+
+03:06.130 --> 03:06.580
+thing.
+
+03:06.580 --> 03:08.620
+We'll try to actually build your credit card.
+
+03:10.010 --> 03:11.840
+To make sure that these three checks at least work.
+
+03:11.840 --> 03:14.350
+We should do a little quick intermediate test here.
+
+03:14.360 --> 03:18.260
+So I'm going to restore that resend of success.
+
+03:18.260 --> 03:19.520
+True, once again.
+
+03:21.970 --> 03:25.920
+So now, in theory, we could test this out and try to make a variety of different requests.
+
+03:25.930 --> 03:30.890
+Using Postman, we could try to pay for a order that does not actually exist.
+
+03:30.910 --> 03:35.500
+We could try to sign up as two different users, create an order on one and then pay for it on another.
+
+03:35.800 --> 03:40.690
+We could also try to create an order wait a minute, for the thing to be expired and then try to pay
+
+03:40.690 --> 03:41.310
+for it.
+
+03:41.320 --> 03:44.980
+But all those scenarios sound like a lot of tedious work.
+
+03:44.980 --> 03:48.760
+We would have to be using Postman quite a bit just to verify these different cases.
+
+03:48.850 --> 03:53.470
+So I think that this is a great scenario where automated testing could make sure that we are doing the
+
+03:53.470 --> 03:55.540
+correct thing in all three scenarios.
+
+03:56.200 --> 03:57.070
+Let's take a pause right here.
+
+03:57.070 --> 04:00.220
+When we come back, the next video, we're going to start to write out some automated tests to make
+
+04:00.220 --> 04:03.040
+sure that all these different cases are handled appropriately.

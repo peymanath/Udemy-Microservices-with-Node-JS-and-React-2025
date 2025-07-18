@@ -1,0 +1,283 @@
+WEBVTT
+
+00:01.190 --> 00:03.380
+We're all done with our update route handler.
+
+00:03.530 --> 00:07.700
+We've now got a lot of different routes inside of here and we've got some tests for each of them.
+
+00:07.700 --> 00:12.350
+But before we just say that everything's really complete, I think would be kind of nice to test everything
+
+00:12.350 --> 00:16.850
+out using Postman to make sure that we can reach into this ticket service, create a ticket, updated
+
+00:16.850 --> 00:17.840
+ticket, and so on.
+
+00:18.380 --> 00:22.990
+So we're going to use Postman in this video to test out these different route handlers before we can.
+
+00:23.000 --> 00:26.900
+However, remember, we have to expose access to this ticket service.
+
+00:27.020 --> 00:33.590
+We have not updated our ingress engine x config file and told it to take requests to API tickets and
+
+00:33.590 --> 00:35.360
+forward them on to our ticket service.
+
+00:36.130 --> 00:38.530
+So I'm going to find my info directory inside there.
+
+00:38.530 --> 00:41.140
+I'll find Kate's ingress survey.
+
+00:42.120 --> 00:43.920
+So here's our ingress config file.
+
+00:44.650 --> 00:50.710
+I'm going to go down to our Path's section and right after the API users path I'm going to add in a
+
+00:50.710 --> 00:51.670
+new path.
+
+00:51.670 --> 00:57.040
+So we'll say any request to API, slash tickets, slash anything.
+
+00:59.230 --> 01:02.080
+Take the request and forward it onto this back end.
+
+01:02.290 --> 01:06.580
+I want to send it to the service with the name of tickets, Savi.
+
+01:07.830 --> 01:10.770
+And a service port of 3000.
+
+01:11.160 --> 01:17.130
+Now, once again, it's super important that we add in this new path right here before the reactor,
+
+01:17.130 --> 01:20.670
+the next JJ's root handler or path rule setting right here.
+
+01:21.210 --> 01:22.890
+This is a catch all route.
+
+01:22.890 --> 01:27.720
+So if we put that at the top, every single incoming request is always going to match that 1/1 and we'll
+
+01:27.720 --> 01:30.420
+never get on to API users or API tickets.
+
+01:31.410 --> 01:32.820
+All right, I'm going to save this file.
+
+01:34.530 --> 01:37.140
+And then going to open up postman on my local machine.
+
+01:37.950 --> 01:42.150
+So here's postman right here, and we're going to try to test out the different route handlers we just
+
+01:42.150 --> 01:44.250
+put together to access all them.
+
+01:44.250 --> 01:46.410
+Remember, we do have to be authenticated.
+
+01:46.410 --> 01:50.670
+The first thing I'm going to do is make a request to attempt to either sign in or sign up.
+
+01:51.000 --> 01:56.850
+So we'll do a post request to HTTPS ticketing dev API users sign in.
+
+01:58.060 --> 02:03.190
+I'll go to Body Select Raw, make sure I've got JSON selected over here and I could put in an email
+
+02:03.190 --> 02:04.030
+and password.
+
+02:04.030 --> 02:08.650
+And remember if you're going to make a request to sign in, the email password must be some combination
+
+02:08.650 --> 02:12.790
+that is valid that you've already created an account for on the service.
+
+02:12.790 --> 02:18.220
+So if you do not remember any credentials, you can always change it over to sign up and make a request
+
+02:18.220 --> 02:20.530
+to sign up with the email and password instead.
+
+02:20.710 --> 02:24.880
+Either way, whether you use sign up or sign in, make sure you make that request and get a response
+
+02:24.880 --> 02:25.420
+back.
+
+02:25.600 --> 02:30.730
+As long as we see a response back, that means we should now be authenticated just to confirm that we
+
+02:30.730 --> 02:32.170
+could open up a second tab.
+
+02:32.920 --> 02:36.910
+Make a get request to ticketing dev API users, current user.
+
+02:37.120 --> 02:39.040
+And if we send that in, we should see.
+
+02:39.040 --> 02:40.480
+Yes, we are authenticated.
+
+02:42.160 --> 02:42.430
+All right.
+
+02:42.430 --> 02:46.720
+So now that I'm authenticated, first thing I'm going to do is attempt to create a new ticket.
+
+02:46.840 --> 02:48.610
+So I'll open up a third tab.
+
+02:48.880 --> 02:56.410
+I'm going to make a post request to HTTPS ticketing dev API tickets.
+
+02:58.240 --> 03:01.630
+Under the header section, I'm going to put in a content.
+
+03:03.020 --> 03:04.850
+Type of application.
+
+03:05.700 --> 03:06.450
+Jason.
+
+03:07.880 --> 03:14.630
+I'll then go to the body tab, select raw, make sure I've got JSON selected and we'll enter in the
+
+03:14.630 --> 03:18.710
+attributes or parameters, body parameters that are required to create a ticket, which you'll recall
+
+03:18.740 --> 03:20.660
+is a title and a price.
+
+03:21.140 --> 03:22.490
+So I'll put in a title.
+
+03:24.500 --> 03:25.640
+Of concert.
+
+03:27.950 --> 03:30.440
+At a price of ten.
+
+03:31.430 --> 03:33.110
+Remember that we are writing JSON here.
+
+03:33.110 --> 03:37.550
+So the keys have to be wrapped in double quotes and the word concert has to have double quotes as well.
+
+03:38.360 --> 03:42.980
+I'll then send this in and I should see a response that looks like this right here.
+
+03:43.010 --> 03:47.930
+I should have a status of two of one created and I should see the title The Price My user ID because
+
+03:47.930 --> 03:52.340
+I'm the person who owns this ticket and my ID for the ticket right there as well.
+
+03:53.790 --> 03:54.840
+That definitely looks good.
+
+03:55.360 --> 03:58.500
+So now if we take that ID, I'll copy it.
+
+03:59.450 --> 04:06.050
+And I'm going to try to make a get request to API tickets slash and then that ID.
+
+04:09.730 --> 04:10.960
+Well, then send that off.
+
+04:11.530 --> 04:12.490
+And there we go.
+
+04:12.520 --> 04:13.810
+Request made successfully.
+
+04:13.810 --> 04:15.040
+Status 200.
+
+04:15.340 --> 04:17.800
+And I see all the details about that particular ticket.
+
+04:18.940 --> 04:21.670
+Let's try to fetch a list of all of our tickets to do so.
+
+04:21.670 --> 04:26.770
+We can delete that ID at the very end and make a request to just API tickets.
+
+04:27.600 --> 04:31.560
+So I'll send that off and I should get back an array of all the different tickets that have been created.
+
+04:31.590 --> 04:36.060
+Now, in my case, I have to write here because I created one just before this video to test this out,
+
+04:36.060 --> 04:37.620
+make sure everything was working correctly.
+
+04:37.620 --> 04:41.760
+So you're probably going to see an array with just the ticket that you created.
+
+04:42.940 --> 04:46.620
+So now finally, let's try to update this ticket that we just made a moment ago.
+
+04:46.630 --> 04:48.730
+So I'm going to take it's ID once again.
+
+04:49.830 --> 04:52.290
+I'm going to change the request type to a put.
+
+04:53.120 --> 04:56.600
+I'll make the requests to API tickets and then the ID.
+
+04:57.630 --> 05:00.240
+And then we could add in a new title and a new price.
+
+05:00.240 --> 05:07.230
+So, for example, I could put in a new title of How about new concerts and a price of 500?
+
+05:08.640 --> 05:09.840
+I'll make that request.
+
+05:10.670 --> 05:11.320
+And there we go.
+
+05:11.330 --> 05:13.280
+I get a response back with the updated data.
+
+05:13.400 --> 05:18.320
+And of course, if you really want to test this, we could try to fetch that ticket again so I can change
+
+05:18.320 --> 05:19.310
+this back to a git.
+
+05:19.310 --> 05:20.780
+Leave the URL the same.
+
+05:21.440 --> 05:24.860
+Fetch the ticket and I'll see details about the one that I just updated.
+
+05:24.890 --> 05:25.150
+Yep.
+
+05:25.160 --> 05:27.470
+Looks like all that data was persisted successfully.
+
+05:28.170 --> 05:28.390
+Okay.
+
+05:28.400 --> 05:29.970
+So overall, I'd say this looks pretty good.
+
+05:29.990 --> 05:32.240
+I think that our ticket service is working.
+
+05:33.170 --> 05:36.080
+So let's take a quick pause right here and continue in just a moment.

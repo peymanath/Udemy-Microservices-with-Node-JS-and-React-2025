@@ -1,0 +1,403 @@
+WEBVTT
+
+00:00.750 --> 00:05.030
+Whenever you and I write TypeScript code, we're going to rely upon type inference quite heavily.
+
+00:05.040 --> 00:08.910
+This is where TypeScript is going to figure out the different types that are flowing around our application
+
+00:08.910 --> 00:09.870
+for us.
+
+00:10.140 --> 00:13.680
+However, there are three different scenarios that we're going to look at where we're going to have
+
+00:13.680 --> 00:16.410
+to add and type annotations manually instead.
+
+00:16.620 --> 00:19.800
+Remember, these type annotations are going to help TypeScript along.
+
+00:20.310 --> 00:24.570
+The first example we're going to look at is whenever we have a function that returns the any type and
+
+00:24.570 --> 00:25.800
+we need to clarify it.
+
+00:26.190 --> 00:29.610
+Now, we haven't really discussed the any type just yet, so we're going to write out first just a little
+
+00:29.610 --> 00:34.560
+bit of code, then we'll review what the any type really means and then we'll get a better idea of why
+
+00:34.560 --> 00:36.810
+we need to use a type annotation in this case.
+
+00:36.810 --> 00:37.980
+So let's get to it.
+
+00:38.370 --> 00:42.840
+I'm going to flip back over to my code editor and I'm going to go down to the very bottom of the file
+
+00:43.140 --> 00:43.590
+down here.
+
+00:43.590 --> 00:46.530
+We're going to add in our three different examples on type annotations.
+
+00:46.530 --> 00:51.360
+So I'm going to put in a little comment that says, when to you use annotations?
+
+00:52.100 --> 00:54.830
+So case number one is when we have a function.
+
+00:56.110 --> 00:57.460
+That returns.
+
+00:58.630 --> 01:00.250
+Be any type.
+
+01:01.140 --> 01:01.380
+Okay.
+
+01:01.380 --> 01:06.510
+So for this example, I want to define a little snippet of JSON as a string, and then we're just going
+
+01:06.510 --> 01:08.190
+to try to parse that JSON.
+
+01:08.700 --> 01:14.820
+So I'm going to define a new variable called lowercase JSON and I'm going to assign it a JSON string.
+
+01:14.820 --> 01:15.930
+So I'll put down a string.
+
+01:15.930 --> 01:18.840
+And then inside of here, we're going to write out just a little bit of JSON.
+
+01:19.440 --> 01:24.780
+So I'll say Curly Brace, I'll put down X and double quotes, a colon and then ten.
+
+01:25.670 --> 01:26.510
+Then why?
+
+01:26.510 --> 01:29.270
+In double quotes, a colon and 20.
+
+01:29.600 --> 01:31.670
+And then I'll close off the curly brace like so.
+
+01:32.760 --> 01:38.340
+So now I could use that string with the JSON parse function and turn the string into an actual object.
+
+01:39.000 --> 01:42.090
+So I'm going to create a new variable called How about coordinates?
+
+01:42.890 --> 01:47.690
+And I'll assign it the result of JSON parse with that JSON variable.
+
+01:48.200 --> 01:54.350
+So in theory, if we now ran this code and console logged out coordinates, we would see something like
+
+01:54.920 --> 01:57.770
+X is ten and y is 20.
+
+01:57.770 --> 01:58.460
+Like so.
+
+02:00.170 --> 02:02.510
+Now there's just one little gotcha inside of here.
+
+02:02.510 --> 02:06.800
+If you mouse over coordinates, you'll notice that it has a type annotation of any.
+
+02:06.800 --> 02:11.210
+So this means that TypeScript thinks that coordinates is of type any.
+
+02:12.120 --> 02:16.530
+In addition, if we mouse over paths right here, you'll notice a lot of nasty syntax up here.
+
+02:16.530 --> 02:19.410
+But at the very end of it is something that says Colony.
+
+02:19.650 --> 02:23.280
+That means that the JSON parse function returns the any type.
+
+02:24.010 --> 02:26.460
+So clearly this anything is something pretty important.
+
+02:26.470 --> 02:31.060
+Let's have a quick pause, a little aside here and discuss what the any type means.
+
+02:31.060 --> 02:35.650
+And then we'll understand, based on that discussion, why we would need to add in a type annotation
+
+02:35.650 --> 02:39.430
+here, even though it looks like there's no errors or warnings with our code.
+
+02:40.120 --> 02:40.390
+All right.
+
+02:40.390 --> 02:46.900
+So quick aside here, so the first thing I want to review is how the JSON parse function works in this
+
+02:46.900 --> 02:47.470
+diagram.
+
+02:47.470 --> 02:51.700
+I've got some different values on the left hand side and then we're going to imagine that we feed each
+
+02:51.700 --> 02:56.680
+of these different values into JSON parse and then we'll take a guess at what the different types are
+
+02:56.680 --> 02:58.030
+that will come out of the function.
+
+02:58.510 --> 03:01.360
+Now, in reality, this diagram is just a little bit misleading right here.
+
+03:01.360 --> 03:06.790
+In reality, any time we call JSON parse, we get back a value of the any type.
+
+03:07.060 --> 03:13.150
+So this column over here on the right hand side, I'm just saying this is what the like maybe the type
+
+03:13.150 --> 03:13.540
+would be, right?
+
+03:13.540 --> 03:17.530
+This is like we know that the type of false once we pass it would be a boolean.
+
+03:17.530 --> 03:18.940
+That's not what we get with TypeScript.
+
+03:18.940 --> 03:20.740
+This is just like the ideal world.
+
+03:21.850 --> 03:25.700
+So if we fed in a string of false to json parse we get back a boolean.
+
+03:25.720 --> 03:27.610
+Again, that's not what really happens.
+
+03:27.610 --> 03:30.220
+We get back any but hey, we're just saying we get back a boolean.
+
+03:30.730 --> 03:33.220
+If we pass in a string of four, we would get back a number.
+
+03:33.400 --> 03:38.590
+If we pass in something that looks like an object with value and then five we would get back a type
+
+03:38.590 --> 03:41.230
+that is an object with value, that is a number.
+
+03:41.530 --> 03:46.810
+And likewise, if we have a object with name that is pointing out a string, we would get back an object
+
+03:46.810 --> 03:48.820
+with a name property that is a string.
+
+03:49.180 --> 03:51.100
+And you can see each of these examples very easily.
+
+03:51.100 --> 03:56.680
+If you open up a JavaScript console really quickly and you call, say, JSON parse with a string of
+
+03:56.680 --> 03:58.240
+like five, we get back a number, right?
+
+03:58.240 --> 03:59.140
+Makes sense.
+
+03:59.680 --> 04:05.920
+Now, the kind of common theme here is that we can clearly pass in very different strings into this
+
+04:05.920 --> 04:10.600
+function and we can possibly get back very, very different value types.
+
+04:11.200 --> 04:15.910
+In some cases we might get a boolean, in other cases we might get a number, and then in some other
+
+04:15.910 --> 04:18.610
+cases we might get these really complicated objects.
+
+04:19.290 --> 04:23.820
+So the goal of this diagram right here is just to help you understand that any time we call JSON pass,
+
+04:23.820 --> 04:28.200
+we get back possibly some very, very different value types.
+
+04:28.680 --> 04:32.730
+Now, the problem here is that TypeScript cannot predict these different types.
+
+04:32.760 --> 04:38.280
+TypeScript doesn't know what we're going to get out of JSON parse because it depends entirely on the
+
+04:38.280 --> 04:40.650
+string that we put into that function.
+
+04:41.390 --> 04:47.120
+So when you and I are writing code inside of our code editor and we call JSON parse typescript just
+
+04:47.120 --> 04:53.330
+plain can't predict what we get back from the function because it will be entirely different based upon
+
+04:53.330 --> 04:54.530
+the string that we put in.
+
+04:54.530 --> 04:59.750
+And TypeScript is not going to try to like read the string and figure out what it would return if we
+
+04:59.750 --> 05:01.190
+called JSON parse.
+
+05:01.610 --> 05:07.730
+So as a shortcut, TypeScript instead decides to simply say, you know what, I can't guess all these
+
+05:07.730 --> 05:08.330
+different types.
+
+05:08.330 --> 05:09.550
+That's too complicated.
+
+05:09.560 --> 05:15.230
+So I'm going to say if you ever call JSON Parse, you're going to get back something called the any
+
+05:15.230 --> 05:15.860
+type.
+
+05:17.210 --> 05:23.420
+The any type essentially means that TypeScript has no idea what type of value is being returned from
+
+05:23.420 --> 05:23.810
+JSON.
+
+05:23.960 --> 05:26.120
+Parse has no clue at all.
+
+05:26.570 --> 05:28.580
+And that's what we see inside of our code editor.
+
+05:29.210 --> 05:33.740
+So right here when we mouse over coordinates, typescript is saying this is the any type.
+
+05:33.740 --> 05:37.850
+That means that TypeScript has no idea what type coordinates is.
+
+05:39.540 --> 05:41.760
+So that's what the any type indicates.
+
+05:42.000 --> 05:43.890
+A couple more notes here on the any type.
+
+05:44.680 --> 05:48.340
+So any is a type just as string or boolean are.
+
+05:48.490 --> 05:53.320
+Any time we have to write out a type of a variable like for example, in a type annotation, we could
+
+05:53.320 --> 05:55.660
+in theory put in any just as easily.
+
+05:56.460 --> 06:00.420
+Any time we see something that is marked with the any type, that means that TypeScript has no idea
+
+06:00.420 --> 06:01.170
+what's going on.
+
+06:01.170 --> 06:05.220
+And in general, that is a very bad thing to have inside of our application.
+
+06:05.640 --> 06:10.620
+Remember, the entire idea behind TypeScript and all these types and all this kind of stuff is that
+
+06:10.620 --> 06:16.410
+we're using TypeScript to catch errors inside of our code editor, and we're able to do that because
+
+06:16.410 --> 06:20.250
+of these types, like types like string and number and boolean and whatnot.
+
+06:20.700 --> 06:25.290
+If TypeScript knows the different types inside of our application, it can take a look at any time.
+
+06:25.290 --> 06:30.600
+We say call a function on an object or reference a property on an object in TypeScript can figure out
+
+06:30.600 --> 06:34.800
+whether or not we are referencing a property that actually exists or if it's one that we just made a
+
+06:34.800 --> 06:35.580
+typo on.
+
+06:36.060 --> 06:42.000
+So any time we have a value that is the any type, typescript cannot do any error checking whatsoever
+
+06:42.000 --> 06:43.470
+around that value.
+
+06:43.980 --> 06:47.520
+So for example, right now, if I go back over to my code editor.
+
+06:48.660 --> 06:50.250
+I can write out coordinates.
+
+06:50.250 --> 06:50.760
+Dot.
+
+06:50.790 --> 06:51.780
+Blah, blah, blah, blah, blah.
+
+06:51.810 --> 06:55.110
+Like so this is clearly a property that does not exist.
+
+06:55.290 --> 06:59.940
+But you'll see that TypeScript does nothing to help me out and tell me that I might have a mistake right
+
+06:59.940 --> 07:00.420
+here.
+
+07:00.960 --> 07:05.490
+However, if I go back up to any of these other examples where I'm working with variables that have
+
+07:05.490 --> 07:08.850
+known type, like let's say, how about speed right here?
+
+07:09.450 --> 07:13.980
+If I reference speed, blah, blah, blah, TypeScript is going to jump in very quickly and say, Hey,
+
+07:13.980 --> 07:15.900
+that's not a property that exists.
+
+07:16.200 --> 07:21.150
+It's only going to allow me to call properties that actually exist, like, let's say to uppercase,
+
+07:21.150 --> 07:22.590
+like, so that's fine.
+
+07:22.590 --> 07:25.650
+And it's only fine because TypeScript knows that speed is a string.
+
+07:26.280 --> 07:32.520
+So again, any time we have a variable of type any it is generally a bad thing because TypeScript can't
+
+07:32.520 --> 07:33.750
+do its job.
+
+07:34.770 --> 07:35.370
+All right.
+
+07:35.370 --> 07:38.090
+So I think that we've gone into enough detail on this, any type.
+
+07:38.100 --> 07:39.540
+So let's have another quick pause right here.
+
+07:39.540 --> 07:44.070
+We're going to come back the next video and understand how we can use a type annotation to fix this
+
+07:44.070 --> 07:45.030
+thing up right here.
+
+07:45.030 --> 07:47.190
+So quick pause and I'll see you in just a minute.

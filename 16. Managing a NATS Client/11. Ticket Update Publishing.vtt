@@ -1,0 +1,244 @@
+WEBVTT
+
+00:00.910 --> 00:03.670
+The ticket creative publisher is definitely now working.
+
+00:03.700 --> 00:07.150
+So now we're going to go through this very similar process and we're going to create a new publisher
+
+00:07.150 --> 00:10.000
+to handle ticketing tickets being updated as well.
+
+00:10.540 --> 00:14.540
+So again, the very first thing we have to do is go into our Events Publishers directory.
+
+00:14.560 --> 00:18.760
+We're going to create a new file inside there called Ticket Updated Publisher.
+
+00:20.400 --> 00:22.470
+We could write out all the code from this from scratch.
+
+00:22.470 --> 00:26.490
+Or alternatively, we could just do a copy paste from ticket related publisher.
+
+00:26.520 --> 00:29.820
+Let's just do the ticket or the copy paste just to save ourselves a little bit of time.
+
+00:30.300 --> 00:31.650
+So we'll go to ticket created.
+
+00:31.650 --> 00:32.850
+Copy everything inside of here.
+
+00:32.880 --> 00:34.740
+Go back over to update it and paste.
+
+00:35.780 --> 00:40.490
+And then inside of here, we'll go around and update the word created to update it instead.
+
+00:41.620 --> 00:43.450
+So I'll do one update.
+
+00:45.510 --> 00:46.560
+Second update.
+
+00:48.700 --> 00:49.750
+Third update.
+
+00:53.160 --> 00:53.850
+Fourth.
+
+00:56.250 --> 00:57.120
+And Fifth.
+
+00:57.980 --> 01:01.140
+So we should not see the word created anywhere inside of here.
+
+01:01.160 --> 01:03.770
+We should have five copies of updated.
+
+01:05.230 --> 01:05.340
+Okay.
+
+01:05.490 --> 01:07.170
+Once that's all done, we'll save this.
+
+01:07.650 --> 01:10.350
+And then going to go over to my roots directory.
+
+01:10.380 --> 01:12.030
+I'll find the update handler.
+
+01:13.360 --> 01:15.340
+So inside of here we will import.
+
+01:17.210 --> 01:19.610
+Tickets updated publisher.
+
+01:20.510 --> 01:25.190
+From up one directory events publishers ticket.
+
+01:25.190 --> 01:26.270
+Updated Publisher.
+
+01:30.260 --> 01:33.170
+And then we also need our client, rapper as well.
+
+01:34.300 --> 01:37.900
+So we'll get gnats wrapper from up.
+
+01:39.280 --> 01:40.320
+Nats rapper.
+
+01:44.030 --> 01:48.710
+Then down inside of our update handler right after we successfully do the save.
+
+01:48.740 --> 01:52.490
+Right after that, that's when we probably want to make sure that we emit some kind of update event.
+
+01:53.620 --> 01:55.780
+So we can do a new ticket.
+
+01:55.780 --> 02:03.970
+Updated publisher will pass in our Nats wrapper client and we'll call publish.
+
+02:05.490 --> 02:09.090
+And then TypeScript, remember, is going to guide us on the different properties we need to add inside
+
+02:09.090 --> 02:09.570
+of here.
+
+02:09.690 --> 02:14.070
+So we need to put in the ID of the ticket title price and user ID once again.
+
+02:15.100 --> 02:15.730
+So the ideal.
+
+02:15.730 --> 02:17.350
+The ticket ID.
+
+02:19.060 --> 02:21.190
+Title is ticket title.
+
+02:23.460 --> 02:24.210
+Price.
+
+02:25.410 --> 02:26.550
+And user ID.
+
+02:28.820 --> 02:29.690
+And that should be it.
+
+02:33.440 --> 02:34.220
+So let's save this.
+
+02:34.220 --> 02:35.780
+We'll do a quick test of this as well.
+
+02:36.080 --> 02:38.640
+So we don't really have anything to listen for this event.
+
+02:38.690 --> 02:43.760
+I just want to make sure that we can send in a post or a put to update a given ticket.
+
+02:43.790 --> 02:47.840
+Go over to our terminal and just verify, make sure we don't see any errors or anything like that coming
+
+02:47.840 --> 02:49.700
+out of our ticket service.
+
+02:50.120 --> 02:57.110
+So to do an update are going to change my request type here to put are going to take the ID of the ticket
+
+02:57.110 --> 03:01.580
+I had just created in the last video and I'll add it on to the very end of that URL.
+
+03:03.140 --> 03:04.730
+And then I'll make a change to the price.
+
+03:04.760 --> 03:06.170
+Change it to say, ten.
+
+03:07.620 --> 03:08.820
+So I'll send this off.
+
+03:09.300 --> 03:09.590
+Okay.
+
+03:09.630 --> 03:11.520
+Looks like the update was successful.
+
+03:11.550 --> 03:13.050
+I'll then go back over to my terminal.
+
+03:13.050 --> 03:19.050
+I'll find scaffold and I should see event published to subject ticket colon updated right there, which
+
+03:19.050 --> 03:21.150
+means that the event was successfully published.
+
+03:21.930 --> 03:23.270
+Well, I'd say this looks pretty good.
+
+03:24.310 --> 03:24.850
+All right.
+
+03:25.330 --> 03:28.090
+So everything at this point definitely works.
+
+03:28.090 --> 03:30.730
+What we have right here, it is a working implementation.
+
+03:31.180 --> 03:33.940
+There are nonetheless one or two quick things I want to mention.
+
+03:33.940 --> 03:38.560
+One is something for your own benefit, for projects you might work on, on the future, just something
+
+03:38.560 --> 03:39.820
+to kind of get your mind running.
+
+03:40.030 --> 03:44.980
+And the other is just something I want to mention around how it's kind of awkward right now to actually
+
+03:44.980 --> 03:45.940
+publish an event.
+
+03:45.940 --> 03:49.180
+So we have to create a new instance of the publisher we have to pass in the client.
+
+03:49.480 --> 03:54.370
+And as kind of a side effect of all this, I want to also mention that if we open up yet another terminal
+
+03:54.370 --> 03:54.940
+window.
+
+03:56.970 --> 03:59.880
+And go into our ticket service and try to run our tests.
+
+03:59.880 --> 04:04.980
+So and run test, we're probably going to see all this stuff failing horribly because whenever we try
+
+04:04.980 --> 04:11.580
+to test, say, the update or new operations, we don't actually have any running connection to.
+
+04:13.170 --> 04:13.860
+Nats.
+
+04:13.860 --> 04:15.670
+And so we're going to see a ton of stuff inside here.
+
+04:15.690 --> 04:17.910
+Cannot access Nats client before connecting.
+
+04:18.300 --> 04:22.170
+And so with that doubt, there's kind of a little bit of awkwardness around how we're actually publishing
+
+04:22.170 --> 04:23.040
+events right now.
+
+04:23.310 --> 04:24.570
+So a quick phase right here.
+
+04:24.600 --> 04:26.790
+Go over some of these slide topics in just a moment.

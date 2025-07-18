@@ -1,0 +1,301 @@
+WEBVTT
+
+00:00.840 --> 00:05.410
+We're now going to take a look at how we can delay processing of this job right here for about the 15
+
+00:05.410 --> 00:06.390
+minutes or so.
+
+00:06.420 --> 00:10.710
+I first want to show you how we just add in any kind of arbitrary delay and we'll make sure that we
+
+00:10.710 --> 00:13.770
+put in the correct delay or essentially the 15 minute delay.
+
+00:14.520 --> 00:19.890
+So to get started as a second argument to the ADD function, I'm going to put in an options object inside
+
+00:19.890 --> 00:20.160
+of this.
+
+00:20.160 --> 00:23.070
+I'm going to provide a property called DeLay.
+
+00:23.070 --> 00:25.350
+And yep, this does exactly what you would guess.
+
+00:25.350 --> 00:27.600
+We're going to put in a number of milliseconds.
+
+00:27.810 --> 00:32.190
+So whatever millisecond value we put inside of here, that is going to be an extra delay that is added
+
+00:32.190 --> 00:38.760
+in before we receive this job back from Redis to be processed by this process statement over here.
+
+00:39.720 --> 00:44.970
+So if right now let's try adding in an arbitrary delay of 10 seconds, we'll just hardcoded directly
+
+00:44.970 --> 00:45.330
+in.
+
+00:45.660 --> 00:48.360
+So 10 seconds in milliseconds would be 10,000.
+
+00:48.750 --> 00:50.550
+I'll put in 10,000 like so.
+
+00:52.050 --> 00:53.100
+And then save this.
+
+00:53.640 --> 00:57.990
+Well, then go through that process of creating a ticket once again and then creating an order for it.
+
+00:58.440 --> 01:04.260
+And then we'll make sure that we see a console log from our process statement after about 10 seconds
+
+01:04.260 --> 01:04.890
+or so.
+
+01:05.530 --> 01:09.460
+So over in post, man, I'm going to once again create a new ticket.
+
+01:10.670 --> 01:11.270
+There's my ticket.
+
+01:11.270 --> 01:12.350
+I'll grab the ID.
+
+01:13.170 --> 01:15.090
+I'll go back to where I'm creating an order.
+
+01:16.480 --> 01:19.720
+And I'll update the ticket ID and the body of the order.
+
+01:20.970 --> 01:24.810
+And then really quickly, before I send this request off, I am going to go backward to my terminal
+
+01:25.230 --> 01:26.720
+and I'm going to clear this thing out.
+
+01:26.730 --> 01:30.820
+If you're on macOS, you can hit Command K and it should clear out your terminal window.
+
+01:30.840 --> 01:33.840
+So this is just going to make it a lot easier to see that 10/2 delay.
+
+01:34.260 --> 01:38.040
+So I'm going to send this off and then going to very quickly flip back over to my terminal and hopefully
+
+01:38.040 --> 01:39.930
+we will see about 10 seconds pass.
+
+01:40.260 --> 01:40.920
+Okay, here we go.
+
+01:40.920 --> 01:42.810
+So I'm going to click look back over.
+
+01:42.990 --> 01:44.160
+I see all my events.
+
+01:44.400 --> 01:47.130
+I also see that expiration receive that as well.
+
+01:47.130 --> 01:49.470
+And then after about 10 seconds or so.
+
+01:51.170 --> 01:51.590
+On.
+
+01:51.920 --> 01:52.830
+There we go.
+
+01:53.060 --> 01:55.850
+10 seconds in the future, we then see that console.log.
+
+01:56.920 --> 01:57.100
+All right.
+
+01:57.100 --> 01:57.580
+So that's it.
+
+01:57.580 --> 01:59.410
+Pretty straightforward for adding in that delay.
+
+01:59.410 --> 02:00.700
+Not the worst thing in the world.
+
+02:01.270 --> 02:03.740
+Now, here's where the real challenge comes in.
+
+02:03.760 --> 02:08.380
+We need to somehow figure out how to put in a very precise delay right here.
+
+02:08.860 --> 02:09.580
+How are we going to do that?
+
+02:09.580 --> 02:12.160
+Remember, we want it to be about 15 minutes or so.
+
+02:12.190 --> 02:18.310
+But what we really have available to us is the current time, the time at which we receive this incoming
+
+02:18.310 --> 02:19.300
+data event.
+
+02:19.840 --> 02:25.240
+And then inside of this data object right here, you'll recall that we've also got a timestamp of expires
+
+02:25.240 --> 02:30.640
+at that is when we want to expire or essentially process this job right here.
+
+02:31.790 --> 02:37.280
+So we need to calculate a time from right now, the time at which we are running this function to the
+
+02:37.280 --> 02:39.530
+timestamp that is listed inside of expires at.
+
+02:39.890 --> 02:44.480
+Well to do so it's just going to require a little bit of knowledge of the JavaScript date object.
+
+02:45.020 --> 02:48.620
+So right above the add statement, we're going to add in fonts delay.
+
+02:49.520 --> 02:52.730
+And this is going to be a new date.
+
+02:54.050 --> 02:55.100
+We're going to stick in this thing.
+
+02:55.100 --> 03:02.780
+Data expires at and we'll call get time on it that is going to give us a time in milliseconds.
+
+03:04.030 --> 03:06.630
+We'll see some actual console logs of what these values are.
+
+03:06.640 --> 03:13.540
+Let's just write out some more code first, then we'll subtract from that new date dot get time.
+
+03:13.600 --> 03:14.590
+That's the current time.
+
+03:14.980 --> 03:19.420
+So this should give us the difference between this time out at some point in time in the future or the
+
+03:19.420 --> 03:22.150
+expires that time and the current time right now.
+
+03:23.380 --> 03:28.210
+Right after that, just for logging purposes, I'm going to put in a console log of waiting.
+
+03:29.990 --> 03:35.240
+This many milliseconds to process the job.
+
+03:37.540 --> 03:38.560
+And then I'll put on.
+
+03:39.350 --> 03:40.490
+DeLay like so.
+
+03:42.480 --> 03:47.250
+And then I'll make sure that I make use of delay rather than the hardcoded 10,000 milliseconds.
+
+03:48.550 --> 03:48.790
+Yes.
+
+03:48.790 --> 03:51.790
+Let's save this and we're going to test this out one more time.
+
+03:52.150 --> 03:56.770
+Now, do remember that we are hard coding that expiration, I believe, to be 15 minutes right now.
+
+03:56.770 --> 04:03.550
+We can go back over to our order service and take a look at the route handlers, specifically the new
+
+04:03.550 --> 04:04.240
+rabbit handler.
+
+04:04.240 --> 04:09.970
+That's where we decided on what that expires was going to be the expiration and we had set the actual
+
+04:09.970 --> 04:12.580
+expiration time up here.
+
+04:13.940 --> 04:17.840
+And so it looks like, yep, we do in fact have 15 minutes just to make this a little bit easier to
+
+04:17.840 --> 04:18.460
+test.
+
+04:18.470 --> 04:20.300
+Let's kind of round this down a little bit.
+
+04:20.300 --> 04:22.760
+Let's turn down to just one minute right now.
+
+04:22.910 --> 04:24.710
+So I'm going to put in one time 60.
+
+04:26.150 --> 04:27.290
+Well, then save that.
+
+04:27.930 --> 04:31.500
+I'm going to make sure that I save the order, create the listener, and then we'll go give this thing
+
+04:31.500 --> 04:32.580
+a very quick test.
+
+04:33.600 --> 04:33.680
+Yeah.
+
+04:33.810 --> 04:36.050
+So once again, back inside a postman again.
+
+04:36.050 --> 04:37.310
+We're going to create a new ticket.
+
+04:37.400 --> 04:38.900
+I'm going to grab that things ID.
+
+04:39.740 --> 04:40.910
+I'll then create an order.
+
+04:41.060 --> 04:43.490
+But first stick in the updated ticket ID.
+
+04:44.790 --> 04:48.180
+I'll go an update or clear out my terminal really quickly once again.
+
+04:49.480 --> 04:50.710
+And I'll send that off.
+
+04:51.860 --> 04:55.280
+And now we should see waiting this many milliseconds to process the job.
+
+04:55.280 --> 04:58.400
+And we see just under 60 milliseconds.
+
+04:58.760 --> 05:00.970
+That's just 60,000 milliseconds.
+
+05:00.980 --> 05:06.470
+That's just about just under just ever so slightly under 60 seconds or one minute, which is exactly
+
+05:06.470 --> 05:07.310
+what we expect.
+
+05:07.820 --> 05:11.960
+So now we're essentially just going to sit around for a minute and after one minute we should see that
+
+05:11.960 --> 05:16.520
+console.log that says, I want to emit the expiration complete event.
+
+05:16.760 --> 05:19.220
+Naturally, I'm not going to make you wait a minute in this video.
+
+05:19.220 --> 05:22.580
+So we'll just pause right here, come back to the next video and just make sure we see that console.log
+
+05:22.580 --> 05:23.150
+appear.

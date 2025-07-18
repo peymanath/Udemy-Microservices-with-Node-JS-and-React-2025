@@ -1,0 +1,304 @@
+WEBVTT
+
+00:00.640 --> 00:04.900
+In the last video, we made a change to our host file and we put in here whenever we tried to go to
+
+00:04.900 --> 00:06.970
+post on our local machine.
+
+00:06.970 --> 00:09.580
+Don't go to the real post out there on the Internet.
+
+00:09.580 --> 00:11.500
+Instead, just connect to the local machine.
+
+00:11.530 --> 00:14.610
+I just want to throw a quick note out there, a quick clarification.
+
+00:14.620 --> 00:20.350
+There's nothing special about post being used there or in the host file right here.
+
+00:20.350 --> 00:25.480
+We don't have to say post just because we are trying to go to a path of posts or a service, a post
+
+00:25.480 --> 00:26.370
+or anything like that.
+
+00:26.380 --> 00:30.940
+I just thought the domain name post made sense for the application we were building.
+
+00:31.090 --> 00:35.830
+This could have just as easily been a host of my dash app dot org.
+
+00:36.710 --> 00:42.740
+If we did that, then we just need to make sure that we update the host file to my app or Alexa.
+
+00:43.210 --> 00:47.000
+So the only requirement here is that we've got something consistent inside the host file.
+
+00:48.560 --> 00:51.650
+And inside of our ingress service config file as well.
+
+00:51.980 --> 00:55.580
+The other thing I want to mention is that what we're doing here, modifying that host file is really
+
+00:55.580 --> 00:57.840
+just appropriate for a development environment.
+
+00:57.860 --> 01:02.810
+Once we start to deploy this thing out online, we don't have to make any actual changes to any host
+
+01:02.810 --> 01:08.690
+file on remote server or anything like that, because we'll be connecting to the real jpost.com, which
+
+01:08.690 --> 01:12.110
+would hopefully connect us over to our Kubernetes cluster.
+
+01:12.930 --> 01:14.640
+So just a little bit of clarification there.
+
+01:15.340 --> 01:15.610
+All right.
+
+01:15.610 --> 01:19.780
+So now that we got that out of the way, let's continue moving forward on our application.
+
+01:20.020 --> 01:24.580
+The next thing we're going to do is start to set up that React app dev server pod.
+
+01:25.120 --> 01:31.180
+We need to make sure that inside of that React app server, our actual React code is going to make requests
+
+01:31.180 --> 01:36.990
+now to post because that's where in theory our Kubernetes cluster is located.
+
+01:37.000 --> 01:43.690
+If we make a request to Post or React app is going to attempt to connect to that ingress and export.
+
+01:45.070 --> 01:46.910
+So let's go into our React app code.
+
+01:46.930 --> 01:51.040
+We're going to make sure that any time we made a request to local host, we will change it to be post
+
+01:51.520 --> 01:52.210
+instead.
+
+01:54.860 --> 01:56.630
+So inside my client directory.
+
+01:57.580 --> 02:01.310
+I'm going to open up the source folder and we'll just go through every file inside of here.
+
+02:01.330 --> 02:04.900
+Just make sure that any time we make a request, we make the request to post.
+
+02:05.920 --> 02:07.590
+So here is inside of comment create.
+
+02:07.600 --> 02:12.970
+I see a post request being made right now to localhost 4001 not what we want.
+
+02:12.970 --> 02:14.890
+Instead we want post dot com.
+
+02:16.240 --> 02:19.480
+So again, that's not going to go to the actual post on the Internet.
+
+02:19.480 --> 02:21.400
+It's going to be to our local machine.
+
+02:23.090 --> 02:23.640
+Okay.
+
+02:23.690 --> 02:25.100
+I think that's it for this file.
+
+02:25.730 --> 02:27.290
+I'll move on to comment list.
+
+02:28.360 --> 02:30.850
+I don't think we are making any requests inside of a comment list.
+
+02:30.850 --> 02:32.410
+So I'll close that file.
+
+02:32.920 --> 02:34.450
+We'll go on index dogs.
+
+02:34.480 --> 02:35.830
+No requests inside of here.
+
+02:36.580 --> 02:37.720
+I'll go to post create.
+
+02:38.230 --> 02:38.530
+Yep.
+
+02:38.530 --> 02:40.000
+Looks like we're making a request right here.
+
+02:40.000 --> 02:45.070
+So I will replace local host colon 4000 with post instead.
+
+02:47.180 --> 02:48.920
+No other requests inside of here.
+
+02:49.890 --> 02:51.870
+And so I'll go on to a post list.
+
+02:52.700 --> 02:54.520
+Looks like we've got a request right here as well.
+
+02:55.030 --> 02:57.160
+We'll change that to post as well.
+
+02:59.130 --> 03:00.810
+And no other requests.
+
+03:01.870 --> 03:02.030
+Cool.
+
+03:02.110 --> 03:02.920
+So that looks good.
+
+03:03.750 --> 03:09.060
+So now all the code inside of our React application is going to try to go to post again when we're running
+
+03:09.060 --> 03:11.280
+this React application on our local machine.
+
+03:11.280 --> 03:16.440
+Whenever we make that request, our local operating system is going to take that post and redirect the
+
+03:16.440 --> 03:20.490
+request to our local machine instead, where it will be handled by Kubernetes.
+
+03:21.120 --> 03:25.910
+So now that our React application is all updated, we need to create an image out of this thing.
+
+03:26.780 --> 03:30.560
+We're going to create the image and then we will write out a config file to make a deployment so we
+
+03:30.560 --> 03:34.430
+can actually host this inside of our Kubernetes cluster.
+
+03:34.550 --> 03:39.410
+We need to not only make a deployment, we need to make sure make a cluster IP as well so that the ingress
+
+03:39.410 --> 03:45.410
+engine controller can eventually direct traffic to this pod so we can serve out the HTML, CSS and JavaScript
+
+03:45.410 --> 03:45.920
+out of it.
+
+03:47.320 --> 03:47.620
+Okay.
+
+03:47.620 --> 03:49.300
+So let's go back over to our terminal.
+
+03:49.720 --> 03:55.540
+We're going to change into that client directory and build an image out of the React application.
+
+03:56.920 --> 03:58.270
+So I'll go back over to client.
+
+03:59.780 --> 04:06.320
+I'll do a Docker build RT my Docker ID and I'll call this image client.
+
+04:06.950 --> 04:08.870
+And then don't forget the dot at the very end.
+
+04:11.420 --> 04:12.470
+So there's the image.
+
+04:12.710 --> 04:14.250
+I'll push it up to Docker Hub.
+
+04:14.270 --> 04:18.290
+So, Docker push my Docker ID client.
+
+04:21.000 --> 04:21.930
+And there we go.
+
+04:23.410 --> 04:25.250
+So now I've pushed that image up.
+
+04:25.270 --> 04:29.530
+We're now going to go back over to our code editor and we're going to start to write out another config
+
+04:29.530 --> 04:31.870
+file to create a deployment to host this.
+
+04:32.860 --> 04:36.550
+Image that we just put together and a cluster IP service to go along with it.
+
+04:37.000 --> 04:41.970
+So back inside of my info directory, I'll find K inside that will make a new file called client dash
+
+04:42.010 --> 04:43.450
+devel html.
+
+04:44.940 --> 04:48.270
+The deployment that we're going to create inside of here is going to be just about identical to all
+
+04:48.270 --> 04:50.070
+the other deployments we already put together.
+
+04:50.190 --> 04:54.060
+So rather than write all this stuff out from scratch, I'm just going to go over to the common staple
+
+04:54.060 --> 04:54.570
+file.
+
+04:54.840 --> 04:58.830
+I'm going to copy everything inside of there and then paste it into client.
+
+05:02.480 --> 05:07.580
+I'll then go through all the copy pasted stuff and I'll update comments to client instead.
+
+05:07.820 --> 05:10.880
+So I will do five updates right there.
+
+05:13.170 --> 05:17.220
+I'll then go down to the service at the bottom and I'll update three times.
+
+05:17.910 --> 05:24.360
+Comment over to client and then finally remember a Create React app application is hosted on port 3000
+
+05:24.660 --> 05:26.580
+but can update those ports like so.
+
+05:28.800 --> 05:29.040
+Okay.
+
+05:29.100 --> 05:33.270
+So now last step, we'll go ahead and apply this thing to our Kubernetes cluster.
+
+05:35.500 --> 05:44.620
+I'm going to change back over to my infra aids directory and I'll do a CTL apply f client dash devel
+
+05:44.890 --> 05:45.400
+html.
+
+05:48.190 --> 05:48.710
+Okay.
+
+05:48.730 --> 05:49.540
+That should be it.
+
+05:51.040 --> 05:54.410
+So now that our React application is running inside of here, the last thing we have to do.
+
+05:54.430 --> 05:58.300
+This really is the last thing we need to set up all those routing rules.
+
+05:58.300 --> 06:03.190
+We need to make sure that anytime we get an incoming request to that ingress controller, it understands
+
+06:03.190 --> 06:05.170
+where to route the request off to.
+
+06:05.620 --> 06:08.800
+So let's start to write out all those routing rules in the next video.

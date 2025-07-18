@@ -1,0 +1,391 @@
+WEBVTT
+
+00:01.080 --> 00:02.000
+All right, let's get to it.
+
+00:02.010 --> 00:05.880
+We're going to start to build out these subclasses of request validation error and database connection
+
+00:05.880 --> 00:06.360
+error.
+
+00:06.450 --> 00:10.110
+As we are building these two classes, there's going to be a little bit of strange code.
+
+00:10.110 --> 00:14.580
+We're going to mostly just kind of blaze through these two implementations because as soon as we start
+
+00:14.580 --> 00:18.390
+using them, you are going to understand what is going on as are building them.
+
+00:18.390 --> 00:19.980
+You're probably going to say, Wait, what?
+
+00:19.980 --> 00:22.740
+But don't worry, as soon as we use them, it's going to be really clear.
+
+00:23.130 --> 00:23.320
+Okay.
+
+00:23.370 --> 00:24.270
+So let's get to it.
+
+00:24.810 --> 00:28.830
+Back inside, my editor are going to find my CRC directory and inside there I'm going to make a new
+
+00:28.830 --> 00:30.270
+folder called Errors.
+
+00:30.720 --> 00:35.520
+Inside this directory, we're going to write out all these different custom subclasses of error.
+
+00:36.250 --> 00:41.740
+So the first one I'm going to make is request validation airports.
+
+00:46.000 --> 00:53.830
+Then at the very top, I'm going to first import validation error from Express Dash validator.
+
+00:54.880 --> 00:56.700
+Validation error is a type.
+
+00:56.710 --> 01:04.570
+It is describing the type that comes back whenever we do a validation attempt using express validator.
+
+01:04.780 --> 01:09.040
+So it's essentially a type that refers to this kind of object right here, something that has a message,
+
+01:09.040 --> 01:13.990
+a parameter, also technically a field and one other property I can't remember off the top of my head.
+
+01:14.410 --> 01:19.240
+The reason that we are importing this is that when we start to build the subclass at some point in time
+
+01:19.240 --> 01:24.220
+we're going to have to receive a list of validation errors like in other words, the actual reasons
+
+01:24.220 --> 01:25.870
+that the request failed validation.
+
+01:26.600 --> 01:31.040
+So we are importing this type to make sure that we can describe the requirements or the errors that
+
+01:31.040 --> 01:32.960
+are going to be assigned to our subclass.
+
+01:34.180 --> 01:37.360
+After that, I'm going to export a new class called Request.
+
+01:38.330 --> 01:39.470
+Validation error.
+
+01:40.580 --> 01:42.020
+And we're going to extend.
+
+01:43.940 --> 01:44.450
+Air.
+
+01:45.300 --> 01:48.570
+So again, we are building our own custom implementation of an air.
+
+01:49.750 --> 01:52.300
+Then inside of here, I'm going to define the constructor.
+
+01:53.180 --> 01:53.840
+Function.
+
+01:55.430 --> 01:59.630
+I'm going to say that this is going to need to be coupled with a list of validation errors.
+
+01:59.630 --> 02:02.180
+So again, that is why we import this type at the very top.
+
+02:02.810 --> 02:03.980
+So I'm going to write out right here.
+
+02:03.980 --> 02:08.480
+Private errors is going to be validation, error array.
+
+02:10.030 --> 02:11.560
+Let's break this down really quickly.
+
+02:11.590 --> 02:16.720
+I'm using the keyword private right here because we want to take this first property and assign it as
+
+02:16.720 --> 02:18.490
+a property to the overall class.
+
+02:18.880 --> 02:22.570
+So writing out the word private right there is 100% equivalent to writing this.
+
+02:22.870 --> 02:24.580
+Errors, equal errors.
+
+02:24.820 --> 02:29.320
+And then also defining this property ahead of time.
+
+02:30.560 --> 02:36.150
+So something like validation error, like so what you see right here is 100% equivalent to just writing
+
+02:36.150 --> 02:36.720
+out.
+
+02:38.730 --> 02:39.960
+Private heirs.
+
+02:43.830 --> 02:45.860
+Now I still have an air around the constructor.
+
+02:45.870 --> 02:48.570
+That is because we are extending a base class.
+
+02:48.720 --> 02:53.340
+Whenever we do so and we define the constructor, we have to call super to invoke the constructor inside
+
+02:53.340 --> 02:55.440
+the base class, which in this case is air.
+
+02:55.800 --> 02:57.480
+So I will call super to fix that.
+
+03:01.690 --> 03:03.380
+Now one very, very small thing.
+
+03:03.400 --> 03:05.770
+This is a very small technicality.
+
+03:06.040 --> 03:11.770
+It only has to be done when we are writing TypeScript and trying to extend a class that is built in
+
+03:11.770 --> 03:12.640
+to language.
+
+03:12.790 --> 03:16.250
+So we are trying to extend it right here, which is built into the language.
+
+03:16.270 --> 03:19.530
+To do so, we have to write out one additional line of code right here.
+
+03:19.540 --> 03:25.690
+And I'm going to put a little quick comment that says, only because we are extending a built in class,
+
+03:25.930 --> 03:34.480
+we will write out object set prototype of and then this and request validation error dot prototype.
+
+03:36.820 --> 03:41.590
+This is just some behind the scenes stuff that gets our class to work correctly again, just because
+
+03:41.590 --> 03:43.300
+we are extending a built in class.
+
+03:44.910 --> 03:45.170
+Okay.
+
+03:45.180 --> 03:47.130
+So now how would we use this class right here?
+
+03:47.160 --> 03:51.060
+Well, we would say something like new request, validation, error.
+
+03:52.090 --> 03:56.680
+And then we would pass in the list of errors like so we would probably want to throw this as well because
+
+03:56.680 --> 03:58.120
+it is intended to be an error.
+
+03:58.510 --> 04:03.850
+And then this thing, this instance that we are creating and throwing again should be communicated automatically
+
+04:03.850 --> 04:04.450
+down.
+
+04:05.920 --> 04:07.210
+So that's like that right there.
+
+04:07.210 --> 04:10.600
+It should be communicated down into our error handling middleware.
+
+04:12.600 --> 04:14.590
+Now there is one other quick change I'm going to make here.
+
+04:14.610 --> 04:17.490
+I'm actually going to update this keyword of private over to public.
+
+04:17.520 --> 04:20.130
+We eventually are going to revert it back to private.
+
+04:20.160 --> 04:23.630
+I was reading my notes here looking at the final implementation.
+
+04:23.640 --> 04:27.210
+We're going to leave it as public for just a moment, but we are going to flip that back over to private
+
+04:27.210 --> 04:28.170
+in just a little bit.
+
+04:29.070 --> 04:29.340
+Okay.
+
+04:29.340 --> 04:31.860
+So we've now got our first custom air put together.
+
+04:31.980 --> 04:37.290
+Let's build our other custom air out, which is going to be called database connection air.
+
+04:37.320 --> 04:41.070
+It's going to be very similar in nature, but it's going to have this reason property that's going to
+
+04:41.070 --> 04:45.030
+be a string instead of reasons that's going to be an array of validation errors.
+
+04:46.590 --> 04:54.300
+So inside of my heirs folder, I'm going to create another file called Database Connection Airports.
+
+04:56.270 --> 04:58.280
+And then inside of here, we're going to do something very similar.
+
+04:58.280 --> 05:02.690
+So we will export a new class called Database Connection Error.
+
+05:03.500 --> 05:04.430
+Stevens air.
+
+05:07.000 --> 05:09.370
+Firstly not super but constructor.
+
+05:10.070 --> 05:11.930
+Inside the constructor we have to call super.
+
+05:13.520 --> 05:17.780
+We also have to do that same kind of little initialization line because we are extending a built in
+
+05:17.780 --> 05:26.180
+class that will do object set prototype of and then this and database connection.
+
+05:26.570 --> 05:28.640
+Air dot prototype.
+
+05:30.420 --> 05:34.290
+And then in this case I'm going to hard code in the reason that that we are throwing this error.
+
+05:34.500 --> 05:41.730
+So I will put in a fixed reason property right here that says something like error connecting to database.
+
+05:45.050 --> 05:50.120
+Now in this case, do we actually have to extend air or something like database connection here?
+
+05:50.150 --> 05:54.710
+All we're really trying to communicate in this case is a fixed string, so perhaps it doesn't make a
+
+05:54.710 --> 05:55.940
+lot of sense to make a base class.
+
+05:55.940 --> 05:57.710
+I just want to give you kind of a counterpoint.
+
+05:57.710 --> 06:02.660
+I want to give you a second subclass to create beyond just request validation air.
+
+06:02.990 --> 06:06.470
+So we're going to be mostly just focusing on request validation here for right now.
+
+06:06.470 --> 06:10.250
+Again, I just want to kind of give you some other air that we could possibly create that might make
+
+06:10.250 --> 06:11.810
+sense in an application like this.
+
+06:12.930 --> 06:13.250
+Okay.
+
+06:13.260 --> 06:17.970
+So now we put these two subclasses together, we're going to import them into the request handler.
+
+06:17.970 --> 06:22.080
+And then anytime something goes wrong inside there, we're going to throw either request validation
+
+06:22.080 --> 06:23.760
+error or database connection error.
+
+06:24.870 --> 06:28.080
+So I'm going to go back over to my sign up route handler.
+
+06:30.940 --> 06:35.320
+And then at the top, I'm going to import those two custom subclasses we just put together.
+
+06:35.800 --> 06:36.910
+So request.
+
+06:38.990 --> 06:40.130
+Validation error.
+
+06:45.270 --> 06:46.980
+And database.
+
+06:47.750 --> 06:48.650
+Connection, auctioneer.
+
+06:53.590 --> 06:54.130
+Okay.
+
+06:54.990 --> 06:59.020
+So now we're going to make sure that then rather than throwing a very generic error.
+
+06:59.990 --> 07:04.520
+We will instead throw an instance of request, validation or database connection.
+
+07:05.290 --> 07:09.490
+So down inside of my implementation, I'm going to find where we check to see if there were any errors
+
+07:09.490 --> 07:10.550
+during validation.
+
+07:10.570 --> 07:12.190
+I'm going to delete everything inside there.
+
+07:13.120 --> 07:21.370
+And replace it with RO new request validation error and I'll pass in our list of errors.
+
+07:21.370 --> 07:24.250
+So errors dot array like so.
+
+07:25.980 --> 07:28.710
+I'll then do something very similar for the other air right here.
+
+07:28.740 --> 07:32.880
+So rather than throwing a very generic air, that doesn't really tell us a lot about what is going on,
+
+07:32.880 --> 07:37.410
+well, instead throw a new database connection air.
+
+07:38.920 --> 07:39.550
+Like so.
+
+07:42.800 --> 07:43.160
+Okay.
+
+07:43.160 --> 07:49.370
+So that is step one we have now subclass error created these two very custom errors.
+
+07:49.850 --> 07:52.040
+We are throwing them out of our request handler.
+
+07:52.370 --> 07:54.830
+They're going to eventually show up inside of our era handling middleware.
+
+07:54.830 --> 07:59.330
+And so now the last thing we have to do is add in some code to inspect the incoming error and check
+
+07:59.330 --> 08:04.460
+to see if it is an instance of request, validation, error or an instance of database validation error.
+
+08:04.670 --> 08:09.290
+And if it is, we can build up our response and send it back to the user appropriately.
+
+08:09.970 --> 08:11.220
+So a quick pause right here.
+
+08:11.230 --> 08:13.420
+We're going to build this last step out in just a moment.
+
+08:13.420 --> 08:16.630
+And all this stuff is going to start to come together very, very quickly.

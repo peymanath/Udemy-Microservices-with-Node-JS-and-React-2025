@@ -1,0 +1,262 @@
+WEBVTT
+
+00:01.460 --> 00:05.840
+Now that we've got parcel bundler all set up, we're going to do a little bit of initialization for
+
+00:05.840 --> 00:08.450
+a new project and figure out how to make use of parcel.
+
+00:08.660 --> 00:10.970
+So to get started, I'm going to flip back over to my terminal.
+
+00:11.180 --> 00:16.280
+You'll notice I'm still in that features directory, so I'm going to go up one folder back into a workspace
+
+00:16.280 --> 00:17.390
+directory of sorts.
+
+00:17.540 --> 00:21.760
+And then inside of here, I'm going to generate a new project folder that I'm going to call maps.
+
+00:21.770 --> 00:26.600
+So that's going to be the name of this application, simply maps and then going to change into that
+
+00:26.600 --> 00:29.570
+folder and then start up my code editor inside there.
+
+00:30.630 --> 00:31.170
+All right.
+
+00:31.170 --> 00:33.420
+So let me tell you exactly how parcel works.
+
+00:33.420 --> 00:34.800
+It might be kind of surprising.
+
+00:35.370 --> 00:35.790
+All right.
+
+00:35.790 --> 00:39.570
+So we're going to create a single file inside of our project directory.
+
+00:39.570 --> 00:40.260
+To start.
+
+00:40.620 --> 00:43.710
+The single file is going to be an indexed HTML file.
+
+00:44.010 --> 00:49.490
+Inside this HTML file, we are going to include a script tag for a file called indexed CSS.
+
+00:50.040 --> 00:52.780
+Notice the extension on there is dots.
+
+00:53.040 --> 00:57.240
+Remember, we can't have raw typescript code running inside the browser.
+
+00:57.240 --> 00:59.040
+So how does this actually work?
+
+00:59.610 --> 01:03.750
+Well, we're going to start up that partial tool, and we're going to feed the indexed HTML file into
+
+01:03.750 --> 01:04.140
+it.
+
+01:04.680 --> 01:11.040
+Castle is going to see that script tag with a source of indexed and is as soon as it sees that dots
+
+01:11.040 --> 01:16.980
+extension parcel is going to say, Oh, I see it is a typescript file, I need to parse the code inside
+
+01:16.980 --> 01:23.520
+there, compile it and turn it into JavaScript and then load that into the browser as opposed to the
+
+01:23.520 --> 01:25.860
+indexed file that we requested.
+
+01:26.490 --> 01:29.010
+So like I said, parcel is an awesome little tool.
+
+01:29.010 --> 01:34.230
+It has a lot of magic in it like this right here that makes setting up new TypeScript projects really,
+
+01:34.230 --> 01:35.250
+really easily.
+
+01:35.730 --> 01:37.110
+So let's get to it.
+
+01:38.370 --> 01:43.050
+Back inside my editor, I'm going to create a new file called Index HTML.
+
+01:43.530 --> 01:47.080
+And then inside of here, we're going to put down some very, very basic HTML.
+
+01:47.100 --> 01:49.290
+I'm going to put in an HTML tag.
+
+01:50.760 --> 01:52.410
+I'll put a body inside there.
+
+01:53.410 --> 02:02.440
+And then inside there I'll put in a script tag with a source of dot slash Z index dot pts, and I'll
+
+02:02.440 --> 02:04.210
+close off that script tag like so.
+
+02:06.110 --> 02:06.470
+All right.
+
+02:06.470 --> 02:11.390
+So we are going to create an CRC directory inside of our root project folder that's going to hold all
+
+02:11.390 --> 02:12.440
+of our source code.
+
+02:12.770 --> 02:16.760
+So inside of the maps directory, I'm going to make a new folder called CRC.
+
+02:17.330 --> 02:20.750
+And then inside there we're going to create our indexed file.
+
+02:21.360 --> 02:24.780
+So inside of SC, I'll make index dots.
+
+02:25.670 --> 02:29.380
+And then to get started inside of here, I'll do a quick console.log of Hi there.
+
+02:29.390 --> 02:30.110
+Like so.
+
+02:30.950 --> 02:32.300
+Now I'm going to save this file.
+
+02:33.500 --> 02:37.640
+Okay, So like I said, we're now going to take parcel at our command line and we're going to feed in
+
+02:37.640 --> 02:39.080
+this HTML file.
+
+02:39.530 --> 02:44.950
+As soon as Parcel sees this CRC right here, it's going to find our indexed file.
+
+02:44.960 --> 02:50.600
+It's going to notice that it is a typescript file and so it's going to convert it into JavaScript for
+
+02:50.600 --> 02:51.650
+us automatically.
+
+02:52.220 --> 02:58.910
+After it does, that parcel is going to automatically update the script tag and change indexed PTS essentially
+
+02:58.910 --> 03:04.040
+into indexed JS for us before we access this HTML document inside of our browser.
+
+03:04.460 --> 03:05.660
+So let's try that out.
+
+03:05.660 --> 03:10.670
+Right now, I'm going to flip back over to my terminal inside of my maps directory.
+
+03:10.670 --> 03:13.370
+I'll run parcel indexed HTML.
+
+03:13.910 --> 03:17.840
+Now, as soon as I run that, you'll notice very briefly something right there that said installing
+
+03:17.870 --> 03:23.660
+TypeScript, that means that parcel saw that we had a script tag that included that file and installed
+
+03:23.660 --> 03:26.780
+a couple of dependencies to work with TypeScript for us automatically.
+
+03:27.650 --> 03:31.160
+Now you'll notice I have a message right here that says My application is that local host One, two,
+
+03:31.160 --> 03:31.970
+three, four.
+
+03:32.240 --> 03:38.570
+If you see any error message right now and you see anything that says like E adder or air address or
+
+03:38.570 --> 03:44.210
+something like that, chances are port one, two, three, four on your machine is in use, so you'll
+
+03:44.210 --> 03:46.520
+want to make sure you don't have anything running on port.
+
+03:46.520 --> 03:47.600
+One, two, three, four.
+
+03:47.630 --> 03:50.390
+Because if you do, you will probably see an error message.
+
+03:51.560 --> 03:56.510
+As a quick aside, if you ever want to stop this running server, you can just hit control C and you
+
+03:56.510 --> 04:00.800
+can always start it back up very easily by running parcel index HTML again.
+
+04:01.830 --> 04:05.520
+All right, So to test out this application, I'm going to open up my browser and go to local host.
+
+04:05.520 --> 04:06.540
+One, two, three, four.
+
+04:07.350 --> 04:08.100
+So look close.
+
+04:08.160 --> 04:09.210
+One, two, three, four.
+
+04:09.570 --> 04:11.550
+Once here, I'm probably going to see a blank page.
+
+04:11.550 --> 04:13.050
+But if I open up my console.
+
+04:13.950 --> 04:14.820
+I can see.
+
+04:14.820 --> 04:15.420
+Hi there.
+
+04:15.420 --> 04:15.900
+Right there.
+
+04:15.900 --> 04:18.900
+So that's the console.log I had put into my SRC file.
+
+04:19.710 --> 04:21.930
+So it looks like everything is working as expected.
+
+04:21.960 --> 04:22.590
+Awesome.
+
+04:23.880 --> 04:25.800
+One other quick thing you might find interesting.
+
+04:25.800 --> 04:29.500
+If we go to the Elements tab right here and then open up body.
+
+04:29.520 --> 04:34.600
+You'll notice that our script tag that we had written inside that HTML file did get updated.
+
+04:34.620 --> 04:37.230
+So rather than referencing a file.
+
+04:38.050 --> 04:42.640
+Passel injected this New York tag right here, the new SRC property.
+
+04:43.450 --> 04:47.800
+So that's the JavaScript file that Passel created for us out of our TypeScript code.
+
+04:48.700 --> 04:48.970
+All right.
+
+04:48.970 --> 04:50.360
+So now we've got everything working.
+
+04:50.380 --> 04:54.310
+Let's take a pause right here, and we'll continue working on our application in the next video.

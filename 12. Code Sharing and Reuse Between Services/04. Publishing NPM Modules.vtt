@@ -1,0 +1,193 @@
+WEBVTT
+
+00:00.710 --> 00:05.420
+Now that we've created this organization, we are going to create our shared common library and then
+
+00:05.420 --> 00:09.080
+immediately try to publish it to this organization that we just created.
+
+00:09.440 --> 00:11.690
+To get started, I'm going to go back over to my terminal.
+
+00:12.080 --> 00:14.090
+I'm inside of my ticketing directory.
+
+00:15.120 --> 00:15.720
+Inside of here.
+
+00:15.720 --> 00:17.730
+I'm going to make a new folder called Common.
+
+00:17.730 --> 00:22.440
+So this is where we're going to place all of our common logic that we want to have access to between
+
+00:22.440 --> 00:23.550
+our different services.
+
+00:24.030 --> 00:29.730
+I'll change into Common and then I'm going to generate a package JSON file inside there with npm init.
+
+00:30.000 --> 00:30.540
+Why?
+
+00:32.800 --> 00:37.600
+And then going to go over to my code editor and make a couple of changes to that package JSON file.
+
+00:40.170 --> 00:44.090
+Now there's a lot of settings inside of here that you might have ignored over time.
+
+00:44.100 --> 00:49.500
+Usually as developers, we really just care about the script section and dependencies and dev dependencies
+
+00:49.500 --> 00:50.610
+and not much else.
+
+00:50.640 --> 00:55.800
+Now that we are going to actually be publishing a package, the name and version fields are going to
+
+00:55.800 --> 00:57.840
+start to become very, very important.
+
+00:57.870 --> 01:01.890
+There are a couple of other fields we're going to focus on over time, but right now let's just focus
+
+01:01.890 --> 01:03.240
+on name and version.
+
+01:03.910 --> 01:07.960
+So for name, we're going to specify obviously the name of our package.
+
+01:08.140 --> 01:12.760
+But because we are publishing our package inside of the organization that we just created, we're going
+
+01:12.760 --> 01:14.890
+to use a very special format for our name.
+
+01:15.250 --> 01:19.380
+So for the name of our package, we're going to take a look at our organization name.
+
+01:19.390 --> 01:20.860
+For me, it's Srg tickets.
+
+01:21.790 --> 01:27.460
+And then right here inside the name field, I'm going to change that to at SG tickets slash and then
+
+01:27.460 --> 01:32.440
+the name of this very particular package I'm going to call mine Simply Common.
+
+01:34.240 --> 01:39.370
+So by putting our name in as this format, this means that we want to publish a package called Common
+
+01:39.370 --> 01:41.830
+to the Srg Tickets Organization.
+
+01:44.080 --> 01:44.530
+All right.
+
+01:44.530 --> 01:47.290
+So now that we've got that name in there, I'm going to save this file.
+
+01:47.320 --> 01:53.080
+Now, I want to immediately attempt to publish this package to my organization or the NPM registry.
+
+01:53.920 --> 01:55.090
+To publish this thing.
+
+01:55.090 --> 01:56.680
+We're going to go back over to our terminal.
+
+01:58.750 --> 02:01.060
+We're going to make sure we're still inside of our common directory.
+
+02:01.420 --> 02:05.290
+And inside here, we're going to first begin by creating a new git repository.
+
+02:05.440 --> 02:10.240
+In order to publish a package, we must have everything inside this directory committed to git.
+
+02:10.240 --> 02:15.520
+9 p.m. is going to check our git repo created inside this folder and make sure everything has been committed
+
+02:15.520 --> 02:16.990
+before we attempt to publish it.
+
+02:17.620 --> 02:20.110
+So I'm going to create a new git repository by running.
+
+02:20.110 --> 02:20.830
+Get in it.
+
+02:22.210 --> 02:24.190
+I'll then add everything inside of here.
+
+02:25.870 --> 02:29.470
+And then I will commit all of it as initial commit.
+
+02:30.790 --> 02:34.900
+And then after that, we can then attempt to publish this package to our organization.
+
+02:35.770 --> 02:41.620
+To do so we will write out and PM publish and then dash dash access public.
+
+02:41.890 --> 02:46.510
+If we do not add on this access public flag right here, then MPM is going to assume that we want to
+
+02:46.510 --> 02:49.640
+publish this as a private package inside of our organization.
+
+02:49.660 --> 02:53.800
+We'll then throw an error because we have to pay money to publish a private package.
+
+02:54.580 --> 02:56.020
+All right, so I'm going to run that command.
+
+02:57.700 --> 03:01.600
+And we should, after a little pause here, eventually see the thing published.
+
+03:01.630 --> 03:06.100
+Now, very quickly, if you immediately see an error message, if you see something that says you must
+
+03:06.100 --> 03:11.350
+log in or something that says you do not have access and make sure that you run the command and PM log
+
+03:11.350 --> 03:15.220
+in, you'll be prompted to enter in your username and password right here.
+
+03:16.180 --> 03:20.110
+You'll want to enter the same username and password that use back over here on NPM.
+
+03:21.700 --> 03:24.100
+So hopefully you will be able to publish this thing.
+
+03:24.400 --> 03:29.200
+Once we've published this module, we can now install it into any of our other services.
+
+03:29.500 --> 03:33.730
+We can also take a look at our published package on NPM itself.
+
+03:34.330 --> 03:39.850
+As a matter of fact, if I go back over to my organization page, I can refresh it, then go to the
+
+03:39.850 --> 03:40.870
+packages tab.
+
+03:41.790 --> 03:44.220
+And I'll see my published package right there.
+
+03:44.490 --> 03:49.920
+So this can now be installed into any other module or any other project I'm working on very easily,
+
+03:49.920 --> 03:51.220
+in the same way you are already used to.
+
+03:51.240 --> 03:54.810
+We just have to run npm install and then put in our package name.
+
+03:56.040 --> 03:56.360
+Okay.
+
+03:56.370 --> 04:01.230
+Now that we've got this thing, or at least an initial version of it published, let's take a pause
+
+04:01.230 --> 04:05.940
+right here and start to add in some actual implementation for our common module in just a moment.

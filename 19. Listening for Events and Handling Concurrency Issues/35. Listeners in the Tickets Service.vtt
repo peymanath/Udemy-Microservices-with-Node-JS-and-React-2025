@@ -1,0 +1,91 @@
+WEBVTT
+
+00:00.880 --> 00:02.680
+So what are we going to work on next?
+
+00:02.710 --> 00:07.300
+Well, at this point in time, we have wired up our order service that is listening to the ticket created
+
+00:07.300 --> 00:09.790
+event and the ticket updated events.
+
+00:09.790 --> 00:13.240
+So Order Service is processing those events pretty darn well.
+
+00:13.540 --> 00:16.950
+The order service in turn is also emitting a couple events.
+
+00:16.960 --> 00:21.790
+So for example, the order service is publishing order created and order canceled.
+
+00:22.300 --> 00:27.340
+We need to now make sure that the ticket service is going to have a listener that's going to watch for
+
+00:27.340 --> 00:30.460
+the order created event and the order canceled event.
+
+00:30.670 --> 00:35.740
+The reason for this, remember, is we need to make sure that we lock down a ticket after an order has
+
+00:35.740 --> 00:36.930
+been created for it.
+
+00:36.940 --> 00:41.980
+So once a ticket has been reserved, the ticket service needs to make sure that the person who owns
+
+00:41.980 --> 00:46.750
+this ticket, the person who created the ticket, cannot come back and start to edit it because we don't
+
+00:46.750 --> 00:51.850
+want a user to start to go through the process of purchasing a ticket and then see the price just mysteriously
+
+00:51.850 --> 00:54.340
+change or the description change or anything like that.
+
+00:54.880 --> 00:57.600
+So to implement that, we're going to go back over to our ticket service.
+
+00:57.610 --> 01:00.070
+We're going to implement two different listeners.
+
+01:00.340 --> 01:06.160
+Whenever the ticket service sees a list or an event of order created, we're going to find the appropriate
+
+01:06.160 --> 01:10.990
+ticket inside the ticket service and set something on there that's going to lock down that ticket and
+
+01:10.990 --> 01:13.420
+prevent us from making any further changes to it.
+
+01:14.200 --> 01:19.390
+Then whenever we see an order canceled event which indicates that the person who's trying to buy the
+
+01:19.390 --> 01:24.070
+ticket says, forget this, I don't want the ticket, or maybe the order times out or whatever else.
+
+01:24.070 --> 01:29.350
+We're then going to make sure that we unreserved the ticket or essentially unlock it down and allow
+
+01:29.350 --> 01:30.940
+editing of the ticket once again.
+
+01:31.180 --> 01:32.070
+So that's pretty much it.
+
+01:32.080 --> 01:34.060
+It's pretty much an on off lag.
+
+01:34.060 --> 01:36.880
+Whenever we see what are created, lock the ticket.
+
+01:36.880 --> 01:39.700
+Whenever we see cancelled, unlock the ticket, that's all it is.
+
+01:39.760 --> 01:41.320
+So not the worst thing in the world.
+
+01:42.170 --> 01:46.160
+Now that we've got an idea of what we're doing, pause right here, start to implement this in the next
+
+01:46.160 --> 01:46.760
+video.

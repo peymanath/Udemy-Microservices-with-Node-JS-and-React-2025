@@ -1,0 +1,322 @@
+WEBVTT
+
+00:00.900 --> 00:06.240
+In the last video, we started to explore type annotations around simple types like number string boolean
+
+00:06.240 --> 00:08.130
+and some built in objects as well.
+
+00:08.430 --> 00:12.330
+We're not going to write out a couple of examples that use some more complicated syntax.
+
+00:12.540 --> 00:16.320
+So first, start off with trying to add in a type annotation for an array.
+
+00:17.000 --> 00:21.380
+In this example, I'm going to try to make a new variable called colors, and I want to try to assign
+
+00:21.380 --> 00:23.450
+it a array of strings.
+
+00:23.450 --> 00:27.140
+And maybe these strings will be like red, green and blue, because, hey, we're calling this thing
+
+00:27.140 --> 00:27.800
+colors.
+
+00:28.340 --> 00:33.950
+So to indicate that I'll add on an annotation of string and then square brackets like so.
+
+00:34.400 --> 00:39.500
+So this tells TypeScript that we're going to assign an array indicated by the square brackets that's
+
+00:39.500 --> 00:42.140
+going to contain nothing but strings inside of it.
+
+00:43.210 --> 00:49.630
+So I can then place my equal sign and then place the real array and say red, green and blue.
+
+00:51.040 --> 00:56.140
+So the important thing here to understand is that the annotation and specifically this bracket right
+
+00:56.140 --> 00:58.300
+here is not creating an array.
+
+00:58.480 --> 01:04.720
+This is saying we're going to have something assigned to colors that is of type array that contains
+
+01:04.720 --> 01:05.440
+strings.
+
+01:06.730 --> 01:10.390
+One of the more complicated things in the world of TypeScript, I think, is kind of separating all
+
+01:10.390 --> 01:15.310
+this new type annotation, syntax and understanding when we are actually creating an array like as we
+
+01:15.310 --> 01:16.630
+are here on the right hand side.
+
+01:16.630 --> 01:22.480
+And when we are trying to indicate a type of array, as we're doing here on the left hand side.
+
+01:23.500 --> 01:28.740
+Now we're going to go into great examples, much more detail with the raise in just a couple of videos.
+
+01:28.750 --> 01:33.640
+So for right now, let's just kind of sit on this example right here and say if we ever want to create
+
+01:33.640 --> 01:37.330
+a type annotation for an array of strings, that's how we would do it.
+
+01:37.960 --> 01:41.230
+We can do the same thing with, say, maybe an array of numbers as well.
+
+01:41.560 --> 01:47.680
+So let's say, how about let my numbers, for lack of a better name, and then I'll put down the type
+
+01:47.680 --> 01:52.480
+of value that I'm going to have inside of the array, which in this case will be a number, then empty
+
+01:52.480 --> 01:55.120
+square brackets and equal sign.
+
+01:55.120 --> 01:57.100
+And then my real array like so.
+
+01:57.990 --> 01:59.820
+And the same thing with booleans as well.
+
+01:59.820 --> 02:01.800
+So I could say let.
+
+02:02.340 --> 02:03.960
+I don't know truth's.
+
+02:03.960 --> 02:04.520
+How about that.
+
+02:04.540 --> 02:05.280
+That'll work.
+
+02:05.610 --> 02:08.940
+That's going to be a boolean or an array of booleans.
+
+02:09.600 --> 02:11.640
+And I'll set it equal to true.
+
+02:11.940 --> 02:13.860
+True, false like so.
+
+02:15.280 --> 02:19.300
+Like I said, we're going to go into greater detail with arrays in just a moment, so we'll just hang
+
+02:19.300 --> 02:20.230
+it right there.
+
+02:20.910 --> 02:25.980
+So for our next example, let's take a look at how we would deal with classes with type annotations.
+
+02:26.220 --> 02:30.990
+So I'll put down another section here called classes and we'll create a class called Car.
+
+02:31.090 --> 02:33.060
+I'm going to make an empty class like so.
+
+02:33.950 --> 02:38.000
+Classes are another thing that we're going to go into great detail in this course again for right now,
+
+02:38.000 --> 02:43.220
+I just want you to understand how we can add in a type annotation with an instance of class car.
+
+02:44.180 --> 02:48.500
+So I could create a new variable down here and call it, say, lowercase car.
+
+02:49.490 --> 02:54.260
+Well, then put the coal in and then the type of the variable or the type of value that we're going
+
+02:54.260 --> 02:55.340
+to assign to car.
+
+02:55.700 --> 02:59.270
+In this case, I want to make an instance of class car.
+
+02:59.630 --> 03:05.570
+So I'm going to say that my type is capital C car and this is where things start to get really crazy.
+
+03:05.780 --> 03:10.550
+If you've never worked a lot with classes before, traditionally we create classes with capitalized
+
+03:10.550 --> 03:11.300
+names.
+
+03:11.300 --> 03:16.610
+So whenever you see a capital name like this, like capital car, that means we are referring to the
+
+03:16.610 --> 03:18.500
+type of class car.
+
+03:19.330 --> 03:24.490
+And usually whenever we have a fully lowercase name, as you see right here, we have a variable that's
+
+03:24.490 --> 03:26.380
+referring to an instance of a car.
+
+03:26.830 --> 03:32.230
+So we're saying the variable car is only ever going to refer to an instance of a car.
+
+03:33.440 --> 03:35.930
+We can then place our equal sign and then make a new car.
+
+03:35.930 --> 03:37.670
+And that's what creates our instance.
+
+03:38.990 --> 03:39.320
+All right.
+
+03:39.320 --> 03:41.900
+So now one more or two more quick examples here.
+
+03:42.230 --> 03:46.400
+We'll take a look at how we add in a type annotation for an object literal.
+
+03:46.850 --> 03:51.530
+Now, this is where the syntax starts to go a little bit more challenging, but functions are even a
+
+03:51.530 --> 03:52.130
+little bit worse.
+
+03:52.130 --> 03:54.440
+So, hey, let's just hang in there for right now.
+
+03:55.160 --> 03:59.480
+I want to try creating an object and adding in a type annotation for it.
+
+03:59.690 --> 04:03.260
+I'm going to first create the object and we'll discuss how we can add in the annotation.
+
+04:03.740 --> 04:10.040
+So I'll make a new variable called Point, and I'm going to assign that to an object with an X value
+
+04:10.430 --> 04:13.850
+of ten and a y value of how about 20 like so?
+
+04:15.300 --> 04:18.180
+So how would we add in a type annotation for this?
+
+04:18.510 --> 04:24.510
+Well, just like before, we'll add in a colon and then we'll add in some syntax right here to describe
+
+04:24.510 --> 04:27.510
+what type of value we're going to assign to point.
+
+04:28.110 --> 04:31.950
+Now, the only difference this time around is that the syntax is going to look a little bit nasty.
+
+04:32.340 --> 04:39.270
+So to indicate that we're going to assign an object that has an X property that's a number and a Y property
+
+04:39.270 --> 04:45.540
+to number to the variable point, we're going to put the colon and then a set of curly braces and then
+
+04:45.540 --> 04:50.670
+we'll list out all the different property names with their respective types right inside of that set
+
+04:50.670 --> 04:51.750
+of curly braces.
+
+04:52.200 --> 04:56.910
+So I'm going to say that the object that we're going to assign a point is going to have an X property.
+
+04:56.910 --> 04:57.840
+That's a number.
+
+04:58.720 --> 05:00.910
+I'll then put in a semicolon.
+
+05:02.060 --> 05:06.140
+And I'll say that it's going to also have a Y property that's a number as well.
+
+05:07.230 --> 05:12.870
+I only have to put in a semicolon when I'm separating different types inside of here or different property
+
+05:12.870 --> 05:13.350
+names.
+
+05:13.350 --> 05:18.630
+So I do not technically have to put in a colon after the Y property, although I can if I want to.
+
+05:19.440 --> 05:22.140
+So like I said, this is where things start to get a little bit crazy.
+
+05:22.500 --> 05:25.170
+Once again, we are declaring a variable called point.
+
+05:25.620 --> 05:29.970
+We are assigning it an object that has an X property and a Y property.
+
+05:30.570 --> 05:34.650
+And then we are simultaneously adding in a type annotation for point as well.
+
+05:34.650 --> 05:40.410
+And we're saying we can only ever assign an object to point that has an X property that's a number and
+
+05:40.410 --> 05:42.060
+a Y property that's a number as well.
+
+05:43.090 --> 05:49.690
+So just as we saw a moment ago, back up here at the top, we saw very simply, if we assign a bad value
+
+05:49.690 --> 05:53.800
+on the right hand side that doesn't agree with the type on the left hand side, we very quickly see
+
+05:53.800 --> 05:54.760
+an error message.
+
+05:55.300 --> 05:58.360
+So that same rules applies with an object as well.
+
+05:59.070 --> 06:05.700
+For example, if I make the X property right here a string, instead I'll see an error message and it
+
+06:05.700 --> 06:12.420
+says that I have the property called X, but I'm trying to provide a value that is a string instead
+
+06:12.420 --> 06:14.730
+of the number that I said I was going to provide.
+
+06:15.950 --> 06:19.130
+So I'll change that back over to ten and now the error goes away.
+
+06:19.670 --> 06:24.560
+Likewise, if I do not provide all the required property values, like for example, instead of why
+
+06:24.560 --> 06:28.730
+I instead do something like a I'll see an error message as well.
+
+06:29.180 --> 06:32.750
+And the error says, Hey, you're trying to give something that has property.
+
+06:32.780 --> 06:36.170
+A But we were expecting to see something has Y instead.
+
+06:36.900 --> 06:38.450
+So the same rule applies.
+
+06:38.460 --> 06:41.070
+The syntax is just a little bit nastier.
+
+06:42.150 --> 06:42.420
+All right.
+
+06:42.420 --> 06:43.950
+So let's do one more quick pause.
+
+06:43.950 --> 06:48.300
+And in the next video, we'll take a look at the syntax around functions and we'll talk about why we
+
+06:48.330 --> 06:50.460
+care about all these type annotations.
+
+06:50.460 --> 06:52.740
+So quick pause and I'll see you in just a minute.

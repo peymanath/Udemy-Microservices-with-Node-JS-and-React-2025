@@ -1,0 +1,94 @@
+WEBVTT
+
+00:01.880 --> 00:06.110
+Now that we understand that, we need to worry about this whole domain issue inside of get initial props.
+
+00:06.110 --> 00:11.510
+We need to figure out whether we are inside the browser or the server when we're trying to make a request
+
+00:11.510 --> 00:13.880
+in there so that we can adjust the domain accordingly.
+
+00:14.060 --> 00:15.350
+So how are we going to do that?
+
+00:15.740 --> 00:20.540
+Well, it turns out that nexus used to have a really convenient function that we could use to figure
+
+00:20.540 --> 00:24.890
+out very easily whether we are in a browser or server environment.
+
+00:25.220 --> 00:30.410
+However, that little function was removed recently, so instead we have to rely upon a really kind
+
+00:30.410 --> 00:31.660
+of silly fallback.
+
+00:31.670 --> 00:35.600
+As you can tell, I'm a little bit sorry that that function was removed out of next JS, but that's
+
+00:35.600 --> 00:36.110
+life.
+
+00:36.650 --> 00:41.600
+So instead of getting initial props again, we have to decide whether we are on the server or the browser.
+
+00:41.630 --> 00:48.290
+To do so, we're going to write out if type of window equals equals equals undefined.
+
+00:49.800 --> 00:52.620
+Window is an object that only exists inside the browser.
+
+00:52.650 --> 00:56.040
+The window object does not exist inside of a Node.js environment.
+
+00:56.040 --> 01:02.630
+So if the window variable is undefined inside of well, this code that is being executed somewhere,
+
+01:02.640 --> 01:06.240
+that must mean we are on the server.
+
+01:06.810 --> 01:14.250
+And so any requests that we make inside of get initial props requests should be made to HTTP.
+
+01:14.370 --> 01:21.210
+And then that whole really long URL something like what was it, ingress and ingress, dot or dash,
+
+01:21.210 --> 01:22.230
+engine x, blah, blah blah.
+
+01:22.260 --> 01:23.250
+All that other stuff.
+
+01:24.440 --> 01:26.240
+We can then add on an LS case.
+
+01:26.240 --> 01:28.250
+So if window is defined.
+
+01:29.180 --> 01:32.060
+Then that means we are on the browser.
+
+01:32.910 --> 01:34.770
+And requests can be made.
+
+01:35.670 --> 01:36.390
+To.
+
+01:37.350 --> 01:44.580
+HTTP or really we can we can say can be made with a base URL of just empty string.
+
+01:44.580 --> 01:50.280
+And again, we'll rely upon the browser to put on the base domain or the base URL for us.
+
+01:50.760 --> 01:51.480
+So that's it.
+
+01:51.480 --> 01:53.940
+That's how we're going to decide whether we are on the server or the client.
+
+01:54.840 --> 01:58.650
+So now that we've established this quick pause right here, come back the next video and we're going
+
+01:58.650 --> 02:01.110
+to finally, finally make our request.

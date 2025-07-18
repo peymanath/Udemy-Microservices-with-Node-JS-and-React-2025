@@ -1,0 +1,250 @@
+WEBVTT
+
+00:01.170 --> 00:05.770
+In the last video, we put together some sync code inside of our query before we test this out.
+
+00:05.790 --> 00:10.890
+We did try to make use of Axios in here, but unfortunately our query service does not yet have Axios
+
+00:10.890 --> 00:11.580
+installed.
+
+00:11.610 --> 00:14.550
+We haven't even required it into this index file.
+
+00:14.910 --> 00:16.710
+So I'm going to go up to the very top of this file.
+
+00:16.980 --> 00:19.530
+I'm going to require in Axios.
+
+00:20.990 --> 00:21.950
+I'll save this.
+
+00:22.310 --> 00:23.840
+I'll then go back over to my terminal.
+
+00:24.170 --> 00:28.340
+I'm going to find the terminal window that is running my service.
+
+00:28.880 --> 00:30.200
+I'm going to stop that thing.
+
+00:30.620 --> 00:32.810
+I'll install Axios really quickly.
+
+00:34.830 --> 00:36.390
+And then I'll start that server back up.
+
+00:38.070 --> 00:38.370
+Okay.
+
+00:38.400 --> 00:39.240
+So it looks good.
+
+00:39.780 --> 00:43.320
+So now we need to make sure that we can actually test this out effectively.
+
+00:43.830 --> 00:47.730
+So I'm going to just go ahead and stop that server, even though we just started it up.
+
+00:47.820 --> 00:50.450
+So now we do not have any access to query.
+
+00:50.460 --> 00:52.240
+It just doesn't exist.
+
+00:52.260 --> 00:58.290
+But hopefully we can try to create some posts, comments and whatever else those events will be cached
+
+00:58.290 --> 01:00.600
+or stored by our event bus.
+
+01:00.690 --> 01:05.280
+And then as soon as we launch query, hopefully queries should be resync and get all the different events
+
+01:05.280 --> 01:06.750
+that it has missed over time.
+
+01:07.230 --> 01:10.990
+So let's try this out, making sure that the query service is not running.
+
+01:11.010 --> 01:12.840
+I'm going to go over to my browser.
+
+01:13.580 --> 01:14.990
+I'm going to refresh the page.
+
+01:15.500 --> 01:19.610
+You'll notice I've got an air inside of my console right now, and that is to be expected because the
+
+01:19.610 --> 01:21.470
+query service does not exist right now.
+
+01:21.470 --> 01:22.700
+It's not running at all.
+
+01:23.630 --> 01:25.340
+But I should be able to create a post.
+
+01:25.340 --> 01:29.480
+So I'll go ahead and create a post, something like new post and submit.
+
+01:31.180 --> 01:36.130
+Now, in theory, this post has been created and we've gone through that entire process of storing it
+
+01:36.130 --> 01:37.900
+on the post service and so on.
+
+01:38.260 --> 01:42.700
+If I refresh right now, I get another error again because the query service doesn't exist.
+
+01:43.390 --> 01:45.010
+So now let's go back over to our terminal.
+
+01:45.730 --> 01:47.710
+We'll go ahead and launch the query service.
+
+01:47.710 --> 01:51.340
+And as soon as we do so, it should reach out to our event bus.
+
+01:51.370 --> 01:52.590
+You'll notice there are some errors here.
+
+01:52.600 --> 01:53.530
+You could ignore them.
+
+01:53.590 --> 01:58.330
+It should reach out to our event bus and try to receive all the different events that it has missed.
+
+01:58.900 --> 02:00.430
+So I'm going to start up the query service.
+
+02:01.150 --> 02:04.120
+And you'll notice right away it's processed in event of post created.
+
+02:04.120 --> 02:05.650
+That's the event that it had missed.
+
+02:06.130 --> 02:09.850
+So if I now go back to the browser, I can refresh and there's my post.
+
+02:11.360 --> 02:15.620
+Now the benefit to this approach if I kill my service once again.
+
+02:15.620 --> 02:16.760
+So now it's dead again.
+
+02:16.850 --> 02:18.950
+Now I can start to maybe create some comments.
+
+02:18.950 --> 02:21.260
+I can say comment number.
+
+02:22.660 --> 02:23.410
+One.
+
+02:23.590 --> 02:24.560
+I can create a comment.
+
+02:24.580 --> 02:29.140
+Number two, I can create even an invalid comment, something with the word orange in it, something
+
+02:29.140 --> 02:30.460
+that's going to get rejected.
+
+02:31.060 --> 02:35.650
+Now, if I refresh again, once again, I don't see anything because the query service is down and the
+
+02:35.650 --> 02:38.370
+query service has completely missed all these different events.
+
+02:38.380 --> 02:43.960
+It hasn't seen any of the comment created, any of the comment moderated or the comment updated events.
+
+02:44.560 --> 02:46.180
+So now let's relaunch query.
+
+02:47.660 --> 02:51.170
+And instantly it's going to process all those different events that it just missed out on.
+
+02:51.830 --> 02:54.110
+So now if I go back over to the browser, I can refresh.
+
+02:56.520 --> 02:58.620
+Looks like the CD is taking just a moment.
+
+02:59.430 --> 03:01.170
+Chances are it's going to refresh way faster for you.
+
+03:01.170 --> 03:01.800
+There we go.
+
+03:01.800 --> 03:05.970
+And now we can see that the query service is online and 100% up to date.
+
+03:05.970 --> 03:06.930
+We've got our post.
+
+03:06.930 --> 03:10.380
+We've got those comments and the comment that was rejected as well.
+
+03:11.210 --> 03:11.630
+All right.
+
+03:11.630 --> 03:13.700
+So you got to admit, that's pretty neat.
+
+03:13.820 --> 03:19.850
+So this 100% really deals with this issue of a service being brought online at some point in time in
+
+03:19.850 --> 03:25.250
+the future, or possibly the case in which a service goes down for some very small period of time and
+
+03:25.250 --> 03:27.230
+misses out on a couple of event events.
+
+03:27.680 --> 03:31.460
+We're going to use this strategy very heavily as we start to work on our next application.
+
+03:32.600 --> 03:36.890
+Now, if you see some issues with this approach and there are some problems inside of here, without
+
+03:36.890 --> 03:38.320
+a doubt, don't sweat it.
+
+03:38.330 --> 03:43.430
+There are cases and we are going to cover these corner cases, particularly around the possibility of
+
+03:43.430 --> 03:45.030
+having persistent data.
+
+03:45.050 --> 03:46.790
+Right now, none of our data is persistent.
+
+03:46.790 --> 03:51.680
+We store it inside of some in-memory data structure that's lost instantly whenever a service goes down.
+
+03:52.660 --> 03:57.910
+But if we were using a database where we were storing these posts and comments inside of some database
+
+03:57.910 --> 04:01.900
+with, say, the query service, you might be thinking, Hey, we'll get into some trouble here if we
+
+04:01.900 --> 04:04.730
+try to run the same event or process the same event twice.
+
+04:04.750 --> 04:07.030
+Again, if you're thinking that, don't sweat it.
+
+04:07.180 --> 04:10.330
+There are solutions to it that we're going to implement in our next application.
+
+04:10.870 --> 04:14.280
+Okay, so this entire idea of sinking events looks like it's pretty handy.
+
+04:14.290 --> 04:15.250
+So pause right here.
+
+04:15.250 --> 04:16.360
+Continue in just a minute.

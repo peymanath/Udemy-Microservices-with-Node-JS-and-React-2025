@@ -1,0 +1,163 @@
+WEBVTT
+
+00:01.140 --> 00:05.130
+All right, let's start to build out this additional functionality inside of our air handling middleware.
+
+00:05.730 --> 00:10.530
+So to get started, I'm going to find my error handling middleware inside the middleware directory.
+
+00:11.100 --> 00:12.000
+Here it is right here.
+
+00:13.120 --> 00:13.870
+At the very top.
+
+00:13.870 --> 00:19.060
+I'm going to import those two custom air subclasses we just put together once again, rather than writing
+
+00:19.060 --> 00:19.510
+these out.
+
+00:19.510 --> 00:23.770
+Actually, let's just do a copy paste from the sign up route handler we were just working on.
+
+00:24.070 --> 00:25.680
+So here's sign updates.
+
+00:26.580 --> 00:31.380
+We want these two exact import statements, so I'm going to copy both them and then paste them inside
+
+00:31.380 --> 00:32.610
+of the air handler.
+
+00:35.550 --> 00:36.870
+So now at the very top.
+
+00:38.220 --> 00:42.390
+I'm going to delete that console log and we'll add in our little type checks.
+
+00:42.570 --> 00:43.920
+So we're going to say if.
+
+00:45.160 --> 00:45.790
+Air.
+
+00:46.620 --> 00:49.620
+Is an instance of request.
+
+00:50.400 --> 00:51.630
+Validation air.
+
+00:52.880 --> 00:59.450
+Then if right now let's just do a console.log and say something like handling this error as a request
+
+00:59.660 --> 01:00.800
+validation error.
+
+01:04.560 --> 01:06.120
+We will also do a return.
+
+01:06.450 --> 01:08.490
+Actually, we'll leave the return off for just a second.
+
+01:08.490 --> 01:11.490
+Let's just make sure we can get these instances of checks work appropriately.
+
+01:12.440 --> 01:17.300
+After that, we'll say if error is an instance of database.
+
+01:18.360 --> 01:19.410
+Connection error.
+
+01:20.930 --> 01:22.610
+We'll do a console.log of.
+
+01:23.560 --> 01:28.360
+Handling this error as a DB injection error.
+
+01:31.350 --> 01:32.340
+We'll save this.
+
+01:32.340 --> 01:35.790
+And then let's go ahead and do a quick test over with Postman, though.
+
+01:35.790 --> 01:39.870
+All we're trying to do right now is to make sure that we can interpret the type of that incoming error
+
+01:39.870 --> 01:42.120
+so we can eventually handle it appropriately.
+
+01:42.570 --> 01:46.410
+So either we'll take the reasons property and send it back, or we'll take that reason property and
+
+01:46.410 --> 01:48.400
+send it over whatever is most appropriate.
+
+01:48.420 --> 01:49.920
+We still need to figure that part out.
+
+01:51.670 --> 01:54.070
+So to test this out, I'm going to open up post man once again.
+
+01:54.730 --> 02:00.660
+I'll try to handle the invalid request validate or the request validation error first.
+
+02:00.670 --> 02:03.580
+So I'm going to put in an invalid email and then send this off.
+
+02:05.200 --> 02:05.470
+Okay.
+
+02:05.470 --> 02:07.280
+So I've got a status 400.
+
+02:07.300 --> 02:10.640
+I don't have a message or I have an empty string right there, which is okay for right now.
+
+02:10.660 --> 02:15.310
+More importantly, let's go back over to our terminal and take a look at what was console logged out.
+
+02:15.910 --> 02:19.810
+So at my terminal, I'll see handling this error as a request validation error.
+
+02:20.440 --> 02:20.980
+Awesome.
+
+02:20.980 --> 02:27.130
+So that means that we can tell our error handling middleware how to run some custom logic depending
+
+02:27.130 --> 02:29.170
+upon the type of error that it is receiving.
+
+02:31.070 --> 02:35.390
+So now let's do a similar test and make sure that it can recognize a database connection error coming
+
+02:35.390 --> 02:35.750
+in.
+
+02:37.460 --> 02:39.680
+So I'm going to put in a valid email now.
+
+02:40.690 --> 02:41.440
+Send it.
+
+02:42.210 --> 02:47.730
+I'll go back over to my terminal again and I see handling this error as a DB connection error.
+
+02:48.370 --> 02:49.000
+Awesome.
+
+02:51.050 --> 02:51.410
+Okay.
+
+02:51.410 --> 02:57.560
+So now that our error handling middleware can determine what kind of error this is, we can add some
+
+02:57.560 --> 03:02.900
+code inside there to take off either that reason's property or the reason property in the case of database
+
+03:02.900 --> 03:07.100
+connection error and then build up some kind of response and send it back over to the user.
+
+03:07.400 --> 03:09.770
+So let's take care of that last step in just a moment.

@@ -1,0 +1,223 @@
+WEBVTT
+
+00:00.760 --> 00:02.410
+Well, time for the moment of truth.
+
+00:02.440 --> 00:05.890
+Time to see if all this version stuff is going to fix our concurrency issues.
+
+00:06.130 --> 00:10.210
+So I've opened up this little test script once again, as a reminder, this test script is going to
+
+00:10.210 --> 00:15.020
+first try to create a post or ask me not a post, but a ticket at a price of five.
+
+00:15.040 --> 00:18.550
+I'm then going to update it to ten and then update it to 15.
+
+00:18.670 --> 00:22.810
+So we're going to expect to see all tickets eventually at a price of 15.
+
+00:23.500 --> 00:28.120
+I've also increased the number of requests that are made in parallel to 400.
+
+00:28.150 --> 00:33.310
+Now, technically, remember, it's 400 times three, so really 1200 requests more or less in parallel
+
+00:33.340 --> 00:38.440
+again with DOJ's, not technically in parallel, truly, but more or less running at the same time.
+
+00:39.620 --> 00:43.680
+So beyond that, also, remember, I've got two terminal windows open here.
+
+00:43.700 --> 00:46.160
+They are both connected directly to MongoDB.
+
+00:46.580 --> 00:49.430
+On the right hand side is my order database.
+
+00:49.940 --> 00:52.040
+On the left hand side of my orders database.
+
+00:52.040 --> 00:54.740
+And on the right hand side is tickets.
+
+00:56.920 --> 00:58.750
+So I'm going to start up that script.
+
+00:58.840 --> 01:03.580
+I've got my scaffold window open over here and we're going to see some pretty interesting output.
+
+01:03.610 --> 01:07.620
+Beyond seeing a tremendous number of messages saying that we have processed some number of events,
+
+01:07.630 --> 01:10.930
+we're actually going to start to see a couple of errors in there as well.
+
+01:11.140 --> 01:15.610
+We're going to expect to see an error any time some event is being processed out of order.
+
+01:15.850 --> 01:19.900
+So the errors are going to come from this line of code right here or well, really this line of code
+
+01:19.900 --> 01:20.530
+right here.
+
+01:20.560 --> 01:24.250
+So we're going to try to find some very specific version of a ticket.
+
+01:24.250 --> 01:28.300
+If we are processing events out of order, this query is not going to find anything.
+
+01:28.300 --> 01:30.970
+We won't have a ticket and we'll end up throwing an error.
+
+01:31.270 --> 01:37.240
+Now, keep in mind that when we throw the error after 5 seconds of not calling it message back right
+
+01:37.240 --> 01:41.950
+here, and that streaming server is going to automatically re dispatch or re emit the event that we
+
+01:41.950 --> 01:43.060
+fail to process.
+
+01:43.270 --> 01:50.050
+And so after those 5 seconds, in theory, we will have processed the second event or the first update.
+
+01:50.320 --> 01:56.020
+And so when we try to tackle this third event or the second update now, we should be able to find a
+
+01:56.020 --> 01:57.520
+ticket with the correct version.
+
+01:57.790 --> 02:01.840
+So how we're going to actually see that reflected inside of our scaffold logs, we're going to see a
+
+02:01.840 --> 02:05.680
+tremendous amount of output very quickly, then a brief pause.
+
+02:05.680 --> 02:11.920
+And then after about two or 3 seconds, we're going to then see another small little batch of log statements,
+
+02:11.920 --> 02:14.350
+stuff saying, oh, we have now processed this event.
+
+02:14.560 --> 02:15.850
+So that's what we're going to see in total.
+
+02:16.300 --> 02:18.370
+Well enough talking, let's actually run this.
+
+02:18.370 --> 02:21.370
+So I'm going to do a node index JS to run the test script.
+
+02:21.400 --> 02:23.500
+I'll then go back over to my scaffold logs.
+
+02:23.500 --> 02:26.680
+We're going to see all this output and then it's going to stop really quickly.
+
+02:30.140 --> 02:30.270
+Okay.
+
+02:30.350 --> 02:30.980
+There's the stop.
+
+02:31.070 --> 02:34.970
+Now we're going to wait a couple of, like half a second and then boom, those are all the backfield
+
+02:34.970 --> 02:35.630
+events.
+
+02:35.630 --> 02:40.640
+So these are all the events that fail to be processed because they were processed out of order.
+
+02:40.670 --> 02:45.500
+And if I even scroll back up, we're going to see some number of logs or errors inside of here as well.
+
+02:45.500 --> 02:47.150
+So these say ticket not found.
+
+02:47.150 --> 02:52.280
+That is an instance of where we try to process some event out of order so I can keep scrolling up and
+
+02:52.280 --> 02:52.790
+I'll see that.
+
+02:52.790 --> 02:53.030
+Yep.
+
+02:53.030 --> 02:57.680
+There definitely are some number of events that were processed out of order, or at least we attempted
+
+02:57.680 --> 02:58.100
+to.
+
+02:59.700 --> 03:02.400
+It's now the last little moment of truth here.
+
+03:03.070 --> 03:08.230
+We're going to run a query on both our databases and we're going to expect to find the exact same number
+
+03:08.230 --> 03:11.200
+of tickets with the same price inside of both them.
+
+03:11.530 --> 03:15.920
+So on the orders database, well, let's do tickets first because this one should always be correct.
+
+03:15.940 --> 03:18.610
+I'll do a DB tickets find.
+
+03:19.240 --> 03:22.870
+And I'm really going to expect to see that every ticket has a price exactly.
+
+03:22.870 --> 03:23.680
+At 15.
+
+03:25.370 --> 03:29.600
+And so I find that all 400 tickets that I created, yep, they end up at the price of 15.
+
+03:29.630 --> 03:33.380
+So now we're going to do the same query over here on the orders database and we're going to expect to
+
+03:33.380 --> 03:38.360
+see exactly 400 as well, which would indicate that all of our data is truly in sync.
+
+03:38.660 --> 03:47.120
+So I'll do a DB tickets, find the price of 15, get the length, and there we go.
+
+03:47.120 --> 03:47.900
+That's it.
+
+03:48.140 --> 03:53.570
+So it looks like this version tracking stuff really does solve a lot of this versioning issue.
+
+03:53.960 --> 03:56.930
+So it's going to keep track of the version of all these different records.
+
+03:56.930 --> 04:00.710
+We're going to use that implicitly to naturally order our different events.
+
+04:00.980 --> 04:02.270
+So this really is fantastic.
+
+04:02.270 --> 04:07.250
+It's a great solution to make sure that even if we start to receive our events out of order for some
+
+04:07.250 --> 04:13.460
+crazy reason, we're always going to bounce the out-of-order event process, the one that we should
+
+04:13.460 --> 04:18.200
+be processing, and then eventually reissue this one and apply it to our database.
+
+04:19.470 --> 04:21.030
+So this really is a great solution.
+
+04:21.150 --> 04:25.470
+But I think it would be a little bit better if we maybe had a couple of tests as well.
+
+04:25.710 --> 04:26.830
+So let's take a pause right here.
+
+04:26.850 --> 04:30.510
+There's one or two other quick things I want to discuss, and we'll continue in just a minute.

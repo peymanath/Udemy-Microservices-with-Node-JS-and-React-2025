@@ -1,0 +1,235 @@
+WEBVTT
+
+00:01.010 --> 00:05.810
+In the last video we spoke about the need to have some outside file called something like Nat's client
+
+00:05.810 --> 00:06.890
+or something similar.
+
+00:06.980 --> 00:12.230
+And we should be creating some kind of client inside there and then initializing that client from indexed.
+
+00:13.100 --> 00:17.390
+The benefit to this approach is that we can then import that client directly into, say, our ticket
+
+00:17.390 --> 00:21.830
+created route handler and not worry about any circular dependencies or anything like that.
+
+00:22.310 --> 00:27.020
+Now before we start to write out any implementation, putting this thing together, this Nats client
+
+00:27.020 --> 00:29.870
+file is going to be just a little bit confusing.
+
+00:30.880 --> 00:35.350
+So I want to give you a quick analogy here, something to just keep in mind as we are putting this file
+
+00:35.350 --> 00:39.040
+together that's going to help you really understand what is going on behind the scenes.
+
+00:39.550 --> 00:44.530
+Back inside of our indexed file right now, I want to once again point out Mongoose right here.
+
+00:44.740 --> 00:47.590
+Take a look and consider how we use mongoose.
+
+00:47.950 --> 00:50.950
+We import Mongoose into our index file.
+
+00:51.710 --> 00:55.400
+We then call Kinect on it and we pass in some connection settings.
+
+00:55.880 --> 00:58.760
+We can then await for that connection to be completed.
+
+00:59.240 --> 01:04.940
+After running this code right here, any other file inside of our project can import Mongoose and it
+
+01:04.940 --> 01:09.650
+will get a already pre connected, pre initialized version of Mongoose as well.
+
+01:10.130 --> 01:15.530
+So for example, our root handler right here, the new root handler to create a ticket, this thing
+
+01:15.530 --> 01:17.310
+could import Mongoose at the top.
+
+01:17.330 --> 01:17.880
+It doesn't.
+
+01:17.900 --> 01:23.330
+We use mongoose technically through the ticket model, but we could technically import Mongoose and
+
+01:23.330 --> 01:28.370
+use it to reach directly out to our database without having to worry about initializing any connection
+
+01:28.370 --> 01:29.660
+or anything like that.
+
+01:30.960 --> 01:35.310
+We want to do something very similar with this Nats client that we are putting together.
+
+01:35.610 --> 01:39.660
+So here's what's going on behind the scenes inside of Mongoose.
+
+01:39.660 --> 01:43.980
+We are importing mongoose when we import mongoose defined internally.
+
+01:43.980 --> 01:47.960
+There's probably some class called Mongoose or something like that.
+
+01:47.970 --> 01:51.110
+But you and I never actually work with any kind of class called Mongoose.
+
+01:51.120 --> 01:53.620
+Instead we just import mongoose and DA.
+
+01:53.640 --> 01:57.570
+We get an instance of the Mongoose library, or in this case, the mongoose class.
+
+01:58.200 --> 02:00.620
+So we can import that into indexes.
+
+02:00.630 --> 02:04.140
+And inside there we can tell Mongoose to connect to a very specific database.
+
+02:04.140 --> 02:07.020
+We can await that connection to be established and so on.
+
+02:07.840 --> 02:10.660
+Then we can go to any other file inside of our project.
+
+02:10.660 --> 02:17.140
+We can import Mongoose and we get the same object, like the same instance of the Mongoose class.
+
+02:17.470 --> 02:22.210
+So that same object is being shared between indexed and our root handler.
+
+02:22.690 --> 02:27.070
+So we want to do something identical with all of this Nats client stuff as well.
+
+02:27.250 --> 02:29.440
+So we're going to take a very similar approach.
+
+02:29.920 --> 02:35.290
+We're going to create inside this Nats client file that we're going to make a class called NATS wrapper.
+
+02:35.590 --> 02:41.830
+The goal of this Nats wrapper class is to create and initialize a client from the stand or the Nats
+
+02:41.830 --> 02:42.310
+library.
+
+02:42.310 --> 02:43.330
+No Nats streaming.
+
+02:44.720 --> 02:49.490
+Then rather than exporting the entire class, we're going to create an instance of that class inside
+
+02:49.490 --> 02:51.620
+this file and export that instance.
+
+02:51.860 --> 02:57.770
+So we will then be able to access the same object, the same instance inside of indexes and inside of
+
+02:57.770 --> 02:59.600
+the ticket created route handler.
+
+03:00.140 --> 03:05.660
+So just like Mongoose, we can initialize or we will be able to initialize this client from inside of
+
+03:05.660 --> 03:06.710
+indexes.
+
+03:06.710 --> 03:11.780
+And then by the time our ticket created root handler accesses or imports this thing, the client will
+
+03:11.780 --> 03:13.490
+have already been initialized.
+
+03:14.940 --> 03:19.710
+So as we start to write this code, I really just want you to keep in mind how Mongoose works.
+
+03:19.860 --> 03:24.090
+We are not saying, Hey, create a new instance of a mongoose class or something like that.
+
+03:24.090 --> 03:28.950
+We just import mongoose we call connect on it and it seems like everything just works.
+
+03:29.280 --> 03:33.300
+Just keep that in mind because we want to have an interface that is very similar to Mongoose.
+
+03:34.560 --> 03:38.240
+So with all that having been said, let's start to create this Nats client file.
+
+03:38.250 --> 03:40.290
+We're actually going to end up calling this something different.
+
+03:40.290 --> 03:41.550
+We're going to call it Nats wrapper.
+
+03:42.150 --> 03:44.220
+Just to stay consistent with the class name.
+
+03:44.340 --> 03:46.410
+We're probably going to end up renaming both these things.
+
+03:46.420 --> 03:50.910
+The only reason we're calling it Nats wrapper right now is to make its purpose just really clear and
+
+03:50.910 --> 03:53.010
+obvious for right now as we are writing this code.
+
+03:53.460 --> 03:53.700
+All right.
+
+03:53.700 --> 03:57.450
+So back over inside my SRC directory in the tickets folder.
+
+03:58.580 --> 04:01.700
+I'm going to make a new file called Nats wrapper.
+
+04:02.130 --> 04:02.690
+Yes.
+
+04:04.480 --> 04:06.790
+So inside of here, we're going to import nets.
+
+04:07.850 --> 04:11.570
+And the stan type from node nets streaming.
+
+04:15.030 --> 04:18.390
+Then inside of here, we'll create a class called Nats wrapper.
+
+04:19.660 --> 04:23.770
+And then at the very bottom right away, I'm going to export a single instance of this thing.
+
+04:23.770 --> 04:28.870
+So export counts, nets wrapper is new nets wrapper.
+
+04:30.040 --> 04:31.930
+So now we can create a client inside of here.
+
+04:31.930 --> 04:34.270
+We can assign it as a property to the class.
+
+04:34.390 --> 04:38.560
+And then once we create the instance out of that class, we are going to share the instance around to
+
+04:38.560 --> 04:42.340
+all of our different files and we'll be able to say, initialize a client inside.
+
+04:42.340 --> 04:47.560
+They're from inside of indexes and access that instance from inside the ticket created root handler.
+
+04:47.560 --> 04:50.350
+So again, just keep mongoose in mind.
+
+04:51.440 --> 04:51.710
+Okay.
+
+04:51.710 --> 04:55.280
+Before we start to work on this implementation, I don't want this video to run too long.
+
+04:55.280 --> 04:57.290
+So let's take a quick pause right here.

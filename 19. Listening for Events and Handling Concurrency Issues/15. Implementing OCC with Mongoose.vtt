@@ -1,0 +1,199 @@
+WEBVTT
+
+00:00.910 --> 00:05.190
+We have installed the mongoose update if current module into our tickets service.
+
+00:05.200 --> 00:06.760
+So let's now go back over to our editor.
+
+00:06.760 --> 00:10.450
+We're going to wire this thing up to our ticket model and then start to write out a couple of tests
+
+00:10.450 --> 00:12.580
+just to make sure that it behaves as expected.
+
+00:13.030 --> 00:16.510
+So back inside my editor, I'm going to find the tickets service.
+
+00:17.480 --> 00:18.690
+Make sure you're inside a ticket service.
+
+00:18.710 --> 00:20.390
+We've been working inside of orders.
+
+00:20.780 --> 00:23.840
+Inside, they're going to find the models directory and find the ticket file.
+
+00:24.260 --> 00:29.150
+Then at the very top I will import update if current plugin.
+
+00:30.200 --> 00:33.440
+From Mongoose update if current.
+
+00:36.990 --> 00:40.680
+And then we're going to wire this thing up to our ticket schema that we created a little bit lower on
+
+00:40.680 --> 00:41.580
+inside the file.
+
+00:41.820 --> 00:43.900
+So I'm going to scroll on down a little bit to our ticket schema.
+
+00:43.920 --> 00:44.900
+Here it is right here.
+
+00:44.910 --> 00:50.340
+And then right after the ticket schema definition, we're going to add in two lines of configuration.
+
+00:50.610 --> 00:56.640
+I'm going to first say ticket schema, plug in and pass in the update if current plug in.
+
+00:57.610 --> 01:01.870
+And then right above that, very important that we put this right above, we're also going to tell Mongoose
+
+01:01.870 --> 01:06.580
+that we want to track the version of all these different documents using the field version.
+
+01:06.580 --> 01:11.710
+So using some property named version instead of the default of underscore underscore V, which as we've
+
+01:11.710 --> 01:14.530
+seen, is the default version field with mongoose.
+
+01:15.310 --> 01:18.130
+So to rename that field, we're going to write out ticket schema.
+
+01:18.940 --> 01:22.930
+Set version key to simply version instead.
+
+01:22.930 --> 01:23.650
+And that's it.
+
+01:25.130 --> 01:27.500
+Now by making this change to the version key right here.
+
+01:27.500 --> 01:31.790
+There's one other little change we have to make inside of our ticket doc interface.
+
+01:31.880 --> 01:33.230
+So I'm going to scroll up a little bit.
+
+01:33.960 --> 01:35.580
+Here's the ticket doc interface.
+
+01:35.580 --> 01:40.170
+And remember, the goal of this interface was to list out all the different properties that a document
+
+01:40.170 --> 01:42.210
+has or an instance of a ticket has.
+
+01:42.390 --> 01:46.530
+So this was an interface that listed out not only the properties that a ticket has, so specifically
+
+01:46.530 --> 01:51.750
+a title price and user ID, but also includes all the properties that a normal document has as well.
+
+01:52.170 --> 01:57.240
+One of the properties listed inside the humongous DOT document interface is Underscore Underscore V,
+
+01:57.390 --> 02:02.210
+and that's what would normally allow us to write out some code such as tickets underscore underscore
+
+02:02.220 --> 02:02.640
+v.
+
+02:02.970 --> 02:07.050
+Normally if we had a ticket and if we're working with a ticket document, we could write this out and
+
+02:07.050 --> 02:11.610
+TypeScript would be absolutely okay with that because inside of this interface definition is something
+
+02:11.610 --> 02:15.180
+that says that a ticket has an underscore underscore V property.
+
+02:15.480 --> 02:16.670
+So we just change that.
+
+02:16.680 --> 02:21.030
+We are now saying that to access the version field we want to write out, be able to write out something
+
+02:21.030 --> 02:22.650
+such as ticket version.
+
+02:23.130 --> 02:27.460
+This version property is not defined inside of the document interface.
+
+02:27.480 --> 02:30.900
+Nothing inside there says that a document has a version property.
+
+02:31.290 --> 02:36.180
+So to help TypeScript understand that a instance of a ticket has a version property, you and I have
+
+02:36.180 --> 02:38.820
+to manually add it to the ticket dock interface.
+
+02:39.950 --> 02:44.630
+So version is going to be a number like so, and that is what is going to allow us to write out something
+
+02:44.630 --> 02:48.440
+such as ticket version without TypeScript complaining at us.
+
+02:49.930 --> 02:53.770
+So believe it or not, that is it for wiring up this optimistic concurrency control stuff.
+
+02:53.770 --> 02:55.360
+But at this point, I don't know about you.
+
+02:55.360 --> 02:57.480
+I'm kind of thinking, what does that do for us?
+
+02:57.490 --> 03:00.460
+And that's why I would really like to write out a quick test or two.
+
+03:00.670 --> 03:05.170
+I just want to write out a test and make sure that this version field is going to be tracked automatically
+
+03:05.170 --> 03:09.640
+and make sure that if we try to save some record out of the appropriate order, we're going to see some
+
+03:09.640 --> 03:10.300
+kind of error.
+
+03:12.410 --> 03:17.300
+So inside of my model directory, again, inside of my ticket service, I'm going to create a new folder
+
+03:17.300 --> 03:20.300
+of underscore, underscore, test, underscore, underscore.
+
+03:21.330 --> 03:21.990
+Inside of there.
+
+03:21.990 --> 03:25.470
+I'll make a new file of ticket tests.
+
+03:27.860 --> 03:30.530
+And then at the top, we'll immediately start to write our test.
+
+03:31.130 --> 03:35.600
+I'm going to import the ticket model from up one directory ticket.
+
+03:36.660 --> 03:41.580
+And then we're going to write out for right now just one simple test and we'll give this a description
+
+03:41.580 --> 03:47.010
+of it implements optimistic concurrency control.
+
+03:47.610 --> 03:52.290
+We can probably think of a better title for this test, but I just want you to kind of have this term
+
+03:52.290 --> 03:54.900
+around just to give a reminder of what this stuff is all about.
+
+03:55.910 --> 03:57.680
+Rather than having this video take a really long time.
+
+03:57.680 --> 04:01.130
+However, let's take a pause right here and then write out the implementation for this test in just
+
+04:01.130 --> 04:01.730
+a moment.

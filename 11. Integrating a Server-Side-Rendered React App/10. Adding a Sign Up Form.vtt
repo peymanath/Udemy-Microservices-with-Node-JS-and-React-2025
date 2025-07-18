@@ -1,0 +1,169 @@
+WEBVTT
+
+00:01.260 --> 00:01.830
+In this video.
+
+00:01.830 --> 00:04.620
+We're going to start working on our sign up form right here.
+
+00:04.830 --> 00:06.920
+We're not going to worry about the header at the top right now.
+
+00:06.930 --> 00:09.510
+We're really just going to worry about the form right there.
+
+00:09.870 --> 00:16.440
+I want to be able to see this component any time I go to a URL like ticketing dev, slash off, slash
+
+00:16.470 --> 00:17.170
+sign up.
+
+00:17.190 --> 00:21.420
+So if we go to that root right there, I want to see the sign up component up here on the screen.
+
+00:21.870 --> 00:24.180
+So to do so, we will go back over to our editor.
+
+00:24.510 --> 00:29.280
+We'll find our pages directory and we'll create a new folder inside there called Off.
+
+00:30.210 --> 00:34.140
+And then inside there, we'll make a new file called Sign Up JJ's.
+
+00:35.020 --> 00:41.410
+So by defining a folder and putting a sign up file inside there, that is going to define the root of
+
+00:41.710 --> 00:44.500
+all sign up inside of our next application.
+
+00:45.450 --> 00:49.770
+So now all we have to do is define and export a react component from this file.
+
+00:49.770 --> 00:54.480
+And then if we go to sign up, we will see the contents of that component up here on the screen.
+
+00:54.780 --> 00:57.680
+So let's try it out right now inside of sign up JS.
+
+00:57.720 --> 00:59.430
+I will export default.
+
+01:01.530 --> 01:03.150
+And I will return inside of here.
+
+01:03.150 --> 01:04.200
+A form.
+
+01:05.210 --> 01:10.640
+And for right now, I'm just going to put an H one inside that says sign up.
+
+01:11.120 --> 01:15.380
+We're going to come back in just a moment and add in some buttons and inputs and labels and whatnot.
+
+01:15.380 --> 01:18.830
+But let's just say this right now and do a quick test back inside of our browser.
+
+01:19.810 --> 01:24.790
+Flip back over and I'm going to try to navigate to ticketing dev auth sign up.
+
+01:25.700 --> 01:26.510
+And there we go.
+
+01:27.220 --> 01:32.140
+So again, anytime we want to have a nested route of sorts, all we have to do is create a folder and
+
+01:32.140 --> 01:33.820
+place our components inside there.
+
+01:34.330 --> 01:34.630
+All right.
+
+01:34.630 --> 01:36.160
+Let's continue with the form right here.
+
+01:36.460 --> 01:41.020
+So, like I said, we're going to add in a couple of labels, inputs and whatnot.
+
+01:42.170 --> 01:47.300
+Right after that h one I'm going to put in a div with the class name of form group.
+
+01:50.190 --> 01:51.690
+I'll then place a label.
+
+01:52.970 --> 01:55.370
+And give it the text email address.
+
+01:56.790 --> 02:01.320
+And then an input with the class name of form dash control.
+
+02:04.350 --> 02:04.430
+Yeah.
+
+02:04.500 --> 02:07.080
+So this will show our label and input for the email.
+
+02:07.440 --> 02:10.290
+We want to do something very similar for the password as well.
+
+02:10.290 --> 02:11.580
+Just to save a little bit of time.
+
+02:11.580 --> 02:15.060
+I'm going to copy that entire div and paste it underneath itself.
+
+02:15.060 --> 02:18.420
+Then I'll change the label to password.
+
+02:19.500 --> 02:25.020
+And on input, I'll add in a type to this thing of password just to obfuscate any text that gets typed
+
+02:25.020 --> 02:25.710
+inside there.
+
+02:26.960 --> 02:30.020
+And then finally after those two, Divs, I'm going to place a button.
+
+02:31.690 --> 02:33.340
+Oh, get this in text like sign up.
+
+02:34.200 --> 02:35.250
+Also get the button.
+
+02:35.250 --> 02:38.760
+A class name of BTN Eaton Dash Primary.
+
+02:41.500 --> 02:41.800
+All right.
+
+02:41.800 --> 02:43.360
+So that is our signup form.
+
+02:44.880 --> 02:49.980
+Once you've got this all put together, we'll save it and then flip back over and we should see something
+
+02:49.980 --> 02:51.210
+like this appear on the screen.
+
+02:51.600 --> 02:52.290
+Perfect.
+
+02:52.680 --> 02:55.310
+Now, you might notice that I've got some icons here on the right hand side.
+
+02:55.320 --> 02:58.530
+Those are coming from my password manager that I'm running inside of Chrome.
+
+02:58.710 --> 03:02.240
+So if you do not see those icons, that is 100% to be expected.
+
+03:02.250 --> 03:03.180
+Do not sweat it.
+
+03:04.560 --> 03:04.890
+All right.
+
+03:04.890 --> 03:09.270
+Well, now that we've got the basics of this form put together, let's take a pause right here and continue
+
+03:09.270 --> 03:11.310
+adding in some functionality in just a moment.

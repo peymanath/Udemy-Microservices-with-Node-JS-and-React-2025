@@ -1,0 +1,481 @@
+WEBVTT
+
+00:01.000 --> 00:04.860
+In this video, we're going to get an overview of the next big application we're going to work on.
+
+00:04.870 --> 00:09.880
+Now, this next application really is significantly, significantly larger than what we just put together.
+
+00:09.910 --> 00:12.250
+Way more complexity, more services.
+
+00:12.250 --> 00:14.350
+Everything is just bigger in nature.
+
+00:14.890 --> 00:19.840
+I first want to give you a quick overview of some other applications that already exist out there.
+
+00:19.840 --> 00:22.270
+So you may or may not have heard of this app.
+
+00:22.270 --> 00:27.880
+It is popular in the US to some degree, I suppose it's called StubHub and it's all about users selling
+
+00:27.880 --> 00:32.170
+tickets to sporting events, concerts, stuff like that to other users.
+
+00:32.290 --> 00:34.900
+So we're going to build something similar in nature to StubHub.
+
+00:35.110 --> 00:38.490
+I want to outline very quickly a couple of different properties around StubHub.
+
+00:38.500 --> 00:42.340
+So we come to this main page, we see a lot of different events and whatnot.
+
+00:42.760 --> 00:44.620
+We can click on some given event.
+
+00:45.910 --> 00:49.150
+We then get the option to select some time or date to go.
+
+00:49.630 --> 00:51.130
+So I'll select one of these.
+
+00:51.520 --> 00:53.770
+We then get prompted to select an actual ticket.
+
+00:53.770 --> 00:56.950
+And again, these are tickets that are for sale by other users.
+
+00:57.400 --> 01:04.030
+So I will select some ticket and then go to check out and then I get prompted to log in or enter payment
+
+01:04.030 --> 01:05.830
+information or whatever else.
+
+01:06.830 --> 01:10.430
+I want you to really think about what is going on behind the scenes as you are trying to purchase these
+
+01:10.430 --> 01:11.120
+tickets.
+
+01:11.390 --> 01:15.710
+Imagine that I am trying to purchase a ticket for a very, very popular event.
+
+01:16.070 --> 01:19.640
+I don't know what's popular these days, but maybe it's just some really popular event.
+
+01:19.850 --> 01:24.140
+So maybe the instant that tickets get listed for sale, people just dogpile on it.
+
+01:24.290 --> 01:28.820
+In other words, tons of people come to this website simultaneously and tried to buy the exact same
+
+01:28.820 --> 01:29.420
+ticket.
+
+01:29.900 --> 01:35.480
+You probably want to make sure that nobody clicks on, go to checkout and enters their payment information
+
+01:35.480 --> 01:38.810
+for a ticket that has already been sold to some other user.
+
+01:39.230 --> 01:43.220
+So you probably want to have some ability to say, Hey, sorry, but someone else is in the process
+
+01:43.220 --> 01:45.410
+of purchasing these tickets or something similar.
+
+01:46.010 --> 01:50.090
+So with all this in mind, let's take a look at a brief summary of some of the business rules around
+
+01:50.090 --> 01:51.650
+the app that we are going to put together.
+
+01:53.220 --> 01:53.730
+Okay.
+
+01:53.760 --> 01:55.780
+So we're going to build a ticketing app.
+
+01:55.800 --> 02:00.960
+It is definitely let me say right up front, it is not going to be as fully featured as StubHub, so
+
+02:00.960 --> 02:04.650
+it's not going to have the ideas of, say, different dates.
+
+02:04.650 --> 02:09.090
+If I can go back to that StubHub we saw just a moment ago, we had different dates and whatnot.
+
+02:09.090 --> 02:11.460
+It also had these different defined events.
+
+02:11.460 --> 02:14.220
+We're not going to have that level of complexity.
+
+02:14.220 --> 02:17.610
+Instead, we're really just going to focus on the ticketing aspect of this.
+
+02:18.120 --> 02:23.370
+So in our application, users can list tickets for an event for sale.
+
+02:23.370 --> 02:29.310
+So these might be tickets to a concert, sports sporting event, whatever else other users can then
+
+02:29.310 --> 02:31.260
+purchase that ticket after it's been listed.
+
+02:32.040 --> 02:36.660
+Any user who signs up to an application can list tickets and purchase tickets.
+
+02:36.660 --> 02:38.410
+So no user is more special than another.
+
+02:38.430 --> 02:41.070
+Anyone can sell a ticket, anyone can purchase that ticket.
+
+02:41.070 --> 02:44.910
+And in our application, we're even going to say you could purchase your own tickets if you wanted to
+
+02:44.910 --> 02:46.260
+for some crazy reason.
+
+02:47.530 --> 02:48.880
+Now here's the really important part.
+
+02:49.090 --> 02:51.640
+Whenever a user attempts to purchase a ticket.
+
+02:51.640 --> 02:56.680
+So in other words, when a user clicks on some purchase button, the ticket is then going to be locked
+
+02:56.680 --> 02:58.120
+for 15 minutes.
+
+02:58.270 --> 03:02.180
+So the user will then have 15 minutes to enter their payment information.
+
+03:02.200 --> 03:07.390
+So when I say when a user attempts to purchase a ticket, I mean like you saw me do just a moment ago.
+
+03:07.960 --> 03:09.100
+I clicked on.
+
+03:09.890 --> 03:11.090
+Go to checkout.
+
+03:11.090 --> 03:16.220
+So we're going to take clicking on something like go to checkout as a user intending to buy this ticket.
+
+03:16.220 --> 03:21.230
+And at that point in time we are going to lock the ticket and no other user should be able to purchase
+
+03:21.230 --> 03:23.630
+this ticket from out from underneath this person.
+
+03:24.200 --> 03:28.160
+So when I click on Go to Checkout, I have not actually entered any payment information or anything
+
+03:28.160 --> 03:28.850
+like that.
+
+03:29.120 --> 03:33.500
+So a user still has to pay or enter their payment information within 15 minutes.
+
+03:33.500 --> 03:36.470
+It is just expressing the intent to purchase the ticket.
+
+03:36.470 --> 03:38.270
+That's going to lock it for 15 minutes.
+
+03:38.270 --> 03:43.130
+Now, if you don't like the idea of 15 minutes here, if you think that's too long, it doesn't matter.
+
+03:43.250 --> 03:45.350
+I mean, we can make this 30 seconds very easily.
+
+03:45.350 --> 03:50.150
+When I was first building this application, I made the timer 30 seconds just to make it easier to test.
+
+03:50.150 --> 03:52.340
+So 15 minutes not at all relevant.
+
+03:53.520 --> 03:56.880
+While that ticket is locked, no other user can purchase the ticket.
+
+03:56.880 --> 04:00.120
+As a matter of fact, it's just not even going to be displayed to other users.
+
+04:00.120 --> 04:05.130
+So the instant someone locks the ticket, other users who are searching for tickets, they just won't
+
+04:05.130 --> 04:06.900
+even see this one that has been locked.
+
+04:07.380 --> 04:11.430
+Naturally, after those 15 minutes, the ticket should automatically be unlocked.
+
+04:11.550 --> 04:13.590
+So 15 minutes, buy it or not.
+
+04:13.590 --> 04:14.100
+That's it.
+
+04:14.100 --> 04:14.910
+That's all you get.
+
+04:16.120 --> 04:21.820
+And then, of course, we want to probably allow users to edit tickets because who knows, maybe ticket
+
+04:21.820 --> 04:25.450
+prices are dropping really quickly and they want to update the price or something like that.
+
+04:25.450 --> 04:31.330
+So we should be able to edit a ticket price if the ticket is not already locked.
+
+04:31.630 --> 04:37.960
+And this little item right here, this nice little thing, this is going to be a source of some really
+
+04:37.960 --> 04:39.360
+interesting challenges.
+
+04:39.370 --> 04:43.720
+I mean, a lot of the stuff is but this one in particular, because it's going to very clearly demonstrate
+
+04:43.720 --> 04:49.480
+some big challenges around asynchronous communication in microservices, I can very easily tell you
+
+04:49.480 --> 04:49.820
+why.
+
+04:49.840 --> 04:51.250
+Imagine the scenario.
+
+04:52.020 --> 04:58.350
+In which some user out there lists a ticket for $100 and then some amount of time later, another user
+
+04:58.350 --> 04:59.940
+clicks on purchase ticket.
+
+05:00.210 --> 05:04.630
+So in one instant in time, a user attempts to purchase the ticket and the thing should be locked.
+
+05:04.650 --> 05:10.770
+And let's imagine that at the same exact point in time, the user who owns the ticket and who listed
+
+05:10.770 --> 05:14.450
+it changes the price to $1,000 or something like that.
+
+05:14.460 --> 05:17.010
+So at the same time, one person tries to lock it.
+
+05:17.100 --> 05:19.500
+At the same time, someone else tries to change the price.
+
+05:19.890 --> 05:23.640
+We're going to run into a ton of scenarios like that, or we have to figure out how to handle these
+
+05:23.640 --> 05:28.070
+events in some very precise, well codified, testable fashion.
+
+05:28.080 --> 05:32.220
+And that's going to be where a lot of not just this scenario right here, not just this editing while
+
+05:32.220 --> 05:35.880
+locked, there's going to be a lot of things like that inside this application that we have to deal
+
+05:35.880 --> 05:36.330
+with.
+
+05:37.300 --> 05:37.540
+All right.
+
+05:37.540 --> 05:39.960
+So that's an overview of the business logic inside of our app.
+
+05:39.970 --> 05:40.240
+Never.
+
+05:40.240 --> 05:42.340
+Really quickly, I just want to run through a couple of mock ups.
+
+05:42.340 --> 05:44.500
+These mock ups are not at all exhaustive.
+
+05:44.500 --> 05:49.960
+So these mock ups, for example, are not showing the actual ticket creation process or editing a ticket,
+
+05:49.960 --> 05:50.830
+stuff like that.
+
+05:50.830 --> 05:54.700
+Nonetheless, I just want to show you a couple of mock ups just so we have some picture in mind of what
+
+05:54.700 --> 05:58.480
+we're going to be building because we're not going to work on the UI for this for a good amount of time.
+
+05:58.480 --> 06:01.810
+We're going to first focus on a lot of back end setup, and I just want you to have some picture in
+
+06:01.810 --> 06:03.820
+your mind of what we're going to eventually head towards.
+
+06:05.070 --> 06:08.460
+So when a user first comes to our application, we're going to show him a list of all the different
+
+06:08.460 --> 06:10.530
+tickets that are for sale on the top.
+
+06:10.530 --> 06:10.770
+Right.
+
+06:10.770 --> 06:11.450
+We'll have a header.
+
+06:11.490 --> 06:14.400
+It will allow the user to either sign up or sign in for application.
+
+06:14.550 --> 06:17.070
+This is going to be real production grade authentication.
+
+06:17.070 --> 06:20.610
+So like I said, we're not really going to take a lot of shortcuts this time around, except for a couple
+
+06:20.610 --> 06:22.320
+of locations I'm going to be very clear about.
+
+06:22.470 --> 06:24.930
+So this will be very production grade authentication.
+
+06:25.020 --> 06:27.510
+A user can sign up with an email and password.
+
+06:28.370 --> 06:32.430
+Once they've signed up, they can also sign in once they are authenticated.
+
+06:32.450 --> 06:37.010
+The main landing page is still going to show tickets for sale, but then we'll also update the header
+
+06:37.010 --> 06:37.520
+as well.
+
+06:37.550 --> 06:39.350
+A user can then sign out.
+
+06:39.590 --> 06:44.690
+They can attempt to sell some tickets or they can attempt to take a look at all the orders that they
+
+06:44.690 --> 06:45.560
+have in progress.
+
+06:45.560 --> 06:49.640
+So in order is when a user has locked a ticket they have created in order.
+
+06:50.000 --> 06:53.120
+Also, when a user has successfully purchased a ticket, that is in order as well.
+
+06:53.120 --> 06:57.050
+So my orders is essentially going to list all the tickets that a user is trying to purchase.
+
+06:58.560 --> 07:03.030
+If a user clicks on one of these tickets right here, we're then going to show some them some information
+
+07:03.030 --> 07:03.960
+about that ticket.
+
+07:03.960 --> 07:07.440
+So it's price and whether or not it is currently available for purchase.
+
+07:08.040 --> 07:12.840
+A user can then click on purchase right there, which is equivalent to over on StubHub that go to checkout
+
+07:12.840 --> 07:13.410
+button.
+
+07:13.440 --> 07:17.970
+So as soon as the user clicks on that purchase right there, that is going to start up that 15 minute
+
+07:18.000 --> 07:20.400
+timer that's going to lock the ticket.
+
+07:21.260 --> 07:25.060
+And so the user will go to a screen like this right here, something that says, all right, you got
+
+07:25.060 --> 07:26.250
+30 seconds left to order.
+
+07:26.260 --> 07:28.930
+We're going to have a little timer right there that automatically counts down.
+
+07:29.500 --> 07:32.770
+We'll have a little button right there that user can click on to pay for the ticket.
+
+07:32.770 --> 07:36.820
+When they click on that, we'll pop up a little modal like this that allows them to enter in their credit
+
+07:36.820 --> 07:38.170
+card and expiration.
+
+07:38.650 --> 07:44.620
+We are going to handle a real credit cards here so we can use Stripe, JRS or Stripe as payment processing.
+
+07:44.620 --> 07:50.110
+So we will be able to enter in, in theory, real credit card numbers with real money, all that kind
+
+07:50.110 --> 07:51.670
+of good stuff to purchase these tickets.
+
+07:51.670 --> 07:53.590
+Again, not really cutting a lot of corners here.
+
+07:54.430 --> 07:58.740
+Final thing I want to mention beyond the fact that, remember, this is not the full set of mock ups.
+
+07:58.750 --> 08:02.770
+I didn't I meant to mention this in the last video when we were talking about some of these big changes
+
+08:02.770 --> 08:03.700
+to our application.
+
+08:03.790 --> 08:07.810
+We are going to have real databases this time around as opposed to our first application.
+
+08:07.810 --> 08:13.270
+We're also going to make use of a way more production grade event bus than the homemade one we had previously.
+
+08:13.630 --> 08:17.620
+So as you can see, there's a lot of interesting stuff here, a lot of UI to build.
+
+08:17.620 --> 08:23.530
+Even though this flow right here looks very simplistic in nature, there's a lot of super subtle, very
+
+08:23.530 --> 08:27.820
+nasty little bugs and opportunities to go crazy in this application.
+
+08:27.820 --> 08:29.620
+So it's a tremendous amount of work.
+
+08:29.620 --> 08:34.300
+I cannot tell you how much more work this is going to be than the first application, but we're going
+
+08:34.300 --> 08:39.100
+to learn so much along the way, and I don't know if you can tell from my voice, but I am super excited
+
+08:39.100 --> 08:39.820
+about this.
+
+08:40.090 --> 08:41.320
+So let's take a pause right here.
+
+08:41.320 --> 08:42.610
+We're going to come back the next video.
+
+08:43.240 --> 08:47.020
+And I want to outline some general architecture, some of the different technologies we're going to
+
+08:47.140 --> 08:50.920
+be using, because there really is, like I said, a lot of stuff going on here.
+
+08:50.920 --> 08:52.990
+So quick pause and I'll see you in just a minute.

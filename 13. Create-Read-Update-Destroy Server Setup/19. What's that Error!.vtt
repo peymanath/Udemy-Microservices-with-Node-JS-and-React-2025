@@ -1,0 +1,478 @@
+WEBVTT
+
+00:00.760 --> 00:05.560
+In the last video, our test that is looking for a 404 status error instead got a 400.
+
+00:05.590 --> 00:07.520
+This is kind of unexpected.
+
+00:07.540 --> 00:12.970
+If we go back into our actual request handler of show right now, there's absolutely nothing inside
+
+00:12.970 --> 00:16.810
+of here that seems to imply that we should be getting a 400 status code.
+
+00:16.930 --> 00:20.080
+So what could possibly be going on here?
+
+00:20.530 --> 00:23.200
+Well, maybe we need to do a little bit of debugging.
+
+00:23.320 --> 00:28.480
+Remember, all of our error handling stuff is being handled through that common module instead of common
+
+00:28.480 --> 00:28.820
+module.
+
+00:28.840 --> 00:29.550
+Let's open that up.
+
+00:29.560 --> 00:31.240
+Let's find that CRC directory.
+
+00:31.240 --> 00:33.480
+And inside there, let's find middleware as.
+
+00:34.470 --> 00:36.720
+Inside a middle wears is the air handler.
+
+00:37.080 --> 00:41.640
+So this right here is what is ultimately handling any error that occurs inside of one of our middle
+
+00:41.640 --> 00:42.210
+wears.
+
+00:42.960 --> 00:45.750
+So we've got some provision right here for handling customers.
+
+00:46.050 --> 00:49.860
+We've also got this case right here in which we will handle any error.
+
+00:49.860 --> 00:52.470
+That is not one of the custom errors we put together.
+
+00:53.100 --> 00:57.690
+If something generally goes wrong with our application that is not caught by one of these customers,
+
+00:57.690 --> 01:00.610
+then we're going to send back something with the status of 400.
+
+01:00.630 --> 01:04.350
+And we're going to give a message of simply something went wrong.
+
+01:04.920 --> 01:08.070
+Well, the fact that we get back a status of 400 seems kind of promising there.
+
+01:08.220 --> 01:09.960
+Let's try to go back over to our test.
+
+01:09.960 --> 01:15.450
+Let's console.log the response and see if we get back something that says something went wrong.
+
+01:15.630 --> 01:20.970
+If we do, that means that somewhere inside of a request handler for show, the one we were just working
+
+01:20.970 --> 01:24.030
+on, something inside of there is throwing a error.
+
+01:24.030 --> 01:25.800
+That is not a custom error.
+
+01:25.800 --> 01:28.530
+So it's an error that you and I didn't really predict would happen.
+
+01:29.160 --> 01:29.460
+All right.
+
+01:29.460 --> 01:31.920
+So I'm going to go back over to my show test file.
+
+01:33.820 --> 01:36.790
+I will find the 404 status code test.
+
+01:37.210 --> 01:38.650
+I'm going to grab the response.
+
+01:38.650 --> 01:40.120
+We get back from the request.
+
+01:41.100 --> 01:44.010
+And then I will do a console.log of response body.
+
+01:44.010 --> 01:46.440
+So let's take a look at what actually gets sent back to us.
+
+01:47.140 --> 01:48.160
+I'm going to save that.
+
+01:48.820 --> 01:49.780
+Go back over.
+
+01:51.080 --> 01:52.730
+And there we go.
+
+01:52.820 --> 01:53.240
+Okay.
+
+01:53.240 --> 01:55.160
+Well, still nothing good here.
+
+01:55.190 --> 01:56.790
+Why are we not seeing the console.log?
+
+01:56.810 --> 01:57.140
+All right.
+
+01:57.140 --> 01:58.430
+A little bit of a gotcha here.
+
+01:58.610 --> 02:03.140
+Remember, whenever we make the request at the very end, we are expecting to see a404.
+
+02:03.170 --> 02:08.240
+That is an actual expectation in the way that expectations work is by throwing an error if that expectation
+
+02:08.240 --> 02:09.290
+is not satisfied.
+
+02:09.470 --> 02:13.940
+So in other words, this whole statement right here ends up with an error which causes us to exit the
+
+02:13.940 --> 02:15.320
+overall error function.
+
+02:15.620 --> 02:19.340
+So to actually get to that console.log, we have to remove the expectation.
+
+02:20.140 --> 02:24.220
+Since we just removed the only thing that is trying to assert something about the response.
+
+02:24.220 --> 02:29.410
+Well, now the test is probably going to pass, even though our code might not be actually getting a
+
+02:29.410 --> 02:31.570
+status of 404 back.
+
+02:31.960 --> 02:35.110
+So the test will pass now, but we will at least see the console.log.
+
+02:35.410 --> 02:38.770
+I'm going to save the file, flip back over and now we see the console.
+
+02:39.370 --> 02:42.760
+So it looks like we get back errors with a message of something went wrong.
+
+02:43.300 --> 02:44.290
+So what does that mean?
+
+02:45.190 --> 02:49.840
+Well, back inside of our air handler it means that something is throwing an air inside of our app but
+
+02:49.840 --> 02:52.480
+is not being caught by this custom air.
+
+02:52.510 --> 02:58.060
+Instead, it is going on to this handler, in this case right here where we send back that just very
+
+02:58.060 --> 02:59.320
+general air message.
+
+03:00.070 --> 03:05.590
+So at this point, the best way to debug this would probably be to somehow add in a console log right
+
+03:05.590 --> 03:06.130
+here.
+
+03:07.110 --> 03:08.730
+And take a look at that air.
+
+03:08.940 --> 03:11.370
+But we can't do that very easily.
+
+03:11.460 --> 03:12.180
+Why is that?
+
+03:12.210 --> 03:14.340
+Remember, we're inside the air handler file.
+
+03:14.460 --> 03:18.270
+The air handler is defined inside of our common module.
+
+03:18.570 --> 03:23.160
+If we add in a console.log right here or change anything inside of our common module, we're going to
+
+03:23.160 --> 03:24.740
+have to rebuild this thing.
+
+03:24.750 --> 03:30.330
+We're going to have to set a new version on it and redeploy it to NPM and then inside of our ticket
+
+03:30.330 --> 03:35.100
+service, install that updated version of this common module.
+
+03:35.700 --> 03:39.350
+So that's kind of a long process to go through to just do a very quick console log.
+
+03:39.360 --> 03:41.280
+So instead, let me show you a little trick.
+
+03:41.550 --> 03:43.140
+I'm going to remove the console log right there.
+
+03:45.290 --> 03:48.740
+And then going to go back over to my tickets directory.
+
+03:50.080 --> 03:55.080
+So remember, anytime we install an NPM module, it gets added into the node modules folder.
+
+03:55.170 --> 03:59.070
+So if we open up node modules, we will see all our different installed modules.
+
+03:59.720 --> 04:06.050
+So what we can do and I really do not recommend you do this generally this is kind of like a I have
+
+04:06.050 --> 04:07.340
+no idea what is going on.
+
+04:07.340 --> 04:12.520
+I have to do some debugging without trying to change some dependency like common and have to redeploy
+
+04:12.520 --> 04:13.130
+it and stuff like that.
+
+04:13.130 --> 04:18.500
+So again, just to be really clear, this is something I really do not recommend you do normally, but
+
+04:18.500 --> 04:25.460
+because we just want to add in one very small temporary console.log, we could go into our common module.
+
+04:25.670 --> 04:26.420
+Here it is right here.
+
+04:26.420 --> 04:28.400
+So mine is under SG tickets again.
+
+04:28.400 --> 04:29.840
+That's my organization name.
+
+04:30.470 --> 04:35.210
+We can take a look at the build directory inside there and find our.
+
+04:36.100 --> 04:36.640
+Where is it?
+
+04:36.640 --> 04:38.530
+Air handler JS File.
+
+04:38.920 --> 04:44.500
+So this JS file right here, this is what is actually truly getting executed when we run our tests.
+
+04:44.800 --> 04:51.370
+So we could potentially make a temporary, very small change to this file just to try to get a console.log
+
+04:51.370 --> 04:53.320
+in our test environment for right now.
+
+04:53.560 --> 04:58.480
+Again, I really don't recommend you do this normally because if you start to change stuff in your dependencies
+
+04:58.480 --> 05:03.160
+directory, well, obviously these dependencies are going to get blown away all the time as you start
+
+05:03.160 --> 05:05.560
+to say rebuild your image or do anything else.
+
+05:05.560 --> 05:09.880
+But just to save ourselves the hassle of rebuilding the common module and all that stuff, we could
+
+05:09.880 --> 05:12.460
+very temporarily make a very, very small change.
+
+05:13.270 --> 05:15.700
+So inside of here we've got the air handler JS file.
+
+05:15.700 --> 05:18.490
+So this is the built version of our typescript code.
+
+05:18.970 --> 05:24.160
+So inside of here I could add in a console log and take a look at air.
+
+05:26.230 --> 05:31.390
+Now I'm going to never close this file until I'm really sure that I have reverted that change after
+
+05:31.390 --> 05:32.410
+I've completed my debugging.
+
+05:32.410 --> 05:36.520
+Because again, we do not want to be making hard changes to our dependencies.
+
+05:37.120 --> 05:38.400
+So I'm going to save this.
+
+05:38.410 --> 05:41.690
+I'm going to go backward my terminal, and let's take a look at what gets console.log now.
+
+05:41.730 --> 05:43.810
+So now we can see the actual error that occurred.
+
+05:44.540 --> 05:49.400
+So it looks like the actual error that occurred was we were trying to cast something to an object ID
+
+05:49.400 --> 05:52.760
+for value, whatever that is or the ID.
+
+05:53.360 --> 05:58.760
+Well, what's really going on here, essentially, remember back inside of our actual test.
+
+06:00.660 --> 06:04.230
+We were trying to make a request with this ID right here.
+
+06:04.230 --> 06:08.700
+We were trying to fetch a ticket with that ID and then inside of our rent handler, we were taking that
+
+06:08.700 --> 06:11.640
+ID and trying to execute a query with it.
+
+06:12.770 --> 06:18.590
+So the era that we are seeing is saying, hey, that's not a valid ID, that is in no way some kind
+
+06:18.590 --> 06:21.800
+of valid ID that MongoDB is going to understand.
+
+06:21.980 --> 06:26.390
+And so we can even see in greater detail right now, argument passed in must be a single string of 12
+
+06:26.390 --> 06:29.660
+bytes or a string of 24 hex characters.
+
+06:30.140 --> 06:32.480
+So that's how we could figure out what is going on here.
+
+06:33.670 --> 06:33.910
+All right.
+
+06:33.910 --> 06:38.470
+Now that we have figured out what is going on, we are trying to run our test with some invalid ID.
+
+06:38.500 --> 06:40.390
+I'm going to go back over to the error handler.
+
+06:40.390 --> 06:43.720
+I'm going to remove that console.log and save the file again.
+
+06:45.530 --> 06:48.040
+So again, changes like that to the node modules directory.
+
+06:48.050 --> 06:48.830
+Very risky.
+
+06:48.830 --> 06:50.420
+I do not normally recommend you do that.
+
+06:50.420 --> 06:54.740
+I just want to show you that that is one possible way to solve the issue or to do a little bit of debugging
+
+06:54.740 --> 06:55.490
+very quickly.
+
+06:56.290 --> 06:58.930
+So now we have kind of a big question to answer here.
+
+06:59.080 --> 07:04.450
+The air that we are seeing or the reason that we are getting a 400 is because of essentially that line
+
+07:04.450 --> 07:04.810
+right there.
+
+07:04.810 --> 07:06.010
+We're trying to take that ID.
+
+07:06.040 --> 07:07.810
+That is definitely not a valid ID.
+
+07:08.140 --> 07:11.860
+So the real question here, you know, there's kind of there's really two questions.
+
+07:11.860 --> 07:13.810
+The first question is, how do we fix the test?
+
+07:13.840 --> 07:16.840
+Well, the obvious thing is we need to put in a valid ID here.
+
+07:16.840 --> 07:18.030
+That's how we fix the test.
+
+07:18.040 --> 07:18.780
+Easy enough.
+
+07:18.790 --> 07:25.120
+But the real question is we just got an error inside of our test suite and we had to do some kind of
+
+07:25.120 --> 07:27.970
+nasty debugging to figure out what was going on.
+
+07:28.150 --> 07:34.660
+So the real question here, the underlying question is, do we want to add in an additional custom error
+
+07:34.660 --> 07:38.410
+or something like that to try to handle stuff like this going wrong?
+
+07:38.830 --> 07:44.830
+Do we want to try to put in a try catch statement around it or something like that?
+
+07:48.270 --> 07:51.000
+Or is there some other means of capturing this air?
+
+07:51.420 --> 07:54.840
+Maybe we want to go back over to the common module and just make sure that if we get some air that we
+
+07:54.840 --> 07:59.430
+don't recognize, we do some logging information about it so that we can further check our logs in the
+
+07:59.430 --> 08:03.540
+future and understand, hey, some unknown air just occurred inside of our app.
+
+08:03.960 --> 08:08.850
+Well, I'm going to argue and say that the best way to improve our code right now is going to be to
+
+08:08.880 --> 08:13.860
+make an update to our air handler middleware back inside of Common.
+
+08:14.570 --> 08:18.470
+We have added in some number of custom errors inside of our application.
+
+08:18.500 --> 08:23.000
+And right now our kind of belief is that anything that goes wrong is going to be handled by one of these
+
+08:23.000 --> 08:24.140
+custom errors.
+
+08:24.620 --> 08:29.030
+Any time that we get down to this point right here, that really, truly means that something went wrong
+
+08:29.030 --> 08:32.330
+inside of our application that we were not really predicting.
+
+08:32.720 --> 08:36.800
+And so, to be honest with you, I personally as a developer, I would want to know what is going wrong
+
+08:36.800 --> 08:39.410
+inside of my app that I wasn't expecting to happen.
+
+08:39.830 --> 08:43.100
+So I think that maybe the best way to deal with this would be to add in.
+
+08:43.890 --> 08:49.560
+A console ere back inside of our middleware inside of common and log out that air or something like
+
+08:49.560 --> 08:50.100
+that.
+
+08:51.300 --> 08:52.350
+Before making that change.
+
+08:52.350 --> 08:56.730
+However, this is a long video, so let's take a quick pause right here and make that change in just
+
+08:56.730 --> 08:57.330
+a moment.

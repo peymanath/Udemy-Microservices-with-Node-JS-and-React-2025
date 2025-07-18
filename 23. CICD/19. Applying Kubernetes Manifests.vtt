@@ -1,0 +1,160 @@
+WEBVTT
+
+00:00.870 --> 00:02.570
+Time to create our second workflow.
+
+00:02.570 --> 00:06.940
+So this one is going to be all about taking all those different config files inside of our infra AIDS
+
+00:06.950 --> 00:09.110
+directory and applying them to our cluster.
+
+00:09.710 --> 00:12.590
+This config file is going to look really similar to the one we just put together.
+
+00:12.590 --> 00:15.630
+In fact, it's even going to be a little bit more straightforward.
+
+00:15.650 --> 00:17.000
+So let's get right to it.
+
+00:17.680 --> 00:22.360
+I'm going to first go and take a look at the deploy of the file that we just put together a moment ago.
+
+00:22.750 --> 00:26.860
+I'm going to copy all the stuff we had put inside there just to save myself a little bit of time.
+
+00:27.160 --> 00:29.290
+Like I said, it is going to be very similar to this.
+
+00:30.840 --> 00:34.110
+I'll then go back to my workflows directory inside of here.
+
+00:34.110 --> 00:39.960
+I'm going to create a new file and I'm going to call it Deploy Dash Manifest.
+
+00:43.230 --> 00:46.410
+All those config files are technically called manifest, by the way.
+
+00:46.410 --> 00:48.330
+So that's why we're calling it deploy manifest.
+
+00:49.160 --> 00:51.890
+I'm then going to paste in everything that we just copied.
+
+00:52.750 --> 00:55.420
+And we're going to make a couple of small changes inside of here.
+
+00:55.690 --> 00:59.260
+So first off, I'm going to change the name to deploy manifests.
+
+01:01.120 --> 01:05.650
+I'm going to change parts to infra flash star star.
+
+01:08.150 --> 01:14.570
+And then going to remove everything around building the image, logging into Docker, pushing off to
+
+01:14.570 --> 01:15.230
+Docker.
+
+01:15.350 --> 01:17.900
+So those three steps right there, I'm going to delete them.
+
+01:18.840 --> 01:25.830
+So I should now only have a uses for ductal the ductal step right here where we get that context and
+
+01:25.830 --> 01:28.710
+then finally where we are doing the rollout on the deployment.
+
+01:28.710 --> 01:32.580
+So in this case, we do not want to do any rollouts of deployment or anything like that.
+
+01:32.580 --> 01:37.530
+Instead, we want to apply all those config files we had placed into that K AIDS directory.
+
+01:39.230 --> 01:45.950
+So I can put inside of your cube kettle apply f infra slash k eight like so.
+
+01:47.140 --> 01:49.280
+And believe it or not, that should pretty much be it.
+
+01:49.300 --> 01:52.090
+So we're going to apply all those config files to our cluster.
+
+01:55.360 --> 01:57.190
+I'll then go down, commit the file.
+
+01:57.890 --> 01:59.060
+And that should be it.
+
+02:00.670 --> 02:01.540
+Now, as usual.
+
+02:01.540 --> 02:02.840
+No, that's not really it.
+
+02:02.860 --> 02:05.860
+It turns out there's one other thing that we need to be aware of.
+
+02:06.310 --> 02:07.960
+I want to give you a very quick reminder.
+
+02:07.960 --> 02:11.440
+Back inside of our editor, I'm going to find my infra aids directory.
+
+02:12.010 --> 02:14.020
+Inside there is the ingress service file.
+
+02:14.380 --> 02:16.690
+So we have put together this ingress configuration file.
+
+02:16.690 --> 02:23.350
+And we said that whenever a user goes to a host of ticketing dev, we want to apply this set of redirect
+
+02:23.350 --> 02:26.290
+rules and whatnot or routing rules to their request.
+
+02:26.650 --> 02:29.680
+The key thing here is that we have a host of ticketing dev.
+
+02:29.920 --> 02:34.270
+Now we are about to deploy our application to the open Internet, and when we do so, we're going to
+
+02:34.270 --> 02:37.690
+eventually purchase a domain name and point it at our application.
+
+02:38.170 --> 02:42.730
+When we do so, that domain name is probably going to be something different than ticketing dev.
+
+02:42.760 --> 02:46.540
+As a matter of fact, I can guarantee you it's going to be different because I'm going to end up with
+
+02:46.540 --> 02:48.370
+a different domain name than you are.
+
+02:48.820 --> 02:54.760
+So this little property right here, this very singular property, really needs to be different depending
+
+02:54.760 --> 03:01.180
+upon whether we are running our ingress service in our development cluster or on our production cluster.
+
+03:01.840 --> 03:06.070
+Right now, if we just take all these config files and apply them to our cluster, we will create a
+
+03:06.070 --> 03:07.710
+copy of Ingress Engine X.
+
+03:07.720 --> 03:12.610
+But unfortunately, it's always going to be looking for a user to come to ticketing dev.
+
+03:12.910 --> 03:18.010
+And if I go to ticketing dot dev on my local machine, it's always going to point to my local cluster,
+
+03:18.070 --> 03:20.770
+never, ever to the deployed cluster.
+
+03:21.450 --> 03:23.850
+So there are a couple of different ways we can solve this problem.
+
+03:23.880 --> 03:27.480
+We're going to take a quick pause right here and then figure out how to solve it in just a moment.

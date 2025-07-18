@@ -1,0 +1,217 @@
+WEBVTT
+
+00:00.560 --> 00:04.400
+In the last couple of videos, we've spoken a little bit about air handling, and now we're at the point
+
+00:04.400 --> 00:09.620
+where I think that we've got two distinct driving forces in doing all this air handling stuff.
+
+00:09.860 --> 00:14.300
+So issue number one, with air handling, we need to make sure that we always have a very consistently
+
+00:14.300 --> 00:17.630
+structured response from all of our different services we put together.
+
+00:17.930 --> 00:22.940
+And no matter what goes wrong in any of those services, whether it is some invalid data into a request
+
+00:22.940 --> 00:28.610
+handler or an error in database access or some other error, we need to make sure that we somehow capture
+
+00:28.610 --> 00:34.580
+all those different things successfully and structure the air response in some very consistent fashion.
+
+00:35.060 --> 00:36.800
+That is driving force, number one.
+
+00:36.800 --> 00:41.240
+And number two, let's talk about how we are going to solve each of these issues.
+
+00:42.290 --> 00:42.650
+All right.
+
+00:42.650 --> 00:44.210
+So a little solution here.
+
+00:44.750 --> 00:50.810
+So to make sure that we always capture all errors and process them and structure them in some identical,
+
+00:50.870 --> 00:54.470
+consistent fashion, we're going to write an error handling middleware.
+
+00:55.880 --> 00:57.680
+We're then going to wire that up to express.
+
+00:57.680 --> 01:01.580
+And any time that something goes wrong inside of our application, Express is going to capture some
+
+01:01.580 --> 01:04.220
+kind of air and send it to our air handling middleware.
+
+01:04.430 --> 01:07.730
+So we're going to do some processing inside of this area, handling middleware.
+
+01:09.220 --> 01:13.750
+The other big thing, we need to make sure that no matter what goes wrong, no matter where some error
+
+01:13.750 --> 01:19.570
+occurs, we'd need to somehow capture it and send it off to express so that it can be forwarded on to
+
+01:19.570 --> 01:20.770
+our error handling middleware.
+
+01:21.470 --> 01:25.610
+So we are going to make sure that we capture all possible errors inside of all of our different request
+
+01:25.610 --> 01:26.300
+handlers.
+
+01:26.300 --> 01:30.230
+And any time something goes wrong, we're going to pass the error off to express.
+
+01:30.500 --> 01:35.030
+And effectively, that really just means using the next function inside of our request handlers.
+
+01:35.390 --> 01:37.070
+That might not make a lot of sense right now.
+
+01:37.070 --> 01:40.940
+So let me give you a quick reminder on how express does error handling in general.
+
+01:41.750 --> 01:45.020
+I'm taking a look at the express air handling documentation right here.
+
+01:45.470 --> 01:47.540
+So there are several sections inside of here.
+
+01:47.870 --> 01:51.650
+Overall, it's a two step process for dealing with errors inside of Express.
+
+01:52.340 --> 01:57.080
+First off, if anything ever goes wrong inside of a synchronous root handler, and that's what you see
+
+01:57.080 --> 02:01.160
+right here, it is a synchronous root handler because there is no async code inside of it.
+
+02:01.190 --> 02:04.130
+No callbacks, no promises, no async await.
+
+02:04.820 --> 02:09.680
+If anything ever throws an error, the next press is going to automatically capture that error and forward
+
+02:09.680 --> 02:13.070
+it on to any air handling middleware that you and I have authored.
+
+02:14.410 --> 02:18.430
+We can then do some processing on the air and automatically send a response back.
+
+02:19.250 --> 02:23.810
+The second case in which we'll get an error is when we do have an async request handler.
+
+02:24.050 --> 02:29.480
+So this is an example of an async request handler because it has an async callback inside of here.
+
+02:29.930 --> 02:34.460
+This code is going to try to read a file off the hard drive, and then at some point in time the future
+
+02:34.460 --> 02:36.290
+that callback function gets invoked.
+
+02:36.770 --> 02:41.990
+This is also appropriate or relevant if we are making use of promises or the async await syntax.
+
+02:42.780 --> 02:48.390
+So if we have an async route handler and something goes wrong, you and I need to manually capture that
+
+02:48.390 --> 02:54.720
+error either by receiving it as an argument into a callback function or setting up a tri catch block.
+
+02:55.170 --> 03:00.360
+We're then going to take that error and pass it off to the next function that is provided automatically
+
+03:00.360 --> 03:01.650
+into our root handler.
+
+03:02.400 --> 03:06.960
+So again, we've got scenario number one, but they synchronous root handler express is going to take
+
+03:06.960 --> 03:08.550
+care of that automatically for us.
+
+03:08.550 --> 03:13.770
+And scenario number two, where we have an async root handler and that is going to be any root handler
+
+03:13.770 --> 03:18.780
+that makes use of a callback function promise or async await syntax.
+
+03:20.570 --> 03:25.460
+So that is how we're going to somehow capture an air and pass it off to the next function to actually
+
+03:25.460 --> 03:27.000
+build a air handling middleware.
+
+03:27.020 --> 03:28.910
+Let me give you a quick reminder on that as well.
+
+03:29.030 --> 03:31.760
+On the same documentation page, I'm going to scroll down a little bit.
+
+03:34.290 --> 03:37.590
+And there are some directions on here for writing an error handler.
+
+03:37.830 --> 03:42.900
+So we define a middleware function, and all we have to do is make sure that the middleware function
+
+03:42.900 --> 03:45.270
+is going to receive four different arguments.
+
+03:45.810 --> 03:51.630
+Whenever we pass a middleware into Express, it's going to automatically parse that function and count
+
+03:51.630 --> 03:52.770
+the number of arguments.
+
+03:52.770 --> 03:57.180
+So Express is essentially aware of the number of arguments that are going into a middleware.
+
+03:57.720 --> 04:02.250
+If we have a middleware function with four arguments, Express is going to assume that this is a function
+
+04:02.250 --> 04:06.210
+meant to handle errors that occur inside of one of our different root handlers.
+
+04:06.810 --> 04:10.350
+So you and I are going to write out a function that looks very similar to this right here.
+
+04:10.680 --> 04:14.580
+We're going to make sure that any time it gets called, we somehow inspect that error to figure out
+
+04:14.580 --> 04:17.760
+what goes wrong and then automatically send a response back.
+
+04:18.870 --> 04:23.320
+Now in all this stuff, you're going to start to see that there are a couple of interesting corner cases.
+
+04:23.340 --> 04:28.240
+So right now I'm presenting you a very simple and straightforward way of dealing with this stuff.
+
+04:28.260 --> 04:32.940
+But we are going to polish this stuff up beyond what you see in this documentation to a pretty good
+
+04:32.940 --> 04:33.540
+degree.
+
+04:33.570 --> 04:36.930
+And we're going to eventually have a pretty sweet little error handling process.
+
+04:37.530 --> 04:40.560
+And now that we understand the two general things that we're going to do here.
+
+04:40.710 --> 04:43.350
+Number one, we're going to make sure we capture all possible errors.
+
+04:43.380 --> 04:45.720
+Number two, we're also going to write an error handling middleware.
+
+04:45.750 --> 04:49.890
+Let's take a pause right here and start to implement both these things in the next video.

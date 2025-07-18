@@ -1,0 +1,376 @@
+WEBVTT
+
+00:00.960 --> 00:04.710
+As I mentioned in the last video, we're going to start to take a lot of the code inside of our Nats
+
+00:04.710 --> 00:07.800
+test project and merge it into the common module.
+
+00:08.190 --> 00:13.110
+We're then going to rebuild common, publish it and then update the tickets project and start to use
+
+00:13.200 --> 00:14.400
+that streaming server inside there.
+
+00:14.400 --> 00:15.450
+So let's get to it.
+
+00:15.960 --> 00:20.850
+Inside this Common Directory, I'll find CRC inside there I'll make a new folder called Events.
+
+00:22.040 --> 00:27.350
+Well, then find the events directory inside of Nat's test, and we're going to pull out the base listener.
+
+00:28.090 --> 00:29.220
+I'll do a multi select here.
+
+00:29.230 --> 00:31.120
+I'm also going to get the base publisher.
+
+00:31.600 --> 00:32.890
+I'm going to get subjects.
+
+00:33.770 --> 00:36.680
+I'm going to get the event definition and that's it.
+
+00:37.190 --> 00:41.810
+The listener and the publisher are things that are going to be ultimately defined and implemented inside
+
+00:41.810 --> 00:48.170
+of our individual services, because how a service listens to an incoming event like ticket created
+
+00:48.170 --> 00:50.970
+is going to be determined on a service by service basis.
+
+00:50.990 --> 00:54.620
+One service might want to take a ticket and do one thing with it.
+
+00:54.620 --> 00:57.860
+Another service might want to take a ticket and do another thing with it.
+
+00:58.190 --> 01:00.230
+So we're only taking the first four inside of here.
+
+01:00.560 --> 01:01.850
+So I'm going to copy all of this.
+
+01:02.990 --> 01:07.430
+I'll go up to the events directory we just created and paste those four files in.
+
+01:10.180 --> 01:15.840
+If we then go into that, say, base listener file, we're going to see right away that we get an error.
+
+01:15.850 --> 01:17.890
+So this is based listener inside of Common.
+
+01:18.250 --> 01:21.700
+We're getting an error because we have an import for node nat streaming.
+
+01:22.000 --> 01:22.930
+That's totally fine.
+
+01:22.930 --> 01:25.630
+We have not installed node net streaming into the common module.
+
+01:25.630 --> 01:27.040
+That's why we're seeing the error right now.
+
+01:29.070 --> 01:33.780
+I do want to immediately add in one or two more events that I know that we're going to need right away
+
+01:33.780 --> 01:38.520
+when we start to make use of this common module or the update to it back inside of our tickets service.
+
+01:38.880 --> 01:41.390
+So we've got an event here for ticket created.
+
+01:41.400 --> 01:45.450
+We're definitely going to need a event for a ticket update as well.
+
+01:45.450 --> 01:47.970
+So let's put together a event to describe that to.
+
+01:49.030 --> 01:51.850
+To do so we're going to first open up our subject's file.
+
+01:52.770 --> 01:56.550
+We're going to add in a new type to this thing of ticket updated.
+
+01:57.680 --> 02:01.550
+And I'll use a subject name of ticket colon updated.
+
+02:02.800 --> 02:07.390
+Now we are not actually using order updated, so I am going to delete that one just so we don't get
+
+02:07.390 --> 02:13.450
+confused on what we have and haven't implemented, it's now I only have to get created and to get updated.
+
+02:14.110 --> 02:15.850
+I'll then save this file and close it.
+
+02:17.410 --> 02:24.370
+Then also inside of events are going to make a new file called Ticket Updated Event Dates.
+
+02:26.470 --> 02:28.150
+Inside of ticket updated.
+
+02:28.180 --> 02:32.260
+We're going to write out some code that looks very similar to what we just did inside of ticket created.
+
+02:33.740 --> 02:36.950
+So inside of updated at the very top we will import.
+
+02:38.070 --> 02:40.410
+Subjects from subjects.
+
+02:41.900 --> 02:43.220
+Well, then export.
+
+02:44.600 --> 02:48.170
+An interface called Ticket Updated Event.
+
+02:49.510 --> 02:53.380
+We'll say that this thing is going to have a subject of subjects ticket updated.
+
+02:54.660 --> 02:56.460
+And we'll have some data as well.
+
+02:56.760 --> 03:00.840
+Now, we've been kind of just assuming that these tickets and the data around them was going to be just
+
+03:00.840 --> 03:02.300
+the ID title and price.
+
+03:02.310 --> 03:04.110
+I think that still stands for right now.
+
+03:04.110 --> 03:08.550
+Until we realize that we need some extra information, I think we'll just stick with saying we're going
+
+03:08.550 --> 03:11.730
+to emit information about the ID title and price of the ticket.
+
+03:12.000 --> 03:17.400
+So if we emit an update event, well, we probably want to include the updated information about this
+
+03:17.400 --> 03:17.760
+ticket.
+
+03:17.760 --> 03:24.630
+So once again, just ID of string, title of string and price of number.
+
+03:26.820 --> 03:31.800
+There is one other property that we might want to immediately add in, however, back inside of our
+
+03:31.800 --> 03:32.880
+tickets project.
+
+03:33.680 --> 03:37.610
+If we open up that model directory and take a look at our definition of what a ticket is, you might
+
+03:37.610 --> 03:40.970
+recall that a ticket also has a user ID property.
+
+03:41.390 --> 03:45.740
+We might want to add that in to these two event definitions right away, because there might eventually
+
+03:45.740 --> 03:49.040
+be some service that cares about who owns a ticket in particular.
+
+03:49.680 --> 03:54.720
+So let's add that into the event definition or ticket updated and ticket created in both them.
+
+03:54.720 --> 03:57.780
+I'm going to add in a user ID that is a string.
+
+03:59.000 --> 04:00.670
+So there it is inside of updated.
+
+04:00.680 --> 04:02.330
+I'll then go over to created.
+
+04:03.160 --> 04:04.180
+Add in user ID.
+
+04:04.210 --> 04:05.620
+That is a string as well.
+
+04:07.560 --> 04:08.370
+So looks good.
+
+04:09.250 --> 04:11.500
+Now, one other comment I want to throw out there.
+
+04:11.920 --> 04:16.570
+Inside this common module, we basically have everything just mixed up inside of this events directory.
+
+04:16.870 --> 04:19.090
+So we've got the base listener, base publisher.
+
+04:19.090 --> 04:22.810
+We got our listing of subjects, and then eventually we will have a lot of different files inside of
+
+04:22.810 --> 04:25.360
+here as well to describe all the different kinds of events.
+
+04:25.510 --> 04:29.920
+If you want to come up with a different structure for this directory, definitely go for it.
+
+04:30.100 --> 04:34.990
+I think that it doesn't make a lot of sense to mix all these folders or all these files together, especially
+
+04:34.990 --> 04:37.900
+since we're going to eventually have several others in here as well.
+
+04:37.930 --> 04:41.970
+So if you could think of a better way of organizing this directory, certainly feel free to do so.
+
+04:41.980 --> 04:46.630
+Just remember, whenever we do an import statement, you will have to adjust some paths if you start
+
+04:46.630 --> 04:49.480
+to nest these files inside of some other folders.
+
+04:50.730 --> 04:56.310
+All right, so before we do a republish of our common module, let's remember we have to go into our
+
+04:56.310 --> 05:05.070
+index file at the root CRC folder and we have to export the contents of all these events files so we
+
+05:05.070 --> 05:07.950
+can easily import them into other services.
+
+05:09.440 --> 05:16.490
+So inside of here we'll do an export star from events space listener.
+
+05:17.270 --> 05:19.970
+And then just going to copy paste that down a couple of times.
+
+05:20.910 --> 05:22.410
+I think five ought to do it.
+
+05:23.490 --> 05:25.620
+The next one will be bass publisher.
+
+05:26.960 --> 05:28.400
+Then subjects.
+
+05:29.800 --> 05:31.690
+Ticket created event.
+
+05:33.080 --> 05:35.390
+And ticket updated event.
+
+05:36.550 --> 05:37.600
+And that should be it.
+
+05:38.420 --> 05:40.860
+So now last step, we're going to go back over to our terminal.
+
+05:41.770 --> 05:45.670
+We're going to install Node Nat streaming into our common module.
+
+05:46.480 --> 05:51.550
+We're then going to republish this module and then update for right now just our ticket service.
+
+05:52.820 --> 05:54.320
+So I'm going to go back to my terminal.
+
+05:54.350 --> 05:57.770
+I'm going to close down everything that I'm running around this nets test stuff.
+
+05:58.840 --> 06:01.900
+I'm also going to stop the port forwarding stuff.
+
+06:03.980 --> 06:07.400
+And then going to change over to our common directory.
+
+06:07.970 --> 06:10.400
+I'm going to install Node.
+
+06:11.300 --> 06:12.890
+Now it's streaming.
+
+06:17.320 --> 06:20.190
+And then finally I'm going to do an end run pub.
+
+06:20.650 --> 06:21.880
+That was what our script was, right?
+
+06:21.880 --> 06:23.110
+It was just simply pub.
+
+06:23.850 --> 06:25.870
+Let's take a look inside of common module.
+
+06:25.900 --> 06:26.130
+Yep.
+
+06:26.130 --> 06:26.970
+It was just pub.
+
+06:27.430 --> 06:33.690
+So we'll do npm run pub that will do the commit the build the version, delete the build.
+
+06:34.620 --> 06:36.210
+Do the publish all that stuff.
+
+06:36.210 --> 06:39.240
+And it looks like I'm now on version 1013.
+
+06:39.480 --> 06:43.830
+So now we'll go backward to our ticket service also inside of our terminal, and we'll do that update.
+
+06:45.180 --> 06:51.060
+So I'll go back over to your tickets and NPM run or NPM updates.
+
+06:51.060 --> 06:51.750
+That's better.
+
+06:52.390 --> 06:54.180
+SG tickets comin.
+
+06:55.250 --> 07:00.140
+Now I'm going to expect to see some update message saying that this thing has been updated to 1.013.
+
+07:00.140 --> 07:03.200
+For me in particular, your version is probably different at this point.
+
+07:03.230 --> 07:03.530
+Yep.
+
+07:03.530 --> 07:04.160
+There we go.
+
+07:04.190 --> 07:04.880
+All set?
+
+07:06.530 --> 07:07.160
+All right.
+
+07:07.160 --> 07:09.890
+Well, we are pretty much done for right now.
+
+07:09.890 --> 07:14.210
+Anyways, with this common module, we now have our listing of events inside there.
+
+07:14.210 --> 07:18.140
+And as I mentioned, over time, we're going to come back to this thing and add in some other types
+
+07:18.140 --> 07:18.920
+of events.
+
+07:19.250 --> 07:20.540
+So let's take a pause right here.
+
+07:20.540 --> 07:23.990
+When we come back, the next video, we're going to go back to working on our ticket service.
+
+07:23.990 --> 07:29.480
+We'll make sure that any time someone creates a new ticket or any time someone updates the ticket,
+
+07:29.690 --> 07:32.930
+we will publish an event saying, hey, ticket updated.
+
+07:33.260 --> 07:35.510
+So a quick pause and I'll see you in just a minute.

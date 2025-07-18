@@ -1,0 +1,235 @@
+WEBVTT
+
+00:01.270 --> 00:06.220
+At this point, our little test application has exactly one publisher and one listener inside of it.
+
+00:06.250 --> 00:10.960
+Now, let's imagine that we eventually deploy this test application into our Kubernetes cluster, and
+
+00:10.960 --> 00:13.300
+maybe we use it for a real application.
+
+00:13.750 --> 00:18.160
+At some point in time, we might realize that the order service is getting a lot of traffic, and so
+
+00:18.160 --> 00:21.100
+we might decide to scale up the order service in some way.
+
+00:21.310 --> 00:26.980
+We can either scale the order service vertically by giving the order service some more powerful CPU,
+
+00:26.980 --> 00:28.480
+more RAM and so on.
+
+00:28.480 --> 00:34.030
+Or alternatively, we could try to scale it horizontally by just creating a second instance of the order
+
+00:34.030 --> 00:34.750
+service.
+
+00:34.990 --> 00:40.990
+So we might have two copies of the exact same service, and in all regards they're identical in nature.
+
+00:41.560 --> 00:45.670
+Now, of course, we would want to make sure that both these services would be able to connect to our
+
+00:45.670 --> 00:46.840
+NAT streaming server.
+
+00:47.320 --> 00:50.680
+Let's try opening up our terminal once again inside the terminal.
+
+00:50.680 --> 00:55.240
+Let's create a second window or I guess a third window in this case, and try running another copy of
+
+00:55.240 --> 00:57.520
+the order service and just see what happens.
+
+00:58.400 --> 00:59.930
+All right, so back inside my terminal.
+
+01:00.230 --> 01:02.120
+If you are running, I turn to.
+
+01:02.150 --> 01:06.320
+You can select a window that's running the listener and then do a command shift.
+
+01:06.320 --> 01:09.500
+DX That will open up another terminal window down there.
+
+01:09.890 --> 01:14.870
+If you are not using, I turn to go ahead and just create a third terminal window and change into the
+
+01:14.990 --> 01:16.310
+next test directory.
+
+01:17.840 --> 01:22.940
+Then inside there we will start up a second listener by running and PM run.
+
+01:22.940 --> 01:23.600
+Listen.
+
+01:24.290 --> 01:29.660
+And as soon as I run that I'm going to end up getting an error message that says client ID already registered.
+
+01:29.780 --> 01:31.380
+So what's going on here?
+
+01:31.400 --> 01:34.010
+Well, as usual, let's take a quick look at a diagram.
+
+01:35.150 --> 01:36.020
+All right.
+
+01:36.800 --> 01:42.560
+So whenever we connect to our net streaming server, the server maintains a list of different clients
+
+01:42.560 --> 01:43.870
+that is connected to.
+
+01:44.360 --> 01:47.870
+So the first thing we had connect to our streaming server was the publisher.
+
+01:48.650 --> 01:52.810
+When we created the publisher back inside of our publisher file.
+
+01:53.060 --> 01:54.330
+So here's publisher Tess.
+
+01:54.410 --> 01:56.330
+We called Nats Connect.
+
+01:56.330 --> 01:59.780
+And the second argument to it was something called a client ID.
+
+01:59.990 --> 02:03.620
+In this case, we specified a client ID of simply a, b, c.
+
+02:04.190 --> 02:09.290
+So when we successfully connected the streaming server created a new client on the list of clients that
+
+02:09.290 --> 02:15.860
+were connected to it, and it said, Okay, I've got some client with a ID of ABC and I can connect
+
+02:15.860 --> 02:19.070
+to that client by reaching out to this publisher thing over here.
+
+02:20.760 --> 02:24.000
+Then a little bit later on inside of our listener file.
+
+02:24.760 --> 02:27.040
+We created a second client.
+
+02:27.070 --> 02:28.000
+Here it is right here.
+
+02:28.000 --> 02:31.300
+And in this case, we gave it a client ID of 1 to 3.
+
+02:31.870 --> 02:36.160
+So once again, we had the order service reach out, connect, and then that streaming server added
+
+02:36.160 --> 02:38.830
+to its list of clients, this brand new client.
+
+02:38.980 --> 02:42.940
+And it said, okay, you have an ID of one, two, three.
+
+02:44.560 --> 02:49.960
+So now as we just tried to create a third or I should say really a second copy the listener or a third
+
+02:49.960 --> 02:55.870
+client overall, we ran a second copy of the Order Service, and so it tried to connect to the Napster
+
+02:56.020 --> 02:59.500
+server with these same client ID of 1 to 3.
+
+02:59.920 --> 03:05.370
+Napster server never wants to see a duplicate client ID, and that's exactly what we just did.
+
+03:05.380 --> 03:10.090
+We tried to connect with the same client ID, and so that's why we saw the error message.
+
+03:10.090 --> 03:15.310
+It said, sorry, but someone has already connected to the server with the client ID of one, two,
+
+03:15.310 --> 03:15.820
+three.
+
+03:16.770 --> 03:22.590
+So if we want to run multiple copies of a listener, publisher or whatever, any time we want to run
+
+03:22.590 --> 03:27.570
+multiple clients, we need to make sure that all these different clients have a different client ID.
+
+03:28.400 --> 03:31.640
+In the world of Kubernetes, there's going to be a very easy way for us to deal with that.
+
+03:31.640 --> 03:35.780
+But for right now, in this test environment, we're just going to say that we're going to randomly
+
+03:35.780 --> 03:37.190
+generate an ID.
+
+03:37.220 --> 03:42.320
+So rather than having a hard coded 1 to 3 right here, we will instead randomly generate a string and
+
+03:42.320 --> 03:45.110
+then provide it as the second argument to the connect call.
+
+03:46.180 --> 03:48.130
+So let's give that a shot right now.
+
+03:48.520 --> 03:50.950
+Do you randomly generate a string at the very top of the file?
+
+03:50.980 --> 03:55.780
+I'm going to import random bytes from.
+
+03:57.470 --> 03:58.130
+Crypto.
+
+03:59.360 --> 04:03.170
+You might recall using this function a little bit earlier in the course when we were doing that password
+
+04:03.170 --> 04:03.860
+salting.
+
+04:03.860 --> 04:08.780
+So random bytes essentially just allows us to create a random string full of numbers and letters.
+
+04:09.470 --> 04:11.390
+Then I'll find the 1 to 3 right there.
+
+04:11.390 --> 04:15.110
+I'm going to delete it and replace it with random bytes or.
+
+04:15.980 --> 04:18.500
+She was stirring ex like so.
+
+04:19.740 --> 04:25.830
+If I now save this and flip back over to my terminal, it looks like both copies are now able to connect
+
+04:25.830 --> 04:28.260
+because they both have random client IDs.
+
+04:29.070 --> 04:29.310
+Okay.
+
+04:29.370 --> 04:30.660
+That's definitely a good improvement.
+
+04:30.660 --> 04:36.750
+So we now know how to run multiple copies or multiple clients, each of them with a randomly generated
+
+04:36.750 --> 04:37.320
+ID.
+
+04:38.000 --> 04:42.590
+Now we're not quite done with this whole idea of having some multiple clients or multiple listeners.
+
+04:42.590 --> 04:43.640
+So quick pause right here.
+
+04:43.640 --> 04:47.810
+We're going to take a look at what happened when we really added in this second listener.

@@ -1,0 +1,199 @@
+WEBVTT
+
+00:00.930 --> 00:02.660
+All right, my friends, here's the moment of truth.
+
+00:02.670 --> 00:04.500
+We are going to manually create a ticket.
+
+00:04.500 --> 00:09.210
+We'll then manually create an order for that ticket, and then hopefully we're going to see that console.log
+
+00:09.210 --> 00:12.270
+we had put together inside of our queue right here.
+
+00:12.270 --> 00:16.740
+We should see something immediately that says, I want to publish, blah, blah, blah, all that stuff.
+
+00:17.130 --> 00:19.380
+So let's open up postman and get to it.
+
+00:20.810 --> 00:22.690
+I've got post right here as usual.
+
+00:22.700 --> 00:24.830
+Going to want to make sure that we are signed in.
+
+00:25.850 --> 00:28.480
+It looks like I currently am signed in.
+
+00:28.490 --> 00:31.160
+That's our get request to API users current user.
+
+00:31.490 --> 00:33.560
+Make sure you are signed in as a person.
+
+00:34.850 --> 00:36.440
+All then create a brand new ticket.
+
+00:36.440 --> 00:40.400
+So that's going to be opposed to API tickets with a title and a price.
+
+00:40.400 --> 00:41.510
+So I'm going to send that off.
+
+00:42.050 --> 00:42.880
+It looks good.
+
+00:42.890 --> 00:47.240
+I'm going to take that ID and I'm going to create an order with this ticket ID.
+
+00:47.970 --> 00:51.420
+So to create an order, we will make a post request.
+
+00:53.390 --> 00:58.850
+To HTTPS colon ticketing dev API orders.
+
+01:01.800 --> 01:03.390
+I'll go to headers.
+
+01:04.120 --> 01:05.590
+But in a content.
+
+01:06.270 --> 01:09.480
+Type of application slash JSON.
+
+01:11.180 --> 01:12.440
+I'm going to go over to Body.
+
+01:12.470 --> 01:13.520
+I'll select Raw.
+
+01:14.180 --> 01:18.020
+And the only thing that we need to create a new order is the ticket ID.
+
+01:18.050 --> 01:23.990
+So I'm going to enter a JSON object right here with ticket ID and then paste in the ID of the ticket
+
+01:23.990 --> 01:25.040
+that I just created.
+
+01:26.120 --> 01:27.770
+Remember, this is JSON that we're entering.
+
+01:27.770 --> 01:29.370
+So make sure you got those double quotes right there.
+
+01:29.390 --> 01:32.390
+Also make sure that you've got a lowercase dx on ID.
+
+01:33.350 --> 01:37.130
+We'll also make sure that we've got JSON selected over here and that should be it.
+
+01:37.930 --> 01:39.670
+They'll then go ahead and send this off.
+
+01:40.210 --> 01:43.710
+I should immediately see that I have created a brand new order.
+
+01:43.720 --> 01:43.990
+Yep.
+
+01:43.990 --> 01:44.710
+Looks good.
+
+01:45.430 --> 01:48.070
+Then I'll go back over to my terminal and we'll see how we are doing.
+
+01:49.580 --> 01:49.850
+Okay.
+
+01:49.850 --> 01:50.660
+So over here.
+
+01:50.870 --> 01:52.760
+Well, a lot of events going on here.
+
+01:53.330 --> 01:56.930
+So I see in some order, I see the ticket created.
+
+01:57.820 --> 01:59.380
+That's the reception I see.
+
+01:59.380 --> 02:00.880
+A publish of ticket created.
+
+02:01.750 --> 02:04.450
+And then inside kind of a strange order here.
+
+02:04.480 --> 02:09.040
+Nonetheless, remember, all these console logs kind of get jumbled up because of how scaffold handles
+
+02:09.040 --> 02:09.220
+them.
+
+02:09.220 --> 02:13.530
+So it's kind of hard to read, but we can kind of see that everything more or less worked as expected.
+
+02:13.540 --> 02:16.240
+So I've got an event Publish of order created.
+
+02:16.720 --> 02:20.500
+It looks like tickets received, order created and expiration received.
+
+02:20.500 --> 02:21.790
+Order created as well.
+
+02:23.140 --> 02:23.860
+Expiration.
+
+02:23.860 --> 02:30.640
+Once it received that order created event, it then created a new job and published it over to us because
+
+02:30.640 --> 02:33.940
+we did not put any delay on receiving or processing that event.
+
+02:33.940 --> 02:39.700
+We then immediately received that job back and we did a I want to publish an expiration complete event
+
+02:39.700 --> 02:41.170
+for order ID, blah, blah, blah.
+
+02:43.110 --> 02:43.250
+Okay.
+
+02:43.450 --> 02:44.770
+So I'd say that that looks pretty good.
+
+02:44.770 --> 02:46.510
+It means that we are successfully.
+
+02:47.400 --> 02:49.620
+Receiving the order created event.
+
+02:49.620 --> 02:55.350
+We then successfully create the job and then we successfully receive that job right then immediately
+
+02:55.350 --> 02:56.160
+in the future.
+
+02:56.670 --> 03:01.380
+The next obvious thing that we need to add inside of here is to make sure that we delay receiving this
+
+03:01.380 --> 03:03.870
+event or somehow put in that 15 minute delay.
+
+03:03.870 --> 03:08.340
+But we do not immediately get this job back to process.
+
+03:08.340 --> 03:11.220
+We want to make sure we've got that 15 minute delay inside of here.
+
+03:11.760 --> 03:14.160
+So let's take a look at how we're going to add in that 15 minute delay.
+
+03:14.190 --> 03:15.300
+Pretty easy, straightforward.
+
+03:15.300 --> 03:16.680
+We'll take care of that in just a moment.

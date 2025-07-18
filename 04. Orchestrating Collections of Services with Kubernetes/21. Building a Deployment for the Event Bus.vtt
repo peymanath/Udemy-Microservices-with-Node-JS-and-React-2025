@@ -1,0 +1,292 @@
+WEBVTT
+
+00:00.880 --> 00:04.690
+In the last video, we discussed how we're going to add in this new event, bus, pod and then a cluster
+
+00:04.690 --> 00:07.420
+IP service for both posts and event bus.
+
+00:07.660 --> 00:11.770
+I know a lot of this stuff probably seems pretty crazy right now, but I got some good news for you
+
+00:11.800 --> 00:12.970
+as soon as we get through this.
+
+00:13.180 --> 00:17.530
+One last hurdle, we're going to start to take a look at a tool that is going to automate wiring up
+
+00:17.530 --> 00:18.910
+a lot of the stuff for us.
+
+00:18.910 --> 00:20.980
+So it's going to make life a lot easier.
+
+00:21.040 --> 00:24.850
+You do have to go through all this stuff at least once by hand, though, just so you really understand
+
+00:24.850 --> 00:26.440
+what is going on behind the scenes.
+
+00:27.340 --> 00:27.850
+All right.
+
+00:27.850 --> 00:29.770
+So we have to go through a couple of different steps.
+
+00:29.770 --> 00:34.330
+And so just to make sure that everything is crystal clear, put together a quick diagram to understand
+
+00:34.330 --> 00:38.290
+the steps we're about to go through to get the event bus and post working together.
+
+00:39.120 --> 00:42.360
+The first thing we'll do is create an image for the event bus.
+
+00:43.130 --> 00:45.290
+Well, then push that image up to Docker Hub.
+
+00:46.590 --> 00:49.350
+Well, then create a deployment for the event bus.
+
+00:49.650 --> 00:55.170
+That deployment is going to create one pod for us automatically, and that pod is going to be this thing
+
+00:55.170 --> 00:55.890
+right here.
+
+00:57.250 --> 00:59.770
+After that pod comes into it exist existence.
+
+00:59.860 --> 01:04.300
+We will then create a cluster IP service for the event bus and for posts.
+
+01:04.630 --> 01:06.790
+And so that's going to be that thing and that thing.
+
+01:06.790 --> 01:12.040
+And again, these cluster IP services are going to teach these pods how to access each other inside
+
+01:12.040 --> 01:12.790
+the cluster.
+
+01:14.190 --> 01:18.930
+After that, we're going to do just one last additional little step to wire this stuff up all together.
+
+01:19.780 --> 01:21.400
+So let's get started with step number one.
+
+01:21.400 --> 01:25.540
+Right now, we're going to build an image for the event bus to get started.
+
+01:25.540 --> 01:27.280
+I'm going to flip back over to my terminal.
+
+01:28.980 --> 01:34.770
+I'm going to change into my event bus directory and inside there I'll build a new image so I'll do a
+
+01:34.770 --> 01:39.870
+docker build dash TX even greater event dash bus.
+
+01:40.630 --> 01:45.130
+And then don't forget the dot at the very end that in case we want to use the current working directory.
+
+01:45.900 --> 01:47.760
+For all the source code inside the image.
+
+01:48.850 --> 01:49.540
+So I'll run that.
+
+01:49.540 --> 01:52.420
+And as you'll see, that image gets built very, very quickly.
+
+01:54.110 --> 01:54.330
+Okay.
+
+01:54.470 --> 01:55.490
+That's step number one.
+
+01:56.350 --> 02:00.820
+Step number two, we're going to push that image off to Docker Hub so that the deployment can very easily
+
+02:00.820 --> 02:03.910
+pull down that image when it decides that it's time to create the pod.
+
+02:05.590 --> 02:12.280
+So back inside the event bus directory will do a docker push your docker ID slash event dash bus.
+
+02:14.680 --> 02:18.400
+That's going to take the image that we just built and throw it up to Docker Hub.
+
+02:19.750 --> 02:22.990
+It's a pretty small image, so it'll just take a little minute or two.
+
+02:24.590 --> 02:24.890
+All right.
+
+02:24.890 --> 02:29.450
+After that's all done, we're then going to create a deployment for the event bus.
+
+02:29.840 --> 02:33.710
+The deployment that we're going to create is going to be just about identical in nature to the post
+
+02:33.710 --> 02:35.240
+deployment that we already put together.
+
+02:35.270 --> 02:39.120
+So really just going to copy, paste, all that configuration that we already wrote out, we're just
+
+02:39.140 --> 02:43.130
+going to change one or two names to refer to Event Bus as opposed to posts.
+
+02:44.210 --> 02:45.500
+To create the deployment itself.
+
+02:45.500 --> 02:47.960
+Don't forget, we're always going to create a config file.
+
+02:48.410 --> 02:49.850
+So back inside, my editor.
+
+02:51.700 --> 02:53.620
+I'm going to find that infra directory.
+
+02:54.010 --> 02:59.800
+Inside there is K inside of k l make a new directory called event dash.
+
+02:59.800 --> 03:01.660
+Bus Dash Depot.
+
+03:01.990 --> 03:02.500
+HTML.
+
+03:05.260 --> 03:07.630
+I'll then open up the post deployment file.
+
+03:08.140 --> 03:09.120
+Because I'm not kidding.
+
+03:09.130 --> 03:11.110
+We're really just going to copy, paste all this stuff.
+
+03:12.040 --> 03:13.600
+Inside of the post deployment file.
+
+03:13.600 --> 03:14.860
+I'm going to copy everything.
+
+03:16.530 --> 03:19.890
+Go back over to the event bus deployment file and paste.
+
+03:21.610 --> 03:25.750
+I'm then going to go through and everywhere that I see the word posts, I'm going to replace it with
+
+03:25.750 --> 03:26.770
+event bus.
+
+03:27.590 --> 03:29.270
+So here's number one right here.
+
+03:31.720 --> 03:32.650
+Here's to.
+
+03:34.950 --> 03:36.150
+Here's three.
+
+03:38.550 --> 03:39.150
+Or.
+
+03:40.920 --> 03:41.820
+And five.
+
+03:43.750 --> 03:45.580
+Inside of the event plus deployment file.
+
+03:45.580 --> 03:47.650
+I should now be able to do a find.
+
+03:48.710 --> 03:51.470
+I'll look for posts and I should have zero results.
+
+03:51.890 --> 03:55.790
+So make sure you replaced every instance of posts with event bus instead.
+
+03:58.200 --> 03:59.400
+Well, then save the file.
+
+04:00.270 --> 04:05.820
+And now we'll go ahead and apply this configuration file to Kubernetes using Cube CTL.
+
+04:06.660 --> 04:07.890
+So back at my terminal.
+
+04:08.920 --> 04:11.430
+It looks like I have finished pushing up the event bus image.
+
+04:11.440 --> 04:12.160
+That's great.
+
+04:12.990 --> 04:16.530
+I'm going to change back over to my K aids directory.
+
+04:17.790 --> 04:21.720
+And inside there, I've got my event plus deployment file that we just created.
+
+04:22.020 --> 04:23.370
+So we'll do a cube.
+
+04:23.550 --> 04:25.230
+It'll apply.
+
+04:27.250 --> 04:30.550
+Event Bus Depot EML.
+
+04:34.480 --> 04:39.190
+So it looks like we've got the deployment created and that should automatically create the pod for us.
+
+04:39.580 --> 04:42.790
+Let's just list out all of our different pods and make sure that it actually was created.
+
+04:43.240 --> 04:43.750
+I'll do a cube.
+
+04:43.870 --> 04:45.220
+It'll get pods.
+
+04:45.790 --> 04:49.060
+And sure enough, there's my event plus pod right there.
+
+04:49.330 --> 04:51.190
+So it looks like it is up and running.
+
+04:52.830 --> 04:58.680
+So although that looks great right now, we have no effective way to really have any communication between
+
+04:58.680 --> 05:00.900
+this event bus pod and the post pod.
+
+05:01.170 --> 05:05.880
+And so that is why we need to come back and add in these cluster IP services.
+
+05:06.150 --> 05:11.640
+Again, they technically can communicate, but the IP address assigned to these pods is variable and
+
+05:11.640 --> 05:13.380
+we can't really predict it ahead of time.
+
+05:14.150 --> 05:19.820
+The cluster IP services are going to give us a well known, very easy to predict URL that we can type
+
+05:19.820 --> 05:25.190
+in any time we want to have our event bus communicate over to posts or anytime we want post to communicate
+
+05:25.190 --> 05:26.540
+over to event bus.
+
+05:27.370 --> 05:28.690
+So let's take a quick pause right here.
+
+05:28.690 --> 05:33.340
+When we come back, the next video, we're going to create a cluster lip service for posts and one for
+
+05:33.340 --> 05:34.570
+event plus as well.

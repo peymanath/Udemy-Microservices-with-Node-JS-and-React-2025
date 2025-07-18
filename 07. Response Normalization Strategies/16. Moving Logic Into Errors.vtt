@@ -1,0 +1,418 @@
+WEBVTT
+
+00:00.850 --> 00:06.160
+We've now got a working demonstration of how to create custom errors, how to throw them from our different
+
+00:06.160 --> 00:12.100
+route handlers, how to capture them inside of our air handler and send back a very common response
+
+00:12.100 --> 00:13.510
+for every different kind of error.
+
+00:13.660 --> 00:15.260
+But we're not quite done yet.
+
+00:15.280 --> 00:19.960
+I want to point out something not so great about the current implementation of our error handling middleware.
+
+00:20.410 --> 00:26.140
+Right now we are throwing our request validation error and the database connection error into that error
+
+00:26.170 --> 00:27.130
+handling middleware.
+
+00:27.520 --> 00:34.420
+And we've encoded inside there some very intricate knowledge of exactly how to extract information from
+
+00:34.420 --> 00:36.900
+every kind of error that exists inside of our application.
+
+00:36.930 --> 00:38.410
+Now present, that's just two errors.
+
+00:38.410 --> 00:39.730
+So it's not that big a deal.
+
+00:40.330 --> 00:45.010
+Let's imagine some scenario down the line where maybe we have a lot of different things that can go
+
+00:45.010 --> 00:50.500
+wrong inside of our application and we create a custom error for everything that can go wrong.
+
+00:50.800 --> 00:53.830
+And so we end up with all these different custom errors like this.
+
+00:54.460 --> 00:58.690
+If we travel down the same road that we're going down right now, our error handling middleware is going
+
+00:58.690 --> 01:01.110
+to be grow to be absolutely gigantic.
+
+01:01.120 --> 01:07.270
+We will have to encode some logic inside there to understand every possible error and understand how
+
+01:07.270 --> 01:13.930
+to extract information from them to send down to a user making sure that they all follow this same kind
+
+01:13.930 --> 01:15.430
+of common response structure.
+
+01:16.570 --> 01:20.710
+So right now, if we continue down the same path, we're going to end up with our area handling middleware
+
+01:20.740 --> 01:23.500
+growing to be extremely, extremely large.
+
+01:23.920 --> 01:25.360
+So how can we fix this?
+
+01:25.720 --> 01:29.710
+Well, we're going to kind of inverse or take the opposite of this relationship.
+
+01:30.600 --> 01:35.430
+We're going to go back and revisit our request validation error and the database connection error.
+
+01:35.790 --> 01:39.720
+We're going to add in a method to each of these called serialize error.
+
+01:40.660 --> 01:44.620
+The goal of this method is to take all the information about the error.
+
+01:44.620 --> 01:49.900
+So whatever fields failed validation or some reason that we fail to connect to the database and we're
+
+01:49.900 --> 01:55.860
+going to return some array of objects that follow this kind of common air structure right here.
+
+01:55.870 --> 02:00.280
+So an array of objects that have that message, that's a string and a possibly a field that is a string
+
+02:00.280 --> 02:00.940
+as well.
+
+02:02.120 --> 02:07.100
+We're also going to make sure that all these different errors list a status code to send down as well.
+
+02:07.950 --> 02:13.110
+Once we do this, our air handler middleware is no longer going to have to understand how to precisely
+
+02:13.110 --> 02:17.040
+parse and somehow interpret a request validation error.
+
+02:17.250 --> 02:23.130
+Instead, the error handling middleware can just verify to make sure that the incoming error is of type
+
+02:23.130 --> 02:26.040
+request validation error or database connection error.
+
+02:26.220 --> 02:28.530
+Once it makes sure that it's an error that it understands.
+
+02:28.680 --> 02:34.920
+It can then call that errors serialize their property and get back some very customized, very well
+
+02:34.920 --> 02:38.820
+formed structure to describe what just went wrong and send that back to the user.
+
+02:39.240 --> 02:44.370
+It can also refer to the errors status code to understand what status code to use inside the response
+
+02:44.370 --> 02:44.910
+as well.
+
+02:46.750 --> 02:51.970
+Once we start to follow this approach, we can create as many air custom classes as we want.
+
+02:52.480 --> 02:56.140
+We can make a billion of these different things all very custom in nature.
+
+02:56.140 --> 02:58.540
+Each one can have its own special implementation.
+
+02:59.270 --> 03:04.490
+And the air handling middleware is not going to grow in much complexity because no matter what the air
+
+03:04.490 --> 03:09.230
+is, we're always going to refer to the same kind of serialized air function and the same status code
+
+03:09.230 --> 03:09.920
+property.
+
+03:10.720 --> 03:10.990
+Okay.
+
+03:10.990 --> 03:13.300
+So then mind, let's go back over to our editor.
+
+03:13.300 --> 03:18.820
+We're going to start to refactor database connection, error and our the other one that's behind the
+
+03:18.820 --> 03:20.530
+scenes here, the request validation.
+
+03:20.530 --> 03:26.080
+One, we're going to make sure that they both have a serialized error method and a status code property
+
+03:26.080 --> 03:26.800
+as well.
+
+03:26.800 --> 03:31.120
+And we're going to make sure that the error handler uses those methods and those properties as opposed
+
+03:31.120 --> 03:34.930
+to trying to generate this formatted error stuff on its own.
+
+03:36.070 --> 03:36.340
+All right.
+
+03:36.340 --> 03:39.130
+So let's first start off with how about database connection error?
+
+03:39.230 --> 03:40.240
+So here it is right here.
+
+03:43.370 --> 03:49.970
+So inside of database connection there, we're going to add in that serialize errors method.
+
+03:50.360 --> 03:56.760
+And inside of here we're going to make sure that we return this common error structure specifically.
+
+03:56.780 --> 04:00.950
+I really just want to return the array of objects that have a message and the field.
+
+04:00.980 --> 04:05.790
+We will still allow our error handling middleware to create this actual object and assign the errors
+
+04:05.840 --> 04:06.800
+property to it.
+
+04:08.550 --> 04:12.210
+So inside of database connection error, I've got serialize errors.
+
+04:12.450 --> 04:15.000
+We're going to return an array of objects.
+
+04:15.240 --> 04:17.670
+In this case, the object that we're going to create is very simple.
+
+04:17.670 --> 04:22.980
+It's always going to be one single error object that's going to list this reason as the message.
+
+04:23.250 --> 04:26.970
+So we can say Message is this reason.
+
+04:28.810 --> 04:32.680
+And then in addition, I'm also going to assign a status code to this.
+
+04:32.980 --> 04:38.380
+So if we're going to say any time a database connection error occurs, let's give the response a status
+
+04:38.380 --> 04:39.580
+code of 500.
+
+04:40.090 --> 04:44.260
+Now, in this case, again, I want to remind you that database connection error is very simplistic
+
+04:44.260 --> 04:44.950
+in nature.
+
+04:44.980 --> 04:48.370
+Yes, we don't really need to define the separate property of reason right here.
+
+04:48.370 --> 04:51.100
+We could just take that string and throw it in as the message.
+
+04:51.340 --> 04:56.290
+The only reason that we are creating this entire database connection error class is that you have a
+
+04:56.290 --> 04:59.660
+second example to look at beyond just request validation error.
+
+04:59.680 --> 05:01.150
+The other error class we created.
+
+05:02.920 --> 05:03.160
+Okay.
+
+05:03.160 --> 05:03.970
+So that's it for this one.
+
+05:03.970 --> 05:05.080
+So I'm going to save this file.
+
+05:05.500 --> 05:08.320
+Well, then go over to request validation error.
+
+05:09.190 --> 05:10.780
+Also inside of our ears directory.
+
+05:11.320 --> 05:13.630
+I'm going to give this one a status code as well.
+
+05:14.130 --> 05:15.730
+Of 400 in this case.
+
+05:16.210 --> 05:19.090
+And then I will give it that serialize errors property.
+
+05:22.140 --> 05:26.310
+And we can really just take the code that we already wrote out inside of our era handling middleware.
+
+05:26.460 --> 05:28.260
+So I'm going to go back over to the air handler.
+
+05:28.590 --> 05:31.200
+You'll recall that we mapped over the errors.
+
+05:31.590 --> 05:35.790
+And for each error, we returned an object that a message and a field.
+
+05:35.940 --> 05:40.200
+So we essentially want to do that same thing inside of this serialize error function.
+
+05:40.800 --> 05:46.090
+Right here, I'm going to return the result of this dot air's map.
+
+05:47.350 --> 05:51.940
+I'm going to take each error which I will abbreviate as error and then return.
+
+05:53.810 --> 05:56.870
+Message with error message.
+
+05:58.270 --> 06:02.560
+And a field with e r dot ram.
+
+06:04.350 --> 06:04.740
+Okay.
+
+06:04.740 --> 06:08.720
+So now our two errors both follow the same kind of structure.
+
+06:08.730 --> 06:12.000
+They both have the serialized errors method, and they both have status code.
+
+06:12.360 --> 06:15.930
+So now back inside of our error handling middleware, here it is right here.
+
+06:16.080 --> 06:21.780
+We no longer have to encode all this fancy logic into this middleware so we can delete all that fancy
+
+06:21.780 --> 06:22.410
+logic.
+
+06:23.760 --> 06:27.070
+We can also do the same thing down here for the database connection here as well.
+
+06:27.090 --> 06:31.440
+So we no longer have to encode this entire special array right here, which is kind of assuming that
+
+06:31.440 --> 06:35.040
+we have a lot of special knowledge about how database connection air works.
+
+06:35.610 --> 06:36.750
+I'm going to delete that too.
+
+06:37.470 --> 06:41.460
+Also formatted errors goes away up here because that variable doesn't exist anymore.
+
+06:41.940 --> 06:47.310
+So now in both cases, we want to take a look at that incoming air and we're going to call these serialize
+
+06:47.310 --> 06:48.900
+errors function on both them.
+
+06:49.050 --> 06:52.860
+That's going to give us back that array of objects that we want so, so badly.
+
+06:52.860 --> 06:53.430
+Apparently.
+
+06:53.430 --> 06:56.160
+I'm definitely making it seem like it's a very desirable thing to have.
+
+06:57.100 --> 07:03.610
+So in both cases we'll do e r r dot serialize errors.
+
+07:04.090 --> 07:05.620
+And then same thing down here as well.
+
+07:08.230 --> 07:09.160
+And that should be it.
+
+07:10.390 --> 07:14.950
+You'll now notice that we have an identical statement here with both these statements.
+
+07:15.400 --> 07:19.810
+Once we have verified that we have either a request, validation error or a database connection error,
+
+07:19.840 --> 07:24.730
+were then very sure that we pretty much always want to do the same thing of getting serialize errors.
+
+07:25.300 --> 07:28.810
+One other thing that we want to take care of is the status codes on both them as well.
+
+07:29.020 --> 07:33.590
+So now our middleware doesn't need to know about the precise status code to use for any kind of error.
+
+07:33.610 --> 07:37.060
+Instead, it just knows to take a look at the errors status code property.
+
+07:37.390 --> 07:45.250
+So I'm going to replace the 400 right there with IRC status code and the 500 right here with error status.
+
+07:46.640 --> 07:47.720
+Code as well.
+
+07:49.460 --> 07:51.650
+Well, he's definitely look very identical in nature.
+
+07:51.650 --> 07:55.310
+And as you can guess, we're probably going to combine these two statements at some point.
+
+07:55.310 --> 07:59.060
+But for right now, let's just save this and do another quick test to make sure that everything is still
+
+07:59.060 --> 08:00.260
+working as expected.
+
+08:02.070 --> 08:03.810
+So back over at man.
+
+08:03.810 --> 08:06.210
+I'm going to first try out the database connection here stuff.
+
+08:06.270 --> 08:07.170
+I'm going to send that off.
+
+08:07.200 --> 08:07.590
+Yep.
+
+08:07.590 --> 08:08.760
+Still get the correct error.
+
+08:09.150 --> 08:11.310
+And if I put in an invalid email.
+
+08:12.490 --> 08:12.820
+Yup.
+
+08:12.820 --> 08:14.950
+Still get the correct ear as well.
+
+08:15.430 --> 08:15.880
+All right.
+
+08:15.880 --> 08:20.230
+So right away, you can start to see that we are going to extract a lot of logic out of this area,
+
+08:20.230 --> 08:24.490
+handling middleware, and we're going to delegate, figuring out how to produce the correct structure
+
+08:24.490 --> 08:28.000
+of errors and the correct status code in each error instead.
+
+08:29.870 --> 08:33.620
+This is looking pretty good, but we still have one or two very small improvements.
+
+08:33.620 --> 08:36.050
+So quick pause right here and I'll see you in just a minute.

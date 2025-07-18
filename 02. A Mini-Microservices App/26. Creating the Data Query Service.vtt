@@ -1,0 +1,244 @@
+WEBVTT
+
+00:01.030 --> 00:03.960
+In this video, we're going to get started working on our query service.
+
+00:03.970 --> 00:06.100
+So remember the goal of this service.
+
+00:06.100 --> 00:10.990
+We want to have one service that we can make a request to, to get a full listing of all the different
+
+00:10.990 --> 00:13.030
+posts and their associated comments.
+
+00:13.240 --> 00:16.810
+The one request, all the data we need to actually implement this thing.
+
+00:16.810 --> 00:19.120
+We're going to give it to different route handlers.
+
+00:19.330 --> 00:22.690
+One route handler is going to receive events from our event bus.
+
+00:23.170 --> 00:27.940
+Our query service is going to care about events of type post created and common created.
+
+00:28.210 --> 00:33.280
+Whenever it sees these events, it's going to take the data contained inside the event itself and then
+
+00:33.280 --> 00:36.460
+assemble it all into some very easy to access data structure.
+
+00:37.260 --> 00:42.450
+The second endpoint that we're going to implement is going to have a handler for watching a request
+
+00:42.450 --> 00:43.760
+to slash posts.
+
+00:43.770 --> 00:48.210
+Any time someone makes a get request to that endpoint, we're going to send back a full listing of all
+
+00:48.210 --> 00:49.830
+posts and related comments.
+
+00:50.190 --> 00:52.800
+So let's get started working on our query service right now.
+
+00:54.080 --> 00:56.930
+To begin, I'm going to open up yet another terminal window.
+
+00:58.260 --> 00:59.600
+Here's my new window right here.
+
+00:59.610 --> 01:02.530
+I'm going to change back into our root blog directory.
+
+01:02.550 --> 01:04.620
+That's where all of our services live right now.
+
+01:05.070 --> 01:09.120
+And inside there, I'll make a new folder that will call Blue Query.
+
+01:10.460 --> 01:16.430
+I'll then change into that directory and I'm going to generate a package json file using npm init.
+
+01:16.800 --> 01:17.330
+Why?
+
+01:19.240 --> 01:23.050
+After I generate that file, we'll then go ahead and install two dependencies.
+
+01:23.560 --> 01:29.320
+All we need for this service is express and course the query service itself is not going to actually
+
+01:29.320 --> 01:32.920
+emit any events and that's why we are not installing Axios.
+
+01:33.550 --> 01:37.810
+I know ahead of time that the query service is not going to emit any events, but if you were working
+
+01:37.810 --> 01:42.190
+on this from scratch and if you were unsure about whether or not this thing was going to emit any events,
+
+01:42.190 --> 01:46.750
+you would go ahead and install Axios until you were sure that, okay, I don't actually need to emit
+
+01:46.750 --> 01:48.850
+any events and then you can remove that dependency.
+
+01:50.930 --> 01:52.550
+So go ahead and do that installation.
+
+01:53.450 --> 01:55.130
+I'll then go back over to my editor.
+
+01:56.990 --> 01:59.150
+And I should see that new query directory.
+
+02:00.160 --> 02:02.620
+So let's start to build this express application out.
+
+02:03.500 --> 02:07.370
+Inside of that directory, I'll make a new file called Index Dogs.
+
+02:08.380 --> 02:09.310
+And then at the top.
+
+02:09.310 --> 02:10.090
+Let's go ahead.
+
+02:10.090 --> 02:14.530
+We're going to require an express body parser and that course module as well.
+
+02:15.940 --> 02:17.110
+They'll get express.
+
+02:19.420 --> 02:20.640
+I'll get body parser.
+
+02:23.680 --> 02:25.480
+And I'll get horse.
+
+02:27.540 --> 02:29.400
+I'll then create my new Express app.
+
+02:30.980 --> 02:33.440
+And I will wire up the body parser.
+
+02:36.780 --> 02:38.430
+And I will wire up course.
+
+02:39.820 --> 02:40.000
+Okay.
+
+02:40.090 --> 02:40.900
+So that looks good.
+
+02:42.370 --> 02:44.920
+So now we're going to put together our two route handlers.
+
+02:45.040 --> 02:50.290
+Remember, the two that we want are for a get two slash posts and a post to slash events.
+
+02:51.190 --> 02:53.650
+They'll do agate posts.
+
+02:55.460 --> 02:57.770
+And then put it in our rec and rez.
+
+02:58.340 --> 02:59.990
+And right now I'll just leave that empty.
+
+03:00.380 --> 03:03.740
+And then the next one will be post to slash events.
+
+03:04.340 --> 03:08.180
+So this is of course, the endpoint that is going to receive events from our event bus.
+
+03:10.060 --> 03:12.310
+Then finally at the very bottom, let's go ahead and set up that app.
+
+03:12.490 --> 03:12.790
+Listen.
+
+03:12.790 --> 03:13.300
+Call.
+
+03:13.840 --> 03:14.530
+They'll do an app.
+
+03:14.740 --> 03:15.390
+Listen.
+
+03:15.400 --> 03:18.660
+And remember, at present we are using a couple of different ports.
+
+03:18.670 --> 03:25.810
+We've got ports, 4000, 4001 and 4002, I think now just 4000 or 4001.
+
+03:25.810 --> 03:28.660
+So this one will be at 4002.
+
+03:30.600 --> 03:32.010
+And we'll put in our callback.
+
+03:33.160 --> 03:33.670
+Inside of here.
+
+03:33.670 --> 03:37.780
+We'll do a console.log listing on 4002.
+
+03:38.940 --> 03:42.810
+Before we start to worry about any implementation here just yet, let's make sure we can actually run
+
+03:42.810 --> 03:43.680
+this project.
+
+03:43.770 --> 03:45.090
+So I'm going to save this file.
+
+03:45.450 --> 03:49.260
+I'll go back over to package JSON and we'll set up a startup script.
+
+03:50.730 --> 03:51.390
+That's what we forgot.
+
+03:51.420 --> 03:53.340
+On dependencies, we forgot to get node one.
+
+03:53.430 --> 03:55.440
+I'll go and install that really quickly as well.
+
+03:55.800 --> 03:57.090
+So back over my terminal.
+
+03:58.280 --> 04:00.200
+I'll do an NPM installed node mod.
+
+04:03.930 --> 04:07.290
+And then once that is installed, we can update that start script.
+
+04:09.380 --> 04:14.030
+So start the node one index dot js.
+
+04:16.250 --> 04:20.420
+Let's just run this project really quickly to make sure we don't have any typos or anything like that.
+
+04:20.810 --> 04:26.330
+So at my terminal and the window that is running our query service, we'll do an NPM start.
+
+04:27.210 --> 04:27.920
+And there we go.
+
+04:27.930 --> 04:29.430
+Let's stay on 4002.
+
+04:31.050 --> 04:34.200
+Well, now that we've got all this boilerplate put together, we can start worrying about the actual
+
+04:34.200 --> 04:38.130
+implementation of the post event's endpoint and get post as well.
+
+04:38.490 --> 04:42.060
+We'll do a quick break first and then start to worry about those two endpoints in just a moment.

@@ -1,0 +1,205 @@
+WEBVTT
+
+00:01.250 --> 00:05.780
+Now that we've put together this kind of demonstration root handler inside of our current user file,
+
+00:05.810 --> 00:10.340
+we're going to make one or two small changes to it and then duplicate the setup to the other three route
+
+00:10.340 --> 00:12.080
+handling files that we already put together.
+
+00:12.650 --> 00:15.980
+The first thing I'm going to do is add in the arguments to the callback function.
+
+00:16.430 --> 00:18.200
+So rec and rez.
+
+00:18.990 --> 00:22.500
+And then inside of here, I'm going to put together the same implementation we had a little bit ago.
+
+00:22.620 --> 00:25.140
+So I'll do a resend of Hi there.
+
+00:25.140 --> 00:25.830
+Like so.
+
+00:28.980 --> 00:29.310
+Okay.
+
+00:29.320 --> 00:32.630
+So let's now take this configuration or this code.
+
+00:32.640 --> 00:36.390
+We're going to copy, paste it over to a sign in, sign out and sign up.
+
+00:36.810 --> 00:42.120
+We'll then change some of the different routes just to make sure that they all correspond to different
+
+00:42.120 --> 00:44.430
+routes that we had specified over in this diagram.
+
+00:45.480 --> 00:46.860
+So I'm going to take everything inside of here.
+
+00:46.860 --> 00:47.910
+I'm going to copy it.
+
+00:48.360 --> 00:52.230
+I'm going to go first to sign in and paste it and then save.
+
+00:52.960 --> 00:56.140
+I'll go to sign out and paste and then save.
+
+00:56.680 --> 00:59.680
+And then I'll go to sign up and paste and save.
+
+01:00.850 --> 01:07.120
+I'm then going to close current user, I'm going to close indexes and we're going to update, sign in,
+
+01:07.120 --> 01:09.220
+sign out and sign up one by one.
+
+01:09.520 --> 01:13.420
+And each of these we're just going to make sure that they have the appropriate routes and the appropriate
+
+01:13.420 --> 01:14.530
+method as well.
+
+01:15.490 --> 01:17.380
+So I'm going to first begin inside of CNN.
+
+01:18.790 --> 01:19.410
+Inside of here.
+
+01:19.420 --> 01:21.880
+I'm going to change the route to.
+
+01:22.720 --> 01:24.820
+API users sign in.
+
+01:26.640 --> 01:28.530
+I'll change the method to be opposed.
+
+01:29.180 --> 01:32.720
+And then I'll change the name of the router down here at the bottom as well.
+
+01:33.020 --> 01:35.900
+I'll change that to sign in router.
+
+01:37.400 --> 01:39.530
+I'll then save this file and close it.
+
+01:40.690 --> 01:42.490
+Next up is sign out.
+
+01:43.120 --> 01:48.760
+So inside of sign out, we will change this to a post request to API users sign out.
+
+01:49.730 --> 01:55.340
+So we'll take it to a post API users sign out.
+
+01:55.910 --> 01:58.430
+And then finally, I'm going to update the name of the router at the bottom.
+
+01:58.820 --> 02:00.950
+So sign out router.
+
+02:03.410 --> 02:05.000
+And then finally over to sign up.
+
+02:06.590 --> 02:09.770
+So this one should be a post request to API users.
+
+02:09.770 --> 02:10.400
+Sign up.
+
+02:11.610 --> 02:14.520
+So a post your API users sign up.
+
+02:15.240 --> 02:18.180
+And then very similarly, I will update the name of the router at the bottom as well.
+
+02:18.180 --> 02:20.460
+So sign up router.
+
+02:21.950 --> 02:22.250
+All right.
+
+02:22.250 --> 02:25.460
+So we've got a little bit of scaffolding put together for all four of these files.
+
+02:25.580 --> 02:30.200
+Let's now go in, associate each of these different routers with our express application back inside
+
+02:30.200 --> 02:31.640
+the index file.
+
+02:32.730 --> 02:33.750
+So back over here.
+
+02:34.560 --> 02:40.560
+Right after our current user router import, I'll add in an import for sign in router.
+
+02:41.670 --> 02:44.310
+From Roots sign in.
+
+02:46.200 --> 02:48.540
+Then sign out router.
+
+02:52.740 --> 02:55.710
+And finally sign up router.
+
+03:01.370 --> 03:05.420
+I'll then make sure that I associate each of those routers with our express application right after
+
+03:05.420 --> 03:07.550
+the current user, one that we put together down there.
+
+03:08.150 --> 03:15.620
+So we'll do an app, use sign in router and use sign out router.
+
+03:16.460 --> 03:18.080
+And an obtuse.
+
+03:18.970 --> 03:20.590
+Sign up router.
+
+03:22.190 --> 03:25.960
+We're going to be doing a lot of steps like what we just did between the last video and this one.
+
+03:25.970 --> 03:30.230
+Throughout the rest of this application where we create a set of files together and then put some similar
+
+03:30.230 --> 03:31.730
+scaffolding into each of them.
+
+03:32.210 --> 03:36.020
+The reason for this is that a lot of the code that we're going to end up writing is going to be unfortunately
+
+03:36.020 --> 03:39.300
+a little bit similar to each other, I suppose.
+
+03:39.350 --> 03:45.110
+I want to make sure that we save as much as time as possible, because honestly, we have a incredible,
+
+03:45.290 --> 03:50.120
+really an incredible amount of code to write for this application way more than you would ever expect.
+
+03:50.150 --> 03:55.490
+I just want to make sure that this all gets together in a very formulaic fashion with as few mistakes
+
+03:55.490 --> 03:57.020
+and typos as possible.
+
+03:57.050 --> 04:00.950
+And that's really easy to do if we just go through and kind of scaffold all this stuff in one go.
+
+04:02.060 --> 04:03.130
+So it's looks pretty good.
+
+04:03.170 --> 04:03.970
+Quick pause right here.
+
+04:03.980 --> 04:05.180
+Continue in just a minute.

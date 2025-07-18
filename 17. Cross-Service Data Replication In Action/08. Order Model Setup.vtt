@@ -1,0 +1,442 @@
+WEBVTT
+
+00:00.780 --> 00:04.460
+In this video, we're going to write out an implementation for our order model.
+
+00:04.470 --> 00:08.750
+So we're going to write out some description of the order model using some mongoose related code.
+
+00:08.760 --> 00:10.020
+Let's get to it right away.
+
+00:10.820 --> 00:11.930
+Back inside of my editor.
+
+00:11.930 --> 00:14.690
+I want to very quickly give you just a very fast reminder.
+
+00:14.690 --> 00:16.540
+We've been over this twice now inside the course.
+
+00:16.550 --> 00:21.680
+If we go back to our service and find the models directory and then user is inside there.
+
+00:21.890 --> 00:26.000
+So remember, whenever we're getting Mongoose and TypeScript to work together, a good way of doing
+
+00:26.000 --> 00:28.790
+this is to write out those three interfaces at the top of the file.
+
+00:28.910 --> 00:32.840
+One describes the properties that are used to create a user or create a record.
+
+00:34.160 --> 00:39.320
+We've got another interface that describes all the properties that a saved document has, and then a
+
+00:39.320 --> 00:43.210
+third interface to describe all the properties that the overall model it has.
+
+00:43.220 --> 00:46.160
+And remember the model represents the overall collection.
+
+00:46.910 --> 00:52.420
+We build that interface to describe the model, to specifically add in that one extra method right there,
+
+00:52.430 --> 00:53.430
+the build method.
+
+00:53.450 --> 00:57.380
+The whole reason that we're putting together that build method is just to allow TypeScript to do some
+
+00:57.380 --> 01:02.600
+validation or type checking of the arguments that we're using to create a new document so that we got
+
+01:02.600 --> 01:04.400
+that reminder out of the way.
+
+01:05.850 --> 01:11.550
+Back to our order service inside of our CRC directory will make a new folder called Models and then
+
+01:11.550 --> 01:15.300
+inside there a new file called Order Dots.
+
+01:16.880 --> 01:17.690
+At the very top.
+
+01:17.690 --> 01:19.010
+Let's get Mongoose.
+
+01:21.060 --> 01:22.980
+Well, then create those three interfaces.
+
+01:25.240 --> 01:26.980
+We don't need to export that.
+
+01:26.980 --> 01:27.580
+My mistake.
+
+01:27.580 --> 01:30.790
+So interface order adders.
+
+01:32.310 --> 01:34.410
+Interface order, duck.
+
+01:35.940 --> 01:38.160
+Extending magazine document.
+
+01:41.280 --> 01:42.930
+And then order model.
+
+01:43.980 --> 01:46.200
+Extending Mongoose model.
+
+01:46.320 --> 01:48.150
+And this is a generic type.
+
+01:48.600 --> 01:51.420
+So we will put in order doc like so.
+
+01:52.910 --> 01:56.240
+So let's now provide some types for each of these different interfaces.
+
+01:56.540 --> 01:57.990
+First off, order adders.
+
+01:58.010 --> 02:03.650
+So this thing is going to have a user ID that is a string, a status for the order, which is going
+
+02:03.650 --> 02:04.640
+to be a string as well.
+
+02:04.670 --> 02:07.280
+We're going to come back and update the type on string in just a little bit.
+
+02:07.280 --> 02:09.440
+But right now, we'll just leave it as a string.
+
+02:10.570 --> 02:14.740
+Then expires at which will be a date object.
+
+02:15.420 --> 02:20.250
+And then finally and this one's going to be a little bit surprising because back on this diagram over
+
+02:20.250 --> 02:22.970
+here, I said that in order was going to have a ticket ID.
+
+02:22.980 --> 02:27.270
+And so that implies that, well, we're going to have a ticket ID that is a string or something like
+
+02:27.270 --> 02:27.660
+that.
+
+02:27.660 --> 02:32.580
+But remember in the last video we just discussed that to actually relate an order with a ticket, we're
+
+02:32.580 --> 02:36.330
+going to somehow embed a reference over to a ticket document.
+
+02:36.750 --> 02:40.980
+So to do so and we'll go further into this feature in just a little bit, we're going to say that order
+
+02:40.980 --> 02:48.990
+ATRs has to have a ticket property knot, ticket ID, a ticket property that is an instance of a ticket.
+
+02:49.200 --> 02:51.030
+So we're going to write in ticket doc right there.
+
+02:51.360 --> 02:56.130
+We do not have a ticket doc type inside of our orders service just yet.
+
+02:56.130 --> 02:59.430
+So right now that's going to result in an error and we're not going to able to fix that for a little
+
+02:59.430 --> 02:59.940
+bit.
+
+03:00.270 --> 03:01.650
+So we're going to leave that for right now.
+
+03:01.710 --> 03:05.700
+We'll come back to it in, discuss a little bit more about what's going on with this ref population
+
+03:05.700 --> 03:06.690
+feature in a moment.
+
+03:08.470 --> 03:10.090
+Next up is order dock.
+
+03:10.390 --> 03:14.950
+So order documents are going to have the exact same set of properties that are required to create an
+
+03:14.950 --> 03:15.460
+order.
+
+03:15.490 --> 03:19.870
+Remember, the reason we create these two separate interfaces is because the properties that are required
+
+03:19.870 --> 03:24.580
+to create an order might be different than the properties that actually end up on an order.
+
+03:24.610 --> 03:27.070
+So that's why we got these two separate interfaces.
+
+03:27.280 --> 03:32.290
+This project or this service right here is finally the first time where they are going to end up with
+
+03:32.290 --> 03:33.670
+a different set of properties.
+
+03:34.060 --> 03:35.950
+That's why we have the two separate ones.
+
+03:36.490 --> 03:39.130
+But right now they are going to be temporarily identical.
+
+03:39.130 --> 03:43.750
+So I'm going to take all the properties off of order adders that we just added and paste them down into
+
+03:43.750 --> 03:44.890
+order doc as well.
+
+03:47.070 --> 03:49.090
+Then after that, let's do our order model.
+
+03:49.110 --> 03:54.690
+So all we're doing here is saying that a model has this one extra little method on it called build.
+
+03:55.080 --> 03:57.030
+That's going to take an argument called adders.
+
+03:57.030 --> 03:59.070
+That is of type order adders.
+
+03:59.660 --> 04:02.330
+And out of that, we will get an order document.
+
+04:04.480 --> 04:04.670
+Okay.
+
+04:04.780 --> 04:06.370
+So there's our three interfaces.
+
+04:07.910 --> 04:12.320
+So now let's build out our schema that actually describes the different properties and some rules about
+
+04:12.320 --> 04:14.870
+them that we're going to have on an instance of an order.
+
+04:15.140 --> 04:16.550
+So we'll create order schema.
+
+04:17.700 --> 04:20.340
+This will be a new mongoose dot schema.
+
+04:22.320 --> 04:27.710
+On the first argument right here, we'll have an object where we'll provide the different properties
+
+04:27.720 --> 04:30.180
+we want Mongoose to worry about on in order.
+
+04:30.210 --> 04:32.280
+So first off, there's going to be a user ID.
+
+04:33.980 --> 04:35.510
+Its type is going to be string.
+
+04:36.020 --> 04:38.090
+Remember the type right here of string.
+
+04:38.120 --> 04:44.000
+This is actual kind of JavaScript code that really gets executed, whereas the interfaces up here are
+
+04:44.000 --> 04:47.810
+typescript interfaces that get stripped out before our code is executed.
+
+04:47.930 --> 04:50.750
+The types we're listing right here are TypeScript types.
+
+04:50.750 --> 04:56.960
+So this is a lowercase string, whereas down here this is an actual value that will be consumed by mongoose.
+
+04:56.990 --> 05:01.100
+This right here has a capital S string because that is the string constructor.
+
+05:02.240 --> 05:03.650
+We definitely want to make sure.
+
+05:04.380 --> 05:07.530
+That every order that gets created has a user tied to it.
+
+05:07.530 --> 05:09.660
+So we'll put on a required true property.
+
+05:11.050 --> 05:13.870
+Next up, we're going to say that every order has a status.
+
+05:14.890 --> 05:16.300
+It's going to be a string.
+
+05:18.260 --> 05:20.390
+And that will also be required.
+
+05:20.840 --> 05:25.490
+So every order that gets created at all points in time, it must have a status to describe if it is
+
+05:25.490 --> 05:29.180
+awaiting payment, if it's been canceled, if it's been purchased, and so on.
+
+05:30.680 --> 05:32.480
+Next up expires at.
+
+05:32.720 --> 05:37.400
+So this will be of type mongoose schema types.
+
+05:37.670 --> 05:38.030
+Date.
+
+05:38.030 --> 05:42.620
+That's how we say to mongoose that something is going to be a date property or a date object.
+
+05:43.500 --> 05:48.210
+Now this one is not going to be required because there might be scenarios where we do not actually want
+
+05:48.210 --> 05:52.710
+in order to ever expire, for example, after a ticket has actually been or an order has actually been
+
+05:52.710 --> 05:53.280
+paid for.
+
+05:53.310 --> 05:58.230
+If someone pays for an order, we no longer want to expire it, so we might eventually set expires out
+
+05:58.230 --> 06:01.020
+to be null or undefined or something like that.
+
+06:02.420 --> 06:07.310
+And then finally, here's where we're going to set up our actual reference between the order document
+
+06:07.310 --> 06:08.290
+and a ticket.
+
+06:08.300 --> 06:10.910
+So we're going to say that there is a ticket property.
+
+06:12.330 --> 06:18.240
+Its type is going to be mongoose schema types object ID.
+
+06:19.480 --> 06:23.230
+And then we're going to put on here as well ref of ticket.
+
+06:23.860 --> 06:28.600
+So again, at a time back into this whole reference system that we just discussed in the last video
+
+06:28.600 --> 06:31.540
+and we're going to get a deeper dive on that whole system in just a moment.
+
+06:33.760 --> 06:37.510
+All right, so there is our mongoose schema, or at least the first argument we're now going to put
+
+06:37.510 --> 06:38.740
+in the options argument.
+
+06:38.740 --> 06:43.750
+So a second argument to this thing that is also going to be an object inside of here.
+
+06:43.750 --> 06:46.180
+We're going to set that to JSON property.
+
+06:47.050 --> 06:49.060
+Will define a transform function.
+
+06:49.420 --> 06:53.980
+And remember, the whole goal of this thing is to take in some value that we're trying to turn into
+
+06:53.980 --> 06:54.640
+JSON.
+
+06:54.640 --> 06:59.110
+We're going to delete off that underscore ID property and set it on the ID property instead.
+
+06:59.350 --> 07:06.220
+So we'll say red ID is red dot underscore ID, then delete red underscore ID.
+
+07:09.290 --> 07:10.430
+Just a little bit more.
+
+07:11.400 --> 07:17.850
+After all the schema stuff will then define the build method on the order schema statics object.
+
+07:17.850 --> 07:21.420
+So this is what is going to give us the build method on the actual order model.
+
+07:23.180 --> 07:28.880
+So just like we've done on our other services will say order schema statics dot build.
+
+07:30.390 --> 07:36.360
+This is going to be a function that takes in some argument of adders and it must be of type order adders
+
+07:37.140 --> 07:39.060
+never going to return a new order.
+
+07:40.280 --> 07:42.170
+And throw the attributes inside there.
+
+07:42.770 --> 07:46.310
+We get an air out of order right here, but that will go away in just a moment.
+
+07:46.310 --> 07:50.930
+Right after we say Collins to order is our actual mongoose model.
+
+07:52.380 --> 07:54.690
+Remember model is a generic function.
+
+07:54.690 --> 07:59.370
+So we're going to put on those angled brackets and then through an ordered doc ordered a bottle.
+
+08:00.520 --> 08:02.020
+Then the name of the collection.
+
+08:02.650 --> 08:07.300
+Which is going to be order and then our order schema.
+
+08:08.690 --> 08:12.680
+Then finally at the very bottom export order in curly braces.
+
+08:15.070 --> 08:15.820
+So that's it.
+
+08:16.720 --> 08:20.650
+Now at this point, there's really two big points of discussion or two things we need to kind of figure
+
+08:20.650 --> 08:20.940
+out.
+
+08:20.950 --> 08:26.050
+We need to understand a little bit more about how that ref system with Mongoose works, because what
+
+08:26.050 --> 08:27.720
+is this type right here exactly?
+
+08:27.730 --> 08:32.560
+Why is the type object ID as opposed to say type ticket or something like that?
+
+08:32.590 --> 08:34.540
+We've got to figure out a little bit more on that side.
+
+08:35.210 --> 08:39.830
+We need to make sure that we define these ticket doc interfaces somewhere inside of our project.
+
+08:40.190 --> 08:44.810
+And then also I mentioned that we're going to give a better type two status right here to describe the
+
+08:44.810 --> 08:45.920
+status of an order.
+
+08:45.920 --> 08:47.450
+So we've got to figure that out as well.
+
+08:47.450 --> 08:49.010
+So just a little bit work left.
+
+08:49.010 --> 08:52.190
+Let's take a pause right here and tackle these problems in just a moment.

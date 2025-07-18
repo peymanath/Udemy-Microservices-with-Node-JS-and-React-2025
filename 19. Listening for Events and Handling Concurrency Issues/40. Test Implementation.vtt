@@ -1,0 +1,259 @@
+WEBVTT
+
+00:01.040 --> 00:02.480
+Our set up function is complete.
+
+00:02.480 --> 00:05.030
+We're now going to start to write out some tests around our order created.
+
+00:05.030 --> 00:07.910
+Listener So we'll throw down a first test right here.
+
+00:07.910 --> 00:09.650
+What do we really care about testing here?
+
+00:09.650 --> 00:16.160
+Well, we probably really want to make sure that we take the ticket and we set its ID or the order ID
+
+00:16.160 --> 00:20.200
+property equal to whatever the order ID was out of the data object.
+
+00:20.210 --> 00:21.230
+That's the big goal here.
+
+00:21.230 --> 00:22.760
+That's what we're really trying to do.
+
+00:23.240 --> 00:27.890
+We also, of course, care about acting the message as well, assuming everything goes as expected.
+
+00:28.890 --> 00:31.080
+So we're going to write out to success case tests.
+
+00:31.080 --> 00:36.420
+Once again, we'll say it sets the user ID of the ticket.
+
+00:39.440 --> 00:40.670
+We'll do one test for that.
+
+00:41.920 --> 00:49.300
+And then another test to say that it calls the message or I think in our previous test, we just simply
+
+00:49.300 --> 00:52.630
+said axe the message just to be a little bit more concise.
+
+00:56.660 --> 00:56.740
+Okay.
+
+00:56.840 --> 00:59.510
+So our first test right here, we'll call our setup function.
+
+00:59.510 --> 01:00.920
+It is an async function.
+
+01:01.460 --> 01:03.860
+We'll just make sure that we use the awake keyword on it.
+
+01:04.400 --> 01:07.580
+We'll pull out the listener ticket data and message.
+
+01:08.350 --> 01:09.880
+From a wait setup.
+
+01:10.480 --> 01:11.200
+Looks good.
+
+01:12.830 --> 01:18.530
+So we're then going to take our listeners on message function and call it with the data and message
+
+01:18.530 --> 01:19.280
+arguments.
+
+01:20.220 --> 01:24.660
+So await listener on message, pass in data and message.
+
+01:25.140 --> 01:27.030
+Then we can write out our expectation.
+
+01:27.390 --> 01:30.150
+So in this case, we want to reach into our database once again.
+
+01:30.150 --> 01:35.700
+We want to find the ticket that has presumably been updated inside there, and then just make sure that
+
+01:35.700 --> 01:39.030
+the ticket has its user or order ID property set.
+
+01:39.730 --> 01:43.690
+Now, the ticket that we already have inside of here, that is an out of date ticket document.
+
+01:43.720 --> 01:48.310
+Presumably we have already written an updated version back into our data collection or the collection
+
+01:48.310 --> 01:49.270
+of all of our different tickets.
+
+01:49.270 --> 01:51.190
+So we do have to re fetch this thing.
+
+01:51.940 --> 01:53.350
+We'll say updated ticket.
+
+01:54.100 --> 01:56.890
+Is a wait ticket find by ID.
+
+01:57.070 --> 02:00.970
+We want to find the ticket with the same ID as the one we have right here.
+
+02:00.970 --> 02:04.330
+But again, we have to re fetch this thing because it has some out of date data.
+
+02:05.630 --> 02:09.840
+So we'll then take a look at the updated ticket and just make sure that it's audited property is set.
+
+02:09.860 --> 02:10.520
+That's it.
+
+02:11.770 --> 02:13.210
+They'll do and expect.
+
+02:14.470 --> 02:16.840
+Updated ticket, exclamation.
+
+02:18.080 --> 02:19.100
+Order ID.
+
+02:19.980 --> 02:23.880
+To equal the data objects ID.
+
+02:25.350 --> 02:30.360
+So data ID and again, data ID is the ID of the order that we had just created.
+
+02:31.090 --> 02:32.110
+And that should be it.
+
+02:32.900 --> 02:33.670
+So let's save this.
+
+02:33.680 --> 02:38.420
+We'll go back over to our terminal and start up our test suite inside of our tickets service.
+
+02:40.470 --> 02:42.480
+I still have the test going for my order service right here.
+
+02:42.480 --> 02:46.200
+I'm going to close all that stuff down because they're really focused on the ticket service right now.
+
+02:47.310 --> 02:51.480
+I'll go back over two tickets to an NPN run test and we'll see how we're doing now.
+
+02:51.480 --> 02:55.890
+We might see some other failures inside of here or all those kind of same versioning issues around our
+
+02:56.100 --> 02:57.660
+handlers we saw a little bit ago.
+
+02:57.660 --> 02:59.070
+So some other stuff is failing.
+
+02:59.070 --> 02:59.730
+That's okay.
+
+02:59.770 --> 03:01.590
+Looks like we're okay in this case, however.
+
+03:01.770 --> 03:03.360
+So that looks fantastic.
+
+03:04.050 --> 03:07.260
+And I just want to find my listener test right there in particular.
+
+03:08.010 --> 03:10.890
+Let's filter our test and just run the listener one.
+
+03:12.710 --> 03:15.500
+So I'll do a P and then listener.
+
+03:18.880 --> 03:21.430
+And they'll make sure that that thing fails as usual.
+
+03:21.460 --> 03:25.660
+I know the steps seems kind of arbitrary and not important, but you would be surprised how often you
+
+03:25.660 --> 03:29.980
+can actually capture a little mistakes in your testing by making sure that stuff actually does fail.
+
+03:30.160 --> 03:32.170
+So I will comment that thing out now.
+
+03:32.170 --> 03:37.660
+We should not be sending the order ID property at all, and we do in fact see this thing fail.
+
+03:37.870 --> 03:39.070
+So that's fantastic.
+
+03:40.630 --> 03:40.790
+Okay.
+
+03:40.810 --> 03:41.680
+Back to working.
+
+03:42.130 --> 03:45.370
+Let's now also take care of making sure that we act the message as well.
+
+03:46.990 --> 03:48.850
+We're going to again do the setup step.
+
+03:49.270 --> 03:50.430
+Copy, paste that down.
+
+03:50.440 --> 03:52.150
+We're going to call on message once again.
+
+03:52.180 --> 03:52.480
+Copy.
+
+03:52.480 --> 03:53.320
+Paste that down.
+
+03:54.210 --> 03:58.460
+And then we can take a look at the message property and just make sure it was invoked.
+
+03:58.470 --> 04:02.460
+So expect message to have been dealt.
+
+04:03.680 --> 04:04.900
+So I'm going to save that.
+
+04:05.950 --> 04:06.640
+Passes.
+
+04:06.640 --> 04:07.960
+Comment out on message.
+
+04:07.960 --> 04:08.800
+Save it.
+
+04:09.610 --> 04:10.210
+Bales.
+
+04:10.210 --> 04:11.500
+Everything is good to go.
+
+04:11.860 --> 04:12.280
+Cool.
+
+04:13.440 --> 04:13.770
+All right.
+
+04:13.770 --> 04:16.920
+Well, I'd say that our order created listener looks pretty reasonable.
+
+04:17.130 --> 04:20.060
+But there might be one or two other things we want to take care of inside of here.
+
+04:20.070 --> 04:25.320
+So let's take a quick pause to kind of walk through this entire workflow of resolving a ticket or reserving
+
+04:25.320 --> 04:28.410
+a ticket and some things we might want to do along that process.

@@ -1,0 +1,172 @@
+WEBVTT
+
+00:00.980 --> 00:05.330
+In this video, we're going to take a look at a very easy way to capture the cookie that gets sent back
+
+00:05.330 --> 00:10.010
+to us during this initial request and include that cookie in the follow up request right after it.
+
+00:10.250 --> 00:13.340
+We're going to first take a look at this very easy way of handling this.
+
+00:13.340 --> 00:17.690
+But then after that, we're going to start to do a little bit larger refactor to make it really easy
+
+00:17.690 --> 00:19.820
+to make authenticated requests in the future.
+
+00:19.820 --> 00:24.230
+Because, again, just about every other service we're going to put together and write test for, we're
+
+00:24.230 --> 00:27.010
+going to have to be authenticated to make requests to it.
+
+00:27.020 --> 00:31.760
+So we want to make sure that in a testing environment, it is really, really easy to get authenticated.
+
+00:32.260 --> 00:34.520
+Okay, so here's the very easy solution.
+
+00:34.940 --> 00:39.350
+We're going to first take a look at the initial request right here, which should be giving us back
+
+00:39.350 --> 00:40.010
+a cookie.
+
+00:40.680 --> 00:43.220
+I'm going to capture the response so we get sent.
+
+00:43.230 --> 00:49.620
+So I will call this something like off response, maybe a better name for it would be like sign up response
+
+00:49.620 --> 00:50.550
+or something like that.
+
+00:50.970 --> 00:54.300
+So inside there is going to be the cookie that we actually care about.
+
+00:55.080 --> 01:01.110
+So we can extract that thing using response or off response.
+
+01:01.490 --> 01:02.430
+Target.
+
+01:03.000 --> 01:03.540
+Set.
+
+01:03.600 --> 01:04.200
+Cookie.
+
+01:04.920 --> 01:07.170
+So we are pulling off that authentication cookie.
+
+01:07.170 --> 01:10.170
+That is the thing that contains our JSON web token inside of it.
+
+01:10.530 --> 01:14.910
+We now want to take that cookie and include it in this follow up request that we're making right here.
+
+01:15.270 --> 01:18.710
+We can do so very easily by right after the get.
+
+01:18.720 --> 01:22.530
+We're going to add in another change on method of set.
+
+01:22.740 --> 01:26.200
+We can use set to set different headers on the request are about to make.
+
+01:26.220 --> 01:29.070
+So in this case, we're going to set the cookie header.
+
+01:29.740 --> 01:33.910
+And we'll set it to the cookie that we got from the initial response.
+
+01:34.240 --> 01:36.550
+We'll put in cookie like so.
+
+01:38.960 --> 01:42.290
+All right, so let's now save this flight back over to our terminal.
+
+01:43.310 --> 01:44.570
+Tests are rerunning.
+
+01:46.130 --> 01:46.910
+And there we go.
+
+01:46.910 --> 01:48.260
+There is our current user.
+
+01:48.480 --> 01:52.580
+Now, we could very easily write out a test and make sure that there is a current user property that
+
+01:52.580 --> 01:55.790
+is defined and that there are some kind of email defined on there as well.
+
+01:56.450 --> 02:05.000
+So for example, I'm going to replace the console.log right here within expect response dot body dot
+
+02:05.000 --> 02:07.460
+current user dot email.
+
+02:08.480 --> 02:09.530
+Two equal.
+
+02:09.800 --> 02:10.820
+And we'll have that email.
+
+02:10.820 --> 02:14.330
+We'll make sure that it equals the email we had signed up as originally up here.
+
+02:14.720 --> 02:16.250
+It will say test at test.
+
+02:18.780 --> 02:19.050
+Okay.
+
+02:19.050 --> 02:19.890
+Let's save that.
+
+02:20.490 --> 02:25.770
+I'm going to flip back over and after these tests run again, we should see now current user is passing.
+
+02:26.070 --> 02:26.700
+Very good.
+
+02:27.670 --> 02:27.970
+All right.
+
+02:27.970 --> 02:29.860
+So without a doubt, this approach right here works.
+
+02:29.860 --> 02:35.530
+But as I mentioned, every other service that we test, we're going to have to probably initially sign
+
+02:35.530 --> 02:36.520
+up somehow.
+
+02:36.700 --> 02:40.870
+In other words, we want to be able to make authenticate requests to these other services very, very
+
+02:40.870 --> 02:42.550
+easily in a testing environment.
+
+02:42.820 --> 02:44.260
+So we're going to take a quick pause right here.
+
+02:44.260 --> 02:48.460
+When we come back, the next video, we're going to refactor some of this authentication stuff into
+
+02:48.460 --> 02:50.950
+a helper function and this helper function.
+
+02:50.950 --> 02:54.790
+We're going to eventually kind of copy paste around to a lot of different services.
+
+02:54.820 --> 02:59.500
+It's going to make testing, authentication and making sure we can make authenticated requests really
+
+02:59.500 --> 03:00.730
+easy and straightforward.
+
+03:00.940 --> 03:03.250
+So a quick pause, and I'll see you in just a minute.

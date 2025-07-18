@@ -1,0 +1,292 @@
+WEBVTT
+
+00:00.940 --> 00:04.210
+In this video, I want to make one additional change to our program.
+
+00:04.390 --> 00:09.430
+I want to take this console.log statement and extract it into a separate helper function so that will
+
+00:09.430 --> 00:14.560
+allow us to leave this promise body right here a little bit more compact than it currently is.
+
+00:14.950 --> 00:18.520
+So to get started, I'm going to define a new function at the bottom of the file.
+
+00:18.880 --> 00:20.830
+I'm going to call it log to do.
+
+00:22.260 --> 00:24.270
+I'm going to set this up as an arrow function.
+
+00:24.570 --> 00:30.540
+And I'm going to say that when we call this function, we should take in the arguments ID title and
+
+00:30.540 --> 00:31.290
+completed.
+
+00:31.890 --> 00:37.140
+Now if you see a little nasty underline right here, like a yellow or even a red underline, that's
+
+00:37.140 --> 00:37.800
+totally fine.
+
+00:37.800 --> 00:39.270
+Just stick with it for a moment.
+
+00:40.050 --> 00:44.610
+Once I define that function, I'm then going to cancel or simply cut and paste the console.log inside
+
+00:44.610 --> 00:46.320
+there like so.
+
+00:47.890 --> 00:50.860
+So now we can call that function from up here.
+
+00:51.540 --> 00:53.400
+And that will do our console.log for us.
+
+00:54.180 --> 00:56.190
+So I'm going to call log to do.
+
+00:57.700 --> 01:02.890
+And I'll pass in the ID that completed flag and the title like so.
+
+01:03.650 --> 01:07.100
+Now, once again, if you're looking at this and you're thinking, Stephen, you just made an error
+
+01:07.100 --> 01:07.580
+there.
+
+01:07.610 --> 01:08.630
+That's totally fine.
+
+01:08.630 --> 01:10.640
+Once again, just bear with me for a moment.
+
+01:11.120 --> 01:15.110
+So I'm not going to save this file and I'm going to flip back with my turtle and let's try to run this
+
+01:15.110 --> 01:15.860
+once more.
+
+01:16.070 --> 01:16.580
+So I'll do it.
+
+01:16.910 --> 01:19.540
+Node indexes.
+
+01:20.460 --> 01:21.450
+In my program runs.
+
+01:21.450 --> 01:25.560
+But if you look carefully, the console.log is not quite right.
+
+01:25.560 --> 01:28.530
+So it says has a title of false.
+
+01:28.890 --> 01:29.940
+Is it finished?
+
+01:29.940 --> 01:31.830
+Deluxe Art Autumn.
+
+01:31.860 --> 01:32.310
+Hmm.
+
+01:32.310 --> 01:34.020
+Something's definitely off here.
+
+01:34.170 --> 01:35.880
+So what did we do wrong?
+
+01:36.390 --> 01:40.290
+Well, if I flip back over and look very carefully, you'll notice on my log To-Do function.
+
+01:40.290 --> 01:45.450
+I was expecting arguments in the order of ID and then the title and then completed.
+
+01:45.810 --> 01:52.020
+However, when I called the function, I passed an ID, then completed and then title.
+
+01:52.170 --> 01:56.040
+So I clearly mixed up the order of arguments into the function.
+
+01:56.460 --> 02:02.250
+And once again, I got absolutely no information about the error that I just made until I actually executed
+
+02:02.250 --> 02:03.990
+my code at the terminal.
+
+02:04.290 --> 02:06.690
+So once again, here's the lesson about TypeScript.
+
+02:06.690 --> 02:12.090
+If we're not using TypeScript correctly or for just writing out plain JavaScript, we don't find errors
+
+02:12.090 --> 02:17.310
+until we run our code, which is pretty inefficient from a developer perspective.
+
+02:17.990 --> 02:23.270
+So if we used TypeScript appropriately, we could have gotten a warning about this or some error inside
+
+02:23.270 --> 02:25.670
+of our editor before we ran our code.
+
+02:25.670 --> 02:29.480
+And that would have been a signal to you and me that we had to fix up something.
+
+02:30.080 --> 02:31.520
+So how are we going to fix this up?
+
+02:31.880 --> 02:34.520
+Well, I'm going to find my log to the function right here.
+
+02:34.790 --> 02:39.170
+And on each of these arguments, I'm going to add in a type annotation.
+
+02:39.620 --> 02:41.760
+So we've used that term several times so far.
+
+02:41.780 --> 02:45.920
+Remember, we're going to really clarify all these TypeScript topics in just a moment.
+
+02:45.920 --> 02:47.640
+So for right now, just bear with me.
+
+02:47.660 --> 02:50.540
+We're going to add a little bit of TypeScript syntax here.
+
+02:51.110 --> 02:56.330
+So I'm going to say that this ID variable, whatever we pass in here, it has to be a number.
+
+02:57.080 --> 02:58.270
+And then our title.
+
+02:58.280 --> 03:00.950
+It has to be a string, remember, that makes sense.
+
+03:00.950 --> 03:04.030
+Our title is going to be a string and that completed flag.
+
+03:04.040 --> 03:07.190
+It has to be a boolean, either true or false.
+
+03:09.730 --> 03:14.710
+So we've now written out ID colon number and then the same thing for the other two arguments as well.
+
+03:15.250 --> 03:17.610
+Now this is not creating an object or anything like that.
+
+03:17.620 --> 03:23.410
+Instead, we are trying to describe the type of variable that ID is going to be, the type of variable
+
+03:23.410 --> 03:24.160
+that title is going to be.
+
+03:24.160 --> 03:26.140
+And the same thing for completed as well.
+
+03:27.160 --> 03:27.400
+Now.
+
+03:27.400 --> 03:32.140
+As soon as I add that in, I can then see a red underline under the completed flag right here.
+
+03:32.170 --> 03:34.080
+And if I hover over it, it will tell me.
+
+03:34.090 --> 03:37.870
+Argument of type boolean is not assignable to parameter of type string.
+
+03:38.350 --> 03:42.220
+So what this is telling me is that completed is supposed to be a boolean, right?
+
+03:42.220 --> 03:42.940
+That's what this is.
+
+03:42.940 --> 03:44.110
+Completed is a boolean.
+
+03:44.110 --> 03:46.210
+It is a true or false value.
+
+03:46.790 --> 03:51.080
+And I tried to pass it in as the second argument to the log to do function.
+
+03:51.470 --> 03:55.700
+But log To-Do says the second argument has to be a string.
+
+03:55.970 --> 03:59.090
+A boolean is not a string, and that's why we are seeing this error.
+
+03:59.510 --> 04:04.580
+So once again, this is a notice to you and I as a developers that were doing something incorrectly,
+
+04:04.580 --> 04:06.020
+and we have to fix this up.
+
+04:06.500 --> 04:11.300
+So in this case, I would probably analyze this and say, Oh, yeah, I just made a mistake in the order
+
+04:11.300 --> 04:12.260
+of arguments here.
+
+04:12.380 --> 04:14.120
+So I would flip the order around.
+
+04:15.320 --> 04:16.100
+Like so.
+
+04:16.400 --> 04:18.110
+And then the message goes away.
+
+04:18.470 --> 04:20.060
+And now I can save this file.
+
+04:20.300 --> 04:26.390
+I can flip back over to my terminal again, run the file once more, and now I'll see the correct result.
+
+04:27.580 --> 04:28.360
+All right.
+
+04:28.360 --> 04:29.360
+So that's it.
+
+04:29.380 --> 04:32.680
+Two quick examples of why we like to use TypeScript.
+
+04:32.830 --> 04:33.460
+We just saw it.
+
+04:33.460 --> 04:38.950
+Two examples of extremely common errors, like people making typos on object properties.
+
+04:38.950 --> 04:45.700
+That happens every day, probably thousands or even tens of thousands of times a day across the world
+
+04:45.700 --> 04:46.690
+with JavaScript.
+
+04:47.020 --> 04:52.600
+And we also saw an example of calling a function with the incorrect order of arguments, also an extremely
+
+04:52.600 --> 04:53.560
+common error.
+
+04:53.830 --> 04:57.070
+In both cases, we would have had to run our code to find these errors.
+
+04:57.070 --> 05:02.800
+But by using a tiny amount of typescript, we found these errors during development and we saved ourselves
+
+05:02.800 --> 05:03.940
+a lot of time.
+
+05:04.540 --> 05:09.250
+So we've now seen some very basic examples of why we like to use TypeScript.
+
+05:09.520 --> 05:10.930
+So let's take a quick pause right here.
+
+05:10.930 --> 05:14.080
+We're going to start working on our next application in the next video.

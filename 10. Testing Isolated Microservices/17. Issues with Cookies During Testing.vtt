@@ -1,0 +1,265 @@
+WEBVTT
+
+00:01.200 --> 00:01.770
+In this video.
+
+00:01.770 --> 00:05.310
+We're going to move on to testing our last root handler of current user.
+
+00:05.340 --> 00:09.030
+Now, on the last two tests we put together, the last two things we have tested.
+
+00:09.060 --> 00:11.250
+I've said that they were optional videos in this case.
+
+00:11.250 --> 00:15.810
+I really recommend you stick around because we're going to very quickly encounter a little problem around
+
+00:15.810 --> 00:20.130
+testing this row handler that's going to have some far reaching impact on some tests we're going to
+
+00:20.130 --> 00:21.930
+write for other services in the future.
+
+00:22.050 --> 00:24.420
+So with that in mind, let's just tackle this thing.
+
+00:24.420 --> 00:26.520
+Let's try to put some implementation together.
+
+00:26.520 --> 00:30.960
+And we're going to start to see that there is a little issue around testing current user.
+
+00:31.560 --> 00:31.890
+All right.
+
+00:31.890 --> 00:35.690
+So as usual, I'm going to find the test directory inside there.
+
+00:35.700 --> 00:40.050
+I'll make a new file called Current User Tests.
+
+00:41.560 --> 00:46.360
+At the top, we will once again add in some imports, very similar to the two we put together previously.
+
+00:46.930 --> 00:50.080
+So we will get request from super test.
+
+00:50.990 --> 00:53.030
+And we'll get app from.
+
+00:53.770 --> 00:55.660
+Up two directories app.
+
+00:57.880 --> 00:58.470
+Okay.
+
+00:58.480 --> 01:02.230
+After that, let's go ahead and put together a very simple statement.
+
+01:02.230 --> 01:08.920
+So chances are we want to try to sign in and then make a request to current user and get a response
+
+01:08.920 --> 01:14.770
+back and verify that the response we get back says that we have a current user of whoever we had signed
+
+01:14.770 --> 01:19.900
+in or signed up, as it's all put together in its statement that says something like it.
+
+01:20.940 --> 01:24.030
+Responds with details about the current.
+
+01:25.570 --> 01:26.200
+User.
+
+01:29.240 --> 01:32.870
+So in order to really test this thing out, we first have to sign up.
+
+01:32.870 --> 01:37.730
+We have to somehow create a new account and then make our request to the current user endpoint.
+
+01:37.940 --> 01:42.260
+So we're going to sign up very similar to how we had previously back inside of our sign up test.
+
+01:42.260 --> 01:45.650
+So I'll do an await request to app.
+
+01:46.420 --> 01:49.900
+We'll make a post request to API users sign up.
+
+01:50.660 --> 01:53.390
+I'm going to send along a valid email.
+
+01:55.240 --> 01:56.890
+And a valid password.
+
+01:59.570 --> 02:03.620
+And then we'll put on a little assertion to this thing just to make sure that we signed up correctly.
+
+02:03.710 --> 02:06.020
+So I'll put in and expect of 201.
+
+02:07.980 --> 02:13.590
+So after this request, we should be signed up or authenticated with the application.
+
+02:13.590 --> 02:14.010
+Right.
+
+02:14.040 --> 02:15.000
+Makes sense.
+
+02:15.740 --> 02:18.590
+So now we can make a follow up request right down here.
+
+02:19.040 --> 02:23.510
+We can attempt to reach out to the current user endpoint and try to get some details about this user
+
+02:23.510 --> 02:25.100
+that we just signed up as we can.
+
+02:25.100 --> 02:30.130
+Then take the response, take a look at the body, the response, and make some assertion around it.
+
+02:30.140 --> 02:32.390
+At least that is what we hope to do.
+
+02:32.420 --> 02:36.350
+I'm going to tell you right now that it's not going to quite work out as we hope, but let's try it
+
+02:36.350 --> 02:37.160
+out anyways.
+
+02:38.560 --> 02:39.970
+So I'll get the response.
+
+02:42.340 --> 02:44.710
+From making a request to.
+
+02:46.130 --> 02:49.280
+API users current user.
+
+02:52.720 --> 02:53.890
+I'm going to send that off.
+
+02:55.690 --> 02:58.510
+And the response we get back should have a 200.
+
+02:58.930 --> 03:01.090
+So I'll put on an expected of 200 like so.
+
+03:02.420 --> 03:06.810
+So now in theory, information about the current user should be on response right there.
+
+03:07.820 --> 03:13.190
+Now to actually get the information from the body of that response, we can refer to response body.
+
+03:13.190 --> 03:15.830
+That's where the current user should exist.
+
+03:16.430 --> 03:22.010
+So down here, rather than writing out an expectation right away, let's do a console log of response
+
+03:22.460 --> 03:23.180
+body like.
+
+03:23.180 --> 03:25.670
+So let's just take a look at that and see what we get back.
+
+03:26.150 --> 03:26.480
+All right.
+
+03:26.480 --> 03:27.560
+So I'm going to save this.
+
+03:28.070 --> 03:29.660
+I'll go back over to my terminal.
+
+03:30.320 --> 03:31.860
+It looks like my tests are running.
+
+03:33.350 --> 03:38.150
+And sure enough, I get a current user of null, which means that I am not signed in.
+
+03:38.540 --> 03:39.620
+Well, why is that?
+
+03:40.070 --> 03:43.700
+We have made a request right here to sign up to the application after signing up.
+
+03:43.700 --> 03:45.470
+We should be authenticated.
+
+03:45.830 --> 03:51.290
+So why are we not seeing some current user coming back in the response body when we make that request
+
+03:51.290 --> 03:52.400
+to current user?
+
+03:52.940 --> 03:54.290
+Well, here's the issue.
+
+03:54.320 --> 03:59.300
+We've been working in the browser and we've been working with Postman to test out all these different
+
+03:59.300 --> 03:59.870
+route handlers.
+
+03:59.870 --> 04:05.840
+So far, the browser and Postman have some functionality included inside them to automatically manage
+
+04:05.840 --> 04:09.920
+cookies and send cookie data along with any follow up request to our server.
+
+04:10.400 --> 04:12.170
+We are currently making use of super test.
+
+04:12.170 --> 04:18.380
+However, inside of our testing setup right here and super test by default is not going to manage cookies
+
+04:18.380 --> 04:19.760
+for us automatically.
+
+04:20.270 --> 04:25.610
+So while we do get back a cookie during this first request right here that will supposedly authenticate
+
+04:25.610 --> 04:30.980
+us with our server, that cookie does not get included with the follow up request.
+
+04:31.160 --> 04:32.360
+That's the big issue.
+
+04:33.280 --> 04:37.630
+So even though we have gotten back a cookie from the first request, it does not get sent along with
+
+04:37.630 --> 04:38.410
+the second one.
+
+04:38.410 --> 04:44.590
+And so our server assumes that, hey, we are not authenticated and that's why we saw a response.
+
+04:44.650 --> 04:47.230
+That body right here with a current user of null.
+
+04:48.970 --> 04:54.070
+So beyond just making this test pass right here, as you can imagine, at some point in time, the future,
+
+04:54.070 --> 04:58.570
+we're going to want to send authenticated requests to test out other services we put together.
+
+04:58.600 --> 05:02.080
+So it's really not something right here that is just relevant to this test.
+
+05:02.080 --> 05:03.270
+It's very relevant to test.
+
+05:03.280 --> 05:04.720
+We write in the future as well.
+
+05:04.960 --> 05:10.000
+So we need to make sure that we come up with some kind of solution to sign up, take the cookie from
+
+05:10.000 --> 05:14.410
+that, and make it really easy to include that cookie with follow up requests as well.
+
+05:15.130 --> 05:18.910
+Let's take a pause right here and start to figure out some solution to that in the next video.

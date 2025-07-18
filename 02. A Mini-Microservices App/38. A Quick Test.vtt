@@ -1,0 +1,313 @@
+WEBVTT
+
+00:00.890 --> 00:02.240
+Just one last big step.
+
+00:02.240 --> 00:06.350
+We need to make sure that we open up our query service and watch for the comment updated event.
+
+00:06.350 --> 00:10.220
+Whenever we receive that, we're going to find the appropriate comment in memory and we're going to
+
+00:10.220 --> 00:13.730
+update its status to whatever the status is inside the event.
+
+00:13.880 --> 00:14.720
+So let's get to it.
+
+00:14.720 --> 00:16.340
+Let's open up our query service.
+
+00:17.420 --> 00:18.620
+Back inside my editor.
+
+00:19.930 --> 00:22.570
+I'm going to find my query service.
+
+00:22.600 --> 00:24.850
+Open up the index dog's file inside there.
+
+00:25.780 --> 00:28.900
+I will find where we handle all the different events that are coming in here.
+
+00:30.480 --> 00:34.950
+I'm going to add on a new if statement and watch for a type of.
+
+00:36.400 --> 00:37.750
+Comment updated.
+
+00:39.800 --> 00:45.260
+I'll then pull out the updated ID content post ID and status.
+
+00:46.300 --> 00:47.110
+From Data.
+
+00:48.540 --> 00:51.720
+And we'll once again attempt to find the appropriate comment.
+
+00:52.110 --> 00:55.920
+As a quick reminder, we are storing all of our posts inside of an object.
+
+00:55.920 --> 00:57.200
+So we're going to look inside there.
+
+00:57.210 --> 01:00.420
+We're going to find all the comments with the appropriate post.
+
+01:00.420 --> 01:04.650
+And then we need to, just as we did a moment ago, look to that array of comments and find the comment
+
+01:04.650 --> 01:05.550
+that we're trying to update.
+
+01:05.550 --> 01:10.710
+So very similar code to what we wrote in the back inside of our comment service just in the last video.
+
+01:11.370 --> 01:13.710
+So I'll say post is going to be.
+
+01:15.230 --> 01:17.120
+Posts at post ID.
+
+01:21.400 --> 01:23.860
+Well, then find the appropriate comment.
+
+01:25.110 --> 01:30.480
+Which will be post comments find we're going to iterate over every comment.
+
+01:31.380 --> 01:37.620
+And then return comment ID equal to the idea of the comment that we're trying to update.
+
+01:41.770 --> 01:43.240
+Well, then update that comment.
+
+01:44.220 --> 01:47.880
+So let's say that it's status is going to be this new status.
+
+01:48.060 --> 01:52.770
+But remember, climate updated right here is kind of a very generic update or it's saying, hey, there's
+
+01:52.770 --> 01:54.900
+some new attributes associated with this comment.
+
+01:55.080 --> 02:00.210
+So chances are we would want to not only update the status here, we might have also updated the content
+
+02:00.210 --> 02:01.610
+of the comment itself as well.
+
+02:01.620 --> 02:06.000
+So we should probably just take that property and use it to update this comment because again, we don't
+
+02:06.000 --> 02:07.470
+really know what change here might have been.
+
+02:07.470 --> 02:10.020
+The status might have been the content, who knows?
+
+02:10.020 --> 02:13.470
+We'll just take all these updated properties and assign them to this comment.
+
+02:14.070 --> 02:15.240
+So I'll do comment.
+
+02:15.240 --> 02:17.520
+Content is content.
+
+02:20.530 --> 02:21.970
+And that should pretty much be it.
+
+02:22.000 --> 02:26.290
+Once again, we don't have to try to save this or stored this back inside the comments array because
+
+02:26.290 --> 02:28.600
+we are updating the object that already exists inside there.
+
+02:30.530 --> 02:31.100
+Okay.
+
+02:31.100 --> 02:33.830
+So we've made many changes so far.
+
+02:33.830 --> 02:39.710
+And I just want to say that chances are some point in time during this process, you have said, wow,
+
+02:39.710 --> 02:41.750
+this seems crazy, this seems insane.
+
+02:41.750 --> 02:44.330
+How do I know what changes are being made?
+
+02:44.630 --> 02:46.340
+Those are some really great questions.
+
+02:46.340 --> 02:50.900
+And honestly, if you did not get confused during this process of updating these services, I would
+
+02:50.900 --> 02:52.220
+be kind of surprised.
+
+02:52.370 --> 02:57.890
+This really was nasty, and I'm going to be kind of surprised if you made all these changes without
+
+02:57.890 --> 02:59.810
+making any typos whatsoever.
+
+03:00.230 --> 03:04.610
+I just want you to keep that in mind, because this entire process of having to go between these different
+
+03:04.610 --> 03:09.620
+services, add in some events, change events, that's some really nasty stuff.
+
+03:09.620 --> 03:13.700
+And with that doubt, if we're going to start working on any larger application, we need some better
+
+03:13.700 --> 03:19.700
+tools or some better methodology of managing the definition of all these events between these services.
+
+03:19.700 --> 03:20.810
+There's no doubt about it.
+
+03:20.810 --> 03:26.450
+We need a better way of managing all this stuff because the last three videos really have not been fun.
+
+03:27.830 --> 03:31.610
+Having said that, I think it's time to actually do a test of the application and see if this moderation
+
+03:31.610 --> 03:32.930
+stuff is actually working.
+
+03:32.960 --> 03:37.730
+Now, remember, we do not actually have anything on the React side, this application yet to actually
+
+03:37.730 --> 03:42.230
+show something that says, hey, this comment is being approved or rejected or what have you.
+
+03:42.260 --> 03:46.160
+So for right now, we're going to take a look at our network request, log inside of Chrome and make
+
+03:46.160 --> 03:49.850
+sure that all these different comments we're creating have the appropriate status attached to them.
+
+03:50.690 --> 03:54.230
+Before we do any of that testing, however, I'm going to go over to my terminal and I'm going to make
+
+03:54.230 --> 03:57.800
+sure that none of these windows have any airs being displayed inside them.
+
+03:57.890 --> 04:01.280
+If you see any errors, that means you likely have a typo somewhere inside of your code.
+
+04:01.700 --> 04:04.070
+Now, one last thing I want to mention very quickly.
+
+04:04.070 --> 04:09.470
+If you go through this process of testing out this application and you don't get an error from something,
+
+04:09.470 --> 04:15.710
+again, I'm kind of going to be surprised because we've made a ton of changes, so many places where
+
+04:15.710 --> 04:18.200
+you can make a typo very, very easily.
+
+04:19.390 --> 04:22.240
+All right, so let's go over to our browser and at least try to do a test.
+
+04:22.480 --> 04:23.830
+So I'm going to refresh the page.
+
+04:24.190 --> 04:26.080
+I'm going to create a new post.
+
+04:26.080 --> 04:27.910
+So say new post.
+
+04:29.580 --> 04:35.820
+I'll refresh the page, I'll add in a new comment at Submit and I'll go back over to my terminal and
+
+04:35.820 --> 04:36.660
+see what I have.
+
+04:37.140 --> 04:39.670
+When I flip back over, I don't see any errors anywhere.
+
+04:39.690 --> 04:43.920
+Again, incredibly likely that you will have an error from somewhere inside of here.
+
+04:43.950 --> 04:48.840
+If you have an error, you can either try to hunt it down yourself or just download the completed code
+
+04:48.840 --> 04:51.690
+that is attached to this lecture and try running that instead.
+
+04:53.460 --> 04:54.630
+So I'm going to go back over now.
+
+04:54.660 --> 04:55.880
+I'm going to refresh the page.
+
+04:55.890 --> 04:57.420
+I see the comment right there.
+
+04:58.020 --> 05:03.120
+If I click on my list of posts or see my yes, my list of posts inside the network request log, I'll
+
+05:03.120 --> 05:04.900
+expand that one post that I have.
+
+05:04.920 --> 05:08.910
+Take a look at the comments and you'll notice that this comment has been approved.
+
+05:09.980 --> 05:10.100
+Okay.
+
+05:10.250 --> 05:11.090
+Well, that's good.
+
+05:11.120 --> 05:13.850
+Let's now try making a comment that should be rejected.
+
+05:14.000 --> 05:16.070
+So I'm going to put in a comment here.
+
+05:17.090 --> 05:18.200
+Of orange.
+
+05:18.410 --> 05:19.490
+I will submit it.
+
+05:20.200 --> 05:21.340
+I'm going to refresh.
+
+05:22.420 --> 05:25.450
+I'll click on the post request again.
+
+05:26.030 --> 05:28.130
+And now I should see a second comment inside of here.
+
+05:28.130 --> 05:32.750
+And this time around it should have a status of rejected because it met our criteria for rejecting a
+
+05:32.750 --> 05:33.100
+comment.
+
+05:33.110 --> 05:34.640
+It had the word orange inside of it.
+
+05:35.120 --> 05:37.910
+So that means that, hey, this stuff is working out pretty well.
+
+05:39.460 --> 05:42.340
+The last thing we really need to do is update the React application.
+
+05:42.340 --> 05:45.930
+So the React application should show, hey, this comment has been rejected.
+
+05:45.940 --> 05:50.590
+If the comment has been rejected and it should show something like this comment is still being moderated
+
+05:50.590 --> 05:52.870
+if it is still in the pending state.
+
+05:53.080 --> 05:56.770
+So let's take a look at the React application in just a moment and fix it up.

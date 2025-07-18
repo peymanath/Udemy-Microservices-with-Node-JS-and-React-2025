@@ -1,0 +1,220 @@
+WEBVTT
+
+00:01.190 --> 00:04.330
+We've got a rough start to our ticket created listener put together.
+
+00:04.340 --> 00:08.810
+We're not going to start to pivot and work on the ticket updated listener Just you know, we are not
+
+00:08.810 --> 00:10.700
+by any means done with this code right now.
+
+00:10.700 --> 00:14.450
+But as I mentioned at the start of this section, I really want to focus on some of those different
+
+00:14.450 --> 00:18.530
+concurrency issues now that we have both publishers and listeners inside of our app.
+
+00:19.010 --> 00:22.130
+So we're going to work on the listener for ticket updated.
+
+00:22.370 --> 00:26.090
+We're going to see that there is very quickly some really big concurrency issues that we're going to
+
+00:26.090 --> 00:28.940
+come back through both these listeners and make some adjustments to them.
+
+00:29.420 --> 00:29.750
+Okay.
+
+00:29.810 --> 00:36.140
+So inside my listeners directory, inside my order service, I'll make a new file of ticket updated
+
+00:36.140 --> 00:36.710
+listener.
+
+00:36.890 --> 00:37.540
+It's.
+
+00:39.300 --> 00:43.530
+And then inside of here, we're going to add some very similar imports to what we've got up here at
+
+00:43.530 --> 00:44.280
+the very top.
+
+00:45.140 --> 00:50.750
+So inside of a ticket updated we will add in an import for message from node nat streaming.
+
+00:51.990 --> 00:58.680
+We'll get subjects listener and ticket updated event from our common module.
+
+01:02.700 --> 01:07.470
+I'm going to get tickets from up to directories, models ticket.
+
+01:09.150 --> 01:11.580
+And then finally, our cue group name.
+
+01:13.770 --> 01:14.850
+From you.
+
+01:14.880 --> 01:15.630
+Group name.
+
+01:17.900 --> 01:19.850
+Then comes our actual listener definition.
+
+01:19.850 --> 01:22.200
+So expert class ticket.
+
+01:22.220 --> 01:23.810
+Updated Listener.
+
+01:23.840 --> 01:29.510
+This is going to be extending our listener abstract class and the event that we are trying to listen
+
+01:29.510 --> 01:31.040
+for is ticket updated.
+
+01:31.040 --> 01:33.440
+So ticket updated event.
+
+01:35.280 --> 01:38.160
+Then inside of here we'll go through all that hassle with subject again.
+
+01:38.160 --> 01:45.480
+So we'll put in subject as subjects ticket updated equal to subjects dot ticket updated.
+
+01:47.810 --> 01:49.010
+Then our group name.
+
+01:52.610 --> 01:55.220
+And then finally async on message.
+
+01:57.330 --> 02:02.880
+They're going to receive some data that's going to be of type ticket updated event at data.
+
+02:03.610 --> 02:07.420
+And as the second argument, we'll get our message of type message.
+
+02:08.740 --> 02:12.880
+Well, now inside of here, well, pretty straightforward in theory.
+
+02:12.880 --> 02:17.200
+We need to find the ticket that is being updated, the ticket that is mentioned inside of this data
+
+02:17.200 --> 02:19.990
+object and just update the data and save it.
+
+02:19.990 --> 02:20.980
+That's pretty much it.
+
+02:20.980 --> 02:24.310
+So at the end of the day, in theory, it's going to look kind of similar to what we just did inside
+
+02:24.310 --> 02:25.150
+of ticket created.
+
+02:25.150 --> 02:28.600
+The only difference is this time around we are updating data instead.
+
+02:29.950 --> 02:34.510
+So step one, let's pull the ticket out of our ticket collection using that ticket model.
+
+02:35.290 --> 02:36.250
+They'll say ticket.
+
+02:37.580 --> 02:41.570
+Is a wait ticket fined by ID.
+
+02:43.110 --> 02:49.110
+The idea is going to be contained inside this data argument, as ID will say, data ID.
+
+02:50.600 --> 02:53.810
+There is a chance that we will not find the ticket we are looking for.
+
+02:54.230 --> 02:56.170
+So if we don't find the ticket we are looking for.
+
+02:56.220 --> 02:57.530
+Ticket will have a value of null.
+
+02:57.560 --> 03:00.710
+It's a very similar to what we've done on some of our route handlers in the past.
+
+03:01.070 --> 03:05.210
+We'll say if there is no ticket right now, we're just going to throw a very simple error.
+
+03:05.210 --> 03:06.980
+So we'll say throw new error.
+
+03:08.740 --> 03:10.240
+Tickets not found.
+
+03:10.270 --> 03:14.260
+We will come back and address error handling in way greater detail very shortly.
+
+03:14.260 --> 03:17.920
+But remember, right now we're just trying to focus on some of this async issue stuff.
+
+03:20.000 --> 03:24.590
+Now that we found the ticket, we can go through and update presumably the title and the price.
+
+03:24.980 --> 03:27.290
+Remember, that's the only properties we really care about here.
+
+03:28.940 --> 03:33.470
+So on the ticket we are going to set the title and the price.
+
+03:34.130 --> 03:37.910
+Let's make sure we pull off those properties from ID or from data as well.
+
+03:38.120 --> 03:41.730
+So we'll say cost title and price is coming from data.
+
+03:41.750 --> 03:42.410
+That's better.
+
+03:43.660 --> 03:46.540
+After setting those properties will then save the updated ticket.
+
+03:46.540 --> 03:49.090
+So a wait ticket save.
+
+03:51.130 --> 03:53.310
+Well, that is pretty much it for our business logic.
+
+03:53.320 --> 03:59.050
+And so after we've executed all of our business logic, again, we want to call our message function
+
+03:59.050 --> 04:02.920
+that's going to acknowledge the message and tell that streaming server that we have successfully processed
+
+04:02.920 --> 04:03.220
+it.
+
+04:03.610 --> 04:06.370
+It will call message at the bottom like so.
+
+04:07.820 --> 04:12.110
+And well, once again, that's pretty much it kind of a simple on message implementation.
+
+04:12.940 --> 04:14.230
+So let's save this right here.
+
+04:14.770 --> 04:18.820
+The last thing we have to do is make sure that these two listeners actually get used at some point in
+
+04:18.820 --> 04:19.070
+time.
+
+04:19.090 --> 04:23.170
+Right now, we have added in these two files, these two listeners, but we don't actually make use
+
+04:23.170 --> 04:25.300
+of these classes anywhere inside of our project.
+
+04:25.660 --> 04:30.070
+So we need to figure out a suitable location to create an instance of these listeners and have them
+
+04:30.070 --> 04:31.750
+start listening for events.

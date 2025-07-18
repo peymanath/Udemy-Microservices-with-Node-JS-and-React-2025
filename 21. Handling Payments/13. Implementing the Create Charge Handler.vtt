@@ -1,0 +1,445 @@
+WEBVTT
+
+00:01.600 --> 00:04.830
+We've now got a vague idea of how all this stripe stuff works.
+
+00:04.840 --> 00:08.260
+So now we're going to start to work on the payment service and we're really just going to implement
+
+00:08.260 --> 00:10.840
+kind of this portion of the diagram right here.
+
+00:11.260 --> 00:16.420
+So we're going to implement a request handler that's going to handle this incoming request right here
+
+00:16.420 --> 00:21.370
+where we take the token that was provided to us from the Stripe Jar library and send it off to our payment
+
+00:21.370 --> 00:22.030
+service.
+
+00:22.210 --> 00:25.510
+And then in the payment service, we're going to take that token and make a follow up request to the
+
+00:25.510 --> 00:28.480
+Stripe API to actually charge the users credit card.
+
+00:28.720 --> 00:32.860
+Let me show you a diagram of the request handler that we're going to put together to implement this
+
+00:32.860 --> 00:33.820
+part of the flow.
+
+00:35.620 --> 00:35.890
+Okay.
+
+00:35.890 --> 00:37.930
+So we're going to receive that, that request.
+
+00:37.930 --> 00:41.770
+And inside the body of the request, we're going to include the token that the user just received.
+
+00:41.980 --> 00:46.810
+And we're also going to include the order ID or the idea of the order that the user is trying to purchase.
+
+00:48.780 --> 00:52.440
+Then inside of our request handler, we're going to go through the following series of steps.
+
+00:52.860 --> 00:56.610
+We're going to first try to find the order that the user is attempting to pay for, and we're going
+
+00:56.610 --> 00:58.470
+to do some validation around that order.
+
+00:58.800 --> 01:02.880
+For example, we're going to make sure that the person who is trying to purchase the order is the or
+
+01:02.880 --> 01:07.830
+pay for the order is the same person who tried to originally create the order.
+
+01:08.550 --> 01:10.650
+We're also going to make sure that the order is still valid.
+
+01:10.650 --> 01:15.510
+So in other words, it is still in the created state and it's not in the canceled state.
+
+01:16.550 --> 01:22.070
+We'll also make sure that the amount of money that we are displaying inside the order, the price of
+
+01:22.070 --> 01:26.630
+the order is equal to the amount of money that the user just authorized us to charge their credit card
+
+01:26.630 --> 01:27.140
+for.
+
+01:28.110 --> 01:32.970
+After that, we're going to make a request to the Stripe API to actually charge the user's credit card.
+
+01:33.270 --> 01:35.490
+That's where we're going to actually build the user.
+
+01:36.170 --> 01:40.690
+And then immediately after we will create a charge record inside of our database.
+
+01:40.700 --> 01:44.870
+And this charge record is what's going to actually say that we have successfully billed the user for
+
+01:44.870 --> 01:45.920
+some amount of money.
+
+01:46.840 --> 01:47.410
+So that's it.
+
+01:47.410 --> 01:49.810
+That's pretty much what we're going to do inside of some request handler.
+
+01:49.810 --> 01:55.240
+And as I mentioned, we're going to be able to test out this entire flow using just alone or our automated
+
+01:55.240 --> 01:56.050
+test runner.
+
+01:56.080 --> 01:59.830
+We are not going to have to implement anything in the browser just yet to make sure that this stuff
+
+01:59.830 --> 02:01.090
+works as expected.
+
+02:01.980 --> 02:02.160
+Yes.
+
+02:02.180 --> 02:02.730
+Let's get to it.
+
+02:02.730 --> 02:05.700
+Let's build a request handler that goes through these series of steps.
+
+02:08.140 --> 02:12.400
+So back inside of my editor, I'm going to find my payment service.
+
+02:13.200 --> 02:15.870
+And inside there, I'm going to find the QQ directory.
+
+02:17.430 --> 02:19.710
+And I'll make a new folder called Roots.
+
+02:21.460 --> 02:25.030
+Well, then make a new file inside there of new dots.
+
+02:25.510 --> 02:29.830
+I'm calling this new because we're creating a new charge object or a new charge record inside of our
+
+02:29.830 --> 02:30.520
+database.
+
+02:31.370 --> 02:33.980
+Then at the very top, we'll immediately add in a couple of different imports.
+
+02:33.980 --> 02:36.380
+And a lot of these imports are going to look very familiar right away.
+
+02:36.710 --> 02:41.240
+I'm going to import Express and the request and response types from Express.
+
+02:42.600 --> 02:46.020
+I'm going to get the body validator from Express.
+
+02:46.840 --> 02:47.620
+Validator.
+
+02:49.610 --> 02:53.750
+And then we're going to get a couple of different middle wears and air objects from our common module
+
+02:53.960 --> 02:57.350
+that will get require off validate request.
+
+02:59.910 --> 03:01.440
+Bad request air.
+
+03:05.040 --> 03:07.080
+And not found air.
+
+03:07.590 --> 03:09.660
+And all that's going to come from our common module.
+
+03:13.030 --> 03:16.750
+Then after that, I will import my order model we created just a little bit ago.
+
+03:18.790 --> 03:21.220
+From up one directory models order.
+
+03:22.580 --> 03:24.440
+I think that should be enough for right now.
+
+03:25.900 --> 03:28.690
+So we can create a new router object using express.
+
+03:28.870 --> 03:32.140
+So create a new router from express dot router.
+
+03:33.730 --> 03:36.790
+And then we will associate a post request handler with this thing.
+
+03:37.300 --> 03:44.380
+So I can say that anytime someone makes a post request to API payments, we're going to handle it inside
+
+03:44.380 --> 03:45.790
+of this request handler.
+
+03:48.230 --> 03:51.140
+I immediately add on the req as request.
+
+03:52.330 --> 03:53.980
+Andrés as response.
+
+03:54.910 --> 03:58.370
+And then right after the actual path right there, we'll add in a couple of different middleware.
+
+03:58.390 --> 03:59.620
+So we had just imported.
+
+04:00.220 --> 04:03.640
+So first, we definitely want to make sure that the user is actually authenticated.
+
+04:03.640 --> 04:07.300
+If you are not authenticated, you should not be making a request to this handler.
+
+04:07.930 --> 04:09.760
+We'll put in our required auth middleware.
+
+04:10.980 --> 04:15.570
+Then after that, we'll put in a validation step and just make sure that the user is actually submitting
+
+04:15.570 --> 04:18.480
+a token and an order ID as well.
+
+04:19.810 --> 04:22.810
+So I'll put in a validator of body token.
+
+04:24.390 --> 04:27.570
+We want to check and make sure that this thing is not empty.
+
+04:28.170 --> 04:29.310
+So not is empty.
+
+04:30.770 --> 04:32.630
+And then same thing for the order ID as well.
+
+04:33.450 --> 04:33.690
+Order.
+
+04:33.690 --> 04:36.690
+ID not is empty.
+
+04:37.490 --> 04:40.700
+And naturally, if you want to, you can also put a custom message on there if you wish.
+
+04:40.730 --> 04:41.510
+Totally up to you.
+
+04:45.390 --> 04:48.820
+Then inside of the actual handler, I'm going to mark this thing as async because we're definitely going
+
+04:48.820 --> 04:50.910
+to have to reach into our database at some point.
+
+04:51.270 --> 04:54.720
+And for right now, just to get started, I'm going to put in a resend.
+
+04:55.610 --> 04:56.990
+With a success.
+
+04:57.560 --> 04:58.070
+True.
+
+04:58.070 --> 04:58.790
+Like so.
+
+04:58.820 --> 05:02.180
+Just to get started, we will replace this really, really quickly.
+
+05:03.270 --> 05:06.430
+And they're going to make sure that I export this router at the bottom of the file.
+
+05:06.460 --> 05:12.160
+So remember, we've been doing it named experts or we renamed the experts on the fly for all the different
+
+05:12.160 --> 05:13.080
+routers we put together.
+
+05:13.090 --> 05:18.190
+So I will export router as react charge router.
+
+05:21.860 --> 05:25.820
+I'm going to save this file and I'm going to go and wired up inside of my app file.
+
+05:25.820 --> 05:26.830
+So back inside of app.
+
+05:26.960 --> 05:27.530
+Yes.
+
+05:28.100 --> 05:30.020
+At the very top I will import.
+
+05:31.350 --> 05:33.090
+Create charge router.
+
+05:34.090 --> 05:36.700
+From our roots directory new.
+
+05:39.270 --> 05:40.890
+And then right after.
+
+05:43.530 --> 05:46.380
+Our apt use right here for current user.
+
+05:46.410 --> 05:50.820
+Make sure right after that, right above the apple statement, we'll put in an app to use.
+
+05:51.750 --> 05:54.630
+Or the recharge router that we just imported.
+
+05:57.400 --> 05:58.750
+And that should get us started.
+
+05:59.730 --> 06:02.700
+Now we are now handling requests that are coming to this route.
+
+06:02.700 --> 06:07.530
+But remember, we have not yet added anything into our ingress engine config to make sure that requests
+
+06:07.530 --> 06:10.560
+to API payments get directed to our payment service.
+
+06:10.830 --> 06:12.690
+So we still have to make that quick change.
+
+06:12.690 --> 06:14.190
+Let's do that right now as well.
+
+06:14.790 --> 06:19.440
+Inside of my infra directory I'll find the cards folder and then inside there I'm going to find our
+
+06:19.440 --> 06:21.060
+ingress service config.
+
+06:23.280 --> 06:26.400
+I'm going to add a new path in here and I'll just add it at the very top.
+
+06:26.400 --> 06:28.710
+So I'm going to duplicate the API users.
+
+06:29.670 --> 06:30.390
+Paste it in.
+
+06:30.390 --> 06:31.510
+So there's my duplicate.
+
+06:31.530 --> 06:33.060
+I'll fix up some indentation.
+
+06:35.410 --> 06:39.220
+And I'll change this to API payments like so.
+
+06:40.260 --> 06:45.300
+And any time we receive a request going to API payments, I want to send that off to the payments,
+
+06:45.510 --> 06:47.910
+CRV plus or EIP service.
+
+06:49.630 --> 06:50.670
+So let's save that as well.
+
+06:50.670 --> 06:57.360
+And now in theory, we could make a request to API payments and see a response back of success.
+
+06:57.360 --> 06:57.870
+True.
+
+06:58.260 --> 06:59.580
+Let's test that out right now.
+
+06:59.610 --> 07:00.240
+Back inside.
+
+07:00.240 --> 07:00.930
+A postman.
+
+07:01.880 --> 07:03.280
+The back in postman.
+
+07:03.290 --> 07:04.610
+I'm going to open up a new tab.
+
+07:05.740 --> 07:09.100
+I'm going to make a request to HTTPS ticketing dev.
+
+07:12.600 --> 07:15.210
+And then API payments.
+
+07:16.800 --> 07:18.930
+I'll make sure I am making a post request.
+
+07:22.460 --> 07:25.310
+Or headers I will add in that content type.
+
+07:26.540 --> 07:29.070
+Of application, Jason.
+
+07:29.780 --> 07:34.220
+And then as usual, over on the body tab, select raw, select JSON.
+
+07:35.090 --> 07:37.050
+And right now I'll put in an empty object.
+
+07:37.070 --> 07:41.990
+Now we do have some actual validation to make sure that we provide a token and an order ID which we
+
+07:41.990 --> 07:42.680
+are not doing.
+
+07:42.680 --> 07:45.200
+So when we submit this request, we should definitely see an error.
+
+07:45.200 --> 07:45.860
+Come back.
+
+07:46.130 --> 07:47.090
+They'll send this off.
+
+07:48.300 --> 07:54.390
+And Oh, we're not singing there because we never actually wired up the validate request middleware
+
+07:54.390 --> 07:55.000
+right there.
+
+07:55.020 --> 07:58.380
+So although we failed that validation, we never actually handled it.
+
+07:58.380 --> 08:03.150
+And so we just went through to the actual request handler what's let's wire up validate request right
+
+08:03.150 --> 08:08.430
+now because I know I will forget that right after the two validation steps we'll add in validate request.
+
+08:10.240 --> 08:11.280
+I'll save this.
+
+08:11.980 --> 08:17.590
+And now if we flip back over and try to make that same request, now we get that appropriate air where
+
+08:17.590 --> 08:20.740
+we are told that we have to provide a token and an order ID.
+
+08:21.900 --> 08:22.200
+Okay.
+
+08:22.200 --> 08:23.850
+So a little bit of progress here.
+
+08:24.090 --> 08:28.110
+We'll take a quick pause, come back the next video, and then we're going to start to implement a couple
+
+08:28.110 --> 08:31.500
+of different steps of business logic inside the actual route handler.

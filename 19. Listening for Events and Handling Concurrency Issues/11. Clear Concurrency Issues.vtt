@@ -1,0 +1,658 @@
+WEBVTT
+
+00:00.860 --> 00:05.330
+I am really excited about this video because we finally get to see some really weird concurrency stuff
+
+00:05.330 --> 00:06.140
+in action.
+
+00:06.290 --> 00:11.120
+So let me tell you what we're going to do between the last video in this one, I put together a little
+
+00:11.120 --> 00:12.350
+test script.
+
+00:12.350 --> 00:17.630
+So this is a little script I put together that's going to go through a very particular series of actions.
+
+00:17.840 --> 00:22.460
+And as we start to run the script, we're going to be firing off a ton of requests to our server.
+
+00:23.180 --> 00:28.550
+Once the script runs, we're going to then take a look at the consistency of data between our two databases,
+
+00:28.550 --> 00:34.070
+and we're going to see that in some very particular cases, we can definitely get events being processed
+
+00:34.070 --> 00:35.150
+out of order.
+
+00:35.390 --> 00:38.540
+So let me tell you a little bit more about this little test script I put together.
+
+00:38.570 --> 00:40.370
+Now, you do not have to run this test script.
+
+00:40.370 --> 00:44.300
+I just put it together very quickly and I had to change a couple of other things behind the scenes to
+
+00:44.300 --> 00:45.430
+get it to work correctly.
+
+00:45.440 --> 00:49.880
+So we're just going to take a look at my setup rather than trying to replicate the script on your side.
+
+00:50.120 --> 00:51.740
+So here's what the script does.
+
+00:52.130 --> 00:56.750
+This script is going to try to create a ticket with the price of five.
+
+00:57.260 --> 01:02.360
+It's then going to update a ticket to a price of ten and then finally update a ticket to a price of
+
+01:02.360 --> 01:03.530
+$15.
+
+01:04.040 --> 01:07.610
+And it's going to repeat that entire process 200 times in a row.
+
+01:08.350 --> 01:13.020
+What's more, is that it's going to try to repeat this process all in parallel.
+
+01:13.030 --> 01:19.930
+So in other words, simultaneously as much as we can anyways, we're going to try to run all these requests
+
+01:19.930 --> 01:24.640
+to create an update tickets at the same time about 200 times in parallel.
+
+01:24.670 --> 01:29.500
+Now, technically, because the way Node.js works, it's not truly in parallel, but we can imagine
+
+01:29.500 --> 01:35.290
+that more or less kind of somewhat happening at the same time, all these requests being issued in parallel.
+
+01:35.800 --> 01:42.370
+However, the actual update requests will occur in series, so we're going to first create the ticket.
+
+01:42.520 --> 01:46.960
+Then only after that request is completed will we attempt to update it, and then only after that request
+
+01:46.960 --> 01:51.160
+is completed will we attempt to update it a second time to a final price of 15.
+
+01:52.360 --> 01:56.140
+So let's think about how this is actually going to play out on our back end servers.
+
+01:57.030 --> 02:00.660
+So over here on the top left hand side, we've got these requests being issued.
+
+02:00.690 --> 02:03.480
+Now, I'm only going to show one set of requests right here.
+
+02:03.480 --> 02:05.640
+So one series of create update, update.
+
+02:05.640 --> 02:09.750
+But again, this is going to happen at 200 times more or less in parallel.
+
+02:10.860 --> 02:12.660
+So we're going to first make the request.
+
+02:13.760 --> 02:18.190
+To create a ticket with the price of five, that's going to go directly to our ticket service.
+
+02:18.200 --> 02:22.700
+The ticket service is going to get then going to save a new record inside of its database with the price
+
+02:22.700 --> 02:23.360
+of five.
+
+02:23.390 --> 02:27.860
+So let's say maybe it gets an idea of queue and a price of five, and that's it.
+
+02:28.130 --> 02:30.650
+That request has been promised to be processed.
+
+02:31.380 --> 02:37.350
+Then the same instant that we create that actual record inside the database, we're also going to emit
+
+02:37.350 --> 02:40.200
+an event from our ticket service of ticket created.
+
+02:41.030 --> 02:46.250
+That event will then go off to our ticket created channel and then eventually be assigned to a instance
+
+02:46.250 --> 02:47.390
+of the order service.
+
+02:47.750 --> 02:52.410
+For the purposes of this test, I am running four different copies of the Order Service.
+
+02:52.430 --> 02:56.390
+Right now you are running one copy, one instance of it inside of your Kubernetes cluster.
+
+02:56.420 --> 03:01.190
+I'm running four separate copies just to kind of instigate some little concurrency issues here.
+
+03:02.030 --> 03:05.090
+So this event will be processed by one of our order services.
+
+03:05.120 --> 03:10.460
+Maybe it gets processed by instance A And so inside of our orders database, we would replicate some
+
+03:10.460 --> 03:13.310
+data from that event into our order database.
+
+03:13.700 --> 03:18.200
+So we'd end up with a ticket ID in here of queue and a price of five.
+
+03:20.440 --> 03:24.930
+So then next up, we're going to make the request to update the ticket to a price of ten.
+
+03:25.140 --> 03:30.720
+So we're going to process that update to ten and we're going to update or make the request to try to
+
+03:30.720 --> 03:32.790
+update the ticket to a price of 15 as well.
+
+03:33.950 --> 03:39.640
+Now because my script that I put together is running all these three requests in series.
+
+03:39.650 --> 03:45.020
+I'm going to expect my ticket database to always end up with every ticket having a price of 15.
+
+03:45.050 --> 03:46.070
+No two ways about it.
+
+03:46.070 --> 03:50.330
+I really expect the ticket database to have some very consistent data.
+
+03:50.330 --> 03:53.810
+Should absolutely have every single ticket with the price of 15.
+
+03:54.410 --> 03:56.720
+However, we're going to see it very quickly.
+
+03:57.760 --> 04:01.190
+That because we are creating so many different events here.
+
+04:01.210 --> 04:04.690
+So for every single ticket, we're creating a total of three events.
+
+04:04.690 --> 04:08.740
+And all these events are going to be thrown out to these four separate copies of the Order service.
+
+04:08.770 --> 04:14.920
+There might be some scenarios or some cases where these update events get processed slightly out of
+
+04:14.920 --> 04:15.520
+order.
+
+04:17.000 --> 04:23.270
+So this ticket update to a price of ten might get assigned to service a and this update for a price
+
+04:23.270 --> 04:30.980
+of 15 might get assigned to service DX Now in theory, we really, really hope for the Price ten event
+
+04:30.980 --> 04:32.990
+to get processed first.
+
+04:32.990 --> 04:38.330
+So what we really want to have happen is see this thing get updated to a price of ten so that thing
+
+04:38.330 --> 04:39.380
+is now processed.
+
+04:39.680 --> 04:44.660
+And then this other event down here, the second update event, get processed and have this record end
+
+04:44.660 --> 04:46.070
+up with a price of 15.
+
+04:46.100 --> 04:51.440
+That is what we really, really want to have happen is that would lead to our data being consistent
+
+04:51.440 --> 04:53.900
+between the tickets database and the orders database.
+
+04:54.710 --> 04:59.900
+However, you're going to see very quickly that in some number of cases, because we are emitting so
+
+04:59.900 --> 05:05.120
+many events and they're going to so many instances of the order service, there might be some scenarios
+
+05:05.120 --> 05:09.830
+where we accidentally process the update to a price of 15/1.
+
+05:11.030 --> 05:16.820
+And then only after that process, this other update, which it technically should have been processed.
+
+05:16.820 --> 05:21.920
+Second, so process this one right here and end up with a price of ten.
+
+05:22.940 --> 05:24.730
+And so that would be a very bad scenario.
+
+05:24.740 --> 05:29.420
+We would not want to see any tickets with a price or a final price of ten, because then we would have
+
+05:29.420 --> 05:33.320
+some inconsistent data between our orders database and the tickets database.
+
+05:34.000 --> 05:38.560
+So again, I just want to make sure it's super clear after I run the script, I'm going to expect that
+
+05:38.560 --> 05:43.060
+all the tickets inside the tickets database have a price of 15, and I feel pretty confident that it's
+
+05:43.060 --> 05:43.810
+going to happen.
+
+05:44.050 --> 05:49.530
+However, I would really want to also double check and make sure that all the tickets inside the owners
+
+05:49.540 --> 05:51.550
+database end up with the price of 15.
+
+05:51.550 --> 05:55.750
+And if we see any with the price of ten, that is going to be a pretty bad sign.
+
+05:55.750 --> 05:59.920
+That is going to be a sign that there are some major concurrency issues inside of our app and we're
+
+05:59.920 --> 06:01.930
+going to have to somehow fix those issues.
+
+06:03.080 --> 06:07.490
+So now that we understand this entire test setup, we understand what we are really looking for at the
+
+06:07.490 --> 06:08.240
+end of the day.
+
+06:08.300 --> 06:11.150
+Let me show you one last piece of this testing setup.
+
+06:12.220 --> 06:18.730
+So to actually figure out how many tickets have a price of ten and a price of 15 across these two services,
+
+06:18.730 --> 06:20.620
+I set up two terminal windows right here.
+
+06:21.250 --> 06:23.770
+The one on the right is running a mongo shell.
+
+06:23.770 --> 06:26.650
+So this is a mongo shell to the orders.
+
+06:26.650 --> 06:32.350
+DB So I can use this terminal window over here to essentially make queries directly to my orders database.
+
+06:32.350 --> 06:39.490
+For example, I can write out DB tickets, find that will return all the tickets I've created over time.
+
+06:40.450 --> 06:46.180
+On the right hand side is a mongo shell to my tickets database.
+
+06:46.960 --> 06:48.090
+And so very similar.
+
+06:48.100 --> 06:52.360
+I could run right out a query right here that's going to be executed against my tickets database.
+
+06:52.360 --> 06:55.360
+For example, DB tickets find.
+
+06:56.680 --> 06:56.860
+Like.
+
+06:56.860 --> 07:02.110
+So now for the purposes of this test, I'm going to clear out and delete all the tickets I have inside
+
+07:02.110 --> 07:03.910
+of both databases.
+
+07:03.940 --> 07:08.680
+I'll then run my script and we could run a query or two and figure out whether or not these kind of
+
+07:08.680 --> 07:10.990
+consistency issues are in play.
+
+07:11.590 --> 07:14.800
+So inside both my databases, I'm going to delete all my different tickets.
+
+07:14.980 --> 07:19.750
+So inside of orders, I'll do a DB that tickets remove.
+
+07:20.810 --> 07:22.880
+And then over here inside of tickets.
+
+07:22.880 --> 07:24.130
+I'll do a DB tickets.
+
+07:24.560 --> 07:25.250
+Remove.
+
+07:26.700 --> 07:26.890
+Yes.
+
+07:26.910 --> 07:28.330
+So now both databases.
+
+07:28.350 --> 07:29.460
+Zero tickets.
+
+07:29.550 --> 07:31.710
+So I'm now going to run my little script.
+
+07:32.700 --> 07:36.030
+That's going to go through and create those 200 separate tickets.
+
+07:37.460 --> 07:38.300
+So here we go.
+
+07:41.040 --> 07:41.340
+All right.
+
+07:41.340 --> 07:43.430
+So we'll see just about 200 requests.
+
+07:43.440 --> 07:43.800
+I don't know.
+
+07:43.800 --> 07:44.670
+I wasn't really counting.
+
+07:44.670 --> 07:50.070
+I don't know if you were, but that made 200 separate tickets and then issued a first update in a second
+
+07:50.070 --> 07:51.250
+update for each one.
+
+07:51.270 --> 07:55.650
+If I now go back over to my scaffold window, I'll see that there has been a tremendous number of events
+
+07:55.650 --> 07:57.270
+published and processed.
+
+07:57.870 --> 07:58.500
+Take a look at that.
+
+07:58.500 --> 08:02.820
+That's that is all the events over those 600 requests in total.
+
+08:03.760 --> 08:05.800
+To create and then update twice.
+
+08:06.520 --> 08:08.650
+Now, in theory, everything has been processed.
+
+08:08.800 --> 08:10.310
+Now, here's the moment of truth.
+
+08:10.330 --> 08:12.600
+We're going to first take a look on the right hand side.
+
+08:12.610 --> 08:18.340
+We're going to take a look and try to count out the number of tickets with a price of ten inside of
+
+08:18.340 --> 08:19.480
+the tickets database.
+
+08:19.750 --> 08:25.090
+Now, hopefully we should see zero tickets with the price of ten inside the tickets database.
+
+08:25.090 --> 08:25.720
+That is the goal.
+
+08:25.720 --> 08:26.850
+That's what we're hoping for.
+
+08:26.860 --> 08:30.060
+And I have a pretty high degree of certainty that's going to be the case.
+
+08:30.800 --> 08:32.510
+So I'll do a DB tickets.
+
+08:32.780 --> 08:33.620
+Find.
+
+08:34.810 --> 08:35.890
+For a price of ten.
+
+08:36.790 --> 08:40.660
+And I'm going to get the number of records that match that criteria right there.
+
+08:40.810 --> 08:42.610
+So I end up with zero perfect.
+
+08:42.610 --> 08:43.560
+That is what we want.
+
+08:43.570 --> 08:48.400
+That means that after we made the three requests to the ticket service, there were no tickets inside
+
+08:48.400 --> 08:50.160
+of here that had a price of ten.
+
+08:50.170 --> 08:54.280
+If there were any that had a price of ten, that would mean that we have got some serious issues inside
+
+08:54.280 --> 08:54.820
+of our app.
+
+08:55.590 --> 08:59.070
+But we end up with zero out of ten, so everything looks good there.
+
+08:59.460 --> 09:02.360
+So we're going to run that same query on the order database.
+
+09:02.370 --> 09:08.070
+And hopefully in a perfect world, there are going to be no records with a price of ten.
+
+09:08.430 --> 09:12.840
+If there are no records of the price of ten, that means we processed all these different update events
+
+09:12.840 --> 09:14.220
+in the correct order.
+
+09:15.220 --> 09:16.180
+So let's run a query.
+
+09:16.180 --> 09:18.340
+Find how many were marked with a price of ten.
+
+09:19.580 --> 09:20.630
+And go from there.
+
+09:22.190 --> 09:24.050
+So I'm going to do a DB tickets.
+
+09:24.050 --> 09:26.870
+Find the price of ten.
+
+09:27.560 --> 09:30.560
+And I'll get the number that have a press of ten.
+
+09:30.890 --> 09:33.500
+And you can see in this case I end up with just one.
+
+09:33.710 --> 09:36.830
+Now, that's a little bit of a kind of disappointment here.
+
+09:36.830 --> 09:38.650
+Well, partial disappointment.
+
+09:38.660 --> 09:41.590
+So, again, in a perfect world, we would have seen zero here.
+
+09:41.600 --> 09:47.090
+Zero would have meant that we'd processed all events in the correct order inside of our order service.
+
+09:47.420 --> 09:52.850
+But we saw just one that has a price of ten that just you know, as I run the script, every single
+
+09:52.850 --> 09:56.480
+time I run it, there's going to be a slightly different number that end up with the price of ten.
+
+09:56.510 --> 10:00.730
+The last time I ran it, I actually end up with eight separate ones that had a price of ten.
+
+10:00.740 --> 10:04.940
+And so eight was a little bit more compelling to say, Hey, look, we got a major concurrency issue
+
+10:04.970 --> 10:06.200
+here than just one.
+
+10:06.200 --> 10:09.880
+But even with one, we can still say that one record out of 200.
+
+10:09.890 --> 10:15.650
+So 0.5% of the time we end up with some major data consistency issue between our order database and
+
+10:15.650 --> 10:16.730
+the tickets database.
+
+10:16.910 --> 10:19.760
+And actually, I'm sure I could probably run the script another time.
+
+10:19.970 --> 10:21.230
+I'll make another 200.
+
+10:21.590 --> 10:25.790
+And I'll bet you will see that we're going to end up with more than one additional record.
+
+10:26.300 --> 10:28.070
+So this time it looks like there were two now.
+
+10:28.070 --> 10:30.650
+So there was previously one with the price of ten.
+
+10:30.650 --> 10:34.640
+So in this latest run, I now ended up with two additional records being out of sync.
+
+10:34.640 --> 10:35.960
+I'll do it just one more time.
+
+10:36.260 --> 10:39.200
+Hopefully I'll get some kind of convincing evidence here.
+
+10:40.520 --> 10:41.120
+There we go.
+
+10:41.150 --> 10:41.390
+All right.
+
+10:41.390 --> 10:41.990
+Fantastic.
+
+10:41.990 --> 10:48.200
+So now we got seven records in that latest run, seven out of 200 that are now out of sync.
+
+10:48.410 --> 10:52.760
+If I go and take a look at the ticket service, there are still zero inside the ticket service that
+
+10:52.780 --> 10:56.300
+a price of ten, which is again, very good, 100% what we expect.
+
+10:56.570 --> 11:00.530
+But inside the order database, that's one query here on the left, there are now.
+
+11:01.410 --> 11:06.210
+Ten out of 600 or in the latest run, seven out of 200 that are out of sync.
+
+11:06.980 --> 11:10.840
+So seven out of 200, that's kind of bad odds in my opinion.
+
+11:10.850 --> 11:17.900
+I would not want to expect to see that seven out of every 200 series of requests to create and then
+
+11:17.900 --> 11:22.870
+update update a ticket fail catastrophically like this where we end up with our data being out of sync.
+
+11:22.880 --> 11:27.470
+So I would say that right now seven out of 200, that's pretty bad and we definitely don't want to have
+
+11:27.470 --> 11:27.890
+that.
+
+11:28.400 --> 11:32.570
+So at this point in time, I apologize for the length, this video, but hopefully we can see that without
+
+11:32.570 --> 11:39.050
+too much finagling, we can really start to break some event handling or orders of events being processed
+
+11:39.050 --> 11:40.220
+inside of our application.
+
+11:40.490 --> 11:45.590
+So it's pretty clear to me at least that we need to implement some kind of concurrency control here.
+
+11:45.590 --> 11:49.460
+We need something to make sure that we process these events in the correct order.
+
+11:50.840 --> 11:55.760
+Now lastly, I want to mention really quickly, even though I say that we didn't really have to finagle
+
+11:55.760 --> 12:00.320
+a lot to make this thing break, just, you know, I really did have to actually mess around with this
+
+12:00.320 --> 12:01.020
+application a lot.
+
+12:01.040 --> 12:06.050
+I spent the last 3 hours before this video finally coming up with these series of requests you see right
+
+12:06.050 --> 12:10.970
+here, and also making a couple of changes to the infrastructure as well.
+
+12:10.970 --> 12:13.690
+So specifically spooling up for copies of the order service.
+
+12:13.700 --> 12:16.540
+There are technically four copies of the ticket service as well.
+
+12:16.550 --> 12:19.880
+So I really, truly did have to try to break this stuff.
+
+12:19.880 --> 12:23.120
+So just, you know, it is not inherently flimsy or anything like that.
+
+12:23.120 --> 12:27.320
+And using this event based pattern doesn't mean that we're going to automatically start to break every
+
+12:27.320 --> 12:27.860
+time.
+
+12:28.220 --> 12:33.680
+However, at the same time, I really just mean to say that there is the potential for stuff going wrong,
+
+12:33.680 --> 12:37.880
+and so it would behoove us to spend a little bit of time to try to figure out this concurrency stuff.
+
+12:38.270 --> 12:39.950
+So just a quick little note there.
+
+12:39.950 --> 12:44.240
+Don't feel like this stuff is horribly flimsy or anything like that because again, I really had to
+
+12:44.240 --> 12:45.050
+try to break it.
+
+12:45.440 --> 12:45.630
+Okay.
+
+12:45.800 --> 12:47.210
+So enough talking.
+
+12:47.210 --> 12:50.240
+At this point, it is clear that there are some concurrency issues.
+
+12:50.240 --> 12:55.430
+We need something additional inside of our app to make sure that we process all these events in the
+
+12:55.430 --> 12:56.390
+correct order.
+
+12:56.390 --> 12:58.940
+So let's figure that step out in the next video.

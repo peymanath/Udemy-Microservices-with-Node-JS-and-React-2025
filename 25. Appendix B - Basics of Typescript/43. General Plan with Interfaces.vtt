@@ -1,0 +1,151 @@
+WEBVTT
+
+00:00.760 --> 00:04.300
+In this video, I want to show you a couple of different diagrams to help you really understand what
+
+00:04.300 --> 00:08.400
+is going on inside this file and really understand what the goal of the interface is right here.
+
+00:08.410 --> 00:09.550
+So let's get to it.
+
+00:10.440 --> 00:10.920
+All right.
+
+00:10.920 --> 00:14.250
+On the left hand side, at the very bottom, we've got that print summary function that we just put
+
+00:14.250 --> 00:14.850
+together.
+
+00:15.590 --> 00:21.470
+We can kind of think of that interface that we are using to annotate the argument to that function as
+
+00:21.470 --> 00:23.600
+being like a gatekeeper of sorts.
+
+00:24.050 --> 00:28.700
+In other words, if we ever have any value inside of our application like say, old Civic or drink over
+
+00:28.700 --> 00:34.160
+here, and we want to use these values with the print summary function, we have to make sure that those
+
+00:34.160 --> 00:37.460
+values implement the reportable interface.
+
+00:37.910 --> 00:42.380
+In other words, these two values have to have a summary function that returns a string.
+
+00:42.770 --> 00:46.010
+If they don't, then they cannot be used with print summary.
+
+00:47.220 --> 00:52.590
+This mechanic right here of using an interface for gatekeeping is going to be one of the prime ways
+
+00:52.590 --> 00:55.800
+that we get some amount of code re-use inside of TypeScript.
+
+00:55.800 --> 01:00.900
+And you're going to see this strategy used over and over in every application we put together in this
+
+01:00.900 --> 01:01.500
+course.
+
+01:02.360 --> 01:07.580
+So the general strategy that we're going to use for code re-use in TypeScript is to create functions
+
+01:07.580 --> 01:11.510
+that accept arguments that are typed with interfaces.
+
+01:12.300 --> 01:17.850
+So all the different functions we're going to create are going to accept interfaces as much as possible.
+
+01:17.880 --> 01:22.800
+Obviously, not every last function we ever put together is always going to require an interface type
+
+01:22.800 --> 01:23.390
+argument.
+
+01:23.400 --> 01:28.380
+Sometimes we're going to have something that takes a string or a boolean, or maybe a plain object in
+
+01:28.380 --> 01:30.270
+some far off cases.
+
+01:30.450 --> 01:35.700
+But in general, we're going to try to create functions that accept arguments that are typed with interfaces.
+
+01:36.300 --> 01:42.300
+And then in order to call those functions, we're going to make sure that we have objects or classes
+
+01:42.300 --> 01:45.480
+that can decide to implement that interface.
+
+01:46.550 --> 01:49.190
+So it's essentially this same scenario right over here.
+
+01:49.190 --> 01:55.460
+We created a function that takes an interface type as an argument, so other values inside of our application
+
+01:55.460 --> 02:00.440
+can opt into satisfying or implementing that interface to work with that function.
+
+02:01.580 --> 02:05.300
+This diagram that you're seeing right here, we can kind of generalize into something like this.
+
+02:05.300 --> 02:11.000
+So we can imagine some like arbitrary interface over here that's going to govern access to some function.
+
+02:11.010 --> 02:16.280
+And if we want to work with this function, any other object must implement that interface.
+
+02:16.700 --> 02:21.020
+So we're going to see this exact diagram right here in many other applications we work on.
+
+02:21.020 --> 02:23.570
+And every single time it's going to have the exact same meaning.
+
+02:23.570 --> 02:29.240
+We're going to talk about how we've got some function and in order to call it we might, we must have
+
+02:29.240 --> 02:33.590
+some values that implement the given interface that's acting as the gatekeeper.
+
+02:34.550 --> 02:34.820
+All right.
+
+02:34.820 --> 02:37.400
+So at this point, I'm sure this is still a little bit confusing.
+
+02:37.400 --> 02:42.650
+But like I said earlier, the good news is that the entire course, like every application we put together,
+
+02:42.650 --> 02:45.860
+is going to be focusing 100% on this mechanic.
+
+02:46.160 --> 02:51.620
+We're going to be focusing on how to define different interfaces, to restrict access to different functions,
+
+02:51.890 --> 02:56.270
+and then decide how to implement those different interfaces in different objects that we're going to
+
+02:56.270 --> 02:56.900
+create.
+
+02:57.500 --> 03:01.910
+So the real code reuse we're going to get here is making essentially this function right here really
+
+03:01.910 --> 03:02.720
+reusable.
+
+03:02.810 --> 03:06.860
+As long as a value implements that interface, it can work with this function.
+
+03:07.520 --> 03:07.790
+All right.
+
+03:07.790 --> 03:09.090
+So let's take a quick pause right here.
+
+03:09.110 --> 03:11.450
+We're going to move on to our next topic in the next video.

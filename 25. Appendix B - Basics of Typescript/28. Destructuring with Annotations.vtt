@@ -1,0 +1,175 @@
+WEBVTT
+
+00:00.940 --> 00:03.250
+There's one last quick thing I want to mention around functions.
+
+00:03.250 --> 00:06.850
+So down here at the very bottom, we're going to add in one last example here.
+
+00:07.210 --> 00:10.840
+Let's imagine for a second, do we have some object that describes today's weather?
+
+00:10.840 --> 00:17.020
+So maybe we call it forecast like so and maybe it's got a date to indicate today's date and the current
+
+00:17.020 --> 00:17.950
+weather outside.
+
+00:17.950 --> 00:20.860
+So maybe that will be a string that we'll call Sunny like so.
+
+00:22.090 --> 00:26.500
+Now let's try creating a function that's going to take that forecast and just log out the weather.
+
+00:26.800 --> 00:33.190
+So to do so, we could say something like const log weather and then we're going to get some forecast
+
+00:33.190 --> 00:34.060
+object.
+
+00:35.020 --> 00:38.360
+We need to annotate the return type or simply the argument type right here.
+
+00:38.380 --> 00:44.410
+So to do so, we would put in an object literal, just like we saw previously with our variable annotation,
+
+00:44.410 --> 00:45.940
+like what we saw right here.
+
+00:46.970 --> 00:52.190
+So we would put in a colon and then curly braces and list out all the different properties that we would
+
+00:52.190 --> 00:54.170
+expect this forecast object to have.
+
+00:54.620 --> 01:00.500
+So maybe it will be a date that has a date type and a weather that has a string type.
+
+01:00.800 --> 01:03.320
+I'm going to zoom out for just a second so you can see that whole line.
+
+01:04.480 --> 01:09.130
+Then after the list right there, I'm only going to try to log out the current weather so there's not
+
+01:09.130 --> 01:10.780
+going to be anything I'm going to return.
+
+01:10.960 --> 01:15.880
+So, Mark, the return type is void and then put down my arrow for the function like so.
+
+01:18.820 --> 01:19.920
+I'm going to zoom back in.
+
+01:20.370 --> 01:27.980
+So now if we wanted to, we could do a quick console log of forecast dot date and a console log of say
+
+01:27.990 --> 01:30.750
+forecast weather like so.
+
+01:32.680 --> 01:38.290
+And then just as a quick example down here, we could try calling log weather with the forecast object.
+
+01:38.800 --> 01:42.430
+And just to make the variables in here a little bit more clear, maybe rather than calling this forecast,
+
+01:42.430 --> 01:44.350
+it should be like today's weather.
+
+01:44.350 --> 01:45.970
+Maybe that makes a little bit more sense.
+
+01:47.720 --> 01:48.590
+Now it's better.
+
+01:49.950 --> 01:50.250
+All right.
+
+01:50.250 --> 01:55.710
+Now, one little optimisation we could do here would be to use a little bit of 2015 syntax, an attempt
+
+01:55.710 --> 02:01.050
+to restructure the date and weather properties out of the forecast variable right there.
+
+02:01.590 --> 02:06.390
+So in other words, rather than having to refer to forecast, date and forecast weather, I want to
+
+02:06.390 --> 02:10.050
+just pull those two properties directly off inside the argument list.
+
+02:10.680 --> 02:14.730
+If we were using normal s 2015 syntax, I'll put a quick example right here.
+
+02:14.730 --> 02:16.020
+We would write out something like this.
+
+02:16.050 --> 02:18.000
+We would say const log whether?
+
+02:20.170 --> 02:24.820
+And then inside the argument list, we would put a set of curly braces and list the two properties we
+
+02:24.820 --> 02:25.810
+wanted to access.
+
+02:25.810 --> 02:29.230
+So in this case, date and weather like so.
+
+02:29.470 --> 02:32.140
+And then we could do a simple console log of date.
+
+02:33.140 --> 02:34.640
+And of weather.
+
+02:35.090 --> 02:37.430
+So how do we use this kind of syntax right here?
+
+02:38.060 --> 02:40.040
+With a typescript annotation.
+
+02:40.670 --> 02:40.880
+All right.
+
+02:40.880 --> 02:45.260
+I'm going to remove the 2015 and we're going to adjust the syntax in here just a little bit.
+
+02:45.710 --> 02:50.600
+So if we ever want to use de structuring along with an annotation, all we have to do is replace the
+
+02:50.600 --> 02:53.510
+variable itself with the actual D structuring statement.
+
+02:53.930 --> 02:59.120
+So instead of forecast right there, I'm going to replace it with a set of curly braces and I'll list
+
+02:59.120 --> 03:02.300
+out the different properties I want to pull out of that object.
+
+03:02.450 --> 03:04.460
+So it'll be date and weather like so.
+
+03:05.060 --> 03:08.600
+And then I can adjust the body of the function to be just date and weather.
+
+03:09.480 --> 03:16.200
+So notice that we did not try to stick the annotation types along with the DE structuring, the DE structuring
+
+03:16.200 --> 03:21.660
+portion and the annotation are always going to be two separate statements separated by that colon right
+
+03:21.660 --> 03:22.080
+there.
+
+03:22.320 --> 03:27.240
+So we're first going to do our D structuring and then we'll try to do the actual annotation right after
+
+03:27.240 --> 03:27.570
+it.
+
+03:28.840 --> 03:29.170
+All right.
+
+03:29.170 --> 03:33.130
+So now we've seen that another quick pause right here, and we'll move on to our last subject around
+
+03:33.130 --> 03:35.050
+annotations and inference.

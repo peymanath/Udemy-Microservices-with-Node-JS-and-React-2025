@@ -1,0 +1,436 @@
+WEBVTT
+
+00:01.120 --> 00:02.030
+All right, let's get to it.
+
+00:02.050 --> 00:05.920
+We're going to build out our first workflow that's going to make sure that we build an image for the
+
+00:06.100 --> 00:06.620
+service.
+
+00:06.640 --> 00:10.900
+Push the Docker hub, all that stuff back over on my GitHub repo.
+
+00:11.290 --> 00:13.150
+I'm going to find the Actions tab.
+
+00:13.900 --> 00:16.120
+And then I'm going to make a new workflow.
+
+00:18.180 --> 00:22.730
+Once a year, I can either click on set up the simple workflow or I can take any other.
+
+00:22.740 --> 00:26.670
+Again, it doesn't matter because we're going to delete everything and build it back up from scratch.
+
+00:27.330 --> 00:31.830
+You can click on any of the setup workflow buttons come to this window.
+
+00:31.860 --> 00:36.390
+We're going to delete all the code inside there and we'll also rename the file itself.
+
+00:36.900 --> 00:40.200
+So we're going to use nomenclature here of the ploy.
+
+00:40.200 --> 00:41.880
+And then the name of the service.
+
+00:42.330 --> 00:46.740
+The first service that we're going to try to work on deployment for is the service, of course.
+
+00:46.740 --> 00:48.090
+So we're going to call this new file.
+
+00:48.090 --> 00:48.990
+Deploy.
+
+00:49.020 --> 00:50.390
+Dash off.
+
+00:50.400 --> 00:51.480
+Dot html.
+
+00:53.300 --> 00:57.260
+Then inside of here, we're going to put together our config that's going to dictate when we run this
+
+00:57.260 --> 01:00.200
+workflow and exactly what it's going to do.
+
+01:02.070 --> 01:06.960
+I'm going to first put in the name property which will be deployed off.
+
+01:08.980 --> 01:12.240
+Well then put in on to dictate when this thing should be executed.
+
+01:12.690 --> 01:16.650
+So we want to run this thing and this is going to be a little bit not quite make sense, but we're going
+
+01:16.650 --> 01:19.110
+to run this whenever there is a push.
+
+01:20.180 --> 01:21.290
+Bonnie Branch.
+
+01:22.320 --> 01:24.240
+Of Dash Master.
+
+01:25.470 --> 01:29.280
+And we're also going to set up a filter here to say that we only want to run this when something inside
+
+01:29.280 --> 01:31.110
+of the directory changes.
+
+01:31.650 --> 01:38.280
+Though under push on the same level of indentation as branches are going to put in paths and then a
+
+01:38.280 --> 01:42.600
+dash and off slash star star like so.
+
+01:43.330 --> 01:45.910
+You might be curious, why are we putting push here?
+
+01:46.120 --> 01:52.210
+Well, whenever we close or merge a pull request that actually counts as a push directly to the master
+
+01:52.210 --> 01:52.900
+branch.
+
+01:53.410 --> 01:58.690
+So this little check right here is going to run this workflow whenever we merge a pull request into
+
+01:58.690 --> 01:59.770
+the master branch.
+
+02:00.220 --> 02:05.710
+It's also only going to run if it contains a change to something inside of that off directory.
+
+02:08.230 --> 02:08.470
+All right.
+
+02:08.470 --> 02:09.430
+So after that.
+
+02:10.600 --> 02:14.270
+We're going to go back to the top level of indentation if this editor will cooperate with me.
+
+02:14.290 --> 02:14.950
+There we go.
+
+02:15.250 --> 02:16.960
+And we'll enter in jobs.
+
+02:17.560 --> 02:18.970
+We're going to provide a job ID.
+
+02:18.980 --> 02:21.520
+So this is just the name of the job we're going to use built.
+
+02:21.550 --> 02:23.170
+I'm not super picky on this build.
+
+02:23.170 --> 02:26.250
+Technically on our test workflow was not most ideal.
+
+02:26.260 --> 02:29.290
+We probably should have called it test, but it's not a big difference.
+
+02:30.220 --> 02:31.340
+Then we're going to enter in here.
+
+02:31.340 --> 02:34.060
+And let me zoom in just a little bit further to make sure this is super legible.
+
+02:34.060 --> 02:38.770
+We're going to enter in runs on the wound to latest.
+
+02:40.560 --> 02:42.690
+And then we'll define a series of steps.
+
+02:43.020 --> 02:47.580
+The first step we want to run here is check out all of our code inside of our repo.
+
+02:47.760 --> 02:49.260
+For that, we're going to say uses.
+
+02:50.140 --> 02:53.380
+Action slash checkout at V two.
+
+02:57.390 --> 03:02.040
+After that, I'm going to put in another dash and we're going to run a command right here.
+
+03:02.520 --> 03:06.080
+The command that we're going to run is essentially going to go through this process.
+
+03:06.120 --> 03:09.090
+We're going to build out our image and then push it off to Docker Hub.
+
+03:10.340 --> 03:16.040
+Whenever we make use of this Ubuntu latest operating system as the base, really it is again a container,
+
+03:16.040 --> 03:19.330
+so it's technically an image as opposed to anything else.
+
+03:19.340 --> 03:23.270
+It comes with docker already pre-installed so we can make use of all the Docker commands we are already
+
+03:23.270 --> 03:24.020
+familiar with.
+
+03:24.350 --> 03:35.050
+The for example, we will do a change into the directory and do a docker build t your docker id slash
+
+03:35.060 --> 03:36.620
+off dot.
+
+03:37.650 --> 03:40.380
+But technically we don't have to change into the directory.
+
+03:40.380 --> 03:45.450
+We actually can run the Docker, build command and then say, oh yeah, just go into the auth folder.
+
+03:45.450 --> 03:47.670
+So instead of right there, we can put in off.
+
+03:47.790 --> 03:50.370
+But personally, I'd kind of like just changing into the folder.
+
+03:50.370 --> 03:53.580
+It just leaves the Docker build command very easy and simple to read.
+
+03:55.900 --> 03:59.680
+After we build the image, we're then going to take the image and push it off to Docker Hub.
+
+03:59.860 --> 04:01.840
+So remember to push an image to Docker Hub.
+
+04:01.840 --> 04:04.720
+We must be logged in to the Docker CLI.
+
+04:05.080 --> 04:09.130
+The Docker Calli must know who you are, what your Docker account is.
+
+04:09.370 --> 04:13.880
+So before we can push it off to Docker Hub, we have to log in to the Docker CLI.
+
+04:13.900 --> 04:17.760
+But remember, this entire script right here is not being executed on your machine.
+
+04:17.770 --> 04:21.010
+It is being ran inside of some container managed by GitHub.
+
+04:21.870 --> 04:26.790
+So we have to somehow tell Docker to log in using your username and password.
+
+04:27.090 --> 04:31.380
+Of course we are not going to enter your Docker username and password directly into the script.
+
+04:31.620 --> 04:38.310
+Instead, we're going to add your username and password as a secret into your GitHub repository itself.
+
+04:38.940 --> 04:43.890
+Once we add it in as an encrypted secret to your repository, we can then reference that in a secure
+
+04:43.890 --> 04:45.550
+fashion inside of the script.
+
+04:45.570 --> 04:47.580
+So let me show you how we're going to do that.
+
+04:48.420 --> 04:53.250
+At the top of the screen, on the right hand side, I'm going to find settings for this individual repository.
+
+04:53.670 --> 04:55.350
+I'm going to open that inside of a new tab.
+
+04:57.560 --> 05:01.010
+Then once you're on the left hand side, I'm going to scroll down and find secrets.
+
+05:03.210 --> 05:04.800
+Well, then add a new secret.
+
+05:06.990 --> 05:12.300
+And this is where we are going to individually add in the password and username for your Docker hub
+
+05:12.300 --> 05:12.960
+account.
+
+05:13.260 --> 05:17.010
+Now once you add it in here, no one else is going to be able to easily see this information.
+
+05:17.010 --> 05:18.600
+So it is absolutely okay.
+
+05:18.600 --> 05:24.240
+And this is 100% is where we would want to enter in some protected information like a password.
+
+05:24.750 --> 05:30.180
+So we're going to enter in a name of Docker, underscore username.
+
+05:30.960 --> 05:33.910
+And we'll put our username right here in as the value.
+
+05:33.930 --> 05:36.540
+So for me, my docker username is Stephen Grider.
+
+05:37.300 --> 05:39.100
+I'm going to add that as a secret.
+
+05:41.570 --> 05:44.930
+And then going to add in a second secret for my password.
+
+05:44.930 --> 05:47.360
+The Docker underscore password.
+
+05:48.170 --> 05:51.770
+Now, just so you do not see my password, I'm not going to show or I'm not going to enter in my password
+
+05:51.770 --> 05:52.280
+right now.
+
+05:52.280 --> 05:57.110
+But you can believe that after this video is over, I'm going to enter in my password here and click
+
+05:57.110 --> 05:58.160
+on Add Secret.
+
+05:58.780 --> 06:04.340
+So after that, we will have access to our doctor username and password inside of our script.
+
+06:05.430 --> 06:07.050
+But here's the script we were just working on.
+
+06:07.560 --> 06:10.500
+So how do we use those secrets to actually log into Docker?
+
+06:10.620 --> 06:15.650
+Well, let me show you exactly how we're going to enter in a new dash statement here.
+
+06:15.660 --> 06:17.100
+We're going to enter in run.
+
+06:18.100 --> 06:20.320
+We're going to say docker log in.
+
+06:20.920 --> 06:22.840
+Dash you dollar sign.
+
+06:22.840 --> 06:24.490
+Docker underscore username.
+
+06:25.420 --> 06:29.680
+And P dollar sign docker underscore password.
+
+06:31.320 --> 06:35.220
+Now we are referencing Docker username and password as environment variables.
+
+06:35.520 --> 06:41.040
+When we add in a secret to repository, as we did just a moment ago, those do not automatically get
+
+06:41.040 --> 06:43.340
+added into the script as environment variables.
+
+06:43.350 --> 06:49.260
+Instead, we have to tell GitHub that we want those two secrets to be added as specifically environment
+
+06:49.260 --> 06:52.140
+variable called DRS name and Docker password.
+
+06:52.470 --> 06:56.380
+So to do so on the next line down without adding in an additional dash.
+
+06:56.400 --> 06:57.930
+So notice how there's no dash here.
+
+06:58.230 --> 06:59.700
+I'm going to enter an E and be.
+
+07:01.460 --> 07:07.280
+And I'm going to say that I want to have an environment variable inside of my script called Docker Username.
+
+07:08.270 --> 07:10.100
+And I want that to come from.
+
+07:10.910 --> 07:11.870
+Dollar sign.
+
+07:12.140 --> 07:12.440
+Really?
+
+07:12.440 --> 07:12.770
+Brace.
+
+07:12.800 --> 07:13.820
+Curly brace.
+
+07:14.580 --> 07:15.450
+Secrets.
+
+07:16.740 --> 07:18.450
+Dot Docker.
+
+07:20.090 --> 07:22.820
+Username closing curly braces.
+
+07:24.180 --> 07:27.060
+And then I'm going to repeat the same thing for Docker password.
+
+07:29.340 --> 07:30.240
+And dollar sign.
+
+07:30.240 --> 07:31.410
+Curly braces.
+
+07:33.300 --> 07:36.660
+Secrets dot docker password.
+
+07:38.040 --> 07:43.200
+Now, this kind of stuff right here is where I have found that people in courses a billion times over
+
+07:43.200 --> 07:44.730
+always tend to make typos.
+
+07:44.730 --> 07:47.820
+So I beg you, please double check your spelling.
+
+07:47.820 --> 07:50.160
+Double check the number of curly braces.
+
+07:50.160 --> 07:52.980
+Make sure you've got all capitals here except for on secrets.
+
+07:52.980 --> 07:57.780
+Of course, just double check the section, because I can guarantee you this is going to be a location
+
+07:57.780 --> 08:00.690
+where many people make a very subtle, small typo.
+
+08:02.560 --> 08:07.300
+So after we run the step, we should now be authenticated with Docker and we can now push the image
+
+08:07.300 --> 08:09.040
+that we had just created in the last step.
+
+08:10.620 --> 08:12.420
+So we can then add in another.
+
+08:14.070 --> 08:18.450
+Dash down here and we can run the command docker push.
+
+08:19.020 --> 08:21.640
+And in my case will be Steven Grider off.
+
+08:23.940 --> 08:24.540
+All right.
+
+08:24.540 --> 08:28.140
+So that should take us all the way through to this step right here.
+
+08:28.140 --> 08:32.130
+And I think that this would be a really good place to pause and then try to test all this stuff out
+
+08:32.130 --> 08:36.240
+in the next video just to make sure that we are able to build a new image and push it off.
+
+08:36.880 --> 08:39.670
+So let's take a pause right here and continue in just a moment.

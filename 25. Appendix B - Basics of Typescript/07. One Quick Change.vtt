@@ -1,0 +1,202 @@
+WEBVTT
+
+00:00.790 --> 00:05.290
+In the last video, we were able to write out some code to fetch, a single to do and print it out at
+
+00:05.290 --> 00:05.950
+the terminal.
+
+00:06.280 --> 00:10.780
+Now everything works pretty well, but this console log right here is kind of ugly and it's hard to
+
+00:10.780 --> 00:12.890
+understand in this kind of object format.
+
+00:12.940 --> 00:19.060
+So in this video, I want to pull off the ID title and completed flags and print them out in a nicer
+
+00:19.060 --> 00:19.640
+format.
+
+00:19.660 --> 00:21.880
+Kind of like a little report of sorts.
+
+00:22.510 --> 00:25.270
+So let's try making some changes to our code base.
+
+00:25.720 --> 00:29.830
+I'm going to flip back over to my editor and to get started, I'm going to first get a direct reference
+
+00:29.830 --> 00:33.290
+to the to do, which is that data property right there.
+
+00:33.310 --> 00:37.930
+So I'm going to essentially pull off that data property and assign it to a separate variable again just
+
+00:37.930 --> 00:39.430
+to make it easier to work with.
+
+00:40.000 --> 00:44.110
+So let's say cons to do is response data.
+
+00:44.800 --> 00:50.590
+So now that we've got that to do, we can pull off the ID, the title and completed properties.
+
+00:50.920 --> 00:55.540
+I'll assign them to some temporary variables and then we can insert them all into a single string and
+
+00:55.540 --> 00:55.900
+console.
+
+00:55.900 --> 00:58.540
+Log that string to essentially put together our report.
+
+01:00.480 --> 01:03.200
+So I'm going to pull off those three properties we just took a look at.
+
+01:03.210 --> 01:07.590
+So I'll say const ID is to do ID.
+
+01:08.560 --> 01:12.070
+I'll get the title as to do dot title.
+
+01:13.340 --> 01:14.960
+And I'll say, finished.
+
+01:16.070 --> 01:19.400
+Is to do not finished like so.
+
+01:20.160 --> 01:24.480
+Now, if you're looking at these three lines of code and thinking, Hey, Stephen, you just messed
+
+01:24.480 --> 01:26.460
+something up right here, that's totally fine.
+
+01:26.460 --> 01:28.050
+Just bear with me for a second.
+
+01:28.260 --> 01:31.920
+If you're looking at this code and you don't see anything wrong, that's totally fine as well.
+
+01:31.920 --> 01:33.900
+Again, just bear with me for a moment.
+
+01:34.560 --> 01:38.100
+So now underneath that, we can start to print out a nice little report here.
+
+01:38.310 --> 01:39.630
+So I'll do a console log.
+
+01:40.940 --> 01:42.920
+To print out this as a nice little report.
+
+01:42.920 --> 01:47.390
+I want to use a multi-line string that is capable of using string templating.
+
+01:47.390 --> 01:50.420
+So I want to kind of inject some variables into the string.
+
+01:50.840 --> 01:51.350
+To do so.
+
+01:51.350 --> 01:56.060
+We can use a template string, just as you might be familiar with from 2015.
+
+01:56.570 --> 01:59.990
+So inside, if you are going to put a set of back ticks, remember these are back ticks.
+
+01:59.990 --> 02:02.400
+It's the character to the left of the one on your keyboard.
+
+02:02.420 --> 02:04.160
+They are not single quotes.
+
+02:05.060 --> 02:06.950
+I'm going to turn this into a multi-line string.
+
+02:08.020 --> 02:12.340
+And they'll say something like the to do with ID.
+
+02:13.770 --> 02:16.170
+A colon and I'll print out the ID.
+
+02:18.900 --> 02:20.610
+And I'll just print out the title underneath.
+
+02:20.610 --> 02:23.460
+I'll say as a title of.
+
+02:24.460 --> 02:26.050
+Dollar sign title.
+
+02:27.710 --> 02:29.720
+And I'll print out whether or not it is finished.
+
+02:29.720 --> 02:32.960
+So I'll say something like, Is it finished?
+
+02:34.150 --> 02:37.600
+And I'll print in the finished variable like so.
+
+02:39.140 --> 02:39.410
+All right.
+
+02:39.410 --> 02:43.370
+So that's a little bit nicer to read report right there than the plane console console.log that we had
+
+02:43.370 --> 02:43.860
+before.
+
+02:43.880 --> 02:46.910
+So let's save this file and then attempt to run it at our terminal.
+
+02:47.210 --> 02:53.210
+So I'm going to flip back over to my terminal and I'll run the file in one step using Node once again.
+
+02:53.210 --> 02:55.120
+So I'll say to Node indexed.
+
+02:55.320 --> 02:58.850
+Let's remember, we are feeding in the typescript file here.
+
+02:58.850 --> 03:01.280
+We're not making use of the plane JavaScript file anymore.
+
+03:02.020 --> 03:03.190
+So I'll run this command.
+
+03:03.960 --> 03:08.520
+And sure enough, I end up seeing undefined, undefined, undefined.
+
+03:08.970 --> 03:10.350
+What's up with that?
+
+03:10.380 --> 03:11.340
+That's kind of unexpected.
+
+03:11.340 --> 03:15.300
+We just saw all that data up here correctly a moment ago when we did the console log.
+
+03:15.480 --> 03:18.330
+So that means that we must have made a mistake somewhere in here.
+
+03:18.540 --> 03:20.340
+So what is going wrong?
+
+03:21.080 --> 03:22.510
+Well, let's take a quick pause right here.
+
+03:22.520 --> 03:23.820
+When we come back, the next video.
+
+03:23.840 --> 03:26.570
+We're going to make sure it's really clear what's wrong with this program.
+
+03:26.570 --> 03:30.980
+And we're going to start to discuss how we can easily use TypeScript to avoid making the error that
+
+03:30.980 --> 03:32.510
+we just made inside of here.
+
+03:32.510 --> 03:34.790
+So a quick pause and I'll see you in just a minute.

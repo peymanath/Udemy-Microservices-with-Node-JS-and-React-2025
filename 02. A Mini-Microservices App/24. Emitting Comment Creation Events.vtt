@@ -1,0 +1,193 @@
+WEBVTT
+
+00:01.320 --> 00:03.280
+We're now going to move on to our comment service.
+
+00:03.300 --> 00:07.980
+We need to make sure that any time someone creates a new comment, we once again emit an event over
+
+00:07.980 --> 00:08.500
+to that event.
+
+00:08.520 --> 00:11.830
+Plus, in this case, our event is going to look a little something like this.
+
+00:11.850 --> 00:13.590
+It'll have a type of comet created.
+
+00:13.590 --> 00:16.620
+And the data in this case will be the actual comment itself.
+
+00:16.950 --> 00:19.290
+So once again, we're going to send this over to the event bus.
+
+00:19.290 --> 00:25.020
+And the event bus is going to echo, so to speak, this event over to all of our different services.
+
+00:25.710 --> 00:30.210
+We're going to once again see that we're going to get a couple of 400 for errors because, again, we
+
+00:30.210 --> 00:34.200
+don't have anything on the services themselves to receive these events just yet.
+
+00:34.950 --> 00:35.250
+All right.
+
+00:35.250 --> 00:35.880
+So I'm going to change it.
+
+00:35.880 --> 00:37.410
+Back over to my editor.
+
+00:38.710 --> 00:40.930
+I'm going to find the comments service folder.
+
+00:40.960 --> 00:41.860
+Here it is right here.
+
+00:42.280 --> 00:42.880
+Inside there.
+
+00:42.880 --> 00:44.770
+I'll open up the index file.
+
+00:45.490 --> 00:46.450
+At the very top.
+
+00:47.270 --> 00:48.530
+I'll get Axios.
+
+00:51.310 --> 00:54.130
+I'll then go down to my code where I'm creating a new comment.
+
+00:54.490 --> 00:55.330
+Here it is, right here.
+
+00:58.040 --> 01:04.370
+Well, then add in right after we add in that new comment right there, or we push it into that array
+
+01:04.400 --> 01:05.240
+or about right after.
+
+01:05.240 --> 01:07.970
+That's really where we kind of save, so to speak, the comment.
+
+01:08.630 --> 01:12.020
+I'll go ahead and we'll add in Axios dot post.
+
+01:13.410 --> 01:17.760
+To local host Colon 4005.
+
+01:19.650 --> 01:20.460
+Events.
+
+01:22.660 --> 01:26.950
+And once again, the data or the event that we're going to send over is going to have a type of something
+
+01:26.950 --> 01:28.720
+like comment created.
+
+01:30.000 --> 01:31.140
+And a data property.
+
+01:31.140 --> 01:32.970
+That's going to be the actual comment itself.
+
+01:33.480 --> 01:40.020
+So remember a comment is going to have the comment ID some content and then in that case or in this
+
+01:40.020 --> 01:41.810
+case, that is the entire comment.
+
+01:41.820 --> 01:47.910
+But we're going to also add into this data property, another property of post ID, just to clarify
+
+01:47.910 --> 01:49.980
+exactly what comment this thing is tied to.
+
+01:50.760 --> 01:53.160
+So in this case, for data, I'm going to put in the.
+
+01:54.310 --> 01:56.200
+ID of comment ID.
+
+01:57.820 --> 01:59.020
+The content.
+
+02:00.140 --> 02:04.250
+And then finally our post ID as well, which is available inside this request.
+
+02:04.250 --> 02:09.470
+Handler Remember, it's technically in that parameter string right there or the root string, so we
+
+02:09.470 --> 02:16.460
+can access it using rec params dot id, let's say post id is rec dot params id.
+
+02:17.840 --> 02:24.890
+And then once again, I'm going to add on async to the wrapping function and await on the request itself.
+
+02:27.450 --> 02:28.230
+So it looks good.
+
+02:28.710 --> 02:30.150
+So let's test this out again.
+
+02:30.300 --> 02:31.950
+I'm going to flip on over to my browser.
+
+02:33.740 --> 02:38.420
+I'm going to find the post that we had just created, and I'll add in some comment and submit it.
+
+02:39.130 --> 02:43.990
+I can refresh the page, see some comment up here, and then finally I'll go over to my terminal and
+
+02:43.990 --> 02:49.540
+I'm going to expect to once again see a series of 404 errors coming out of our event bus.
+
+02:49.570 --> 02:54.040
+Again, that's because we don't have anything inside of our services yet to actually receive these events.
+
+02:55.210 --> 02:55.360
+Yes.
+
+02:55.480 --> 02:56.260
+That looks good.
+
+02:57.250 --> 03:02.080
+Well, at this point in time, we've now got two services that are emitting events whenever something
+
+03:02.080 --> 03:03.280
+interesting happens.
+
+03:03.520 --> 03:08.350
+So now we need to make sure that all of our services right now really just post and comments because
+
+03:08.350 --> 03:13.570
+we've not yet created the query service has an endpoint where it can receive these events and then do
+
+03:13.570 --> 03:14.680
+some processing on them.
+
+03:14.680 --> 03:19.900
+If that service cares about the event that was just emitted in our scenario or in our case right now,
+
+03:19.930 --> 03:24.330
+our post service and the common service don't really care whatsoever.
+
+03:24.340 --> 03:29.140
+They just don't care about any incoming events out of the two that we've created and created and post
+
+03:29.140 --> 03:29.770
+created.
+
+03:29.920 --> 03:33.640
+But as soon as we make this query service, well, we're definitely going to have something that is
+
+03:33.640 --> 03:37.750
+very much interested in some events that are coming out of our application.
+
+03:38.350 --> 03:39.310
+So quick pause right here.
+
+03:39.310 --> 03:44.980
+We're going to start putting this and this those two event or semi handlers together in just a moment.

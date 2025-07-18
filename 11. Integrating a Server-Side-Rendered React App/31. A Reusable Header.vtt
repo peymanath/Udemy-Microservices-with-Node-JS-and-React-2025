@@ -1,0 +1,232 @@
+WEBVTT
+
+00:01.030 --> 00:04.570
+We're now going to start to focus on creating this header that's going to be displayed at the top of
+
+00:04.570 --> 00:05.740
+every single page.
+
+00:05.980 --> 00:10.120
+Now, given that this thing is displayed at the top of every page, there's definitely two ways we can
+
+00:10.120 --> 00:12.310
+go about designing it and showing it on the screen.
+
+00:12.790 --> 00:18.550
+Option number one would be to go into every one of our different page components, such as Indexed Edge's
+
+00:18.550 --> 00:19.810
+sign in and sign up.
+
+00:20.170 --> 00:25.870
+And in each of these we could add in about inside of sign in at the very top, maybe like right above
+
+00:25.870 --> 00:29.110
+that form, some kind of like reusable header component.
+
+00:29.470 --> 00:33.520
+If we took this kind of approach, we would have to go around to every different page and remember to
+
+00:33.520 --> 00:34.810
+add in that header element.
+
+00:35.870 --> 00:37.760
+There's definitely a better way to handle this.
+
+00:37.790 --> 00:42.770
+You might recall that inside of our pages directory we had created a custom app component, so that
+
+00:42.770 --> 00:45.140
+was inside of our underscore app JS file.
+
+00:46.300 --> 00:50.950
+The reason we had originally done this was to just be able to include some global CSS.
+
+00:51.490 --> 00:55.510
+But it turns out that this custom app component right here can also be used to show some elements on
+
+00:55.510 --> 00:58.510
+the screen that will be visible on every single page.
+
+00:58.750 --> 01:02.890
+Remember that this component prop right here is really the page that we are trying to show.
+
+01:03.070 --> 01:07.690
+So component will be equal to our signing component or sign up or the landing page.
+
+01:08.140 --> 01:12.400
+So if we want to show something that's going to be visible on every page, we could wrap this component
+
+01:12.400 --> 01:13.930
+with that extra content.
+
+01:13.960 --> 01:15.160
+Let me show you what I mean.
+
+01:15.830 --> 01:17.810
+I'm going to add in a div right here.
+
+01:19.380 --> 01:20.520
+Around that component.
+
+01:20.520 --> 01:25.260
+And then right above the component itself, I'm going to put on in each one of header.
+
+01:27.330 --> 01:31.260
+Make sure you move the semicolon at the very end of component if you had one.
+
+01:31.290 --> 01:34.920
+I'll then save this and I'll flip back over and let's see what we get.
+
+01:35.790 --> 01:40.530
+Well, we now have header at the very top and if I start to navigate to some other routes, you'll notice
+
+01:40.530 --> 01:41.790
+that's present everywhere.
+
+01:42.330 --> 01:47.370
+So without a doubt, this would be a pretty solid way of getting the header to be displayed on the screen.
+
+01:48.910 --> 01:52.960
+Now, one thing that we need to really understand around this header is that it's kind of a reactive
+
+01:52.960 --> 01:53.710
+in nature.
+
+01:53.710 --> 01:58.510
+As the user starts to sign in and sign out of our application, we need to update the content in the
+
+01:58.510 --> 01:58.960
+header.
+
+01:59.200 --> 02:03.940
+So if the user is not signed in, we need to show some links to go to the sign up and sign in pages.
+
+02:04.240 --> 02:08.530
+But once a user is authenticated, we're going to change that to just say sign out instead.
+
+02:09.290 --> 02:13.400
+So that means that our header needs to understand who the current user is.
+
+02:13.610 --> 02:17.600
+And that kind of presents a little bit of a problem for us with our current architecture.
+
+02:17.630 --> 02:19.580
+Let me show you a diagram to help you understand why.
+
+02:20.260 --> 02:23.200
+So at present, this is what we're saying that we want to do.
+
+02:23.470 --> 02:29.320
+We want our app component to always display a header and possibly index DOJ's sign up or sign in.
+
+02:30.200 --> 02:35.960
+At present, index is already fetching some data to figure out who the current user is, but we are
+
+02:35.960 --> 02:40.220
+now saying that we want to somehow also have our header know who the current user is.
+
+02:42.010 --> 02:46.480
+Rather than having two separate requests to fetch some data, it makes a lot of sense to really just
+
+02:46.480 --> 02:53.680
+centralize that data fetching logic up into the app component alone so the app component can be in charge
+
+02:53.680 --> 02:58.750
+of some initial prop function to fetch the current user so it can fetch the current user and then pass
+
+02:58.750 --> 03:03.400
+that down as a prop into the header and index dogs.
+
+03:05.160 --> 03:06.540
+That's what we're going to start to do.
+
+03:06.690 --> 03:10.650
+Rather than having the landing page figure out who the current user is, we're going to extract that
+
+03:10.650 --> 03:12.480
+into the app component instead.
+
+03:12.510 --> 03:16.470
+And once the app component understands who the current user is, it can pass it down as a prop into
+
+03:16.470 --> 03:18.540
+header and index dogs.
+
+03:18.660 --> 03:23.310
+So eventually, right here instead of one, we will have an actual header component and we'll pass down
+
+03:23.310 --> 03:25.800
+some prop to it that says, Hey, here's the current user.
+
+03:26.160 --> 03:27.870
+Same thing for this component as well.
+
+03:27.900 --> 03:32.790
+Remember, that component is going to eventually be the indexed JS component, and so we can somehow
+
+03:32.790 --> 03:35.130
+include it in this element.
+
+03:36.370 --> 03:41.410
+And this definitely sounds like not the worst thing in the world, but there is a little bit of a complication
+
+03:41.410 --> 03:42.820
+we need to be aware of.
+
+03:43.610 --> 03:49.010
+We're saying right now that we're going to move this data fetching logic from index up to app.
+
+03:49.610 --> 03:54.750
+What that really means is we are going to define get initial props inside of our app component and indexes
+
+03:54.770 --> 03:58.550
+will not require a get initial props function anymore.
+
+03:59.030 --> 04:03.200
+So we're moving that entire function over and index JS is not going to have one.
+
+04:03.680 --> 04:09.590
+However, at some point in the future, I think it is not unreasonable to say that we might have some
+
+04:09.590 --> 04:13.940
+other component that does need to have some get initial props function.
+
+04:13.940 --> 04:16.940
+Maybe it will be the landing page, maybe it will be some other page.
+
+04:16.940 --> 04:21.410
+But we probably are going to eventually be in a scenario where we want to have both the app component
+
+04:21.440 --> 04:25.580
+have get initial props and some page have get initial props as well.
+
+04:26.060 --> 04:30.580
+And it turns out that having these two different components or these two different pages with the get
+
+04:30.590 --> 04:34.190
+initial function is a little bit more challenging to deal with.
+
+04:34.190 --> 04:35.250
+With next JSS.
+
+04:35.270 --> 04:39.590
+Then you would probably expect, as we're kind of finding is true with a lot of this stuff around.
+
+04:40.490 --> 04:45.260
+Anyways, the point is we might eventually want to get initial props up here and down here as well.
+
+04:45.260 --> 04:49.310
+And to accommodate for that, we do have to add in a little bit of extra code.
+
+04:49.400 --> 04:50.620
+It's just something to be aware of.
+
+04:50.630 --> 04:57.080
+But right now let's just focus on relocating, get initial props from landing page up to app component.
+
+04:57.080 --> 04:57.770
+So quick pause.
+
+04:57.770 --> 05:00.050
+We'll start to write out this code in just a moment.

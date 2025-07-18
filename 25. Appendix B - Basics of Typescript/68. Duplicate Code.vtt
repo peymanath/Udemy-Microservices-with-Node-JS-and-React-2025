@@ -1,0 +1,154 @@
+WEBVTT
+
+00:00.900 --> 00:01.440
+In this video.
+
+00:01.440 --> 00:04.710
+We're going to continue by implementing our ad company marker method.
+
+00:05.280 --> 00:07.200
+So I'm still inside of my custom app class.
+
+00:07.200 --> 00:08.460
+I'm down here at the bottom.
+
+00:08.460 --> 00:10.800
+I'm going to expand the method definition.
+
+00:10.800 --> 00:13.020
+We're going to create another marker inside of here.
+
+00:13.260 --> 00:18.120
+Now, as you might guess, the marker code is going to look awfully similar to what we just did.
+
+00:18.510 --> 00:23.580
+The only difference is that we're now pulling the latitude and longitude off of an instance of a company
+
+00:23.580 --> 00:24.810
+as opposed to a user.
+
+00:26.100 --> 00:32.070
+So I'm going to add in new Google Maps dot marker, capital marker.
+
+00:34.330 --> 00:36.460
+We're going to give this thing an options object.
+
+00:36.700 --> 00:38.080
+It's going to have a map property.
+
+00:38.080 --> 00:42.250
+That is a reference to the map that we want to add the marker to, which will be this Google map.
+
+00:43.160 --> 00:47.450
+And we also have that position property that's going to have a latitude coming from our company.
+
+00:47.750 --> 00:55.180
+That would be company, location, lat and a longitude company coming from company dot location dot
+
+00:55.250 --> 00:56.510
+LNG like so.
+
+00:57.820 --> 00:58.450
+All right.
+
+00:58.450 --> 00:59.680
+So I'm going to save this.
+
+00:59.680 --> 01:04.720
+And right away you're going to notice that these two methods right here look awfully darn similar,
+
+01:04.720 --> 01:05.340
+don't they?
+
+01:05.350 --> 01:05.710
+Huh?
+
+01:05.740 --> 01:06.790
+That's kind of funny.
+
+01:07.270 --> 01:11.320
+Well, before we start to obsess over that too much, let's make sure we can actually show a market
+
+01:11.320 --> 01:12.100
+for a company.
+
+01:12.370 --> 01:14.470
+So I'm going to go back over to indexes.
+
+01:14.770 --> 01:17.380
+I'm going to uncomment our import for company.
+
+01:18.170 --> 01:20.630
+Right underneath my user, I'll create a company.
+
+01:23.690 --> 01:26.600
+And we can use that company and add it as a marker.
+
+01:26.630 --> 01:33.950
+So custom map, add company marker and I'll pass in my company like so.
+
+01:35.710 --> 01:40.040
+So let's save this flip back over to the browser again and just make sure we can see our marker.
+
+01:40.060 --> 01:40.420
+Yep.
+
+01:40.420 --> 01:40.730
+Sure.
+
+01:40.750 --> 01:41.260
+Can.
+
+01:42.820 --> 01:45.220
+All right, so we got both our markers to display.
+
+01:45.340 --> 01:51.730
+But like I said, well, our custom map file or our class doesn't have the best format right now.
+
+01:52.210 --> 01:55.060
+So this right here, this ends the bad code we've written.
+
+01:55.270 --> 01:58.960
+So from here on out, we're going to discuss how to fix the bad code we have inside of here.
+
+01:59.380 --> 02:02.860
+First off, let's make sure it's really clear what is bad about this.
+
+02:03.280 --> 02:09.570
+So the very bad thing here is that we've got two different methods that very clearly have, you know,
+
+02:09.580 --> 02:11.430
+a ton of duplication between them.
+
+02:11.440 --> 02:14.200
+The only difference is that in this case, we are accepting a user.
+
+02:14.230 --> 02:16.270
+In this case, we are accepting a company.
+
+02:16.660 --> 02:21.880
+Now, it sure would be great if we could just take in like one method and say, Hey, as long as you
+
+02:21.880 --> 02:26.440
+are passing in something that has like a latitude and longitude, everything is going to work out just
+
+02:26.440 --> 02:27.010
+fine.
+
+02:27.280 --> 02:28.690
+And that's exactly what we want to do.
+
+02:28.720 --> 02:32.740
+We're going to take these two methods and figure out how to condense them down to just one.
+
+02:33.340 --> 02:34.600
+So let's take a quick pause right here.
+
+02:34.600 --> 02:38.020
+We're going to come back to the next video and take a look at a couple of diagrams to understand how
+
+02:38.020 --> 02:42.430
+we're going to do this by using interfaces and what the implication of it is.
+
+02:42.430 --> 02:44.650
+So quick break and I'll see you in just a minute.

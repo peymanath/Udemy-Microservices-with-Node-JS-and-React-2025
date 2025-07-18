@@ -1,0 +1,178 @@
+WEBVTT
+
+00:00.610 --> 00:04.450
+In this video, we're going to get a better idea of what this English bracket syntax is really doing
+
+00:04.450 --> 00:05.110
+for us.
+
+00:05.140 --> 00:09.160
+If you are already familiar with TypeScript and understand what generics are, you can skip over this
+
+00:09.160 --> 00:09.940
+video entirely.
+
+00:09.940 --> 00:16.030
+Otherwise, take around the angle bracket syntax we see right here is the generic syntax inside a typescript.
+
+00:16.240 --> 00:21.610
+You can really think of these generic things as essentially being functions or types.
+
+00:21.940 --> 00:24.310
+Let me give you an example right now.
+
+00:24.310 --> 00:29.230
+When we call model, we've got a function invocation right here or the set of parentheses.
+
+00:29.230 --> 00:34.240
+When we normally call a function inside of TypeScript or JavaScript, we pass in a set of arguments
+
+00:34.240 --> 00:37.030
+and those arguments customize how that function behaves.
+
+00:37.690 --> 00:42.600
+The same thing is true for this list of generic type arguments as well.
+
+00:42.610 --> 00:48.310
+You can really think of these as being some arguments to the function of model, but instead of being
+
+00:48.310 --> 00:54.400
+a data type or an actual value like let's say a string of user or this user schema thing, it is instead
+
+00:54.400 --> 00:55.230
+a type.
+
+00:55.240 --> 00:59.830
+So again, you can think of these as being types being provided to a function as arguments.
+
+01:00.740 --> 01:02.900
+To really get a better idea of what's going on behind the scenes.
+
+01:02.900 --> 01:06.530
+I'm going to hold down command on my keyboard and then click on Model.
+
+01:07.390 --> 01:10.870
+If you're on windows, you'll probably want to hit control and then click instead.
+
+01:11.410 --> 01:14.890
+That will take us to the definition of what the model function is.
+
+01:15.310 --> 01:19.990
+This is the typescript definition of that function, not the actual JavaScript implementation.
+
+01:21.440 --> 01:27.830
+So there is a function called model and we can optionally provide two generic types to it.
+
+01:28.220 --> 01:32.060
+So here is generic type number one and generic type number two.
+
+01:32.300 --> 01:36.410
+I know the syntax in here is really crazy, but all you really need to understand once again is that
+
+01:36.410 --> 01:39.320
+these are essentially arguments that we are providing to this function.
+
+01:39.350 --> 01:43.490
+They are not arguments in the same sense as normal arguments to a function that we're used to.
+
+01:43.520 --> 01:45.800
+Instead, they are customizing types.
+
+01:46.840 --> 01:52.510
+So if you go back over to where we followed model, we provided two types, user doc and user model.
+
+01:52.810 --> 01:57.820
+So those are going to show up as argument one and argument two.
+
+01:58.700 --> 02:02.120
+So argument one is referred to as t that name.
+
+02:02.150 --> 02:07.010
+T Right there is the same as though we had some kind of argument name such as name or schema.
+
+02:08.750 --> 02:12.110
+We also have a second type argument that's going to be called you.
+
+02:13.180 --> 02:17.440
+We can take a look at the function definition and get a better understanding of how these different
+
+02:17.440 --> 02:18.850
+types are actually being used.
+
+02:19.330 --> 02:21.640
+In particular, let's take a look at you right here.
+
+02:21.880 --> 02:25.900
+You'll notice that that you type is being used down here at the very end.
+
+02:26.500 --> 02:31.300
+Remember that the syntax right here is referring to the type of value that the function of model is
+
+02:31.300 --> 02:32.260
+going to return.
+
+02:32.740 --> 02:37.240
+So this right here says that whenever we call model, we are going to be returning type U.
+
+02:37.450 --> 02:38.680
+And what is type you?
+
+02:38.890 --> 02:44.020
+Well, it's whatever we pass in as the second generic type argument to the model function.
+
+02:44.560 --> 02:47.950
+In our case, our second type argument is user model.
+
+02:47.950 --> 02:54.280
+And that means that we are saying that the model function overall is going to return something of type
+
+02:54.280 --> 02:55.150
+user model.
+
+02:55.450 --> 02:59.950
+And so if I actually go back over to and hover over user right here, it says that user is going to
+
+02:59.950 --> 03:01.270
+be of type user model.
+
+03:01.970 --> 03:07.760
+If I change this second argument right here to anything else, then the model function is going to return
+
+03:07.760 --> 03:10.820
+a value of type, whatever I put in there.
+
+03:10.820 --> 03:14.450
+So for example, if I type in any now TypeScript.
+
+03:14.660 --> 03:19.280
+TypeScript thinks that the model function is going to return a value of type any.
+
+03:19.700 --> 03:24.380
+And so if I go and take a look at what gets assigned to user, now user is of type any as well.
+
+03:26.270 --> 03:26.510
+Okay.
+
+03:26.510 --> 03:28.610
+So I'm going to revert that back over to user model.
+
+03:29.840 --> 03:32.700
+So again, this is referred to as generics in TypeScript.
+
+03:32.720 --> 03:36.110
+This is a very brief, very brief summary of what they're all about.
+
+03:36.140 --> 03:41.870
+They essentially allow us to customise the types being used inside of a function, a class or an interface.
+
+03:42.440 --> 03:44.710
+We don't really need to understand a lot more beyond that right now.
+
+03:44.720 --> 03:48.950
+I just want to give you a very quick understanding of what this stuff is being used for.
+
+03:49.610 --> 03:49.760
+Okay.
+
+03:49.790 --> 03:52.700
+So let's take a quick pause right here and continue in just a moment.

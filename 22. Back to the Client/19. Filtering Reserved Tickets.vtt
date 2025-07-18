@@ -1,0 +1,133 @@
+WEBVTT
+
+00:00.910 --> 00:03.160
+We've now successfully purchased our first ticket.
+
+00:03.160 --> 00:07.060
+So for me personally, I have purchased first client ticket right here.
+
+00:07.270 --> 00:11.680
+If I view that ticket and try to purchase it again, I am told ticket is already reserved.
+
+00:11.830 --> 00:16.300
+So as I mentioned at the end of the last video, we should probably try to filter this list right here
+
+00:16.300 --> 00:18.940
+and only show tickets that are still available for purchase.
+
+00:19.330 --> 00:24.460
+So to do so, we can open up our ticket service, find the route handler that is serving up a list of
+
+00:24.460 --> 00:29.620
+tickets, and probably alter the query that we are making inside there so that we only return tickets
+
+00:29.620 --> 00:30.940
+that are still available.
+
+00:31.920 --> 00:32.100
+Okay.
+
+00:32.130 --> 00:33.150
+Back inside, my editor.
+
+00:33.150 --> 00:34.740
+I'm going to find the ticket service.
+
+00:35.520 --> 00:38.900
+Inside there, I'll find the roots folder and then index keys.
+
+00:39.510 --> 00:44.490
+So this is the route handler that we are making a request to whenever we get that big list of tickets.
+
+00:44.700 --> 00:46.890
+And this is the query that we are actually issuing.
+
+00:47.730 --> 00:54.510
+So you might recall from our models tickets file our different ticket documents might have in order
+
+00:54.510 --> 00:55.470
+ID property.
+
+00:55.470 --> 01:00.270
+It is the presence of that order ID property that indicates that a ticket is currently reserved and
+
+01:00.270 --> 01:01.380
+cannot be ordered.
+
+01:01.960 --> 01:06.400
+So when we write out the query back inside of our route handler to find a list of all of the different
+
+01:06.400 --> 01:11.070
+tickets, we can add on a little filter or a little bit of criteria for the query.
+
+01:11.080 --> 01:16.960
+We could say only give us tickets where the order ID property is undefined or essentially not set.
+
+01:17.770 --> 01:23.680
+So inside that object I'm going to put in order id undefined find all the tickets that don't have a
+
+01:23.680 --> 01:24.730
+corresponding order.
+
+01:25.590 --> 01:26.570
+So let's save that.
+
+01:27.170 --> 01:32.720
+And now if I flip back over, refresh the page, I'll see only the ticket remaining that I have not
+
+01:32.720 --> 01:37.810
+created in order for if I now view that ticket, click on purchase.
+
+01:37.820 --> 01:39.920
+I have created an order for that.
+
+01:40.340 --> 01:44.600
+And if I go back over to my big list of tickets now that big list is empty.
+
+01:45.320 --> 01:46.880
+As soon as that order expires.
+
+01:46.880 --> 01:48.080
+So I'm not going to pay for it.
+
+01:48.080 --> 01:49.460
+I'm going to let it expire.
+
+01:49.490 --> 01:54.620
+And as soon as it expires, if I then refresh this page, I should see that ticket up here back on this
+
+01:54.620 --> 01:55.160
+list.
+
+01:56.210 --> 01:58.130
+That was a pretty straightforward solution.
+
+01:59.150 --> 02:02.300
+Now we still have a little bit of stuff to take care of inside of our app.
+
+02:02.810 --> 02:07.670
+For example, I would really like to have some links inside the header, so maybe a link right here
+
+02:07.670 --> 02:08.770
+to create a new ticket.
+
+02:08.780 --> 02:11.060
+That's really the goal of this sell tickets link.
+
+02:11.330 --> 02:15.770
+And we should probably also list out all the different orders that the user has successfully created
+
+02:15.770 --> 02:16.730
+and paid for.
+
+02:17.440 --> 02:22.780
+So we'll create one last page to handle a listing of my orders or orders that correspond to a very particular
+
+02:22.780 --> 02:23.320
+user.
+
+02:23.620 --> 02:24.770
+There's still a little bit left.
+
+02:24.790 --> 02:26.710
+Let's continue in just a moment.

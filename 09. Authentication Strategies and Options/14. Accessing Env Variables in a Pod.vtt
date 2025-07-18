@@ -1,0 +1,259 @@
+WEBVTT
+
+00:00.620 --> 00:03.830
+We just created a secret and assigned it to our pod.
+
+00:03.830 --> 00:09.380
+So we're now going to open up the code tied to that container and make sure that we refer to the environment
+
+00:09.380 --> 00:12.920
+variable that we just set inside there of JWT underscore key.
+
+00:13.520 --> 00:15.650
+So I'm going to go back into my directory.
+
+00:15.680 --> 00:18.830
+I'll find CRC routes, sign updates.
+
+00:19.830 --> 00:21.060
+So here's our sign up route.
+
+00:21.090 --> 00:26.700
+HANDLER Specifically where we are creating our JSON Web token, again, we've got a hardcoded string
+
+00:26.700 --> 00:27.840
+inside of here right now.
+
+00:28.050 --> 00:31.940
+So we don't want to have this hard coded, very critical piece of information side of here.
+
+00:31.950 --> 00:37.290
+Instead, we want to try to reference it from our environment variables to access an environment variable
+
+00:37.290 --> 00:38.260
+with Node.js.
+
+00:38.280 --> 00:45.690
+We do process E and V and then the name of the variable, which in our case is JWT underscore key.
+
+00:46.230 --> 00:48.540
+As soon as we add that in, we're going to get an error.
+
+00:48.990 --> 00:51.720
+So this is coming from TypeScript if we hover over it.
+
+00:52.380 --> 00:59.460
+TypeScript thinks that this environment variable JWT underscore key has type string or undefined.
+
+01:00.030 --> 01:05.230
+The reason for this is that TypeScript is never going to assume that a environment variable is defined.
+
+01:05.250 --> 01:10.410
+It is entirely possible that we are going to run our application completely forgetting to define that
+
+01:10.410 --> 01:11.420
+environment variable.
+
+01:11.430 --> 01:14.670
+And so TypeScript wants us to account for that inside of our code.
+
+01:15.150 --> 01:23.490
+Usually what we'll do is maybe add a little bit of a check before we could say if not process EMV dot
+
+01:23.490 --> 01:24.750
+JWT key.
+
+01:26.250 --> 01:27.930
+Then throw a new air.
+
+01:28.850 --> 01:30.530
+Or something similar to that.
+
+01:30.890 --> 01:35.690
+As soon as we add in this little type card right here that's going to capture the case in which JWT
+
+01:35.710 --> 01:37.610
+key is equal to undefined.
+
+01:37.790 --> 01:42.740
+So if we get past that, if statement type script knows that down here now this thing must be defined
+
+01:42.740 --> 01:45.380
+because we just checked to see if it was defined a moment ago.
+
+01:45.710 --> 01:47.990
+You'll notice that now it says, Hey, this is a string.
+
+01:49.040 --> 01:53.270
+Now, the only downside to this is that we could possibly be throwing an air inside of a route handler,
+
+01:53.270 --> 01:57.620
+and that will only start to arise once we deploy our application.
+
+01:57.890 --> 02:03.200
+Ideally, we would capture the case in which our environment variables are not defined when we first
+
+02:03.200 --> 02:04.370
+start up our app.
+
+02:04.550 --> 02:09.500
+So if we need an environment variable to get our code working correctly and it's not defined, we should
+
+02:09.500 --> 02:11.080
+throw an error at the instance.
+
+02:11.090 --> 02:16.070
+Our application starts up so that we know immediately, once we do our deployment, that there's something
+
+02:16.070 --> 02:22.010
+wrong rather than trying to capture that error way on down the line when our application is actually
+
+02:22.010 --> 02:24.050
+been running possibly for some amount of time.
+
+02:24.850 --> 02:29.590
+So rather than doing the check right there, I'm going to delete that and I'm going to go back to my
+
+02:29.590 --> 02:31.360
+index file.
+
+02:32.250 --> 02:33.030
+So here's indexed.
+
+02:34.260 --> 02:35.250
+I'm going to go down.
+
+02:36.560 --> 02:37.970
+To our start function.
+
+02:40.140 --> 02:45.240
+And before we even attempt to connect to our MongoDB instance, I'm going to add in a check to make
+
+02:45.240 --> 02:47.830
+sure that that environment variable actually is defined.
+
+02:47.850 --> 02:54.090
+So I'll say if not process and v jwt underscore key.
+
+02:54.090 --> 03:02.790
+So if that thing is not defined, then I'll throw a new error and say JWT must be defined.
+
+03:03.770 --> 03:09.500
+So now if there's ever a scenario where I forget to do this and somehow get past the check of that secret
+
+03:09.500 --> 03:13.970
+or something like that, it's entirely possible, to be honest, we could completely forget to add in
+
+03:13.970 --> 03:15.020
+this section right here.
+
+03:15.020 --> 03:20.180
+If we forgot to add that in, then if this secret didn't exist or whatever else, we would still create
+
+03:20.180 --> 03:21.890
+this pod without an issue.
+
+03:22.520 --> 03:25.970
+So if for some reason we forget to do that, then we'll capture it right here.
+
+03:26.690 --> 03:31.400
+And we'll start to throw an error, which we will detect immediately when we start to deploy our code.
+
+03:32.720 --> 03:34.250
+So I'm going to leave this cheque right here.
+
+03:34.700 --> 03:35.900
+I'm going to save this file.
+
+03:36.230 --> 03:38.220
+And if I go back over to sign up, yes.
+
+03:38.240 --> 03:40.580
+I still have the same error I had before.
+
+03:41.180 --> 03:45.980
+So that little type card that we had only works correctly with TypeScript if we do that check right
+
+03:45.980 --> 03:48.320
+before we try to access that environment variable.
+
+03:48.740 --> 03:55.220
+However, we're now at a point where I personally feel pretty darn confident that if I actually started
+
+03:55.220 --> 03:58.700
+up my application, I already did a check to see if this thing is defined.
+
+03:58.850 --> 04:01.340
+So personally, I think TypeScript is in the wrong here.
+
+04:01.340 --> 04:05.600
+I think TypeScript is being a little bit too cautious just because it doesn't know that I already did
+
+04:05.600 --> 04:07.670
+that check when our application first started up.
+
+04:08.300 --> 04:15.260
+So to make TypeScript happy here, we can just add in an exclamation right after JWT, that exclamation
+
+04:15.260 --> 04:18.440
+says, Hey, TypeScript, don't worry, we already check this thing.
+
+04:18.440 --> 04:22.100
+We know 100% that this environment variable is defined.
+
+04:24.940 --> 04:25.920
+So that looks pretty good.
+
+04:26.460 --> 04:27.480
+Let's save this.
+
+04:28.940 --> 04:33.620
+I'm going to go back over to my terminal and just make sure I don't have any errors during startup.
+
+04:33.650 --> 04:37.580
+We would have an error if for some reason we had forgotten to load up that environment variable or set
+
+04:37.580 --> 04:38.780
+it inside the container.
+
+04:39.430 --> 04:40.650
+Looks like everything is good.
+
+04:40.670 --> 04:44.180
+So let's go back over to Postman and try to sign up once again.
+
+04:45.020 --> 04:45.890
+At Postman.
+
+04:46.250 --> 04:49.940
+I'm going to enter in another unique email address.
+
+04:50.390 --> 04:51.170
+I'll send it.
+
+04:52.070 --> 04:52.970
+And looks good.
+
+04:53.960 --> 04:57.890
+There's my response or there's my cookie and I've still got my response on here.
+
+04:58.770 --> 04:59.130
+All right.
+
+04:59.130 --> 05:03.090
+Well, that is pretty much it for our initial authentication setup.
+
+05:03.360 --> 05:08.580
+We've gone through this very long process of discussing all the pros and cons of handling authentication.
+
+05:09.060 --> 05:12.300
+We took a look at JSON Web tokens versus cookies.
+
+05:12.300 --> 05:14.140
+We touched on Kubernetes a little bit.
+
+05:14.160 --> 05:15.540
+I think we're at a pretty good spot.
+
+05:15.540 --> 05:18.330
+So let's take a pause right here and continue in just a moment.

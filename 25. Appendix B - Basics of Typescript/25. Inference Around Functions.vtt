@@ -1,0 +1,334 @@
+WEBVTT
+
+00:01.310 --> 00:01.940
+In this video.
+
+00:01.940 --> 00:06.500
+We're going to dissect the ad function just a little bit and get a better idea about how type annotation
+
+00:06.500 --> 00:07.610
+works with functions.
+
+00:08.000 --> 00:12.770
+So once again, every time we add in an argument list, we're always going to annotate every single
+
+00:12.770 --> 00:13.490
+argument.
+
+00:14.000 --> 00:18.410
+Likewise, right after that argument list, we're going to add an annotation for what the function will
+
+00:18.410 --> 00:19.070
+return.
+
+00:19.940 --> 00:25.190
+And when we add in the return annotation right there, TypeScript is going to immediately analyze the
+
+00:25.190 --> 00:27.110
+body of your function.
+
+00:27.110 --> 00:32.600
+So it's literally going to read the code inside there and decide whether or not you actually are returning
+
+00:32.600 --> 00:33.080
+a value.
+
+00:33.080 --> 00:34.040
+That is a number.
+
+00:34.690 --> 00:38.040
+In this case, TypeScript knows that A and B are numbers.
+
+00:38.050 --> 00:40.060
+It sees that we add them together.
+
+00:40.090 --> 00:44.800
+It knows that adding two numbers together results in a number, and then it sees that we return that
+
+00:44.800 --> 00:45.400
+value.
+
+00:45.790 --> 00:50.800
+So TypeScript can read this line of code right here and understand that we have done exactly what we
+
+00:50.800 --> 00:51.970
+said we were going to do.
+
+00:52.830 --> 00:56.220
+If we return some other type of value from the function like a string like.
+
+00:56.220 --> 01:01.500
+So we'll very quickly get an error because now TypeScript has read the body of our function again and
+
+01:01.500 --> 01:06.060
+seen that we are returning a string as opposed to the number we said we are going to do.
+
+01:06.330 --> 01:10.590
+So if I hover over that, it says specifically, Hey, you're trying to return a string, you're supposed
+
+01:10.590 --> 01:14.220
+to return a number, and so I can revert it back over to A plus B.
+
+01:15.260 --> 01:19.130
+Now, one really important thing to understand here, and this is kind of getting into one of the more
+
+01:19.130 --> 01:24.410
+interesting sides of types, although we've declared what type of value we are going to return, TypeScript
+
+01:24.410 --> 01:29.420
+is not going to try to make sure we actually have the correct code inside the function.
+
+01:29.960 --> 01:32.780
+And I know that sounds kind of weird, but let me tell you what I mean by that.
+
+01:33.230 --> 01:35.390
+You and I wrote a function here called ADD.
+
+01:35.390 --> 01:39.530
+And so I think any engineer who looks at this function would say, okay, if I call this, it's going
+
+01:39.530 --> 01:44.150
+to add two numbers together and then we add it in some annotation to say, Oh yeah, the function is
+
+01:44.150 --> 01:45.350
+going to return a number.
+
+01:45.800 --> 01:51.380
+TypeScript can make sure that we are returning the correct type of value, but it does not actually
+
+01:51.380 --> 01:56.780
+try to make sure that we have the correct logic inside of our application or inside this function.
+
+01:57.170 --> 02:02.480
+So in other words, we could very easily return the difference between A and B, so no longer are we
+
+02:02.480 --> 02:02.750
+adding.
+
+02:02.750 --> 02:03.860
+We're now subtracting.
+
+02:03.860 --> 02:06.110
+But TypeScript doesn't care about that.
+
+02:06.440 --> 02:08.060
+It just says, Hey, you're returning.
+
+02:08.060 --> 02:09.530
+A number works for me.
+
+02:09.890 --> 02:14.000
+Now, this might seem like a really obvious thing, but it's going to have some really big impacts on
+
+02:14.000 --> 02:15.860
+some later topics we discuss.
+
+02:16.010 --> 02:19.270
+Remember, the type system is just concerned with types.
+
+02:19.280 --> 02:24.770
+It doesn't actually vet your actual logic inside the function and make sure you're doing the right thing,
+
+02:24.770 --> 02:25.580
+so to speak.
+
+02:26.460 --> 02:26.760
+All right.
+
+02:26.760 --> 02:28.680
+I am going to restore that to A plus B.
+
+02:29.690 --> 02:34.400
+Now, the last thing I want to mention here is just a little bit more around annotations and type inference.
+
+02:34.400 --> 02:36.260
+So quick diagram of this function.
+
+02:37.420 --> 02:37.720
+All right.
+
+02:37.720 --> 02:38.290
+Here we go.
+
+02:38.890 --> 02:40.290
+So here's our ADD function.
+
+02:40.300 --> 02:42.340
+We have two arguments into it.
+
+02:42.490 --> 02:44.980
+They are both numbers and we have a single output.
+
+02:44.980 --> 02:46.330
+That is a number as well.
+
+02:48.150 --> 02:53.570
+So when we think about the arguments, we have to always use type annotation.
+
+02:53.580 --> 02:59.880
+In other words, we have to write out colon number, colon number right there every single time we define
+
+02:59.880 --> 03:00.750
+a function.
+
+03:00.930 --> 03:05.070
+There are some corner cases where we do not, but for right now we'll just kind of ignore those.
+
+03:05.070 --> 03:06.450
+We'll discuss them later on.
+
+03:06.690 --> 03:12.060
+So whenever you and I write a function in this course, we are always going to add in these annotations
+
+03:12.060 --> 03:13.920
+every time we write out a function.
+
+03:15.320 --> 03:18.320
+So we do not get any type inference on arguments.
+
+03:18.560 --> 03:19.400
+Arguments?
+
+03:20.580 --> 03:22.770
+We're always going to add in those annotations.
+
+03:23.310 --> 03:29.790
+However, on the other side over here for the output from the function, we do get the benefit of type
+
+03:29.790 --> 03:32.250
+inference, but we're not going to use it.
+
+03:32.550 --> 03:34.530
+And so let me clarify what's going on there.
+
+03:35.010 --> 03:40.260
+Back over inside my function, I'm going to find the return value annotation right here and delete it.
+
+03:41.110 --> 03:46.960
+If I now hover over AD, I'll see an annotation on the variable itself that says that ad is referring
+
+03:46.990 --> 03:50.050
+to a function that takes two numbers and returns a number.
+
+03:51.240 --> 03:52.910
+So that's type inference in play.
+
+03:52.920 --> 03:59.280
+We did not add in a type return annotation, but TypeScript read the body of our function and it knows
+
+03:59.280 --> 04:01.050
+that we are going to return a number.
+
+04:01.440 --> 04:06.810
+So just like we saw with inference before, with variable declarations, we have type inference around
+
+04:06.810 --> 04:09.780
+only the return value from a function.
+
+04:10.510 --> 04:14.770
+So we don't have to add in that return annotation if we don't want to.
+
+04:14.950 --> 04:19.780
+However, like I said, you and I always, always, always will.
+
+04:19.780 --> 04:20.710
+And here's why.
+
+04:20.950 --> 04:24.460
+Let's imagine we've got another function here called Subtract.
+
+04:26.020 --> 04:30.940
+And this is also going to take two arguments, A and B, they're both going to be numbers and I'm going
+
+04:30.940 --> 04:32.320
+to leave off the annotation.
+
+04:32.740 --> 04:35.770
+So then inside of here, we'll just subtract the two numbers like so.
+
+04:36.160 --> 04:37.410
+And yeah.
+
+04:37.420 --> 04:38.540
+Okay, I think that's it.
+
+04:38.560 --> 04:39.430
+We're good to go.
+
+04:40.140 --> 04:42.210
+So do you notice anything missing here?
+
+04:42.420 --> 04:44.760
+Well, I didn't put on a return statement.
+
+04:45.300 --> 04:49.980
+So if I hover over, subtract right now, you'll see that we get an annotation on here that says that
+
+04:49.980 --> 04:56.490
+we have two arguments as inputs A and B, and then we have a return value of void, which means that
+
+04:56.490 --> 04:58.980
+we are not returning anything at all.
+
+04:59.940 --> 05:04.680
+So TypeScript has used type inference here to say, hey, since you're not returning anything from the
+
+05:04.680 --> 05:08.910
+function, I guess you don't mean to turn anything, return anything from the function.
+
+05:09.390 --> 05:10.380
+We made a mistake.
+
+05:10.380 --> 05:15.990
+We did not return a value in TypeScript has not done anything to tell us that we made a mistake inside
+
+05:15.990 --> 05:16.890
+of this function.
+
+05:17.740 --> 05:21.760
+So if we instead add in an annotation for the return type right here of number like.
+
+05:21.760 --> 05:27.400
+So we'll very quickly see a error message that would be our signal that, hey, we probably made a mistake
+
+05:27.400 --> 05:30.670
+inside the function and we should add on a return like so.
+
+05:31.460 --> 05:34.310
+So that's why you and I are always going to use return annotations.
+
+05:34.310 --> 05:40.280
+It's because we could very easily make a mistake inside of a function and forget to return a value or
+
+05:40.280 --> 05:42.230
+even return an incorrect type.
+
+05:42.740 --> 05:45.740
+If we do so, TypeScript is not going to give us an error.
+
+05:45.740 --> 05:48.530
+It's just going to think, Oh, that's what the developer meant to do.
+
+05:48.860 --> 05:52.960
+The only way that we're going to get an error is if we add on that annotation right there.
+
+05:52.970 --> 05:58.550
+So like I said, although we get inference on the output from my function, we are not going to use
+
+05:58.550 --> 05:58.670
+it.
+
+05:58.670 --> 06:01.220
+We're always going to add that annotation in.
+
+06:02.200 --> 06:02.500
+All right.
+
+06:02.500 --> 06:04.020
+So that's functions in a nutshell.
+
+06:04.030 --> 06:05.680
+One or two quick more topics.
+
+06:05.680 --> 06:07.870
+So quick pause and I'll see you in just a minute.

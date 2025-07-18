@@ -1,0 +1,265 @@
+WEBVTT
+
+00:00.930 --> 00:03.000
+We've put together both of our publishers.
+
+00:03.000 --> 00:07.140
+So now we're going to go back to our new route handler and the delete route handler.
+
+00:07.320 --> 00:10.170
+In both those, we had left ourselves some little comments.
+
+00:10.170 --> 00:14.730
+So here's the new handler and we left ourselves a comment at the very bottom where we said that we should
+
+00:14.730 --> 00:17.280
+publish an event to say that an order was created.
+
+00:17.520 --> 00:18.900
+So let's take care of that.
+
+00:19.350 --> 00:22.050
+We're going to start off first inside of our new handler.
+
+00:22.320 --> 00:27.630
+In order to publish an event, we need both the publisher that we just created and we also need an active
+
+00:27.630 --> 00:28.950
+Nats client.
+
+00:29.250 --> 00:34.830
+You might recall that to manage our Nats client, we've got that Nats wrapper file inside of our root
+
+00:34.880 --> 00:35.970
+CRC directory.
+
+00:36.580 --> 00:42.100
+So this Nats upper class right here, we create a singleton out of it at the very bottom called Nats
+
+00:42.100 --> 00:42.700
+wrapper.
+
+00:42.700 --> 00:47.650
+And this Nats wrapper class is what is going to give us access to an active Nats client.
+
+00:48.690 --> 00:49.200
+All right.
+
+00:49.200 --> 00:54.210
+So inside of Newt's at the very top, we will add in two import statements.
+
+00:55.350 --> 00:57.690
+One four hour order created.
+
+00:58.440 --> 00:59.160
+Publisher.
+
+01:00.020 --> 01:06.140
+From up one directory events publishers order created.
+
+01:06.170 --> 01:06.640
+There we go.
+
+01:06.650 --> 01:07.340
+Publisher.
+
+01:09.310 --> 01:12.190
+And we'll also get our Nats rapper.
+
+01:12.910 --> 01:15.010
+From up one directory nats rapper.
+
+01:17.100 --> 01:20.820
+So we can go ahead and publish that event down where we left that comment.
+
+01:22.740 --> 01:24.180
+So here's where we left the comment.
+
+01:25.530 --> 01:28.170
+Right after it, we will create a new publisher.
+
+01:28.170 --> 01:31.670
+And remember, when we create the publisher, we have to feed it the Nats client.
+
+01:31.680 --> 01:35.130
+So we'll do a new order created publisher.
+
+01:35.990 --> 01:36.740
+The parson.
+
+01:36.740 --> 01:38.660
+That's rapper client.
+
+01:40.290 --> 01:42.090
+And then we will publish.
+
+01:44.290 --> 01:48.400
+And when we pass in that empty object for right now to publish, we can hover over it and it will tell
+
+01:48.400 --> 01:50.830
+us the exact properties that we have to provide.
+
+01:50.860 --> 01:54.280
+So we have to throw in the ID status, user ID and so on.
+
+01:55.270 --> 01:56.180
+So let's fill it out.
+
+01:56.850 --> 02:01.350
+So when we publish this event, we're going to pass along some data of the ID and the ID is going to
+
+02:01.350 --> 02:03.840
+come from the order that we had created just a moment ago.
+
+02:03.870 --> 02:05.070
+The order ID.
+
+02:06.110 --> 02:09.050
+Then our status will be the orders status.
+
+02:12.170 --> 02:13.940
+Next up is our user ID.
+
+02:14.940 --> 02:16.300
+Which will be the order.
+
+02:16.320 --> 02:17.370
+User ID.
+
+02:18.740 --> 02:19.970
+Then expires at.
+
+02:22.090 --> 02:26.500
+Now, remember, on this order object right here we are assigning a date object.
+
+02:26.500 --> 02:30.430
+And the date object is what is going to eventually be more or less saved to the database.
+
+02:30.430 --> 02:35.740
+The date object doesn't actually technically it saved into the database, but Mongoose is going to automatically
+
+02:35.740 --> 02:40.270
+take that date object and convert it to a string just before it gets saved into MongoDB.
+
+02:40.690 --> 02:45.580
+But at our code level, at basically what we have access to inside of this file that expires, that
+
+02:45.580 --> 02:47.680
+property is a date object.
+
+02:48.160 --> 02:52.600
+Now we are not going to provide a date object for the expires that property.
+
+02:52.600 --> 02:55.780
+Instead we had said that we were going to provide expires that as a string.
+
+02:56.260 --> 03:00.430
+The reason for that is that whatever object we put inside of here is going to be eventually turned into
+
+03:00.430 --> 03:01.150
+JSON.
+
+03:01.330 --> 03:07.570
+When a date object gets turned into JSON or essentially a string, that JSON code is essentially going
+
+03:07.570 --> 03:12.910
+to say, hey, data object, turn yourself into a string and the date object is going to assume that
+
+03:12.910 --> 03:17.410
+it should turn itself into a string representing the current time zone that it is in.
+
+03:17.590 --> 03:22.840
+So in other words, if we just rely upon the normal behavior and we put in some kind of date object
+
+03:22.840 --> 03:29.110
+right here, we would end up with a date string or a timestamp that reflects whatever time zone you
+
+03:29.110 --> 03:29.920
+are living in.
+
+03:29.920 --> 03:35.500
+So for me, I'm currently in Mountain Standard Time, so it would be some date time right here, Mountain
+
+03:35.500 --> 03:37.900
+Standard Time, and that's not what we want.
+
+03:37.900 --> 03:42.880
+Whenever we share time stamps across different services, we want to communicate them in some kind of
+
+03:42.880 --> 03:45.010
+timezone, agnostic sort of way.
+
+03:45.010 --> 03:51.640
+So ideally we would be providing a UTC timestamp which is going to work regardless of what the time
+
+03:51.640 --> 03:54.460
+zone of the service that is receiving this event is in.
+
+03:55.200 --> 04:00.330
+So rather than relying upon this default to string behavior of the date object, which would end up
+
+04:00.330 --> 04:05.280
+with some not time zone that we want, we are going to instead control how this thing gets turned into
+
+04:05.280 --> 04:05.850
+a string.
+
+04:05.850 --> 04:13.380
+So we are going to provide order expires at two ISO string.
+
+04:14.480 --> 04:15.360
+And that's how we do it.
+
+04:15.360 --> 04:17.700
+That's how we get a UTC timestamp.
+
+04:18.090 --> 04:21.090
+Notice how it's capital ISO and A capital S.
+
+04:21.570 --> 04:23.340
+So that's going to return to us a string.
+
+04:23.370 --> 04:27.420
+It's going to give us the date that is contained inside these expires at object.
+
+04:28.430 --> 04:32.690
+And it's going to be in a UTC time format or Time's Up.
+
+04:33.710 --> 04:33.980
+Okay.
+
+04:33.980 --> 04:34.730
+Enough of that.
+
+04:35.290 --> 04:37.840
+So next up, we have to provide the status of the order.
+
+04:38.020 --> 04:40.110
+So we'll put in status of order.
+
+04:40.120 --> 04:40.840
+Oh, sorry.
+
+04:40.840 --> 04:43.000
+We already did the status on two lines right above.
+
+04:43.390 --> 04:44.620
+We have to do the ticket.
+
+04:45.350 --> 04:48.200
+So for the ticket, we have to provide the idea of the ticket.
+
+04:49.160 --> 04:50.540
+That would be ticket ID.
+
+04:51.220 --> 04:54.070
+And then the price as well, which will be ticket price.
+
+04:54.730 --> 04:57.010
+And let's take a pause right here.
+
+04:57.010 --> 05:01.000
+When we come back in the next video, we're going to go through this same process over inside of our
+
+05:01.000 --> 05:02.170
+delete route handler.

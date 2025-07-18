@@ -1,0 +1,223 @@
+WEBVTT
+
+00:00.850 --> 00:03.780
+You've now got some scaffold put together for our moderation service.
+
+00:03.790 --> 00:07.900
+So now we need to go round to all three of these different services and make a couple of changes to
+
+00:07.900 --> 00:08.740
+each ones.
+
+00:08.950 --> 00:13.870
+In some cases, we need to tweak an event that already exists, and in some cases we need to add in
+
+00:13.870 --> 00:14.800
+a new event.
+
+00:15.100 --> 00:19.810
+We're going to go through the step by step and kind of follow the actual workflow of a user submitting
+
+00:19.810 --> 00:20.590
+a comment.
+
+00:20.800 --> 00:23.230
+So let's think about what happens when a user submits a comment.
+
+00:23.260 --> 00:27.640
+Remember, right now we persist a new comment inside of our common service.
+
+00:28.000 --> 00:31.420
+At present we are just storing that comments, ID and content.
+
+00:31.810 --> 00:37.840
+We probably also want to store that comments status as well, whether it is pending, moderation, approved
+
+00:37.840 --> 00:38.740
+or rejected.
+
+00:39.070 --> 00:43.720
+So as soon as the user submits a comment, we need to make sure that we store, in addition to everything
+
+00:43.720 --> 00:48.400
+else, a status of pending to say this comment is still awaiting moderation.
+
+00:48.910 --> 00:50.880
+Let's open up our code editor right now.
+
+00:50.890 --> 00:53.980
+We're going to find our common service and make that change right away.
+
+00:54.780 --> 00:56.310
+So I'm going to go back over to my editor.
+
+00:56.880 --> 00:58.530
+I'll find my comment service.
+
+00:58.950 --> 01:01.110
+Inside there is my index file.
+
+01:03.080 --> 01:07.340
+I'll then go down to where we create a new comment inside this post request handler right here.
+
+01:08.170 --> 01:11.530
+So let's read through this code really quickly and just get a quick reminder of what's going on.
+
+01:11.860 --> 01:15.220
+We generate the random ID, we get the content of the comment.
+
+01:16.140 --> 01:21.180
+We then get the list of comments that already exist that is associated with the given post.
+
+01:21.810 --> 01:25.400
+And then right here is where we create the actual comment itself.
+
+01:25.410 --> 01:27.570
+So this object, that is the comment.
+
+01:28.050 --> 01:33.360
+So we want to add into that object this new status property and by default it should always be pending.
+
+01:34.160 --> 01:40.010
+So inside that object, I'll add in a new property of pending or submit status.
+
+01:41.190 --> 01:42.000
+That's better.
+
+01:44.000 --> 01:45.320
+Of pending like so.
+
+01:46.570 --> 01:46.930
+Okay.
+
+01:46.930 --> 01:47.920
+So that's step one.
+
+01:48.250 --> 01:50.980
+Let's go backward to our diagram and figure out what to do next.
+
+01:51.720 --> 01:57.360
+So step number two, remember, whenever this or whenever we create a new comment, we then immediately
+
+01:57.360 --> 01:58.980
+emit a new event.
+
+01:59.490 --> 02:02.280
+And that event is the comment created event.
+
+02:03.230 --> 02:08.630
+That's going to go into our event bus and then get sent over to both the moderation service.
+
+02:09.990 --> 02:11.490
+And the query service.
+
+02:12.180 --> 02:16.740
+Remember that we are sending it over to the query service so that the query service can immediately
+
+02:16.740 --> 02:18.210
+store that comment.
+
+02:18.600 --> 02:23.100
+And the entire idea there was that we want to make sure the query service as soon as possible had a
+
+02:23.100 --> 02:28.440
+copy of that comment so that if a user refreshed this page after adding a new comment, they could immediately
+
+02:28.440 --> 02:33.570
+see it on the screen as opposed to waiting for some moderation event coming out of the moderation service.
+
+02:34.420 --> 02:39.760
+So we need to open up our query service now and we need to make sure that when we send over that event.
+
+02:40.600 --> 02:45.550
+We take off the status property from the event and save it inside the query service as well.
+
+02:46.180 --> 02:50.800
+We also need to make sure that the event itself also includes that status property.
+
+02:52.750 --> 02:54.850
+So let's go to our comment service first.
+
+02:55.450 --> 02:57.460
+Here is where we were just looking at a moment ago.
+
+02:57.730 --> 03:00.250
+This is where we create the comment created event.
+
+03:00.430 --> 03:03.360
+Right now, it does not reflect the status of the comment.
+
+03:03.370 --> 03:08.920
+So let's add in that status right now in the data property, I'll add in status of pending.
+
+03:09.980 --> 03:15.200
+So now when this event goes over to our query service, the query service is going to understand, okay,
+
+03:15.230 --> 03:18.080
+a comment was created and its status is pending.
+
+03:19.300 --> 03:21.280
+So now we can go and open up our query service.
+
+03:21.280 --> 03:24.040
+We're going to make sure that when receives this event, it persists.
+
+03:24.040 --> 03:28.060
+That little extra piece of information that we are now adding in of status pending.
+
+03:29.320 --> 03:31.300
+So I will now go over to my query service.
+
+03:31.330 --> 03:33.400
+Here's the index file inside there.
+
+03:34.380 --> 03:38.190
+I'll go down to our code where we are handling a comment created event.
+
+03:40.040 --> 03:43.640
+So we're going to pull off that new status property that we just added in.
+
+03:45.030 --> 03:49.570
+And we'll make sure that when we add in this comment to our array of comments, we also persist the
+
+03:49.570 --> 03:50.820
+status flag as well.
+
+03:50.830 --> 03:51.490
+Like so.
+
+03:53.960 --> 03:54.280
+Okay.
+
+03:54.360 --> 03:55.130
+That looks good.
+
+03:56.360 --> 03:56.720
+All right.
+
+03:56.720 --> 03:58.670
+So that gets us up to this point in time.
+
+03:58.700 --> 04:03.110
+So now the next thing we need to do is make sure that we also handle this content creation inside the
+
+04:03.110 --> 04:04.220
+moderation service.
+
+04:04.550 --> 04:09.500
+Remember that the entire goal here is to actually look at that content property inside that event and
+
+04:09.500 --> 04:11.900
+see if it has the word orange or not.
+
+04:12.170 --> 04:17.810
+If it has the word orange, then we're going to emit comment moderated with a status of rejected.
+
+04:17.810 --> 04:21.230
+Otherwise we'll emit comment moderated with the status of approved.
+
+04:21.710 --> 04:25.370
+Let's take a quick pause right here, however, and then continue with the moderation service in just
+
+04:25.370 --> 04:25.910
+a moment.

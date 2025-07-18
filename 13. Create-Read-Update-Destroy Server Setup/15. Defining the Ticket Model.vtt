@@ -1,0 +1,217 @@
+WEBVTT
+
+00:01.220 --> 00:03.420
+Let's move on to creating our ticket schema.
+
+00:03.440 --> 00:05.540
+So after those three interfaces I'm going to add in.
+
+00:05.540 --> 00:10.340
+Ticket schema is new mongoose schema.
+
+00:12.870 --> 00:15.090
+As the first argument, we're going to provide an object.
+
+00:15.090 --> 00:18.120
+And inside of here, we're going to list out all the different properties that we want this thing to
+
+00:18.120 --> 00:18.600
+have.
+
+00:18.600 --> 00:20.310
+So we want it to have a title.
+
+00:20.670 --> 00:22.650
+It's type is going to be string.
+
+00:23.650 --> 00:25.180
+And it is required.
+
+00:25.600 --> 00:26.620
+We'll say it required.
+
+00:26.620 --> 00:27.220
+True.
+
+00:27.820 --> 00:31.810
+As a quick reminder right here, we are listing out an actual value type.
+
+00:31.810 --> 00:35.260
+So this type thing right here is used by Mongoose, not TypeScript.
+
+00:35.500 --> 00:40.120
+So when we say string right here, we are referring to the global string constructor in JavaScript and
+
+00:40.120 --> 00:42.160
+that means we should have a capital S.
+
+00:42.960 --> 00:47.430
+In all these interfaces up here, we're referring to a type as far as TypeScript is concerned, this
+
+00:47.430 --> 00:49.410
+is a type specifically for TypeScript.
+
+00:49.410 --> 00:51.510
+So we use lowercase s up here.
+
+00:54.950 --> 00:57.500
+Besides the title, we will also have a price.
+
+00:58.360 --> 01:02.080
+Its title or assuming its type will be number and again, capital N.
+
+01:03.390 --> 01:03.960
+Require.
+
+01:03.960 --> 01:04.620
+True.
+
+01:06.350 --> 01:07.970
+And then finally, a user ID.
+
+01:08.960 --> 01:10.280
+Its type will be string.
+
+01:11.120 --> 01:12.440
+It is required.
+
+01:12.650 --> 01:13.550
+And that's it.
+
+01:14.930 --> 01:21.170
+Now as the second argument into mongoose schema, we're going to put in another object and this is where
+
+01:21.170 --> 01:26.690
+we're going to put in that custom to JSON function because remember, we want to massage that ID property.
+
+01:27.460 --> 01:30.820
+So we're going to add inside of the second argument to JSON.
+
+01:32.920 --> 01:34.930
+I'll define the transform function.
+
+01:36.450 --> 01:40.110
+And recall, this thing takes two arguments, Doc and Rhett.
+
+01:40.110 --> 01:43.740
+So Rhett is going to be the object that's just about to be turned into JSON.
+
+01:43.740 --> 01:46.560
+So we're going to make some direct changes to that Rhett object.
+
+01:46.560 --> 01:48.600
+We're not trying to return anything from this thing.
+
+01:48.600 --> 01:50.670
+We're trying to modify Rhett directly.
+
+01:51.430 --> 01:57.310
+So again, we're going to assign the red dot ID property from red dot underscore ID and then we will
+
+01:57.310 --> 02:00.430
+delete ret dot underscore ID.
+
+02:04.570 --> 02:05.320
+That looks good.
+
+02:06.820 --> 02:11.320
+After that, we're going to build up that build method on our ticket schema.
+
+02:11.350 --> 02:13.810
+The ticket schema statics build.
+
+02:15.070 --> 02:19.570
+So this is going to be the one and only way that we create new records again, just to make sure that
+
+02:19.570 --> 02:23.530
+we can have TypeScript helping us figure out the different types of attributes we're supposed to be
+
+02:23.530 --> 02:24.190
+providing.
+
+02:24.490 --> 02:27.880
+So we'll take in adders of type ticket adders.
+
+02:29.340 --> 02:33.360
+And then we'll return new ticket and pass in those ads.
+
+02:33.360 --> 02:35.550
+And I love to s out of that argument right there.
+
+02:35.910 --> 02:37.410
+We immediately get an air out of that.
+
+02:37.410 --> 02:38.160
+That's really okay.
+
+02:38.160 --> 02:39.570
+We're going to fix that up in just a moment.
+
+02:40.880 --> 02:44.510
+So after we define that build method, we will create the actual ticket model.
+
+02:45.550 --> 02:48.040
+That's going to be mongoose model.
+
+02:49.230 --> 02:50.580
+We're going to put in some generic types.
+
+02:50.580 --> 02:53.400
+This thing of ticket doc and ticket model.
+
+02:54.950 --> 02:59.750
+Well then called the actual function will provide a name for the collection of ticket.
+
+03:00.260 --> 03:05.120
+And then the second argument is going to be our schema to use, which is to get schema.
+
+03:05.150 --> 03:05.960
+I'll save that.
+
+03:06.590 --> 03:07.790
+It does not wrap the line.
+
+03:07.790 --> 03:09.110
+So me collapse that sidebar.
+
+03:09.140 --> 03:09.800
+There we go.
+
+03:11.620 --> 03:13.480
+And finally, very last step.
+
+03:13.600 --> 03:16.600
+Let's export or not expect exports.
+
+03:17.350 --> 03:18.280
+Not ticket.
+
+03:19.090 --> 03:19.930
+And that should be it.
+
+03:22.660 --> 03:22.840
+Okay.
+
+03:22.900 --> 03:24.760
+So we're all done with our ticket now.
+
+03:26.480 --> 03:30.890
+Now that we've got that ticket model put together, we can actually save data and retrieve data from
+
+03:30.890 --> 03:32.270
+our Mongo database.
+
+03:33.180 --> 03:37.200
+So back inside of our new test file, remember, we've still got this comment right here reminding us.
+
+03:37.200 --> 03:39.990
+So we need to make sure that somehow that ticket was saved.
+
+03:40.350 --> 03:41.490
+So we'll take a pause right here.
+
+03:41.490 --> 03:45.750
+We're going to implement this little check right here in the next video, and it'll build out the actual
+
+03:45.750 --> 03:48.570
+implementation inside of our request handler itself.

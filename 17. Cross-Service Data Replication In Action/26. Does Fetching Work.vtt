@@ -1,0 +1,370 @@
+WEBVTT
+
+00:01.660 --> 00:05.980
+As I just mentioned, we're going to write out a really quick test around this show route handler.
+
+00:06.190 --> 00:10.840
+Inside my test directory, I'll make a new file of show test tests.
+
+00:11.950 --> 00:14.280
+Then at the top, a couple of imports here.
+
+00:14.290 --> 00:17.220
+As usual, we will get request.
+
+00:17.740 --> 00:18.880
+No brackets on there.
+
+00:20.310 --> 00:21.660
+From super test.
+
+00:22.460 --> 00:26.840
+We'll get our Express app from up to directories app.
+
+00:28.770 --> 00:34.110
+And we'll also pull in the ticket model so that we can create a ticket, so that we can associate that
+
+00:34.110 --> 00:35.580
+thing with a new order.
+
+00:37.060 --> 00:38.050
+So we'll get ticket.
+
+00:39.470 --> 00:41.180
+From up to directories as well.
+
+00:41.180 --> 00:42.530
+Models ticket.
+
+00:43.210 --> 00:45.010
+So we'll write out our actual test.
+
+00:45.010 --> 00:49.060
+So let's say it fetches the order.
+
+00:50.200 --> 00:50.980
+Pretty simple.
+
+00:52.450 --> 00:55.630
+So inside of here, we're going to once again create a ticket.
+
+00:56.590 --> 01:00.820
+Well, then make a request to build an order with this ticket.
+
+01:02.550 --> 01:04.350
+And then finally make a.
+
+01:05.250 --> 01:07.590
+Request to fetch the order.
+
+01:10.460 --> 01:14.000
+When we make the request to build the order with the ticket and then the follow up request to fetch
+
+01:14.000 --> 01:18.460
+the order, we once again need to make sure that we're making those two requests as the same user,
+
+01:18.470 --> 01:23.120
+because if we make these as different users, then chances are trying to fetch that order is going to
+
+01:23.120 --> 01:26.990
+fail because we're trying to access a order that's been created by a different user.
+
+01:27.440 --> 01:31.460
+So again, it's just going to look pretty similar to what we did back inside of our index test file.
+
+01:31.490 --> 01:33.140
+Not a lot more explanation needed.
+
+01:33.140 --> 01:35.850
+So let's get this code together first thing.
+
+01:35.870 --> 01:39.470
+Create the ticket because we're only creating one ticket inside of here for right now.
+
+01:39.500 --> 01:42.920
+We'll just create the ticket directly in line rather than creating a helper function.
+
+01:43.780 --> 01:46.600
+So let's say ticket is ticket build.
+
+01:48.340 --> 01:49.420
+With some title.
+
+01:51.600 --> 01:52.620
+And a price.
+
+01:54.770 --> 01:56.180
+Then save our ticket.
+
+01:58.320 --> 02:01.980
+After that, we'll create our user with global sign in.
+
+02:02.760 --> 02:07.230
+And when I say create the user, I'm really saying we're going to create a cookie that encodes some
+
+02:07.230 --> 02:08.640
+particular user inside of it.
+
+02:09.670 --> 02:15.640
+We can then make a request to build that order with that user, and we're going to build the order with
+
+02:15.640 --> 02:16.450
+that ticket.
+
+02:18.050 --> 02:20.450
+So we'll do an O8 request to EP.
+
+02:20.480 --> 02:23.480
+We want to do a post request to API orders.
+
+02:24.180 --> 02:26.490
+We definitely want to our authenticate ourselves.
+
+02:27.410 --> 02:29.210
+As the user that we just created.
+
+02:29.210 --> 02:37.250
+And we're going to send along a ticket ID of ticket ID and then finally I'll expect that that goes successfully.
+
+02:37.250 --> 02:39.170
+So we'll do it in a expect of 201.
+
+02:42.300 --> 02:45.180
+Now when we build up this order, it's going to give us back a response.
+
+02:45.180 --> 02:49.140
+And inside of that response is going to be the idea of the order that was created.
+
+02:49.290 --> 02:53.940
+We need that order ID because when we access the show route handler, we have to specify the idea of
+
+02:53.940 --> 02:55.740
+the order that we are attempting to fetch.
+
+02:56.340 --> 02:57.330
+So I'll make sure.
+
+02:58.400 --> 02:59.840
+That we get the response here.
+
+03:00.380 --> 03:02.990
+Once again, we don't really care about the entire response.
+
+03:02.990 --> 03:06.260
+So he could do structure off just the property we care about, which is body.
+
+03:07.040 --> 03:10.060
+We don't even care about having a variable name necessarily body.
+
+03:10.070 --> 03:15.680
+We really kind of maybe want to rename this thing on the fly once again and say that this is the order
+
+03:15.680 --> 03:16.880
+that we are trying to find.
+
+03:21.940 --> 03:24.520
+So now we'll make our follow up request to fetch that order.
+
+03:26.020 --> 03:29.350
+So I'll do and await request to EP.
+
+03:30.630 --> 03:31.860
+We'll do a get.
+
+03:32.620 --> 03:34.180
+And we're going to use some string templating here.
+
+03:34.180 --> 03:39.580
+So notice the back ticks and we'll put an API orders and then the ID of the order that we are trying
+
+03:39.580 --> 03:43.210
+to fetch and that ID is going to come out of that order variable right there.
+
+03:43.570 --> 03:46.660
+So we'll do some string interpolation order ID.
+
+03:48.560 --> 03:52.520
+We'll make sure that we set our cookie so that we are making this request as the same user.
+
+03:52.550 --> 03:53.930
+So we're going to set it to user.
+
+03:59.510 --> 04:01.040
+We will send this request off.
+
+04:01.580 --> 04:04.880
+And then finally, we will expect to get a 200 back.
+
+04:07.690 --> 04:12.220
+Now, we could definitely try to get the response that comes back and take a look at the data that we
+
+04:12.220 --> 04:13.270
+actually received.
+
+04:13.840 --> 04:14.800
+So for that.
+
+04:16.510 --> 04:18.540
+We could do structure off body once again.
+
+04:18.550 --> 04:23.920
+In this case, I will rename that body variable just to distinguish it from the body up here as fetched
+
+04:23.920 --> 04:24.520
+order.
+
+04:26.890 --> 04:31.210
+And then we can write out an expectation to make sure that this thing has the same ID as the order that
+
+04:31.210 --> 04:32.290
+we created up here.
+
+04:32.950 --> 04:40.720
+So we could do an expect batched order ID to equal order ID.
+
+04:42.700 --> 04:43.630
+Ketzel looks good.
+
+04:44.410 --> 04:45.460
+We're going to save this.
+
+04:45.490 --> 04:47.770
+Take a look at our terminal and see how we're doing.
+
+04:48.670 --> 04:50.980
+And it looks like we're passing as usual.
+
+04:50.980 --> 04:55.810
+I'm going to change one of these expectations to say 500 just to make sure the file actually got saved
+
+04:55.810 --> 04:57.640
+updated by just.
+
+04:58.780 --> 04:59.100
+Yup.
+
+04:59.110 --> 04:59.790
+Looks like it did.
+
+04:59.800 --> 05:00.880
+So we're good to go.
+
+05:01.640 --> 05:01.910
+Okay.
+
+05:01.910 --> 05:06.090
+So this right here really tests out the happy path or everything going as expected.
+
+05:06.110 --> 05:11.870
+We could also add in one or two tests to make sure that if the order is not found, we return a 404.
+
+05:11.870 --> 05:16.100
+Or probably more importantly, if the user tries to fetch an order that doesn't belong to them, we
+
+05:16.130 --> 05:18.710
+send back a 401 of not authorized.
+
+05:19.860 --> 05:21.480
+I'm not really going to sweat the 404.
+
+05:21.510 --> 05:25.110
+You could definitely write out a test on your own if you want to test that, but I think that it would
+
+05:25.110 --> 05:29.370
+be kind of nice to make sure that one user is not able to fetch another user's orders.
+
+05:29.970 --> 05:34.080
+So I'm going to write out a very quick test for that, and I'm only going to write out very quickly
+
+05:34.080 --> 05:36.510
+because, well, we can really just copy paste the test.
+
+05:36.510 --> 05:40.530
+We already wrote change one or two variables and make it all work as expected.
+
+05:40.830 --> 05:42.720
+So I'm going to take the entire test we just wrote.
+
+05:44.250 --> 05:47.100
+I'll copy it and then paste it down right underneath.
+
+05:48.900 --> 05:51.960
+I'll change the description of this copy paste to it.
+
+05:53.150 --> 05:54.880
+Returns and error.
+
+05:54.890 --> 06:01.790
+If one user tries to fetch another user's order, we could probably write out a better description there,
+
+06:01.940 --> 06:03.590
+but I think that's pretty well descriptive.
+
+06:05.260 --> 06:09.600
+So now in this case, we're going to still build up a ticket, still going to create up an order.
+
+06:09.840 --> 06:14.940
+But then when we make the request to fetch that order, we do not want to make this request as the same
+
+06:14.940 --> 06:15.600
+user.
+
+06:16.200 --> 06:19.980
+So rather than putting in the same user right there, I'm going to create a new user by calling global
+
+06:19.980 --> 06:20.610
+sign in.
+
+06:22.410 --> 06:26.430
+So now we're going to, in theory, get back a41 status code from this.
+
+06:26.790 --> 06:29.040
+I don't really care about the body that we get anymore.
+
+06:29.340 --> 06:32.880
+So I'll delete all that stuff and also delete the expectation at the bottom.
+
+06:33.120 --> 06:37.380
+And I should be able to just change the status code on the expect to 401.
+
+06:39.210 --> 06:41.220
+All right, let's save this and see how we're doing.
+
+06:44.300 --> 06:45.970
+And it passes as usual.
+
+06:45.980 --> 06:47.590
+Real quick change here.
+
+06:47.600 --> 06:50.570
+So I'll take it over to 500, make sure the thing fails.
+
+06:53.070 --> 06:53.450
+Yep.
+
+06:53.460 --> 06:54.200
+Looks good.
+
+06:54.210 --> 06:57.240
+Back to 401 and we are all set.
+
+06:59.110 --> 07:01.510
+Well, that is pretty much it for our show route handler.
+
+07:02.250 --> 07:03.540
+Pretty effective test for it.
+
+07:03.540 --> 07:05.760
+So we just have one last handler.
+
+07:05.790 --> 07:09.840
+We've got the one that's going to allow us to delete an order or essentially cancel it.
+
+07:09.900 --> 07:14.070
+Turns out we're not going to actually delete it out of our database, but we will go ahead and cancel
+
+07:14.070 --> 07:14.370
+it.
+
+07:14.400 --> 07:17.130
+We'll take a look at what we really mean by that in the next video.

@@ -1,0 +1,343 @@
+WEBVTT
+
+00:00.970 --> 00:02.920
+We are onto our very last test here.
+
+00:02.920 --> 00:07.900
+So we need to make sure that if we send in some valid values and we are authenticated, a ticket actually
+
+00:07.900 --> 00:08.770
+gets created.
+
+00:08.920 --> 00:11.080
+Once again, let's write out the test for this first.
+
+00:11.470 --> 00:15.820
+So I think that the general request itself is going to maybe look something like this, maybe something
+
+00:15.820 --> 00:18.580
+like a wait request to app.
+
+00:18.940 --> 00:25.480
+We want to do a post to API tickets and I want to send along some valid title.
+
+00:26.420 --> 00:29.450
+So some string and a valid price of, say, 20.
+
+00:31.680 --> 00:36.390
+I'm going to say that if we successfully create a ticket, I want to try to send back a status code
+
+00:36.390 --> 00:37.050
+of 201.
+
+00:37.050 --> 00:38.940
+Indicating that a record was created.
+
+00:39.360 --> 00:44.460
+But by just asserting a201 right here, we're not actually checking to make sure that a ticket was created
+
+00:44.460 --> 00:46.770
+and saved to the database or anything like that.
+
+00:47.010 --> 00:51.780
+So I would really like, if we could somehow write out some check inside of here to make sure that something
+
+00:51.780 --> 00:53.490
+was saved to the database.
+
+00:54.430 --> 00:58.660
+We don't really have anything inside of our tickets project just yet to work with the Mongo database
+
+00:58.660 --> 00:59.680
+so we've allocated.
+
+00:59.690 --> 01:02.350
+So for right now, I'm going to put in some comments to remind myself.
+
+01:02.350 --> 01:04.870
+I'm going to say add in a check.
+
+01:06.570 --> 01:09.690
+To make sure a ticket was saved.
+
+01:10.110 --> 01:13.290
+So we will come back here very shortly and add something else in.
+
+01:14.740 --> 01:15.280
+Okay.
+
+01:15.370 --> 01:18.520
+So without a doubt, the next thing we're going to have to work on to make sure that we can actually
+
+01:18.520 --> 01:23.740
+save a record to the database and then eventually fetch some data or make sure that thing was saved
+
+01:23.740 --> 01:25.600
+is a ticket model.
+
+01:25.840 --> 01:31.000
+So remember, we work with our MongoDB database using Mongoose in order to have Mongoose communicate
+
+01:31.000 --> 01:36.940
+with MongoDB, we have to create a model, and that model represents the collection of records we have
+
+01:36.940 --> 01:38.200
+inside of MongoDB.
+
+01:39.760 --> 01:43.420
+Reading a mongoose model with Thai scripts is a little bit confusing.
+
+01:43.420 --> 01:48.430
+So let's go back over to our art service, find the models directory and then the user file inside there.
+
+01:48.430 --> 01:52.570
+And just get a quick reminder on how we build a mongoose model with TypeScript.
+
+01:53.290 --> 01:56.770
+So back over here, we had created those three interfaces at the very top.
+
+01:57.160 --> 02:01.210
+We had an interface that described the properties that were required to create a record.
+
+02:02.640 --> 02:04.040
+The user doc right here.
+
+02:04.050 --> 02:05.200
+I'm skipping over the middle one.
+
+02:05.220 --> 02:09.180
+The doc described the properties that a saved record had.
+
+02:10.220 --> 02:14.870
+And then the model represented all the different properties that were going to be assigned to the model
+
+02:14.870 --> 02:15.350
+itself.
+
+02:15.350 --> 02:18.950
+And remember, the model essentially represents the entire collection of data.
+
+02:19.250 --> 02:21.680
+The document represents one single record.
+
+02:22.860 --> 02:26.640
+We then created our schema which listed out all the properties we wanted.
+
+02:26.880 --> 02:29.130
+We also had the two JSON functions side there.
+
+02:29.400 --> 02:34.110
+Remember to JSON was going to somehow manipulate the JSON representation of this data.
+
+02:34.560 --> 02:39.540
+The most important thing we did inside of here, beyond removing the password for our user in particular,
+
+02:39.600 --> 02:47.040
+remember Mongo saves IDs to a record as underscore ID that is super atypical, not very standard.
+
+02:47.040 --> 02:52.470
+And so to make sure that we could have MongoDB running as a back end database along with possibly other
+
+02:52.470 --> 02:57.480
+databases in the future, we wanted to make sure that all of our JSON representation of these records
+
+02:57.480 --> 03:01.890
+always presented the ID simply as ID as opposed to underscore ID.
+
+03:02.340 --> 03:06.300
+So we're going to need to make sure that we do this for the ticket model we create as well.
+
+03:08.310 --> 03:12.900
+After that, we then set up the pre safe hook that was only required because we were hashing a password.
+
+03:12.900 --> 03:14.880
+So that will not be needed on our ticket model.
+
+03:16.870 --> 03:18.990
+We then defined that build function.
+
+03:19.000 --> 03:24.100
+Remember, the entire goal of this build function was to just allow TypeScript to do some validation
+
+03:24.100 --> 03:28.210
+or type checking on the properties we were trying to use to create a new record.
+
+03:28.420 --> 03:30.250
+That was the only reason we made Build.
+
+03:31.080 --> 03:35.970
+Whenever we tried to create a record directly by using that user model, there's not any type checking
+
+03:35.970 --> 03:38.320
+that goes on with the attributes we pass in.
+
+03:38.340 --> 03:39.750
+That's why we made this build thing.
+
+03:40.530 --> 03:43.350
+After that, we create the actual model and then exported it.
+
+03:43.650 --> 03:47.610
+So we're going to do just about the exact same thing or a ticket model.
+
+03:47.760 --> 03:51.630
+We're going to write out the three interfaces, the schema, the build method, and so on.
+
+03:52.640 --> 03:56.930
+So for the ticket stuff, let's just take a look at the interfaces we're going to create.
+
+03:57.410 --> 03:59.510
+So here are the interfaces we're going to make.
+
+04:00.630 --> 04:02.160
+We'll have ticket adders again.
+
+04:02.160 --> 04:04.230
+These are the properties that are required to build a ticket.
+
+04:04.230 --> 04:06.720
+So we're going to have title price and the users ID.
+
+04:07.600 --> 04:10.930
+Left, take a document which describes the properties that a ticket has.
+
+04:11.050 --> 04:15.580
+Now, on this diagram I put created at right here, we are not going to actually have created that.
+
+04:15.580 --> 04:20.500
+That was just because I wanted you to have a reminder of why we have a separate ticket ATRs and Ticket
+
+04:20.500 --> 04:26.320
+Doc Interface Ticket Adders is the set of properties required to build a record after the record is
+
+04:26.320 --> 04:31.930
+actually created and saved and essentially turned into a document, that document might have some additional
+
+04:31.930 --> 04:34.870
+properties placed on it automatically by Mongoose.
+
+04:35.380 --> 04:38.050
+And so an example of that might be that created at Flag.
+
+04:38.050 --> 04:42.670
+And again, that is why we had these two separate interfaces because the final set of properties on
+
+04:42.670 --> 04:46.540
+a save record might be different than the set of properties that are required to create the record.
+
+04:46.540 --> 04:48.160
+But again, we won't have created that.
+
+04:48.160 --> 04:49.600
+That was just a very quick reminder.
+
+04:50.580 --> 04:54.360
+Then the last interface will be ticket model and once again we'll have a build method on there that's
+
+04:54.360 --> 04:57.330
+going to take in some attributes and the return in actual document.
+
+04:58.140 --> 05:01.380
+So with all this in mind, with this review, let's go back over to our editor.
+
+05:01.380 --> 05:03.570
+We're going to start to build our ticket model.
+
+05:05.640 --> 05:06.570
+All right.
+
+05:08.260 --> 05:09.520
+Inside of my tickets project.
+
+05:09.520 --> 05:11.070
+I'll find the CRC directory.
+
+05:11.080 --> 05:12.340
+I'll make a new folder inside.
+
+05:12.340 --> 05:17.110
+They're called models and then inside that tickets.
+
+05:19.190 --> 05:22.640
+At the very top, I will import mongoose from mongoose.
+
+05:24.220 --> 05:26.530
+Well then create those three different interfaces.
+
+05:26.950 --> 05:28.870
+So the first one will be at ticket adders.
+
+05:30.850 --> 05:34.300
+Then Ticket Doc, and I'm going to write out the names of these to get started.
+
+05:35.460 --> 05:37.140
+And ticket model.
+
+05:41.250 --> 05:41.820
+All right.
+
+05:41.820 --> 05:42.870
+So that looks reasonable.
+
+05:43.110 --> 05:46.460
+So now we're going to go through and add in some actual properties to each of these.
+
+05:46.470 --> 05:49.260
+So with ticket adders, we're going to put in our title.
+
+05:49.260 --> 05:54.750
+That's a string the price that is a number and a user ID that's going to be a string.
+
+05:57.250 --> 06:00.280
+For the ticket document, we're going to have the exact same set of properties.
+
+06:00.280 --> 06:05.110
+So again, the only purpose of this thing is to have the possibility of adding in some additional properties
+
+06:05.110 --> 06:05.890
+in the future.
+
+06:06.040 --> 06:09.340
+So we'll put in a title that's a number price.
+
+06:10.490 --> 06:11.840
+And user ID.
+
+06:13.000 --> 06:18.640
+We're also going to make sure that the ticket document interface extends Mongoose DOT document.
+
+06:23.100 --> 06:25.080
+And then finally for a ticket model right here.
+
+06:26.430 --> 06:30.540
+We're going to define that build function very similar to what we had back inside of.
+
+06:31.360 --> 06:32.200
+User model.
+
+06:33.130 --> 06:37.330
+We're also going to make sure that we extend mongoose model and add on that generic type at the very
+
+06:37.330 --> 06:38.860
+end as well.
+
+06:43.210 --> 06:44.760
+I'm going to put on expense.
+
+06:45.820 --> 06:47.380
+Mongoose dart model.
+
+06:48.580 --> 06:50.170
+With Ticket Doc.
+
+06:51.290 --> 06:57.830
+Inside there, we'll define the build method as taking in a set of attributes of type ticket adders.
+
+06:59.750 --> 07:02.180
+And it's going to return a ticket, doc.
+
+07:04.500 --> 07:06.630
+All right, so there's our three interfaces.
+
+07:07.170 --> 07:11.610
+Let's take a quick pause right here, and we'll start to define our ticket schema in the next video.

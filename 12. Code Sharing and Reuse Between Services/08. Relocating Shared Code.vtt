@@ -1,0 +1,397 @@
+WEBVTT
+
+00:00.620 --> 00:04.800
+Time for us to start moving code from our service over to the Common Service.
+
+00:04.810 --> 00:06.100
+So let's get to it.
+
+00:06.130 --> 00:10.990
+Inside the service, there are really two directories inside of here that we probably want to reuse
+
+00:10.990 --> 00:16.390
+between many other services across our entire project, and that is the Air's directory and middleware.
+
+00:16.930 --> 00:22.360
+So I want to take those two folders and move them over to the CRC directory inside of our common module.
+
+00:22.990 --> 00:27.400
+To do so, I can either do a simple drag and drop, or I could cut and paste both of these.
+
+00:27.580 --> 00:29.080
+I'll do a simple drag and drop.
+
+00:29.590 --> 00:32.440
+So I'm going to drag errors over to Z.
+
+00:34.270 --> 00:36.670
+And Middleware over to CRC as well.
+
+00:38.230 --> 00:42.730
+Now as soon as I do so if you are still running scaffold on your machine, scaffold is going to start
+
+00:42.730 --> 00:46.000
+to go insane because it's going to try to build all these changes.
+
+00:46.000 --> 00:50.170
+And lo and behold, you now have a lot of missing files inside the service.
+
+00:50.290 --> 00:53.320
+So I would encourage you to stop scaffold at this point in time.
+
+00:54.830 --> 00:55.190
+All right.
+
+00:55.190 --> 00:59.690
+So back inside of Cullman now we've got these two files or these two folders with a ton of files inside
+
+00:59.690 --> 01:00.050
+them.
+
+01:00.950 --> 01:05.210
+Now at some point in time, we're going to want to import all these files into some other module.
+
+01:05.210 --> 01:11.180
+For example, inside of our off project, we're going to want to import specifically that bad request
+
+01:11.180 --> 01:11.720
+error.
+
+01:13.130 --> 01:15.110
+I'm going to open up the indexed file.
+
+01:15.140 --> 01:16.490
+I'm going to delete everything inside of here.
+
+01:16.490 --> 01:19.430
+And I want to just show you something that we need to keep in mind.
+
+01:20.070 --> 01:24.750
+So inside of our auth module, we're going to eventually want to import bad request error and we need
+
+01:24.750 --> 01:26.790
+to figure out how we want to import that.
+
+01:26.790 --> 01:29.550
+In other words, what path do we actually want to write?
+
+01:29.670 --> 01:31.110
+There's two ways we could do this.
+
+01:31.440 --> 01:37.500
+We can either set everything up so that we have to write out something like import bad request error
+
+01:37.920 --> 01:38.580
+from.
+
+01:40.190 --> 01:41.270
+SG ticketing.
+
+01:41.450 --> 01:44.300
+Common errors, bad request error.
+
+01:44.300 --> 01:45.830
+That's option number one.
+
+01:46.340 --> 01:54.470
+Or we can also set everything up so we only have to do something like bad request error from SG ticketing
+
+01:54.470 --> 01:55.160
+common.
+
+01:55.790 --> 01:57.350
+Those are the two options.
+
+01:57.680 --> 02:00.560
+Now option number one up here is a lot easier to do.
+
+02:00.590 --> 02:05.240
+We could essentially just publish our code as it stands right now and this would pretty much work.
+
+02:05.690 --> 02:09.860
+The bad thing about this approach is that anyone who uses our common module is going to have to know
+
+02:09.860 --> 02:13.430
+about the different directories and different files inside of our project.
+
+02:13.970 --> 02:17.450
+So it'd be a little bit nicer for the people who are actually using our library.
+
+02:17.450 --> 02:20.240
+They could write out a simple import statement like this right here.
+
+02:20.720 --> 02:22.190
+So how do we enable this behavior?
+
+02:22.190 --> 02:23.540
+How do we actually set this up?
+
+02:23.960 --> 02:30.380
+Well, I'm going to delete all this to make sure that that is available or allow our users of our module
+
+02:30.380 --> 02:31.160
+to do that.
+
+02:31.160 --> 02:38.000
+We're going to import everything inside these different files and export it from the indexed file.
+
+02:38.450 --> 02:40.790
+So it's going to be kind of a little bit of repetitive code.
+
+02:40.790 --> 02:44.990
+We're going to have to import all these different files inside of here and then export everything we
+
+02:44.990 --> 02:45.740
+imported.
+
+02:46.100 --> 02:47.300
+Let me show you how we do that.
+
+02:48.470 --> 02:50.080
+Inside of indexes.
+
+02:50.120 --> 02:53.390
+Well, first, begin with that bad request error file.
+
+02:53.720 --> 02:58.640
+So I'm going to write out export star from errors bad request error.
+
+02:59.690 --> 03:05.490
+So that's going to import everything from battery to air and then immediately re export it from this
+
+03:05.490 --> 03:06.060
+file.
+
+03:06.540 --> 03:11.280
+So we have to write out this line right here for everything that we want to export directly out of the
+
+03:11.280 --> 03:12.480
+indexed file.
+
+03:12.510 --> 03:14.910
+So essentially one line for every file.
+
+03:16.710 --> 03:17.760
+So let's get to it.
+
+03:18.150 --> 03:19.950
+We're going to copy that line right there.
+
+03:20.830 --> 03:24.610
+Paste it down and we're pretty much just going to go down this file list.
+
+03:24.760 --> 03:26.500
+The next one is customer.
+
+03:28.220 --> 03:32.630
+After that is database connection error.
+
+03:36.520 --> 03:38.590
+Not authorized air.
+
+03:41.980 --> 03:43.930
+Not found air.
+
+03:47.860 --> 03:49.510
+Request validation air.
+
+03:51.650 --> 03:52.940
+Now we'll go on to the middle.
+
+03:52.940 --> 03:53.840
+Where directory?
+
+03:55.080 --> 04:00.630
+So I can make sure I update the folder to middle wears and that will do current user.
+
+04:04.670 --> 04:06.110
+Air handler.
+
+04:09.700 --> 04:10.930
+Require off.
+
+04:13.200 --> 04:15.480
+And validate request.
+
+04:15.870 --> 04:16.500
+There we go.
+
+04:21.730 --> 04:23.980
+Well, still not done just yet.
+
+04:24.130 --> 04:28.180
+Let's try to build our project with TypeScript really quickly and we're going to see a bunch of errors
+
+04:28.180 --> 04:28.760
+pop up.
+
+04:28.790 --> 04:32.470
+Now, once you see these errors, just to understand what we have to do next and how we're going to
+
+04:32.470 --> 04:33.100
+solve it.
+
+04:33.430 --> 04:34.900
+So I'm going to go back over to my terminal.
+
+04:35.650 --> 04:36.840
+Inside of Common.
+
+04:36.850 --> 04:39.670
+I'm going to try to build my project directory by just running.
+
+04:39.700 --> 04:40.420
+Tsk.
+
+04:41.170 --> 04:42.460
+And as soon as I do so.
+
+04:42.850 --> 04:43.260
+Yep.
+
+04:43.270 --> 04:44.260
+A bunch of errors.
+
+04:44.470 --> 04:45.730
+So why are we seeing this?
+
+04:46.000 --> 04:50.680
+Well, inside of a lot of these different files, we are making assumptions about the different modules
+
+04:50.680 --> 04:54.390
+that we have available to or are available to us inside of this package.
+
+04:54.400 --> 04:59.920
+So, for example, inside of, say, the current user middleware, we are trying to import express and
+
+04:59.920 --> 05:01.060
+JSON web token.
+
+05:02.270 --> 05:05.180
+We had all these modules installed back inside of off.
+
+05:05.300 --> 05:07.480
+So everything worked out, just A-OK over there.
+
+05:07.490 --> 05:12.080
+But now that they are defined inside of Common, we have to actually install these modules into Common
+
+05:12.080 --> 05:14.630
+to make these middleware actually work correctly.
+
+05:15.420 --> 05:17.400
+So we pretty much have to go through all these files.
+
+05:17.400 --> 05:22.140
+We have to take a look at all the imports we have and then install them into this project so we can
+
+05:22.140 --> 05:23.820
+actually build this stuff with TypeScript.
+
+05:25.510 --> 05:26.710
+So let's do that right away.
+
+05:27.980 --> 05:28.880
+Back at my terminal.
+
+05:28.910 --> 05:30.740
+We're going to do an NP install.
+
+05:31.540 --> 05:34.660
+And we're going to get a pretty hefty list of modules here.
+
+05:34.930 --> 05:39.220
+So we are going to get Express Express validator.
+
+05:41.570 --> 05:44.030
+We will get cookie session.
+
+05:44.940 --> 05:47.160
+And then Jason Webb token.
+
+05:47.640 --> 05:50.400
+We're also going to install a couple of type definition files as well.
+
+05:50.730 --> 05:58.830
+So we'll get at types cookie session, at types express at types JSON Web token.
+
+06:00.720 --> 06:02.100
+And I think that's about it.
+
+06:02.790 --> 06:07.290
+Express validator has its own included type definition file, so we do not have to install that success
+
+06:07.290 --> 06:08.340
+or be separately.
+
+06:10.410 --> 06:10.620
+It's.
+
+06:10.620 --> 06:11.670
+Let's run that command.
+
+06:14.340 --> 06:17.610
+And now if we tried to do a typescript compile or tsk.
+
+06:19.380 --> 06:21.150
+Everything will be built successfully.
+
+06:21.890 --> 06:22.310
+Cool.
+
+06:23.610 --> 06:27.630
+Well, I think we are now ready to try to build this module and publish it.
+
+06:28.140 --> 06:33.180
+So as we saw in the last video, we put together that nice little script of pub right here.
+
+06:33.220 --> 06:39.240
+So let's run NP Run pub that's going to build our project, commit it, publish it up to 9 p.m. and
+
+06:39.270 --> 06:44.580
+we'll be able to install it into our service and start to fix up off to use the code we have now inside
+
+06:44.580 --> 06:46.050
+this module.
+
+06:47.340 --> 06:49.050
+So I'll do an end run pub.
+
+06:50.360 --> 06:51.950
+So that's going to commit our changes.
+
+06:52.250 --> 06:53.960
+Clean build.
+
+06:54.700 --> 06:55.630
+And push.
+
+06:59.300 --> 06:59.900
+There we go.
+
+07:01.180 --> 07:02.470
+All right, so that's pretty much it.
+
+07:02.980 --> 07:04.970
+We've got our common module put together.
+
+07:04.990 --> 07:09.610
+Now we are going to come back to the common module over time and add in a lot more code to this thing.
+
+07:09.880 --> 07:14.020
+Specifically, we're going to add in a lot of code to the common module around handling and publishing
+
+07:14.020 --> 07:15.910
+events through our event bus.
+
+07:15.910 --> 07:18.910
+But right now, errors in middleware is pretty much good enough.
+
+07:19.570 --> 07:20.860
+Well, let's take a pause right here.
+
+07:20.860 --> 07:23.850
+When we come back, the next video, we're going to go back over to our project.
+
+07:23.860 --> 07:28.450
+We're going to install this common module and fix up a lot of import statements inside there.

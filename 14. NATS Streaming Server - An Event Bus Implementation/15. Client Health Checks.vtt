@@ -1,0 +1,520 @@
+WEBVTT
+
+00:01.580 --> 00:02.420
+At this point in time.
+
+00:02.420 --> 00:07.130
+We've been running these two listeners for the last couple of videos or so, and in this last couple
+
+00:07.130 --> 00:12.740
+of videos, you might have noticed that sometimes you have published an event and not seen it immediately
+
+00:12.740 --> 00:14.600
+appear inside one of these listeners.
+
+00:14.810 --> 00:16.990
+Let's see if I can replicate that really quickly.
+
+00:17.000 --> 00:19.370
+So I'm going to first publish a normal event.
+
+00:19.790 --> 00:20.120
+Okay.
+
+00:20.180 --> 00:21.840
+I see number 70 right there.
+
+00:21.860 --> 00:27.950
+I'm now going to restart both these listeners very, very quickly and then publish an event very quickly
+
+00:27.950 --> 00:28.700
+after that.
+
+00:28.700 --> 00:33.350
+And I bet you we are not going to immediately see event number 71 up here right away.
+
+00:33.380 --> 00:37.880
+If I do see 71 appear right away, I'm going to restart the publisher yet again and then see if Event
+
+00:37.880 --> 00:39.990
+72 also shows up really quickly.
+
+00:40.010 --> 00:41.150
+Let's just give it a shot.
+
+00:41.450 --> 00:43.820
+I'm going to restart, restart, publish.
+
+00:44.810 --> 00:47.630
+And you'll notice I do not see 71.
+
+00:48.200 --> 00:53.960
+Now, if we wait for about 30 seconds or so, we might see 71 up here in one of these windows.
+
+00:54.170 --> 00:55.530
+I can even do another publish.
+
+00:55.570 --> 00:55.810
+Okay.
+
+00:55.820 --> 00:59.170
+There's 72, but without a doubt, 71 has been skipped.
+
+00:59.180 --> 01:02.060
+So where did events 71 go off to?
+
+01:02.210 --> 01:03.950
+Why are we not seeing it appear anywhere?
+
+01:04.490 --> 01:06.830
+Well, we're going to do a little bit of digging.
+
+01:06.860 --> 01:10.760
+I want you to get kind of a natural understanding of what's going on internally with that streaming
+
+01:10.760 --> 01:11.060
+server.
+
+01:11.060 --> 01:13.670
+And, hey, there are 71 right there, but why did it take so long?
+
+01:13.670 --> 01:14.180
+Right.
+
+01:14.660 --> 01:18.920
+So, again, I want to get you or make sure you have a little bit better idea of what's going on internally
+
+01:18.920 --> 01:20.150
+with that streaming server.
+
+01:20.150 --> 01:22.820
+So it will require us to do a little bit of debugging.
+
+01:23.300 --> 01:26.210
+The first thing I want to begin with, you might recall.
+
+01:27.040 --> 01:33.130
+But when we put our Nat's deployment file together inside of our directory a little bit ago on our service,
+
+01:33.130 --> 01:35.560
+we actually exposed two different ports.
+
+01:35.710 --> 01:39.230
+So one was for connecting clients that was port for 2 to 2.
+
+01:39.400 --> 01:45.790
+There is another port named monitoring on eight 2 to 2, so we can access the NAT streaming server on
+
+01:45.790 --> 01:47.260
+this monitoring port.
+
+01:47.260 --> 01:51.190
+And it's going to give us a lot of information about all the different subscriptions that have been
+
+01:51.190 --> 01:55.780
+created, all the different clients, some incoming traffic statistics, stuff like that.
+
+01:56.020 --> 02:00.490
+So we're going to take a look at the information that is served to us by this monitoring stuff to get
+
+02:00.490 --> 02:03.970
+a better idea of why we are sometimes missing events.
+
+02:05.430 --> 02:05.730
+To do.
+
+02:05.730 --> 02:11.640
+So the first thing we have to do is expose Port 8 to 2 on our local machine so that we can access it
+
+02:11.640 --> 02:13.680
+and take a look at that monitoring information.
+
+02:14.340 --> 02:17.870
+So inside of my terminal, once again, I'm going to go back to that window.
+
+02:17.920 --> 02:21.990
+We had previously set up the port forwarding for port 4 to 2.
+
+02:22.590 --> 02:26.700
+We're going to repeat that same process, but for port eight, 2 to 2 instead.
+
+02:27.120 --> 02:29.130
+So I'm going to open up another terminal window.
+
+02:29.670 --> 02:31.910
+We're going to do that same port forwarding stuff.
+
+02:31.920 --> 02:34.860
+So remember, we're going to first do a little get pods.
+
+02:35.310 --> 02:37.590
+I'm going to find my Nat's deployment pod.
+
+02:37.980 --> 02:39.180
+I'm going to copy the name.
+
+02:40.550 --> 02:44.480
+I'll then do a little short dash forward.
+
+02:45.160 --> 02:46.810
+I'm going to paste in the pod name.
+
+02:47.620 --> 02:48.470
+And then eight.
+
+02:48.490 --> 02:49.540
+Two, two, two.
+
+02:49.570 --> 02:50.260
+Colon.
+
+02:50.260 --> 02:50.740
+Eight.
+
+02:50.740 --> 02:51.730
+Two, two, two.
+
+02:54.360 --> 03:00.690
+We can now open up our browser and navigate to a local host 8222 and that should print out some monitoring
+
+03:00.690 --> 03:03.120
+information about our running NATS server.
+
+03:03.690 --> 03:07.120
+Now we're going to go to a very specific address inside of our browser.
+
+03:07.140 --> 03:10.710
+I'm going to put into my editor here really quickly, just you can read it very easily.
+
+03:10.740 --> 03:14.820
+We're going to go to local host call an 8 to 2 two streaming.
+
+03:17.100 --> 03:19.710
+So I'm going to take that URL, put it into my browser.
+
+03:20.390 --> 03:22.340
+And we'll see something like this right here.
+
+03:22.700 --> 03:26.150
+So this is the net streaming server monitoring page.
+
+03:26.390 --> 03:31.970
+We can click around to these different pages and see some stats or information about our running streaming
+
+03:31.970 --> 03:32.540
+server.
+
+03:34.460 --> 03:38.690
+Now you'll notice that whenever I click one of these tabs or one of these little links, I see some
+
+03:38.690 --> 03:40.430
+nicely formatted JSON data.
+
+03:40.550 --> 03:42.770
+You might see just a big blob of text.
+
+03:42.800 --> 03:47.900
+I see this nicely formatted because I'm running a chrome extension that automatically formats JSON inside
+
+03:47.900 --> 03:48.650
+my browser.
+
+03:48.860 --> 03:53.060
+If you want to run the same extension, I would encourage you hop on the Chrome Extension Store and
+
+03:53.060 --> 03:54.060
+just search for JSON.
+
+03:54.080 --> 03:56.060
+You'll find one very similar very easily.
+
+03:56.680 --> 04:00.310
+So there's a couple of links on this page that I want to highlight in particular.
+
+04:00.340 --> 04:01.930
+First off is clients.
+
+04:02.350 --> 04:06.460
+When I go to clients, it's going to print out the information about every client that is currently
+
+04:06.460 --> 04:12.100
+connected to my net streaming server, and in particular it will show the ID of each of them at the
+
+04:12.100 --> 04:13.420
+very bottom of this array.
+
+04:13.450 --> 04:22.930
+I see one client that has an ID of ABC and you might recall that our publisher has a client ID of ABC.
+
+04:23.610 --> 04:28.920
+So this entry right here represents our publisher that is currently connected to that streaming server.
+
+04:29.660 --> 04:34.100
+These two right here represent the two listeners that we currently have running.
+
+04:35.300 --> 04:37.820
+We can also take a look at channels over here.
+
+04:38.120 --> 04:42.230
+You'll notice that on the Channels tab as a list of all the active channels currently inside of our
+
+04:42.230 --> 04:42.870
+cluster.
+
+04:42.890 --> 04:46.460
+And so right now we have just one channel of ticket colon created.
+
+04:47.870 --> 04:52.340
+Now there's a little bit more information we can use to kind of extract about these channels.
+
+04:52.340 --> 04:55.730
+And unfortunately, it is not super well documented.
+
+04:55.760 --> 04:59.350
+In other words, there's not really any link on this page to help you understand how to get here.
+
+04:59.360 --> 05:04.580
+So I'm going to click on the channels link and then inside the address bar, I'm going to put in a question
+
+05:04.580 --> 05:10.880
+mark and then subs equals one like so now I'm going to navigate there.
+
+05:11.210 --> 05:15.560
+So this is going to print out a lot more information about each of the channels that Nat streaming server
+
+05:15.560 --> 05:16.550
+is currently running.
+
+05:17.000 --> 05:17.750
+So I'll now see.
+
+05:17.750 --> 05:23.180
+Okay, we've got a channel with the name of Ticket Colon created and we can see that there are two subscriptions
+
+05:23.180 --> 05:24.200
+for this channel.
+
+05:24.500 --> 05:28.250
+So there are two subscriptions, one for each of the two.
+
+05:29.180 --> 05:31.160
+Listeners that we are currently running.
+
+05:32.870 --> 05:36.680
+They are both members of the same CU group because they have the same Q group name.
+
+05:37.820 --> 05:42.350
+There's an equate property, which is the number of seconds that net streaming server is going to wait
+
+05:42.350 --> 05:48.980
+after sending this thing a message for that client or this subscription to act or acknowledge the message.
+
+05:49.550 --> 05:53.240
+And then there's some other information inside of here that you can kind of figure out on your own if
+
+05:53.240 --> 05:53.960
+you want to.
+
+05:54.610 --> 05:59.950
+So how is this going to help us diagnose this issue with somehow restarting these listeners and then
+
+05:59.950 --> 06:02.950
+publishing events and not seeing the event immediately appear?
+
+06:02.980 --> 06:05.110
+Well, let me show you what's going on.
+
+06:06.250 --> 06:11.110
+I want you to take note that inside of my subscription list right now I have two running subscriptions.
+
+06:11.380 --> 06:12.880
+I then going to go back over.
+
+06:12.880 --> 06:14.800
+I'm going to restart one of the listeners.
+
+06:16.010 --> 06:16.360
+Okay.
+
+06:16.400 --> 06:17.150
+Restarted.
+
+06:17.150 --> 06:20.120
+And now I'm going to go back over and refresh this page.
+
+06:20.690 --> 06:24.710
+And as soon as I do, you'll now see that there are three running subscriptions.
+
+06:28.590 --> 06:30.720
+It looks like they are none of them are offline.
+
+06:30.720 --> 06:33.030
+So they all have is offline a false.
+
+06:33.710 --> 06:39.010
+So right now, when I restarted that listener, I without a doubt stopped a listener.
+
+06:39.020 --> 06:39.560
+I stopped it.
+
+06:39.560 --> 06:40.520
+I restarted one.
+
+06:40.520 --> 06:45.260
+So the copy of that listener or that client that I was running or the subscription, it was closed down
+
+06:45.260 --> 06:48.470
+and I created a new one, but for a brief period of time.
+
+06:48.470 --> 06:54.470
+Now that streaming server is just going to assume that maybe there is some momentary interrupt in connection
+
+06:54.470 --> 06:56.570
+or communication with that client.
+
+06:56.780 --> 07:01.940
+So for a very brief period of time now, streaming server says, oh, you know what, that that client,
+
+07:01.940 --> 07:03.650
+that subscription just went offline.
+
+07:03.650 --> 07:06.080
+But I'm sure it'll be back in just a moment or two.
+
+07:06.080 --> 07:11.390
+And so it's just going to sit around and wait and wait and wait and wait until eventually it decides,
+
+07:11.390 --> 07:15.590
+you know what, that connection that just went offline, they're probably not coming back.
+
+07:15.590 --> 07:20.360
+And so after some period of time, the subscription will eventually be removed from this list.
+
+07:20.720 --> 07:22.550
+So it's been about 30 seconds or so.
+
+07:22.550 --> 07:24.290
+That's how long I've been yapping on.
+
+07:24.290 --> 07:27.530
+So I'm going to now refresh the page and now it's back to two.
+
+07:28.760 --> 07:30.200
+So that's what's going on behind the scenes.
+
+07:30.200 --> 07:33.560
+That's why we are seeing some messages being temporarily lost.
+
+07:33.590 --> 07:39.050
+Now, streaming server thinks that that client is still around, even though we just completely killed
+
+07:39.050 --> 07:39.410
+it.
+
+07:39.410 --> 07:42.620
+So there's some period of time where now streaming services can say, you know what, I think that thing
+
+07:42.620 --> 07:44.450
+might be coming back any point in time.
+
+07:44.450 --> 07:48.620
+I'm just going to hold on to this event and send it to them when they come online.
+
+07:48.620 --> 07:52.490
+And that's why it appears that we are losing some messages for some period of time.
+
+07:52.880 --> 07:56.300
+Now, as you can imagine, that is not super desirable.
+
+07:56.420 --> 08:01.400
+So how can we help that streaming server understand that when one of these clients goes offline, it's
+
+08:01.400 --> 08:02.420
+not coming back?
+
+08:02.600 --> 08:04.340
+Well, there's two things we can do.
+
+08:04.820 --> 08:10.610
+The first thing we can do, we kind of already did back inside of our net's deployment file inside the
+
+08:11.000 --> 08:11.660
+directory.
+
+08:12.780 --> 08:16.590
+You might recall that we had that long list of arguments inside of here.
+
+08:16.590 --> 08:20.100
+We had arguments of HP, HP and HBF.
+
+08:20.370 --> 08:22.320
+HP stands for Heartbeat.
+
+08:22.530 --> 08:27.240
+A heartbeat is like a little request that Napster streaming server is going to send to all of its different
+
+08:27.240 --> 08:30.120
+connected clients every so many seconds.
+
+08:30.390 --> 08:32.730
+This is purely a little health check.
+
+08:32.760 --> 08:35.400
+It makes sure that each of these clients is still up and running.
+
+08:36.500 --> 08:41.810
+HB is how often that streaming server is going to make a heartbeat request to each of its clients.
+
+08:42.700 --> 08:46.060
+Heat is how long each client has to respond.
+
+08:46.090 --> 08:51.160
+And Hfpef is the number of times that each client can fail before that streaming server is going to
+
+08:51.160 --> 08:53.530
+assume that that connection is dead and gone.
+
+08:54.130 --> 08:56.740
+So when we restart one of these listeners.
+
+08:57.730 --> 09:03.490
+Napster server is then at some in the next couple of seconds, like 0 to 5 seconds, whatever listener
+
+09:03.490 --> 09:06.580
+we killed Napster server is going to send it a heartbeat request.
+
+09:07.000 --> 09:12.220
+We're then going to have to wait for that killed process to fail the health check or the heartbeat twice
+
+09:12.220 --> 09:13.360
+in a row before Napster.
+
+09:13.420 --> 09:16.390
+The server eventually says, okay, that thing must really be dead.
+
+09:16.390 --> 09:18.640
+I'm going to take it off this list of subscriptions.
+
+09:19.030 --> 09:21.790
+So that's the first thing we can do to kind of fix this problem.
+
+09:21.790 --> 09:26.590
+We can implement tighter heartbeat checks, but even then, we still have to wait for 10 seconds or
+
+09:26.590 --> 09:29.590
+so for this thing to actually be cleaned up.
+
+09:29.590 --> 09:33.110
+So there must be another way to kind of tell that story.
+
+09:33.190 --> 09:35.170
+Server Hey, our clients going dead.
+
+09:35.170 --> 09:38.050
+Don't consider us to be receiving any messages anymore.
+
+09:38.810 --> 09:44.060
+Well, let's take a look at that second method of helping nats understand that a client is going offline
+
+09:44.060 --> 09:45.140
+in the next video.

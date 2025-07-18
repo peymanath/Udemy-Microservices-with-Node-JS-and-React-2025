@@ -1,0 +1,127 @@
+WEBVTT
+
+00:01.090 --> 00:05.530
+We've now got some tests around the expiration complete listener and I feel pretty confident in that,
+
+00:05.530 --> 00:08.080
+the fact that this thing is probably working as expected.
+
+00:08.260 --> 00:10.300
+But there is one last thing we have to do.
+
+00:10.600 --> 00:16.960
+You might recall that back inside of our CRC directories indexed file, that is where we are inputting
+
+00:16.960 --> 00:20.680
+all of our different listeners and it's where we create a new instance of the listener and tell it to
+
+00:20.680 --> 00:22.300
+start listening for incoming events.
+
+00:22.540 --> 00:26.470
+So we have to do that same thing for the expiration complete listener as well.
+
+00:27.550 --> 00:34.200
+Inside of indexes at the very top, we will import the X Operation Complete listener.
+
+00:35.460 --> 00:39.150
+From events listeners exploration complete.
+
+00:42.960 --> 00:44.360
+Then down by the other two listeners.
+
+00:44.390 --> 00:45.430
+We already started up.
+
+00:45.450 --> 00:46.950
+We'll do the same exact thing.
+
+00:47.310 --> 00:50.670
+So expiration complete listener.
+
+00:51.890 --> 00:56.390
+That's rapper client and we'll call listen on that thing.
+
+00:57.440 --> 00:58.460
+And that's pretty much it.
+
+00:59.260 --> 01:03.190
+Now, if you wanted to test this thing out, we could go back over to Postman.
+
+01:04.650 --> 01:05.400
+Inside a postman.
+
+01:05.400 --> 01:07.710
+We can make sure that we are currently signed in.
+
+01:07.750 --> 01:08.910
+Looks like I still am.
+
+01:09.990 --> 01:12.390
+I can then create a new ticket.
+
+01:12.390 --> 01:14.880
+So I'm at post API tickets.
+
+01:14.880 --> 01:15.810
+I'll send that off.
+
+01:15.840 --> 01:20.820
+I'll get my ticket ID right here and now I should be able to create a new order and then eventually
+
+01:20.820 --> 01:24.570
+see the order expired or the order cancelled event get published.
+
+01:26.400 --> 01:28.140
+So we'll go to another tab right here.
+
+01:28.170 --> 01:29.940
+A post request to API slash orders.
+
+01:29.940 --> 01:31.440
+I'm going to paste in the ticket ID.
+
+01:32.440 --> 01:33.700
+And then send this thing off.
+
+01:34.800 --> 01:36.060
+Now if I flip back over.
+
+01:37.810 --> 01:38.860
+Inside of nets.
+
+01:38.860 --> 01:40.480
+I got my expiration service.
+
+01:40.690 --> 01:45.940
+It looks like it received an order created event and after 60 seconds it will publish the expiration
+
+01:45.940 --> 01:49.840
+complete event and then in turn, our order service.
+
+01:51.190 --> 01:54.070
+She would receive that event inside of exploration complete.
+
+01:54.960 --> 01:56.970
+It should update the status of the order.
+
+01:57.700 --> 02:00.610
+And then eventually published the order cancelled event as well.
+
+02:00.850 --> 02:04.120
+So like I said, we should eventually see something that says order cancelled.
+
+02:05.690 --> 02:07.520
+Now that is going to take 6 seconds or so.
+
+02:07.520 --> 02:11.660
+So we're going to end the video right now, but I'll leave it up to you to just watch your console,
+
+02:11.660 --> 02:15.080
+watch your terminal, and make sure that you eventually see that event get emitted.
+
+02:15.590 --> 02:16.620
+Though this looks good.
+
+02:16.650 --> 02:19.970
+Quick pause right here and we're going to start to move on to our next service in just a moment.

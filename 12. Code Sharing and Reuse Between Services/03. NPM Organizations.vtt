@@ -1,0 +1,220 @@
+WEBVTT
+
+00:00.690 --> 00:05.010
+In the last video, we established that we're going to share all of our code through an NPM package.
+
+00:05.100 --> 00:09.480
+And the first thing I want to discuss around publishing our common library as an NPM package is the
+
+00:09.480 --> 00:11.220
+security of our code.
+
+00:11.640 --> 00:15.240
+So inside of our common library, we're going to have some really common middleware.
+
+00:15.240 --> 00:20.130
+So you're going to see all over online, such as that require authentication, middleware and that error
+
+00:20.130 --> 00:21.390
+handling stuff and so on.
+
+00:21.750 --> 00:25.890
+But inside of your own personal project that you might be working on in the future, your common library
+
+00:25.890 --> 00:28.140
+might have some very sensitive code inside of it.
+
+00:28.140 --> 00:31.710
+It might contain some very sensitive business logic or something similar.
+
+00:31.980 --> 00:37.140
+And so before even creating this package, I just want to have a quick discussion on package security.
+
+00:37.960 --> 00:43.570
+When we published a package with AMPM, there are really three different options or three very popular
+
+00:43.570 --> 00:49.120
+options, I should say, available to us to make this package available to other people inside of our
+
+00:49.120 --> 00:51.750
+company or other people who are working on our project.
+
+00:51.760 --> 00:55.360
+We can publish this package to the NPM public registry.
+
+00:55.840 --> 01:01.540
+We can publish it to the public registry inside of an organization, or we can publish it to a private
+
+01:01.540 --> 01:02.350
+registry.
+
+01:03.570 --> 01:06.420
+When we published a package directly to the public registry.
+
+01:06.420 --> 01:11.370
+Anyone else can see this package by default, and so anyone else can take a look at your code and possibly
+
+01:11.370 --> 01:13.230
+see your business logic inside their.
+
+01:14.030 --> 01:20.120
+If you instead publish your package to a organization, we can mark the organization as public or assuming
+
+01:20.150 --> 01:21.050
+it has private.
+
+01:21.050 --> 01:25.910
+And then only people who are a member of this organization can see the packages inside.
+
+01:26.420 --> 01:31.140
+If you want to use a private organization, you do have to pay extra money to NPM.
+
+01:32.620 --> 01:37.510
+You can also create a private registry and access to this will be limited to whoever you give direct
+
+01:37.510 --> 01:38.410
+access to.
+
+01:39.190 --> 01:43.660
+If you try to create a private registry directly through NPM, you end up having to pay money.
+
+01:43.690 --> 01:49.540
+Alternatively, you can also host your own open source version of a MPM registry which is free but requires
+
+01:49.540 --> 01:50.890
+a bit of additional setup.
+
+01:51.430 --> 01:56.890
+So in total, if we just publish this package directly to NPM, it will be public and visible to all.
+
+01:57.280 --> 02:02.200
+If we publish it inside of a private organisation, it will be only accessible by people who are a member
+
+02:02.200 --> 02:03.460
+of our organisation.
+
+02:03.970 --> 02:08.410
+And if we publish it to a private registry, then only people who have access to our registry will be
+
+02:08.410 --> 02:09.100
+able to see it.
+
+02:10.000 --> 02:12.400
+We're going to end up going with the organization option.
+
+02:12.400 --> 02:16.540
+So we're going to create a new organization and then publish our package inside there.
+
+02:16.840 --> 02:20.550
+And just, you know, there are public and private organizations.
+
+02:20.560 --> 02:25.030
+If you create a public organization, then everyone else is going to be able to see the package inside
+
+02:25.030 --> 02:25.480
+of here.
+
+02:25.480 --> 02:29.080
+It's only when we create a private one that the package will be hidden.
+
+02:29.920 --> 02:32.650
+Creating a public organization does cost money.
+
+02:32.650 --> 02:34.720
+So we're not going to create a private one.
+
+02:34.720 --> 02:36.160
+We're going to create a public one.
+
+02:36.160 --> 02:39.520
+But you could very easily turn it into private if you wish to do so.
+
+02:40.230 --> 02:42.750
+Let's first get started by creating this organization.
+
+02:43.080 --> 02:46.500
+To do so, I'm going to open up a new browser tab and navigate to NPM.
+
+02:48.850 --> 02:52.270
+Once over here, I'm going to make sure that I've signed up for an account.
+
+02:52.870 --> 02:57.550
+I'll click on myself on the top right hand side and I'll click on Add organization.
+
+02:58.300 --> 03:04.480
+I then get prompted to create a new organization, as you can see right away, that we can create either
+
+03:04.480 --> 03:06.600
+a private one or a public one.
+
+03:06.610 --> 03:08.920
+And if you want a private one, you've got to pay some money.
+
+03:08.920 --> 03:12.880
+So we're not going to go with the private one because honestly, there's not really a lot of secure
+
+03:12.880 --> 03:15.100
+or sensitive code inside of our common module.
+
+03:16.520 --> 03:19.340
+Let's type in a name for our custom organization.
+
+03:20.220 --> 03:23.460
+I'm going to use a name of SG tickets.
+
+03:23.640 --> 03:25.980
+So that's going to be the name of my organization.
+
+03:26.280 --> 03:32.110
+All organization names created on NPM must be unique, so you will not be able to use SG tickets.
+
+03:32.130 --> 03:35.340
+You're going to have to come up with your own name for your organization.
+
+03:35.550 --> 03:37.530
+Just make sure it's something you can easily remember.
+
+03:37.920 --> 03:41.370
+Just, you know, I use SG because those are my initials, Steven Grider.
+
+03:42.370 --> 03:43.930
+After that, I'll click on Create.
+
+03:45.170 --> 03:47.330
+I then get prompted to invite some people.
+
+03:47.330 --> 03:52.550
+So if I had marked this organisation as private, I would have to invite other people in order for them
+
+03:52.550 --> 03:55.670
+to see these packages and install them into their own projects.
+
+03:56.180 --> 04:00.800
+In this case, I don't have anyone else to invite, so I'll just click on Skip and that's it.
+
+04:01.730 --> 04:07.040
+So now we can create our own packages and push them to this organization.
+
+04:08.120 --> 04:10.320
+And if we had marked this organization as private.
+
+04:10.340 --> 04:10.980
+That'd be great.
+
+04:11.000 --> 04:12.080
+No one else would be able to see these.
+
+04:12.080 --> 04:14.390
+But again, I don't really want to pay any money for this.
+
+04:15.080 --> 04:15.380
+All right.
+
+04:15.380 --> 04:19.070
+So now that we've created this organization, let's take a pause right here in the next video, we're
+
+04:19.070 --> 04:25.470
+going to actually create our common module and make sure that we publish it to this private or this
+
+04:25.490 --> 04:26.960
+public organization.

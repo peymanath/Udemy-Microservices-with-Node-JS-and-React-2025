@@ -1,0 +1,313 @@
+WEBVTT
+
+00:01.220 --> 00:04.550
+In this video, we're going to create a new git repository inside of our project.
+
+00:04.580 --> 00:09.710
+Before we do, however, I want to have just a quick note, one or two on how we create Git and use
+
+00:09.710 --> 00:11.810
+Git inside of a microservices project.
+
+00:12.290 --> 00:16.940
+So in general, you're going to see that there are two different styles of managing code in a microservices
+
+00:16.940 --> 00:19.820
+project using Git or really any other version control.
+
+00:20.240 --> 00:23.780
+One approach is to use what is referred to as a mono repo.
+
+00:23.990 --> 00:28.730
+This is where we are going to create a single git repository to track all the changes made to all of
+
+00:28.730 --> 00:29.870
+our different services.
+
+00:30.140 --> 00:34.130
+So in this scenario, all of our code lives inside of one single git repository.
+
+00:34.670 --> 00:39.530
+The other approach is to create a separate repository for each individual service.
+
+00:39.980 --> 00:43.100
+So we're going to have one git repository for auth, another for tickets payments.
+
+00:43.100 --> 00:44.450
+So on you get the idea.
+
+00:45.280 --> 00:49.990
+You're going to see that even though it might make a lot of sense when you initially think about this,
+
+00:49.990 --> 00:55.210
+it might seem like it makes a lot of sense to create a single git repository for each repo but or for
+
+00:55.210 --> 00:55.960
+each service.
+
+00:55.960 --> 01:00.790
+But you're going to see that in reality what a lot of different companies do and I'm talking about very,
+
+01:00.790 --> 01:06.040
+very large companies with tremendously large code bases, they actually trend towards using a single
+
+01:06.040 --> 01:09.730
+repository to track all the code inside of their project.
+
+01:10.360 --> 01:14.560
+One of the biggest reasons for this is that every single time that you create a new git repository,
+
+01:14.560 --> 01:17.140
+there's actually a lot of overhead that goes along with that.
+
+01:17.380 --> 01:22.150
+You have to create a separate repository on, say, GitHub or get lab depending on what service you're
+
+01:22.150 --> 01:22.720
+using.
+
+01:23.020 --> 01:27.730
+You might have to create a separate set of authentication keys just to get access to that repository,
+
+01:27.730 --> 01:30.370
+you have to set up a separate CI and CD pipeline.
+
+01:30.400 --> 01:34.870
+There's a lot of work that goes into creating each of these Git repositories when we're working with
+
+01:34.870 --> 01:35.890
+microservices.
+
+01:36.040 --> 01:40.540
+It's not really just as simple as writing out Git in it and saying, okay, that's it, we're done.
+
+01:40.840 --> 01:42.610
+Instead, there really is a lot of work.
+
+01:43.450 --> 01:45.490
+So to limit that amount of overhead.
+
+01:45.850 --> 01:46.840
+Very simple solution.
+
+01:46.840 --> 01:49.270
+Just use one single git repository.
+
+01:49.540 --> 01:53.500
+And that's not to say that there are no downsides of using a single repository, because there definitely
+
+01:53.500 --> 01:53.950
+are.
+
+01:53.980 --> 01:57.910
+As a matter of fact, we're going to run into a couple of those downsides as we go through this deployment
+
+01:57.910 --> 01:58.540
+workflow.
+
+01:59.560 --> 02:05.570
+In this course because the vast majority of larger companies doing micro services use a single git repository.
+
+02:05.590 --> 02:07.270
+We're going to take that same pattern.
+
+02:07.270 --> 02:11.410
+So we're going to use a single git repository to track all of our different services.
+
+02:12.630 --> 02:14.860
+So that means we're now going to go over to our terminal.
+
+02:14.880 --> 02:17.940
+We're going to create a new git repo inside of our project.
+
+02:18.150 --> 02:19.550
+We're going to commit all of our code.
+
+02:19.560 --> 02:23.460
+We'll then go off to GitHub and create a matching repository up there as well.
+
+02:25.480 --> 02:25.640
+Yeah.
+
+02:25.690 --> 02:27.190
+So inside of my project directory.
+
+02:27.980 --> 02:29.690
+I'm going to do a get in it.
+
+02:32.130 --> 02:32.700
+Inside of here.
+
+02:32.750 --> 02:37.650
+Before I commit anything or add anything, I'm going to create a get ignore file to make sure that we
+
+02:37.650 --> 02:40.210
+ignore all of our node modules, directories and so on.
+
+02:40.230 --> 02:44.580
+I don't want to commit any of my repositories, assuming any of my dependencies or anything like that.
+
+02:45.490 --> 02:50.950
+After making that repository, I'm then going to go back over to my editor inside of my root project
+
+02:50.950 --> 02:51.400
+directory.
+
+02:51.400 --> 02:55.150
+I'll make a new file called Dot yet ignore.
+
+02:56.160 --> 02:59.000
+I'm going to add in there node modules.
+
+03:00.140 --> 03:06.760
+Because I'm on Mac OS, I'm also going to ignore a very annoying little file called the DZ store file.
+
+03:06.770 --> 03:08.720
+You only have to do that if you're on MAC OS.
+
+03:09.670 --> 03:11.650
+It will save that and close the file.
+
+03:12.450 --> 03:13.890
+I'll then go back to my terminal.
+
+03:14.160 --> 03:15.450
+I'll do a get ad.
+
+03:16.970 --> 03:18.710
+And then a get commit.
+
+03:19.650 --> 03:22.440
+And I'll just say initial commit like so.
+
+03:23.370 --> 03:28.530
+And I should see all of my typescript files, some JSON stuff, some JavaScript stuff, all that should
+
+03:28.530 --> 03:29.130
+be committed.
+
+03:29.130 --> 03:33.360
+Now, as you scroll through this list, you should definitely not see anything tied to, say, the node
+
+03:33.360 --> 03:35.430
+modules directory or anything like that.
+
+03:37.150 --> 03:41.800
+Once we've committed all that, we now have an up to date git repository on our local machine.
+
+03:42.090 --> 03:45.820
+We're now going to go off to GitHub and create a matching repository on there.
+
+03:46.420 --> 03:51.520
+Now for this course, even if you are normally a user of GitLab, please make use of GitHub.
+
+03:51.670 --> 03:57.040
+We're going to rely upon some features on GitHub itself, specifically something called GitHub actions
+
+03:57.400 --> 04:02.140
+to handle running our tests and eventually handle the deployment as well.
+
+04:02.200 --> 04:07.090
+So you can not use GitLab in this course because we are relying upon these GitHub features in particular.
+
+04:08.600 --> 04:10.340
+So once I go to GitHub.
+
+04:12.260 --> 04:13.670
+I'll make sure that I am signed in.
+
+04:16.080 --> 04:16.840
+If I can.
+
+04:16.860 --> 04:17.460
+There we go.
+
+04:17.640 --> 04:19.560
+I'll then create a new repository.
+
+04:21.250 --> 04:24.950
+And I'll give it a very simple name about ticketing.
+
+04:25.340 --> 04:26.210
+Simple enough.
+
+04:28.260 --> 04:29.730
+I'll then create the repository.
+
+04:31.100 --> 04:36.170
+And then we have to tie this GitHub repository to the repo that we just created on our local machine.
+
+04:36.560 --> 04:38.720
+So I'm going to copy the link displayed right here.
+
+04:40.690 --> 04:47.830
+I'll go back over to my terminal where I just read the repo and I'll do a get remote, add origin and
+
+04:47.830 --> 04:49.060
+then paste in that URL.
+
+04:50.030 --> 04:54.590
+If you get an error during the step right here or during the next step where we're going to push, let's
+
+04:54.590 --> 04:57.410
+do the push first because this is actually probably where you're going to see the error.
+
+04:57.440 --> 05:01.970
+It's going to do a get push origin master and you'll notice for me everything is going to appear to
+
+05:01.970 --> 05:06.020
+work just fine if you get an error here that says something like permission denied or something like
+
+05:06.020 --> 05:10.400
+that, you need to make sure that you've got your git client set up to work with GitHub.
+
+05:10.400 --> 05:15.020
+Appropriately so in particular, you're going to want to make sure that you've got some matching SSH
+
+05:15.020 --> 05:16.100
+keys and whatnot.
+
+05:16.100 --> 05:19.670
+You can check the help on GitHub for directions on how to do that.
+
+05:19.700 --> 05:23.570
+If you're here in this course, to be totally honest with you, I'm really going to expect that you
+
+05:23.570 --> 05:26.150
+are familiar with Git and you know how to push code to GitHub.
+
+05:26.150 --> 05:30.110
+So I'm going to leave doing some research on resolving any errors that you might have just got gotten
+
+05:30.110 --> 05:31.160
+right here on you.
+
+05:32.630 --> 05:35.240
+After I pushed my code, I'll then flip back over to the repo.
+
+05:35.270 --> 05:38.330
+Refresh the page and I should see everything up here.
+
+05:38.630 --> 05:39.230
+Very good.
+
+05:40.670 --> 05:41.000
+All right.
+
+05:41.000 --> 05:46.400
+So now that we've got all of our code put together, we're now going to create these two automatic little
+
+05:46.400 --> 05:52.220
+steps where we're going to make sure that any time that we create a request, we run some tests for
+
+05:52.220 --> 05:53.140
+our project.
+
+05:53.150 --> 05:57.230
+And we're also going to create a little step to make sure that any time that we merge something into
+
+05:57.230 --> 06:00.650
+our master branch, GitHub builds and deploys our project as well.
+
+06:01.220 --> 06:04.490
+So let's get started on that little level of automation in the next video.

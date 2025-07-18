@@ -1,0 +1,364 @@
+WEBVTT
+
+00:01.360 --> 00:05.620
+Now that I've told you a ton about config files without actually saying, well, what they're really
+
+00:05.620 --> 00:08.890
+doing internally, let's go ahead and create our first config file.
+
+00:08.890 --> 00:12.910
+In this first config file, we are going to try to create a pod directly.
+
+00:12.910 --> 00:18.700
+So just a pod by itself out of our post service though, just to look back at this diagram over here,
+
+00:18.820 --> 00:24.940
+the only part of this thing that I really want to make out of everything we discussed is just one pod.
+
+00:26.870 --> 00:27.900
+Like that right there.
+
+00:27.920 --> 00:30.530
+That's all they want to have a pod that's running container.
+
+00:30.560 --> 00:32.330
+There's not going to be any other service.
+
+00:32.330 --> 00:33.530
+There's not going to be any deployment.
+
+00:33.560 --> 00:34.250
+Nothing like that.
+
+00:34.250 --> 00:35.690
+Just a pod by itself.
+
+00:35.990 --> 00:37.800
+So let's figure out how we will do this.
+
+00:37.820 --> 00:41.240
+In this video, we're going to write out all the configuration for it, and we'll have a deep discussion
+
+00:41.240 --> 00:43.760
+about what every line of this configuration really means.
+
+00:44.240 --> 00:46.430
+To get started, we're going to first go back to our terminal.
+
+00:47.620 --> 00:52.360
+We will change into our post directory and we are going to rebuild that Docker image.
+
+00:52.370 --> 00:56.300
+Now, it's really important that you rebuild this thing because we're going to apply a additional label
+
+00:56.300 --> 00:59.930
+to it that's going to help us identify it inside the configuration that we're about to write.
+
+00:59.930 --> 01:03.320
+So even though we've built it several times now in the last couple of videos, yeah, we're going to
+
+01:03.320 --> 01:04.190
+build it again.
+
+01:04.580 --> 01:08.270
+So inside of posts I'm going to run Docker Build.
+
+01:09.030 --> 01:16.530
+Dashti and then we'll put down your Docker ID slash posts and then I call in and I'll throw a version
+
+01:16.530 --> 01:17.250
+number on there.
+
+01:17.250 --> 01:19.260
+So I'll use 00.1.
+
+01:19.260 --> 01:20.460
+Don't forget the call in.
+
+01:21.230 --> 01:25.700
+I'll then put a space and put in the dot to say I want to build this image out of this current directory
+
+01:25.700 --> 01:26.480
+of posts.
+
+01:28.400 --> 01:29.180
+And there we go.
+
+01:29.180 --> 01:33.710
+So I've now built that image and that's how we can refer to this exact image.
+
+01:33.710 --> 01:37.640
+We've got the name of the image or the tag along with the version number right there on the very end.
+
+01:37.970 --> 01:40.370
+So now that we've got that put together, let's go back over to our editor.
+
+01:40.370 --> 01:45.050
+We're going to write out our configuration file to create a pod using this container or this image.
+
+01:45.930 --> 01:50.580
+The back of my editor, I'm going to first create a new directory called Infra.
+
+01:51.210 --> 01:52.860
+This is short for infrastructure.
+
+01:52.860 --> 01:58.080
+So this is going to contain all the configuration, all the code related to the deployment or management
+
+01:58.080 --> 02:00.930
+of all of our different services inside there.
+
+02:00.930 --> 02:03.680
+And then going to create a folder called K Eights.
+
+02:04.440 --> 02:06.810
+We're going to eventually have several different folders inside of here.
+
+02:06.930 --> 02:11.850
+Right now, we're just going to say K AIDS is going to contain all of our Kubernetes configuration files.
+
+02:11.850 --> 02:15.480
+Just, you know, k8s is short for Kubernetes.
+
+02:17.560 --> 02:22.750
+Inside there, I'll create a new file and we're going to call this thing post YAML.
+
+02:25.300 --> 02:26.430
+All right, so inside of here.
+
+02:26.440 --> 02:26.770
+Yep.
+
+02:26.770 --> 02:28.790
+That's what we're going to write out, all of our configuration.
+
+02:28.810 --> 02:32.920
+Now, as I mentioned at the start, this video, we're just going to focus on writing out the configuration
+
+02:32.920 --> 02:34.770
+and creating this pod.
+
+02:34.780 --> 02:38.410
+Then we'll come back the next video and discuss exactly what all the config is actually doing.
+
+02:38.410 --> 02:42.370
+So for right now, we're going to do a little bit of a follow along, write out exactly what I write
+
+02:42.370 --> 02:42.880
+out.
+
+02:43.030 --> 02:46.030
+So we'll say API version with a capital V.
+
+02:48.190 --> 02:49.690
+A colon and then v one.
+
+02:50.830 --> 02:54.340
+But in a kind of pod notice that pod has a capital P.
+
+02:55.520 --> 02:56.870
+Put in metadata.
+
+02:57.850 --> 02:59.260
+Well, then put in a new line.
+
+02:59.260 --> 03:04.660
+And on the next slide there has to be one indentation that like so the really two spaces right there.
+
+03:04.810 --> 03:09.250
+If you don't have that, then you're not running out valid yaml so make sure you've got exactly two
+
+03:09.250 --> 03:10.030
+spaces.
+
+03:11.090 --> 03:12.890
+We'll write out name is posts.
+
+03:14.000 --> 03:17.510
+Then back at the top level of indentation, we'll put down speck.
+
+03:18.380 --> 03:19.580
+We will indent again.
+
+03:20.500 --> 03:22.210
+And say containers.
+
+03:23.480 --> 03:24.590
+Another new line.
+
+03:24.770 --> 03:26.470
+We're going to indent one more level.
+
+03:26.480 --> 03:30.410
+We'll put in a dash space name of posts.
+
+03:31.620 --> 03:37.070
+Then image will be whatever the image is that you just built 2 seconds ago back at your terminal.
+
+03:37.070 --> 03:38.660
+So essentially that right there.
+
+03:38.990 --> 03:44.030
+So for me, it will be Stephen Greider slash post colon 001.
+
+03:44.720 --> 03:49.010
+Now it's absolutely critical that you have the exact same indentation that I do all the way through.
+
+03:49.810 --> 03:54.370
+If you save this in a try to run it, as we're about to do in a second and you get an error, I can
+
+03:54.370 --> 03:57.670
+just about guarantee you there is a typo somewhere inside of here.
+
+03:59.290 --> 03:59.460
+Okay.
+
+03:59.470 --> 04:00.730
+So that's our config file.
+
+04:00.760 --> 04:03.550
+We have told Kubernetes that we want to create a pod.
+
+04:03.580 --> 04:05.370
+We want its name to be posts.
+
+04:05.380 --> 04:08.560
+And inside that pod, we want there to be exactly one container.
+
+04:08.980 --> 04:13.990
+The containers name should be posts and we're going to build that container using the image of that
+
+04:13.990 --> 04:14.650
+right there.
+
+04:15.260 --> 04:20.290
+So now let's figure out how we can use the CTL command line tool to actually make use of this config
+
+04:20.290 --> 04:20.830
+file.
+
+04:22.360 --> 04:27.040
+Next, we're going to tell Kubernetes to use this config file to create a new object.
+
+04:27.370 --> 04:29.590
+But to do so, we're going to go back over to our terminal.
+
+04:30.390 --> 04:31.230
+Back at my terminal.
+
+04:31.230 --> 04:33.590
+I'm still inside of my post project directory.
+
+04:33.600 --> 04:36.780
+I want to change into that K AIDS folder that we just made a second ago.
+
+04:37.140 --> 04:38.550
+They'll go up one directory.
+
+04:38.910 --> 04:41.460
+I'll change into infra and then k.
+
+04:42.990 --> 04:48.330
+And then inside there I should see the post yaml file to tell Kubernetes that we wanted to use this
+
+04:48.330 --> 04:48.950
+config file.
+
+04:48.960 --> 04:56.970
+We'll write out cube, it'll apply F and then the name of the file, which in this case is post HTML.
+
+04:58.540 --> 04:59.620
+Well, go ahead and run that.
+
+04:59.890 --> 05:01.960
+And then we should see something like this right here.
+
+05:02.290 --> 05:07.330
+If you immediately see an error when you run that command again, I can guarantee you that you've got
+
+05:07.330 --> 05:09.490
+a typo somewhere inside this file.
+
+05:09.880 --> 05:13.420
+You will only ever see errors coming out of this command if there is a typo.
+
+05:13.450 --> 05:17.180
+There's just about no other scenario unless you're not running the Kubernetes cluster at all.
+
+05:17.200 --> 05:18.180
+That's the only two scenarios.
+
+05:18.190 --> 05:21.940
+Either Kubernetes is not running on your machine, or there's a typo inside the file.
+
+05:23.370 --> 05:26.250
+Well, it says that this thing was created, but what does that really mean?
+
+05:26.940 --> 05:31.030
+To inspect the state or to figure out exactly what is going on inside of our cluster?
+
+05:31.050 --> 05:34.330
+There is a variety of different commands we're going to run with CTL.
+
+05:34.710 --> 05:39.370
+In this case, we want to take a look at all the different pods that are running inside of our cluster.
+
+05:39.390 --> 05:41.310
+There should be exactly one right now.
+
+05:41.760 --> 05:45.540
+So to inspect and get a list of all the different pods that are running inside of here, we can run
+
+05:45.540 --> 05:46.950
+Kube CTL.
+
+05:48.020 --> 05:49.550
+Yet odds.
+
+05:51.030 --> 05:53.940
+And we'll see that there is exactly one pod with the name of posts.
+
+05:54.330 --> 05:59.730
+There's one copy of it that is been trying to be executed and one copy is successfully running.
+
+06:00.210 --> 06:01.790
+This pod status is running.
+
+06:01.800 --> 06:05.160
+It has never been restarted and it was created 50 seconds ago.
+
+06:05.950 --> 06:06.370
+So that's it.
+
+06:06.370 --> 06:08.590
+That's how we create an object in Kubernetes.
+
+06:08.770 --> 06:14.560
+Just about everything else we do with Kubernetes is going to be kind of variations of this config file.
+
+06:15.340 --> 06:18.850
+Normally the config files we're going to write out are going to be way longer than what you see right
+
+06:18.850 --> 06:21.580
+here, usually closer to, say, 40 lines or so.
+
+06:21.970 --> 06:24.270
+But this creates just one simple little object.
+
+06:24.280 --> 06:26.680
+We then applied it to Kubernetes and Kubernetes.
+
+06:26.710 --> 06:29.980
+Use this config to decide exactly what to do inside the cluster.
+
+06:30.370 --> 06:33.520
+Now, there's a lot of configuration, even though it's only a couple of lines that's kind of stuffed
+
+06:33.520 --> 06:34.110
+inside of here.
+
+06:34.120 --> 06:37.990
+So I want to give you a couple of quick notes about what's going on here and a couple of quick notes
+
+06:37.990 --> 06:41.050
+about the Cube CTL command line tool in just a moment.

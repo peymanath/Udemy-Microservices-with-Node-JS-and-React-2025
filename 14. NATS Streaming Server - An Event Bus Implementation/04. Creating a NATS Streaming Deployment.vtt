@@ -1,0 +1,364 @@
+WEBVTT
+
+00:01.870 --> 00:05.800
+As I mentioned at the end of the last video, we're going to focus on deploying that streaming server
+
+00:05.800 --> 00:07.790
+into our Kubernetes cluster in this video.
+
+00:07.810 --> 00:09.040
+So let's get to it.
+
+00:09.250 --> 00:14.740
+Like anything we've been deploying, we're going to go into our code editor by the infra directory.
+
+00:14.740 --> 00:20.200
+Inside the k folder will make a new file called nats devel html.
+
+00:20.940 --> 00:22.590
+So we're going to write out a deployment inside of here.
+
+00:22.590 --> 00:25.170
+Again, very similar to ones we've already created.
+
+00:25.770 --> 00:30.420
+At the very top, we'll write out API version apps slash V one.
+
+00:31.190 --> 00:33.830
+I'm going to set this to a kind of deployment.
+
+00:35.030 --> 00:35.780
+For metadata.
+
+00:35.780 --> 00:38.150
+We'll give a name of nats dash depot.
+
+00:40.130 --> 00:43.520
+Then for the spec, I'm going to say that I want to run one copy of this thing.
+
+00:44.750 --> 00:49.520
+We'll put on our selector with Match Labels app nets.
+
+00:51.530 --> 00:53.870
+Then our pod template section.
+
+00:57.060 --> 00:59.520
+Well, once again put in a metadata section.
+
+01:00.850 --> 01:01.960
+Neda data.
+
+01:01.990 --> 01:02.560
+There we go.
+
+01:02.610 --> 01:03.580
+Couple of typos here.
+
+01:03.610 --> 01:04.540
+Got them fixed, though.
+
+01:05.500 --> 01:09.670
+And here we'll set up some labels in particular just app nets.
+
+01:11.670 --> 01:17.370
+Then on the same level of indentation as metadata, we'll put in our pod spec, we're going to be running
+
+01:17.370 --> 01:18.390
+at one container.
+
+01:19.470 --> 01:21.750
+I'm going to give it a name of Nat's.
+
+01:22.910 --> 01:31.370
+And then our image that's streaming and we're going to specify a specific version here of 0.17.0.
+
+01:33.740 --> 01:34.280
+All right.
+
+01:34.700 --> 01:37.280
+So now we've got our container specified right here.
+
+01:37.280 --> 01:39.140
+And we said, here's the image we want to run.
+
+01:39.230 --> 01:43.010
+Just a moment ago, I had said over here on the dock or have documentation that some of these command
+
+01:43.010 --> 01:45.260
+line options were really important for us to set.
+
+01:45.470 --> 01:50.780
+If we ever want to set some custom command line options to be executed when our container starts up,
+
+01:50.780 --> 01:55.010
+we can provide them in an option right here in this container section.
+
+01:55.460 --> 01:57.020
+So we're going to write out arcs.
+
+01:57.440 --> 02:04.010
+This is going to be an array of arguments to provide to the primary command that gets executed when
+
+02:04.010 --> 02:06.020
+a container is built out of our image.
+
+02:06.440 --> 02:11.240
+So in other words, we can take a look at all of these different command line options right here.
+
+02:11.270 --> 02:14.870
+Let's just pick one at random and say, how about dashed?
+
+02:15.050 --> 02:21.290
+If we wanted to set this dashed flag and make sure that Nat streaming server executed itself with the
+
+02:21.320 --> 02:26.240
+star flag, we would add inside this args array inside of a string dashed.
+
+02:28.150 --> 02:33.190
+Each separate argument that we put inside of here is going to be separated inside of this array into
+
+02:33.190 --> 02:34.170
+separate strings.
+
+02:34.180 --> 02:39.370
+So, for example, the documentation here says that when we when we use the rst flag, we provide it
+
+02:39.370 --> 02:40.260
+a string.
+
+02:40.270 --> 02:47.380
+So if I want to do provide RST and give it a string argument, I would put in the EST and then something
+
+02:47.380 --> 02:48.880
+right here like that.
+
+02:50.890 --> 02:54.520
+Now we're not going to actually set it, but there are a variety of different arguments that we are
+
+02:54.520 --> 02:55.450
+going to be setting.
+
+02:55.870 --> 02:59.470
+Our list here of different arguments is going to end up being pretty darn long.
+
+02:59.470 --> 03:03.250
+So bear with me for a second because we're going to write out a lot of different arguments right here.
+
+03:03.280 --> 03:06.370
+Please make sure that you put in the exact same order that I do.
+
+03:06.430 --> 03:09.400
+Make sure that you don't have any typos, of course, or anything like that.
+
+03:10.060 --> 03:10.330
+All right.
+
+03:10.330 --> 03:11.140
+So let's get to it.
+
+03:11.140 --> 03:14.260
+A lot of different arguments we're going to put in Dash P.
+
+03:15.380 --> 03:16.100
+Or to.
+
+03:16.100 --> 03:16.280
+To.
+
+03:16.280 --> 03:16.850
+To.
+
+03:17.980 --> 03:19.510
+We'll put in dash em.
+
+03:20.420 --> 03:20.810
+Eight.
+
+03:20.810 --> 03:21.800
+Two, two, two.
+
+03:23.290 --> 03:27.160
+I'm going to put in HB five SE.
+
+03:29.350 --> 03:30.160
+But.
+
+03:30.870 --> 03:31.860
+Five se.
+
+03:34.890 --> 03:36.010
+Hpf.
+
+03:37.140 --> 03:37.860
+Of two.
+
+03:39.760 --> 03:42.000
+Then semi SD.
+
+03:42.070 --> 03:42.730
+There we go.
+
+03:44.150 --> 03:46.370
+And then finally dash I'd.
+
+03:47.290 --> 03:48.340
+Ticketing like.
+
+03:48.340 --> 03:53.110
+So now we are going to come back over here and discuss exactly what all these different arguments are
+
+03:53.110 --> 03:53.620
+about.
+
+03:53.620 --> 03:57.310
+Or alternatively, of course, you can reference all those different arguments against these command
+
+03:57.310 --> 03:58.270
+line options.
+
+03:59.230 --> 04:01.920
+But of course, if you don't want to do the reference yourself, don't sweat it.
+
+04:01.930 --> 04:03.610
+We'll go over these options later on.
+
+04:04.990 --> 04:07.300
+So that is it for the actual deployment itself.
+
+04:07.570 --> 04:12.730
+And actually, we still want to be able to get a connection to this deployment or the pod created by
+
+04:12.730 --> 04:12.990
+it.
+
+04:13.000 --> 04:18.400
+So we are going to also create a service, a cluster IP service that's going to get us access to the
+
+04:18.400 --> 04:20.200
+NAT streaming server that gets created.
+
+04:20.860 --> 04:24.760
+So down at the bottom of the file, I'm going to put in the dash, dash, dash, and I'll write out
+
+04:24.760 --> 04:27.700
+a separate config to create a cluster IP service.
+
+04:28.270 --> 04:30.670
+I'm going to put in an API version of V one.
+
+04:31.830 --> 04:33.150
+A kind of service.
+
+04:34.280 --> 04:37.220
+Her metadata and name of Nats SRB.
+
+04:39.730 --> 04:43.690
+Or Speck a selector of app nets.
+
+04:44.560 --> 04:45.790
+And then ports.
+
+04:45.940 --> 04:48.940
+In this case, we're going to expose two separate ports.
+
+04:49.240 --> 04:54.880
+So we're going to put in name, colon, client and protocol TCP.
+
+04:55.850 --> 05:01.430
+And for that we'll have a port of four, two, two, two and a target port of four, two, two, two.
+
+05:02.740 --> 05:04.960
+Then we'll add in a second port to expose.
+
+05:06.200 --> 05:08.750
+I'm going to give this one a name of monitoring.
+
+05:10.150 --> 05:11.860
+Protocol of TCP.
+
+05:13.170 --> 05:14.040
+A port of eight.
+
+05:14.050 --> 05:14.940
+Two, two, two.
+
+05:16.340 --> 05:19.220
+And a target port of eight.
+
+05:19.230 --> 05:20.030
+Two, two, two.
+
+05:21.860 --> 05:22.190
+All right.
+
+05:22.190 --> 05:23.180
+So a lot of typing.
+
+05:23.210 --> 05:25.970
+I apologize for all the typing, but this is the worst of it.
+
+05:25.970 --> 05:29.180
+From here on out, all the code that we're going to write around that streaming server is going to be
+
+05:29.180 --> 05:31.010
+actually kind of interesting.
+
+05:31.980 --> 05:33.900
+Last thing we're going to do is save this.
+
+05:34.440 --> 05:36.030
+We're going to go back over to Scaffold.
+
+05:37.920 --> 05:40.220
+We're going to make sure that our deployment was created.
+
+05:40.230 --> 05:40.500
+Yep.
+
+05:40.500 --> 05:40.830
+I see.
+
+05:40.830 --> 05:42.870
+Somewhere inside of here, the thing actually was created.
+
+05:43.950 --> 05:46.370
+Once I see that, I'll then go over to a new terminal window.
+
+05:46.380 --> 05:50.220
+We're going to try to print out all the different pods that are running inside of our cluster.
+
+05:50.790 --> 05:57.540
+And remember, we do that with the cube, CTL, get pods, and I should then see a Nats deployment pod
+
+05:57.540 --> 05:58.230
+right there.
+
+05:58.860 --> 05:59.550
+Very good.
+
+06:00.820 --> 06:02.480
+Make sure that you've got a status of running.
+
+06:02.500 --> 06:05.170
+It might take some time, of course, to pull down the actual image.
+
+06:05.170 --> 06:09.250
+So if it says that the thing is still creating or something like that, you can rerun cuz it'll get
+
+06:09.250 --> 06:12.430
+pods and make sure that it just eventually flips over to running.
+
+06:13.450 --> 06:13.750
+All right.
+
+06:13.750 --> 06:17.170
+So now that our Napster server is up and running, another quick pause right here.
+
+06:17.170 --> 06:22.000
+Next video, we're going to focus on what that streaming server is and how we're going to work with
+
+06:22.000 --> 06:23.650
+it via Node.js.
+
+06:24.430 --> 06:25.570
+See you in just a minute.

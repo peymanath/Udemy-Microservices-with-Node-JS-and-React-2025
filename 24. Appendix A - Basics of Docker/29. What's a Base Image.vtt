@@ -1,0 +1,250 @@
+WEBVTT
+
+00:00.840 --> 00:05.640
+In the last section, we broke down the contents of our Docker file and got an understanding of the
+
+00:05.640 --> 00:07.980
+overall contents or structure of it.
+
+00:08.010 --> 00:12.960
+We now know that there is a handful of instructions that we can use to customize how our image is built.
+
+00:12.990 --> 00:17.100
+These are three of the most important instructions to know, and we'll introduce a handful of other
+
+00:17.100 --> 00:18.180
+ones over time.
+
+00:18.360 --> 00:23.160
+In this section, I now want to kind of break down what was really occurring behind the scenes with
+
+00:23.160 --> 00:24.450
+each of these instructions.
+
+00:24.480 --> 00:27.750
+We're going to first begin by taking a look at a little analogy.
+
+00:27.750 --> 00:33.090
+So this is going to be an analogy to help you understand the structure or purpose of those lines of
+
+00:33.090 --> 00:35.490
+configuration inside that Docker file.
+
+00:35.760 --> 00:42.870
+So quick analogy, I'm going to tell you, writing a Docker file is a little bit just like being given
+
+00:42.870 --> 00:43.770
+a computer.
+
+00:43.770 --> 00:50.570
+So a brand new computer with no operating system on it and being told to install Google Chrome on there.
+
+00:50.580 --> 00:56.430
+So I want you to imagine what you would do if I handed you a computer that has no operating system on
+
+00:56.430 --> 00:56.640
+it.
+
+00:56.640 --> 01:00.120
+And I told you, you have to install Google Chrome on here.
+
+01:00.360 --> 01:02.550
+Well, here is probably what you would end up doing.
+
+01:03.420 --> 01:07.800
+The first thing you might do is try turning on that laptop or turning on that desktop.
+
+01:07.800 --> 01:12.690
+And when you turned it on, you would probably maybe see some boot up process, but then you would eventually
+
+01:12.690 --> 01:18.540
+be given a message that says something like, Hey, sorry, no bootable drive or no operating system.
+
+01:18.540 --> 01:20.070
+I'm just an empty computer.
+
+01:20.070 --> 01:21.240
+I don't know what to do.
+
+01:21.420 --> 01:25.230
+So the first thing you would probably do is install an operating system.
+
+01:25.230 --> 01:30.990
+You need an operating system on that computer in order to go through all these sequential steps on here.
+
+01:31.260 --> 01:35.520
+If you want to download Google Chrome, you have to go and download it from somewhere by opening up
+
+01:35.520 --> 01:39.330
+your web browser and you have to navigate to Chrome Google.com.
+
+01:39.330 --> 01:44.790
+You have to download the installer and open a file explorer and then execute that installer.
+
+01:44.910 --> 01:51.060
+So those series of steps right there, those are all steps that are facilitated by the installation
+
+01:51.060 --> 01:52.770
+of that initial operating system.
+
+01:52.950 --> 01:58.440
+If you didn't have an operating system, there would be no default browser to start up that you would
+
+01:58.440 --> 02:04.890
+not have a file or folder explorer to start up, and you probably would not have any way to run an executable
+
+02:04.890 --> 02:05.580
+file.
+
+02:05.610 --> 02:11.610
+All of these steps are kind of preceded or dependent upon having an initial operating system.
+
+02:12.790 --> 02:18.010
+So then going through all those initial steps, eventually you would be able to execute the Chrome executable
+
+02:18.010 --> 02:19.420
+and start up that browser.
+
+02:19.840 --> 02:27.190
+So these steps right here, very similar to what we just did inside that Docker file, when we specify
+
+02:27.190 --> 02:33.490
+that base image of Alpine, that was a lot like installing an initial operating system by default.
+
+02:33.490 --> 02:38.170
+When we create a container or something, when we create an image, we have an empty image.
+
+02:38.170 --> 02:44.200
+There's really nothing inside there, no infrastructure, no programs that we can use to navigate around
+
+02:44.200 --> 02:45.700
+a file or folder system.
+
+02:45.700 --> 02:49.660
+There's nothing we can use to download or install or configure dependencies.
+
+02:49.660 --> 02:51.130
+There's nothing in there.
+
+02:51.130 --> 02:57.130
+So the purpose of specifying a base image is to kind of give us an initial starting point or an initial
+
+02:57.130 --> 03:01.330
+set of programs that we can use to further customize our image.
+
+03:01.630 --> 03:04.210
+So that is the purpose of that first line.
+
+03:04.870 --> 03:11.680
+The from Alpine, we said that we wanted to use the Alpine Docker image as kind of an initial operating
+
+03:11.680 --> 03:15.220
+system or a starting point for the image that we are creating.
+
+03:15.730 --> 03:20.050
+Now, you're very initial follow up question might be, well, why did we use Alpine?
+
+03:20.050 --> 03:21.130
+What is Alpine?
+
+03:21.130 --> 03:22.750
+So that's a good question.
+
+03:22.750 --> 03:27.070
+Another brief aside, why did we use Alpine as a base image?
+
+03:27.070 --> 03:28.180
+Well, back to you.
+
+03:28.180 --> 03:34.780
+I'm going to kind of pose a question I'm going to say to you, why do you use Windows or Mac OS or Ubuntu
+
+03:34.780 --> 03:37.630
+or some other Linux distribution on your personal computer?
+
+03:37.780 --> 03:44.200
+The answer is that you use any particular operating system because it kind of suits your needs.
+
+03:44.290 --> 03:48.850
+Windows might have a program that you need to use your computer effectively.
+
+03:48.850 --> 03:53.260
+You might use Mac OS because it has a built in terminal and that's really nice for you.
+
+03:53.440 --> 03:58.930
+In other words, you use one of these default operating systems because it has a set of preinstalled
+
+03:58.930 --> 04:02.920
+programs that is useful to you and what you are trying to accomplish.
+
+04:03.370 --> 04:09.670
+So we just made use of Alpine as a base image, as kind of like an operating system of sorts because
+
+04:09.670 --> 04:15.790
+it includes a default set of programs that are very useful for what you and I are trying to accomplish.
+
+04:15.790 --> 04:21.760
+We are trying to install and run Redis and the Alpine base image has a set of programs inside of it
+
+04:21.760 --> 04:28.420
+that are very useful for installing and running Redis, the command that was or the program that was
+
+04:28.420 --> 04:30.730
+most useful for you and I for installing and running.
+
+04:30.730 --> 04:34.510
+Redis was found on the second line of the Docker file.
+
+04:34.510 --> 04:38.080
+We had said run apk, add update Redis.
+
+04:38.110 --> 04:40.390
+This is not a Docker command right here.
+
+04:40.390 --> 04:43.990
+This line has nothing to do with Docker whatsoever.
+
+04:44.350 --> 04:48.940
+APK is a program called Apache Package something.
+
+04:48.940 --> 04:55.960
+I think it is a package manager that comes pre-installed on the alpine image and we can use that package
+
+04:55.960 --> 05:01.270
+manager that is built into Alpine to automatically download and install Redis for us.
+
+05:01.270 --> 05:07.570
+So we made use of Alpine because it had this package manager program automatically included inside of
+
+05:07.570 --> 05:07.810
+it.
+
+05:07.810 --> 05:12.160
+And so it made it a very convenient thing to start with inside of our Docker file.
+
+05:12.850 --> 05:13.480
+All right.
+
+05:13.480 --> 05:17.080
+So I think we got a better idea of what's going on with this from line.
+
+05:17.080 --> 05:22.430
+And I think we've got kind of a reasonable idea of at least the right hand side of this one, the actual
+
+05:22.430 --> 05:25.210
+like command or line of code that was executed.
+
+05:25.210 --> 05:30.370
+But we still need to have a better understanding of what run over here is doing, have a better understand
+
+05:30.460 --> 05:34.750
+standing of what command is doing, and kind of put this entire equation together.
+
+05:34.750 --> 05:35.590
+So quick break.
+
+05:35.590 --> 05:38.800
+We're going to come back the next section and do a little bit more of a deep dive.
+
+05:38.800 --> 05:40.330
+So I'll see you in just a minute.

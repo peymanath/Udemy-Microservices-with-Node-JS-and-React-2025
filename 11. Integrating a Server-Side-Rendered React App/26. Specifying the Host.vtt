@@ -1,0 +1,436 @@
+WEBVTT
+
+00:01.360 --> 00:05.710
+Now that we've made the determination of whether we are on the server or the browser, we can now make
+
+00:05.710 --> 00:10.630
+a request in either these if statement cases and return some data from that request.
+
+00:10.660 --> 00:15.010
+Remember, the only thing that's really changing between these two cases is the domain that we are trying
+
+00:15.010 --> 00:16.060
+to make the request to.
+
+00:16.090 --> 00:16.780
+That's it.
+
+00:17.580 --> 00:21.000
+So I'm going to handle the case in which we are on the browser first because that's just a little bit
+
+00:21.000 --> 00:22.080
+easier to deal with.
+
+00:23.490 --> 00:24.720
+So I'm going to put inside of here.
+
+00:25.480 --> 00:28.630
+Trump's response is await Axios target.
+
+00:29.080 --> 00:33.340
+And remember, if we are on the browser, we'll just make a request to the path that we are trying to
+
+00:33.340 --> 00:33.760
+access.
+
+00:33.760 --> 00:36.670
+That is API users current user.
+
+00:37.410 --> 00:41.040
+And the browser is going to automatically pretend in the domain for us.
+
+00:41.460 --> 00:44.130
+So then after that we can return response data.
+
+00:45.540 --> 00:48.630
+As a reminder of what we get back from the current user request.
+
+00:48.810 --> 00:53.430
+So response to data, what that value actually is, it's going to be an object that has a current user
+
+00:53.430 --> 00:59.580
+property that is null if the user has signed out or an object if the user is signed in and that object
+
+00:59.580 --> 01:01.590
+will have the ID, email and so on.
+
+01:02.460 --> 01:06.450
+We could shorten this up just a little bit by doing a little bit of structuring and only pulling out
+
+01:06.450 --> 01:09.090
+the data properly, because that's the only thing we really care about here.
+
+01:09.390 --> 01:13.440
+So I'll structure out data and then only return data.
+
+01:15.140 --> 01:18.080
+I think it'd be great to do a quick test of this right away.
+
+01:18.410 --> 01:20.960
+So to test this out, I'm going to go back up to landing page.
+
+01:21.700 --> 01:26.710
+So remember, whatever we return right here is going to show up as a prop in landing page.
+
+01:26.710 --> 01:31.180
+And as we just saw, data is going to be an object that has the current user property.
+
+01:31.180 --> 01:33.280
+So we should be able to access current user.
+
+01:33.880 --> 01:36.820
+And I'll just do a console log of current user.
+
+01:38.810 --> 01:39.250
+Okay.
+
+01:39.260 --> 01:45.260
+So remember, in order to execute, get initial props on the browser, we have to somehow get our application
+
+01:45.260 --> 01:47.540
+to navigate over to this page.
+
+01:47.540 --> 01:52.100
+So we're going to go through that same signup process, which as we just discussed.
+
+01:52.860 --> 01:56.100
+Does cause get initial props to be executed on the client.
+
+01:57.450 --> 01:59.160
+So I'm going to go back over to my application.
+
+02:00.310 --> 02:02.140
+I'm going to navigate to sign up.
+
+02:02.650 --> 02:06.400
+I'll put in some email address and some password and sign up.
+
+02:07.060 --> 02:12.670
+And sure enough, after I navigate over the request, a current user is issued and there's my data.
+
+02:14.390 --> 02:14.690
+Okay.
+
+02:14.690 --> 02:15.770
+Well, that definitely worked.
+
+02:16.130 --> 02:20.690
+So now we're going repeat the same process for the case in which we are on the server, so our code
+
+02:20.690 --> 02:21.740
+is going to look identical.
+
+02:21.770 --> 02:25.400
+The only thing that's going to change is the domain that we are making the request to.
+
+02:26.870 --> 02:27.640
+So I'll put in here.
+
+02:27.650 --> 02:33.740
+Concert data is a way to Axios target and I'm going to give myself a new line just because this URL
+
+02:33.740 --> 02:35.390
+is going to end up being a little bit long.
+
+02:35.900 --> 02:42.920
+So remember the format we use here, it's going to be something like service name, dot namespace,
+
+02:43.250 --> 02:46.550
+dot, CVC Cluster Local.
+
+02:46.850 --> 02:51.770
+So we need to go and look up the service name and the namespace that we want to make our request to.
+
+02:53.020 --> 02:55.240
+To get a quick reminder, I'll go back over to my terminal.
+
+02:55.870 --> 03:00.910
+I'm going to first print out all my different namespaces so it'll get namespace.
+
+03:02.050 --> 03:06.400
+So it's ingress in Gen X and I'll list out all the services inside that namespace.
+
+03:06.400 --> 03:13.720
+So CTL gets services N, Ingress Engine X, and that's the name of my service.
+
+03:15.410 --> 03:23.600
+So we're going to make our request to HTTP, colon, slash, ingress, dash and gen x, then a dot ingress
+
+03:23.600 --> 03:27.890
+dash and gen x, then dot svc cluster local.
+
+03:29.740 --> 03:34.570
+This will make our request over to Ingress Engine X, but we don't really care about just making a request
+
+03:34.570 --> 03:35.680
+to ingress engine x.
+
+03:35.680 --> 03:39.190
+We specifically want to make one over to our service.
+
+03:39.190 --> 03:44.770
+So we're still going to specify the route at the very end of API users current user.
+
+03:45.160 --> 03:50.080
+So the first part right here, the domain is really just about reaching out to ingress engine x, the
+
+03:50.080 --> 03:55.000
+root is about telling ingress engine x where we want our request to be forwarded on to.
+
+03:56.730 --> 03:57.120
+Okay.
+
+03:57.150 --> 04:02.400
+So now that we've got the full domain on there, I got to tell you about one other very small technicality.
+
+04:02.820 --> 04:05.490
+I'm going to go back over to my ingress service file.
+
+04:05.700 --> 04:07.650
+So here's our routing configuration.
+
+04:08.070 --> 04:14.700
+You might recall that inside of here, we specify these routing rules under a host of ticketing dev.
+
+04:15.430 --> 04:20.560
+So whenever a request comes into ingress, engine X, ingress engine x needs to know about the host
+
+04:20.560 --> 04:21.630
+that we are trying to reach.
+
+04:21.640 --> 04:23.590
+Are we trying to reach out to ticketing Dev?
+
+04:23.620 --> 04:27.100
+We might also have some other set of rules for a totally different domain.
+
+04:27.700 --> 04:28.750
+Now previously.
+
+04:29.420 --> 04:34.280
+Back inside the browser when we were making a request by navigating between different pages or what
+
+04:34.280 --> 04:34.910
+have you.
+
+04:35.090 --> 04:40.400
+The request was issued included the domain that we were making the request from of ticketing dev.
+
+04:41.000 --> 04:46.340
+So when the request is coming from the browser engine can easily inspect the request and understand.
+
+04:46.340 --> 04:48.590
+Oh, they're trying to access ticketing dev.
+
+04:48.620 --> 04:49.380
+No problem.
+
+04:49.400 --> 04:51.620
+All I will use this set of rules right here.
+
+04:52.610 --> 04:57.800
+Unfortunately, when we are making the request in this style, there's nothing inside of here to indicate
+
+04:57.800 --> 05:00.200
+what domain we are trying to access.
+
+05:00.230 --> 05:05.630
+On ingress, engine x, ingress and Gen X is not going to assume that we're using the only domain that's
+
+05:05.630 --> 05:06.460
+listed right here.
+
+05:06.470 --> 05:09.410
+It's going to say, I don't know what domain you're trying to access.
+
+05:09.620 --> 05:14.120
+As a matter of fact, let's do a quick test with this right now just to verify that it doesn't work
+
+05:14.120 --> 05:16.040
+because we are not specifying the domain.
+
+05:16.400 --> 05:17.990
+I'm going to complete this code.
+
+05:17.990 --> 05:19.760
+I would still want to make sure that I returned data.
+
+05:20.420 --> 05:21.710
+I'm going to save this.
+
+05:21.710 --> 05:26.990
+And then again, remember, we want to make sure that we execute this stuff with get initial props being
+
+05:26.990 --> 05:30.830
+executed on the server, which means that we need to do a hard refresh to the page.
+
+05:31.160 --> 05:32.030
+So I'll go back over.
+
+05:32.030 --> 05:36.320
+I'm going to do a hard refresh and I do in fact see a status code of 404.
+
+05:37.040 --> 05:42.370
+So that four of four means that this request right here resulted in a 404.
+
+05:42.410 --> 05:47.630
+The request went out to ingress engine X successfully, but Ingress Engine X said, hey, sorry, but
+
+05:47.630 --> 05:52.040
+I don't know what domain you're trying to access, so I don't know what set of rules to use.
+
+05:52.640 --> 05:53.720
+So how do we fix this?
+
+05:53.720 --> 06:01.130
+Well, pretty simple as a second argument to Axios dot yet I'm going to put in an option subject, so
+
+06:01.130 --> 06:03.350
+I'll zoom out for just a second so you can see that very easily.
+
+06:05.110 --> 06:11.470
+And I'm going to include a header section inside of here and I'm going to give it a host of ticketing
+
+06:11.830 --> 06:12.470
+def.
+
+06:12.910 --> 06:17.950
+So this header right here of host that is going to be used by ingress engine x, it's going to take
+
+06:17.950 --> 06:19.090
+a look at this header.
+
+06:19.090 --> 06:22.990
+It's going to say, oh, you are trying to get at the domain ticketing dev.
+
+06:23.200 --> 06:23.890
+Fantastic.
+
+06:23.890 --> 06:25.660
+I got a set of routing rules for that.
+
+06:26.510 --> 06:30.830
+Here it is right here and we're trying to access API users current user, no problem.
+
+06:30.830 --> 06:32.390
+Send you off to the OTT service.
+
+06:33.470 --> 06:36.740
+So let's now save this flip back over one more time.
+
+06:36.830 --> 06:38.840
+I'm going to do another hard refresh.
+
+06:40.300 --> 06:43.360
+To make sure that get initial props is executed on the server.
+
+06:44.410 --> 06:47.800
+I'll then go over to my terminal and I will see up here.
+
+06:47.890 --> 06:49.150
+We will probably see there.
+
+06:49.150 --> 06:52.720
+But then down here, towards the very bottom, you should see null.
+
+06:53.080 --> 06:55.180
+So what does null mean?
+
+06:55.750 --> 06:59.590
+Well, null means we were able to reach out to our service correctly.
+
+06:59.650 --> 07:02.590
+We reached out to that service to fetch the current user.
+
+07:02.680 --> 07:05.020
+We got back this current user object.
+
+07:06.410 --> 07:06.980
+As data.
+
+07:06.980 --> 07:07.670
+We returned it.
+
+07:07.670 --> 07:13.400
+It showed up as a prop inside of landing page, but our current user is showing up as null.
+
+07:13.610 --> 07:14.960
+Why is it showing up at all?
+
+07:14.990 --> 07:19.530
+Well, remember, right now we are not including any cookies along with this request.
+
+07:19.550 --> 07:25.550
+So even though the request is being issued over to our service, no cookies are being included.
+
+07:26.190 --> 07:28.770
+Just as a quick reminder here, we got a great diagram for it.
+
+07:29.310 --> 07:30.040
+Where is it?
+
+07:30.060 --> 07:30.660
+Where is it?
+
+07:30.690 --> 07:31.410
+Where is it?
+
+07:31.440 --> 07:31.740
+Here it is.
+
+07:31.740 --> 07:32.310
+Right here.
+
+07:34.310 --> 07:38.900
+So our browser is making this request when we refresh the page and it is including that cookie that
+
+07:38.900 --> 07:41.180
+is the initial page reload we do right there.
+
+07:41.480 --> 07:43.400
+That request gets sent over to next.
+
+07:43.400 --> 07:46.440
+Next then makes its own request over to ingress engine x.
+
+07:46.460 --> 07:49.250
+But right now we are not including that cookie.
+
+07:49.250 --> 07:53.630
+It is cookie less so even though the request is going over to the service.
+
+07:53.660 --> 07:55.790
+The service is taking a look at this incoming request.
+
+07:55.790 --> 07:59.150
+It's saying you don't have a cookie, therefore you must not be signed in.
+
+08:00.080 --> 08:02.510
+So the point here is if we see null.
+
+08:03.430 --> 08:04.240
+At our console.
+
+08:04.240 --> 08:05.640
+That's actually really good.
+
+08:05.650 --> 08:07.710
+It means the request was issued successfully.
+
+08:07.720 --> 08:08.950
+We got it sent over.
+
+08:08.980 --> 08:14.080
+All we have to do now is figure out how to take that cookie from the income request and attach it on
+
+08:14.080 --> 08:17.290
+to the request that goes over ultimately to the OTT service.
+
+08:17.470 --> 08:18.420
+So we're almost there.
+
+08:18.430 --> 08:19.540
+We're almost done.
+
+08:19.570 --> 08:22.090
+One last quick video and we'll have this all solved.

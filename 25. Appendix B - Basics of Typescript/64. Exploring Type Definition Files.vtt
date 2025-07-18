@@ -1,0 +1,679 @@
+WEBVTT
+
+00:01.160 --> 00:05.960
+Now that we've got our type definition file loaded up, TypeScript understands what is going on with
+
+00:05.960 --> 00:07.050
+this Google library.
+
+00:07.070 --> 00:11.690
+This first line of code right here is telling TypeScript that there's going to be a global variable
+
+00:11.690 --> 00:12.680
+called Google.
+
+00:13.160 --> 00:16.430
+On that variable, there's going to be a property called maps.
+
+00:16.670 --> 00:21.830
+And on that property is going to be a bunch of different other properties that are listed out inside
+
+00:21.830 --> 00:25.860
+this file to see everything that exists on this maps property.
+
+00:25.880 --> 00:29.090
+We can hit command shift P or control shift.
+
+00:29.390 --> 00:33.980
+If you're on Windows, this is going to pull open the Visual Studio Code command palette.
+
+00:34.490 --> 00:38.480
+And then inside of here we're going to search for fold level two.
+
+00:38.840 --> 00:40.340
+I'm going to select that like so.
+
+00:40.520 --> 00:44.000
+So all that does is kind of condense some of these different sections of code.
+
+00:44.420 --> 00:48.350
+So now we can see all the different properties that this maps object has.
+
+00:48.620 --> 00:51.420
+So the maps object has a map property.
+
+00:51.440 --> 00:56.570
+And as you might guess, we can use this class right here to create a new map and show it on the screen.
+
+00:57.050 --> 01:03.290
+We can also see that this maps object has many other properties like padding map options, map type
+
+01:03.290 --> 01:08.180
+ID, gesture, handling options, and you can basically just scroll down the list and this will give
+
+01:08.180 --> 01:11.360
+you an overview of everything that's available inside this library.
+
+01:11.750 --> 01:14.680
+Here's another one that's probably going to be relevant for us, something called marker.
+
+01:14.690 --> 01:19.220
+Remember, we eventually want to show a marker on this map, so we might eventually have to take a look
+
+01:19.220 --> 01:22.130
+at this thing right here to understand how to create a marker.
+
+01:23.010 --> 01:27.570
+And the reason I want you to look through this is because I want you over time to get in the habit of
+
+01:27.570 --> 01:31.950
+reading these type definition files to understand how a library works.
+
+01:32.970 --> 01:38.910
+At the end of the day, sure, you can go and take a look at the at documentation on StackOverflow on
+
+01:38.910 --> 01:39.810
+how to create a map.
+
+01:39.840 --> 01:41.040
+You definitely can do that.
+
+01:41.040 --> 01:45.510
+But to really grow as a developer, take a look at these type definition files.
+
+01:45.510 --> 01:50.430
+They tell you to some degree everything you need to know about how to work with the library.
+
+01:50.700 --> 01:55.890
+Sometimes, like in this case, there's a lot of stuff going on inside this file, and so it would be
+
+01:55.890 --> 01:59.700
+a little bit of a stretch to only use this thing to understand how to create a map and show it on the
+
+01:59.700 --> 02:00.300
+screen.
+
+02:00.300 --> 02:04.800
+But nonetheless, I want you to kind of get in the habit of reading these type definition files.
+
+02:05.610 --> 02:12.300
+So anyways, the point here is that this very first thing right here that gets exported, it means that
+
+02:12.300 --> 02:18.570
+we've got the Google Maps Global Object, which has a Maps property, which has a map property, and
+
+02:18.570 --> 02:21.690
+that map property, capital map is a class.
+
+02:21.780 --> 02:26.370
+We can create an instance of this class right here to show a map on the screen.
+
+02:26.610 --> 02:31.680
+So let's expand this section right here and get a better understanding of how this class works.
+
+02:32.360 --> 02:36.950
+So whenever we create an instance of map, we're going to remember automatically called a constructor
+
+02:36.950 --> 02:37.610
+function.
+
+02:38.030 --> 02:42.440
+And we are told right here what arguments this constructor function requires.
+
+02:43.040 --> 02:46.940
+So I don't really know, you know, necessarily a lot about what's going on here, but you can kind
+
+02:46.940 --> 02:47.840
+of read this.
+
+02:48.050 --> 02:49.250
+So take a look at it.
+
+02:49.250 --> 02:53.030
+It says Map Div and that must be of type element.
+
+02:53.420 --> 02:58.790
+If you hover over element, you'll get a little note here, just as a quick hint, an element is an
+
+02:59.090 --> 03:00.320
+HTML element.
+
+03:00.770 --> 03:06.140
+So by looking at just this constructor and using these hints right here, here's what you might arrive
+
+03:06.140 --> 03:06.350
+at.
+
+03:06.350 --> 03:08.960
+If you had like a reasonable amount of experience with Google Maps.
+
+03:08.960 --> 03:12.620
+What this is essentially telling us is that we can create an instance of a map.
+
+03:12.830 --> 03:17.270
+When we do so, we have to pass in a reference to an HTML element.
+
+03:17.630 --> 03:22.610
+And, you know, just based on my experience of working with maps, that HTML element is probably going
+
+03:22.610 --> 03:26.930
+to be where our Google map is going to be rendered inside of our HTML document.
+
+03:27.530 --> 03:32.450
+So I know that was like a real big stretch in thinking, and it'd be kind of hard to connect those dots.
+
+03:32.450 --> 03:37.430
+But once again, I just want you to get in the habit of trying to read these things and understand what's
+
+03:37.430 --> 03:37.840
+going on.
+
+03:37.850 --> 03:43.100
+This is like half the power of TypeScript right here reading these different types and using some little
+
+03:43.100 --> 03:46.160
+hints inside of here to understand how these libraries work.
+
+03:47.030 --> 03:48.950
+Having said that, let's give this a shot.
+
+03:49.950 --> 03:53.370
+So I'm going to go back over to my index file back over here.
+
+03:53.370 --> 03:58.520
+I'm going to clean up all that user and company stuff and comment out the two import statements.
+
+03:58.530 --> 04:00.300
+Let's just focus on a map for right now.
+
+04:00.720 --> 04:04.350
+So like I just mentioned, Google is a reference to the global variable.
+
+04:04.380 --> 04:10.200
+If we put a dot here, we get a reminder that it has a maps property and if we put another dot, we
+
+04:10.200 --> 04:14.040
+can see a list of all the different properties that belong to that maps object.
+
+04:14.040 --> 04:17.490
+That's that big list of all those folded things we were just looking at.
+
+04:18.180 --> 04:21.840
+So one of the things inside there is the map class, right?
+
+04:21.900 --> 04:23.220
+We were just looking at that.
+
+04:23.700 --> 04:28.710
+So we want to create an instance of a map class, to create an instance of something.
+
+04:28.710 --> 04:32.130
+We put the new keyword in front of it and then we call it like so.
+
+04:33.050 --> 04:35.060
+As soon as we write that out, we're going to get an error.
+
+04:35.270 --> 04:40.640
+So it tells us very directly we were expected to call this map class or try to create an instance of
+
+04:40.640 --> 04:42.580
+it with 1 to 2 arguments.
+
+04:42.590 --> 04:45.050
+So we were expected to pass in that map div thing.
+
+04:45.050 --> 04:48.500
+Remember, we are just looking at that inside the type definition file.
+
+04:48.590 --> 04:54.110
+And like I said, this map div argument is supposed to be a reference to an HTML element of where we
+
+04:54.110 --> 04:55.160
+want to place our map.
+
+04:55.820 --> 05:01.370
+So we need to first create an HTML element to house the map and then pass a reference to it as the first
+
+05:01.370 --> 05:02.060
+argument.
+
+05:02.600 --> 05:05.150
+So I'm going to open up my indexed HTML file.
+
+05:06.530 --> 05:08.620
+Over here, right above my script tag.
+
+05:08.630 --> 05:14.150
+I'm going to create a div to a function as the essentially root or container for the map.
+
+05:14.390 --> 05:16.580
+So I'm going to make a div with an ID of map.
+
+05:17.320 --> 05:20.080
+I'm going to give it a style tag or a style property.
+
+05:21.250 --> 05:23.980
+With a height of 100%.
+
+05:24.610 --> 05:29.830
+Notice how height has a colon right after it, 100%, and then semi colon.
+
+05:30.310 --> 05:32.500
+And I'm going to close that dive off like so.
+
+05:34.100 --> 05:37.880
+So now we're going to get a reference to this right here and pass it as the first argument into that
+
+05:37.880 --> 05:38.650
+constructor.
+
+05:38.660 --> 05:40.370
+So I'm going to save the HTML file.
+
+05:40.400 --> 05:41.450
+I'm going to close it.
+
+05:41.750 --> 05:45.620
+And then to get a reference to that element, I'm going to use a document selector.
+
+05:45.620 --> 05:48.110
+So I'll say document Dot.
+
+05:49.080 --> 05:49.770
+Oh, what is it?
+
+05:49.800 --> 05:51.480
+My mind is totally blank in here.
+
+05:51.510 --> 05:52.920
+Get element by ID.
+
+05:52.950 --> 05:53.550
+Yeah.
+
+05:55.270 --> 05:55.660
+Sorry.
+
+05:55.660 --> 05:57.510
+Sometimes the basics elude me, right?
+
+05:57.520 --> 06:02.680
+Get element by ID because we just gave that thing an ID So the idea that did we just created was map
+
+06:02.680 --> 06:02.890
+like.
+
+06:02.890 --> 06:03.370
+So.
+
+06:03.970 --> 06:09.220
+So notice the autocomplete that we get right here for the get element by ID function and we call that
+
+06:09.220 --> 06:11.110
+we get back in HTML element.
+
+06:11.290 --> 06:15.640
+It's not quite the element type that that map constructor was looking for, right?
+
+06:15.640 --> 06:18.970
+It was saying, I want an element, but it seems like it's close enough.
+
+06:19.210 --> 06:23.170
+We're going to learn a little bit more about how one type can function as another type in a little bit.
+
+06:23.170 --> 06:26.890
+But right now, as soon as we add that code in, it looks like everything worked.
+
+06:28.010 --> 06:32.720
+All right, Now, before we actually test this out, I want to look at the map type definition file
+
+06:32.720 --> 06:33.230
+again.
+
+06:33.560 --> 06:34.430
+So here's the constructor.
+
+06:34.430 --> 06:38.090
+Once again, we passed in an HTML element as a first argument.
+
+06:38.250 --> 06:41.990
+Now, you'll notice that there is a second argument list on here as well.
+
+06:42.380 --> 06:45.800
+Notice how the second argument has a question mark right after that.
+
+06:46.280 --> 06:50.360
+So whenever you see a question mark like that, it means that this is an optional argument.
+
+06:50.360 --> 06:51.590
+We don't have to pass it in.
+
+06:51.590 --> 06:53.240
+But if we can, if we want to.
+
+06:53.880 --> 06:58.550
+And you'll notice that the type of this second argument is supposed to be map options.
+
+06:59.240 --> 07:02.330
+So let's take a look at what map options is.
+
+07:02.780 --> 07:05.030
+Notice how MAP options is an interface.
+
+07:05.030 --> 07:09.920
+And remember, an interface is kind of like a description of an object in the different properties it
+
+07:09.920 --> 07:10.640
+will have.
+
+07:11.120 --> 07:15.110
+So if we look at map options right here and look at the interface, it might tell us about the different
+
+07:15.110 --> 07:18.470
+options we can pass in to customize this map when it is created.
+
+07:19.040 --> 07:22.670
+So I'm going to again hold down command and click on Map options.
+
+07:23.790 --> 07:26.850
+And I'm taken to the definition for map options right here.
+
+07:27.540 --> 07:29.100
+I'm going to expand this section.
+
+07:29.780 --> 07:35.270
+And now we can take a look at all the different properties we can pass in to customize how the map looks.
+
+07:35.690 --> 07:36.890
+Well, this is pretty awesome.
+
+07:37.730 --> 07:42.500
+So we can scroll through here and notice how this time there are nice little comments to tell us exactly
+
+07:42.500 --> 07:43.940
+how to customize the map.
+
+07:44.360 --> 07:49.040
+So all the things that you see inside of here, these are all possible properties that we could pass
+
+07:49.040 --> 07:52.520
+in as the second argument to this map constructor.
+
+07:52.520 --> 07:58.220
+Like right here, we can take all these different properties we see right here and list them in right
+
+07:58.220 --> 08:00.050
+here inside this second object.
+
+08:00.590 --> 08:04.310
+So for you and I, we are concerned with two very specific options.
+
+08:04.610 --> 08:07.060
+The very first one that we want to pass in is something called Zoom.
+
+08:07.070 --> 08:11.210
+So I'm going to scroll down a little bit inside this map options interface.
+
+08:12.810 --> 08:16.920
+And I'm going to look for one property inside of here called Zoom right here.
+
+08:17.760 --> 08:19.820
+So notice how it says zoom in the question mark.
+
+08:19.830 --> 08:22.560
+Remember that question mark means that this is an optional property.
+
+08:22.560 --> 08:24.570
+We don't have to include if we don't want to.
+
+08:24.720 --> 08:26.310
+But for you and I, we do.
+
+08:27.030 --> 08:30.900
+So it says the initial map level zoom now kind of misleading.
+
+08:30.900 --> 08:34.250
+It says right here that it is required even though it was marked as optional.
+
+08:34.260 --> 08:37.230
+So that's kind of like, I don't know what's going on there.
+
+08:37.230 --> 08:38.280
+They're saying it's required.
+
+08:38.280 --> 08:43.140
+So yeah, we are going to pass it in ourselves and then it gives us some information about what different
+
+08:43.140 --> 08:44.910
+valid values we can pass in for it.
+
+08:44.910 --> 08:49.980
+So for us, valid values are numbers between zero and up to the maximum zoom level.
+
+08:50.280 --> 08:54.270
+So we're going to use a starting zoom level of one, which is like pretty darn zoomed out.
+
+08:55.160 --> 08:58.250
+So back inside of indexes, here's this second object.
+
+08:58.250 --> 09:00.050
+Remember, this is the options object.
+
+09:00.050 --> 09:02.620
+That's the interface definition we are looking at right now.
+
+09:02.630 --> 09:05.270
+And I'm going to put in Zoom is one.
+
+09:05.660 --> 09:11.060
+Notice how as soon as I started typing that, I got some autocomplete on Zoom right here.
+
+09:11.330 --> 09:14.300
+We're seeing that autocomplete because TypeScript knows that.
+
+09:14.300 --> 09:19.520
+The second argument to this constructor is supposed to be an object that satisfies that interface we
+
+09:19.520 --> 09:20.960
+are just looking at.
+
+09:21.170 --> 09:26.540
+So TypeScript is going to look at that interface definition and know that it can have a property called
+
+09:26.540 --> 09:29.780
+Zoom, and that's why we are seeing it on the autocomplete right there.
+
+09:30.500 --> 09:33.590
+So I'm going to add in that property and give it a value of one like so.
+
+09:35.430 --> 09:35.700
+Okay.
+
+09:35.700 --> 09:37.460
+One other property we're going to add in.
+
+09:37.470 --> 09:41.520
+Again, it is one of the different options we can pass in under this map.
+
+09:41.550 --> 09:42.720
+Options Interface.
+
+09:43.580 --> 09:45.080
+So here's map options again.
+
+09:45.500 --> 09:47.930
+I'm going to scroll down just a little bit more.
+
+09:48.410 --> 09:51.020
+And we're looking for center right here.
+
+09:51.260 --> 09:55.370
+Again, notice how even though it has a question mark right here, which means that it is technically
+
+09:55.370 --> 09:59.080
+an optional property, they still say in their comment right here required.
+
+09:59.090 --> 10:00.530
+So kind of misleading right there.
+
+10:00.530 --> 10:02.720
+But I guess they're just doing their thing.
+
+10:03.590 --> 10:07.910
+So this is saying that our map options object can have a center property.
+
+10:08.300 --> 10:14.900
+And if it does, it must satisfy the type of being latitude, longitude or lat longitude.
+
+10:14.900 --> 10:15.650
+Literal.
+
+10:16.300 --> 10:18.580
+So in our case, we're going to go for longitude literal.
+
+10:18.580 --> 10:19.990
+I'm going to give you that little hint.
+
+10:20.440 --> 10:26.080
+So now to figure out how to provide a center property that satisfies this interface right here, we
+
+10:26.080 --> 10:28.180
+can again do a command click on that.
+
+10:28.840 --> 10:33.640
+And it's going to tell us how we can be considered to be a latitude longitude, literal.
+
+10:34.180 --> 10:37.840
+So to be allowed to launch to literal, we have to pass in an object.
+
+10:38.990 --> 10:40.130
+That has a latitude.
+
+10:40.130 --> 10:41.870
+That's a number and a longitude.
+
+10:41.870 --> 10:42.680
+That's a number.
+
+10:44.070 --> 10:49.920
+So that means that back here inside of our map options object, we can add in another property.
+
+10:52.020 --> 10:52.780
+Of center.
+
+10:52.800 --> 10:56.850
+Notice how as soon as I start typing that, I see the autocomplete that's coming from the interface
+
+10:56.850 --> 10:58.500
+definition we were just looking at.
+
+10:59.070 --> 11:04.140
+And if I put on a colon or if I just hover over center, it tells me that the center property is supposed
+
+11:04.140 --> 11:10.110
+to be an instance of latitude longitude or that latitude longitude literal thing that we were just looking
+
+11:10.110 --> 11:10.590
+at.
+
+11:10.980 --> 11:12.770
+And that's what we're going to try to provide.
+
+11:12.780 --> 11:17.430
+So that means that we're going to pass in an object here that has that lat property.
+
+11:19.100 --> 11:23.330
+We're going to use a value of zero angle longitude of zero as well.
+
+11:23.330 --> 11:26.060
+So that means that the center of our map is going to be at zero zero.
+
+11:27.170 --> 11:27.480
+Okay.
+
+11:27.500 --> 11:31.220
+I know that this entire process was like really far very much in depth.
+
+11:31.220 --> 11:36.530
+But again, my only intent here is to just start kind of forcibly exposing you to these type definition
+
+11:36.530 --> 11:41.780
+files, because you can do that command click and look through all these different types and use them
+
+11:41.780 --> 11:44.480
+as hints to understand how to work with the library.
+
+11:44.480 --> 11:49.130
+You don't have to look at the documentation all the time when you are working with TypeScript.
+
+11:49.460 --> 11:54.350
+I apologize again for this video being so long, but I just wanted you to look through an entire example
+
+11:54.350 --> 11:57.710
+with Google Maps of how I personally would go through that process.
+
+11:58.070 --> 12:01.730
+I also know that some of the things I showed you in here was probably like, you know, a little bit
+
+12:01.730 --> 12:02.420
+of a jump.
+
+12:02.420 --> 12:04.940
+Like, we haven't quite seen this syntax before right here.
+
+12:04.940 --> 12:09.050
+So I know some of that was a little bit rough, but again, just one to expose you to it at least one
+
+12:09.050 --> 12:09.560
+time.
+
+12:10.070 --> 12:10.340
+Okay.
+
+12:10.370 --> 12:14.030
+Having said all that, we've now got our options object put together right here.
+
+12:14.210 --> 12:15.920
+So I'm not going to save this file.
+
+12:16.190 --> 12:18.050
+I'm going to flip back over to my browser.
+
+12:18.440 --> 12:20.780
+And lo and behold, we see our map.
+
+12:21.350 --> 12:21.830
+All right.
+
+12:21.830 --> 12:24.800
+You'll notice that the map is technically centered on zero zero.
+
+12:24.800 --> 12:26.660
+That's like, right there.
+
+12:26.690 --> 12:28.100
+Latitude and longitude.
+
+12:28.550 --> 12:32.600
+I know that you can kind of see North America, South America duplicated, and Asia, of course, as
+
+12:32.600 --> 12:32.830
+well.
+
+12:32.840 --> 12:35.270
+But this is going to work for our application.
+
+12:35.570 --> 12:35.870
+All right.
+
+12:35.870 --> 12:36.990
+So let's take a quick pause right here.
+
+12:37.010 --> 12:38.230
+Going to come back in the next video.
+
+12:38.240 --> 12:43.490
+We're going to start to think about how we can show our user in our company as markers on this map.
+
+12:43.490 --> 12:45.740
+So quick pause and I'll see you in just a minute.

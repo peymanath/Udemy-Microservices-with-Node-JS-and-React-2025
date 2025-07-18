@@ -1,0 +1,196 @@
+WEBVTT
+
+00:01.090 --> 00:03.520
+We've got all that graceful shutdown stuff, but together.
+
+00:03.520 --> 00:09.460
+But now the big question is inside of our new ticket handler, are we actually successfully publishing
+
+00:09.460 --> 00:10.390
+an event?
+
+00:10.480 --> 00:13.120
+So in this video, we're going to figure out how to test this.
+
+00:13.800 --> 00:19.890
+So to do so well, you might recall for the millionth time that inside of our Gnats Test little project,
+
+00:19.890 --> 00:26.730
+we had that listener put together and that listener was listening for an event of type or on the subject
+
+00:26.730 --> 00:30.900
+on the channel of where is it ticket created right here.
+
+00:31.260 --> 00:35.730
+So we actually already have a listener inside this other project that can listen for the event subject
+
+00:35.730 --> 00:36.810
+that we are emitting.
+
+00:37.410 --> 00:41.100
+So let's try to run our listener from this Nats test project again.
+
+00:41.100 --> 00:46.050
+We'll then attempt to create a ticket using Postman and then verify that we get a console.log from this
+
+00:46.050 --> 00:46.590
+listener.
+
+00:47.290 --> 00:50.080
+So to set all this stuff up, I'm going to go over to my terminal.
+
+00:51.250 --> 00:52.450
+I'll do a cube.
+
+00:52.870 --> 00:54.310
+I'll get pods.
+
+00:54.550 --> 00:58.090
+I'm going to once again find my Nat's deployment and I'm going to set up port forwarding for it.
+
+00:58.120 --> 00:58.750
+Once again.
+
+00:59.500 --> 01:03.760
+So we'll do a little port forward based in that pod name.
+
+01:04.800 --> 01:05.700
+And then we want to bind.
+
+01:05.700 --> 01:07.290
+Four, two, two, two, colon.
+
+01:07.290 --> 01:08.460
+Four, two, two, two.
+
+01:10.660 --> 01:12.250
+Then in another terminal window.
+
+01:12.980 --> 01:15.680
+I'm going to go back to my Nats test directory once again.
+
+01:16.220 --> 01:17.810
+Inside there we'll do an RPM run.
+
+01:17.810 --> 01:18.470
+Listen.
+
+01:19.790 --> 01:22.280
+And then we should see a listener connected to Nat's.
+
+01:23.210 --> 01:25.510
+So now all we have to do is attempt to actually create a ticket.
+
+01:25.870 --> 01:28.780
+So for that, we're going to pull a postman open once again.
+
+01:29.540 --> 01:33.190
+Now, in order to create a ticket, remember, you need to be authenticated.
+
+01:33.200 --> 01:38.570
+So you might very quickly want to make a get request to ticketing dev API users, current users and
+
+01:38.570 --> 01:40.070
+make sure that you are signed in.
+
+01:40.100 --> 01:44.660
+If you're not signed in either, make a post request to sign in with some valid credentials or make
+
+01:44.660 --> 01:45.950
+a post request to sign up.
+
+01:47.470 --> 01:49.090
+Then verify that you are signed in.
+
+01:49.420 --> 01:52.180
+And then finally we'll go ahead and try to create a ticket.
+
+01:52.180 --> 01:57.670
+And we can do that by making a post request to API tickets, and we'll make sure that we've got a body
+
+01:57.670 --> 01:58.370
+inside of here.
+
+01:58.390 --> 02:02.770
+Make sure this thing is set to JSON, title and price are required.
+
+02:03.250 --> 02:04.480
+So I'm going to send this off.
+
+02:05.130 --> 02:06.630
+And there's my ticket.
+
+02:08.280 --> 02:12.480
+So now we should be able to go back over to our terminal and inside the listener window.
+
+02:12.480 --> 02:16.200
+We should see that we receive some data on the subject ticket created.
+
+02:16.920 --> 02:22.320
+Here's the raw event data and then we've got the ID, the title, the price and the ID of the user who
+
+02:22.320 --> 02:23.130
+created this.
+
+02:23.700 --> 02:25.410
+Yeah, it works.
+
+02:25.410 --> 02:26.190
+It works well.
+
+02:26.190 --> 02:27.450
+Hopefully it works for you as well.
+
+02:28.140 --> 02:32.310
+If you do not see anything here, the very first thing to check, make sure you've got some consistent
+
+02:32.310 --> 02:33.340
+subject names.
+
+02:33.390 --> 02:37.320
+Based upon this whole typescript stuff, do we put together all the subject?
+
+02:37.320 --> 02:38.970
+Names should be consistent.
+
+02:38.970 --> 02:42.710
+So do go back over to the ticket created listener we had created inside of Nat's test.
+
+02:42.720 --> 02:45.600
+Make sure you get a subject inside there of ticket created.
+
+02:47.670 --> 02:51.810
+If that name is different at all, obviously the subject being different, you're going to be listening
+
+02:51.810 --> 02:54.480
+to a different channel and so it's not going to work as expected.
+
+02:55.330 --> 02:55.630
+All right.
+
+02:55.630 --> 02:57.850
+So looks like we are able to publish.
+
+02:57.850 --> 02:59.650
+We are able to listen.
+
+02:59.890 --> 03:00.580
+Awesome.
+
+03:01.040 --> 03:06.880
+Now, the very last thing we really have to do inside of our ticket service, we need to make sure that
+
+03:06.880 --> 03:11.350
+we also emit a very similar event anytime someone updates a ticket as well.
+
+03:11.770 --> 03:17.260
+So we're going to go into our new route handler essentially more or less just copy paste this code over
+
+03:17.260 --> 03:19.990
+to the update handler and that should pretty much be it.
+
+03:20.890 --> 03:21.780
+So a quick pause right here.
+
+03:21.790 --> 03:23.230
+Take care of this in just a moment.

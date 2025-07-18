@@ -1,0 +1,238 @@
+WEBVTT
+
+00:01.540 --> 00:04.520
+Now we've completed our initial implementation of our user.
+
+00:04.540 --> 00:08.470
+We can try to actually make use of it inside of our index file.
+
+00:08.920 --> 00:13.780
+In general, any time we create a file that houses a single class in TypeScript, we're not going to
+
+00:13.780 --> 00:17.260
+have any actual code in here that does anything with the class.
+
+00:17.440 --> 00:22.900
+Instead, we will usually import this class into some other more central location and use it from there.
+
+00:23.440 --> 00:29.320
+So in order to get access to this class inside of our index file, we first have to export it.
+
+00:29.320 --> 00:33.940
+So to make the class available somewhere else inside of our project, I'm going to put the export keyword
+
+00:33.940 --> 00:35.170
+in front of it like so.
+
+00:36.270 --> 00:39.630
+Then inside of index dots at the very top of the file.
+
+00:39.660 --> 00:41.550
+I'm going to delete that console.log really quick.
+
+00:41.670 --> 00:48.390
+We can write out, import a set of curly braces and then user from the user file.
+
+00:49.280 --> 00:54.500
+Now if you're coming from a background of React DJ's chances are the syntax looks really familiar.
+
+00:54.800 --> 00:57.740
+Once again, we are going to look into the user file.
+
+00:57.950 --> 01:04.100
+We're going to find something inside there called user and pull it into the indexed file as a variable
+
+01:04.100 --> 01:04.910
+called user.
+
+01:05.820 --> 01:07.790
+Notice how we've got the curly braces on here.
+
+01:07.800 --> 01:11.430
+One, have a very quick aside on what those curly braces are doing for us.
+
+01:12.030 --> 01:18.210
+So any time that we export something from a file using just the export keyword by itself, we will always
+
+01:18.210 --> 01:23.340
+receive that in another file by placing that word inside of a set of curly braces.
+
+01:23.850 --> 01:28.380
+We do this so that we can safely export multiple different variables from this file.
+
+01:28.650 --> 01:32.790
+So, for example, if we had another variable inside of here that we wanted to export, like let's say
+
+01:32.790 --> 01:35.700
+a variable called red, that was literally just a string red.
+
+01:36.400 --> 01:43.780
+I can now import this into indexes by adding it as an additional thing that we want to import from user.
+
+01:46.510 --> 01:51.970
+Once again, if you're coming from the world of React, the syntax might seem a little bit strange because
+
+01:51.970 --> 01:56.380
+in the React world we typically will export things using the default keyword.
+
+01:56.590 --> 01:59.080
+The default keyword is available inside of TypeScript as well.
+
+01:59.080 --> 02:01.240
+If you haven't used the default keyword, totally fine.
+
+02:01.240 --> 02:03.010
+Let's take a look at how it works really quickly.
+
+02:03.710 --> 02:09.800
+So right now we've seen an example of how we can export very specific variables from a given file.
+
+02:10.220 --> 02:14.780
+However, we can choose to also export something as the default export from a file as well.
+
+02:14.780 --> 02:19.910
+So I could say export default and then just a single value by itself.
+
+02:20.240 --> 02:25.070
+So in this case, I did not provide a name for this value I'm trying to export.
+
+02:25.550 --> 02:30.470
+Previously I had given it a name of red, which means I could import it into another file as the name
+
+02:30.470 --> 02:31.000
+Red.
+
+02:31.010 --> 02:34.160
+But this time it's literally just the string red by itself.
+
+02:34.700 --> 02:42.110
+So to import this value into another file, I would write out no curly braces and just the name of the
+
+02:42.110 --> 02:43.150
+thing I want to pull in.
+
+02:43.160 --> 02:45.080
+So now red would be that string red.
+
+02:45.650 --> 02:48.470
+This name right here can actually be any variable we want to call it.
+
+02:48.470 --> 02:53.810
+So I could call it red or I could call it color or user colour or whatever we want it to be.
+
+02:55.340 --> 02:57.500
+If we then did a console log of that.
+
+02:58.480 --> 03:00.790
+We would see literally just a string read.
+
+03:00.790 --> 03:01.510
+That's it.
+
+03:02.340 --> 03:06.780
+In TypeScript, we usually do not use these default statements like the one you see right here.
+
+03:07.250 --> 03:12.450
+The reason for that is that when you're first getting started with these modules like this import statement
+
+03:12.450 --> 03:16.980
+and this export statement right here, it gets really confusing really quickly when you should use curly
+
+03:16.980 --> 03:18.540
+braces and when you shouldn't.
+
+03:18.960 --> 03:23.920
+So convention inside of TypeScript is to never use default export statements.
+
+03:23.940 --> 03:28.740
+Now, of course, there will be some people out there who disagree and who want to still use default
+
+03:28.770 --> 03:29.920
+default statements.
+
+03:29.940 --> 03:34.770
+If you work on a project where that is the case and you want to use default statements, totally fine.
+
+03:35.220 --> 03:39.660
+All I'm saying is that in the typescript world, it's a little bit more community convention to not
+
+03:39.660 --> 03:41.700
+use default exports.
+
+03:42.450 --> 03:46.380
+And once again, the reason for that is that then we don't have to worry about whether or not we have
+
+03:46.380 --> 03:48.060
+to include those curly braces.
+
+03:48.810 --> 03:54.810
+So if I don't have any default exports whatsoever, that means every time I import any code that is
+
+03:54.810 --> 03:57.600
+mine, I'm always going to put on those curly braces.
+
+03:57.930 --> 04:02.580
+So it just makes it really easy for me to remember and avoids simple little typos.
+
+04:03.680 --> 04:07.550
+Now of course that rule does not apply to third party modules.
+
+04:07.550 --> 04:13.070
+So NPM modules we use might still have a default export statement, as is the case with Faker right
+
+04:13.070 --> 04:13.550
+here.
+
+04:13.670 --> 04:14.780
+And that's totally fine.
+
+04:14.780 --> 04:15.860
+It is unavoidable.
+
+04:16.100 --> 04:20.930
+Nonetheless, the rule for us for code that we write is that we will avoid default statements if we
+
+04:20.930 --> 04:21.440
+can.
+
+04:22.510 --> 04:22.780
+Okay.
+
+04:22.780 --> 04:25.940
+So that's a lot on default exports and all that kind of good stuff.
+
+04:25.960 --> 04:31.330
+So last thing, now that we've got the user inside of our index file, let's try to use it to create
+
+04:31.330 --> 04:33.130
+a new instance of a user.
+
+04:34.940 --> 04:36.920
+And then just console log out that user.
+
+04:37.810 --> 04:38.500
+Like so.
+
+04:40.110 --> 04:42.580
+All right, now that I've got that, I'll flip back over to my terminal.
+
+04:42.600 --> 04:46.650
+I've already got a live reload here, and you'll see that I've got a console log of my user.
+
+04:46.650 --> 04:52.410
+So they have a name and a location that is an object with a latitude and longitude property as well.
+
+04:52.740 --> 04:53.430
+Perfect.
+
+04:53.940 --> 04:54.210
+All right.
+
+04:54.210 --> 04:58.920
+So now we've got our user all put together and we can access them inside of our index file.
+
+04:58.950 --> 05:02.880
+We're now going to repeat this whole same process for a company as well.
+
+05:02.970 --> 05:05.280
+It's a quick pause, and I'll see you in just a minute.

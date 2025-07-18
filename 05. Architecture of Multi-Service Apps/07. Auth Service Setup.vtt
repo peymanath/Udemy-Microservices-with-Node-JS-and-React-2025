@@ -1,0 +1,244 @@
+WEBVTT
+
+00:00.870 --> 00:04.580
+All right, enough videos about the design or architecture of our application.
+
+00:04.590 --> 00:06.210
+Time to actually start writing some code.
+
+00:06.360 --> 00:09.270
+So in this video, we're going to start working on our off service.
+
+00:09.600 --> 00:13.950
+This service is going to be in charge of handling signup, signing in and so on.
+
+00:14.340 --> 00:18.090
+In total, our service is going to have four different routes assigned to it.
+
+00:18.330 --> 00:23.400
+So we'll have the ability to sign up with the post request, sign in with the post, sign out with the
+
+00:23.400 --> 00:26.940
+post, and also get information about the currently signed and user.
+
+00:27.450 --> 00:29.640
+So let's go back over to our terminal right away.
+
+00:29.670 --> 00:31.920
+We're going to start to generate some different files.
+
+00:31.920 --> 00:37.710
+We're going to do some NPM installation, get some modules, all that kind of stuff for our off service.
+
+00:38.630 --> 00:40.040
+So back at my terminal.
+
+00:41.790 --> 00:44.130
+I'm still inside my blog project directory.
+
+00:44.160 --> 00:45.930
+I'm going to change out of that folder.
+
+00:46.200 --> 00:48.690
+So I'm now back inside of a workspace directory.
+
+00:48.810 --> 00:53.550
+And inside of here I'm going to generate a new overall folder for all of our different services.
+
+00:53.610 --> 00:55.140
+I'm going to call this ticketing.
+
+00:55.710 --> 00:58.410
+That is the name of our project ticketing.
+
+01:00.340 --> 01:04.000
+Then inside of ticketing, I'll create a new directory of auth.
+
+01:05.210 --> 01:06.350
+And change into it.
+
+01:07.410 --> 01:10.860
+And then inside of this auth directory I'll run npm init.
+
+01:11.370 --> 01:12.000
+Why?
+
+01:13.680 --> 01:15.600
+There's our package chase on file.
+
+01:16.080 --> 01:19.740
+Then inside of here, we're going to first install a couple of different dependencies.
+
+01:21.660 --> 01:26.490
+I'm going to install TypeScript because remember, we are going to use TypeScript on this project.
+
+01:26.820 --> 01:32.370
+I'm going to get Node dev, which is a tool that we're going to use to actually execute our project
+
+01:32.370 --> 01:33.840
+in the development environment.
+
+01:35.330 --> 01:36.830
+I'm going to get express.
+
+01:37.850 --> 01:40.910
+I'll get at types express.
+
+01:41.930 --> 01:44.050
+And we'll just do that installation for right now.
+
+01:44.060 --> 01:48.710
+We will come back very shortly and add in many other dependencies into this project, but that's good
+
+01:48.710 --> 01:49.850
+enough to get started with.
+
+01:51.310 --> 01:56.740
+So while that is running and then going to open up my code editor inside of our overall project directory.
+
+01:56.740 --> 01:57.940
+So the ticketing folder.
+
+01:59.200 --> 02:00.310
+So it looks like that's all done.
+
+02:00.310 --> 02:04.270
+I'll change back out to ticketing and open up my code editor inside there.
+
+02:06.600 --> 02:09.330
+All right, so now I should see that off the project directory right there.
+
+02:09.360 --> 02:11.250
+There's our package JSON file.
+
+02:13.110 --> 02:19.020
+Then back at my terminal, I'm going to change into that directory one more time and I'm going to generate
+
+02:19.020 --> 02:23.940
+a config file inside of here with TSC dash dash in it.
+
+02:25.600 --> 02:25.950
+Cool.
+
+02:25.960 --> 02:27.520
+So that's enough to get started with.
+
+02:27.940 --> 02:30.850
+I'm going to go back over to my editor and we'll start writing out some code.
+
+02:33.100 --> 02:37.550
+Inside my art directory, I'm going to make a new folder called CRC.
+
+02:37.960 --> 02:41.290
+So you're going to start placing all of our code inside this CRC directory.
+
+02:41.590 --> 02:47.020
+I'm going to first begin by creating a apts or index to get started with file.
+
+02:48.150 --> 02:49.770
+Inside this indexed file.
+
+02:49.800 --> 02:55.230
+I'll then throw in some basic syntax and basic imports, all that kind of stuff to get an express application
+
+02:55.230 --> 02:56.010
+up and running.
+
+02:56.550 --> 02:58.890
+So I will do an import express.
+
+02:59.680 --> 03:00.610
+From Express.
+
+03:03.070 --> 03:04.570
+I'll then get my.
+
+03:05.920 --> 03:09.010
+JSON from body dash parser.
+
+03:09.810 --> 03:11.370
+I'm going to create a new app.
+
+03:14.560 --> 03:17.050
+Then I will associate the JSON middleware with it.
+
+03:17.050 --> 03:20.230
+So API use JSON.
+
+03:21.650 --> 03:24.380
+I'm not going to worry about setting up any handlers just yet.
+
+03:24.710 --> 03:27.170
+And so finally, I'll do an listen.
+
+03:27.170 --> 03:30.140
+And this time around, we're going to do a lesson on Port 3000.
+
+03:30.140 --> 03:34.220
+Remember, the port doesn't really make a difference once we start making use of Kubernetes, because
+
+03:34.220 --> 03:36.350
+we're going to start to create all these different services.
+
+03:36.380 --> 03:41.570
+A Kubernetes service that is that's going to govern access to this off thing that we're putting together.
+
+03:41.870 --> 03:46.880
+So right now, we'll just use a service sub 3000 because again, doesn't really make a big difference.
+
+03:47.770 --> 03:49.720
+And then I would will put in a callback.
+
+03:49.720 --> 03:54.220
+But the console log of listing on port 3000.
+
+03:56.970 --> 03:59.330
+Let's now go over to our package JSON file.
+
+03:59.360 --> 04:01.590
+We're going to set up a start script inside there.
+
+04:02.160 --> 04:06.300
+So inside of package JSON, I'm going to remove the test script.
+
+04:06.630 --> 04:08.340
+I'm going to replace it with START.
+
+04:09.530 --> 04:14.390
+And the command that we're going to run to start this thing up is dash node, dash dev.
+
+04:15.240 --> 04:17.830
+And we want to run source slash index.
+
+04:18.030 --> 04:19.440
+It's like so.
+
+04:22.500 --> 04:25.230
+We are going to eventually run this thing inside of Kubernetes.
+
+04:25.230 --> 04:29.220
+But for right now, let's change into this auth directory at our terminal and just make sure that we
+
+04:29.220 --> 04:31.920
+could run NPM start and have our applications start up.
+
+04:33.060 --> 04:34.350
+So back at my terminal.
+
+04:35.090 --> 04:38.960
+I'm inside my directory still, so I'll do an NPM start.
+
+04:40.690 --> 04:41.380
+And there we go.
+
+04:41.410 --> 04:42.940
+Looks like we are all set.
+
+04:43.600 --> 04:45.850
+Okay, so just a little bit of boilerplate to get started.
+
+04:46.090 --> 04:50.050
+Let's take a pause right here and discuss a couple of different things around this service in just a
+
+04:50.050 --> 04:50.530
+moment.

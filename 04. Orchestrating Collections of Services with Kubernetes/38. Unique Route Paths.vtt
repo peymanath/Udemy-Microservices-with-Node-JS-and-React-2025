@@ -1,0 +1,379 @@
+WEBVTT
+
+00:00.920 --> 00:05.420
+In this video, we're going to start to set up routing rules for all the other microservices inside
+
+00:05.420 --> 00:06.230
+of our cluster.
+
+00:06.620 --> 00:11.030
+I'm inside of our Ingress CRV file inside of our infra AIDS directory.
+
+00:11.060 --> 00:16.670
+Right now we only have a route mapping for slash posts, which means in theory we can only attempt to
+
+00:16.670 --> 00:21.320
+fetch or retrieve posts because that is the only thing we're doing with our post cluster IP service.
+
+00:21.500 --> 00:25.640
+So we need to add in some additional paths to this thing to make sure that we map up all the different
+
+00:25.640 --> 00:27.170
+incoming requests that might come in.
+
+00:27.740 --> 00:32.120
+Now, I went through all of our different microservices and the React application and put together a
+
+00:32.120 --> 00:35.630
+quick diagram to help you remember all the different routes that we need to service.
+
+00:37.040 --> 00:37.370
+All right.
+
+00:37.370 --> 00:41.690
+So in this diagram, we have some number of requests coming in from our React application.
+
+00:41.930 --> 00:44.510
+These are all the different requests we expect to receive.
+
+00:44.810 --> 00:47.540
+So we're going to get a post to post.
+
+00:47.570 --> 00:49.880
+If that occurs, it should go to the post pod.
+
+00:50.480 --> 00:54.140
+We're also going to have a post to slash, post, slash ID, slash comments.
+
+00:54.500 --> 00:56.690
+That request should go to the Common Service.
+
+00:57.410 --> 01:03.350
+A get to slash post should go to query and then finally a get to just slash by itself is attempting
+
+01:03.350 --> 01:04.850
+to load up the React application.
+
+01:04.850 --> 01:07.120
+So we need to make sure that gets sent to the React up.
+
+01:07.900 --> 01:11.830
+So we need to write out all these different routing rules inside that ingress config file.
+
+01:12.100 --> 01:14.500
+Now, I got some bad news.
+
+01:14.590 --> 01:19.510
+This is something that I knew about ahead of time, and I wanted you to have to go through this as well,
+
+01:19.540 --> 01:22.420
+because I've had to deal with this on a real project, too.
+
+01:22.840 --> 01:27.040
+The bad news here is that we have two routes right now of slash posts.
+
+01:27.520 --> 01:32.690
+If a request comes in with a method of post, then that should go to the post service.
+
+01:32.710 --> 01:35.290
+Otherwise, if it is a git, it should go to query.
+
+01:35.680 --> 01:42.310
+The bad news here is that our ingress engine x module cannot do routing based upon the method of the
+
+01:42.310 --> 01:43.090
+request.
+
+01:43.360 --> 01:49.870
+So all the methods I have listed on here, the ingress controller has no idea that these methods exist.
+
+01:50.050 --> 01:55.060
+So the only thing we can really root on effectively is a route, really a path.
+
+01:55.600 --> 01:59.050
+So for all these things, it really goes down to just.
+
+02:00.170 --> 02:01.470
+This is all we get.
+
+02:01.490 --> 02:03.560
+This is what we have to root based on.
+
+02:06.250 --> 02:10.690
+Now, the reason that this is bad is that now when we look at this, you'll notice that if we have a
+
+02:10.690 --> 02:14.730
+request coming in to slash posts, we're saying it should go to this post pod.
+
+02:14.740 --> 02:18.760
+But there's another one down here that says if a request comes in to slash posts, it should go to the
+
+02:18.760 --> 02:19.630
+query pod.
+
+02:20.080 --> 02:23.740
+We can no longer differentiate on the method of the income and request.
+
+02:23.830 --> 02:28.750
+So now we don't have enough information with these requests to figure out whether or not one should
+
+02:28.750 --> 02:30.850
+go to the post pod or query.
+
+02:31.670 --> 02:32.990
+So that's the bad news here.
+
+02:33.320 --> 02:38.750
+To fix this, we need to make sure that we have some unique path for requests that should go to posts
+
+02:38.750 --> 02:41.240
+and a unique path for one that should go to query.
+
+02:41.780 --> 02:44.870
+So in other words, we really just need to change the name of one of these paths.
+
+02:44.870 --> 02:50.570
+So maybe this right here, instead of being slash post, it should be something like O's slash create
+
+02:50.570 --> 02:51.740
+or something like that.
+
+02:52.010 --> 02:56.150
+If we put that in now, we can distinguish between requests that's going to go to the post pod and the
+
+02:56.150 --> 02:56.870
+query pod.
+
+02:58.300 --> 03:03.430
+And to actually make this reality, well, we need to make sure that we not only update our React application
+
+03:03.430 --> 03:05.780
+to make a to create.
+
+03:05.800 --> 03:12.430
+We need to make sure we also update the post pod itself so that it should expect requests to come into
+
+03:12.820 --> 03:14.080
+post create.
+
+03:14.110 --> 03:19.240
+So in other words, we need to change two different images right now just to solve this image or this
+
+03:19.240 --> 03:20.620
+issue that we are running into.
+
+03:21.190 --> 03:25.930
+Let's take care of that right now because we're going to have to edit those two code bases and then
+
+03:25.930 --> 03:28.600
+rebuild the images and post them back up to Docker Hub.
+
+03:29.230 --> 03:32.200
+So I'm going to first get started inside of my React application.
+
+03:32.960 --> 03:34.870
+I'm going to find my post create file.
+
+03:34.880 --> 03:37.920
+That is where we are making a post request to slash posts.
+
+03:38.300 --> 03:43.970
+So I'm going to change that route to post slash, create again so that we can differentiate between
+
+03:43.970 --> 03:47.960
+a request that is supposed to go to the post pod versus the query pod.
+
+03:49.170 --> 03:50.120
+There's the change right there.
+
+03:50.130 --> 03:51.330
+I'm going to save this file.
+
+03:52.270 --> 03:57.550
+Then after that, I'm going to go to my post project, find the index file inside there.
+
+03:58.120 --> 03:59.650
+Here's the post request handler.
+
+03:59.650 --> 04:02.590
+So posts slash create.
+
+04:03.910 --> 04:08.320
+You will recall that we do have a Gitter or a get request handler for slash post right here.
+
+04:08.560 --> 04:13.000
+That was in the previous initial version of our application before we implemented that query.
+
+04:13.000 --> 04:16.660
+So this thing is technically unused right now and we don't really care about that handler at all.
+
+04:16.690 --> 04:18.370
+We could actually delete it if we want to.
+
+04:18.400 --> 04:23.050
+I only left it in here so we could test out our post endpoint once we initially set up all that ingress
+
+04:23.050 --> 04:23.950
+engine stuff.
+
+04:25.130 --> 04:25.390
+Okay.
+
+04:25.400 --> 04:28.370
+So I'll save this file as well, and I'll go back over to my terminal.
+
+04:29.980 --> 04:31.210
+I'm going to go to my.
+
+04:32.540 --> 04:33.620
+Client folder.
+
+04:34.730 --> 04:36.470
+And I'll do a Docker build.
+
+04:37.460 --> 04:38.990
+Client Dot.
+
+04:39.950 --> 04:40.610
+There we go.
+
+04:41.520 --> 04:43.140
+And a darker push.
+
+04:45.910 --> 04:46.570
+Here we go.
+
+04:48.450 --> 04:51.060
+And now we're going to repeat that same process for post as well.
+
+04:51.090 --> 04:54.330
+Now, this one time, you're probably sitting there saying, wait a minute, Steven, wait, wait,
+
+04:54.330 --> 04:54.870
+wait, wait.
+
+04:55.050 --> 05:00.150
+We have to rebuild the image manually and push it up to Docker Hub every single time we make a change
+
+05:00.150 --> 05:01.080
+to our code base.
+
+05:02.190 --> 05:02.610
+Wait a minute.
+
+05:02.610 --> 05:04.600
+That seems really, really awkward.
+
+05:04.620 --> 05:06.380
+I know it is really awkward.
+
+05:06.390 --> 05:08.860
+And this is something else we're going to fix up very quickly.
+
+05:08.880 --> 05:13.620
+I really just want us to have to go through this problem distinctly one more time, because very quickly,
+
+05:13.620 --> 05:17.310
+like in the next coming videos, we're going to take a look at a tool that's going to automate all this
+
+05:17.310 --> 05:18.390
+change process for us.
+
+05:18.390 --> 05:21.810
+And so I just want to give you a quick reminder that, yeah, anytime right now, do we want to make
+
+05:21.810 --> 05:22.560
+a change to our code?
+
+05:22.560 --> 05:26.160
+We have to rebuild image, push it and then update the deployment manually.
+
+05:26.190 --> 05:27.600
+All very painful.
+
+05:28.420 --> 05:28.690
+All right.
+
+05:28.690 --> 05:29.890
+Well, the client is all done.
+
+05:30.220 --> 05:33.280
+I'm going to restart that deployment.
+
+05:33.700 --> 05:37.180
+They'll do a cube CTL.
+
+05:38.120 --> 05:39.080
+What is it?
+
+05:40.020 --> 05:43.800
+Rollout restart deployment.
+
+05:44.730 --> 05:45.510
+Client.
+
+05:47.330 --> 05:48.390
+Client Depo.
+
+05:48.440 --> 05:49.100
+There we go.
+
+05:49.370 --> 05:53.090
+So we'll restart our client deployment and now we're going to go through all those same steps for our
+
+05:53.090 --> 05:54.380
+post service as well.
+
+05:54.740 --> 05:56.960
+So I will go back to posts.
+
+05:57.910 --> 06:01.900
+I'll do a Dr. Bill T even greater post dot.
+
+06:03.050 --> 06:07.220
+I'll do a Docker push even greater posts.
+
+06:12.100 --> 06:16.720
+And then once this is all done, we'll go ahead and restart the post deployment as well.
+
+06:21.200 --> 06:21.970
+Quick upload.
+
+06:21.980 --> 06:22.400
+Come on.
+
+06:22.400 --> 06:23.120
+Come on.
+
+06:25.910 --> 06:28.730
+This upload always takes slightly longer than you hope.
+
+06:29.060 --> 06:29.780
+There we go.
+
+06:30.680 --> 06:31.910
+So we'll do a cube.
+
+06:32.030 --> 06:32.870
+It'll.
+
+06:33.740 --> 06:38.570
+Rollout Restart Deployment Post Dash Depot.
+
+06:39.900 --> 06:40.170
+Okay.
+
+06:40.170 --> 06:44.760
+So we've now got that new version of code for posts and for the React client.
+
+06:45.150 --> 06:49.290
+So now we've got unique routes that are going to access each of our different pods.
+
+06:49.710 --> 06:50.940
+So now a quick pause right here.
+
+06:50.950 --> 06:54.300
+When we come back to the next video, we can start to actually write out the routing configuration that
+
+06:54.300 --> 06:54.930
+we need.

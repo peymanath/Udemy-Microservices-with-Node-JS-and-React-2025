@@ -1,0 +1,286 @@
+WEBVTT
+
+00:01.000 --> 00:02.620
+Our application is now feature complete.
+
+00:02.620 --> 00:05.410
+But I want to mention one last thing around interfaces.
+
+00:05.620 --> 00:09.190
+Just a second ago, we added in a new requirement to our interface.
+
+00:09.190 --> 00:14.740
+We said that in order to be considered to be malleable, an object had to have a marker content method
+
+00:14.740 --> 00:15.880
+that returned a string.
+
+00:16.540 --> 00:21.400
+When we added in that additional requirement right there, we saw errors pop up inside of our index
+
+00:21.880 --> 00:26.530
+file, specifically where we were passing in user and company to add marker.
+
+00:27.550 --> 00:32.980
+I want to try adding in a new property to interface map able back inside of custom map and just see
+
+00:33.010 --> 00:34.210
+eres pop up again.
+
+00:34.330 --> 00:38.680
+So inside of custom map, I'm going to say that anything that wants to be considered to be malleable
+
+00:38.680 --> 00:43.120
+has to also have how about a color property that is a string like so?
+
+00:44.070 --> 00:44.310
+Now.
+
+00:44.310 --> 00:47.760
+As soon as I add that in, I'll see my index file light up.
+
+00:48.030 --> 00:51.690
+If I open that once again, I will see errors around user and company.
+
+00:52.200 --> 00:56.910
+So the discussion I want to have here is around where we see error messages.
+
+00:57.150 --> 01:01.220
+Remember, the entire goal of TypeScript is to help us find errors in our code.
+
+01:01.230 --> 01:06.690
+And so part of that process is making sure that TypeScript can point us in the right direction and help
+
+01:06.690 --> 01:09.600
+us find, like the root source of an error.
+
+01:10.080 --> 01:16.290
+So in this case, we added in a new requirement to an interface and we're seeing an error up here where
+
+01:16.290 --> 01:19.470
+we actually try to pass in some value to this function.
+
+01:20.100 --> 01:24.840
+Now, I'm going to suggest that maybe this is not the best place to see this error message.
+
+01:25.200 --> 01:27.870
+Think about what we would have to do to fix this error.
+
+01:27.870 --> 01:30.720
+At the end of the day, if we want to make this error go away.
+
+01:30.750 --> 01:37.650
+We have to open up our definition for a user like the user class and the company class and modify those
+
+01:37.650 --> 01:39.090
+classes and both those classes.
+
+01:39.090 --> 01:42.990
+We would have to add in a new property of color to both them.
+
+01:43.780 --> 01:46.600
+So because we would have to open up those class definitions.
+
+01:46.600 --> 01:49.590
+Seeing the error here is not super useful.
+
+01:49.600 --> 01:51.370
+It is useful to see an air.
+
+01:51.370 --> 01:52.360
+Absolutely.
+
+01:52.360 --> 01:57.370
+But it's not really pointing us to the exact location of where we should go to fix this problem.
+
+01:58.100 --> 02:03.500
+So I want to tell you how we can add in a little bit more code to help TypeScript point us in the correct
+
+02:03.500 --> 02:04.250
+direction.
+
+02:04.730 --> 02:07.270
+Here's what we're going to do inside of custom map.
+
+02:07.280 --> 02:11.360
+I'm going to add in an export statement for the interface that we just added.
+
+02:11.930 --> 02:14.510
+So we now have export interface map able.
+
+02:15.420 --> 02:17.370
+So this is going to make the interface.
+
+02:17.370 --> 02:21.930
+We can import this into other files and refer to this as a separate type.
+
+02:22.850 --> 02:29.270
+So now I'm going to go back over to user notes and at the top I'm going to import that interface.
+
+02:29.270 --> 02:32.240
+So I'm going to import my tappable.
+
+02:33.210 --> 02:34.020
+From.
+
+02:35.010 --> 02:36.480
+Custom map.
+
+02:37.440 --> 02:42.570
+And then inside of here, I'm going to add in right after my class definition, I'm going to say implements
+
+02:42.570 --> 02:43.590
+map able.
+
+02:44.230 --> 02:50.290
+So what this does right here is it tells TypeScript we want to make sure that an instance of class user
+
+02:50.290 --> 02:56.470
+like a user that we create, satisfies all the properties required by the Tappable interface.
+
+02:56.890 --> 03:02.500
+This sets up a very direct dependency between our user class and the custom map class, or technically
+
+03:02.500 --> 03:04.180
+the custom map file, I suppose.
+
+03:04.480 --> 03:07.240
+So we've now declared our intention to TypeScript.
+
+03:07.240 --> 03:12.850
+We are saying we want every user we create to satisfy that interface because we eventually want users
+
+03:12.850 --> 03:16.030
+to be an argument to that add marker function.
+
+03:16.660 --> 03:23.680
+So by adding in implements map right here we are telling TypeScript help us help us make sure user is
+
+03:23.680 --> 03:24.640
+implemented correctly.
+
+03:24.640 --> 03:28.750
+Help us make sure that user has all the properties specified by map able.
+
+03:29.560 --> 03:35.770
+If we now hover over user, you'll see that it says, okay, property color is missing on class user,
+
+03:35.770 --> 03:37.840
+but it's required by that interface.
+
+03:38.320 --> 03:43.960
+So now we have a additional error message inside of here that can help us pinpoint the source of the
+
+03:43.960 --> 03:45.010
+error in our application.
+
+03:45.010 --> 03:50.440
+Right now, we have something that says very specifically, Hey, your class user is not implemented
+
+03:50.440 --> 03:51.160
+correctly.
+
+03:51.670 --> 03:55.860
+So we're still seeing an error message just like we were seeing before inside of indexes.
+
+03:55.870 --> 04:00.580
+But now the difference is that TypeScript is helping us point out the true source of the error.
+
+04:00.610 --> 04:05.740
+It's helping us understand that if we want this error to go away, we have to update our user class
+
+04:05.740 --> 04:06.580
+definition.
+
+04:07.380 --> 04:12.600
+So as you might guess, we could fix this up by adding in a color property that is a string, and I'll
+
+04:12.600 --> 04:15.600
+initialize it as like, you know, red or something like that right there as well.
+
+04:18.020 --> 04:23.810
+And as soon as I add that in air goes away and the number of errors inside of indexes goes down to one.
+
+04:24.620 --> 04:30.590
+So again, the entire idea behind this implements clause right here is we are telling TypeScript, help
+
+04:30.590 --> 04:32.530
+us satisfy this interface.
+
+04:32.540 --> 04:36.140
+We want to make sure that user can be considered to be malleable.
+
+04:36.470 --> 04:40.520
+And so TypeScript is going to do some additional checking of our class and make sure we have all the
+
+04:40.520 --> 04:41.600
+correct properties.
+
+04:42.020 --> 04:43.760
+You do not have to do this.
+
+04:43.760 --> 04:45.830
+This is not required at all.
+
+04:46.040 --> 04:51.440
+The reason we would decide to add in this implements clause right here to a class is so that if we fail
+
+04:51.440 --> 04:57.620
+to properly implement an interface, TypeScript can point us to the true source of the error, our definition
+
+04:57.620 --> 05:04.250
+of the class, as opposed to when we try to pass a value or an instance of that class into a given function.
+
+05:05.040 --> 05:08.700
+So if we wanted to, we could go through the same process with the company as well inside of company.
+
+05:09.450 --> 05:12.990
+We could add in an import statement for able.
+
+05:14.090 --> 05:15.410
+From Custom Map.
+
+05:16.480 --> 05:18.370
+And then I'll say implements.
+
+05:19.550 --> 05:20.570
+Malleable.
+
+05:21.470 --> 05:25.130
+And now once again, we get an error on company and it tells us we have to have color.
+
+05:25.130 --> 05:27.680
+That is a string, but we did not provide it.
+
+05:27.920 --> 05:33.470
+So if we add in color, that is a string and I'll just say a red like so right there on the same line,
+
+05:33.500 --> 05:36.230
+air goes away and we're back to being perfect.
+
+05:37.220 --> 05:37.580
+All right.
+
+05:37.580 --> 05:39.250
+So, again, 100% optional.
+
+05:39.260 --> 05:40.010
+Totally up to you.
+
+05:40.040 --> 05:44.630
+You will see some projects that use this implements clause extensively to make sure that it's really
+
+05:44.630 --> 05:50.330
+clear to TypeScript and even other engineers that we are trying to make sure that class company satisfies
+
+05:50.330 --> 05:51.230
+that interface.
+
+05:51.380 --> 05:57.230
+If you don't put it in, no problem, the only thing it's going to do is help TypeScript help you and
+
+05:57.230 --> 06:00.350
+help under other engineers understand what you are trying to do.
+
+06:01.160 --> 06:06.080
+So a quick pause right here and we'll wrap up this application for real this time in the next video.

@@ -1,0 +1,259 @@
+WEBVTT
+
+00:01.300 --> 00:04.880
+We've now got everything around handling orders put together inside of our payment service.
+
+00:04.900 --> 00:09.970
+So now our attention is going to move over to actually handling credit cards and actually billing users.
+
+00:10.180 --> 00:14.530
+So in this video, we're going to get an overview of the API that we're going to use to eventually handle
+
+00:14.530 --> 00:17.470
+real credit card payments coming in from our users.
+
+00:18.410 --> 00:18.710
+All right.
+
+00:18.710 --> 00:19.610
+So a quick diagram.
+
+00:20.520 --> 00:24.150
+First off, we're going to start with a quick mockup of what a user is going to see in our app.
+
+00:24.510 --> 00:28.470
+On the left hand side is a very simplified version of what a user is going to look at whenever they
+
+00:28.470 --> 00:30.440
+take a look at an individual ticket.
+
+00:30.450 --> 00:32.730
+So this would be a ticket that a user might want to buy.
+
+00:33.330 --> 00:36.000
+So we're going to display the title of The Ticket and the Price.
+
+00:36.120 --> 00:40.560
+And then right after that, we'll show a Buy Now button or something that looks very similar.
+
+00:41.270 --> 00:47.420
+Whenever a user clicks on this, we're going to use a third party library to open up a automatic dialog
+
+00:47.420 --> 00:48.710
+that looks like this right here.
+
+00:49.100 --> 00:54.020
+This is going to be a dialog created by a third party library called the Stripe JS Library.
+
+00:54.500 --> 00:58.730
+The goal of this modal dialog right here is to take in some credit card input from a user.
+
+00:58.910 --> 01:03.260
+The user will enter in their name and then a credit card number and then submit the payment.
+
+01:03.950 --> 01:09.350
+So this entire modal right here again is created by Stripe JS And the reason I'm saying that so much
+
+01:09.350 --> 01:13.520
+is that what happens with this information is really important for us to understand.
+
+01:14.720 --> 01:19.070
+At no point in time do you and I really want to directly handle credit card numbers, and that's what
+
+01:19.070 --> 01:21.080
+this Stripe API does for us.
+
+01:21.110 --> 01:25.490
+It removes the requirement of you and I to deal with credit card numbers directly because there are
+
+01:25.490 --> 01:28.970
+huge security concerns with handling credit cards at any point in time.
+
+01:29.870 --> 01:34.460
+So by having this modal window right here created by Stripe, we're essentially delegating, handling
+
+01:34.460 --> 01:39.140
+everything related to a credit card number off to a stripe, as opposed to dealing with it ourselves.
+
+01:39.620 --> 01:41.780
+So what happens when the user clicks on submit right there?
+
+01:41.810 --> 01:45.860
+Well, let's take a look at another diagram and understand what happens when a user submits their credit
+
+01:45.860 --> 01:46.520
+card number.
+
+01:48.380 --> 01:48.640
+Okay.
+
+01:48.650 --> 01:53.090
+So this diagram is a little bit complicated, even though it looks relatively simple in nature because
+
+01:53.090 --> 01:56.690
+there's kind of a lot of hidden gotchas and hidden little steps inside of here.
+
+01:57.460 --> 02:00.750
+So we're going to have running inside the browser the Stripe JS library.
+
+02:00.760 --> 02:03.280
+That is the thing that is going to eventually create that modal window.
+
+02:03.520 --> 02:07.870
+Users can enter in their credit card details and when they click on Submit, the Stripe JS Library is
+
+02:07.870 --> 02:11.470
+going to take those credit card details and send them off to the Stripe API.
+
+02:12.010 --> 02:16.750
+Now during this initial send off right here, we're essentially going to get back something called a
+
+02:16.750 --> 02:17.380
+token.
+
+02:17.380 --> 02:21.770
+And you should really view this token right here as kind of like an authorization.
+
+02:21.790 --> 02:26.320
+It is something that is going to allow you and I, some developers to eventually charge that credit
+
+02:26.320 --> 02:29.380
+card that the user just submitted for some amount of money.
+
+02:30.220 --> 02:34.720
+The token that is received back inside the browser when those credit card details are submitted, should
+
+02:34.720 --> 02:37.060
+be thought of as a pre authorization.
+
+02:37.060 --> 02:38.530
+No money has been charged yet.
+
+02:38.530 --> 02:43.330
+It is a token that allows us to do a follow up request and actually charge some real money.
+
+02:44.160 --> 02:48.450
+The nice thing about this token is that it is a little bit more secure than handling a credit card number
+
+02:48.450 --> 02:49.140
+directly.
+
+02:49.320 --> 02:54.300
+It's really a kind of one time use thing where as soon as we charge some money with that token, that's
+
+02:54.300 --> 02:54.450
+it.
+
+02:54.450 --> 02:57.990
+We no longer have any access to the user's credit card or anything like that.
+
+03:00.080 --> 03:03.560
+The token is going to be sent back into the browser from the Stripe API.
+
+03:03.980 --> 03:08.210
+The Stripe JS library is again going to take that token and hand it off to you and I.
+
+03:08.240 --> 03:11.990
+Inside of our JavaScript code that is also being executed inside the browser.
+
+03:12.680 --> 03:17.900
+You and I are then going to take that token and submit it inside a request to our payments service.
+
+03:18.380 --> 03:21.470
+Then inside of our payment service, you and I are going to take that token.
+
+03:21.500 --> 03:24.830
+We're going to make sure that the user is trying to pay for some valid order.
+
+03:24.860 --> 03:27.900
+We're going to make sure we verify the price correctly, all that kind of stuff.
+
+03:27.920 --> 03:31.490
+And then once we decide that it's now time to charge the user's credit card.
+
+03:31.520 --> 03:36.680
+We're going to make a request from our payment service off to the Stripe API, and we're going to include
+
+03:36.680 --> 03:37.430
+that token.
+
+03:37.790 --> 03:41.840
+And that's what's going to actually finalize the charge or really create a charge.
+
+03:42.320 --> 03:45.800
+The term charge in the world of Stripe really means payment.
+
+03:45.800 --> 03:50.990
+So whenever you see a charge, we're talking about a credit card charge or a payment of sorts.
+
+03:51.710 --> 03:56.300
+So it's only when you and I take that token and make the final request to the Stripe API that the user's
+
+03:56.300 --> 03:57.800
+credit card actually gets charged.
+
+03:57.800 --> 04:00.170
+And you and I, in theory, receive some money.
+
+04:02.090 --> 04:06.050
+Now, as we look at this diagram right here, you're going to notice that the browser component plays
+
+04:06.050 --> 04:08.980
+well, a really big part of this entire flow.
+
+04:08.990 --> 04:13.130
+But at this point, we have not really worked on our React application whatsoever.
+
+04:13.130 --> 04:15.740
+All it really handles right now is the ideal of authentication.
+
+04:15.740 --> 04:19.460
+We don't have anything around tickets or orders, let alone payments.
+
+04:20.030 --> 04:24.260
+Does that mean we're going to go work on all the React stuff before we can come back and start to finish
+
+04:24.260 --> 04:25.370
+up the payment service?
+
+04:25.370 --> 04:25.940
+Well, no.
+
+04:25.940 --> 04:30.260
+Remember, we've got these automated tests put together, so it turns out that we can actually write
+
+04:30.260 --> 04:32.060
+a tremendous amount of this flow.
+
+04:32.060 --> 04:36.770
+So essentially receiving that token, submitting it to the Stripe API and successfully charging a credit
+
+04:36.770 --> 04:42.080
+card and we can implement all that stuff and test it out using automated tests with just as opposed
+
+04:42.080 --> 04:46.280
+to having to manually test it inside the browser through the use of the Stripe JS library or anything
+
+04:46.280 --> 04:46.940
+like that.
+
+04:47.890 --> 04:48.780
+That's the idea.
+
+04:48.790 --> 04:51.640
+That's what we're going to move on or start to work on moving forward.
+
+04:52.610 --> 04:56.930
+We're going to implement some code inside the payment service to receive the token, create a charge.
+
+04:56.930 --> 05:00.410
+And we're going to also get a little bit creative in testing this stuff as well.
+
+05:00.920 --> 05:01.970
+So let's take a pause right here.
+
+05:01.970 --> 05:07.490
+When we come back, the next video, we're going to start to create a new Stripe API key, and that's
+
+05:07.490 --> 05:10.100
+going to allow us to make use of the Stripe API.

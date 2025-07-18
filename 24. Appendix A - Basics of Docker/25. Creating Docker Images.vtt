@@ -1,0 +1,115 @@
+WEBVTT
+
+00:00.690 --> 00:05.100
+Throughout this course, we've been making use of images that have been created by other engineers.
+
+00:05.100 --> 00:10.560
+So, for example, we have used, say, the Hello World Image or Redis or Busy Box.
+
+00:10.560 --> 00:14.190
+These are all images that were created by other engineers.
+
+00:14.310 --> 00:18.840
+We download them onto our local machine and then created a container out of them.
+
+00:20.010 --> 00:24.540
+At this point, we're going to start to figure out how we can build our own custom images so that we
+
+00:24.540 --> 00:29.340
+can run our own applications inside of our own personalised containers.
+
+00:29.670 --> 00:33.300
+The process for making an image is somewhat straightforward.
+
+00:33.300 --> 00:36.840
+Like all things, you just have to learn a little bit of syntax.
+
+00:36.840 --> 00:39.810
+So here's what we're going to do to make our own image.
+
+00:39.930 --> 00:42.660
+We're going to create something called a Docker file.
+
+00:42.870 --> 00:48.720
+A darker file is essentially a plain text file that is going to have a couple of lines of configuration
+
+00:48.720 --> 00:49.710
+placed inside of it.
+
+00:50.160 --> 00:55.920
+This configuration is going to define how our container behaves, or more specifically, what different
+
+00:55.920 --> 01:00.630
+programs it's going to contain and what it does when it starts up as a container.
+
+01:01.080 --> 01:05.910
+Once we create that Docker file, we'll then pass it off to the Docker client, which you will recall
+
+01:05.910 --> 01:08.550
+is the Docker CLI that we've been using at our terminal.
+
+01:09.420 --> 01:13.620
+In turn, the Docker client will provide the file to the Docker server.
+
+01:13.650 --> 01:17.230
+The Docker server is what is doing the heavy lifting for us.
+
+01:17.250 --> 01:22.440
+It's going to take the Docker file, look at all the lines of configuration that we have inside of it,
+
+01:22.440 --> 01:27.000
+and then build a usable image that can then be used to start up a new container.
+
+01:27.940 --> 01:31.300
+Now that Docker file is where all the complexity is going to sit.
+
+01:31.300 --> 01:34.570
+And like I just said a moment ago, it's not really going to be the worst thing in the world.
+
+01:34.570 --> 01:37.990
+It's just about learning a couple of new commands, that's all.
+
+01:38.740 --> 01:43.570
+In fact, just about every Docker file that you and I are going to put together is almost always going
+
+01:43.570 --> 01:44.530
+to look the same.
+
+01:45.310 --> 01:50.650
+Inside of every Docker file, we're always going to specify a base image and we'll talk about what that
+
+01:50.650 --> 01:51.820
+means in just a moment.
+
+01:51.820 --> 01:54.100
+It's got it's going to be one of the first things we have to do.
+
+01:54.670 --> 02:00.400
+After that, we'll add in some additional configuration to run commands, to add in some dependencies
+
+02:00.400 --> 02:06.010
+or some more software, some more programs that we need to successfully create and execute our container.
+
+02:06.370 --> 02:10.900
+And then finally, we will specify a startup command for the image.
+
+02:10.900 --> 02:15.970
+So any time we take that image and create a container out of it, it will be the command that is executed
+
+02:15.970 --> 02:19.090
+to essentially boot up or start the container.
+
+02:20.490 --> 02:24.450
+It's the same command that we've been talking about around all of these images all along.
+
+02:25.440 --> 02:26.040
+So that's it.
+
+02:26.040 --> 02:30.700
+That's all we have to do to make our own image essentially just revolves around writing a Docker file.
+
+02:30.720 --> 02:32.310
+So let's take a quick pause right here.
+
+02:32.310 --> 02:35.970
+We'll come back the next section and get started working on our Docker file.

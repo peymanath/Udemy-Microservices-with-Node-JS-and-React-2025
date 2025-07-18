@@ -1,0 +1,478 @@
+WEBVTT
+
+00:00.760 --> 00:05.080
+At the end of the last video I mentioned going back and fixing a couple other tests inside of our order
+
+00:05.080 --> 00:07.350
+service rather than going off topic.
+
+00:07.360 --> 00:09.330
+Let's just stick to what we were doing before.
+
+00:09.340 --> 00:11.260
+Let's write out some tests around our ticket.
+
+00:11.260 --> 00:12.550
+Updated Listener.
+
+00:12.940 --> 00:16.900
+So we'll write out some tests around that and then we'll get back to fixing some tests inside of our
+
+00:16.900 --> 00:18.280
+roots directory specifically.
+
+00:18.280 --> 00:20.470
+Those are the ones essentially that are failing right now.
+
+00:21.520 --> 00:21.850
+All right.
+
+00:21.850 --> 00:24.730
+So we're going to write some tests out around the ticket, update the listener.
+
+00:25.240 --> 00:26.590
+I've got an open right here.
+
+00:27.040 --> 00:30.490
+The test we're going to write out around this listener are going to be very similar in nature to the
+
+00:30.490 --> 00:32.530
+ones we already put together for ticket created.
+
+00:32.650 --> 00:34.450
+We will create an instance of this listener.
+
+00:34.600 --> 00:36.280
+We will create a fake data object.
+
+00:36.280 --> 00:40.420
+And a fake message will then call on message with those fake arguments.
+
+00:40.600 --> 00:44.770
+And then we'll write out some assertions to make sure that this thing finds a ticket inside the ticket
+
+00:44.770 --> 00:49.630
+collection, makes a change to it, and saves that update back to the ticket collection.
+
+00:50.110 --> 00:54.070
+We'll also probably write out a separate test once again to make sure that this thing eventually calls
+
+00:54.070 --> 00:55.240
+the function.
+
+00:56.810 --> 00:59.750
+So let's get to it inside of our listeners test directory.
+
+00:59.780 --> 01:05.540
+I'm going to make a new file of ticket updated listener tests.
+
+01:07.210 --> 01:10.030
+I will once again create a setup function.
+
+01:11.640 --> 01:12.630
+At the very top.
+
+01:12.660 --> 01:15.720
+And I'm going to put some comments in outside of this thing just to guide myself.
+
+01:15.720 --> 01:17.850
+I know we've gone through one set of function already.
+
+01:17.850 --> 01:21.270
+This one's going to be almost identical, but there will be one or two very small changes.
+
+01:21.270 --> 01:23.940
+So I would like to just throw in a couple of very quick comments.
+
+01:24.240 --> 01:27.480
+So inside of setup, we're going to first create a listener.
+
+01:28.630 --> 01:33.100
+This time around, we're going to create and save a ticket into our tickets collection.
+
+01:33.100 --> 01:37.720
+This is going to be the ticket that we are trying to update will create and save a ticket.
+
+01:38.580 --> 01:43.590
+Well, then create a fake data object that describes some update that we're going to make to that ticket
+
+01:43.590 --> 01:44.430
+we just saved.
+
+01:45.090 --> 01:50.700
+We'll create a fake message object and then return all of this stuff.
+
+01:52.620 --> 01:54.240
+Then what do we really want to test here?
+
+01:54.270 --> 01:57.360
+Well, let's write out two kind of stubs for tests.
+
+01:57.390 --> 01:59.460
+Let's say it finds.
+
+02:00.230 --> 02:01.070
+Updates.
+
+02:01.810 --> 02:02.950
+And saves.
+
+02:03.720 --> 02:04.290
+A ticket.
+
+02:04.290 --> 02:06.690
+So that's going to be really our success case right there.
+
+02:09.400 --> 02:13.930
+And we'll also throw in another test here, very similar to the last one as well, something that just
+
+02:13.930 --> 02:17.710
+says it acts the message.
+
+02:21.000 --> 02:24.570
+I could certainly write out a couple of comments inside of both these, but I bet you can imagine what's
+
+02:24.570 --> 02:25.270
+going to happen.
+
+02:25.290 --> 02:29.820
+We're going to call the setup function, get all this stuff kind of set up for us, then call on message
+
+02:29.820 --> 02:31.710
+and then write out an expectation or two.
+
+02:31.740 --> 02:34.710
+Very similar to what we just did a moment ago inside of Ticket Created.
+
+02:35.680 --> 02:35.950
+All right.
+
+02:35.950 --> 02:36.820
+So let's get to it.
+
+02:37.210 --> 02:39.340
+First thing we have to do right here, create a listener.
+
+02:39.340 --> 02:44.020
+To create the listener, we have to import our ticket updated listener.
+
+02:44.020 --> 02:48.400
+So the actual class, we also need to import the Nats wrapper because remember to create an instance
+
+02:48.400 --> 02:51.250
+of a listener, we have to provide a Nats client.
+
+02:51.520 --> 02:52.480
+So at the very top.
+
+02:53.210 --> 02:57.710
+I will add in an import for ticket updated listener.
+
+02:58.850 --> 03:01.040
+From up one directory ticket updated listener.
+
+03:04.350 --> 03:06.510
+I will also get my Nets rapper.
+
+03:10.070 --> 03:11.420
+From three directories up.
+
+03:11.420 --> 03:12.530
+That's rapper.
+
+03:14.210 --> 03:15.320
+Then our listener.
+
+03:16.490 --> 03:17.740
+Will be a new ticket.
+
+03:17.750 --> 03:19.310
+Updated listener.
+
+03:20.380 --> 03:22.450
+That's rapper client.
+
+03:25.830 --> 03:27.970
+After that, we'll go ahead and create and save our ticket.
+
+03:27.990 --> 03:30.330
+To do so, we need access to our ticket model.
+
+03:30.600 --> 03:32.490
+So I will make sure that I import.
+
+03:33.330 --> 03:34.500
+Buy ticket model.
+
+03:35.720 --> 03:37.790
+From up three directories as well.
+
+03:37.790 --> 03:39.080
+Models ticket.
+
+03:40.050 --> 03:43.500
+When we build a ticket, we have to provide a ID for this ticket.
+
+03:43.500 --> 03:47.670
+Because remember, the idea here is that we're sharing the same ID for all these different tickets across
+
+03:47.670 --> 03:48.810
+our different services.
+
+03:49.380 --> 03:54.810
+In order to provide some ID or an existing ID, we have to generate an ID on the fly and to generate
+
+03:54.810 --> 03:56.840
+an ID, we're going to use Mongoose.
+
+03:56.850 --> 04:01.620
+Remember, Mongoose has a reference to that object ID constructor that we can use to make a new ID.
+
+04:02.070 --> 04:03.600
+So I will also import.
+
+04:04.770 --> 04:07.020
+Mongoose from mongoose.
+
+04:08.490 --> 04:09.840
+So we can then create our ticket.
+
+04:09.930 --> 04:12.150
+That will be a ticket build.
+
+04:13.490 --> 04:17.580
+And then if we forget what properties we have to add, as usual, just mess over.
+
+04:17.600 --> 04:18.950
+So we've got to provide that ID.
+
+04:18.980 --> 04:20.420
+That's why we just imported Mongoose.
+
+04:20.420 --> 04:22.280
+We're going to generate that ID on the fly.
+
+04:22.340 --> 04:23.720
+A title enterprise.
+
+04:24.360 --> 04:26.700
+So our ID will be mongoose.
+
+04:26.700 --> 04:30.960
+That types object ID that two x.
+
+04:31.710 --> 04:32.370
+String.
+
+04:35.050 --> 04:35.920
+Then a title.
+
+04:36.790 --> 04:39.490
+A use concert and a price.
+
+04:40.330 --> 04:41.110
+Of 20.
+
+04:43.380 --> 04:45.470
+That's going to create the ticket in memory.
+
+04:45.480 --> 04:46.780
+It creates just the document.
+
+04:46.800 --> 04:50.170
+Now we have to actually take this ticket and save it to our IT tickets collection.
+
+04:50.190 --> 04:54.060
+So I will do and await ticket dot save like so.
+
+04:57.650 --> 04:59.390
+Next up, our fake data object.
+
+04:59.390 --> 05:02.810
+So this is going to be the thing that describes some update to our ticket.
+
+05:03.760 --> 05:08.620
+If we need a little bit of help on assembling this event or this data object, we can always import
+
+05:08.620 --> 05:12.640
+the event object or the event type from our common module.
+
+05:12.670 --> 05:14.170
+Let's do that at the very top.
+
+05:14.820 --> 05:18.540
+So I'm going to import the ticket updated event.
+
+05:20.710 --> 05:21.430
+From.
+
+05:22.220 --> 05:23.300
+My Command module.
+
+05:27.190 --> 05:29.470
+Well, then use that to create our fake data objects.
+
+05:29.470 --> 05:32.950
+So we'll say data is of type ticket.
+
+05:33.850 --> 05:35.440
+Updated events.
+
+05:35.440 --> 05:36.700
+I got ticket updated, right?
+
+05:36.700 --> 05:38.200
+Yes, very good.
+
+05:38.200 --> 05:42.910
+And specifically, we want to create an object that mirrors the data property on that thing.
+
+05:45.190 --> 05:48.560
+So now we can mouse over data and that will give us some help on what we need to do here.
+
+05:48.580 --> 05:51.340
+So we need the ID version titled Price User ID.
+
+05:52.220 --> 05:57.470
+Well, the ID right here is going to be the same ID of the as the ticket that we had created just a
+
+05:57.470 --> 05:58.430
+moment ago right here.
+
+05:58.910 --> 05:59.750
+So for ID.
+
+06:00.820 --> 06:02.520
+That will be ticketed.
+
+06:04.760 --> 06:06.530
+Next up, a version.
+
+06:06.830 --> 06:11.870
+So the version in this case, it needs to be whatever this thing's version is, plus one.
+
+06:12.380 --> 06:17.660
+So we'll put in a version of the ticket's version plus one.
+
+06:20.070 --> 06:22.350
+Next up, a title price and user ID.
+
+06:22.380 --> 06:24.630
+So these will be the things we actually change in some way.
+
+06:24.630 --> 06:28.920
+So we probably want to make sure that we provide either a different title, maybe a different price.
+
+06:29.010 --> 06:33.600
+The user ID, as usual, we're not really making use of inside this order service, so we could throw
+
+06:33.600 --> 06:35.250
+in some kind of imaginary user ID.
+
+06:35.250 --> 06:39.030
+It doesn't really matter, but we should make sure that we provide some different title and some different
+
+06:39.030 --> 06:42.030
+price because that's what we're going to eventually write an assertion around.
+
+06:42.060 --> 06:46.530
+We're going to make sure that when we process this data object right here, we end up with whatever
+
+06:46.530 --> 06:47.640
+this thing is, title and price.
+
+06:47.640 --> 06:51.150
+Ah, so I will give this a title of new concerts.
+
+06:51.150 --> 06:53.490
+So notice how it's different than the original title.
+
+06:53.520 --> 06:55.410
+Not very different, but different enough.
+
+06:55.680 --> 06:57.900
+And a price of how about 999?
+
+06:58.560 --> 07:01.110
+I'll then throw in the user ID of whatever.
+
+07:01.110 --> 07:03.840
+Again, we're not really using that, so not a big difference.
+
+07:06.160 --> 07:10.090
+So I do not have an error around the data object anymore, which means that TypeScript is happy with
+
+07:10.090 --> 07:11.950
+my definition of that data object.
+
+07:13.170 --> 07:15.450
+Finally our fake message object.
+
+07:15.960 --> 07:18.560
+So again, we will annotate this as a message.
+
+07:18.570 --> 07:21.360
+The only function we care about on this thing is the act function.
+
+07:21.390 --> 07:24.030
+We're going to make it a just mock function.
+
+07:24.120 --> 07:27.990
+TypeScript is very unhappy with our definition of message right here.
+
+07:28.080 --> 07:29.220
+We have not actually imported that.
+
+07:29.220 --> 07:31.740
+Let's import that at the very top really quick.
+
+07:35.990 --> 07:38.390
+Message from Node.
+
+07:38.420 --> 07:39.260
+Net streaming.
+
+07:39.680 --> 07:40.520
+That's better.
+
+07:40.730 --> 07:44.750
+And now if we take a look, touch it, it's going to be really unhappy with our definition because we
+
+07:44.750 --> 07:46.190
+are not defining all these other properties.
+
+07:46.190 --> 07:51.560
+But again, we just don't care about them for the purposes of this test so we can.
+
+07:52.660 --> 07:53.440
+Just 3 minutes.
+
+07:53.440 --> 07:55.760
+Ignore and say, TypeScript, just don't sweat it.
+
+07:55.780 --> 07:56.980
+We know what we're doing here.
+
+07:57.820 --> 08:00.640
+And finally, we're going to return all this stuff that we just created.
+
+08:00.970 --> 08:02.650
+It's all written inside of an object.
+
+08:02.830 --> 08:07.630
+The message, the data object, the ticket that we created and saved.
+
+08:07.630 --> 08:09.040
+And the listener as well.
+
+08:09.960 --> 08:13.170
+The Message Data Ticket Listener.
+
+08:14.590 --> 08:14.900
+Yeah.
+
+08:14.920 --> 08:15.730
+That looks good.
+
+08:16.740 --> 08:20.490
+So let's take a quick pause right here, and we will implement both our tests in just a moment.

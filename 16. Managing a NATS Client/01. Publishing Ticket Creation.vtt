@@ -1,0 +1,178 @@
+WEBVTT
+
+00:00.670 --> 00:05.800
+We have updated our common library, so it now has all that code related to creating events and listening
+
+00:05.800 --> 00:06.970
+to events as well.
+
+00:07.450 --> 00:12.070
+We've updated the version that the tickets service is making use of for the Common Library.
+
+00:12.100 --> 00:15.310
+So now our ticket service has access to all that event stuff as well.
+
+00:15.610 --> 00:19.270
+In this video, the first thing we're going to start to focus on is making sure that whenever someone
+
+00:19.270 --> 00:23.890
+creates a new ticket by making a post request to our ticket service.
+
+00:23.890 --> 00:30.370
+So specifically this new handler right here, we're going to make sure that we create the ticket, save
+
+00:30.370 --> 00:31.660
+the ticket to the database.
+
+00:31.660 --> 00:36.280
+And then right after that, we're going to want to publish an event telling every other service inside
+
+00:36.280 --> 00:39.100
+of our application that someone just created a new ticket.
+
+00:39.670 --> 00:45.650
+So to do so, we are going to create a new custom publisher inside of our tickets service.
+
+00:45.670 --> 00:51.460
+This custom publisher sole purpose is to publish an event saying, Hey, a ticket was created.
+
+00:51.730 --> 00:55.570
+It's going to end up looking just about identical to the one we just put together inside that little
+
+00:55.570 --> 00:57.850
+gnats test project a moment ago.
+
+00:58.270 --> 01:00.370
+So let's put this thing together right away.
+
+01:00.760 --> 01:04.000
+Inside my ticket service, I'm going to find the SRC directory.
+
+01:04.630 --> 01:07.390
+Inside there, I'm going to make a new folder called Events.
+
+01:08.080 --> 01:11.350
+And then inside of that, I'm going to make a new folder called Publishers.
+
+01:11.680 --> 01:14.740
+So we're going to have a slightly better folder structure this time around.
+
+01:14.770 --> 01:19.450
+We're going to have a directory for all the different publishers that we create and a directory eventually
+
+01:19.450 --> 01:22.180
+for all the different custom listeners we create as well.
+
+01:23.030 --> 01:27.700
+Inside a publishers i'm going to make a new file called ticket created publisher.
+
+01:28.070 --> 01:28.620
+It's.
+
+01:31.100 --> 01:31.230
+Okay.
+
+01:31.340 --> 01:34.340
+So instead of here, we're going to put together a very simple publisher.
+
+01:34.340 --> 01:38.180
+Remember, a publisher is going to emit an event over to that streaming server.
+
+01:38.240 --> 01:41.480
+And again, this thing is going to look very similar to the one we already put together.
+
+01:41.870 --> 01:50.450
+So at the very top I'm going to import the publisher base class are subjects enum and the ticket created
+
+01:50.450 --> 01:56.000
+event and all those are going to come from my common library.
+
+02:01.110 --> 02:06.870
+So then inside this file, we're going to export a class of ticket related publisher.
+
+02:07.940 --> 02:11.720
+This is going to be extending the publisher base class.
+
+02:11.720 --> 02:16.100
+That is a generic class, which means we need to put on those angle brackets and provide the type of
+
+02:16.100 --> 02:18.530
+event that we are going to try to emit with this publisher.
+
+02:18.530 --> 02:21.200
+So in this case, it is a ticket created event.
+
+02:27.610 --> 02:31.090
+So now TypeScript is going to try to guide us and tell us what we're doing wrong here.
+
+02:31.120 --> 02:35.350
+Well, if we hover over this thing, it's telling us that we need to define some subject.
+
+02:35.680 --> 02:39.340
+Remember, the subject is going to be essentially the name of the channel that we want to emit this
+
+02:39.340 --> 02:40.120
+event to.
+
+02:40.720 --> 02:46.810
+The name of our subject is going to be the ticket created event or should we not take a create event
+
+02:46.810 --> 02:47.590
+but subjects.
+
+02:47.590 --> 02:48.570
+That's what we're looking for.
+
+02:48.580 --> 02:50.080
+We do a command click on subjects.
+
+02:50.080 --> 02:53.080
+We'll see that we've got the subject in there named ticket created.
+
+02:54.170 --> 02:55.760
+So put in subject.
+
+02:55.760 --> 03:03.110
+It is of type subjects ticket created and its value is subjects ticket created as reminder.
+
+03:03.110 --> 03:07.860
+We have to do both the type annotation right here and the value assignment.
+
+03:07.880 --> 03:13.100
+The reason that we have both on here is to make sure that we never try to change the value of subject.
+
+03:13.430 --> 03:18.590
+So by saying that subject is of type subjects to get created, we are not going to be allowed to change
+
+03:18.590 --> 03:21.230
+this value to any other value at any point in time.
+
+03:23.360 --> 03:24.130
+That looks good.
+
+03:24.140 --> 03:25.450
+So now we can save this.
+
+03:25.460 --> 03:29.040
+And now, in theory, in some other file, we can import this publisher.
+
+03:29.060 --> 03:30.980
+We can create a new ticket.
+
+03:30.980 --> 03:32.180
+Created publisher.
+
+03:33.140 --> 03:38.390
+Hassan, Arnett's client, and then publish some kind of ticket or something like that.
+
+03:40.490 --> 03:40.700
+All right.
+
+03:40.700 --> 03:42.170
+So let's take a quick pause right here.
+
+03:42.200 --> 03:45.920
+When we come back, the next video, we're going to figure out how to create a Nats client inside of
+
+03:45.920 --> 03:47.210
+our tickets project.

@@ -1,0 +1,154 @@
+WEBVTT
+
+00:00.690 --> 00:04.890
+In the last section, we went over the behind the scenes flow of what occurred during that Docker build
+
+00:04.890 --> 00:08.870
+process, and there was a rather long section and we went through a lot of detail.
+
+00:08.880 --> 00:14.310
+So in this section I want to do a quick recap, just a very quick overview on the really important critical
+
+00:14.310 --> 00:15.410
+flow to understand.
+
+00:15.420 --> 00:19.140
+Now, if you don't want to hear me lecture about this stuff anymore, if you feel like you already have
+
+00:19.140 --> 00:20.940
+a good understanding, no problem.
+
+00:20.940 --> 00:23.430
+Pause the video right now and move on to the next section.
+
+00:23.430 --> 00:26.880
+Again, we're only going to do a recap of what we just spoke about a moment ago.
+
+00:27.180 --> 00:27.480
+Okay.
+
+00:27.540 --> 00:30.030
+So here's the recap with a slightly different diagram.
+
+00:30.390 --> 00:36.360
+So everything started with the from Alpine instruction that told the Docker server or Docker daemon
+
+00:36.360 --> 00:38.580
+to go and download the Alpine image.
+
+00:38.580 --> 00:44.190
+And we use the Alpine image as a base because it comes preinstalled with some really handy programs
+
+00:44.190 --> 00:46.890
+that are useful for us creating our image.
+
+00:48.120 --> 00:53.190
+The next thing that occurred was the run instruction was executed by the Docker server.
+
+00:53.340 --> 00:58.860
+The first thing that occurred there was it looked for the image from the previous step, and so it went
+
+00:58.860 --> 01:03.060
+back to the previous step and got the alpine image that had just been downloaded.
+
+01:03.890 --> 01:08.450
+That image was then used to create a brand new, very temporary container.
+
+01:08.630 --> 01:10.340
+So here's our container over here.
+
+01:10.580 --> 01:12.950
+And then the command that we had specified.
+
+01:12.950 --> 01:18.920
+So apk add dash update reduce was executed inside of that temporary container.
+
+01:19.580 --> 01:22.070
+The APK program was executed.
+
+01:22.070 --> 01:26.380
+It downloaded and installed Redis inside the file system of that container.
+
+01:26.390 --> 01:30.140
+So the result is a container with a modified file system.
+
+01:30.140 --> 01:32.660
+It now has Redis added onto it.
+
+01:34.010 --> 01:39.830
+We then took a snapshot of that container's new file system, and the result was a file system snapshot.
+
+01:40.130 --> 01:45.260
+We then shut down the temporary container, like this one right here that had just been created, and
+
+01:45.260 --> 01:48.400
+we got our image ready for the next instruction.
+
+01:48.410 --> 01:54.260
+And the image that we're using is that file system snapshot, the modified one that we just created
+
+01:54.260 --> 01:55.850
+when we installed Redis.
+
+01:56.330 --> 02:00.080
+So you can now imagine that we are now passing on to the next step.
+
+02:00.080 --> 02:06.140
+We are essentially passing along the Alpine image, but with Redis added on top.
+
+02:07.250 --> 02:10.440
+So we then move on to the command server instruction.
+
+02:10.460 --> 02:12.780
+We again get the image from the previous step.
+
+02:12.800 --> 02:15.200
+We again create a temporary container out of it.
+
+02:15.200 --> 02:20.210
+But this time around, rather than executing a command inside there, which is the purpose of the run
+
+02:20.210 --> 02:26.480
+instruction, we instead use the CMT instruction, which is used to specify what the container should
+
+02:26.480 --> 02:30.320
+do or what the image should do when it is started up as a container.
+
+02:31.640 --> 02:36.440
+So we told the temporary container that we just created that whenever it gets started in the future,
+
+02:36.440 --> 02:43.070
+it should try to execute the command Redis server and the result was a container that has a modified
+
+02:43.070 --> 02:44.390
+primary command.
+
+02:44.990 --> 02:48.280
+We then shut down that temporary container and we got it ready.
+
+02:48.300 --> 02:52.010
+We took an image out of it and got it ready for the next instruction.
+
+02:52.010 --> 02:56.540
+But in that case, there are no more instructions, no more steps to execute inside this file.
+
+02:56.960 --> 03:03.830
+And so the output of the overall series of steps is whatever image was generated during the last instruction
+
+03:03.830 --> 03:05.420
+inside of our Docker file.
+
+03:06.020 --> 03:06.450
+All right.
+
+03:06.470 --> 03:12.080
+So like I said, just a quick recap on that entire process one more time, because it is it's not super
+
+03:12.080 --> 03:15.590
+critical that you have an in-depth understanding here, but it definitely makes a lot of this Docker
+
+03:15.590 --> 03:20.150
+stuff a lot easier if you have a good grasp on this entire flow.
+
+03:20.870 --> 03:23.990
+So let's take a quick pause right here and we'll continue in the next section.

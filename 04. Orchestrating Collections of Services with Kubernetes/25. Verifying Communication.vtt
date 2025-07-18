@@ -1,0 +1,256 @@
+WEBVTT
+
+00:01.660 --> 00:04.150
+In theory, everything inside of our cluster is now working.
+
+00:04.150 --> 00:08.650
+We should have perfect communication between our post pod and the event bus pod as well.
+
+00:08.830 --> 00:10.170
+We actually test this stuff out.
+
+00:10.180 --> 00:14.350
+We're going to make a post request to post an attempt to create a new post.
+
+00:14.530 --> 00:20.860
+Whenever we do that, remember that our current implementation should attempt to reach out to the event
+
+00:20.860 --> 00:23.830
+bus service and emit some kind of event.
+
+00:24.530 --> 00:28.330
+We should eventually see some kind of console.log or something like that between these two.
+
+00:28.340 --> 00:32.120
+Something that says, Oh, an event was just emitted or an event was just received, or something very
+
+00:32.120 --> 00:33.080
+similar to that.
+
+00:33.320 --> 00:38.000
+So we are going to use that API client called Postman, which we use much earlier inside the course
+
+00:38.090 --> 00:39.740
+to send a post to posts.
+
+00:40.340 --> 00:46.580
+Well then use the logs command to just make sure that we see some logging information related to emitting
+
+00:46.580 --> 00:48.290
+or receiving some kind of event.
+
+00:49.300 --> 00:50.260
+So let's get to it.
+
+00:51.040 --> 00:53.880
+I've already opened up the API client postman.
+
+00:53.890 --> 00:54.910
+So here it is right here.
+
+00:57.390 --> 00:58.860
+I'm going to open up a new tab.
+
+00:59.460 --> 01:01.560
+We need to make a post request.
+
+01:02.420 --> 01:05.210
+And we're going to make this post request to HTTP.
+
+01:05.360 --> 01:11.000
+And then remember, we are trying to access the node port service right now that's governing access
+
+01:11.000 --> 01:12.230
+to the post port.
+
+01:12.410 --> 01:16.200
+So recall that we spoke about node port services just a little bit ago.
+
+01:16.220 --> 01:18.050
+Let's see, where is our diagram for it?
+
+01:18.080 --> 01:18.950
+Here it is right here.
+
+01:19.940 --> 01:24.470
+So remember, if we are trying to access some pod that is running inside of our cluster, we can use
+
+01:24.470 --> 01:29.060
+a node port service and we typically only use those for development purposes, which is exactly what
+
+01:29.060 --> 01:30.110
+we are doing right now.
+
+01:30.740 --> 01:34.490
+Remember that to access that thing we have to use that randomly assigned port.
+
+01:34.490 --> 01:36.110
+That usually starts with three.
+
+01:36.110 --> 01:37.550
+It's in the 30 thousandths.
+
+01:38.390 --> 01:44.570
+And the actual URL that we're going to use depends upon whether you are using Docker for Mac or Windows
+
+01:44.570 --> 01:45.590
+or Mini Cube.
+
+01:46.500 --> 01:50.430
+So again, if you are making use of mini cube, you will run mini cube IP and that will give you the
+
+01:50.430 --> 01:52.440
+IP address that you're going to make your request to.
+
+01:52.470 --> 01:57.090
+Otherwise, if you're on Docker for Mac or Windows, you will use local host and then to actually get
+
+01:57.090 --> 01:59.070
+the port that we need to make the request to.
+
+02:00.170 --> 02:01.250
+We can rerun that.
+
+02:01.620 --> 02:04.190
+It'll get Services Command.
+
+02:05.830 --> 02:09.040
+We'll see the post service right there of type mode port.
+
+02:09.970 --> 02:15.940
+And at the very end is the actual port that we use to get to that node port service from outside of
+
+02:15.940 --> 02:16.440
+our cluster.
+
+02:16.450 --> 02:18.980
+So for me it is 3402 for you.
+
+02:19.000 --> 02:20.560
+It might be something slightly different.
+
+02:22.650 --> 02:24.600
+So I will put in localhost.
+
+02:24.600 --> 02:26.160
+3402.
+
+02:27.980 --> 02:31.520
+For you, you are very likely going to have a different port and if you are using mini key right now,
+
+02:31.520 --> 02:32.930
+you will not have local host.
+
+02:32.930 --> 02:36.290
+Instead, you will have whatever IP was assigned to you from mini cube.
+
+02:38.730 --> 02:41.250
+Then at the very end, we're going to make a post request to post.
+
+02:41.280 --> 02:42.000
+Of course.
+
+02:43.220 --> 02:44.900
+I'll then go to headers.
+
+02:45.750 --> 02:48.270
+I'm going to put in a content type.
+
+02:50.750 --> 02:52.670
+Of application JSON.
+
+02:53.330 --> 02:58.730
+I'll go to body, we'll go to Raw, put in a title of post.
+
+02:59.390 --> 03:02.390
+I'm going to make sure I've got JSON selected over here in the dropdown.
+
+03:03.110 --> 03:04.280
+And then here's the big test.
+
+03:04.280 --> 03:05.330
+I'll hit send.
+
+03:06.060 --> 03:12.120
+And believe it or not, status 201 created, that looks good, but that's really just kind of testing
+
+03:12.120 --> 03:15.000
+the functionality that we already verified around the node port service.
+
+03:15.000 --> 03:18.090
+Let's now start to pull some logs out of our post pod.
+
+03:20.230 --> 03:24.310
+And the event was spot and make sure that these things are exchanging events.
+
+03:25.760 --> 03:27.770
+So for that, I'm going to go back over to my terminal.
+
+03:27.980 --> 03:30.050
+I'm going to print out all my different pods.
+
+03:34.170 --> 03:41.610
+And I'll use the Cube CTL log command to print out some logs from the event bus and the posts board.
+
+03:42.320 --> 03:44.130
+So I'll take a look at post first.
+
+03:44.130 --> 03:48.420
+I'll do a little logs and then paste in that pod name.
+
+03:50.570 --> 03:55.190
+And hey, look at that received event post created.
+
+03:55.730 --> 03:58.010
+So what does that little line right there really mean?
+
+03:58.190 --> 04:04.010
+Well, it means that when we created that post, our post pod sent a message out to the event bus through
+
+04:04.010 --> 04:05.390
+the event bus service.
+
+04:06.260 --> 04:08.200
+It sent out the post created events.
+
+04:08.240 --> 04:13.400
+The event plus then took that event and emitted it to all of the different services that are running
+
+04:13.400 --> 04:14.330
+inside of our cluster right now.
+
+04:14.330 --> 04:16.100
+Or I don't really mean to say that.
+
+04:16.100 --> 04:19.940
+I mean to say specifically right now, really just the post cluster IP service.
+
+04:20.090 --> 04:24.590
+So that means that we were able to send a message to the event bus and receive a message from the event
+
+04:24.590 --> 04:25.520
+bus as well.
+
+04:26.510 --> 04:27.620
+And that's pretty much it.
+
+04:29.250 --> 04:33.060
+So that's really proof that we can get all this stuff working inside of our Kubernetes cluster.
+
+04:33.090 --> 04:38.220
+So now to really wrap up our application and finish up all this kind of Kubernetes introduction stuff,
+
+04:38.220 --> 04:42.330
+we're going to start to introduce all the other microservices we had put together.
+
+04:42.510 --> 04:48.900
+So we are going to create deployments and cluster IP services for comments, moderation and query.
+
+04:49.080 --> 04:53.280
+And then we're going to make sure that all these things have the correct URLs that are going to attempt
+
+04:53.280 --> 04:56.670
+to access the event bus or the appropriate microservice and so on.
+
+04:57.270 --> 05:00.270
+So let's start that final step of integration in just a moment.

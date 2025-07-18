@@ -1,0 +1,205 @@
+WEBVTT
+
+00:01.120 --> 00:04.160
+In the last couple of videos we discussed Docker and Kubernetes.
+
+00:04.180 --> 00:08.320
+Hopefully you had a chance to go through those appendix videos at the very end of the course and get
+
+00:08.320 --> 00:10.660
+more familiar with Docker if you didn't know about it already.
+
+00:10.990 --> 00:13.630
+So I'm saying here you're a Docker pro now, right?
+
+00:13.780 --> 00:15.880
+I do not expect you to be a Docker pro.
+
+00:15.910 --> 00:20.470
+I really just expect you to have a basic understanding of what a container is, what an image is, how
+
+00:20.470 --> 00:25.520
+to create images, how to create containers, and a couple of commands around them, just to reinforce
+
+00:25.520 --> 00:26.390
+some of that knowledge.
+
+00:26.410 --> 00:30.160
+In this video, we're going to start to Docker, rise our post service, and then we're going to play
+
+00:30.160 --> 00:33.310
+around with the image and container just a little bit.
+
+00:33.980 --> 00:35.060
+So let's get to it.
+
+00:36.640 --> 00:41.050
+In order to doc arise our post service, we're going to have to create an image out of it to make an
+
+00:41.050 --> 00:41.350
+image.
+
+00:41.350 --> 00:45.160
+Remember, we make a docker file and then run the Docker build command.
+
+00:45.980 --> 00:49.970
+In this diagram, I've listed out the different commands that we're going to write out inside of the
+
+00:49.970 --> 00:51.740
+Docker file for the Post project.
+
+00:51.980 --> 00:55.790
+The first thing we'll do is specify our base image of Node Alpine.
+
+00:56.360 --> 01:01.160
+Well, then specify a working directory, which is going to set the working directory for the rest of
+
+01:01.160 --> 01:03.860
+all these commands inside of our Docker file.
+
+01:04.570 --> 01:07.150
+Well then copy over just the package json file.
+
+01:07.330 --> 01:09.610
+Install our dependencies using that file.
+
+01:10.500 --> 01:13.410
+And then copy over all the other source code from our project.
+
+01:14.240 --> 01:18.410
+And then finally we'll set up our default command of NTP and start to start up our container.
+
+01:19.990 --> 01:23.410
+So let's flip over to our code editor and start putting this Docker file together.
+
+01:24.560 --> 01:25.640
+Back inside my editor.
+
+01:25.640 --> 01:26.990
+I'll find the post directory.
+
+01:28.480 --> 01:34.090
+Inside there, I'll make a new file called Docker File and remember it has to have a capital DX and
+
+01:34.090 --> 01:35.860
+no extension on it whatsoever.
+
+01:36.600 --> 01:38.130
+Then we'll write out those series of commands.
+
+01:38.130 --> 01:40.020
+So we were just looking at inside that diagram.
+
+01:40.560 --> 01:43.260
+Well, first, specify our base image.
+
+01:45.010 --> 01:48.010
+Well then set up a working directory of app.
+
+01:49.440 --> 01:52.890
+We will copy over just the package json file.
+
+01:54.080 --> 01:57.890
+And then we will run and install to install all of our dependencies.
+
+01:59.500 --> 02:03.490
+After that we will copy over everything else from our post directory.
+
+02:03.490 --> 02:06.100
+So that really just means our indexed file.
+
+02:07.440 --> 02:12.630
+And then finally we'll set up our default command of NPM start.
+
+02:15.420 --> 02:16.290
+And that should be it.
+
+02:17.460 --> 02:19.770
+Now, one other thing we're going to do really quickly.
+
+02:19.770 --> 02:24.000
+Remember that if you went through those videos in the appendix, we usually don't want to include any
+
+02:24.000 --> 02:26.840
+install dependencies that are on our local machine.
+
+02:26.850 --> 02:31.680
+So in our case, that would be the node modules folder in order to make sure that we don't send all
+
+02:31.680 --> 02:36.510
+those dependencies over during the image building process, we're going to create a file inside this
+
+02:36.510 --> 02:37.440
+post directory.
+
+02:38.420 --> 02:39.440
+Called Dot.
+
+02:39.440 --> 02:40.850
+Make sure you get a dot in there.
+
+02:41.090 --> 02:42.710
+Docker ignore.
+
+02:44.040 --> 02:47.670
+And then inside of here we will write out node modules like.
+
+02:47.670 --> 02:52.350
+So that's going to make sure that during the image building process we do not attempt to copy over at
+
+02:52.350 --> 02:56.640
+that node modules directory because the image is going to install all the relevant dependencies when
+
+02:56.640 --> 02:58.170
+it is being built on its own.
+
+02:59.780 --> 03:00.200
+Okay.
+
+03:00.200 --> 03:02.450
+So let's now close those two files.
+
+03:02.720 --> 03:04.400
+Well, then go back over to our terminal.
+
+03:07.170 --> 03:12.870
+I will change into the post directory and inside there we'll do a docker build dot.
+
+03:14.580 --> 03:19.710
+So that's going to pull down the node base image, set our working directory, copy over packaged JSON,
+
+03:19.710 --> 03:22.710
+install dependencies using that package JSON file.
+
+03:23.040 --> 03:25.230
+The dependencies should be installed rather quickly.
+
+03:25.710 --> 03:30.540
+We'll then copy over all of the other files inside of our project and then set up that default command.
+
+03:30.540 --> 03:34.410
+And at the very end we get the ID of the image that was just built.
+
+03:34.950 --> 03:42.060
+So we can now create an instance of that image or in other words, a container by copying that ID and
+
+03:42.060 --> 03:45.360
+running Docker run and then pasting the ID of that image.
+
+03:47.610 --> 03:48.450
+And there we go.
+
+03:48.480 --> 03:50.670
+Looks like our server is running successfully.
+
+03:51.180 --> 03:52.890
+Okay, so that's a good step forward.
+
+03:53.010 --> 03:54.180
+Let's take a pause right here.
+
+03:54.180 --> 03:58.890
+And then as I mentioned, we'll do a quick review on some basic commands with Docker in the next video
+
+03:58.890 --> 04:02.280
+just to make sure it's really clear how we can work with a running container.

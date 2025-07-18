@@ -1,0 +1,424 @@
+WEBVTT
+
+00:00.590 --> 00:04.700
+There are still a couple of things we have to do around our sign up route handler so we have to go through
+
+00:04.700 --> 00:05.790
+that password hashing.
+
+00:05.810 --> 00:08.970
+We need to make sure that we generate a cookie or JSON web token.
+
+00:08.990 --> 00:12.890
+We also need to make sure that we resolve or fix up this if statement check right here.
+
+00:13.010 --> 00:14.600
+Let's take care of that really quickly.
+
+00:14.900 --> 00:18.530
+So in this if statement check, we're checking to see if there is already some existing user inside
+
+00:18.530 --> 00:20.090
+of our database with the same email.
+
+00:20.120 --> 00:24.350
+At present we are just doing a console log and then sending back an empty object and that's not really
+
+00:24.350 --> 00:25.140
+appropriate.
+
+00:25.160 --> 00:30.680
+If a existing user already exists, we need to somehow tell the person who made this request exactly
+
+00:30.680 --> 00:32.300
+why their request failed.
+
+00:33.120 --> 00:38.220
+So we're going to do this in the same way that we've been doing air handling already in all those previous
+
+00:38.220 --> 00:38.940
+videos.
+
+00:39.110 --> 00:42.120
+We're going to create a new kind of custom air.
+
+00:42.120 --> 00:46.470
+And then rather than trying to send back some message or response rate here manually, we're going to
+
+00:46.470 --> 00:48.360
+instead throw that air.
+
+00:48.870 --> 00:51.610
+So let me show you what I would like to be able to eventually do.
+
+00:51.630 --> 00:55.890
+This is this would be an ideal scenario if there is an existing user.
+
+00:55.890 --> 01:01.350
+I want to be able to do something like throw a new bad request air.
+
+01:02.510 --> 01:05.680
+And then provide a string to tell the user exactly what went wrong.
+
+01:05.690 --> 01:11.180
+So in this case I would provide a string that would say something like email in use or something like
+
+01:11.180 --> 01:11.690
+that.
+
+01:12.140 --> 01:13.310
+That would be ideal.
+
+01:14.120 --> 01:17.810
+We do not have a custom error called bad request error just yet.
+
+01:17.810 --> 01:19.880
+So we're going to be building that inside this video.
+
+01:20.300 --> 01:24.230
+This bad request error, custom error that we're going to put together is going to be a very general
+
+01:24.230 --> 01:25.220
+use error.
+
+01:25.250 --> 01:29.060
+We're going to be making use of this customer quite a bit throughout the remainder of this course.
+
+01:29.060 --> 01:34.010
+We're going to use it just about any time that something goes wrong inside of a request handler due
+
+01:34.010 --> 01:35.900
+to some input that a user gave us.
+
+01:36.790 --> 01:41.530
+This is a different kind of custom error compared to one that we put together already that's somewhat
+
+01:41.530 --> 01:42.160
+similar.
+
+01:42.190 --> 01:44.740
+So remember, we put together a request validation error.
+
+01:44.770 --> 01:50.200
+Already the goal of this custom error was to handle output from express validator.
+
+01:50.410 --> 01:53.890
+That was exactly and only what this error was supposed to handle.
+
+01:54.600 --> 01:59.580
+So this new customer we're going to put together called Battery Quest here is a much more general purpose
+
+01:59.580 --> 02:00.030
+error.
+
+02:00.150 --> 02:05.250
+We're going to throw it any time just about anything goes wrong if we don't have some reason to make
+
+02:05.250 --> 02:06.840
+a more general use case thing.
+
+02:08.180 --> 02:10.340
+So let's create this new battery cluster.
+
+02:10.580 --> 02:14.540
+We're going to get started by finding our air's directory and making a new file inside there called
+
+02:14.540 --> 02:17.960
+Bad Request Airports.
+
+02:18.910 --> 02:22.750
+If you do not recall how to put a custom air together, even though we spent a pretty good amount of
+
+02:22.750 --> 02:25.990
+time on it just a little bit ago, remember the general rule of thumb?
+
+02:25.990 --> 02:30.430
+All you have to do here is import that custom air abstract class.
+
+02:30.550 --> 02:32.380
+You are going to create a new class.
+
+02:32.380 --> 02:37.870
+You're going to extend custom air, and then TypeScript is going to jump in and tell you how to proceed
+
+02:37.870 --> 02:38.530
+from there.
+
+02:38.830 --> 02:40.690
+Let me show you exactly how that would happen.
+
+02:41.080 --> 02:43.270
+At the top of Battery Quest here.
+
+02:44.070 --> 02:46.980
+I will import custom air from.
+
+02:47.790 --> 02:48.480
+Customer.
+
+02:49.890 --> 02:52.770
+I'll then export a new class called Bad Request.
+
+02:53.900 --> 02:55.850
+Air and it's going to be extending.
+
+02:56.530 --> 02:57.250
+Customer.
+
+02:57.940 --> 03:01.830
+And so we can see right away that TypeScript is going to jump in and it's going to tell us everything
+
+03:01.840 --> 03:04.690
+we have to do to actually implement this, to measure.
+
+03:06.140 --> 03:08.520
+So we need to define that serialized method.
+
+03:08.540 --> 03:11.360
+We also need to define that status code property.
+
+03:11.450 --> 03:12.950
+Let's get started with status code.
+
+03:13.770 --> 03:15.280
+So I'm going to set up a status code.
+
+03:15.300 --> 03:20.520
+We're going to say that if any general error occurs due to some requests that a user is sending us,
+
+03:20.520 --> 03:23.880
+we're going to send back a response with the status code of 400.
+
+03:25.330 --> 03:29.500
+We can now hover over the constructor or the class name once again, and now it's telling us, okay,
+
+03:29.500 --> 03:32.560
+you took care of status code, but now you need to take care of serialize errors.
+
+03:33.040 --> 03:35.920
+So I'm going to put inside of here serialize errors.
+
+03:36.810 --> 03:40.350
+Then TypeScript is going to jump in once again and say, all right, well, you got this method, but
+
+03:40.350 --> 03:41.910
+you did not define it correctly.
+
+03:42.030 --> 03:47.310
+You need to make sure that you return an array of objects where each object has a message and possibly
+
+03:47.310 --> 03:47.970
+a field.
+
+03:48.390 --> 03:55.680
+So to make that go away, we would return an array of objects where each object has at least a message
+
+03:56.340 --> 03:56.970
+like so.
+
+03:59.350 --> 03:59.860
+Okay.
+
+04:00.220 --> 04:03.180
+So that would definitely get us at least one step closer.
+
+04:03.190 --> 04:07.490
+But remember what I said about how we actually want to implement this when we throw this there?
+
+04:07.510 --> 04:12.190
+I want to provide some message right here, and I want that message to go back to whoever actually sent
+
+04:12.190 --> 04:13.420
+that request to us.
+
+04:13.720 --> 04:15.730
+So I really want to take that string.
+
+04:16.470 --> 04:17.940
+And display it right there.
+
+04:17.940 --> 04:21.150
+I want it to go back in the response that gets sent back to the user.
+
+04:21.450 --> 04:26.190
+So we need to make sure that when we throw this error, we capture that string by defining the constructor
+
+04:26.190 --> 04:29.100
+method and save a reference to that string.
+
+04:29.340 --> 04:30.120
+We can then.
+
+04:30.930 --> 04:33.960
+Reference that string right there as the message property.
+
+04:34.440 --> 04:37.980
+Long story short, we just need to define a constructor and receive that message.
+
+04:38.740 --> 04:40.240
+So I'm going to define my constructor.
+
+04:40.630 --> 04:41.980
+I'm going to set up a.
+
+04:43.520 --> 04:47.090
+Property that we'll call message.
+
+04:47.090 --> 04:48.050
+That's going to be a string.
+
+04:49.650 --> 04:50.400
+Inside of here.
+
+04:50.400 --> 04:52.980
+We're going to call super with this message.
+
+04:54.840 --> 04:56.490
+And I'm getting a little bit of an error here.
+
+04:56.490 --> 05:00.000
+It's just because I'm trying to reference this message technically.
+
+05:00.000 --> 05:04.800
+Remember, we put public on there, it's going TypeScript is going to automatically take this property
+
+05:04.800 --> 05:08.910
+or this argument and save it as a property to our instance of bad request error.
+
+05:09.150 --> 05:15.270
+If we try to reference this dot message inside the super right here, super is executed before TypeScript
+
+05:15.270 --> 05:20.010
+kind of jumps in and saves a reference to message on our instance.
+
+05:20.010 --> 05:25.290
+So we cannot actually reference this message right there, but we can anytime after that safely, you'll
+
+05:25.290 --> 05:26.700
+notice that error now goes away.
+
+05:27.510 --> 05:28.470
+That's definitely better.
+
+05:29.290 --> 05:31.150
+So then inside of here after that super.
+
+05:31.150 --> 05:36.700
+We do also have to add in that little extra magic line of code just because we are extending a class
+
+05:36.700 --> 05:38.490
+that is built into JavaScript.
+
+05:38.560 --> 05:45.310
+So that was the object set prototype of this bad request error.
+
+05:46.240 --> 05:47.410
+Dot prototype.
+
+05:48.550 --> 05:49.180
+Like so.
+
+05:49.300 --> 05:50.380
+And now, finally.
+
+05:50.460 --> 05:51.310
+Right here.
+
+05:52.520 --> 05:54.890
+We can reference this message.
+
+05:56.510 --> 05:57.410
+And that should be it.
+
+05:58.290 --> 06:01.500
+So let's now go back over to our signup request handler.
+
+06:02.680 --> 06:04.450
+We're getting an air around battery quest here.
+
+06:04.480 --> 06:07.030
+That is just because we have not imported it into this file.
+
+06:07.210 --> 06:08.230
+So at the very top.
+
+06:08.990 --> 06:11.780
+I'm going to make sure that I import bad request.
+
+06:12.820 --> 06:16.360
+Here from up one directory errors.
+
+06:16.810 --> 06:17.860
+Bad request error.
+
+06:22.590 --> 06:22.860
+All right.
+
+06:22.860 --> 06:23.740
+I'm going to save that.
+
+06:23.760 --> 06:25.950
+I'm going to make sure I do not have any errors down here.
+
+06:25.950 --> 06:26.250
+Yep.
+
+06:26.250 --> 06:27.270
+Everything looks good.
+
+06:27.600 --> 06:29.610
+I'm going to delete that commented out stuff.
+
+06:30.730 --> 06:34.900
+I'm going to save the file once more and then I'll go back over to Postman and do a quick test of this.
+
+06:36.280 --> 06:36.520
+Okay.
+
+06:36.520 --> 06:43.450
+So at Postman, you'll notice that I've got a unique email enough in here, so I'm going to send this
+
+06:43.450 --> 06:43.960
+off.
+
+06:45.030 --> 06:49.500
+I have now signed up for a new account and now we're going to send the same exact request again and
+
+06:49.500 --> 06:52.560
+we should end up seeing an error with the appropriate structure.
+
+06:52.590 --> 06:56.940
+So remember, it should match that consistent response structure that we want to have for all of our
+
+06:56.940 --> 06:58.980
+different errors that could possibly occur.
+
+06:59.310 --> 07:00.330
+So we'll send it again.
+
+07:00.720 --> 07:01.620
+And there we go.
+
+07:02.490 --> 07:03.540
+Now I've got heirs.
+
+07:03.540 --> 07:07.050
+It's the array of objects that has the message property that we are looking for.
+
+07:07.970 --> 07:08.090
+Okay.
+
+07:08.150 --> 07:09.170
+So this looks pretty good.
+
+07:10.420 --> 07:15.100
+Well, I'd say that we are making progress, but we still have to handle that password hashing stuff.
+
+07:15.280 --> 07:20.830
+We also need to make sure that we eventually take this signed and user and send back a cookie or JSON
+
+07:20.830 --> 07:22.620
+web token, that stuff as well.
+
+07:22.750 --> 07:25.300
+Let's take care of the password hashing in just a moment.

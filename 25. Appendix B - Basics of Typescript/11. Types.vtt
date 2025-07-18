@@ -1,0 +1,265 @@
+WEBVTT
+
+00:01.100 --> 00:06.140
+In this video, we're going to start to cover our first big topic, which is basic types in TypeScript
+
+00:06.470 --> 00:08.000
+for every topic that we go through.
+
+00:08.030 --> 00:09.890
+Here's the gameplan we're going to try to follow.
+
+00:10.190 --> 00:13.910
+First off, we're going to get a plain definition and overview of the subject.
+
+00:14.180 --> 00:17.090
+We're then going to talk about why we care about each feature.
+
+00:17.360 --> 00:21.770
+In some cases, we're going to discuss features in TypeScript that I really don't think you're going
+
+00:21.770 --> 00:22.730
+to use that often.
+
+00:22.730 --> 00:24.590
+And so I want to kind of make that clear.
+
+00:24.740 --> 00:28.940
+I want you to understand why do we care about these features and like how often will you actually use
+
+00:28.940 --> 00:29.360
+them?
+
+00:29.780 --> 00:34.490
+After that, we'll then take a look at some different examples inside of our code editor by actually
+
+00:34.490 --> 00:35.540
+writing out some code.
+
+00:35.720 --> 00:40.340
+And then finally, we'll close every topic out with a discussion of when to use it.
+
+00:40.760 --> 00:45.380
+Sometimes when to use it is going to be a little bit quick and will really be in some of the applications
+
+00:45.380 --> 00:49.280
+we put together that you're going to discover when we use some of these different features.
+
+00:49.970 --> 00:50.180
+Okay.
+
+00:50.270 --> 00:51.740
+So that's a flow we're going to go through.
+
+00:51.740 --> 00:55.820
+Like I said, our first topic is going to be basic types, so let's get to it.
+
+00:55.820 --> 00:59.750
+Let's begin with a plain definition or as plain as I can make it.
+
+01:00.140 --> 01:03.740
+Now, I'm sure if you open up a dictionary, you're going to find a very academic definition of what
+
+01:03.740 --> 01:04.610
+a type is.
+
+01:04.610 --> 01:08.750
+But if I had to use my own words to describe what a type is, here's what I would say.
+
+01:09.020 --> 01:15.470
+I would say that in TypeScript, a type is an easy way to refer to the different properties and functions
+
+01:15.470 --> 01:16.820
+that a value has.
+
+01:18.850 --> 01:20.560
+There's a lot of meaning in this statement right here.
+
+01:20.560 --> 01:22.660
+So let's kind of break it apart piece by piece.
+
+01:22.690 --> 01:24.280
+First off, what is a value?
+
+01:24.580 --> 01:29.680
+Well, a value in JavaScript and TypeScript is anything that we can assign to a variable.
+
+01:29.830 --> 01:31.480
+So what can we assign to variables?
+
+01:31.660 --> 01:40.300
+Well, we can assign strings, numbers, booleans, null, undefined objects, functions, classes,
+
+01:40.300 --> 01:42.010
+arrays and so on.
+
+01:42.550 --> 01:46.300
+So all of those different things have types.
+
+01:46.300 --> 01:49.780
+An array has a type, a object has a type.
+
+01:50.550 --> 01:53.670
+A function has a type A class as a type and so on.
+
+01:54.980 --> 01:56.810
+So let's now break down the first part of the statement.
+
+01:56.810 --> 02:01.040
+What is what do I mean by an easy way to refer to the different properties and functions?
+
+02:01.280 --> 02:04.370
+Well, to answer that, maybe it would be easier to take a look at a quick diagram.
+
+02:05.300 --> 02:05.660
+All right.
+
+02:05.660 --> 02:09.560
+So in this diagram right here, I want you to take a look at this box right here, and I want you to
+
+02:09.560 --> 02:11.040
+answer a question for me.
+
+02:11.060 --> 02:11.990
+Here's the question.
+
+02:12.200 --> 02:14.840
+What is inside that box?
+
+02:15.410 --> 02:16.640
+Like what is in there?
+
+02:17.120 --> 02:19.730
+I think you can probably give me two answers.
+
+02:19.730 --> 02:22.580
+Maybe one would be to simply say it is a string.
+
+02:22.910 --> 02:28.370
+Alternatively, if you wanted to give me a more detailed answer, you might say it is a value that has
+
+02:28.370 --> 02:33.020
+all the properties and methods that we assume that a string has.
+
+02:34.550 --> 02:38.390
+So to really understand that part, I think we would really need to understand what different properties
+
+02:38.390 --> 02:39.800
+and methods a string has.
+
+02:40.310 --> 02:44.960
+Here's a short list of just some of the functions that belong to a string in JavaScript.
+
+02:45.260 --> 02:51.890
+So every string in JavaScript has access to the character at function and can cat and includes an index
+
+02:51.890 --> 02:52.910
+of and so on.
+
+02:53.980 --> 02:59.620
+If I had to tell you what this thing is right here by listing out all the different functions that belong
+
+02:59.650 --> 03:02.220
+to it, that would be really inconvenient.
+
+03:02.230 --> 03:06.880
+In other words, if I asked you what is inside this box and you responded to me, Oh yeah.
+
+03:06.910 --> 03:12.730
+Stephen That is a value that has the function character at and can cat and includes an index of and
+
+03:12.730 --> 03:15.790
+so on that would be super inconvenient.
+
+03:15.790 --> 03:22.930
+So instead as a shortcut to describe what properties and function this thing has, you summarize it
+
+03:22.930 --> 03:24.040
+in a single word.
+
+03:24.040 --> 03:26.590
+You tell me this is a string.
+
+03:27.460 --> 03:33.850
+So when we refer to the type of a value, it is a shortcut to refer to the different methods and properties
+
+03:33.850 --> 03:35.710
+that that value has.
+
+03:36.970 --> 03:40.850
+Every value that we create has a type assigned to it.
+
+03:40.870 --> 03:44.500
+In some cases, that type is going to be really obvious, like in the case of this string right here.
+
+03:44.890 --> 03:49.510
+However, in some other cases, we're going to learn that types exist that are tied to values that you
+
+03:49.510 --> 03:50.830
+kind of wouldn't expect.
+
+03:51.130 --> 03:55.780
+So, for example, let's take a quick glance at that application we just worked on a moment ago.
+
+03:56.200 --> 03:59.470
+Remember inside of here, we created an interface called To-Do.
+
+03:59.830 --> 04:05.110
+When we created this interface, we created a new type inside of our application, and that type's name
+
+04:05.110 --> 04:06.280
+was to do.
+
+04:06.850 --> 04:11.410
+So there are two ways that I could have referred to this response data thing right here.
+
+04:11.410 --> 04:17.260
+I could have either told you, Oh, yes, response data is an object that has an ID property, a title
+
+04:17.260 --> 04:19.030
+property and a completed property.
+
+04:19.300 --> 04:24.010
+But if I had to repeat that statement every single time you asked me what this variable was, it would
+
+04:24.010 --> 04:25.990
+be just really inconvenient.
+
+04:26.020 --> 04:28.750
+So instead we formed a shortcut.
+
+04:29.140 --> 04:34.390
+Instead, I can say response data is a to do an instantly.
+
+04:34.390 --> 04:37.770
+You understand what response data is.
+
+04:37.780 --> 04:42.580
+It is an object that has an ID title and completed property.
+
+04:43.940 --> 04:44.240
+Okay.
+
+04:44.270 --> 04:50.630
+So to sum up here, the big takeaway is that when we start to discuss types in TypeScript, these are
+
+04:50.630 --> 04:51.850
+just shortcuts.
+
+04:51.860 --> 04:58.070
+They are labels for describing the different properties and method methods that a single value has.
+
+04:58.370 --> 05:04.610
+And then the secondary statement to that is that every value in TypeScript has a type, every single
+
+05:04.610 --> 05:05.150
+one of them.
+
+05:06.070 --> 05:06.310
+Okay.
+
+05:06.310 --> 05:07.720
+So let's take a quick pause right here.
+
+05:07.750 --> 05:11.680
+We're going to come back the next video and start to expand on types just a little bit more.

@@ -1,0 +1,343 @@
+WEBVTT
+
+00:01.210 --> 00:02.350
+Inside of our roots file.
+
+00:02.350 --> 00:04.510
+We're going to find our updates file.
+
+00:04.990 --> 00:07.980
+So this is the route handler that handles updates to tickets.
+
+00:07.990 --> 00:12.460
+So as I just mentioned, we need to take a look at the ticket that the user is trying to update.
+
+00:12.460 --> 00:17.560
+And if it is currently reserved or locked down, we need to reject the update request.
+
+00:18.620 --> 00:21.530
+So to do so, we're going to scroll down a little bit inside of here.
+
+00:22.380 --> 00:27.910
+And then right after we find the ticket and it can be right before or after we take a look at who owns
+
+00:27.910 --> 00:29.700
+the ticket just somewhere inside of here.
+
+00:29.700 --> 00:35.460
+We need to decide whether or not we should allow the ticket to be edited in case it is actually reserved.
+
+00:36.130 --> 00:37.680
+Now, how about right after we find the ticket?
+
+00:38.990 --> 00:40.070
+We'll say if.
+
+00:40.430 --> 00:40.680
+Ticket.
+
+00:41.000 --> 00:42.200
+Order ID.
+
+00:42.500 --> 00:43.690
+And that's pretty much the check.
+
+00:43.700 --> 00:48.350
+Remember, we had said the presence of an order ID means this thing is reserved and we should prevent
+
+00:48.350 --> 00:48.980
+edits.
+
+00:49.130 --> 00:51.680
+So if there is an order ID, fantastic.
+
+00:51.680 --> 00:53.030
+Let's throw a new air.
+
+00:53.910 --> 00:57.630
+I think the most appropriate error here would be a bad request here.
+
+00:57.630 --> 01:01.410
+So I'll throw a new bad request air.
+
+01:03.150 --> 01:05.010
+We do have to import that at the very top.
+
+01:06.010 --> 01:10.300
+So from our common module I will get bad request error.
+
+01:11.880 --> 01:14.010
+And that should just be about it.
+
+01:14.250 --> 01:16.350
+One thing we forgot, we have to provide a message here.
+
+01:16.350 --> 01:17.880
+So some explanation.
+
+01:18.300 --> 01:19.950
+Well, we can give a very simple explanation.
+
+01:19.950 --> 01:26.860
+We can say ticket is reserved or how about cannot edit a reserved ticket?
+
+01:26.880 --> 01:27.720
+Simple enough.
+
+01:30.570 --> 01:31.350
+That looks good.
+
+01:31.650 --> 01:35.910
+Now, as I mentioned, I would really like to write out a test around this as well, just to make sure
+
+01:35.910 --> 01:37.080
+that we've got something to say.
+
+01:37.080 --> 01:38.700
+Yep, we cannot edit a ticket.
+
+01:38.740 --> 01:43.110
+Naturally, the logic here is really simple and straightforward, so the test is a little bit over the
+
+01:43.110 --> 01:43.600
+top.
+
+01:43.620 --> 01:47.370
+Nonetheless, this is the kind of thing you want to test because this is some pretty critical business
+
+01:47.370 --> 01:48.000
+logic.
+
+01:49.240 --> 01:53.560
+So inside of our test directory, inside the Roots folder, we'll find update tests.
+
+01:57.380 --> 02:00.560
+Let's then go down to the very bottom and we'll add in a new test.
+
+02:01.380 --> 02:05.520
+It will say it rejects updates if the ticket is.
+
+02:07.050 --> 02:07.800
+Reserved.
+
+02:11.820 --> 02:15.480
+Let's then get a very quick reminder on how we write out tests around drought handlers, because it
+
+02:15.480 --> 02:17.190
+has been a while since we've done that.
+
+02:17.490 --> 02:19.470
+So I can take a look at our previous test.
+
+02:19.890 --> 02:24.690
+In the previous test, we first created a cookie so we can make a number of requests as one consistent
+
+02:24.690 --> 02:25.260
+user.
+
+02:25.680 --> 02:30.450
+We then created a ticket and then made a follow up request to edit that ticket.
+
+02:31.050 --> 02:35.580
+So our test is going to be very similar, except we're going to expect the follow up edit to result
+
+02:35.580 --> 02:38.940
+in a 400 or essentially a bad request.
+
+02:39.480 --> 02:44.130
+In addition, in between the creation and the update, we're also going to have to reach directly into
+
+02:44.130 --> 02:48.900
+our database, get a handle on the ticket that was created and set the order ID property on that thing
+
+02:48.900 --> 02:49.440
+as well.
+
+02:50.710 --> 02:56.110
+Now just to save a little bit of time from this previous event or previous test of publishes an event,
+
+02:56.110 --> 02:58.450
+I'm going to copy the cookie.
+
+02:59.300 --> 03:00.950
+The request to create the ticket.
+
+03:01.700 --> 03:04.190
+And then default requests to edit it as well.
+
+03:04.700 --> 03:06.830
+So I'm going to copy those three blocks right there.
+
+03:07.800 --> 03:12.030
+And then piece them down inside of our test and we'll just make a couple of changes to this thing.
+
+03:13.870 --> 03:17.980
+So first off, we do know that our follow up request right here, we are going to expect to get back
+
+03:17.980 --> 03:19.060
+a 400.
+
+03:20.940 --> 03:24.900
+In addition, we're going to make sure that right after we make this initial request, we're then going
+
+03:24.900 --> 03:29.440
+to reach in, find our ticket and set the order ID property on it.
+
+03:29.460 --> 03:34.070
+And to do that, we're going to, first off, have to get access to our ticket collection.
+
+03:34.080 --> 03:39.420
+And number two, we're also going to need access to Mongoose so we can generate a random ID or the order
+
+03:39.420 --> 03:40.200
+ID as well.
+
+03:41.170 --> 03:44.540
+So at the very top, it looks like we've already got an import for Mongoose.
+
+03:44.560 --> 03:50.770
+I'm going to add in an import or ticket as well from up one to.
+
+03:52.450 --> 03:53.440
+Models.
+
+03:53.740 --> 03:54.700
+Oh, come on.
+
+03:55.910 --> 03:56.420
+Ticket.
+
+03:59.670 --> 04:01.650
+All right, back down at our test.
+
+04:02.820 --> 04:04.890
+Right after we create our ticket.
+
+04:06.050 --> 04:07.340
+Well, then do a ticket.
+
+04:07.340 --> 04:09.320
+And that's going to come from a wait ticket.
+
+04:09.500 --> 04:10.940
+Find buy ID.
+
+04:11.730 --> 04:16.650
+And the ID of the ticket that we are looking for is inside the body of this response right here.
+
+04:17.040 --> 04:20.490
+So it's going to be response body ID.
+
+04:23.690 --> 04:26.980
+Then we'll do a ticket set of the order.
+
+04:26.990 --> 04:27.590
+I'd.
+
+04:29.720 --> 04:32.490
+And we're going to set it to mongoose types.
+
+04:32.720 --> 04:33.860
+Object ID.
+
+04:34.860 --> 04:37.020
+To hex string.
+
+04:38.020 --> 04:42.130
+And as usual, going to throw a exclamation right after ticket right there as well.
+
+04:44.680 --> 04:45.550
+And then finally.
+
+04:46.450 --> 04:49.660
+Let's make sure we do in a weight ticket save.
+
+04:51.640 --> 04:53.880
+And another darn exclamation.
+
+04:53.890 --> 04:54.520
+There we go.
+
+04:55.580 --> 04:55.970
+Okay.
+
+04:55.970 --> 04:57.180
+So that's pretty much it.
+
+04:57.200 --> 05:03.020
+We got our consistent user rate the ticket, edit it, save it, make the follow up request, expect
+
+05:03.020 --> 05:03.980
+that request to error.
+
+05:04.310 --> 05:05.960
+Let's save this and see how we're doing.
+
+05:06.970 --> 05:09.400
+I'll go back over to my terminal and find my test suite.
+
+05:10.060 --> 05:15.400
+Now we are still filtering our tests, so I'm going to hit W to go to the watch menu.
+
+05:15.760 --> 05:20.680
+I'm then going to filter by file name once again by hitting P and I'm going to try to run only this
+
+05:20.680 --> 05:21.940
+update test file.
+
+05:22.120 --> 05:24.340
+So I'll put an update dot test.
+
+05:26.340 --> 05:30.570
+It looks like I'm writing or running the correct file, and it looks like all of our tests are passing
+
+05:30.840 --> 05:31.870
+as usual.
+
+05:31.890 --> 05:35.230
+Just quickly, make sure this thing is failing as expected.
+
+05:35.310 --> 05:39.780
+So what happens if we comment all that stuff out and never set the order ID property?
+
+05:40.380 --> 05:43.770
+Well, now our request should succeed with a 200.
+
+05:44.790 --> 05:47.820
+And so we got a 200 back when we were expecting a 400.
+
+05:47.850 --> 05:50.520
+So that means that our test is failing as expected.
+
+05:51.150 --> 05:52.440
+So I'll uncomment that.
+
+05:53.490 --> 05:54.800
+It looks like everything's going.
+
+05:55.130 --> 06:00.860
+Now, I'll do just one last test run of all my tests inside of this project by hitting W and then A.
+
+06:02.500 --> 06:06.010
+And we'll just make sure that the entire service is good to go.
+
+06:06.040 --> 06:06.420
+Yep.
+
+06:06.430 --> 06:07.330
+Looks like it is.
+
+06:08.120 --> 06:08.600
+Well.
+
+06:09.670 --> 06:11.170
+Well, that is it.
+
+06:11.170 --> 06:12.490
+So I think we're all set here.
+
+06:12.520 --> 06:13.180
+Quick pause.
+
+06:13.180 --> 06:14.350
+Continue in just a minute.

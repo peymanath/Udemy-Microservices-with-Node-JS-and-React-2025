@@ -1,0 +1,334 @@
+WEBVTT
+
+00:01.560 --> 00:06.030
+Let's make sure we've got an index root of sorts that shows the user a list of all the different orders
+
+00:06.030 --> 00:06.990
+that belong to them.
+
+00:07.500 --> 00:11.820
+So back inside my editor, I'm going to find my pages directory.
+
+00:12.150 --> 00:13.380
+Inside there is orders.
+
+00:13.380 --> 00:16.590
+And inside of that I'm going to make a new file of index JS.
+
+00:16.920 --> 00:21.720
+So if we now go to just slash orders, it's going to show the component that we export from this index
+
+00:21.720 --> 00:22.590
+JS file.
+
+00:23.370 --> 00:24.000
+At the very top.
+
+00:24.000 --> 00:25.320
+Let's make an order.
+
+00:26.370 --> 00:27.660
+Index component.
+
+00:29.970 --> 00:31.800
+And for right now, just return it live.
+
+00:32.630 --> 00:34.010
+It says order index.
+
+00:35.420 --> 00:37.910
+I will export default order index.
+
+00:38.840 --> 00:41.570
+And then let's define a get initial prop function.
+
+00:41.690 --> 00:44.210
+This is where we're going to fetch our initial list of orders.
+
+00:45.220 --> 00:46.480
+The order index.
+
+00:46.840 --> 00:48.610
+Get initial props.
+
+00:53.000 --> 00:56.600
+This function will be called with a context, argument and client.
+
+00:56.600 --> 00:58.280
+We don't really care about context in this case.
+
+00:58.280 --> 00:59.690
+We really just care about the client.
+
+00:59.840 --> 01:02.840
+We want to make a request to our order service and get the list of orders.
+
+01:03.890 --> 01:08.600
+We'll get some data from await Lionsgate API.
+
+01:09.830 --> 01:10.580
+Porter's.
+
+01:13.880 --> 01:17.960
+All, then return an object with orders that references that data.
+
+01:20.420 --> 01:25.220
+Now, before we test this out, we should probably go take a little quick peek at our order service
+
+01:25.220 --> 01:29.570
+and make sure that it only returns orders related to the user who is making the request.
+
+01:31.070 --> 01:36.320
+So back inside of my order service, I'm going to take a look at my routes directory and find index
+
+01:36.320 --> 01:37.550
+dots inside there.
+
+01:37.790 --> 01:42.770
+And it looks like, yep, we definitely filter by the user ID or the person who is making the request.
+
+01:44.850 --> 01:46.800
+Now back inside to the index case file.
+
+01:47.340 --> 01:50.970
+We can receive that list of orders as a prop into order index.
+
+01:54.030 --> 01:58.410
+And then maybe rather than returning the live right here that we just put together, maybe we should
+
+01:58.410 --> 02:02.910
+just return some kind of UL with the list of allies inside of it that just list out all the different
+
+02:02.910 --> 02:04.320
+orders and their status.
+
+02:04.890 --> 02:07.190
+So I'm going to go ahead and just delete that div right there.
+
+02:07.200 --> 02:08.550
+Sorry for making you write it.
+
+02:08.580 --> 02:10.110
+Even though we just deleted it.
+
+02:10.500 --> 02:11.730
+I'm going to place a UL.
+
+02:12.780 --> 02:15.130
+And inside they're going to place some curly braces.
+
+02:15.460 --> 02:17.350
+I'm going to map over my list of orders.
+
+02:17.350 --> 02:23.470
+And for every order, I'm going to render an ally that displays maybe the title of the ticket that is
+
+02:23.470 --> 02:26.260
+associated with this order and the order status as well.
+
+02:27.780 --> 02:30.990
+So orders a map and for every order.
+
+02:32.030 --> 02:34.010
+I'm going to return an ally.
+
+02:36.440 --> 02:38.600
+I'll place the key prop on that lie.
+
+02:39.050 --> 02:40.910
+The ID will be my key.
+
+02:43.110 --> 02:49.140
+And then inside of the lie itself, I'm going to print out the order ticket title.
+
+02:50.600 --> 02:54.830
+And then a little dash, and then I'll print out the status of the order.
+
+02:54.830 --> 02:56.660
+So order status.
+
+02:58.350 --> 03:00.660
+Let's save this and see what it looks like.
+
+03:01.980 --> 03:05.990
+So I'm going to refresh the page while I'm at orders and there is our list.
+
+03:06.000 --> 03:13.020
+So it looks like I've had many attempts to purchase that first client ticket and then eventually I completed
+
+03:13.020 --> 03:13.380
+one.
+
+03:13.380 --> 03:16.530
+So that is my order right there that has been completed.
+
+03:16.530 --> 03:18.150
+I own that ticket.
+
+03:18.750 --> 03:23.220
+And then finally, between the last video and this one, I tried to create an order for the other ticket
+
+03:23.220 --> 03:25.260
+I created and I let it time out as well.
+
+03:25.260 --> 03:27.000
+And so it got marked as canceled.
+
+03:27.980 --> 03:28.290
+Cool.
+
+03:29.120 --> 03:33.440
+Well, the very last thing that I would like to do is to make sure that after we successfully purchase
+
+03:33.440 --> 03:34.250
+a ticket.
+
+03:34.430 --> 03:36.500
+So in other words, we provide a payment for an order.
+
+03:36.500 --> 03:40.040
+I would like to redirect the user over to this big list of orders.
+
+03:40.490 --> 03:41.560
+It should be pretty straightforward.
+
+03:41.570 --> 03:42.770
+So let's just do it right now.
+
+03:45.200 --> 03:47.690
+I'm going to go back over to our page.
+
+03:48.640 --> 03:49.810
+Or order show.
+
+03:50.350 --> 03:53.410
+So inside the orders folder, I'll find the order ID file.
+
+03:53.740 --> 03:55.450
+That is our order show component.
+
+03:56.540 --> 04:01.760
+So rather than doing a console log of the payment that we got back, let's instead redirect the user
+
+04:01.760 --> 04:06.350
+over to the big list of orders and they should hopefully see that the order they had just been that
+
+04:06.350 --> 04:08.660
+they had just created gets marked as complete.
+
+04:09.650 --> 04:10.580
+To redirect the user.
+
+04:10.580 --> 04:15.530
+We're going to again import router from next router at the top.
+
+04:17.130 --> 04:21.720
+And then instead of doing that console log of the payment, I don't really need that payment argument.
+
+04:22.670 --> 04:23.640
+Or the console.log.
+
+04:23.660 --> 04:24.980
+I'm going to replace it with router.
+
+04:25.160 --> 04:27.680
+Push to slash orders.
+
+04:30.750 --> 04:31.210
+Yet.
+
+04:31.620 --> 04:33.750
+Let's now try to purchase another ticket.
+
+04:33.750 --> 04:38.100
+And after we purchase the ticket, we should be redirected back over to the list of orders.
+
+04:40.010 --> 04:41.720
+I'm going to go back to my main landing page.
+
+04:41.720 --> 04:43.280
+So here's the ticket I want to buy.
+
+04:43.310 --> 04:47.030
+If you do not have a ticket at this point, just go ahead and create one really quickly.
+
+04:48.060 --> 04:49.410
+So I'm going to view that ticket.
+
+04:49.560 --> 04:50.460
+I'll purchase it.
+
+04:51.240 --> 04:52.560
+I'm going to pay with my credit card.
+
+04:54.390 --> 04:58.070
+And remember, our magic credit card number is four two, four, two, four, two.
+
+04:58.800 --> 05:02.820
+Put in my date the security code and pay.
+
+05:04.380 --> 05:09.780
+So now I should be automatically redirected back over to my big list of orders and there is my completed
+
+05:09.780 --> 05:10.530
+order right there.
+
+05:10.530 --> 05:12.750
+And so that ticket, in theory, belongs to me.
+
+05:13.350 --> 05:14.520
+And that's pretty much it.
+
+05:15.610 --> 05:20.590
+Well, I know that the styling on this application is not great at all, and some of the screens are
+
+05:20.590 --> 05:24.400
+just plain confusing, like this screen right here kind of unclear what is going on.
+
+05:24.550 --> 05:28.630
+But I'm going to leave improvements to the styling and changing some of the mechanics around this up
+
+05:28.630 --> 05:33.700
+to you, because really there are an infinite number of ways that we could further develop this application.
+
+05:34.180 --> 05:37.990
+The other thing I want to mention is that when a user purchases a ticket, we don't really have any
+
+05:37.990 --> 05:40.980
+information or anything like that being exposed to the user.
+
+05:40.990 --> 05:45.240
+There's not really like a ticket that they really receive and the email or anything like that.
+
+05:45.250 --> 05:48.760
+We're solely saying that once the order has been paid for, that's it.
+
+05:48.760 --> 05:53.830
+The order or the ticket now belongs to that user and that's kind of the end of the entire workflow.
+
+05:54.130 --> 05:56.290
+It's a little bit not that great.
+
+05:56.440 --> 05:58.450
+We could have gone a little bit further in developing that.
+
+05:58.450 --> 06:02.200
+But again, these are some things I'm going to leave up to you so you can add on maybe an additional
+
+06:02.200 --> 06:06.670
+service, maybe some additional features or something like that and expand out this application.
+
+06:07.860 --> 06:11.130
+So we're going to call the front end pretty much good for right here.
+
+06:11.670 --> 06:13.020
+We're going to take a pause right here.
+
+06:13.050 --> 06:14.040
+Continue in just a minute.
+
+06:14.040 --> 06:18.480
+And we're going to start to take a look at adding in some test automation and deployment options for
+
+06:18.480 --> 06:19.470
+our application.

@@ -1,0 +1,205 @@
+WEBVTT
+
+00:01.420 --> 00:06.310
+All right, my friends, let's implement all this concurrency control stuff inside of our tickets service.
+
+00:06.310 --> 00:10.900
+First, we're going to first focus on building out all this versioning stuff inside of our ticket service.
+
+00:11.260 --> 00:15.490
+We're then going to make sure that all the versioning numbers and whatnot get reflected inside of all
+
+00:15.490 --> 00:16.140
+these different events.
+
+00:16.140 --> 00:20.680
+So we eventually emit and we'll eventually move over to our order service and make sure that the order
+
+00:20.680 --> 00:22.780
+service makes use of the versioning stuff as well.
+
+00:22.960 --> 00:27.070
+So ticket service first we're going to take a look at a little module that we're going to use along
+
+00:27.070 --> 00:29.650
+with Mongoose to handle all the versioning stuff for us.
+
+00:29.650 --> 00:33.370
+Then we're going to start to write out a test or two to make sure that it all works as we expect.
+
+00:33.760 --> 00:38.350
+So let me first show you some documentation on the module that we're going to use at NPM.
+
+00:40.500 --> 00:44.940
+We're going to look up a module called Mongoose Update if current.
+
+00:47.090 --> 00:48.080
+So here it is right here.
+
+00:49.430 --> 00:51.860
+So if you want to, you could certainly take a look at the documentation.
+
+00:51.860 --> 00:53.930
+It's actually some pretty fantastic documentation.
+
+00:53.930 --> 00:56.630
+It explains what it does pretty easy and straightforward.
+
+00:56.870 --> 01:02.000
+You will notice if you read the documentation that this thing can implement optimistic concurrency control
+
+01:02.000 --> 01:05.780
+either by using a version number or by using a timestamp.
+
+01:05.780 --> 01:10.880
+So like an actual date time when the record was last updated at we're going to go with the strategy
+
+01:10.880 --> 01:13.880
+of using a version as opposed to a timestamp.
+
+01:14.180 --> 01:16.010
+So that's what we're going to be doing inside of our app.
+
+01:16.910 --> 01:20.690
+So if you want to again, take a look at the documentation here, it's really easy to get started with.
+
+01:20.690 --> 01:24.230
+Pretty much all we have to do is import it, wired it up to our schema.
+
+01:24.440 --> 01:28.220
+So the schema that we want to use this versioning stuff on and then the one reason that I'm kind of
+
+01:28.220 --> 01:32.810
+showing you the documentation here, just a little piece of trivia, you'll notice that if we're going
+
+01:32.810 --> 01:38.150
+to use this a version number thing, so version one, version two, version three and so on, the version
+
+01:38.150 --> 01:42.770
+is going to be set on the underscore underscore V property of the mongoose document.
+
+01:42.800 --> 01:47.540
+So chances are you've seen that underscore underscore v thing before with mongoose, even if we take
+
+01:47.540 --> 01:49.070
+a look at, say, our.
+
+01:49.790 --> 01:51.430
+Postman that we've been using.
+
+01:52.470 --> 01:54.330
+Let's see if I can log in here really quickly.
+
+01:55.810 --> 01:56.540
+Come on.
+
+01:56.560 --> 01:58.000
+I want to show you one.
+
+01:59.620 --> 02:02.920
+Log me in and then post a ticket.
+
+02:02.950 --> 02:03.430
+There we go.
+
+02:03.430 --> 02:04.000
+Finally.
+
+02:04.000 --> 02:04.450
+There we go.
+
+02:04.450 --> 02:04.870
+Finally.
+
+02:04.870 --> 02:08.080
+So you can see underscore, underscore, score V right there.
+
+02:08.080 --> 02:10.930
+So that is the version number that Mongoose implements by default.
+
+02:10.930 --> 02:14.860
+But right now, there's nothing to actually increment it, nothing to say, make use of this value,
+
+02:14.860 --> 02:16.480
+make use this flag or anything like that.
+
+02:16.660 --> 02:21.340
+So by default mongoose update of current that's the module we're using is going to try to use that underscore
+
+02:21.340 --> 02:26.380
+underscore V property for checking the version now for you and I underscore underscore V doesn't really
+
+02:26.380 --> 02:27.700
+have a lot of meaning.
+
+02:27.700 --> 02:31.420
+We don't really glance at that and say, Oh yeah, that's tracking the document version.
+
+02:31.420 --> 02:34.450
+So we are going to make a little tweak to this module.
+
+02:34.450 --> 02:35.080
+It's a setting.
+
+02:35.080 --> 02:39.520
+We're not going to update any internal code or anything like that and say rather than using underscore
+
+02:39.520 --> 02:45.460
+underscore V, we're going to use a field instead called simply version, exactly the same as what we've
+
+02:45.460 --> 02:47.110
+used on all these different diagrams.
+
+02:47.530 --> 02:52.180
+So as we save records to our database, rather than using the default of underscore underscore V to
+
+02:52.180 --> 02:56.140
+track the version, we're going to forcibly rename this thing to be simply version.
+
+02:56.140 --> 02:59.740
+And that's just going to make it a lot easier for you and I to look at that number, understand what
+
+02:59.740 --> 03:03.700
+it means, and eventually take that number and throw it into an event as well.
+
+03:03.700 --> 03:08.260
+Because as you can imagine, if we had inside of an event underscore underscore V, not a lot of meaning.
+
+03:08.260 --> 03:12.280
+They're a lot easier to just write out version and immediately look at this thing and say, Oh yeah,
+
+03:12.280 --> 03:12.820
+it's the version.
+
+03:12.820 --> 03:14.230
+I understand what that's all about.
+
+03:15.450 --> 03:16.470
+Yes, that's the idea.
+
+03:16.560 --> 03:21.750
+So as your guests, we're now going to go over to our terminal install mongoose update if current into
+
+03:21.750 --> 03:23.580
+our tickets service.
+
+03:25.040 --> 03:26.060
+So at my terminal.
+
+03:27.050 --> 03:29.390
+I can open up a new terminal window.
+
+03:30.340 --> 03:36.760
+Change over to my ticket service and install mongoose updates if current.
+
+03:38.080 --> 03:38.240
+Okay.
+
+03:38.350 --> 03:39.730
+Well, that runs.
+
+03:40.090 --> 03:44.260
+We'll take a quick pause, come back the next video and start to update our ticket service and use this
+
+03:44.260 --> 03:45.730
+new little module thing.

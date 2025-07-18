@@ -1,0 +1,448 @@
+WEBVTT
+
+00:01.690 --> 00:05.260
+All right, let's continue working on the implementation of this Nets rapper class.
+
+00:05.260 --> 00:08.450
+So instead of here, we want to eventually create a Nets client.
+
+00:08.470 --> 00:12.730
+In other words, the client that we get back from the Nets library itself, we're going to eventually
+
+00:12.730 --> 00:15.670
+create that and assign it as a property to our class.
+
+00:16.030 --> 00:21.760
+So I'm going to add in a private property called client and it's type is going to be stand and notice
+
+00:21.760 --> 00:23.870
+that I'm calling this thing underscore client.
+
+00:23.890 --> 00:26.740
+You'll see why for that or why we're doing that in just a moment.
+
+00:27.880 --> 00:32.620
+Now we are not going to try to define this property inside of any constructor or anything like that
+
+00:32.620 --> 00:35.200
+because we are running our constructor right here.
+
+00:35.200 --> 00:39.790
+And so at this point in time, it is too early to try to create a actual next client and assign it to
+
+00:39.790 --> 00:40.870
+this client property.
+
+00:41.140 --> 00:46.330
+Instead, we do not want to create and assign this client property until we eventually try to call it
+
+00:46.330 --> 00:49.630
+connect or something like that from inside of our index file.
+
+00:50.660 --> 00:54.980
+TypeScript, however, wants to make sure that we try to either immediately initialize this property
+
+00:54.980 --> 00:57.080
+on the same line of code or inside the constructor.
+
+00:57.080 --> 00:58.880
+And that's why we are seeing an error right here.
+
+00:59.030 --> 01:04.700
+So to get this error to go away, we're going to say underscore client and then question mark that tells
+
+01:04.700 --> 01:08.540
+TypeScript that this property might be undefined for some periods of time.
+
+01:10.310 --> 01:10.460
+Okay.
+
+01:10.610 --> 01:14.000
+After that, we're then going to create a function called Connect.
+
+01:14.450 --> 01:19.010
+So again, very similar to Mongoose, we're going to eventually call this connect function with our
+
+01:19.010 --> 01:21.950
+different connection settings from inside of indexes.
+
+01:22.890 --> 01:28.770
+Inside of Kinect, we're going to create an actual instance of the Nats client and assign it to this
+
+01:28.770 --> 01:30.900
+underscore client variable.
+
+01:32.430 --> 01:33.980
+To connect very similar to Mongoose.
+
+01:33.990 --> 01:37.730
+Once again, we're going to assume that this thing is going to receive some connection settings.
+
+01:37.740 --> 01:43.020
+So for example, the cluster ID that we want to connect to the client that we want to name ourselves
+
+01:43.020 --> 01:45.300
+as, and the URL to try to connect to as well.
+
+01:45.330 --> 01:49.320
+Essentially the same connection settings you might recall having written back inside of it Nat's test
+
+01:49.320 --> 01:51.570
+project inside that listener file.
+
+01:51.720 --> 01:53.670
+So this is what we refer to as our cluster ID.
+
+01:53.670 --> 01:55.500
+I'll show you where that comes from in just a moment.
+
+01:55.830 --> 02:00.270
+We spoke about the client ID and then the URL that we actually want to connect to.
+
+02:00.540 --> 02:04.350
+So we're going to receive all those three things as arguments to this connect function.
+
+02:05.220 --> 02:11.670
+So let's say cluster ID is going to be a string line, ID will be a string and URL will be a string
+
+02:11.670 --> 02:12.240
+as well.
+
+02:12.980 --> 02:13.880
+Then inside of here.
+
+02:14.800 --> 02:20.740
+We're going to assign this dot underscore client and that's going to come from calling Nats connect.
+
+02:21.280 --> 02:26.110
+We're going to pass in the cluster ID, client ID and the URL inside of an object.
+
+02:26.140 --> 02:29.350
+Make sure sure URL is inside of an object like so.
+
+02:31.470 --> 02:37.680
+Then normally to somehow get a signal that we have connected, we would write out something like client
+
+02:38.040 --> 02:44.610
+on Kinect and then put in a callback function and that callback function would be invoked once Nats
+
+02:44.610 --> 02:46.920
+actually successfully connects to our Nats server.
+
+02:48.110 --> 02:53.300
+And so inside that callback function, we might do something like a console log of connected to nets.
+
+02:54.450 --> 02:57.110
+Now this callback semantics right here.
+
+02:57.120 --> 03:00.000
+Not that great in today's day and age, right?
+
+03:00.030 --> 03:05.460
+It would be a lot better if we could call, connect and then be able to use the same kind of async await
+
+03:05.460 --> 03:08.400
+syntax as we were able to use with Mongoose Connect.
+
+03:08.730 --> 03:14.430
+So really we want to somehow take this callback function right here and twist it, turn it, allow us
+
+03:14.430 --> 03:16.890
+to use the async, await syntax instead.
+
+03:17.570 --> 03:20.630
+You might recall that we already did something very similar to this a little bit ago.
+
+03:20.660 --> 03:25.160
+We essentially took the callback function and wrapped it with a promise and then we manually resolved
+
+03:25.160 --> 03:27.120
+that promise from inside the callback.
+
+03:27.140 --> 03:29.000
+So let's do that same thing right here.
+
+03:29.240 --> 03:31.250
+So from Connect, I'm going to return.
+
+03:32.060 --> 03:33.140
+A new promise.
+
+03:36.300 --> 03:38.520
+I'm going to put in the resolve and reject.
+
+03:39.090 --> 03:42.240
+I'll then move in the this underscore client inside their.
+
+03:44.410 --> 03:49.330
+And then in the success case, right after doing that console.log, I will resolve the promise.
+
+03:49.960 --> 03:52.420
+You'll notice we have an error around this underscore client.
+
+03:52.420 --> 03:53.890
+We'll just ignore that for a moment.
+
+03:54.540 --> 03:58.410
+Now, if we're doing everything correctly, we should probably also make sure we handle the air case,
+
+03:58.410 --> 04:00.540
+the case in which we failed to connect to Nats.
+
+04:00.870 --> 04:04.950
+So I'm going to also add in a handler to watch for where we fail to connect.
+
+04:05.610 --> 04:09.210
+So we're going to do a this underscore client on air.
+
+04:10.020 --> 04:11.560
+And then put a callback function.
+
+04:11.580 --> 04:15.480
+This is how we handle a connection error during the initial connection attempt.
+
+04:15.930 --> 04:20.760
+If we fail to connect, this callback function will be invoked and the first argument will be some error
+
+04:20.760 --> 04:22.710
+describing exactly what went wrong.
+
+04:23.250 --> 04:28.020
+So in this case, we're going to reject our promise and we will reject it with that error.
+
+04:32.240 --> 04:32.570
+All right.
+
+04:32.570 --> 04:34.550
+So why is TypeScript complaining right here?
+
+04:34.580 --> 04:37.520
+If we hover over that thing, it says object is possibly undefined.
+
+04:37.820 --> 04:42.800
+The reason for this is that TypeScript understands that we just assigned the client property right here.
+
+04:42.800 --> 04:47.780
+So at this point in time, if we write out this underscore client, typescript says, Oh, okay, sure,
+
+04:47.780 --> 04:48.920
+like client exists.
+
+04:48.920 --> 04:50.750
+You justified it 2 seconds ago.
+
+04:51.350 --> 04:57.290
+But because we are now trying to access this underscore client inside of a callback function right here,
+
+04:57.320 --> 05:04.280
+TypeScript is thinking that we could have accidentally reassigned or unassigned really the this underscore
+
+05:04.280 --> 05:07.400
+client between this line of code and this line of code.
+
+05:07.520 --> 05:12.380
+Now that is extremely unlikely to happen, but it is what TypeScript is designed to do.
+
+05:12.380 --> 05:17.540
+It is meant to capture errors where a variable might suddenly flip back to going to undefined.
+
+05:18.610 --> 05:22.300
+We're going to put in a very temporary fix for this that we're going to change in just a little bit.
+
+05:22.300 --> 05:24.840
+But I really want to test out the code we put together so far.
+
+05:24.850 --> 05:30.580
+So to just get this air to go away, we're going to put an exclamation right after this dot underscore
+
+05:30.580 --> 05:31.930
+client on both those.
+
+05:33.290 --> 05:33.560
+Okay.
+
+05:33.560 --> 05:34.610
+So let's save this.
+
+05:34.610 --> 05:39.460
+And I would now like to do a quick test and just make sure that we can actually connect to nets.
+
+05:39.470 --> 05:44.210
+We want to be able to call this connect, function and use the async, await syntax on it.
+
+05:45.070 --> 05:48.330
+So to do so, we'll go back over to to indexes.
+
+05:49.570 --> 05:50.350
+At the very top.
+
+05:50.350 --> 05:53.080
+I'm going to import Nat's wrapper.
+
+05:54.270 --> 05:56.070
+From Nats wrapper.
+
+05:56.100 --> 05:58.830
+Notice I'm using a lowercase end right here.
+
+05:59.100 --> 06:03.390
+The reason for that is that we are indicating that this is an instance of the class Nats wrapper.
+
+06:03.540 --> 06:07.950
+We only have one instance floating around the entire application because we are not exporting the class.
+
+06:07.950 --> 06:12.090
+We are exporting one single instance that will be shared between all of our different files.
+
+06:13.600 --> 06:19.700
+So down here, right before our mongoose connect, I'm going to put in and await weight wrapper dot
+
+06:19.840 --> 06:22.990
+connect and we'll put in those three connection settings.
+
+06:23.230 --> 06:26.860
+The first one is going to be our cluster ID and I told you that I would tell you where that is coming
+
+06:26.860 --> 06:27.160
+from.
+
+06:27.160 --> 06:28.420
+So let's do that really quickly.
+
+06:28.630 --> 06:33.940
+If we think back to the Nats test project and open up that listener, you'll recall that for that cluster
+
+06:33.940 --> 06:36.640
+ID or the first argument we put in a string of ticketing.
+
+06:36.640 --> 06:37.810
+So why is that?
+
+06:38.320 --> 06:44.620
+Well, if we think back also to our infra directory inside there, we had the Nats deployment file.
+
+06:46.080 --> 06:51.570
+So here's the Nats deployment file, here's our pod spec and here's the arguments we fed to that container.
+
+06:52.250 --> 06:56.060
+One of the arguments we provided was CE ID and we gave it a value of ticketing.
+
+06:56.090 --> 06:58.220
+CID stands for cluster ID.
+
+06:58.250 --> 07:03.260
+This is going to assign an ID to the cluster and in the case the ID is simply ticketing.
+
+07:03.650 --> 07:05.210
+That's what the first argument is.
+
+07:05.210 --> 07:08.300
+We're just specifying the ID of the cluster that we're trying to connect to.
+
+07:08.690 --> 07:09.860
+So we'll put in ticketing.
+
+07:10.500 --> 07:12.260
+For that first argument.
+
+07:13.840 --> 07:17.170
+Then the second argument, you'll recall, is going to be our client ID.
+
+07:17.410 --> 07:20.500
+We need to make sure that this is a more or less random value.
+
+07:20.860 --> 07:22.870
+Right now we'll just put in some kind of random string.
+
+07:24.540 --> 07:28.410
+And then finally we have to put in the URL that we want to connect to as the third argument.
+
+07:28.920 --> 07:35.220
+The URL that we are going to connect to is going to be the service that is governing access to our Nats
+
+07:35.220 --> 07:36.030
+deployment.
+
+07:36.060 --> 07:38.550
+So remember, we define that service at the bottom of this file.
+
+07:38.550 --> 07:40.620
+Its name was Nats CRV.
+
+07:40.620 --> 07:43.710
+And we specifically want to connect to Port four, 2 to 2.
+
+07:44.550 --> 07:50.460
+So for the URL at the very end of Connect right here, we will put in a HTTP colon, slash, slash.
+
+07:52.050 --> 07:54.420
+Nats CRV Colon four.
+
+07:54.470 --> 07:55.350
+Two, two, two.
+
+07:56.830 --> 07:57.150
+Okay.
+
+07:57.160 --> 08:01.510
+So that should be enough to at least test this out and make sure that we can actually connect to nets.
+
+08:01.750 --> 08:06.460
+So I'm going to save this and then going to go back over to my scaffold window, which I'm still running
+
+08:06.460 --> 08:09.460
+at my terminal and I'll see connected to nets.
+
+08:10.030 --> 08:14.890
+Now, if you fail to connect for any reason, I would really encourage you to take a look at that message.
+
+08:14.920 --> 08:17.540
+Also, if you don't see anything around now it's down here.
+
+08:17.560 --> 08:20.200
+Try stopping scaffold and restarting it.
+
+08:20.740 --> 08:25.840
+Now, if you see an error, I would suspect that you might have a duplicate client ID in use.
+
+08:25.840 --> 08:29.440
+So try changing the client ID to something else, saving it.
+
+08:29.440 --> 08:33.190
+And that should get you your automatic refresh and then you should see connected to nets.
+
+08:33.580 --> 08:37.030
+If you still do not manage to have any success, don't sweat it.
+
+08:37.060 --> 08:38.180
+Hop over to the way.
+
+08:38.230 --> 08:39.730
+Post your code on GitHub.
+
+08:39.730 --> 08:42.850
+Link me to your code and I'll do my best to help you debug this.
+
+08:43.600 --> 08:43.930
+All right.
+
+08:43.930 --> 08:48.880
+So it looks like we were able to connect two nets and most importantly, we were able to do so using
+
+08:48.880 --> 08:51.850
+some semantics that look very similar to Mongoose.
+
+08:52.330 --> 08:53.620
+So this is definitely good.
+
+08:53.620 --> 08:58.570
+But now I'm kind of curious how are we going to actually use this thing from inside of, say, our new
+
+08:58.570 --> 09:00.550
+root handler where we are creating a ticket?
+
+09:00.550 --> 09:02.170
+So still a little bit of work to do.
+
+09:02.200 --> 09:04.720
+So let's take a pause right here and return in just a moment.

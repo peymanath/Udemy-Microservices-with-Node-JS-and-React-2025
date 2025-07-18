@@ -1,0 +1,160 @@
+WEBVTT
+
+00:01.220 --> 00:06.110
+We've now got our custom new ticket listener put together along with the base class of listener.
+
+00:06.140 --> 00:08.990
+At this point, there's something I really want to clarify very quickly.
+
+00:09.170 --> 00:12.320
+We have our base class of listener and a ticket created listener.
+
+00:12.350 --> 00:16.970
+The idea here is that we're going to define this listener class inside of our common module.
+
+00:17.000 --> 00:20.600
+Well, then import this into our different services we're going to eventually create.
+
+00:20.750 --> 00:26.300
+Then inside of each of our services, that is where we are going to actually subclass listener and create
+
+00:26.300 --> 00:32.090
+some custom listener that's going to work specifically for, say, the payment service or say the ticket
+
+00:32.090 --> 00:34.760
+service or whatever other service we are creating.
+
+00:35.030 --> 00:36.620
+So listener is just a blueprint.
+
+00:36.620 --> 00:38.640
+It is a guide on how to create a listener.
+
+00:38.660 --> 00:43.220
+We're going to actually implement these things with very custom logic inside of each of our services.
+
+00:44.080 --> 00:44.320
+All right.
+
+00:44.320 --> 00:49.360
+So with that out of the way, next thing I want to do, when we take a look at our listener file, there's
+
+00:49.360 --> 00:52.870
+a lot of code inside of here right now and it's really hard to figure out what is going on.
+
+00:53.170 --> 00:57.880
+Let's try redistributing some of the code into a couple of different files inside this project directory
+
+00:57.880 --> 01:00.640
+just to make all this stuff a little bit easier to understand.
+
+01:01.790 --> 01:07.760
+So inside the CRC folder, I'm going to first begin by creating a new folder called Events.
+
+01:08.500 --> 01:12.310
+Inside, they are going to make a new file called Base Listener TS.
+
+01:12.760 --> 01:18.520
+I would normally not use the name of base listener for this listener class we just put together, but
+
+01:18.520 --> 01:21.130
+we already have a file called Listener inside of our project.
+
+01:21.130 --> 01:25.270
+So rather than calling it listener and having two listener files, which would be really confusing,
+
+01:25.270 --> 01:27.250
+let's just give it a name of base listener.
+
+01:28.260 --> 01:30.720
+I'll then go back over to the listener file.
+
+01:30.900 --> 01:33.570
+I'm going to find the abstract class of listener.
+
+01:34.080 --> 01:35.670
+I'm going to cut that entire thing.
+
+01:40.260 --> 01:42.570
+And then I'll paste it into base listener.
+
+01:44.700 --> 01:46.930
+We then need to add some imports at the top.
+
+01:46.950 --> 01:51.870
+We're going to get message and stan from node nets streaming.
+
+01:53.410 --> 01:55.630
+And I'll make sure that I also export that class.
+
+01:57.130 --> 02:01.180
+Now let's try to also extract this ticket created listener.
+
+02:02.210 --> 02:06.950
+So inside the events directory as well, I'll make a new file called Ticket Created Listener.
+
+02:09.680 --> 02:12.320
+I'm going to go and find the ticket created listener itself.
+
+02:12.350 --> 02:13.220
+I'm going to cut it.
+
+02:14.540 --> 02:16.220
+And then paste it into that new file.
+
+02:16.520 --> 02:20.420
+And then again, we do have to add in some imports at the top or listener.
+
+02:22.400 --> 02:24.470
+From Listener.
+
+02:25.880 --> 02:31.190
+And let's also get message from node nats streaming.
+
+02:32.940 --> 02:35.130
+I'll then make sure that I export the class itself.
+
+02:38.590 --> 02:43.590
+Now, finally back inside of the listener file, we have to make sure that we import ticket.
+
+02:43.600 --> 02:44.950
+Create a listener at the top.
+
+02:45.940 --> 02:48.580
+So I will import ticket created.
+
+02:48.580 --> 02:53.890
+Listener from events ticket created listener.
+
+02:56.820 --> 03:00.510
+I can then also clean up the imports up here for message and Stan.
+
+03:01.670 --> 03:02.690
+Schultz looks good.
+
+03:04.010 --> 03:04.310
+All right.
+
+03:04.310 --> 03:07.670
+If I go back over to my terminal, I should be able to confirm that everything is still working.
+
+03:07.670 --> 03:08.870
+Yep, it's still running.
+
+03:08.870 --> 03:12.950
+And if I publish an event, I see it appear in one of these terminal windows.
+
+03:13.370 --> 03:14.000
+Very good.
+
+03:14.240 --> 03:15.350
+So just a little bit of code.
+
+03:15.350 --> 03:15.860
+Clean up.
+
+03:15.870 --> 03:16.640
+Quick pause right here.
+
+03:16.640 --> 03:17.810
+Continue in just a minute.

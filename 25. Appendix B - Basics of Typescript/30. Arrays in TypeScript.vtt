@@ -1,0 +1,256 @@
+WEBVTT
+
+00:00.600 --> 00:03.570
+In this video, we're going to start to discuss a raise in TypeScript.
+
+00:03.600 --> 00:07.920
+As usual, we'll start off with a plain definition, then walk through some examples and then talk about
+
+00:07.920 --> 00:10.080
+why we care about these things and when to use them.
+
+00:10.080 --> 00:11.490
+So let's get to it first.
+
+00:11.490 --> 00:12.660
+A quick definition.
+
+00:13.110 --> 00:17.700
+When we work with the raise in TypeScript, we're essentially working with plain JavaScript arrays,
+
+00:17.700 --> 00:21.150
+so we still have all the features that you will are already used to.
+
+00:21.330 --> 00:24.690
+We can push elements into an array or pop elements out.
+
+00:24.840 --> 00:30.330
+We can map over an array, write a for each loop, use a for loop, all that kind of good stuff.
+
+00:30.630 --> 00:35.910
+The one big difference with arrays in TypeScript is that generally we only stick elements with a very
+
+00:35.910 --> 00:37.740
+consistent type into the array.
+
+00:38.040 --> 00:42.900
+So for example, if we make an array that is supposed to contain strings, we will only put strings
+
+00:42.900 --> 00:43.770
+inside there.
+
+00:43.770 --> 00:48.780
+And if we try to put a number in or a boolean, we're going to very quickly get an error message.
+
+00:49.140 --> 00:53.940
+So in general, when we work with the raise in TypeScript, we're making use of one specific type of
+
+00:53.940 --> 00:55.260
+element inside that array.
+
+00:55.710 --> 01:00.480
+We can technically put different types of values inside of an array, but if we want to do so, we have
+
+01:00.480 --> 01:04.560
+to be very explicit about it and add in a special little type annotation.
+
+01:04.800 --> 01:07.800
+And we are going to look at a quick example of how to do that as well.
+
+01:08.760 --> 01:09.120
+All right.
+
+01:09.120 --> 01:12.390
+So as you might guess, pretty critical to look at some code samples here.
+
+01:12.390 --> 01:14.430
+So that's the only definition we're going to get.
+
+01:14.430 --> 01:18.150
+Let's flip on over to our code editor and start writing out a little bit of code.
+
+01:18.780 --> 01:24.150
+So back inside my editor, I'm going to make a new file inside of my root project directory called Arrays
+
+01:24.190 --> 01:25.290
+Dots.
+
+01:26.310 --> 01:29.910
+Then inside of here, I'm going to declare an array and just assign it to a variable.
+
+01:30.300 --> 01:37.860
+So I'll say const car maker's is going to be an array of strings that has strings like Ford, Toyota
+
+01:37.860 --> 01:39.480
+and Chevy like so.
+
+01:40.190 --> 01:45.560
+If I now hover over that array right there, you'll notice that I have an added on annotation that says
+
+01:45.560 --> 01:48.170
+that car makers is going to be an array of strings.
+
+01:48.320 --> 01:50.560
+So this is type inference in action.
+
+01:50.570 --> 01:55.970
+TypeScript took a look at the value inside this array right here and it said, okay, it looks like
+
+01:55.970 --> 01:56.900
+those are all strings.
+
+01:56.900 --> 02:02.000
+So I guess carmakers is always going to point at an array that only contains strings.
+
+02:03.410 --> 02:04.420
+Now that's type inference.
+
+02:04.430 --> 02:05.930
+Doing that for us automatically.
+
+02:05.930 --> 02:12.500
+Remember, if we wanted to be really explicit about this, we could always put on a colon string and
+
+02:12.500 --> 02:13.880
+then square brackets like so.
+
+02:14.420 --> 02:19.850
+So that's a type annotation that says that this variable is always going to point at an array that contains
+
+02:19.850 --> 02:21.110
+nothing but strings.
+
+02:21.710 --> 02:26.170
+We will sometimes want to add in type annotations when we are working with the RES.
+
+02:26.180 --> 02:32.270
+So the case in which we would want to do that is if we initialize the array as an empty array like so.
+
+02:33.060 --> 02:37.890
+In this case, if we did not have the annotation on here, TypeScript would not have enough information
+
+02:37.890 --> 02:41.700
+to understand what type of value is going to be inside that array.
+
+02:41.970 --> 02:47.010
+So, for example, if I now hover over carmakers, it says any array, and that means we can put any
+
+02:47.010 --> 02:48.450
+type of value inside there.
+
+02:48.960 --> 02:52.620
+Remember, we want to avoid the any type as much as possible.
+
+02:52.680 --> 02:58.350
+So if we ever have to initialize an array as an empty array, we will add on our annotation.
+
+02:58.560 --> 03:00.270
+So I'll put in string like so.
+
+03:01.090 --> 03:05.590
+Otherwise, if we're going to initialize our array with some contents already inside of it, then we
+
+03:05.590 --> 03:07.120
+don't need that annotation.
+
+03:09.040 --> 03:09.370
+All right.
+
+03:09.370 --> 03:12.460
+Now, we're not limited to just putting basic values inside of a race.
+
+03:12.460 --> 03:14.890
+We can also put complex objects inside as well.
+
+03:15.160 --> 03:20.770
+So, for example, let's try creating a new array here called dates, and I'm going to be creating an
+
+03:20.770 --> 03:24.760
+array and assigning it a variety of new date object instances.
+
+03:25.330 --> 03:29.590
+If I now hover over dates once again, it'll tell me that this is going to be an array that contains
+
+03:29.590 --> 03:31.570
+instances of dates.
+
+03:34.010 --> 03:39.560
+Next up, we can also write out two dimensional arrays inside of TypeScript very easily.
+
+03:40.070 --> 03:44.340
+To do so, we're just going to double up on the syntax around that annotation we put together.
+
+03:44.360 --> 03:50.660
+So, for example, let's say we've got an array called Cars by Make and I want to have like a 2D array
+
+03:50.660 --> 03:51.920
+of strings inside of here.
+
+03:52.250 --> 03:57.290
+So inside of the first element of the outer array, I'm going to put a new array inside of here and
+
+03:57.290 --> 04:01.010
+then I'll put in like some actual model of car made by, say, Ford.
+
+04:01.010 --> 04:02.600
+So maybe an F-150.
+
+04:03.340 --> 04:08.620
+And then at the second index, I'll put in a car by semi car by Toyota, which is a Corolla.
+
+04:09.460 --> 04:11.230
+And then finally, something by Chevy.
+
+04:11.260 --> 04:13.120
+How about a Camaro?
+
+04:13.600 --> 04:14.350
+Like so.
+
+04:14.740 --> 04:19.870
+So if we now hover over cars by make once again, we'll see the type invitation for a two dimensional
+
+04:19.870 --> 04:20.440
+array.
+
+04:20.680 --> 04:25.180
+In order to indicate a two dimensional array will write out the type of value that goes inside the inner
+
+04:25.180 --> 04:25.810
+array.
+
+04:26.260 --> 04:29.620
+Then one square bracket and a second square bracket.
+
+04:30.010 --> 04:35.540
+So that means that we're going to have an array that contains arrays of strings.
+
+04:35.560 --> 04:36.190
+Right there.
+
+04:36.190 --> 04:38.860
+That's the array inner array of string indication right there.
+
+04:39.860 --> 04:42.920
+Once again, we don't have to add in that annotation if we don't want to.
+
+04:42.950 --> 04:47.510
+The only time we would is if we didn't have any contents in the array when we initialized it.
+
+04:47.810 --> 04:50.600
+So in this case we would write out string square bracket.
+
+04:50.600 --> 04:52.400
+Square square bracket like so.
+
+04:53.360 --> 04:58.160
+Now, like I said, when we type in array, we're putting on a restriction on what type of value we
+
+04:58.160 --> 04:59.210
+can put into it.
+
+04:59.450 --> 05:01.100
+So let's have a quick pause right here.
+
+05:01.100 --> 05:04.340
+When we come back in the next video, we'll see a very quick example of that.

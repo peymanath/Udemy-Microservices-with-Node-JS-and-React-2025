@@ -1,0 +1,160 @@
+WEBVTT
+
+00:00.770 --> 00:05.030
+Now that we've got some initial setup of our application complete, we can start to think about writing
+
+00:05.030 --> 00:06.650
+code for our actual application.
+
+00:07.100 --> 00:11.870
+So in this video, I want to focus on the overall project structure we're going to use in general.
+
+00:11.870 --> 00:15.680
+For all the applications you and I are going to build, we're going to create a collection of different
+
+00:15.680 --> 00:16.490
+files.
+
+00:16.820 --> 00:22.220
+Every different file is going to contain one single class, and each of those classes represents one
+
+00:22.220 --> 00:24.380
+different thing inside of our project.
+
+00:24.920 --> 00:29.090
+Now, in some cases, I'm going to have you kind of figure out the different schema or the different
+
+00:29.090 --> 00:32.000
+classes we're going to create, but in this case, we're going to do it together.
+
+00:32.510 --> 00:37.310
+So when I look at this mock up right here, I really see three different things going on.
+
+00:37.730 --> 00:40.670
+I see one type of object for our user.
+
+00:40.670 --> 00:46.520
+So I think we should probably create a single file called Class Dot or some user dots that will hold
+
+00:46.520 --> 00:48.350
+a user class inside of it.
+
+00:48.950 --> 00:53.690
+That user class is going to have some methods and properties associated with it that define exactly
+
+00:53.690 --> 00:55.280
+what it means to be a user.
+
+00:56.500 --> 00:59.470
+Next up, I see a company thing inside of here as well.
+
+00:59.470 --> 01:04.840
+So likewise, I think we should create a separate file to house a company class that will also represent
+
+01:04.840 --> 01:07.060
+what a company is inside of our application.
+
+01:07.960 --> 01:11.920
+And then finally, the last obvious piece that we have here is the map itself.
+
+01:12.250 --> 01:16.870
+So I think we should probably create some separate file that's going to hold a class to represent the
+
+01:16.870 --> 01:21.610
+map and probably have some methods attached to it to actually get the map to show up on the screen and
+
+01:21.610 --> 01:23.380
+render some markers on it.
+
+01:23.920 --> 01:26.650
+So in total, I think we've got three separate classes here.
+
+01:26.650 --> 01:30.880
+We've got like a map file, a user file and a company file.
+
+01:31.450 --> 01:36.880
+Then to actually get all these different classes to work together, we will import them into our root
+
+01:36.880 --> 01:38.410
+indexed file.
+
+01:38.410 --> 01:43.450
+And that's where we're going to actually initialize our project, create a map, create a user, create
+
+01:43.450 --> 01:48.130
+a company and have some code to actually show the user and the company on that map.
+
+01:49.330 --> 01:50.530
+So that's the general idea.
+
+01:51.550 --> 01:53.660
+So right now, let's get started on our users.
+
+01:54.940 --> 01:56.500
+Back inside, my code editor.
+
+01:57.490 --> 02:03.490
+I'm going to find my Z folder and inside there I'm going to make a new file called User Dots.
+
+02:04.370 --> 02:09.080
+And one thing I to want to point out right away, you'll notice that I called the file indexed with
+
+02:09.080 --> 02:13.670
+a lowercase I but user I labeled with a capital U.
+
+02:13.850 --> 02:15.470
+So what's with the difference there?
+
+02:15.920 --> 02:22.370
+Well, by convention, any time we have a file whose primary purpose is to create an export a class,
+
+02:22.370 --> 02:25.100
+we're usually going to give it a capital name.
+
+02:25.100 --> 02:26.590
+So in this case, capital U.
+
+02:26.600 --> 02:30.860
+User, because we're going to create an export a class from this file.
+
+02:31.370 --> 02:34.630
+However, in indexed notes, we're not going to have any classes.
+
+02:34.640 --> 02:39.530
+We're going to have just some code to import some classes and then use those to actually make something
+
+02:39.530 --> 02:40.130
+happen.
+
+02:40.880 --> 02:46.220
+You're going to most commonly see lowercase file names any time you have a file that either serves as
+
+02:46.220 --> 02:47.870
+something like the indexed file.
+
+02:47.870 --> 02:54.110
+So like kind of the root of your application or a file that exports plain objects, plane functions
+
+02:54.110 --> 02:55.400
+or constants.
+
+02:56.590 --> 02:58.810
+All right, so now we've got the user file.
+
+02:58.840 --> 03:04.120
+I'm going to get started inside of here by declaring a new class called user like so.
+
+03:04.790 --> 03:07.130
+And that's where we're going to leave it for right now.
+
+03:07.130 --> 03:09.880
+So let's take a quick pause with just this inside of here.
+
+03:09.890 --> 03:14.030
+By the way, if you see any error inside of this file right now when we save this, that's totally fine.
+
+03:14.030 --> 03:15.740
+We're going to fix it up in just a second.
+
+03:15.950 --> 03:19.160
+So let's take a quick pause right here, and we'll see you in just a minute.

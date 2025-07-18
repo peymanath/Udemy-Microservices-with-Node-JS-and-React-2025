@@ -1,0 +1,328 @@
+WEBVTT
+
+00:00.660 --> 00:05.340
+We have now published a working build of our common module, so we're now going to go back over to our
+
+00:05.700 --> 00:07.820
+service inside of our OTT service.
+
+00:07.830 --> 00:12.900
+If we open up that CRC directory, open up routes and then open up, say the current user file.
+
+00:12.930 --> 00:16.020
+We've got a ton of broken import statements inside of here.
+
+00:16.260 --> 00:21.330
+So to fix all these up, we're going to install our common module into the project.
+
+00:21.420 --> 00:25.460
+After we install that will then go through all the different files inside of our project.
+
+00:25.470 --> 00:30.060
+We will find any broken import statements like the one we have right here and fix those all up.
+
+00:30.390 --> 00:31.590
+So let's get to it.
+
+00:32.070 --> 00:38.790
+Back at my terminal, I'm going to change over to my auth project directory and then I will install
+
+00:38.790 --> 00:41.280
+my common module so I'll do an NPM install.
+
+00:41.460 --> 00:45.540
+Then my organization name which is Srg tickets slash common.
+
+00:45.930 --> 00:50.710
+Remember, you definitely have a different organization name to remember what yours is.
+
+00:50.730 --> 00:55.890
+You can always go back over to your common directory, find the package JSON file inside there and then
+
+00:55.890 --> 00:57.750
+look up the name field right there.
+
+01:00.380 --> 01:02.330
+All right, so I'm going to install a common.
+
+01:04.120 --> 01:05.400
+It should be pretty quick.
+
+01:06.720 --> 01:07.770
+And there we go.
+
+01:09.160 --> 01:15.790
+So now that we have all that code inside of our off project, let's start to update these import statements.
+
+01:16.210 --> 01:20.260
+We're going to do this in a very methodical fashion where it's going to go into our CRC directory and
+
+01:20.260 --> 01:24.100
+we're going to go through all the files inside of here from top to bottom, one at a time.
+
+01:24.100 --> 01:28.000
+And we're going to make sure that we don't have any errors in any import statements anywhere across
+
+01:28.000 --> 01:28.570
+the board.
+
+01:29.110 --> 01:31.390
+So we will first begin inside of user tests.
+
+01:31.720 --> 01:34.570
+Well, I don't see any errors with the import statements inside of here.
+
+01:34.570 --> 01:36.010
+So let's close this.
+
+01:36.900 --> 01:37.900
+Let's go into the roots.
+
+01:37.920 --> 01:38.460
+Underscore.
+
+01:38.460 --> 01:38.910
+Underscore.
+
+01:38.910 --> 01:39.870
+Test directory.
+
+01:40.780 --> 01:42.100
+Current user test file.
+
+01:42.130 --> 01:43.090
+No issues here.
+
+01:43.980 --> 01:45.220
+Sign and test file.
+
+01:45.270 --> 01:46.230
+No issues here.
+
+01:47.010 --> 01:47.670
+Sign out.
+
+01:47.910 --> 01:48.750
+No problem.
+
+01:48.960 --> 01:49.890
+And sign up.
+
+01:50.010 --> 01:50.910
+No problem.
+
+01:52.520 --> 01:55.190
+All right out of the test directory into a current user.
+
+01:55.610 --> 01:57.920
+And right away I see some air start to appear.
+
+01:58.220 --> 02:02.090
+So our current user middleware is no longer defined inside this middleware directory.
+
+02:02.270 --> 02:05.000
+We don't even have a middleware directory inside the auth module.
+
+02:05.270 --> 02:10.160
+So we need to update this import statement to try to get the current user middleware out of our common
+
+02:10.160 --> 02:11.180
+module instead.
+
+02:11.450 --> 02:13.880
+So all we have to do is update that import statement.
+
+02:15.180 --> 02:20.910
+So I'll put inside of here the name of my module SG tickets slash comment and again for you you will
+
+02:20.910 --> 02:22.680
+have a different organisation name.
+
+02:23.650 --> 02:25.870
+So as soon as I add that in air goes away.
+
+02:26.120 --> 02:27.070
+That's pretty much it.
+
+02:27.820 --> 02:30.940
+So we're going to repeat that same process for all the remaining files.
+
+02:31.240 --> 02:32.530
+Let's go over to sign in.
+
+02:33.510 --> 02:35.340
+Looks like we've got two errors right here.
+
+02:35.370 --> 02:36.750
+Now, this is actually kind of nice.
+
+02:36.750 --> 02:42.300
+We were importing a middleware and air in separate import statements, validate request and bad request
+
+02:42.300 --> 02:42.720
+error.
+
+02:43.140 --> 02:47.790
+Both these things are now being exported from the same location inside of our shared module, so we
+
+02:47.790 --> 02:50.310
+can actually condense these two imports down to one.
+
+02:50.610 --> 02:51.510
+Let me show you how.
+
+02:52.380 --> 02:52.770
+Up here.
+
+02:52.770 --> 02:56.250
+I'll put in an import for validate request.
+
+02:57.190 --> 02:59.710
+And bad request air.
+
+03:00.610 --> 03:03.040
+From SG tickets.
+
+03:04.820 --> 03:05.510
+Common.
+
+03:08.970 --> 03:11.010
+I'll then delete the other two imports.
+
+03:12.160 --> 03:13.330
+And we're good to go.
+
+03:17.070 --> 03:17.510
+Okay.
+
+03:18.090 --> 03:19.140
+That's it for CNN.
+
+03:19.170 --> 03:20.850
+Let's move on to sign out.
+
+03:21.390 --> 03:23.970
+Well, no issue here about sign up.
+
+03:25.010 --> 03:25.220
+Okay.
+
+03:25.220 --> 03:27.440
+We got two more here, so let's fix those up.
+
+03:29.240 --> 03:32.360
+I'll do an import of validate request.
+
+03:33.590 --> 03:36.470
+And bad request air.
+
+03:37.290 --> 03:38.010
+From.
+
+03:38.700 --> 03:39.390
+There we go.
+
+03:39.630 --> 03:41.430
+And then delete the old imports.
+
+03:45.380 --> 03:45.480
+Get.
+
+03:45.600 --> 03:46.380
+That looks good.
+
+03:48.700 --> 03:50.200
+That's it for our roots directory.
+
+03:50.200 --> 03:51.940
+I'll take a look at these services file.
+
+03:51.940 --> 03:54.340
+So inside of services, I got password TS.
+
+03:54.340 --> 03:55.690
+Well, no issue here.
+
+03:55.930 --> 03:57.700
+How about inside of our test directory?
+
+03:57.970 --> 03:58.360
+Nope.
+
+03:58.360 --> 03:59.530
+No issue here.
+
+04:00.350 --> 04:01.960
+About inside of apts.
+
+04:02.320 --> 04:06.430
+Instead of APTs, we've got that air handler and the not found air as well.
+
+04:06.700 --> 04:09.730
+So let's make sure we get those out of our custom module.
+
+04:11.350 --> 04:11.740
+Up here.
+
+04:11.740 --> 04:16.420
+I'll get air handler and not found air.
+
+04:17.500 --> 04:19.870
+From SG tickets comin.
+
+04:20.320 --> 04:22.480
+And then once again, I'll delete the old ones.
+
+04:26.310 --> 04:27.330
+Well, that looks good.
+
+04:27.360 --> 04:28.810
+I'll do a quick check inside the file.
+
+04:28.830 --> 04:30.290
+No other issues inside of here.
+
+04:30.300 --> 04:34.770
+So we are now onto our very last file in texts and inside of here.
+
+04:34.800 --> 04:35.020
+Nope.
+
+04:35.070 --> 04:36.120
+No issues either.
+
+04:36.570 --> 04:37.620
+And that's pretty much it.
+
+04:38.220 --> 04:42.120
+So now, in theory, our art module or project should be working A-OK.
+
+04:42.150 --> 04:46.470
+So now we should be able to start scaffold back up and just make sure we can still access our project
+
+04:46.470 --> 04:47.400
+inside the browser.
+
+04:47.670 --> 04:48.630
+So let's get to it.
+
+04:49.990 --> 04:51.190
+Back inside of my terminal.
+
+04:51.700 --> 04:55.630
+I had previously closed down scaffold when we started moving all that code around.
+
+04:55.780 --> 04:59.410
+So inside of my ticketing project directory, I'll do another scaffold dev.
+
+05:01.250 --> 05:06.430
+Now as we launch this, we have made a change that packaged JSON file of our off project.
+
+05:06.440 --> 05:10.390
+So chances are we're going to have to rebuild that project and install all the dependencies for it.
+
+05:10.400 --> 05:12.800
+Once again, that might take a moment or two.
+
+05:12.830 --> 05:16.520
+So I'll pause the video right here and we'll do a quick test of our project in the next video.

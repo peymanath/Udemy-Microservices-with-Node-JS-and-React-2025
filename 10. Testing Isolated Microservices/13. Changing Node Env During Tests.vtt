@@ -1,0 +1,289 @@
+WEBVTT
+
+00:00.730 --> 00:04.450
+I would really like to write out one or more two quick tests around our sign up route handler.
+
+00:04.480 --> 00:09.340
+At this point, we've really only been making sure that the responses that come back are of an appropriate
+
+00:09.340 --> 00:10.170
+status code.
+
+00:10.180 --> 00:14.380
+So in this case, we're going to take a look at a slightly more in depth test, just slightly.
+
+00:15.010 --> 00:16.270
+So in the side of our route.
+
+00:16.270 --> 00:20.440
+HANDLER As a quick reminder, we take a look at the email, we make sure the emails use.
+
+00:20.440 --> 00:22.090
+We then create and save a user.
+
+00:23.060 --> 00:26.840
+We then generate our JSON web token and then we store it on that session object.
+
+00:27.020 --> 00:31.130
+Remember, that session object is going to be turned into a string by cookie session.
+
+00:31.550 --> 00:36.770
+The cookies session middleware is then going to attempt to send this cookie back over to the user's
+
+00:36.770 --> 00:40.970
+browser inside the response to be really precise on what happens there.
+
+00:40.970 --> 00:45.740
+In order to send that information back, the cookie session middleware is going to set a header on the
+
+00:45.740 --> 00:46.520
+response.
+
+00:46.790 --> 00:49.790
+This header has a name of set cookie.
+
+00:50.430 --> 00:54.930
+So to make sure that we actually generated JSON Web token and sent it back inside that response, let's
+
+00:54.930 --> 01:00.630
+make sure that after signing up successfully, our response has a header of set dash cookie.
+
+01:01.710 --> 01:05.360
+We could always also try to inspect that cookie and make sure as a JSON web token.
+
+01:05.370 --> 01:09.360
+But let's start small if right now, let's just make sure that the response has that header.
+
+01:09.900 --> 01:10.150
+Okay.
+
+01:10.200 --> 01:12.750
+So to write out this test, I'm going to go back over to my test file.
+
+01:13.200 --> 01:18.840
+I'm going to put together another block at the very bottom and I'll say something like, it sets a cookie
+
+01:19.380 --> 01:21.960
+after successful sign up.
+
+01:26.070 --> 01:30.780
+Then inside of here, we're going to make another successful signup request rather than writing out
+
+01:30.780 --> 01:31.450
+from scratch.
+
+01:31.470 --> 01:33.810
+I'll just copy paste the one we did in the last test.
+
+01:33.840 --> 01:37.890
+Make sure you copy paste the one that has a status code of 201.
+
+01:37.890 --> 01:39.000
+Not the 400.
+
+01:40.560 --> 01:41.850
+So I didn't like so.
+
+01:43.290 --> 01:47.910
+So now, after making this request, we need to somehow inspect the response that comes back from it.
+
+01:48.090 --> 01:53.250
+It turns out that when we make a request with super test, this entire call right here returns the response.
+
+01:53.520 --> 01:56.400
+So we can say response like so.
+
+01:56.730 --> 02:00.900
+And that right there is our response object, the same kind of response object that we get access to
+
+02:00.930 --> 02:03.690
+inside of our request handlers like that one right there.
+
+02:04.230 --> 02:08.850
+So we can take a look at that response and try to inspect the data that we're trying to send back inside
+
+02:08.850 --> 02:11.070
+of it or also inspect the headers.
+
+02:11.100 --> 02:13.320
+Of course, we care about the headers in this case.
+
+02:14.950 --> 02:21.370
+So we're going to write out expect response get so get right.
+
+02:21.370 --> 02:25.450
+Here is a method that is built into the response that allows us to look up any of the headers that have
+
+02:25.450 --> 02:26.710
+been set in the response.
+
+02:27.010 --> 02:31.360
+The header that we are going to try to look up is set dash cookie like.
+
+02:31.360 --> 02:34.570
+So make sure you use the capital letters as I did.
+
+02:35.470 --> 02:41.350
+So we're going to attempt to pull out that cookie and then we will expect that it is defined.
+
+02:41.350 --> 02:46.540
+So we'll write out that to be defined like so.
+
+02:47.830 --> 02:48.130
+Okay.
+
+02:48.130 --> 02:49.540
+So let's save this and run this test.
+
+02:49.540 --> 02:52.420
+And I want you to know right away this test is going to fail.
+
+02:52.420 --> 02:54.670
+But nonetheless, let's run it anyways.
+
+02:56.140 --> 02:57.210
+If I flip back over.
+
+02:57.240 --> 02:58.200
+Yep, I see.
+
+02:58.230 --> 03:03.150
+As a matter of fact, we got a value of undefined when we try to get that set cookie header, which
+
+03:03.150 --> 03:06.330
+means that there is no set cookie header inside the response.
+
+03:06.750 --> 03:11.580
+So it looks like our test is failing entirely, even though we know for a fact that we've been able
+
+03:11.580 --> 03:14.220
+to sign up using this request handler.
+
+03:14.250 --> 03:15.870
+So what's going on right now?
+
+03:16.140 --> 03:18.480
+Well, this is a very, very small technical issue.
+
+03:18.480 --> 03:23.100
+And this is why I really want to highlight it specifically in a test around checking to see if that
+
+03:23.100 --> 03:29.190
+cookie exists as a reminder back inside of our APTs file, which is where we create our Express app
+
+03:29.190 --> 03:30.780
+and wire up a bunch of middleware.
+
+03:31.050 --> 03:34.290
+When we wired up that cookie session library, we said Secure.
+
+03:34.320 --> 03:35.580
+True right there.
+
+03:35.880 --> 03:36.240
+Secure.
+
+03:36.240 --> 03:41.610
+True means that cookies are only going to be shared when someone is making a request to our server over
+
+03:41.610 --> 03:43.380
+an HTTPS connection.
+
+03:44.040 --> 03:51.210
+When we make use of super test, we are not making an HTTPS connection, we are making plain HTTP requests.
+
+03:51.600 --> 03:56.160
+So Cookie Session sees that and it says, Oh, I don't care that I'm in a test environment, I'm only
+
+03:56.160 --> 04:00.370
+sending cookies if this is a secure request in this case, it's not.
+
+04:00.390 --> 04:03.810
+We're not making a secure request in the test environment.
+
+04:04.320 --> 04:09.480
+So we could either figure out how to make a secure request or alternatively, what would be way easier
+
+04:09.480 --> 04:11.610
+to do and way more time effective.
+
+04:11.880 --> 04:17.400
+We can decide to change this secure property to false if we are in a test environment.
+
+04:17.520 --> 04:21.990
+So if we are running our test through just we're going to flip the value of this thing to false and
+
+04:21.990 --> 04:26.520
+that will allow cookie session to set that cookie even if the request is not secure.
+
+04:27.490 --> 04:31.510
+So to do so, we'll take a look at another environment variable we're going to put in here.
+
+04:31.510 --> 04:36.910
+Process and V node underscore E and v not equal to test.
+
+04:37.860 --> 04:42.720
+So whenever Jest runs our tests at the terminal, it's going to set this node environment variable equal
+
+04:42.720 --> 04:44.070
+to the string test.
+
+04:44.070 --> 04:47.530
+So we're saying that if equals is equal to test, give us false.
+
+04:47.550 --> 04:52.920
+Otherwise, if we're in any other kind of environment, be it development or production, then set secure
+
+04:52.920 --> 04:53.550
+to true.
+
+04:54.650 --> 04:55.280
+Let's save this.
+
+04:55.280 --> 04:58.970
+Now, look back over to our terminal and now we're going to see that test pass.
+
+04:59.540 --> 05:00.140
+Awesome.
+
+05:00.890 --> 05:04.430
+So again, I really just want to highlight the fact that we needed to add in this little change right
+
+05:04.430 --> 05:08.150
+here to get all of our authentication stuff working in the test environment.
+
+05:09.160 --> 05:09.790
+All right.
+
+05:10.180 --> 05:15.190
+Now, as I mentioned, there are a ton of different tests we could write right out around our sign up
+
+05:15.190 --> 05:16.050
+request handler.
+
+05:16.060 --> 05:19.450
+But I think that what we've put together so far is pretty much good for right now.
+
+05:19.450 --> 05:21.670
+I don't want to totally overdo this testing stuff.
+
+05:21.850 --> 05:26.620
+In addition, I would like to write out some tests for our other request handlers as well.
+
+05:26.860 --> 05:28.630
+So let's take a quick, quick pass right here.
+
+05:28.630 --> 05:32.800
+We're going to start to write out some request handlers for all these other some tests for these other
+
+05:32.800 --> 05:33.790
+request handlers.
+
+05:33.790 --> 05:37.810
+Most of them are going to be pretty similar in nature, but there will be one or two locations where
+
+05:37.810 --> 05:39.880
+we run into some other interesting issues.
+
+05:39.880 --> 05:42.490
+So let's start to write out these tests in just a moment.

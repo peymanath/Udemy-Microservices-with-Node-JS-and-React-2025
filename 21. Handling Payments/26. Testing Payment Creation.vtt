@@ -1,0 +1,331 @@
+WEBVTT
+
+00:02.100 --> 00:03.630
+Back inside of our handler.
+
+00:03.630 --> 00:07.260
+Right after we create this charge, we're then going to take the response so we get back.
+
+00:07.260 --> 00:10.590
+That's going to be an object that tells us some details about the charge that was created.
+
+00:10.590 --> 00:15.540
+We're going to take the ID out of that thing and then use it to create a new payment record to get started.
+
+00:15.540 --> 00:20.130
+At the very top of this file, I will import the payment model.
+
+00:21.080 --> 00:23.810
+From up one directory models payment.
+
+00:26.230 --> 00:28.500
+Then back down right after we create that charge.
+
+00:28.510 --> 00:32.500
+Let's take a look at our documentation really quickly just to understand what comes back when we create
+
+00:32.500 --> 00:32.860
+a charge.
+
+00:32.860 --> 00:36.220
+Because I keep on saying, oh yeah, we get back something that represents the charge.
+
+00:36.220 --> 00:38.380
+But again, let's just look at the docs really quick.
+
+00:39.250 --> 00:44.020
+All right, so back on the Stripe API docs, I'm going to take a look at creating a charge and we could
+
+00:44.020 --> 00:46.030
+see the response we get back right here.
+
+00:46.540 --> 00:50.860
+So it's going to be this big object that has a lot of information about the charge that was created.
+
+00:50.860 --> 00:53.680
+And very simply, you'll notice it has that ID property.
+
+00:53.680 --> 00:54.310
+That's pretty much it.
+
+00:54.310 --> 00:55.480
+That's what we want to store.
+
+00:55.960 --> 01:00.370
+Once we store that ID, if we ever want to look up this charge at some point in the future, we could
+
+01:00.370 --> 01:04.360
+use this retrieve a charge endpoint through the Stripe client.
+
+01:04.360 --> 01:08.800
+So we would do a stripe charges, retrieve, put in the ID right there, and that would give us the
+
+01:08.800 --> 01:10.420
+full charge object.
+
+01:10.780 --> 01:14.770
+And so that's how we could retrieve a charge potentially at some point in time in the future if we needed
+
+01:14.770 --> 01:16.810
+to look up any further details about it.
+
+01:19.040 --> 01:19.420
+Okay.
+
+01:19.640 --> 01:23.450
+So that entire big response is going to come out of this create call.
+
+01:24.670 --> 01:26.860
+So I receive that as a variable called charge.
+
+01:28.730 --> 01:31.640
+And then immediately after, I'll build up a new payment.
+
+01:32.160 --> 01:34.100
+So it'll be a payment build.
+
+01:35.400 --> 01:38.520
+I'm going to pass in the order ID as order ID.
+
+01:39.820 --> 01:41.110
+And actually we do not have an order.
+
+01:41.110 --> 01:42.730
+I ordered ID property.
+
+01:42.730 --> 01:46.990
+We've got just the order ID itself which actually suits pretty well for our uses.
+
+01:47.020 --> 01:48.460
+They'll put in just order ID.
+
+01:49.480 --> 01:52.780
+And then our stripe ID is charged.
+
+01:53.080 --> 01:53.590
+ID.
+
+01:56.070 --> 02:00.330
+Then after creating the payment will do an A await payment save.
+
+02:02.970 --> 02:03.880
+Well, that's pretty much it.
+
+02:03.900 --> 02:05.130
+Not the worst thing in the world.
+
+02:06.500 --> 02:07.550
+Now as usual.
+
+02:07.550 --> 02:11.030
+It'd be fantastic to write out a real quick test around this.
+
+02:11.240 --> 02:13.760
+So let's go back over to our route handler test file.
+
+02:15.840 --> 02:16.770
+Here it is right here.
+
+02:17.500 --> 02:20.350
+I think we could put together a test for this very, very quickly.
+
+02:20.650 --> 02:23.290
+As a matter of fact, we'll just reuse the test we already put together.
+
+02:23.470 --> 02:27.100
+So at the very top, I will import the payment model.
+
+02:28.150 --> 02:29.380
+From up to directories.
+
+02:29.380 --> 02:30.820
+Models payment.
+
+02:33.090 --> 02:36.210
+I'll then go down to the most recent tests that we put together.
+
+02:36.970 --> 02:39.100
+That is the success case won right here.
+
+02:39.460 --> 02:42.550
+And we'll just add in an additional expectation to this thing.
+
+02:42.580 --> 02:46.930
+So at the very bottom of the test, after we make sure that the stripe charge was actually created,
+
+02:46.930 --> 02:51.580
+let's take a look in our payment collection and just make sure that a payment was actually created and
+
+02:51.580 --> 02:55.330
+saved with the given stripe ID or alternatively with a given order ID.
+
+02:55.330 --> 02:56.500
+Either one would be fine.
+
+02:58.360 --> 03:01.210
+So I will do a payment.
+
+03:01.780 --> 03:04.060
+Is a weight payment.
+
+03:04.360 --> 03:05.440
+Find one.
+
+03:07.090 --> 03:10.030
+So we'll try to find one payment saved to the payment collection.
+
+03:10.330 --> 03:16.000
+And how about we try to find the payment with the ID equal to the stripe charges ID and the given order
+
+03:16.000 --> 03:16.810
+ID as well?
+
+03:16.840 --> 03:19.990
+That'll really make sure that we save the payment with all the correct details.
+
+03:20.620 --> 03:23.800
+So I'm going to say that I want to find a payment with this.
+
+03:23.800 --> 03:24.460
+Order ID.
+
+03:24.490 --> 03:25.540
+Order ID.
+
+03:26.660 --> 03:32.000
+And with a stripe ID of stripe charge dot id.
+
+03:33.610 --> 03:37.330
+Once again, you'll notice we get an error right there because this thing might be undefined.
+
+03:38.330 --> 03:41.450
+We're going to say TypeScript, don't sweat it because you're really checked for the existence of that
+
+03:41.450 --> 03:42.530
+variable right there.
+
+03:45.040 --> 03:47.140
+After that, we will write out an expectation.
+
+03:49.120 --> 03:50.520
+To make sure that we actually found a payment.
+
+03:50.530 --> 03:53.020
+Now, there is a real small gotcha here.
+
+03:53.050 --> 03:57.340
+You'll notice that on the last step when we looked up all of our different charges, tried to find a
+
+03:57.340 --> 04:02.410
+given charge, the actual expectation we wrote out was expect this thing to be defined.
+
+04:02.440 --> 04:08.110
+The reason that we use the to be defined matcher was that when we use the find method right here, where
+
+04:08.110 --> 04:13.810
+are they're going to get the record we were looking for or a value of undefined the to be defined matcher
+
+04:13.810 --> 04:19.480
+itself checks to see that a value is not undefined specifically the value not undefined.
+
+04:20.330 --> 04:25.490
+Now in the case of payment right here, if we are not able to find a payment with the given filters
+
+04:26.000 --> 04:31.970
+rather than being given undefined, we get a value of null, null and undefined are two different things.
+
+04:31.970 --> 04:39.650
+So if we expect payment to be defined, this will always evaluate successfully or truthfully.
+
+04:39.680 --> 04:43.820
+In other words, we will not fail to matter because the payment variable is either going to be the payment
+
+04:43.820 --> 04:47.030
+we are looking for or it will be a value of null.
+
+04:47.030 --> 04:51.650
+And both those are going to pass this expectation because again, this thing is looking for a value
+
+04:51.650 --> 04:52.760
+to be undefined.
+
+04:54.070 --> 04:58.720
+So because payment is either going to be a payment or null, we need to specifically say that we expect
+
+04:58.720 --> 05:00.850
+this thing not to be null.
+
+05:01.300 --> 05:02.710
+So we're going to update that matcher.
+
+05:03.550 --> 05:09.610
+And say that we expect payment not to be null like so.
+
+05:11.630 --> 05:11.810
+Okay.
+
+05:11.880 --> 05:12.950
+Let's now save that.
+
+05:13.770 --> 05:15.720
+Well back over to our terminal.
+
+05:19.400 --> 05:20.600
+And back over here.
+
+05:22.850 --> 05:24.260
+It looks like we are good to go.
+
+05:24.290 --> 05:26.180
+As usual, let's make this test fail.
+
+05:26.570 --> 05:28.190
+So I will flip back over.
+
+05:28.220 --> 05:32.570
+Let's go back over to our request handler and we'll just comment out the line where we try to actually
+
+05:32.570 --> 05:33.500
+save the payment.
+
+05:34.930 --> 05:35.620
+I'll comment that out.
+
+05:35.620 --> 05:36.490
+Save the file.
+
+05:36.490 --> 05:39.550
+And now we will expect something to come up and say, Hey, sorry what?
+
+05:39.550 --> 05:42.310
+This value was actually null when you expected it wouldn't be.
+
+05:42.730 --> 05:43.660
+And there we go.
+
+05:44.960 --> 05:45.920
+It looks good.
+
+05:46.130 --> 05:49.310
+So I'm going to uncomment that, save it again and we are all set.
+
+05:50.160 --> 05:50.550
+All right.
+
+05:50.550 --> 05:51.870
+So we have created the charge.
+
+05:51.870 --> 05:55.530
+We have saved a record that relates the charge and the order together.
+
+05:55.840 --> 05:59.670
+So now the last thing we really have to do inside of Europe, beyond responding with some more meaningful
+
+05:59.670 --> 06:04.230
+value than what we have right here, last thing we really have to do is make sure we publish an event
+
+06:04.230 --> 06:08.250
+to say that, well, we created a charge or we create a payment or something like that.
+
+06:08.490 --> 06:12.870
+Let's take a pause here and build up that publisher and the event definition in the next video.

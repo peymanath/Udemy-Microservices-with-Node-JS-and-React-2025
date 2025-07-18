@@ -1,0 +1,298 @@
+WEBVTT
+
+00:00.960 --> 00:04.320
+We've now put together our very first test right here, which is fantastic.
+
+00:04.650 --> 00:08.550
+We're going to start to write out a couple of more tests around that sign up route handler.
+
+00:08.610 --> 00:13.060
+Now, the nice thing about using super test is it's really easy to write out a test.
+
+00:13.080 --> 00:15.090
+So we're going to put together a fair number.
+
+00:15.420 --> 00:19.500
+I just want to give you a good example of all the different ways in which we could test a very basic
+
+00:19.500 --> 00:19.680
+route.
+
+00:19.720 --> 00:21.540
+HANDLER So let's get to it.
+
+00:21.870 --> 00:26.850
+The next test I want to put together is to just make sure that if we put in some kind of request or
+
+00:26.850 --> 00:31.440
+try to sign up with, say, an invalid email or password, the request should fail.
+
+00:31.830 --> 00:36.720
+And we certainly could write out a test to say, Hey, let's make sure that we fail the request and
+
+00:36.720 --> 00:38.990
+send back some very appropriate error message.
+
+00:39.000 --> 00:41.420
+But we're going to take an even more basic approach than that.
+
+00:41.430 --> 00:47.610
+We're going to say that if we send in some invalid email or password, let's just expect that we get
+
+00:47.610 --> 00:52.620
+a response that has a status code of 400, which would indicate that we failed to sign in.
+
+00:53.580 --> 00:58.500
+We absolutely can try to write out an assertion to make sure we get the appropriate error message.
+
+00:58.500 --> 01:03.120
+But again, we'll just keep it really quick, really simple, and make sure we get back a status code
+
+01:03.120 --> 01:03.930
+at 400.
+
+01:05.030 --> 01:08.840
+So back inside my test file, I'll add in, in its statement and say.
+
+01:09.600 --> 01:14.310
+It returns a 400 with an invalid email.
+
+01:20.040 --> 01:21.660
+Rather than writing out the entire request.
+
+01:21.660 --> 01:23.610
+Again, let's just do a quick copy paste.
+
+01:23.610 --> 01:26.700
+So I'm going to copy that block right there, but into the second one.
+
+01:27.900 --> 01:32.580
+And now all we have to do is update the email to be something invalid and change the status code.
+
+01:33.030 --> 01:35.040
+So I will put in an invalid email.
+
+01:36.350 --> 01:39.200
+And I will expect to get back a status code of 400.
+
+01:40.020 --> 01:41.010
+So I'm going to save that.
+
+01:41.250 --> 01:42.420
+Go back over to my terminal.
+
+01:43.470 --> 01:44.420
+And there we go.
+
+01:44.870 --> 01:47.150
+So you'll notice that I'm getting a council log right here.
+
+01:47.180 --> 01:51.830
+That's just because we still have a leftover console log inside of our error handled middleware.
+
+01:52.520 --> 01:54.200
+Remember our error handler middleware?
+
+01:54.230 --> 01:57.980
+Anytime it sees an error is going to do a log of the error that's coming across.
+
+01:58.280 --> 02:00.620
+We probably don't really want to see this in that test environment.
+
+02:00.620 --> 02:03.320
+So let's just go delete that console, log from that area handler.
+
+02:04.660 --> 02:06.580
+I'm going to go and find my middleware directory.
+
+02:06.670 --> 02:10.600
+I'll find the air handler inside there and I'll just delete that console log.
+
+02:10.630 --> 02:15.430
+Pretty sure we just had that in there for testing purposes or manual testing purposes, I suppose.
+
+02:15.460 --> 02:16.300
+A little bit ago.
+
+02:16.840 --> 02:18.010
+Now, if I flip back over.
+
+02:18.130 --> 02:18.670
+Awesome.
+
+02:18.670 --> 02:19.960
+We have two tests passing.
+
+02:21.320 --> 02:24.860
+Now, one thing I want to mention, I meant to mention a bit earlier when we first started up our test
+
+02:24.860 --> 02:29.360
+suite, the very first time you start up the test suite, it's going to take about eight or all the
+
+02:29.360 --> 02:30.980
+way up to 20 seconds to start up.
+
+02:30.980 --> 02:35.210
+And that's because that in-memory copy of MongoDB just takes a little bit to load.
+
+02:35.450 --> 02:41.090
+But after it has been loaded, we no longer have to restart MongoDB for each individual test run.
+
+02:41.240 --> 02:45.770
+So after that long initial start up, all of our tests are going to run very, very quickly.
+
+02:46.680 --> 02:49.470
+I can hit enter while at the terminal to rerun my test.
+
+02:49.470 --> 02:52.650
+And as you can see, these two tests run very, very fast.
+
+02:53.920 --> 02:54.250
+All right.
+
+02:54.250 --> 02:55.390
+Let's add in a couple more.
+
+02:55.420 --> 02:59.650
+Very quickly, I'm going to just do another copy paste of this entire block right here.
+
+03:01.460 --> 03:06.810
+So there's the paste and I'll say it returns a 400 with an invalid password.
+
+03:07.410 --> 03:12.570
+So an invalid password, as you'll recall, is any that has a length less than four or greater than
+
+03:12.570 --> 03:13.140
+20.
+
+03:13.200 --> 03:15.590
+So let's just try putting a password with one character.
+
+03:15.600 --> 03:17.250
+I'll put in a password appear right there.
+
+03:17.730 --> 03:20.580
+If we have an invalid password, we should get a 400.
+
+03:20.940 --> 03:21.990
+So we'll save this.
+
+03:22.530 --> 03:23.340
+Go back over.
+
+03:24.400 --> 03:24.770
+Awesome.
+
+03:24.790 --> 03:26.290
+Got another passing test.
+
+03:27.790 --> 03:29.430
+Let's try just doing one more.
+
+03:29.440 --> 03:30.250
+We'll do.
+
+03:30.280 --> 03:35.020
+We'll try saying that if we send in a request that does not have an email or a password, we should
+
+03:35.020 --> 03:36.280
+get a 400 as well.
+
+03:36.700 --> 03:38.890
+So I'll do another copy paste to that it block.
+
+03:40.200 --> 03:41.830
+And I'll change the description to it.
+
+03:41.830 --> 03:43.300
+Returns a 400.
+
+03:46.230 --> 03:50.070
+With missing email and password.
+
+03:52.510 --> 03:54.850
+And then I'll just send in an empty object.
+
+03:55.750 --> 03:56.530
+Like so.
+
+03:57.550 --> 04:01.330
+Now, of course, we could write out two separate tests, one to just have the email missing, one had
+
+04:01.330 --> 04:02.380
+the password missing.
+
+04:03.100 --> 04:03.490
+Absolutely.
+
+04:03.490 --> 04:05.050
+Feel free to do so if you want to.
+
+04:05.080 --> 04:06.490
+Matter of fact, I'll just show you how to do that.
+
+04:06.490 --> 04:10.360
+If we want to write out two separate requests inside of one handler, that's when we'll start to use
+
+04:10.360 --> 04:11.950
+that async await syntax.
+
+04:12.100 --> 04:16.540
+So we will copy that block right there, paste it right above the return.
+
+04:17.050 --> 04:19.990
+And then on the first request we have to add in and await.
+
+04:19.990 --> 04:25.120
+So we will await this request to be completed and then we will return the next one behind the scenes
+
+04:25.120 --> 04:28.150
+just is going to automatically await this request for us.
+
+04:29.220 --> 04:31.100
+So we technically don't even need the return there.
+
+04:31.110 --> 04:33.870
+We could instead use a wait and see.
+
+04:33.900 --> 04:35.880
+Same thing is true of everything up here.
+
+04:35.880 --> 04:38.650
+We just need to make sure we either return, request or await it.
+
+04:38.670 --> 04:39.660
+Either one is fine.
+
+04:40.200 --> 04:42.750
+So now maybe in the first one we could put in a valid email.
+
+04:46.600 --> 04:49.300
+And in the second one, we could put in a valid password.
+
+04:52.040 --> 04:53.090
+Call and say this.
+
+04:53.270 --> 04:54.230
+I'll flip back over.
+
+04:55.520 --> 04:56.090
+Awesome.
+
+04:56.990 --> 04:57.380
+All right.
+
+04:57.380 --> 05:00.620
+So you can see it is pretty darn easy to write test with super test.
+
+05:01.130 --> 05:05.040
+But, well, right now you're really just making expectations around the response.
+
+05:05.060 --> 05:08.050
+There's definitely some more complex behaviors going on inside of here.
+
+05:08.060 --> 05:12.350
+So let's take a quick pause and we'll start to test some of the actual infrastructure of this thing
+
+05:12.350 --> 05:13.310
+in just a moment.

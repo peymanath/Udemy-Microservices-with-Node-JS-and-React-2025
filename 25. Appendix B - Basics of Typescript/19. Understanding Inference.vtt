@@ -1,0 +1,202 @@
+WEBVTT
+
+00:00.730 --> 00:05.110
+In the last video we saw that we could remove all these different type annotations and we did not see
+
+00:05.110 --> 00:06.100
+any errors.
+
+00:06.130 --> 00:11.050
+In fact, if we then hovered over these variables, it's clear that TypeScript still understands what
+
+00:11.080 --> 00:13.750
+type of value we're going to assign to each given variable.
+
+00:14.110 --> 00:18.040
+So what you're seeing here is the type inference system in action.
+
+00:18.250 --> 00:22.300
+In this video, we're going to discuss how type inference works and then discuss when we're going to
+
+00:22.300 --> 00:26.190
+rely on type inference versus adding in an annotation manually.
+
+00:26.200 --> 00:27.400
+So let's get to it.
+
+00:27.910 --> 00:28.180
+All right.
+
+00:28.180 --> 00:30.430
+So first off, the basics of type inference.
+
+00:30.820 --> 00:35.230
+Any time you and I make a new variable inside of our application, we're actually undergoing two separate
+
+00:35.230 --> 00:35.890
+steps.
+
+00:36.220 --> 00:41.020
+So on the left hand side of this equals sign where we say const color, we're doing something called
+
+00:41.020 --> 00:42.430
+variable declaration.
+
+00:42.640 --> 00:46.360
+This is where we are telling our program that we're going to have a new variable inside of our application
+
+00:46.360 --> 00:47.410
+with the given name.
+
+00:48.090 --> 00:53.070
+And then in the second step of this entire process, on the right hand side, the equal sign, we are
+
+00:53.070 --> 00:55.770
+attempting to assign a value to that variable.
+
+00:56.400 --> 01:01.410
+Assigning a value to a variable for the very first time is referred to as variable initialization.
+
+01:01.800 --> 01:08.070
+So this entire line of code right here, two separate steps, first variable declaration and then initialization.
+
+01:08.910 --> 01:10.770
+Here's the rule around type inference.
+
+01:11.070 --> 01:17.130
+If we do our declaration and initialization on the same line or essentially in one single expression,
+
+01:17.430 --> 01:22.470
+then TypeScript is going to figure out the type of value that we're going to assign to color for us.
+
+01:22.980 --> 01:27.150
+So in this case, TypeScript would look at the variable that we're the value that we're usually using
+
+01:27.150 --> 01:28.330
+for initialization.
+
+01:28.350 --> 01:33.660
+It would see that this is a string and it would say, okay, color must be a variable that's going to
+
+01:33.660 --> 01:35.850
+refer to a value of type string.
+
+01:36.390 --> 01:42.780
+And that's how we get this kind of pre done type right here where we can delete the annotation and TypeScript
+
+01:42.780 --> 01:44.610
+still sees what's going on for us.
+
+01:45.150 --> 01:50.490
+If I move this assignment or this initialization onto a separate line, then it's not going to work
+
+01:50.490 --> 01:51.090
+anymore.
+
+01:51.150 --> 01:56.520
+So if I say apples equals five on the next line down by hover over apples, you'll notice that it has
+
+01:56.520 --> 01:58.140
+a different annotation on here.
+
+01:58.140 --> 02:02.520
+It says any in this case we're going to discuss with any means in just a moment.
+
+02:02.520 --> 02:06.750
+But right now, I think you can agree with me that TypeScript can no longer figure out what type of
+
+02:06.750 --> 02:08.490
+value we're going to assign to apples.
+
+02:08.850 --> 02:14.070
+So, again, the rule of thumb here is if we're doing the initialization and declaration on the same
+
+02:14.070 --> 02:17.070
+line, TypeScript will use type inference for us.
+
+02:18.170 --> 02:18.470
+Okay.
+
+02:18.470 --> 02:20.780
+So that's the kind of easy part of type inference.
+
+02:20.780 --> 02:23.450
+If we do everything on one line, everything's going to work just fine.
+
+02:23.780 --> 02:30.200
+So now here's the really obvious question When are we going to add in these type annotations?
+
+02:30.200 --> 02:31.700
+When are we going to type them out?
+
+02:31.730 --> 02:36.080
+If we're saying that TypeScript can figure out these different types for us, why would we go through
+
+02:36.080 --> 02:38.710
+the process of writing out the annotations manually?
+
+02:38.720 --> 02:40.040
+And that's a great question.
+
+02:40.370 --> 02:45.680
+Let's take a look at a diagram to understand why we might want to use type inference over annotation
+
+02:45.680 --> 02:47.270
+or the opposite.
+
+02:48.470 --> 02:48.740
+Okay.
+
+02:48.740 --> 02:52.490
+So in that file that we just put together, we've got a lot of examples of type annotations.
+
+02:52.490 --> 02:57.470
+So remember, that's where you and I, the developers are going to tell TypeScript the type that a value
+
+02:57.470 --> 02:59.390
+or a variable is going to refer to.
+
+03:00.720 --> 03:02.100
+Now a type of inference.
+
+03:02.100 --> 03:04.440
+That's where TypeScript is going to guess everything for us.
+
+03:04.800 --> 03:11.100
+So in general, we're going to rely on type inference always, all the time, wherever we can, we will
+
+03:11.100 --> 03:12.750
+rely on type inference.
+
+03:13.110 --> 03:17.970
+That means that whenever you and I have a variable that we are declaring and then initializing on the
+
+03:17.970 --> 03:22.230
+same line, you and I in this course are not going to add in type annotations.
+
+03:22.410 --> 03:25.080
+So we're going to have a lot of code that looks like this right here.
+
+03:25.080 --> 03:30.180
+And we will much more rarely have code that looks like this down here or anything else that you see
+
+03:30.180 --> 03:31.200
+inside this file.
+
+03:31.740 --> 03:37.560
+So we are going to rely upon type inference as much as we possibly can, but there are three scenarios
+
+03:37.560 --> 03:40.590
+where we will rely on type annotations.
+
+03:41.070 --> 03:42.390
+So let's take a quick break right here.
+
+03:42.390 --> 03:46.170
+And we're going to go through these three different examples of where we are going to add in these type
+
+03:46.170 --> 03:48.290
+annotations to help TypeScript out.
+
+03:48.300 --> 03:50.640
+So quick pause and I'll see you in just a minute.

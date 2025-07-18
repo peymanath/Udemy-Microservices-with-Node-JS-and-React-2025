@@ -1,0 +1,133 @@
+WEBVTT
+
+00:00.870 --> 00:04.440
+The last thing we have to do around our two listeners is make sure that we actually create an instance
+
+00:04.440 --> 00:06.330
+about them when we create the incidents.
+
+00:06.330 --> 00:11.160
+Remember, we do have to provide an instance of the Nats streaming server client.
+
+00:12.350 --> 00:16.600
+Once we create the instance, we're then going to call the Listen method on those instances.
+
+00:16.610 --> 00:17.900
+If you don't remember any of this.
+
+00:17.930 --> 00:18.440
+No problem.
+
+00:18.440 --> 00:21.590
+We can always do a command click on the less listener definition.
+
+00:21.830 --> 00:26.030
+This thing will tell you that the constructor expects to receive an instance of the standard client
+
+00:26.030 --> 00:30.680
+or the node streaming server client, and it's the listen function in particular that's going to make
+
+00:30.680 --> 00:32.780
+sure that we actually start listening for incoming traffic.
+
+00:33.490 --> 00:39.100
+So right now we're going to create our instances and start listening for these events from inside of
+
+00:39.100 --> 00:42.550
+the indexed file inside of our Root Z directory.
+
+00:43.210 --> 00:43.870
+So I'll open up.
+
+00:43.870 --> 00:44.840
+Index us.
+
+00:46.350 --> 00:51.960
+Remember inside this file, we create our net's wrapper and we get access to the Nats client inside
+
+00:51.960 --> 00:52.430
+there.
+
+00:52.470 --> 00:57.030
+So right after we go through all that nets initialization stuff, right after that is probably a good
+
+00:57.030 --> 00:59.190
+time to start listening for incoming events.
+
+01:00.630 --> 01:03.630
+So at the very top, let's import those two listeners that we just created.
+
+01:04.020 --> 01:07.290
+I'm going to import ticket related listener.
+
+01:10.420 --> 01:11.140
+From.
+
+01:12.700 --> 01:16.720
+Events listeners ticket created listener.
+
+01:18.750 --> 01:22.050
+And then something very similar ticket updated.
+
+01:22.820 --> 01:27.620
+Listener from events listeners to get updated.
+
+01:27.620 --> 01:28.280
+Listener.
+
+01:30.910 --> 01:34.390
+All right, then down after we create all that natural power stuff.
+
+01:36.660 --> 01:40.410
+Let's go ahead and create a new instance of ticket created listener.
+
+01:40.890 --> 01:44.250
+We'll pass in our nets wrapper client.
+
+01:45.440 --> 01:47.540
+And then we'll tell this thing to start listening for traffic.
+
+01:48.450 --> 01:50.310
+Same thing with ticket updated as well.
+
+01:50.310 --> 01:51.390
+So new ticket.
+
+01:51.420 --> 01:59.250
+Updated listener that's rapper client and call listen and that should be it.
+
+01:59.910 --> 02:04.380
+So let's now save this file and then go in to go over to Scaffold, which is still running inside my
+
+02:04.380 --> 02:04.950
+terminal.
+
+02:05.690 --> 02:08.610
+And hopefully you should see everything boot up without any errors.
+
+02:08.630 --> 02:12.950
+If you don't see anything at all, remember you can always restart scaffold, but hopefully you do see
+
+02:12.950 --> 02:16.100
+something that says that we're connected to Nats, Connect and MongoDB and so on.
+
+02:16.670 --> 02:20.780
+Now to do a manual test of these listeners, we could try to trigger.
+
+02:21.580 --> 02:26.620
+The ticket updated and the ticket publish or ticket up created events.
+
+02:27.380 --> 02:30.770
+And we can do that by simply manually creating a ticket using Postman.
+
+02:31.010 --> 02:35.600
+Once we go through that, once we create manually a ticket and update it, we should start to see some
+
+02:35.600 --> 02:40.430
+logging console logs to say that we have a listener inside the order service that has received those
+
+02:40.430 --> 02:41.030
+events.
+
+02:41.240 --> 02:44.240
+So let's start to do that little manual test in the next video.

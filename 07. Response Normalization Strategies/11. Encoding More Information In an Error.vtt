@@ -1,0 +1,247 @@
+WEBVTT
+
+00:00.590 --> 00:04.190
+In the last video, we established that we need to communicate more information from the request handler
+
+00:04.190 --> 00:06.830
+to the error handling middleware through this error object.
+
+00:06.950 --> 00:11.930
+But because we are using TypeScript, we cannot just arbitrarily add in additional properties to the
+
+00:11.930 --> 00:13.160
+error object itself.
+
+00:13.430 --> 00:17.900
+So in this video, we're going to figure out how to solve this issue with a very TypeScript style approach.
+
+00:18.170 --> 00:20.060
+So here's really the issue.
+
+00:20.090 --> 00:22.700
+Here's what we want to do, summarized in a single sentence.
+
+00:23.000 --> 00:25.910
+We really want an object like an air.
+
+00:26.030 --> 00:31.010
+We really want an error object, essentially, but we want to add in some more custom properties to
+
+00:31.010 --> 00:31.430
+it.
+
+00:31.520 --> 00:33.380
+That's what we really want to do right now.
+
+00:33.800 --> 00:38.540
+So any time that you say that you want something like X, but you want to add in some more custom properties,
+
+00:38.540 --> 00:41.780
+that is usually a sign that you want to subclass something.
+
+00:41.990 --> 00:44.270
+And that's exactly what you and I are going to do.
+
+00:44.840 --> 00:47.510
+We are going to take the built in error object.
+
+00:47.660 --> 00:51.320
+We are going to subclass it into two separate subclasses.
+
+00:51.530 --> 00:54.200
+We're going to call one request validation, error.
+
+00:54.470 --> 00:57.110
+And the second database connection error.
+
+00:57.500 --> 01:02.300
+Request validation error is going to be a new type of error object that we're going to throw any time
+
+01:02.300 --> 01:06.110
+that there is an error with the incoming data on that incoming request.
+
+01:07.250 --> 01:11.780
+Then any time that anything goes wrong with a database connection, we will instead throw a database
+
+01:11.780 --> 01:12.740
+connection error.
+
+01:12.830 --> 01:14.930
+So that would be like this right here.
+
+01:16.180 --> 01:20.230
+The reason that we are making both these subclasses is that when we create the subclass, we can add
+
+01:20.230 --> 01:25.450
+in some additional custom properties to it that will further clarify the reason for the error.
+
+01:25.480 --> 01:31.030
+Again, we are trying to use these custom subclasses to communicate much more information.
+
+01:31.860 --> 01:34.740
+From the request handler down to that error handling middleware.
+
+01:36.290 --> 01:38.540
+Now at this point, this might seem pretty crazy.
+
+01:38.540 --> 01:43.640
+So let me show you a diagram to help you understand the entire big picture of what is going on here.
+
+01:44.390 --> 01:45.830
+So kind of complicated diagram.
+
+01:45.920 --> 01:47.270
+We'll go through it step by step.
+
+01:48.190 --> 01:51.060
+So we're going to first start off up here inside of our request handler.
+
+01:51.390 --> 01:53.880
+You and I are going to create two new subclasses.
+
+01:53.880 --> 01:57.930
+One is going to be called request validation error, and another that is going to be called database
+
+01:57.930 --> 01:58.920
+connection error.
+
+01:59.280 --> 02:04.470
+Because we are building these classes ourselves, we can add in as many custom properties as we wish.
+
+02:04.560 --> 02:10.230
+So for example, on the request validation error subclass, we can assign to it a new property called
+
+02:10.230 --> 02:16.020
+Reasons, and that could be an array of objects that has exactly why the request validation failed.
+
+02:16.970 --> 02:22.520
+Then over on this other subclass we can say that it needs to have a message property or maybe a reason
+
+02:22.520 --> 02:23.240
+property.
+
+02:23.480 --> 02:28.430
+We can call it whatever we want and it could be a simple string that says something like failed to connect
+
+02:28.430 --> 02:29.330
+to database.
+
+02:30.550 --> 02:32.210
+I'll request handler at some point.
+
+02:32.230 --> 02:35.590
+Time is going to throw either this or this.
+
+02:35.950 --> 02:40.420
+To be precise, it's going to throw an instance of request, validation, error, or an instance of
+
+02:40.420 --> 02:41.710
+database connection error.
+
+02:42.470 --> 02:47.900
+So that air either this one or this one is going to be thrown and it's eventually going to flow on down
+
+02:47.900 --> 02:49.610
+to our error handling middleware.
+
+02:50.820 --> 02:52.650
+Then site of our error handling middleware.
+
+02:52.800 --> 02:57.270
+We're going to set up some code inside there to inspect the air that it is receiving.
+
+02:57.930 --> 03:02.130
+So we're going to check inside the air handling middleware and we're going to say, okay, I see an
+
+03:02.130 --> 03:02.940
+air is coming.
+
+03:02.970 --> 03:06.690
+Is it an instance of the request validation air class?
+
+03:07.140 --> 03:09.360
+If it is, then that means great.
+
+03:09.360 --> 03:11.850
+We have an instance of request validation air.
+
+03:11.880 --> 03:13.920
+Let's take that reasons property.
+
+03:13.920 --> 03:19.170
+So this property right here and we're going to use that to build a response to send back to the user.
+
+03:20.940 --> 03:26.760
+If the incoming error is not a request validation error, then we will check to see if it is an instance
+
+03:26.760 --> 03:28.440
+of database connection error.
+
+03:29.590 --> 03:31.090
+If it is, then great.
+
+03:31.090 --> 03:34.450
+Let's take that reason property and we'll send it to the user.
+
+03:35.020 --> 03:38.800
+And if we fail both these checks, then we don't know what kind of error this is.
+
+03:38.800 --> 03:39.850
+It is a generic error.
+
+03:39.850 --> 03:44.590
+And so in that scenario, we should probably send some kind of generic error message back to the user.
+
+03:45.370 --> 03:46.030
+So this is it.
+
+03:46.030 --> 03:47.410
+This is the entire flow.
+
+03:47.710 --> 03:52.060
+We're going to build out these subclasses to describe all the different things that can go wrong whenever
+
+03:52.060 --> 03:53.650
+we throw one of these errors.
+
+03:53.830 --> 03:55.930
+It's going to go into the error handling middleware.
+
+03:55.960 --> 03:59.950
+We're going to try to figure out the type of error that it is, and then we can build up some appropriate
+
+03:59.950 --> 04:00.730
+response.
+
+04:01.940 --> 04:06.860
+Now, what I'm showing here on this diagram and specifically adding these properties right here is still
+
+04:06.860 --> 04:08.640
+kind of a simplified version.
+
+04:08.660 --> 04:13.220
+After we build an initial implementation of this, we're going to come back and refine this even more
+
+04:13.220 --> 04:16.280
+to add in way more automatic aspects to this.
+
+04:16.700 --> 04:20.420
+I know in the last couple of videos I've said, Hey, just hold on, please be patient.
+
+04:20.450 --> 04:25.160
+We're almost at the point now where you're going to see that this really is an incredible error handling
+
+04:25.160 --> 04:25.850
+approach.
+
+04:25.850 --> 04:27.320
+So just a little bit more patience.
+
+04:27.320 --> 04:30.530
+We're going to start to write out this implementation in the next video, and you're really going to
+
+04:30.530 --> 04:32.690
+start to see all this stuff start to come together.
+
+04:32.690 --> 04:34.940
+So quick pause and I'll see you in just a minute.

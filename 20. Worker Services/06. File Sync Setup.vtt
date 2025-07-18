@@ -1,0 +1,127 @@
+WEBVTT
+
+00:00.850 --> 00:05.920
+We just did some Kubernetes setup on our exploration service, but we did forget one little step.
+
+00:06.160 --> 00:09.760
+We forgot to set up that file sinking inside of our scaffold YAML file.
+
+00:10.150 --> 00:12.010
+I'm going to open up my scaffold YAML file.
+
+00:12.040 --> 00:13.540
+I'm going to scroll down to the bottom.
+
+00:14.660 --> 00:16.690
+The last entry inside of here should be for orders.
+
+00:16.700 --> 00:18.680
+I'm going to copy, paste that thing down.
+
+00:19.130 --> 00:20.720
+I'll fix up some indentation.
+
+00:23.570 --> 00:27.450
+And then I'll change orders and orders to expiration instead.
+
+00:27.480 --> 00:29.990
+So expiration and expiration.
+
+00:30.710 --> 00:35.180
+So now we should have all that file sinking stuff set up for the expiration service as well.
+
+00:35.840 --> 00:40.010
+And then going to save this file and I'm going to go back over to my terminal and see what scaffold
+
+00:40.010 --> 00:40.730
+is doing.
+
+00:41.000 --> 00:41.930
+Now, quick note.
+
+00:41.930 --> 00:46.740
+If you go back over to scaffold, you might see your image get rebuilt.
+
+00:46.760 --> 00:52.550
+So something like this right here, it might try to rebuild your image and then you might eventually
+
+00:52.550 --> 00:56.660
+see something that says on known response manifest for blah blah blah unknown.
+
+00:56.810 --> 01:01.670
+If you see that, no problem whatsoever, all you got to do is restart scaffold.
+
+01:01.850 --> 01:03.470
+So I'm going to close scaffold down.
+
+01:06.290 --> 01:07.490
+And they'll start it back up.
+
+01:08.790 --> 01:10.050
+Oh, scaffold.
+
+01:11.020 --> 01:11.710
+Yep.
+
+01:13.100 --> 01:17.390
+Now when everything gets graded again, we should see that expiration service or speed, the expiration
+
+01:17.390 --> 01:19.940
+deployment or the pod start to get launched.
+
+01:24.220 --> 01:27.070
+I do eventually get my exploration service coming up, which is great.
+
+01:27.070 --> 01:31.970
+But you'll also notice I'm getting some errors inside of here about unable to connect to the NAT service.
+
+01:31.990 --> 01:32.920
+That's totally fine.
+
+01:32.950 --> 01:39.010
+Essentially, our tickets service and probably some others here are starting to boot up before the NAT
+
+01:39.010 --> 01:41.470
+streaming server is live and we can connect to it.
+
+01:41.680 --> 01:45.970
+Those services should automatically restart eventually, but just in case they don't.
+
+01:45.970 --> 01:49.450
+In order to fix that, we can do a little.
+
+01:51.190 --> 01:58.540
+Get pods and then manually restart our orders, deployment tickets, deployment and possibly expiration
+
+01:58.540 --> 01:59.200
+as well.
+
+01:59.290 --> 02:05.770
+So to manually restart those things, I would copy the name and do a CTL, delete odd and then put the
+
+02:05.770 --> 02:08.710
+name in and I'll do the same for tickets as well.
+
+02:11.020 --> 02:13.990
+So it'll delete pod and then the name.
+
+02:15.760 --> 02:20.350
+When those things automatically get relaunched, we should then be able to connect to nets.
+
+02:20.380 --> 02:20.680
+Yep.
+
+02:20.680 --> 02:21.130
+Looks good.
+
+02:21.130 --> 02:21.880
+Looks good.
+
+02:22.180 --> 02:25.030
+And it looks like the expiration service is connected as well.
+
+02:26.040 --> 02:27.930
+So it looks like I'm all green across the board.
+
+02:28.140 --> 02:32.090
+Let's take a pause right here and continue with DJs in just a moment.

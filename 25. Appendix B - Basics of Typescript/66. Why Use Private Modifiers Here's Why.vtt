@@ -1,0 +1,427 @@
+WEBVTT
+
+00:00.980 --> 00:05.810
+In the last video we spoke about how it would be really nice to somehow hide the existence of the Google
+
+00:05.810 --> 00:07.340
+map from other engineers.
+
+00:07.610 --> 00:10.460
+So to do so, we're going to create a class called Custom Map.
+
+00:10.910 --> 00:16.160
+This custom map is going to internally create a Google map for us, but it's going to hide that from
+
+00:16.160 --> 00:17.150
+other engineers.
+
+00:17.150 --> 00:21.560
+Because, remember, we don't want other engineers to access the Google map directly.
+
+00:22.100 --> 00:26.930
+So by creating this custom map class, it's going to allow us to kind of isolate the Google map and
+
+00:26.930 --> 00:30.080
+only expose a bare minimum amount of functionality.
+
+00:30.650 --> 00:35.660
+So in total, at the end of the day, the only thing we can do inside of our index file is create a
+
+00:35.660 --> 00:40.550
+company, reference its properties, create a user, reference it's properties, create a map and then
+
+00:40.550 --> 00:42.280
+add a marker to it and that's it.
+
+00:42.290 --> 00:48.230
+And so it's going to make our application as absolute, barebones, simple as possible to work with.
+
+00:48.680 --> 00:49.880
+So let's get to it.
+
+00:50.210 --> 00:50.660
+All right.
+
+00:50.660 --> 00:55.700
+So I'm going to flip back over to my editor and I'm going to create a new file inside my CRC directory
+
+00:56.150 --> 00:57.770
+called Custom Map.
+
+00:59.030 --> 01:04.340
+I would love to call this thing just like map rather than putting on the word custom, but I just want
+
+01:04.340 --> 01:08.450
+to make sure it's really clear to you that the class we are creating is separate from the Google Map
+
+01:08.450 --> 01:11.420
+instance, so I'm going to call it custom map instead.
+
+01:12.650 --> 01:12.980
+All right.
+
+01:12.980 --> 01:18.110
+So then inside of here, we're going to create a class called Custom Map, and we're going to export
+
+01:18.110 --> 01:21.410
+it right away so we can use it in other files inside of our project.
+
+01:22.270 --> 01:26.170
+So now this thing is going to have one single property tied to it.
+
+01:26.410 --> 01:31.720
+Our custom map is going to carry a reference to the Google map that we create because remember, we
+
+01:31.720 --> 01:34.230
+want the custom map to be able to work with the Google map.
+
+01:34.240 --> 01:35.210
+No problem there.
+
+01:35.230 --> 01:38.740
+The custom map can access the Google map and call different methods on it.
+
+01:38.980 --> 01:44.080
+The whole goal here is that we want to hide the existence of the Google map from other engineers.
+
+01:44.440 --> 01:50.350
+I know at the end of the day, other engineers could open up this file and start changing how this thing
+
+01:50.350 --> 01:53.630
+works with the Google map or call different methods on the Google map.
+
+01:53.650 --> 01:59.140
+I know that is a possibility, but the idea here is that we're just going to pretend that other engineers
+
+01:59.140 --> 02:01.450
+cannot open up this class definition.
+
+02:01.480 --> 02:04.150
+I know that seems like kind of an arbitrary thing to say.
+
+02:04.180 --> 02:06.240
+Nonetheless, it's how we approach this problem.
+
+02:06.250 --> 02:10.570
+We're just pretending that other engineers cannot see the contents of this class.
+
+02:11.900 --> 02:16.190
+So custom map is going to carry a reference to the Google map that we are going to create.
+
+02:17.180 --> 02:21.860
+So I'm going to define a property on here called Google Map and we need to annotate its type.
+
+02:22.460 --> 02:27.860
+Remember that we saw that when we created a Google map, we referenced Google Maps map.
+
+02:27.860 --> 02:29.930
+So that's going to be the type of this variable right here.
+
+02:29.930 --> 02:34.340
+It's going to be an instance of the class Google Maps map.
+
+02:34.370 --> 02:36.350
+This right here is a class we are seeing.
+
+02:36.350 --> 02:39.230
+That Google map is going to be an instance of that class.
+
+02:40.720 --> 02:46.120
+So now we can define our constructor function and we're going to use the constructor function to initialize
+
+02:46.120 --> 02:48.220
+and create this map and show it on the screen.
+
+02:48.790 --> 02:54.160
+So I'm going to say this dot Google map is going to be a map that we create right here.
+
+02:55.160 --> 02:59.300
+So rather than retyping all the code to create a new map, I'm just going to copy paste it from back
+
+02:59.300 --> 03:01.040
+inside of our index file.
+
+03:01.460 --> 03:04.400
+So I'm going to take everything from new all the way down to the bottom.
+
+03:04.880 --> 03:06.080
+I'm going to cut that all.
+
+03:06.470 --> 03:10.370
+I'm going to delete the declaration for const map right there because we don't need that anymore.
+
+03:11.240 --> 03:14.210
+And I'm going to paste all that stuff I just cut right there.
+
+03:14.210 --> 03:17.780
+Like, so I'm going to zoom out just so you can see that entire line very easily.
+
+03:22.140 --> 03:22.560
+All right.
+
+03:22.560 --> 03:23.970
+So one last thing here.
+
+03:24.240 --> 03:29.970
+Remember, any time we define a property inside of a class, by default, it has a modifier of public.
+
+03:30.240 --> 03:32.430
+We don't have to specifically write out public.
+
+03:32.430 --> 03:34.170
+That is the default modifier.
+
+03:34.680 --> 03:37.500
+So I only write it here just to remind you about its existence.
+
+03:37.950 --> 03:43.800
+When a property has a public modifier, that means anyone outside of this class can directly access
+
+03:43.800 --> 03:48.810
+this property and try to reference different properties on it, or try to call different functions attached
+
+03:48.810 --> 03:49.410
+to it.
+
+03:49.680 --> 03:54.120
+And the whole goal of what you and I are trying to do right now is limit access to the Google map.
+
+03:54.120 --> 04:00.840
+We don't want other engineers to access this thing, so we're going to put a modifier on it of private.
+
+04:01.230 --> 04:02.190
+Remember what that means.
+
+04:02.190 --> 04:06.990
+That means that we cannot reference this property from outside of this class.
+
+04:07.320 --> 04:09.660
+And so that's going to give us our original goal.
+
+04:09.660 --> 04:13.680
+Remember, we don't want anyone else to access the map we create inside of here.
+
+04:13.680 --> 04:15.810
+So we mark that property as private.
+
+04:15.810 --> 04:21.810
+That means anyone else who is using this class cannot reach into an instance and try to get a handle
+
+04:21.810 --> 04:22.890
+on the Google map.
+
+04:25.100 --> 04:26.530
+All right, so that's just about it.
+
+04:26.540 --> 04:27.890
+I'm going to save this file.
+
+04:29.370 --> 04:34.230
+And then we're going to try to create an instance of custom map back inside of our indexes.
+
+04:34.350 --> 04:38.820
+So inside of indexes, I'm going to import the custom map that we just created.
+
+04:42.460 --> 04:44.440
+Well, then create a new custom map like.
+
+04:44.440 --> 04:48.060
+So before I save this, I'm going to try to assign this to a variable.
+
+04:48.070 --> 04:50.890
+I'm going to say like custom map is a new custom map.
+
+04:50.890 --> 04:54.130
+And then remember we just marked that Google Map properties private.
+
+04:54.250 --> 04:59.590
+So if I try to reference that property like so I'm going to very quickly get an error message that tells
+
+04:59.590 --> 05:02.980
+me that property is private and I can't reach into it.
+
+05:02.980 --> 05:05.410
+And so this achieves our original goal.
+
+05:05.650 --> 05:10.990
+It means that right now the only thing that we can do inside of our index file is create the company,
+
+05:10.990 --> 05:16.150
+reference it's properties, create the user reference it's properties, and then create a map.
+
+05:16.150 --> 05:17.800
+We don't have the ADD marker function yet.
+
+05:17.800 --> 05:20.740
+We're going to add that in a little bit, but it doesn't exist yet.
+
+05:21.070 --> 05:24.760
+So here is everything we can do inside of our program.
+
+05:24.760 --> 05:32.170
+Right now we completely eliminated that API surface of the Google map, which significantly decreases
+
+05:32.170 --> 05:37.690
+the complexity of our application, and it makes it way more clear to other engineers what we can do
+
+05:37.690 --> 05:39.010
+inside of our program.
+
+05:40.310 --> 05:42.230
+All right, so let's save this thing.
+
+05:42.360 --> 05:44.150
+Oh, I'm going to delete that line right there.
+
+05:44.180 --> 05:46.120
+I'm also going to delete the reference to custom map.
+
+05:46.130 --> 05:49.010
+All we want to do right now is create a map itself.
+
+05:49.250 --> 05:52.250
+I'm going to save this file and we'll do a quick test inside of our browser.
+
+05:52.990 --> 05:53.980
+So I'm going to save that.
+
+05:53.980 --> 05:55.040
+Flip back over.
+
+05:55.060 --> 05:57.550
+Refresh the page and I can still see the map.
+
+05:57.580 --> 05:58.270
+Awesome.
+
+06:00.140 --> 06:00.410
+Okay.
+
+06:00.410 --> 06:02.130
+So this is a very good improvement.
+
+06:02.150 --> 06:07.040
+We now have a significantly less complex, less complex indexed file.
+
+06:07.430 --> 06:10.280
+But before we move on, one last very quick thing.
+
+06:10.610 --> 06:14.090
+Back inside of custom maps, I'm going to zoom out here really quickly.
+
+06:14.120 --> 06:20.520
+Remember, right here, when we create our Google map, we have to pass in a reference to a HTML element.
+
+06:20.570 --> 06:26.990
+And right now, we are always going to pass in some element that has an ID of map in order to make this
+
+06:26.990 --> 06:28.950
+class just a little bit more usable.
+
+06:28.970 --> 06:34.580
+I think it would be really nice if we had an argument to our constructor that described what element
+
+06:34.580 --> 06:36.440
+we wanted to render the map into.
+
+06:36.980 --> 06:41.030
+So we could either take a reference to the entire element or to make things just a little bit easier
+
+06:41.030 --> 06:41.590
+for us.
+
+06:41.600 --> 06:45.460
+Maybe we just make the ID an argument to the constructor.
+
+06:45.470 --> 06:50.180
+So rather than always saying we're going to try to put the map into an ID or a element with an ID of
+
+06:50.180 --> 06:54.770
+map, we're going to instead pass in the ID as an argument to constructor.
+
+06:55.040 --> 07:00.530
+Again, we're just doing this so we can more more easily reuse this class on future projects.
+
+07:01.270 --> 07:04.000
+So to do that, I'm going to say that the constructor function.
+
+07:04.990 --> 07:06.190
+Let me zoom back in here.
+
+07:06.880 --> 07:09.100
+Has to be coupled with some.
+
+07:09.910 --> 07:10.990
+Arguments that will call.
+
+07:10.990 --> 07:14.360
+I want to just call it ID, but let's try to be a little bit more descriptive.
+
+07:14.380 --> 07:17.090
+Let's say like div ID or something like that.
+
+07:17.110 --> 07:20.830
+So like the idea of some div and that has to be a string.
+
+07:21.710 --> 07:27.530
+So then when we call get element, buy ID rather than using the hard coded map, we'll instead to use
+
+07:27.530 --> 07:30.530
+that argument div id like so.
+
+07:33.270 --> 07:33.780
+All right.
+
+07:33.780 --> 07:35.310
+Now back inside of index.
+
+07:36.150 --> 07:36.810
+Back over here.
+
+07:36.810 --> 07:38.340
+We had to call it a custom map.
+
+07:38.730 --> 07:43.830
+If we hover over it, we'll see that we now have an error here because we are now expected to pass in
+
+07:43.830 --> 07:46.320
+one argument, but we're not passing in any right now.
+
+07:46.650 --> 07:51.270
+So now any time we create an instance of our map, we have to pass in the ID of the element we want
+
+07:51.270 --> 07:52.500
+to render this thing into.
+
+07:52.770 --> 07:54.840
+So we've got to do is put in map like so.
+
+07:55.550 --> 08:00.230
+Likewise, if we had other divs inside of our HTML document, we can create another instance and put
+
+08:00.230 --> 08:04.340
+in like the idea of that other div or whatever we want to do.
+
+08:05.300 --> 08:09.680
+So just that one custom map right there, I'm going to save this flip back over one more time.
+
+08:09.680 --> 08:11.930
+Refresh the page and we're good to go.
+
+08:11.960 --> 08:12.620
+Perfect.
+
+08:13.220 --> 08:13.520
+All right.
+
+08:13.520 --> 08:14.390
+So a quick pause right here.
+
+08:14.390 --> 08:18.710
+We're going to move on to the next part of this application, the next section, which is going to focus
+
+08:18.710 --> 08:22.800
+on getting some markers on the screen using our company and our user.
+
+08:22.820 --> 08:25.070
+So quick pause and I'll see you in just a minute.

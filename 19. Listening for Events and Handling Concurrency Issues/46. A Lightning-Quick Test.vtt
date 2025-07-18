@@ -1,0 +1,412 @@
+WEBVTT
+
+00:01.110 --> 00:03.540
+Let's do a very quick test around our order.
+
+00:03.540 --> 00:04.200
+Cancel listener.
+
+00:04.200 --> 00:06.240
+Just make sure it's working as expected.
+
+00:06.510 --> 00:09.720
+We're going to go through this rather quickly, so let's get to it inside of our test directory.
+
+00:09.720 --> 00:12.450
+We'll make an order cancelled.
+
+00:13.230 --> 00:15.540
+Listener test file.
+
+00:17.820 --> 00:20.130
+At the very top, we'll make a set up function once again.
+
+00:23.280 --> 00:26.850
+And inside of here, we're going to need to create a listener, create a ticket, create the event,
+
+00:26.850 --> 00:28.860
+create a message, return everything.
+
+00:29.370 --> 00:31.470
+So first off, we will create the listener itself.
+
+00:31.620 --> 00:36.090
+I'll do a listener is a new order.
+
+00:37.280 --> 00:40.670
+Cancelled listener and we're going to have to pass in a client when we do that.
+
+00:40.670 --> 00:43.100
+So we'll assume that we're going to import Nat's wrapper.
+
+00:43.460 --> 00:46.160
+Client Let's add in an import for both those.
+
+00:47.310 --> 00:51.360
+So first I'll get nats repr from up three directories.
+
+00:51.930 --> 00:52.770
+Nats repr.
+
+00:53.720 --> 00:54.860
+And my order.
+
+00:55.630 --> 00:58.210
+Cancelled listener from up one directory.
+
+01:00.620 --> 01:03.140
+We then need to create a ticket and save it.
+
+01:03.140 --> 01:04.550
+So I'll get my ticket model.
+
+01:08.780 --> 01:09.440
+Here we go.
+
+01:12.320 --> 01:13.610
+So I'll make a new ticket.
+
+01:15.370 --> 01:15.740
+Or not.
+
+01:15.760 --> 01:16.690
+New ticket.
+
+01:16.970 --> 01:18.180
+Ticket Bill.
+
+01:18.190 --> 01:18.910
+There we go.
+
+01:20.280 --> 01:21.720
+I'll throw in a fake title.
+
+01:22.530 --> 01:23.250
+Price.
+
+01:24.020 --> 01:25.020
+What else do we need here?
+
+01:25.040 --> 01:26.150
+We need a user ID.
+
+01:27.500 --> 01:29.900
+And we also need an order ID as well.
+
+01:30.260 --> 01:34.610
+So the order ID we are going to have to also include inside the order cancelled event that eventually
+
+01:34.610 --> 01:36.210
+flows into the listener itself.
+
+01:36.230 --> 01:40.970
+So we're probably going to want to generate a realistic looking ID and then assign it to a separate
+
+01:40.970 --> 01:42.800
+variable so we can make use of it later on.
+
+01:43.460 --> 01:45.590
+So for that, let's import mongoose once again.
+
+01:48.440 --> 01:56.630
+And then make an order variable which will be mongoose type object ID to x string.
+
+02:02.110 --> 02:02.540
+Okay.
+
+02:02.620 --> 02:06.130
+Now if we try to add in the order id like so you'll notice we get an error.
+
+02:06.460 --> 02:10.720
+The reason for that is we had assumed that whenever we first create a ticket or whenever we first build
+
+02:10.720 --> 02:14.320
+one, in this case, we would not yet have an order ID to assign to it.
+
+02:14.440 --> 02:19.570
+So the interface we had assigned to the build function specifically says not going to have an order
+
+02:19.570 --> 02:20.470
+ID property.
+
+02:21.320 --> 02:21.530
+Now.
+
+02:21.530 --> 02:25.460
+We could certainly change that and we could say that the order ID property is optional when we are first
+
+02:25.460 --> 02:26.240
+building a ticket.
+
+02:26.240 --> 02:30.450
+But that would be kind of changing our code just to make our tests a little bit easier.
+
+02:30.470 --> 02:35.660
+I really do not expect that in reality, in our actual application code, we're ever going to create
+
+02:35.660 --> 02:40.970
+a ticket and simultaneously assign it and order ID, so I'm not going to go change the interface.
+
+02:41.360 --> 02:43.710
+Instead, we'll use a very, very simple workaround.
+
+02:43.730 --> 02:48.770
+Right after we build the ticket, we'll just set the order ID property, so we'll do a ticket set of
+
+02:48.770 --> 02:49.490
+order ID.
+
+02:49.760 --> 02:53.030
+Very simple workaround and definitely better in the long term.
+
+02:54.030 --> 02:55.500
+After that, we'll save the ticket.
+
+02:56.380 --> 02:57.160
+And there we go.
+
+02:58.920 --> 03:01.200
+Next up, we're going to build our data event.
+
+03:01.320 --> 03:05.880
+For this, let's import the definition or the interface of our event from our common module.
+
+03:07.110 --> 03:10.500
+So at the top will get our order cancelled event.
+
+03:13.530 --> 03:14.940
+From our common module.
+
+03:18.230 --> 03:21.950
+So we'll build up a data object of type order cancelled.
+
+03:22.750 --> 03:24.040
+Event at Data.
+
+03:25.660 --> 03:28.560
+And then, as usual, we'll be told how to actually implement this thing.
+
+03:28.570 --> 03:36.550
+So we need an ID, a version of the order itself, and then the tickets ID our ID is the order ID or
+
+03:36.550 --> 03:37.840
+version doesn't really matter here.
+
+03:37.840 --> 03:38.890
+We'll just throw in a zero.
+
+03:40.370 --> 03:41.840
+For the ticket itself.
+
+03:41.840 --> 03:43.580
+It's going to be this tickets ID.
+
+03:45.880 --> 03:49.480
+So we'll put in a ticket with an idea of tickets ID.
+
+03:52.770 --> 03:54.750
+After that, build up our message object.
+
+04:00.460 --> 04:04.500
+And this will be of ec just fn.
+
+04:05.720 --> 04:07.670
+Let's import that message type at the very top.
+
+04:15.080 --> 04:16.820
+And I think that is it for our set up.
+
+04:16.850 --> 04:17.940
+Very last thing we have to do.
+
+04:18.000 --> 04:20.630
+Well, of course we need that little tease ignore thing.
+
+04:22.010 --> 04:23.750
+Just to tell TypeScript, don't sweat it.
+
+04:23.750 --> 04:30.470
+And then finally, let's return our message data ticket order ID because we'll probably need to reference
+
+04:30.470 --> 04:30.740
+that.
+
+04:30.770 --> 04:31.250
+Who knows?
+
+04:31.250 --> 04:32.540
+Maybe at some point in time.
+
+04:33.330 --> 04:34.950
+And the listener itself.
+
+04:36.530 --> 04:38.180
+And we can actually write out our test.
+
+04:39.070 --> 04:44.410
+So rather than writing out two tests and trying to make sure that say we update the ticket and save
+
+04:44.410 --> 04:48.910
+it, and then a separate one for making sure act gets called and then maybe even a separate one for
+
+04:48.910 --> 04:49.650
+the publisher.
+
+04:49.660 --> 04:53.950
+Let's just condense this all down to one test just to save ourselves a little bit of time here.
+
+04:54.830 --> 04:56.270
+So I'm going to say it.
+
+04:57.670 --> 05:04.020
+Updates the ticket, publishes an event and acts the message.
+
+05:04.030 --> 05:06.070
+If you want to absolutely feel free.
+
+05:06.340 --> 05:08.440
+I would actually even recommend you do this.
+
+05:08.770 --> 05:10.350
+Split this into three separate tests.
+
+05:10.360 --> 05:13.840
+I'm just going to put it all into one, just to save ourselves a little bit of time for the purposes
+
+05:13.840 --> 05:14.620
+of this video.
+
+05:15.460 --> 05:17.350
+So inside of here, we'll call our setup function.
+
+05:17.350 --> 05:23.230
+Let's pull out the message data, ticket order ID and a listener from a wait setup.
+
+05:24.540 --> 05:27.330
+Then as usual, we'll call the on message function on the listener.
+
+05:27.330 --> 05:31.590
+So a listener on message pass in data.
+
+05:32.730 --> 05:33.780
+And the message.
+
+05:37.060 --> 05:38.860
+So now we'll take a look into our database.
+
+05:38.870 --> 05:40.920
+We're going to take a look at the tickets collection.
+
+05:40.930 --> 05:45.880
+We're going to find the ticket right here or the same ID, and we're going to make sure that it's order
+
+05:45.880 --> 05:47.680
+ID property was unset.
+
+05:47.680 --> 05:49.360
+It should be equal to undefined.
+
+05:49.900 --> 05:52.510
+So we'll define a updated ticket.
+
+05:52.960 --> 05:54.190
+That will be a weight ticket.
+
+05:54.220 --> 05:55.630
+Find by ID.
+
+05:56.700 --> 06:02.640
+We want to find the ticket's ID and then we're going to expect that things order ID property to be undefined.
+
+06:02.940 --> 06:06.360
+So expect updated ticket order ID.
+
+06:07.900 --> 06:08.590
+To.
+
+06:09.650 --> 06:12.640
+Not to be defined.
+
+06:12.650 --> 06:13.250
+There we go.
+
+06:14.450 --> 06:16.910
+And we got to throw that exclamation in as usual.
+
+06:18.940 --> 06:19.760
+Yes, that looks good.
+
+06:19.780 --> 06:22.030
+Let's also make sure that we call the ACC function.
+
+06:22.030 --> 06:23.200
+So I'll do it and expect.
+
+06:24.090 --> 06:27.840
+Message to have been called.
+
+06:29.080 --> 06:31.870
+And finally we'll also make sure that the published function.
+
+06:33.520 --> 06:36.250
+On our nets wrapper client was invoked as well.
+
+06:38.080 --> 06:44.680
+So I'll do it and expect that's rapper client publish to have.
+
+06:45.630 --> 06:46.920
+Ben Gault.
+
+06:46.920 --> 06:51.210
+Now, you'll notice here, unlike the last test, I'm not taking a look at that mock function's arguments.
+
+06:51.210 --> 06:52.950
+You could certainly do so if you wanted to.
+
+06:52.980 --> 06:55.050
+I would once again also really recommend it.
+
+06:55.050 --> 06:58.980
+But in this case, I'm just going to make sure that we do publish an event, not really checking what
+
+06:58.980 --> 07:03.690
+event or anything like that, but at least we know a event is being published, so probably good enough
+
+07:03.690 --> 07:04.380
+for right now.
+
+07:05.160 --> 07:06.140
+I'm going to save this.
+
+07:06.150 --> 07:08.550
+Let's take a look at our tests and just see how we're doing.
+
+07:10.540 --> 07:13.630
+It looks like it's all working as expected, as usual.
+
+07:13.630 --> 07:16.090
+Just a very quick comment to make sure that thing fails.
+
+07:16.090 --> 07:18.100
+It is always worth the time to do that.
+
+07:18.310 --> 07:18.610
+Yep.
+
+07:18.610 --> 07:19.480
+Definitely fails.
+
+07:19.480 --> 07:20.980
+And so let's say we are good to go.
+
+07:22.020 --> 07:22.230
+Yes.
+
+07:22.230 --> 07:24.330
+That is it for the order cancelled listener.
+
+07:25.180 --> 07:26.660
+Was right here, as usual.
+
+07:26.660 --> 07:28.010
+Move on in just a moment.

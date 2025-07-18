@@ -1,0 +1,148 @@
+WEBVTT
+
+00:00.900 --> 00:04.000
+In this video, we're going to sign up for a new Google Cloud account.
+
+00:04.020 --> 00:08.480
+Now, when you sign up for an account, you get automatically $300 in free credit.
+
+00:08.490 --> 00:12.990
+If you already have a Google Cloud account, you might want to create a brand new account just so you
+
+00:12.990 --> 00:18.090
+can get those $300 in free credits to guarantee that you will not have to spend anything in this course.
+
+00:18.090 --> 00:22.650
+But at any rate, I'm going to leave it up to you whether you use an existing account or create a new
+
+00:22.650 --> 00:23.040
+one.
+
+00:23.770 --> 00:28.270
+So to get started, we're going to open up a new browser tab and navigate to cloud google.com.
+
+00:28.690 --> 00:29.320
+Free.
+
+00:30.110 --> 00:32.270
+And you should see a page that looks like this right here.
+
+00:32.720 --> 00:35.220
+There are many pages you can go to to sign up for a new account.
+
+00:35.240 --> 00:40.010
+I point out this one in particular, just because it gives you some information about this free tier
+
+00:40.010 --> 00:40.820
+that they have.
+
+00:41.540 --> 00:43.100
+There will be a blue button right here.
+
+00:43.100 --> 00:46.610
+If you are not signed in, it will say something like sign up for a new account.
+
+00:46.640 --> 00:50.000
+Otherwise, if you're already signed in, it will say something like Go to console.
+
+00:50.510 --> 00:53.330
+So if you do not have an account, click on create an account.
+
+00:53.360 --> 00:56.870
+It will then prompt you to enter in your region in the world.
+
+00:57.140 --> 00:58.430
+So enter in your region.
+
+00:58.490 --> 01:01.880
+It will then prompt you to enter in some billing details.
+
+01:01.910 --> 01:04.820
+You'll also be asked if you are an individual or a business.
+
+01:04.850 --> 01:09.590
+Chances are you're an individual, so change the a little dropdown to say you're an individual and then
+
+01:09.590 --> 01:11.270
+enter in those billing details.
+
+01:11.300 --> 01:15.920
+Again, this entire option requires a credit card, even though we will probably not be spending any
+
+01:15.920 --> 01:17.690
+money thanks to this free credit.
+
+01:19.350 --> 01:23.580
+Now, once you go through that sign up process, you'll eventually be dumped at a page that looks like
+
+01:23.580 --> 01:24.390
+this right here.
+
+01:24.600 --> 01:30.420
+This is the Google Cloud console, and we can use this page to navigate through a ton of different features.
+
+01:31.660 --> 01:34.660
+The first thing we're going to do here is sign up for a new project.
+
+01:34.840 --> 01:39.310
+So at the very top left hand side, you're going to see something that maybe says my first project or
+
+01:39.310 --> 01:40.210
+something similar.
+
+01:40.510 --> 01:41.950
+I'm going to click that dropdown.
+
+01:42.580 --> 01:46.060
+Then on the right hand side, at the very top, I'm going to click on New Project.
+
+01:47.430 --> 01:49.200
+LC A window like this right here.
+
+01:49.440 --> 01:55.770
+I'm going to create a new project name with something like about ticketing dash dev.
+
+01:56.720 --> 01:58.010
+I'll then click on Create.
+
+01:58.430 --> 02:00.950
+Now, very importantly, this happens all the time.
+
+02:00.950 --> 02:05.270
+When you first create a project, you do not immediately jump into that project.
+
+02:05.300 --> 02:09.710
+In other words, this dashboard over here is still showing just my general dashboard.
+
+02:10.070 --> 02:13.250
+A little pop up on the very top right hand side will probably open.
+
+02:13.250 --> 02:14.660
+Or if it doesn't, there's give me a little button.
+
+02:14.660 --> 02:18.050
+You can click right there and it will say that it's creating the project.
+
+02:18.050 --> 02:21.200
+So it actually takes a minute or two to create the project itself.
+
+02:21.410 --> 02:24.920
+So wait for that thing to be created and we'll click on the project.
+
+02:26.770 --> 02:28.600
+And then we'll see a little jump.
+
+02:29.020 --> 02:33.790
+We'll notice that the project selector up here at the top left now says ticketing dev.
+
+02:33.820 --> 02:37.420
+And now we can start to use this dashboard under this project.
+
+02:38.610 --> 02:39.030
+Okay.
+
+02:39.030 --> 02:40.610
+So that's some initial setup.
+
+02:40.620 --> 02:43.680
+Let's take a pause right here and continue in just a moment.

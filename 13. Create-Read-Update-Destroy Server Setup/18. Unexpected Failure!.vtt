@@ -1,0 +1,277 @@
+WEBVTT
+
+00:00.880 --> 00:05.350
+Our tests are all complete, so let's go ahead and build out the actual show handler.
+
+00:05.350 --> 00:08.800
+Inside my roots directory, I'll make a new file of showcase.
+
+00:10.080 --> 00:14.150
+We're then going to add in everything required inside of here to actually build out our route handler.
+
+00:14.160 --> 00:16.320
+So I'm going to import Express.
+
+00:17.380 --> 00:21.340
+And the request type and the response type.
+
+00:22.660 --> 00:23.560
+From Express.
+
+00:24.070 --> 00:28.630
+Without a doubt, I'm going to need to be able to access my ticket collection inside the database.
+
+00:28.630 --> 00:34.120
+So I'm also going to get my ticket model from up one directory models ticket.
+
+00:36.030 --> 00:39.030
+I'll then build up my router with the express router.
+
+00:40.390 --> 00:42.370
+I'll then set up the route handler itself.
+
+00:42.670 --> 00:48.970
+So rootkit we want to watch for get requests to API tickets and then the ID of the ticket we're looking
+
+00:48.970 --> 00:49.450
+for.
+
+00:50.710 --> 00:54.220
+We are going to be making a request to our database from inside this thing.
+
+00:54.220 --> 00:56.680
+So it's definitely going to be an async route handler.
+
+00:58.330 --> 01:03.370
+Well then add in my req as request, Andrés as response.
+
+01:04.030 --> 01:08.140
+And then finally, just because we know we have to do it, let's export this thing right away and wired
+
+01:08.140 --> 01:09.040
+up to our app.
+
+01:09.400 --> 01:12.010
+So at the very bottom I'll put in and export.
+
+01:12.710 --> 01:16.460
+Router as show ticket router.
+
+01:19.850 --> 01:22.520
+I'll then go back over to my apts file.
+
+01:25.350 --> 01:27.150
+I'll add an import statement for that router.
+
+01:32.870 --> 01:34.160
+From Roots show.
+
+01:35.170 --> 01:37.560
+And then again we'll wired that up to our app.
+
+01:37.560 --> 01:40.620
+So app use show ticket router.
+
+01:44.660 --> 01:45.110
+All right.
+
+01:45.110 --> 01:47.930
+I'm going to save this now after we save all this stuff.
+
+01:47.960 --> 01:51.620
+Our tests are going to rerun, and you're probably going to see your tests hanging.
+
+01:51.650 --> 01:56.210
+The reason for that is that we've now got a route handler to receive these incoming requests to the
+
+01:56.210 --> 01:59.090
+show route, but we're not actually responding in any way.
+
+01:59.420 --> 02:01.690
+Eventually, the test is going to time out.
+
+02:01.700 --> 02:04.630
+I believe the default with just is about 20 or 30 seconds.
+
+02:04.640 --> 02:09.050
+So actually if we flip back over after some amount of time, it will tell us it looks like my default
+
+02:09.050 --> 02:10.790
+is actually 5 seconds in this case.
+
+02:11.970 --> 02:12.960
+It's after 5 seconds.
+
+02:12.960 --> 02:15.090
+It naturally times out and both the test fail.
+
+02:15.890 --> 02:16.010
+Okay.
+
+02:16.150 --> 02:17.870
+Let's put together some implementation.
+
+02:17.890 --> 02:21.160
+We're going to first try to focus on getting this one right here to pass.
+
+02:21.160 --> 02:25.510
+So I want to make sure that if we cannot find the ticket, let's return a 404 right away.
+
+02:27.050 --> 02:28.250
+Inside the rent handler.
+
+02:28.730 --> 02:33.920
+All we have to do is use the ticket model to look into our collection and find the ID that was mentioned
+
+02:33.920 --> 02:34.850
+in that URL.
+
+02:35.390 --> 02:39.770
+So we'll say Colin's ticket is a weight ticket defined by ID.
+
+02:40.550 --> 02:46.580
+And we're going to execute this query with rec grams id so rect params id.
+
+02:46.610 --> 02:48.890
+That is the id that we captured out of the URL.
+
+02:50.420 --> 02:51.290
+Find my ID.
+
+02:51.320 --> 02:53.570
+Is a query helper built directly into our model?
+
+02:53.570 --> 02:54.380
+As you'd guess.
+
+02:54.410 --> 02:56.360
+It's just going to try to find a particular record.
+
+02:57.190 --> 03:02.590
+Coming out of this query, we're going to get either our ticket document or if nothing was found, it
+
+03:02.590 --> 03:04.300
+will instead be equal to null.
+
+03:04.840 --> 03:09.850
+So now we can take a look at ticket and if it is equal to null, or essentially if it's not defined,
+
+03:09.850 --> 03:14.050
+then we definitely want to return a status code of 404 to the user.
+
+03:14.500 --> 03:15.770
+So let's handle that first.
+
+03:15.790 --> 03:17.830
+We'll say if not ticket.
+
+03:18.580 --> 03:24.550
+Then we need to return the status code so naturally we could do that return resend status, blah blah,
+
+03:24.580 --> 03:25.360
+all that stuff.
+
+03:25.360 --> 03:30.220
+But remember, we've got that fancy, fancy, fancy air handling system already put together.
+
+03:30.820 --> 03:35.860
+If we think back to our common module inside of our ears directory, we had put together that custom
+
+03:35.860 --> 03:41.260
+air of not found air, and that thing was really built specifically to handle the case we're in right
+
+03:41.260 --> 03:45.730
+now, the case in which we make a request and try to find something that just does not exist.
+
+03:47.050 --> 03:52.660
+So if we do not find a ticket, what we should really be doing is throwing a not found air.
+
+03:53.720 --> 03:54.260
+To do so.
+
+03:54.260 --> 03:59.900
+Let's import not found air from our common module.
+
+04:01.900 --> 04:03.640
+And inside of here throw.
+
+04:04.480 --> 04:06.280
+New not found.
+
+04:07.140 --> 04:07.590
+There.
+
+04:09.850 --> 04:12.850
+Then if the ticket is found, let's send it back in the response.
+
+04:13.150 --> 04:16.870
+So after the if statement, we can do a resend ticket.
+
+04:17.440 --> 04:20.830
+Whenever we leave off a status code, it will default to 200.
+
+04:21.010 --> 04:23.290
+And so that 200 will be.
+
+04:24.070 --> 04:26.590
+Successfully caught by that expectation right there.
+
+04:27.310 --> 04:27.640
+All right.
+
+04:27.640 --> 04:30.220
+So now I'm going to save this file and we're going to check our test output.
+
+04:30.220 --> 04:32.860
+And I want you to know that we're going to see an error.
+
+04:32.860 --> 04:35.110
+Something's going to be failing erroneously.
+
+04:35.440 --> 04:38.290
+And the reason for this is, well, we're going to take a look at it.
+
+04:38.290 --> 04:42.070
+It's an error that I wanted you to see on your own, just to see that even though, yeah, we can write
+
+04:42.070 --> 04:47.410
+tests, sometimes they don't quite work as expected and sometimes they actually help us catch some issues
+
+04:47.410 --> 04:50.680
+that we would have not really found if we were just testing this inside the browser.
+
+04:50.890 --> 04:53.590
+Okay, let's save this thing to flip back over.
+
+04:55.220 --> 04:56.030
+That's a running.
+
+04:56.810 --> 05:01.550
+And it looks like our test to successfully create the ticket and then fetch it worked.
+
+05:01.550 --> 05:02.600
+That one passed.
+
+05:02.930 --> 05:09.610
+So the good case this longer one right here, that thing passed, but this one failed.
+
+05:09.620 --> 05:12.260
+The one we were checking to make sure we got a 404.
+
+05:12.770 --> 05:14.090
+So we get a message here.
+
+05:14.090 --> 05:18.980
+We expect it to get a44 status, but instead we got back a 400.
+
+05:19.400 --> 05:20.030
+Hmm.
+
+05:20.660 --> 05:22.900
+That is definitely unexpected.
+
+05:22.910 --> 05:27.440
+So we're going to have to do a little bit of troubleshooting, a little bit of debugging to figure out
+
+05:27.440 --> 05:28.850
+why this is happening.

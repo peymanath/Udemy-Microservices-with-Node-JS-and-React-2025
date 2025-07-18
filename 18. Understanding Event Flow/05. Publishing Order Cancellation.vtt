@@ -1,0 +1,145 @@
+WEBVTT
+
+00:01.440 --> 00:01.980
+In this video.
+
+00:01.980 --> 00:04.430
+We're going to move over to our delete route handler.
+
+00:04.440 --> 00:07.800
+Remember, that is going to be in charge of canceling a order.
+
+00:08.400 --> 00:10.320
+We're going to go through the same process over there.
+
+00:10.320 --> 00:13.410
+But rather than publishing an order created event, we're going to publish an order.
+
+00:13.410 --> 00:14.340
+Cancel the event.
+
+00:14.550 --> 00:20.670
+So over inside of delete at the very top, we will import our order cancelled.
+
+00:21.400 --> 00:22.150
+Publisher.
+
+00:23.350 --> 00:31.240
+From up one directory events publishers order cancelled publisher well then also get our Nats wrapper
+
+00:31.420 --> 00:32.740
+from up one directory.
+
+00:32.740 --> 00:33.610
+Nats wrapper.
+
+00:36.470 --> 00:38.180
+Do you double check your spelling on order?
+
+00:38.180 --> 00:38.870
+Canceled right there.
+
+00:38.870 --> 00:40.340
+Easy place to make a typo.
+
+00:41.390 --> 00:45.200
+So once we got those imports together, we'll go down to the comment we had left inside of here.
+
+00:46.580 --> 00:48.590
+We'll create a new instance of the order.
+
+00:49.440 --> 00:50.310
+Cancelled.
+
+00:50.760 --> 00:51.510
+Publisher.
+
+00:53.320 --> 00:57.670
+Now we'll pass in the nats client which is available through nats repr client.
+
+00:58.000 --> 01:00.010
+We'll then call publish on the publisher.
+
+01:00.520 --> 01:04.810
+And now on this object right here, we have to provide some information for the events data.
+
+01:04.960 --> 01:09.130
+So we need to give the orders ID and the tickets ID as well.
+
+01:09.670 --> 01:11.290
+Well, the orders ID is easy enough.
+
+01:11.290 --> 01:13.720
+So the ID order ID.
+
+01:14.630 --> 01:17.840
+Well, then give the ticket property and there must be an ID inside there.
+
+01:18.380 --> 01:20.600
+Now, this is going to be just a little bit tricky.
+
+01:21.870 --> 01:25.860
+If we look at the rest of this route handler, you'll notice that we don't actually have a reference
+
+01:25.860 --> 01:30.150
+to the ticket that is associated with this order, and we did not even load it up when we fetch this
+
+01:30.150 --> 01:31.260
+order from the database.
+
+01:31.350 --> 01:35.160
+So we don't really know the ID of the ticket to put inside of here right now.
+
+01:35.580 --> 01:39.540
+So to fix that up, we're going to find where we make a query on the database to get some information
+
+01:39.540 --> 01:40.470
+about this order.
+
+01:40.770 --> 01:44.280
+And we're going to make sure that we populate that ticket property.
+
+01:46.030 --> 01:50.170
+So now when we fetch the order, we will also get the associated ticket along with it.
+
+01:50.620 --> 01:54.910
+So now if we wanted to, we could access order a ticket that would give us the ticket that we were looking
+
+01:54.910 --> 01:55.310
+for.
+
+01:55.330 --> 02:01.030
+And so, in theory, we could get the ID of that ticket by doing ticket ID.
+
+02:04.010 --> 02:04.130
+Okay.
+
+02:04.260 --> 02:09.270
+So down inside this object right here, we'll put in order ticket ID.
+
+02:10.740 --> 02:10.910
+Yes.
+
+02:10.920 --> 02:11.650
+That should be it.
+
+02:11.690 --> 02:12.720
+So let's save this.
+
+02:13.510 --> 02:15.430
+And now that we've got all this stuff put together.
+
+02:16.190 --> 02:19.610
+We need to take a look at how we're going to get our tests running around these.
+
+02:19.610 --> 02:24.410
+So we should probably have some tests to make sure that we are publishing this event correctly and to
+
+02:24.410 --> 02:29.150
+make sure that we are publishing the order created event as well whenever we either create a new order
+
+02:29.150 --> 02:30.500
+or cancel it in order.
+
+02:30.650 --> 02:33.080
+So let's start to fix up some tests in the next video.

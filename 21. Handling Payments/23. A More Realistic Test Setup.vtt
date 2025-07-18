@@ -1,0 +1,463 @@
+WEBVTT
+
+00:01.180 --> 00:06.220
+The test we have put together that relies upon mocking the Stripe client definitely works.
+
+00:06.370 --> 00:10.840
+However, I thought it would be fun to take a look at an alternative way of putting this test together,
+
+00:10.840 --> 00:15.850
+and in this alternate way, we're going to allow in the test, environment or route handler to talk
+
+00:15.850 --> 00:18.160
+directly to the real Stripe API.
+
+00:18.430 --> 00:22.480
+And so this will ensure that we are really creating a charge with all the correct values and that stripe
+
+00:22.480 --> 00:24.820
+is actually successfully creating it for us.
+
+00:25.390 --> 00:26.880
+Now this really is optional.
+
+00:26.890 --> 00:30.640
+I'm really just going to show you this alternative approach, and it's really up to you which approach
+
+00:30.640 --> 00:31.660
+you want to use.
+
+00:32.080 --> 00:37.360
+Although I will say it is kind of an either or you're going to either use this mock approach or you're
+
+00:37.360 --> 00:40.000
+going to use this more realistic way that I'm about to show you.
+
+00:40.510 --> 00:44.560
+The downside to the realistic approach is that these tests are going to take a little bit longer to
+
+00:44.560 --> 00:48.250
+run because we do have to make a request to the real Stripe API.
+
+00:49.520 --> 00:49.820
+Okay.
+
+00:49.820 --> 00:50.580
+So enough of that.
+
+00:50.600 --> 00:52.610
+Let's take a look at how we would put this together.
+
+00:52.970 --> 00:56.090
+The first thing we would want to do is make sure that we remove our stripe.
+
+00:56.090 --> 00:59.200
+Mock We don't want to mock out that client anymore.
+
+00:59.210 --> 01:01.460
+We want to use the real Stripe API.
+
+01:01.880 --> 01:07.580
+So to remove that at the very top of our test file, I will remove the just mock statement.
+
+01:09.970 --> 01:15.400
+And then inside of my MOX directory I'm going to rename that stripe file to stripe.
+
+01:15.600 --> 01:17.440
+It's old.
+
+01:18.810 --> 01:19.330
+So the dot.
+
+01:19.350 --> 01:19.860
+Hold on there.
+
+01:19.860 --> 01:20.460
+Just.
+
+01:20.940 --> 01:24.720
+Just changes the extension, just so we do not accidentally load up that file.
+
+01:26.720 --> 01:27.020
+Okay.
+
+01:27.020 --> 01:33.200
+Next up, we need to make sure that our local test copy or the test instance of the Stripe client we
+
+01:33.200 --> 01:35.990
+create has access to our Stripe API key.
+
+01:36.260 --> 01:41.180
+Remember that we did set up a Kubernetes secret to store our key, but that secret is only accessible
+
+01:41.180 --> 01:45.050
+inside of our Kubernetes cluster, and our tests are running outside of the cluster.
+
+01:45.230 --> 01:48.020
+So in our tests are running, we do not have access to the key.
+
+01:48.560 --> 01:52.880
+Now, ideally, we would store this key inside of an environment variable on your local machine.
+
+01:53.090 --> 01:57.740
+However, setting up environment variables is very different depending upon your operating system and
+
+01:57.740 --> 01:59.360
+even what shell you use.
+
+01:59.780 --> 02:04.370
+So ideally you would set this up as an environment variable, but I will leave that as an exercise to
+
+02:04.370 --> 02:04.850
+you.
+
+02:04.850 --> 02:06.850
+And instead you and I are just going to cheat.
+
+02:06.860 --> 02:12.880
+We're going to directly set the environment or the Stripe API key inside of our test setup file.
+
+02:13.460 --> 02:16.520
+Very similar to how we set some other environment variables inside of here.
+
+02:17.630 --> 02:19.760
+Right above the be for all statement.
+
+02:21.770 --> 02:24.260
+I'm going to define Stripe.
+
+02:25.410 --> 02:30.960
+Key and then I'm going to assign my API key to that variable.
+
+02:31.230 --> 02:36.810
+So as a reminder, you can get that from the Stripe dashboard by going to developers and then API keys
+
+02:36.810 --> 02:38.360
+and you'll see the secret key right there.
+
+02:38.370 --> 02:39.750
+That's the one that we want to use.
+
+02:40.840 --> 02:42.370
+So I'll paste that in like so.
+
+02:43.120 --> 02:47.530
+You'll notice that we are not placing that environment variable next to all the others.
+
+02:47.560 --> 02:52.120
+The reason for that is that we have to define this API key as soon as possible because it's going to
+
+02:52.120 --> 02:57.790
+be used the instant that we first require in these scripts file inside of our SCSI directory.
+
+02:59.830 --> 03:01.720
+Gary going to save that file and then close it.
+
+03:04.270 --> 03:05.170
+So now.
+
+03:06.020 --> 03:10.270
+Whenever we run our test suite and we run that test right here.
+
+03:10.280 --> 03:16.040
+So our success case test, when we make our request, that's going to reach out to the real Stripe API.
+
+03:16.890 --> 03:18.960
+We are still making some expectations right here.
+
+03:18.960 --> 03:21.630
+However, that is assuming that we are working with a mock function.
+
+03:21.930 --> 03:27.000
+So we're going to delete all those expectations and we now need to figure out some other way to reach
+
+03:27.000 --> 03:32.820
+out to the Stripe API and make sure that we actually are creating a chart with all the correct attributes.
+
+03:32.820 --> 03:35.130
+Because again, that is the whole goal of this test.
+
+03:35.220 --> 03:37.470
+We want to make sure that a charge was created.
+
+03:39.680 --> 03:41.120
+Now that is going to be just a little bit challenging.
+
+03:41.120 --> 03:44.840
+So let me show you a diagram just to summarize what we have to do and help you understand why it is
+
+03:44.840 --> 03:46.280
+kind of a challenging process.
+
+03:47.760 --> 03:48.030
+Okay.
+
+03:48.030 --> 03:52.470
+So in this diagram, we've got our test file, we've got our route handler and the Stripe API.
+
+03:53.120 --> 03:58.430
+So inside of our test file, we are going to more or less make a request over to this route handler.
+
+03:58.700 --> 04:01.100
+We'll include a token and some order ID.
+
+04:02.050 --> 04:06.340
+That handler is going to run, and then at some point in time it's going to reach out to the real Stripe
+
+04:06.340 --> 04:07.090
+API.
+
+04:07.630 --> 04:12.310
+It'll provide some token, some amount, some currency for a charge to be created.
+
+04:13.290 --> 04:17.670
+Then the Stripe API is going to immediately return some details about the charge that was just made.
+
+04:18.530 --> 04:23.330
+So these details about the charge that was just created, that is what we would love to get access to
+
+04:23.330 --> 04:28.010
+inside of our test file, because then we could write out some expectations and make sure that the charge
+
+04:28.010 --> 04:28.670
+was created.
+
+04:28.670 --> 04:32.210
+That was created as the correct amount, as the correct.
+
+04:32.600 --> 04:35.270
+Who knows what else made the correct date or something like that.
+
+04:35.300 --> 04:39.200
+In other words, we would really like to get information about this charge into our test file so we
+
+04:39.200 --> 04:41.000
+could write out some expectations.
+
+04:41.360 --> 04:47.420
+But right now, our route handler does not return any information about the charge that was created.
+
+04:47.420 --> 04:49.130
+That does not happen right now.
+
+04:49.640 --> 04:55.130
+Of course, we could very easily change that, without a doubt back inside of our handler.
+
+04:56.880 --> 04:58.200
+So here's Newt's.
+
+04:58.440 --> 04:59.850
+Here's to recreate the church.
+
+05:00.060 --> 05:04.770
+We could definitely take some information about the church that was made and then send it back to whoever
+
+05:04.770 --> 05:05.790
+made this request.
+
+05:06.330 --> 05:10.620
+And then inside of a request or excuse me, inside of our test file, we can receive that information
+
+05:10.620 --> 05:13.470
+and make sure that the church was made has some correct attributes.
+
+05:13.770 --> 05:19.740
+But if we did that, we would be changing the implementation of our code just to better suit our test.
+
+05:19.950 --> 05:22.020
+And that is usually a really bad sign.
+
+05:22.020 --> 05:25.700
+We usually do not want to make any changes to our code just to make it easier.
+
+05:25.770 --> 05:28.110
+Easier to write out some very particular test.
+
+05:29.210 --> 05:33.290
+So rather than trying to take this information about the charge that was created and forward it back
+
+05:33.290 --> 05:36.260
+over to the test file, we are going to figure out a different way to do this.
+
+05:36.260 --> 05:40.580
+We're going to figure out a different way to make sure that our test file can get some details and make
+
+05:40.580 --> 05:43.610
+sure that the charge was created has the correct properties.
+
+05:44.000 --> 05:45.230
+So how are we going to do that?
+
+05:45.620 --> 05:47.960
+Well, let's take another look at the Stripe API.
+
+05:49.170 --> 05:51.780
+Back at the Stripe API documentation again.
+
+05:51.780 --> 05:54.270
+This is at docs API charges.
+
+05:55.800 --> 05:59.370
+We took a look at the creative charge endpoint.
+
+05:59.880 --> 06:02.820
+There is another endpoint to retrieve a charge.
+
+06:02.820 --> 06:05.580
+So this will get information about a charge that has been created.
+
+06:05.670 --> 06:08.340
+But we have to provide the ID of the charge.
+
+06:08.670 --> 06:13.380
+And once again, we currently are not really able to communicate any information about the charge itself
+
+06:13.380 --> 06:15.450
+from the root handler to the test file.
+
+06:15.450 --> 06:17.820
+And it's unlikely that we will ever change that.
+
+06:18.590 --> 06:22.010
+So unfortunately, this retrieval charge, End Point, is not very helpful.
+
+06:22.220 --> 06:25.880
+But there is another one that we might be able to use if we get just a little bit clever.
+
+06:26.240 --> 06:28.880
+There's an end point of list, all charges.
+
+06:29.150 --> 06:34.250
+By default, this will give us the previous ten charges that have been created, and we could increase
+
+06:34.250 --> 06:36.380
+that up to 100 if we wanted to.
+
+06:37.630 --> 06:38.950
+So here's my idea.
+
+06:40.090 --> 06:42.170
+We're going to have our test file, make this request.
+
+06:42.190 --> 06:44.530
+The handler will send that off to Stripe.
+
+06:44.530 --> 06:49.150
+We'll get the response from Stripe back, and eventually the root handler will send back a message of
+
+06:49.420 --> 06:49.990
+success.
+
+06:49.990 --> 06:51.490
+True to our test file.
+
+06:52.220 --> 06:57.860
+After we get that success back, we're then going to have our test itself reach out to the Stripe API.
+
+06:59.590 --> 07:04.240
+We're going to request a list of the ten most recent charges that have been created.
+
+07:04.720 --> 07:07.060
+It will say, give me a list of the ten.
+
+07:09.090 --> 07:11.550
+Most recent charges.
+
+07:12.300 --> 07:15.690
+The Stripe API is going to respond with that list of ten charges.
+
+07:17.590 --> 07:20.050
+So list of ten most recent.
+
+07:20.440 --> 07:25.600
+And then inside of our test file, we're going to take a look at those ten most recent charges and we're
+
+07:25.600 --> 07:26.620
+going to make sure.
+
+07:27.900 --> 07:32.800
+That there was one charge that has the what looks like the correct set of properties.
+
+07:32.820 --> 07:37.560
+So perhaps it has maybe some correct token, some correct currency or something like that.
+
+07:38.270 --> 07:39.650
+Now this would definitely work.
+
+07:39.650 --> 07:44.420
+But remember, the token and the currency are always going to be the same for every single test run.
+
+07:44.630 --> 07:49.280
+So we could potentially be taking a look at some data inside this list of ten most recent charges that
+
+07:49.280 --> 07:53.780
+is stale or belongs to some tests that we ran, say, some minutes ago.
+
+07:54.230 --> 07:58.910
+So we need to make sure that whenever we create this chart, there's some unique identifying information
+
+07:58.910 --> 08:04.250
+inside of it that we can use to identify that charge inside this list of ten most recent charges inside
+
+08:04.250 --> 08:05.240
+of our test file.
+
+08:05.970 --> 08:08.490
+So how are we going to get some unique information inside there?
+
+08:08.670 --> 08:10.920
+Well, we're going to use that currency.
+
+08:11.700 --> 08:15.750
+Remember that inside of our test file we are creating the order that we are trying to purchase.
+
+08:16.170 --> 08:19.950
+Right now the order is hardcoded to be 20 USD.
+
+08:20.040 --> 08:25.860
+So instead of using a hardcoded value of $20, we're going to instead randomly generate a price for
+
+08:25.860 --> 08:26.910
+the order instead.
+
+08:27.330 --> 08:33.420
+So we will randomly generate a price, assign it to the order, and then when that root handler makes
+
+08:33.420 --> 08:39.120
+the request to purchase or create the charge, we will see that randomly generated amount inside there.
+
+08:39.120 --> 08:41.100
+So it'll be like some amount like that.
+
+08:41.960 --> 08:46.550
+Then when we get back our list of ten most recent charges, we can try to find a charge.
+
+08:47.740 --> 08:48.820
+With that amount.
+
+08:48.820 --> 08:51.190
+So some amount of 9 to 2, blah, blah, blah.
+
+08:51.400 --> 08:56.170
+And if we find a charge in the list of charges with that amount, that means that we must have successfully
+
+08:56.170 --> 08:58.540
+created the charge inside the root handler.
+
+08:58.870 --> 09:03.310
+And at no point in time will we have had to change any code or return change the return value of the
+
+09:03.310 --> 09:05.710
+root handler just to better suit our test.
+
+09:06.670 --> 09:06.940
+Okay.
+
+09:06.940 --> 09:11.740
+So I know this entire setup is kind of complicated, but again, I just want to show you this alternate
+
+09:11.740 --> 09:12.430
+approach.
+
+09:12.790 --> 09:15.700
+Let's take a pause right here and implement this in the next video.

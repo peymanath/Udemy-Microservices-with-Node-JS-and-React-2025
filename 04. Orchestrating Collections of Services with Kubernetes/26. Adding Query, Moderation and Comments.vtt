@@ -1,0 +1,493 @@
+WEBVTT
+
+00:00.980 --> 00:05.480
+We've now seen how to work with cluster IP services and node port services.
+
+00:05.510 --> 00:10.180
+So now we're going to go around to the rest of the microservices inside of our app, specifically comments,
+
+00:10.190 --> 00:13.400
+query and moderation and integrate those into our Kubernetes cluster.
+
+00:13.880 --> 00:16.070
+Here's the steps we need to go through for each one.
+
+00:16.520 --> 00:21.050
+We're going to go through the source code for each of those three, and we're going to update the URLs
+
+00:21.050 --> 00:25.080
+in each of them to make sure that they post events to the event bus CRV.
+
+00:25.100 --> 00:30.050
+Because remember, right now they are trying to send events to local host 4005.
+
+00:31.600 --> 00:35.230
+Then for each of those we will build an image and push them to Docker Hub.
+
+00:35.710 --> 00:40.990
+We'll then create a deployment in a cluster IP service for each of them and apply those all to our cluster.
+
+00:41.290 --> 00:46.750
+And then finally, we're going to update our event code so that it once again sends events to comments,
+
+00:46.750 --> 00:50.110
+query and moderation, because we commented out that code just a moment ago.
+
+00:50.740 --> 00:56.200
+So the bad news here is that we're going to be essentially doing the same thing three times over for
+
+00:56.200 --> 00:57.490
+comments, query and moderation.
+
+00:57.490 --> 00:58.510
+That's the bad news.
+
+00:58.540 --> 01:03.160
+The good news is we're going to get a lot of practice very quickly in creating services and deployments.
+
+01:03.520 --> 01:04.690
+So let's get to it.
+
+01:04.720 --> 01:09.280
+We're going to first take a look at comments in moderation, update URLs in each of those to reach out
+
+01:09.280 --> 01:12.460
+to event bus service whenever they need to create an event.
+
+01:14.640 --> 01:16.180
+I'll begin inside of comments.
+
+01:16.200 --> 01:18.480
+I'm going to find the index file inside there.
+
+01:19.770 --> 01:23.430
+And then I'm going to scroll through and just look for local host.
+
+01:23.700 --> 01:24.750
+Here's one right here.
+
+01:24.930 --> 01:28.590
+So I'm going to replace local host with event bus CRV.
+
+01:30.120 --> 01:31.170
+Well, then keep going.
+
+01:33.550 --> 01:34.270
+Here's another.
+
+01:34.270 --> 01:36.760
+So event bus CRV.
+
+01:37.660 --> 01:38.650
+And I think that's it.
+
+01:39.070 --> 01:41.870
+So make sure that you have two updates inside of here.
+
+01:41.890 --> 01:47.140
+If you do a control F and look for local host, you should do or get zero results.
+
+01:47.860 --> 01:49.690
+I'll then save this file and close it.
+
+01:50.640 --> 01:51.460
+So that's one down.
+
+01:51.480 --> 01:53.340
+Let's now move on to moderation.
+
+01:54.290 --> 01:54.740
+Inside there.
+
+01:54.740 --> 01:56.390
+I'll find the index dogs file.
+
+01:58.570 --> 02:00.580
+Here's a local host once right here.
+
+02:00.610 --> 02:03.850
+I'll update that to event bus CRV.
+
+02:04.420 --> 02:05.290
+Save the file.
+
+02:06.440 --> 02:06.800
+And.
+
+02:06.800 --> 02:08.400
+Okay, I think that's it as well.
+
+02:08.420 --> 02:09.380
+I'll do another.
+
+02:09.590 --> 02:11.150
+Control f for local host.
+
+02:11.660 --> 02:12.470
+No issue.
+
+02:13.280 --> 02:14.600
+They'll save that and close it.
+
+02:15.750 --> 02:18.930
+And then finally inside of query, I'll find index indexes.
+
+02:20.910 --> 02:22.170
+I'll go down inside of here.
+
+02:24.360 --> 02:30.390
+And it looks like we have one right here where we tried to do that kind of sync operation.
+
+02:31.020 --> 02:35.880
+So I'm going to make sure that I replace local host with event bus CRV.
+
+02:37.240 --> 02:38.310
+And I'll save the file.
+
+02:41.510 --> 02:41.870
+All right.
+
+02:41.870 --> 02:46.820
+So now comments, moderation and query are all attempting to reach out to the event plus cluster IP
+
+02:46.820 --> 02:48.920
+service, which is exactly what we want.
+
+02:49.820 --> 02:54.200
+So we're now going to go around inside of our terminal to all three of those directories and build images
+
+02:54.200 --> 02:56.300
+out of each of them and push them up to Docker Hub.
+
+02:58.740 --> 02:59.730
+Back at my terminal.
+
+03:01.340 --> 03:03.530
+I'll first start off inside of comments.
+
+03:05.110 --> 03:11.380
+I'll do a docker, build t my docker ID slash comments and then a dot.
+
+03:14.210 --> 03:14.630
+Looks good.
+
+03:16.320 --> 03:17.910
+I'll do a Docker push.
+
+03:19.800 --> 03:20.490
+Comments.
+
+03:24.480 --> 03:26.070
+And that should take just a moment or two.
+
+03:26.100 --> 03:28.500
+I'll let let it just do its thing very quickly.
+
+03:30.160 --> 03:30.910
+Very good.
+
+03:31.750 --> 03:32.900
+So that's it for comments.
+
+03:32.920 --> 03:35.680
+I'm now going to change over to a moderation.
+
+03:38.350 --> 03:39.850
+I'll do a Docker build.
+
+03:41.210 --> 03:42.740
+Moderation in their.
+
+03:45.060 --> 03:46.560
+And a darker push.
+
+03:52.810 --> 03:54.910
+And it looks like that one's going to have a little bit of an upload.
+
+03:54.910 --> 03:59.590
+So while that is running, I'll open up another terminal window just to save ourselves a little bit
+
+03:59.590 --> 04:02.590
+of time here so you don't have to watch my slow upload speed.
+
+04:03.910 --> 04:06.100
+So our last one is going to be for query.
+
+04:06.130 --> 04:07.390
+It's a little change in the query.
+
+04:08.170 --> 04:09.490
+I'll build that image.
+
+04:15.730 --> 04:17.320
+And I'll do a Docker push.
+
+04:19.650 --> 04:20.340
+Rick Perry.
+
+04:25.270 --> 04:25.870
+All right.
+
+04:27.390 --> 04:29.430
+So we have now updated the URLs.
+
+04:29.430 --> 04:31.560
+We built images and push them to Docker Hub.
+
+04:32.160 --> 04:36.120
+Now, last thing we need to do is create a deployment and a cluster IP service for each one.
+
+04:37.150 --> 04:42.400
+This video might run a little bit long, but I figure let's get all these steps done, at least in one
+
+04:42.400 --> 04:44.980
+video, just kind of kind of get this busy work out of the way.
+
+04:44.980 --> 04:46.480
+So let's just keep going for right now.
+
+04:46.930 --> 04:49.750
+So we're going to create a deployment and cluster IP service for each one.
+
+04:49.900 --> 04:51.640
+We'll do that back inside of our code editor.
+
+04:51.640 --> 04:55.180
+Remember, we're going to write out a config file to get started for each of those.
+
+04:56.310 --> 04:57.930
+Inside my infra directory.
+
+04:58.260 --> 05:04.350
+I will first take care of comments so I'll make a new file called comments devel html.
+
+05:06.380 --> 05:09.230
+Rather than writing out the entire deployment file from scratch.
+
+05:09.230 --> 05:15.230
+I'll just go and copy paste all the config from the event bus deployment file because just about all
+
+05:15.230 --> 05:18.920
+of our config around these deployments are going to be identical for right now.
+
+05:19.580 --> 05:20.900
+So here, event bus depot.
+
+05:20.930 --> 05:25.610
+I'm going to copy everything inside of here, including the cluster IP service at the very bottom.
+
+05:26.340 --> 05:29.190
+And I'll paste it into this new common stash double.
+
+05:31.620 --> 05:35.790
+And then going to go through here and update event bus to say comments instead.
+
+05:36.590 --> 05:38.210
+So I'll do one.
+
+05:39.570 --> 05:40.470
+Here's to.
+
+05:42.100 --> 05:42.910
+Here's three.
+
+05:44.760 --> 05:45.630
+Here's for.
+
+05:47.290 --> 05:48.970
+And here's five.
+
+05:50.350 --> 05:54.040
+So make sure that you have no mention of event buzz inside the deployment anymore.
+
+05:55.090 --> 06:01.030
+I'll then go down to the cluster IP service and I will replace event bus once.
+
+06:02.720 --> 06:03.440
+Weiss.
+
+06:04.310 --> 06:06.110
+And three times.
+
+06:07.850 --> 06:14.150
+And then finally remember comments is not listing on 4005 comments listings on port 4001.
+
+06:14.330 --> 06:17.120
+So I will update that as well to 4000.
+
+06:18.410 --> 06:20.450
+And one, make sure you don't have 40,000 won.
+
+06:20.450 --> 06:21.860
+Just 4001.
+
+06:23.080 --> 06:24.510
+All right, one down, two to go.
+
+06:24.520 --> 06:25.690
+So I'm going to save this file.
+
+06:27.210 --> 06:30.270
+I'll then create another new file inside of my k aids directory.
+
+06:31.080 --> 06:34.230
+I'll call this one moderation dash devel.
+
+06:36.290 --> 06:38.870
+I'm going to paste that default config once again.
+
+06:40.250 --> 06:41.850
+And I'll go through the same thing again.
+
+06:41.860 --> 06:42.180
+So.
+
+06:42.190 --> 06:43.050
+Event bus.
+
+06:43.060 --> 06:47.080
+This time I'm just going to do a multi select since you just saw me do all those updates.
+
+06:47.530 --> 06:49.510
+So event bus five times.
+
+06:49.540 --> 06:51.490
+Update them all to moderation.
+
+06:54.010 --> 06:55.540
+And then down inside the service.
+
+06:57.300 --> 06:59.610
+I'm going to update those three to moderation.
+
+06:59.910 --> 07:04.110
+And then remember, moderation listens on, what is it, 4003.
+
+07:04.110 --> 07:07.920
+I think I'll do a quick check inside of the indexed file for moderation.
+
+07:08.310 --> 07:09.900
+So, yes, 4003.
+
+07:11.460 --> 07:14.640
+So I'll update the port and target ports to 4003.
+
+07:15.800 --> 07:16.940
+I'm going to say this file.
+
+07:18.720 --> 07:22.600
+And then finally, one last file inside of K Eights.
+
+07:22.620 --> 07:24.060
+I'll do a query.
+
+07:24.060 --> 07:25.590
+Double HTML.
+
+07:26.520 --> 07:30.540
+In a paste once again and one more multi select.
+
+07:32.250 --> 07:34.290
+So there's query five times through.
+
+07:37.230 --> 07:38.880
+Replace these three with query.
+
+07:39.480 --> 07:42.120
+And then this one is 4002.
+
+07:44.750 --> 07:45.800
+And I'll save the file.
+
+07:46.960 --> 07:47.230
+All right.
+
+07:47.230 --> 07:47.950
+That should be it.
+
+07:49.120 --> 07:52.840
+So we've now made updates or created these three new deployment files.
+
+07:52.850 --> 07:56.920
+Each one consists of a deployment and a cluster IP service.
+
+07:58.210 --> 08:02.140
+It's not the last thing we have to do is take those files and apply them into our cluster.
+
+08:02.920 --> 08:04.900
+Let's go back over to our command line.
+
+08:05.810 --> 08:12.500
+I'm going to change into that k infra directory, the infra k eighths and then we're going to apply
+
+08:12.500 --> 08:14.270
+all the config files inside of here.
+
+08:14.270 --> 08:19.130
+We could apply them all one by one, but it would save us just a little bit of time to apply them all
+
+08:19.130 --> 08:23.510
+inside of one go to apply multiple config files with one single command.
+
+08:23.510 --> 08:30.530
+We write out CTL, apply F and then Dot and once again dot means find all the different config files
+
+08:30.530 --> 08:33.140
+inside of the current working directory and apply them.
+
+08:34.320 --> 08:37.500
+So I'll run that and then I'll see a bunch of things being created.
+
+08:38.100 --> 08:39.740
+So I've now got my query service.
+
+08:39.750 --> 08:44.520
+There's the query deployment, A, I've got my comment service, comments deployment and so on.
+
+08:45.410 --> 08:51.830
+We can now do a cube, CTL, get pods, and we should now see some additional pods running.
+
+08:51.830 --> 08:54.380
+And all of them should have a status of running as well.
+
+08:54.530 --> 08:59.570
+If any of them do not have a status of running, then chances are that you made a mistake during pushing
+
+08:59.570 --> 09:03.830
+these images off to Docker Hub or alternatively maybe inside of a config file.
+
+09:04.340 --> 09:09.560
+So if you see a status of any of these of something like air image back off or error image pull any
+
+09:09.560 --> 09:15.750
+kind of air whatsoever, the first thing to do to debug it is to copy that pod's name and then do a
+
+09:16.070 --> 09:19.430
+little describe pod and then the pods name.
+
+09:20.850 --> 09:24.990
+So run that command and then you'll see a series of events down here which hopefully should give you
+
+09:24.990 --> 09:26.970
+some more information about what is going on.
+
+09:27.730 --> 09:32.480
+We should also make sure that all the different services were created as well, so we can do a CTL,
+
+09:32.530 --> 09:39.730
+get services and we should see comments, event bus moderation, post cluster OST, which is our node
+
+09:39.730 --> 09:41.290
+port and query.
+
+09:43.170 --> 09:44.490
+Well, I'd say this looks pretty good.
+
+09:44.880 --> 09:46.530
+Now, the very last thing we have to do.
+
+09:47.860 --> 09:52.960
+Is make sure that we update the event bus to once again send events to comments, query and moderation.
+
+09:52.960 --> 09:56.890
+So we'll take care of that in just a moment and then start to do a final test of our application.

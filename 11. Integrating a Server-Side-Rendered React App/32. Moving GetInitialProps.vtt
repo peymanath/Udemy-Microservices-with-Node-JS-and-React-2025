@@ -1,0 +1,118 @@
+WEBVTT
+
+00:01.150 --> 00:05.830
+In this video, we're going to start to extract, get initial props from indexes up to that custom app
+
+00:05.830 --> 00:06.450
+component.
+
+00:06.460 --> 00:07.540
+So let's get to it.
+
+00:07.690 --> 00:11.360
+Now, when I say extract, what I really mean right now is just copy paste.
+
+00:11.380 --> 00:16.270
+I do want to have a get initial props in both locations so we can kind of test and make sure that we're
+
+00:16.270 --> 00:21.040
+still able to fetch data from both the page we're trying to display and the custom app.
+
+00:21.310 --> 00:26.560
+Once we can ensure that we can fetch data in both locations at the same time, we will then remove get
+
+00:26.560 --> 00:28.210
+initial props from landing page.
+
+00:28.210 --> 00:29.800
+So eventually this will go away.
+
+00:29.800 --> 00:33.430
+But for right now, we're going to have it in both locations again, just to make sure we can fetch
+
+00:33.430 --> 00:34.690
+data in both places.
+
+00:35.560 --> 00:35.860
+Okay.
+
+00:35.860 --> 00:38.890
+So let's start off inside this underscore Jpgs file.
+
+00:39.490 --> 00:42.310
+So we no longer want to just directly export this function.
+
+00:42.310 --> 00:46.840
+Instead, we need to somehow define that, get initial props function on it.
+
+00:47.380 --> 00:51.280
+So I'm going to delete the export default and I'm going to assign this to a variable that I will call
+
+00:51.280 --> 00:52.690
+app component.
+
+00:54.210 --> 00:56.240
+Now you might be tempted to call this app right here.
+
+00:56.250 --> 00:57.660
+I encourage you not to do that.
+
+00:57.660 --> 00:59.250
+Instead, call it app component.
+
+00:59.280 --> 01:01.170
+You're going to see why in just a moment.
+
+01:02.210 --> 01:06.530
+So we can then define app component, get initial props.
+
+01:08.480 --> 01:09.110
+Like so.
+
+01:10.630 --> 01:14.200
+And I'll do an export default app component at the bottom.
+
+01:16.000 --> 01:19.570
+Now, just as we did back inside of our landing page, inside of get initial props.
+
+01:19.570 --> 01:24.400
+If we do any data fetching, we need to make sure that we build up our Axios client because we're going
+
+01:24.400 --> 01:30.130
+to run into all these same issues around problems with our domain or the base URL, depending upon whether
+
+01:30.130 --> 01:33.070
+we are running this code on the browser or on the server.
+
+01:33.610 --> 01:38.710
+So we still have to require in or import in that build client file and use it to build up our Axios
+
+01:38.710 --> 01:39.370
+client.
+
+01:39.820 --> 01:43.750
+So at the very top, I'm going to add in an import for build client from.
+
+01:44.670 --> 01:45.690
+Up one directory.
+
+01:45.720 --> 01:47.970
+API build pipeline.
+
+01:50.270 --> 01:52.280
+Then down inside of get initial props.
+
+01:52.580 --> 01:56.630
+I would write out right here, I would try to receive in some context argument.
+
+01:56.630 --> 01:58.250
+That's what we would want to do.
+
+01:58.250 --> 02:01.130
+But it turns out life is not quite so simple.
+
+02:01.400 --> 02:04.550
+So now that we've got this kind of scaffolding put together, quick pause.
+
+02:04.550 --> 02:09.440
+I want to show you another diagram just to help you understand a little challenge with next G's.

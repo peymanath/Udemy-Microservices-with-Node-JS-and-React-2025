@@ -1,0 +1,427 @@
+WEBVTT
+
+00:00.910 --> 00:02.140
+Set up function complete.
+
+00:02.140 --> 00:03.730
+Let's write out our tests.
+
+00:03.970 --> 00:06.010
+So our tests are going to be pretty straightforward in nature.
+
+00:06.010 --> 00:08.530
+We really just want to make sure that we can call on message.
+
+00:08.800 --> 00:12.490
+We're going to make sure that we update the order status and save it.
+
+00:12.670 --> 00:17.140
+And we'll also make sure that we emit some new event of order canceled publisher.
+
+00:17.140 --> 00:20.290
+And at some point in time, we should probably also make sure we call the function.
+
+00:21.790 --> 00:23.380
+So back inside the test file.
+
+00:23.650 --> 00:25.840
+I am going to write out three separate tests this time.
+
+00:25.840 --> 00:30.700
+We previously just combined three tests together into one and I said you probably shouldn't do this.
+
+00:31.030 --> 00:34.600
+I really dislike and of course doing one thing and saying, Oh yeah, don't do this.
+
+00:34.600 --> 00:36.550
+So we're just going to write this out correctly.
+
+00:36.550 --> 00:38.230
+We're just going to make three separate tests.
+
+00:38.740 --> 00:43.240
+I'm going to first say it updates the order status to it.
+
+00:45.610 --> 00:46.430
+That's the first thing we want.
+
+00:46.450 --> 00:47.620
+We want to take care of.
+
+00:48.070 --> 00:51.760
+Well, then make sure that we emit an order canceled.
+
+00:52.790 --> 00:53.510
+Event.
+
+00:55.770 --> 00:58.350
+And then naturally we should ask the message.
+
+01:01.200 --> 01:01.470
+All right.
+
+01:01.470 --> 01:03.390
+Each of these we've pretty much done before.
+
+01:03.390 --> 01:05.070
+So it should be pretty straightforward in nature.
+
+01:05.280 --> 01:06.450
+In all three of them.
+
+01:06.690 --> 01:13.950
+We definitely want to pull the listener order ticket data and message from a wait setup.
+
+01:15.370 --> 01:16.630
+And we're definitely going to want to.
+
+01:16.870 --> 01:21.880
+All three of them await listener on message and pass in data and message.
+
+01:23.700 --> 01:25.010
+Because they all need this.
+
+01:25.020 --> 01:26.850
+Let's just do a copy paste right away.
+
+01:27.120 --> 01:29.820
+I'm going to take those two lines and paste them in the other two tests.
+
+01:30.860 --> 01:34.010
+And then we can go through and fill out the expectations for each.
+
+01:34.690 --> 01:37.450
+So on this first one, I bet you could guess what we're going to do here.
+
+01:37.450 --> 01:39.400
+We're going to reach into our order collection.
+
+01:39.400 --> 01:42.460
+We're going to find the order that has been saved, hopefully updated.
+
+01:43.150 --> 01:46.600
+We're going to fetch it out of that collection and then just make sure that the status property was
+
+01:46.600 --> 01:48.580
+updated to cancelled pretty much it.
+
+01:49.690 --> 01:55.720
+So we'll do an updated order will be and await order.
+
+01:55.960 --> 01:57.460
+Find by ID.
+
+01:58.500 --> 01:59.220
+Order ID.
+
+01:59.980 --> 02:04.140
+Remember, we do have the order right there, but in theory that is an out-of-date version of the order.
+
+02:06.340 --> 02:08.020
+So then we'll do an expectation.
+
+02:08.030 --> 02:16.060
+We'll make sure that the updated order status property equals order status got cancelled.
+
+02:17.720 --> 02:18.530
+As usual.
+
+02:18.980 --> 02:20.380
+Let's throw that exclamation on there.
+
+02:20.390 --> 02:22.130
+We've been over that so many times now.
+
+02:23.080 --> 02:23.260
+Yes.
+
+02:23.260 --> 02:24.760
+That should be it for test number one.
+
+02:25.180 --> 02:27.610
+We'll run all these and make sure they all fail at the end.
+
+02:27.610 --> 02:31.240
+Let's just make them or put together some implementation for all three to get started.
+
+02:32.230 --> 02:34.090
+Next up is order cancelled.
+
+02:34.180 --> 02:39.550
+So we need to somehow take a look at our Nats wrapper mark right here.
+
+02:39.580 --> 02:41.590
+We've been over this once before as well.
+
+02:41.820 --> 02:42.990
+Do you remember the Nats wrapper?
+
+02:43.000 --> 02:46.490
+It is a mock function or specifically the published function inside there.
+
+02:46.510 --> 02:52.600
+So we're going to get the Nats wrapper client publish and we're going to take a look at that mock and
+
+02:52.600 --> 02:54.310
+just make sure that it was called.
+
+02:55.330 --> 02:59.170
+And if we want to, we can also make sure that it was coupled with a very specific set of arguments.
+
+03:00.660 --> 03:02.760
+So back down at the order cancelled event.
+
+03:04.390 --> 03:12.430
+We're going to throw in a that's rapper client publish and then remember this polish function is a jest
+
+03:12.430 --> 03:13.150
+mock.
+
+03:13.240 --> 03:18.880
+So to help TypeScript understand that we can then put down as just dot mock.
+
+03:19.960 --> 03:23.470
+That's a typescript is going to understand that this thing is supposed to be a mock function and it's
+
+03:23.470 --> 03:27.280
+going to give us access to all the appropriate properties on there without complaining to us a whole
+
+03:27.280 --> 03:27.850
+bunch.
+
+03:28.880 --> 03:30.470
+I'm going to wrap that with parentheses.
+
+03:30.470 --> 03:34.610
+And then remember, if you want to get access to all the different times this function has been invoked,
+
+03:34.610 --> 03:36.920
+we can chain on a calls.
+
+03:39.190 --> 03:39.610
+Ask me.
+
+03:39.610 --> 03:40.590
+McCall's.
+
+03:40.600 --> 03:41.320
+That's better.
+
+03:42.550 --> 03:46.150
+And that's going to be an array of all the different times, all the different arguments that this thing
+
+03:46.150 --> 03:47.650
+has been provided over time.
+
+03:48.100 --> 03:51.640
+So Elish should have only been invoked one single time.
+
+03:51.970 --> 03:57.100
+So take a look at the first time it was called, and then maybe we want to just make sure that this
+
+03:57.100 --> 03:58.630
+event that we just published.
+
+03:58.840 --> 04:03.040
+How about let's say that we make sure it has the correct order ID inside of it, back inside of our
+
+04:03.040 --> 04:03.590
+listener.
+
+04:03.610 --> 04:04.930
+Here's what we are publishing.
+
+04:04.930 --> 04:09.340
+So we might just want to make sure that we are imitating the event with the correct order ID.
+
+04:10.730 --> 04:16.280
+So for that, we can get access to the second argument inside there, because remember, the first argument
+
+04:16.280 --> 04:20.000
+is the subject or the channel name that we are publishing this event to.
+
+04:20.740 --> 04:23.620
+This is going to give us back the entire data object as JSON.
+
+04:23.620 --> 04:28.120
+So we're going have to turn it into an actual object and then we can pull the ID property out of it.
+
+04:28.840 --> 04:31.150
+So I'll do a JSON parse.
+
+04:31.970 --> 04:34.460
+Wrap that entire thing with a set of parentheses.
+
+04:35.310 --> 04:39.090
+And I'll sign this to about event data.
+
+04:40.350 --> 04:42.270
+Is that line is getting really long.
+
+04:45.620 --> 04:50.390
+Then let's do an expectation here and we'll say that we expect event data ID.
+
+04:51.320 --> 04:53.000
+To equal order.
+
+04:53.000 --> 04:53.660
+I'd.
+
+04:55.040 --> 04:59.900
+We can also just very simply maybe on the line right above all that stuff, we could add in a very simple
+
+04:59.900 --> 05:05.150
+expectation just to make sure that the mark itself is published function actually was invoked.
+
+05:05.600 --> 05:09.620
+So a kind of two stage expectation is really nice in that regard because we can first make sure that
+
+05:09.620 --> 05:13.850
+the thing called and then maybe even if it was called, it might have been given the incorrect arguments.
+
+05:13.850 --> 05:18.650
+And so the two stage kind of set up or two expectations kind of helps you debug stuff in the future.
+
+05:19.220 --> 05:23.870
+So right above that event data stuff, I'll put in a net's wrapper client publish.
+
+05:24.780 --> 05:25.630
+You have.
+
+05:26.850 --> 05:27.420
+Come on.
+
+05:28.130 --> 05:29.240
+Ben felt.
+
+05:30.360 --> 05:30.930
+There we go.
+
+05:32.860 --> 05:37.120
+Now, if you do not really remember this part right here from the last time we did it, you could take
+
+05:37.120 --> 05:39.310
+that value right there and just do a quick console log of it.
+
+05:39.310 --> 05:43.810
+Just to get a quick reminder of yes calls is the array of all the different times this mock function
+
+05:43.810 --> 05:44.590
+was invoked.
+
+05:46.270 --> 05:46.780
+Okay.
+
+05:46.820 --> 05:47.780
+Onto the last one.
+
+05:47.800 --> 05:49.210
+Let's take care of this really quickly.
+
+05:50.420 --> 05:52.260
+So we definitely done this one many times.
+
+05:52.280 --> 05:56.720
+We're just going to take a look at our message and make sure that the act function was invoked.
+
+05:57.200 --> 06:01.130
+So I'll do it and expect message to have been.
+
+06:01.810 --> 06:02.410
+Cult.
+
+06:03.590 --> 06:04.540
+And that is it.
+
+06:04.550 --> 06:05.390
+We are all done.
+
+06:05.930 --> 06:06.950
+Let's save this.
+
+06:08.320 --> 06:11.590
+We could definitely clean up some of the structured arguments in here if you want to.
+
+06:11.590 --> 06:14.880
+By the way, didn't really need to get here, I guess.
+
+06:15.100 --> 06:16.210
+Didn't need to pick it up here.
+
+06:16.240 --> 06:17.110
+Totally up to you.
+
+06:18.050 --> 06:21.530
+At any rate, let's make sure we just save the file and we'll go run our tests.
+
+06:21.980 --> 06:24.200
+The back of my terminal will change into orders.
+
+06:24.740 --> 06:26.120
+Do an NP run test.
+
+06:27.160 --> 06:31.540
+And for the first go round, we're going to pray, really just hope, I suppose, that all of our tests
+
+06:31.540 --> 06:32.280
+pass.
+
+06:32.290 --> 06:33.370
+That's what we're looking for.
+
+06:34.650 --> 06:35.030
+Yep.
+
+06:35.070 --> 06:35.940
+Looks good.
+
+06:36.980 --> 06:40.700
+Now that everything is passing as usual, I still want to make sure that we can get our test to fail
+
+06:40.730 --> 06:43.700
+because they might be passing through some fault on our side.
+
+06:43.880 --> 06:47.720
+So for all three tests we just wrote out, I'm going to comment out the on message call.
+
+06:49.810 --> 06:51.250
+So there's three comments.
+
+06:51.990 --> 06:53.070
+Well, then save this.
+
+06:53.190 --> 06:57.330
+It will now flip back over and just make sure that we've got exactly three failures.
+
+06:59.910 --> 07:00.240
+Yep.
+
+07:00.240 --> 07:01.170
+Three failed.
+
+07:01.740 --> 07:02.400
+Very good.
+
+07:02.880 --> 07:04.590
+All right, I'll undo those changes.
+
+07:05.070 --> 07:06.990
+So they're now all uncommitted.
+
+07:07.440 --> 07:09.510
+Say this again and we are all set.
+
+07:10.410 --> 07:10.740
+All right.
+
+07:10.740 --> 07:12.390
+So that's one more step down.
+
+07:12.480 --> 07:15.420
+We're getting closer and closer to finishing up this application.
+
+07:15.630 --> 07:17.340
+We still have a pretty good amount to do.
+
+07:17.370 --> 07:20.040
+So let's take a pause right here and move forward in just a moment.

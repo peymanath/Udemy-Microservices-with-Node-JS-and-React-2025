@@ -1,0 +1,379 @@
+WEBVTT
+
+00:01.110 --> 00:06.420
+As of repeated several times now, we're going to create a cluster IP service to allow access to our
+
+00:06.420 --> 00:09.160
+post pod and one for event bus as well.
+
+00:09.180 --> 00:10.320
+So let's get to it.
+
+00:11.890 --> 00:17.110
+Back inside my editor, we can either create a new file to house these two services, or, I should
+
+00:17.110 --> 00:18.840
+say one file for each service.
+
+00:18.850 --> 00:24.550
+Or alternatively, we can just write out the configuration for each cluster IP service directly into
+
+00:24.550 --> 00:26.140
+the appropriate deployment file.
+
+00:26.860 --> 00:32.920
+Personally, I kind of like to co-locate my deployment configuration and the IP service that maps up
+
+00:32.920 --> 00:33.340
+to it.
+
+00:33.340 --> 00:38.620
+And the reason for that is that we usually end up with a 1 to 1 mapping between cluster IP services
+
+00:38.620 --> 00:41.290
+and the deployments that they are allowing access to.
+
+00:41.500 --> 00:44.500
+So it kind of makes sense in my mind to co-locate all this stuff.
+
+00:44.650 --> 00:49.690
+But you will find that other people like to create a separate file for every single service, or I should
+
+00:49.690 --> 00:52.560
+say, every single object inside their Kubernetes cluster.
+
+00:52.570 --> 00:53.640
+So it's really up to you.
+
+00:53.650 --> 00:57.070
+But at least in this course, we're going to co-locate all this configuration.
+
+00:58.750 --> 01:03.520
+That means that inside of my event bus deployment file, I'm going to go down to the very bottom of
+
+01:03.520 --> 01:08.380
+the file and we're going to write out the configuration to create this new cluster IP service right
+
+01:08.380 --> 01:08.860
+here.
+
+01:09.780 --> 01:12.870
+To create multiple objects inside of a single YAML file.
+
+01:13.050 --> 01:18.060
+We add on dash, dash, dash, and then just go down to the next line.
+
+01:18.540 --> 01:22.410
+So we will write out our configuration for the cluster IP service starting right here.
+
+01:23.510 --> 01:27.500
+The configuration that we're going to write out is going to look just about identical to what we wrote
+
+01:27.500 --> 01:30.140
+out already inside the post CSV file.
+
+01:31.480 --> 01:32.680
+So let's get to it.
+
+01:33.310 --> 01:37.660
+To create this cluster IP service, we'll say API version B one.
+
+01:38.950 --> 01:40.750
+Hind is going to be service.
+
+01:42.270 --> 01:48.810
+Metadata is going to have a name of event bus CRV.
+
+01:52.660 --> 01:55.240
+I'll then create a spec inside of here.
+
+01:55.240 --> 01:59.620
+We're going to once again set up a selector that's going to tell the service what pods it is going to
+
+01:59.620 --> 02:00.760
+allow access to.
+
+02:01.270 --> 02:06.730
+So in this case, we want to use or we want to make sure that we tell the service to direct any incoming
+
+02:06.730 --> 02:12.130
+traffic to the pod with a label of event which we app event, dash bus.
+
+02:12.280 --> 02:14.950
+So that's going to be the label that we're going to look for right there.
+
+02:15.880 --> 02:18.670
+So we will provide that label to the selector field.
+
+02:19.330 --> 02:22.300
+So EP Event, Dash Plus.
+
+02:23.970 --> 02:30.180
+Next up, we can optionally specify a type of cluster IP three, and I say optionally is that if we
+
+02:30.180 --> 02:35.610
+do not specify a type for the service, Kubernetes will default to creating a cluster IP service for
+
+02:35.610 --> 02:36.060
+us.
+
+02:36.270 --> 02:38.130
+So we can delete that altogether if we want to.
+
+02:38.130 --> 02:40.650
+And we will just go ahead and get a cluster IP service.
+
+02:40.890 --> 02:45.660
+It is 100% up to you whether or not you want to write out the full type or just rely upon the default
+
+02:45.660 --> 02:46.320
+behavior.
+
+02:46.920 --> 02:48.900
+For me personally, I think I'll go with the default.
+
+02:49.880 --> 02:51.230
+So I'm not going to include it.
+
+02:52.040 --> 02:54.050
+And then finally we'll set up our ports.
+
+02:55.990 --> 03:02.350
+As a quick reminder, the event bus application itself, if we open up its implementation, specifically
+
+03:02.350 --> 03:08.080
+the index file, this thing is listening to incoming traffic on Port 4005.
+
+03:08.260 --> 03:13.120
+So we just need to make sure that we specify a port of 4005 in the port configuration.
+
+03:13.720 --> 03:17.260
+So I'll put a dash in, say name, event bus.
+
+03:18.420 --> 03:20.430
+Protocol of TCP.
+
+03:21.420 --> 03:27.590
+Then a port of 4005 and a target port of 4005 like so.
+
+03:29.290 --> 03:30.160
+And that should be it.
+
+03:31.260 --> 03:35.370
+So I'm going to save this file and then going to go back over to my terminal and I'll try to apply it
+
+03:35.370 --> 03:36.090
+right away.
+
+03:37.320 --> 03:41.490
+I'm still inside of my card's directory and I'll do a little apply.
+
+03:43.560 --> 03:44.250
+Event.
+
+03:44.250 --> 03:46.080
+Bus Depot, Yamal.
+
+03:47.840 --> 03:52.580
+Once I run that command, you'll see that Kubernetes now understands that there are two objects that
+
+03:52.580 --> 03:54.440
+we are defining inside that config file.
+
+03:54.980 --> 03:57.260
+The event plus deployment has been unchanged.
+
+03:57.260 --> 04:01.850
+So although we tried to apply some changes, we haven't actually or apply that same file again, we
+
+04:01.850 --> 04:03.860
+haven't actually made any changes to the deployment.
+
+04:04.250 --> 04:09.320
+But Kubernetes did realise that the event bus service was brand new and so it listed as being created.
+
+04:09.920 --> 04:16.130
+We should now be able to do a queue CTL, get services and see our event bus service right there.
+
+04:16.130 --> 04:18.320
+And it should have a type of cluster IP.
+
+04:19.090 --> 04:19.520
+Awesome.
+
+04:19.540 --> 04:20.440
+That looks pretty good.
+
+04:22.310 --> 04:26.110
+So now we're going to repeat that same process for our posts as well.
+
+04:26.770 --> 04:30.970
+Before we do so, however, you'll recall that we already created a node port right here.
+
+04:31.780 --> 04:34.530
+And it's already using this name of post CRV.
+
+04:34.540 --> 04:38.020
+So we just need to be aware that once we create a second service.
+
+04:39.030 --> 04:44.070
+That's going to direct to this post pod right here once we create this second cluster IP in addition
+
+04:44.070 --> 04:45.540
+to the node port.
+
+04:46.820 --> 04:47.950
+That already points to it.
+
+04:47.960 --> 04:50.560
+We just need to make sure that we use some slightly different names.
+
+04:50.570 --> 04:55.760
+Otherwise, Kubernetes is going to think that we want to try to change the existing node port service
+
+04:55.760 --> 04:57.260
+into a cluster IP.
+
+04:57.560 --> 05:01.430
+It's all I mean to say is we just need to use a different name than the one that we already used inside
+
+05:01.430 --> 05:03.170
+this post ZV file.
+
+05:05.380 --> 05:09.460
+I'm going to open up the post-deployment file and once again, we're going to write out the cluster
+
+05:09.460 --> 05:14.620
+IP service that's going to allow access to the pod created for this deployment down here at the very
+
+05:14.620 --> 05:15.160
+bottom.
+
+05:16.620 --> 05:18.340
+So I'll put in dash, dash, dash.
+
+05:18.390 --> 05:22.800
+And then rather than writing all this stuff out again, let's just do some copy paste.
+
+05:23.580 --> 05:26.580
+I'm going to go back over to the event event plus deployment file.
+
+05:26.760 --> 05:28.410
+I'm going to copy everything down here.
+
+05:29.620 --> 05:33.460
+Go down to a post dash deployment and paste it all in.
+
+05:37.320 --> 05:41.730
+And then finally, I'll change the name of this cluster IP service to.
+
+05:43.320 --> 05:44.010
+Hosts.
+
+05:45.940 --> 05:48.580
+Cluster IP dash CRV.
+
+05:49.630 --> 05:53.710
+So again, that's just going to distinguish between the existing post service that we've already created.
+
+05:54.570 --> 05:59.490
+Well, then make sure that I update the selector right here to posts and I'll update the name of the
+
+05:59.490 --> 06:01.860
+port to posts as well.
+
+06:03.170 --> 06:07.940
+Finally recall that we have some different ports for our post application.
+
+06:08.360 --> 06:13.010
+If we open up the post index file, this thing lists traffic on port 4000.
+
+06:13.040 --> 06:14.840
+We just have to make sure that we update that port.
+
+06:16.300 --> 06:17.110
+And that should be it.
+
+06:18.730 --> 06:19.870
+So I'll save this file.
+
+06:19.870 --> 06:21.730
+And once again, we'll go over to our terminal.
+
+06:22.650 --> 06:27.560
+And we'll do a cube to apply those devil HTML.
+
+06:27.630 --> 06:30.930
+Oh, don't forget the F on their dash f.
+
+06:32.410 --> 06:36.010
+So we've now created that cluster IP service that points over to posts.
+
+06:36.870 --> 06:39.720
+And if I do it, it'll get services.
+
+06:41.020 --> 06:41.380
+Yep.
+
+06:41.380 --> 06:42.490
+There it is right there.
+
+06:43.340 --> 06:43.760
+All right.
+
+06:43.760 --> 06:45.020
+Once again, I want to repeat that.
+
+06:45.020 --> 06:47.030
+I know a lot of this stuff seems tedious right now.
+
+06:47.030 --> 06:51.290
+And as soon as you get through this one time of doing all this stuff by hand, a lot of it is going
+
+06:51.290 --> 06:52.760
+to get way, way easier.
+
+06:53.150 --> 06:57.140
+And again, I want to also repeat that I'm sure a lot of this Kubernetes stuff seems kind of pointless
+
+06:57.140 --> 06:57.640
+right now.
+
+06:57.650 --> 07:01.010
+You might be saying there is no way all this trouble is worth it.
+
+07:01.010 --> 07:06.920
+But trust me, once we get a really good Kubernetes flow going, adding in new stuff or new components
+
+07:06.920 --> 07:11.720
+to our microservices application is going to be an absolute breeze, so I can't repeat it enough.
+
+07:11.720 --> 07:15.740
+It's really just some one time pain to learn the stuff and we're almost done anyhow.
+
+07:16.580 --> 07:16.910
+Okay.
+
+07:16.910 --> 07:18.530
+So this is looking pretty good.
+
+07:18.920 --> 07:21.870
+We have now gone through building an image.
+
+07:21.890 --> 07:23.480
+We push the image, we create the deployment.
+
+07:23.480 --> 07:25.210
+We create the cluster IP services.
+
+07:25.220 --> 07:28.310
+Now we just have to do one last little step to wire this stuff up.
+
+07:28.310 --> 07:33.950
+And then our to event bus and posts or the these two pods will be able to communicate with each other
+
+07:33.950 --> 07:34.760
+very easily.
+
+07:35.360 --> 07:37.250
+So a quick pause and I'll see you in just a minute.

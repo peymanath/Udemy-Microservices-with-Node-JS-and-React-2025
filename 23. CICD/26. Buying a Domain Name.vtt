@@ -1,0 +1,151 @@
+WEBVTT
+
+00:00.760 --> 00:05.660
+The last big thing we have to do is get a domain name and pointed at our Kubernetes application running
+
+00:05.660 --> 00:06.920
+on Digital Ocean.
+
+00:07.340 --> 00:09.740
+Let's go back over to our Digital Ocean Dashboard really quick.
+
+00:09.740 --> 00:13.060
+I want to show you something interesting over on Digital Ocean.
+
+00:13.070 --> 00:16.130
+On the left hand side, I'm going to find the networking tab right here.
+
+00:17.660 --> 00:22.970
+Then I'm going to click on load balancers and you might notice that you have a load balancer right here.
+
+00:23.450 --> 00:28.970
+This load balancer was created automatically by Ingress and Gen X when we created it inside of our cluster.
+
+00:29.630 --> 00:30.530
+This load balancer.
+
+00:30.530 --> 00:33.770
+And by the way, if you see some things right here saying down, that's totally fine.
+
+00:33.770 --> 00:36.650
+Digital ocean is buggy sometimes, particularly the dashboard.
+
+00:36.890 --> 00:40.760
+So this load balancer is directing traffic into your cluster.
+
+00:41.640 --> 00:46.050
+If we want to somehow get access to our cluster from a normal web browser, here's what we have to do.
+
+00:46.870 --> 00:52.000
+Right now on Digital Ocean, we've got our cluster as three nodes and we also have a load balancer.
+
+00:52.480 --> 00:57.010
+The load balancer has an external IP assigned to it automatically by digital ocean.
+
+00:57.280 --> 01:01.480
+You can find that external IP listed right here up at the top.
+
+01:02.080 --> 01:06.340
+As a matter of fact, if you copy that IP right now and try to visit it inside your browser, you'll
+
+01:06.340 --> 01:07.780
+get a 404 not found.
+
+01:08.660 --> 01:12.620
+And that is an error, of course, but you'll notice that the air is coming from engine x.
+
+01:12.980 --> 01:19.280
+So right now you are making request to your ingress engine X load balancer, but unfortunately you are
+
+01:19.280 --> 01:21.500
+using no hostname whatsoever.
+
+01:21.500 --> 01:25.460
+And so none of the routing rules we had put together inside of our service file are being applied to
+
+01:25.460 --> 01:26.390
+your request.
+
+01:27.480 --> 01:33.150
+So in order to get this working, we have to buy a domain name and point it at that load balancer or
+
+01:33.150 --> 01:35.280
+specifically really the IP address.
+
+01:35.790 --> 01:37.050
+That's what we really need to do next.
+
+01:37.050 --> 01:42.030
+We need to purchase a domain name and then point it at the load balancer that was created for us automatically.
+
+01:44.360 --> 01:47.870
+The purchase the domain name I'm going to use name cheap.
+
+01:49.170 --> 01:53.040
+Now you can use absolutely any domain name provider you want to use.
+
+01:53.060 --> 01:56.080
+So Name Cheap is one that I use to manage a couple of different domain names.
+
+01:56.090 --> 01:57.400
+Again, it's totally up to you.
+
+01:57.410 --> 01:59.690
+Use any domain name provider you wish.
+
+02:00.630 --> 02:02.580
+We don't really need any particular domain name.
+
+02:02.580 --> 02:06.040
+We just need really the cheapest one around so we can test everything out.
+
+02:06.060 --> 02:10.650
+So me personally, I'm going to try to buy a domain name of something like I don't know.
+
+02:11.720 --> 02:14.990
+Ticketing dash app dash fraud.
+
+02:15.410 --> 02:20.870
+Remember, the longer the domain name is in general, the more characters it has generally, the cheaper
+
+02:20.870 --> 02:21.500
+it is.
+
+02:22.160 --> 02:27.710
+So if I tried to buy a domain name like that, I can look around a little bit and it looks like I can
+
+02:27.710 --> 02:32.180
+get ticketing at product XYZ or just $1 a year.
+
+02:32.240 --> 02:33.350
+Well, that's pretty cheap.
+
+02:34.510 --> 02:38.330
+You could definitely look around and say, here's one at $1.29.
+
+02:38.350 --> 02:40.360
+Definitely some pretty cheap options out there.
+
+02:40.630 --> 02:42.460
+Here's one at 280.
+
+02:43.540 --> 02:45.670
+So go ahead and pick up any old domain name.
+
+02:46.000 --> 02:47.560
+I'm going to buy this one in particular.
+
+02:50.070 --> 02:53.190
+I'll then view that item and I'm going to check out.
+
+02:55.910 --> 02:59.690
+So at this point, I'm going to enter in my credit card information and purchase this domain name.
+
+02:59.900 --> 03:03.250
+So go ahead and purchase a domain of your own and I'll see you in the next video.
+
+03:03.260 --> 03:07.820
+Once you have purchased the domain, then we're going to set up that domain and point it at our running
+
+03:07.820 --> 03:09.920
+load balancer over on Digital Ocean.

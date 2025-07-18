@@ -1,0 +1,211 @@
+WEBVTT
+
+00:00.720 --> 00:03.540
+One last video on the overall design of this application.
+
+00:03.540 --> 00:06.690
+So first I want to show you a list of the different events we're going to create.
+
+00:06.960 --> 00:12.510
+We're going to have events like user created, user updated, ticket created, ticket updated, everything
+
+00:12.510 --> 00:13.710
+you see on this list right here.
+
+00:14.130 --> 00:17.550
+Now, some of these events might not make a lot of sense right now, but over time, we're going to
+
+00:17.550 --> 00:21.120
+have a very deep discussion about the goal of each of these different events.
+
+00:21.120 --> 00:25.050
+You'll notice that right now they all kind of seem more or less kind of simple in nature, and the name
+
+00:25.050 --> 00:27.240
+of each of them is kind of self evident.
+
+00:27.570 --> 00:33.150
+So we're going to emit events like, say, order expired whenever a order goes over that 15 minute limit.
+
+00:33.810 --> 00:37.590
+I just want to give you this list of events right now, just to give you a picture of some of the different
+
+00:37.590 --> 00:38.580
+events we're going to create.
+
+00:38.580 --> 00:41.970
+But the absolute definition of each one is not super important right now.
+
+00:43.280 --> 00:43.690
+On that.
+
+00:43.690 --> 00:45.410
+Just one last quick diagram here.
+
+00:45.430 --> 00:49.600
+So this is going to be just a couple of notes on the overall design of each service.
+
+00:50.020 --> 00:55.090
+So we are going to have once again a kind of React client application that is going to be in charge
+
+00:55.090 --> 00:57.010
+of showing some content inside the browser.
+
+00:57.520 --> 01:02.140
+This time around, this React application is going to be built using next JS.
+
+01:02.170 --> 01:05.260
+If you are not familiar with next JS at all, don't sweat it.
+
+01:05.290 --> 01:09.040
+Next is a server side rendering react framework.
+
+01:09.160 --> 01:13.600
+There's a very, very good reason that we're going to use server side rendering in this application.
+
+01:13.600 --> 01:16.870
+We'll discuss why that is as soon as we start building that React application.
+
+01:17.680 --> 01:22.360
+We're then going to have our art tickets, orders payments and expiration services that are all going
+
+01:22.360 --> 01:24.880
+to be essentially simple node servers.
+
+01:25.210 --> 01:30.070
+Each one of them is going to be running express very similar to how we've been doing on that first project.
+
+01:30.430 --> 01:34.270
+This time around, each of these different services are going to have some persistent storage in the
+
+01:34.270 --> 01:36.010
+form of MongoDB.
+
+01:36.910 --> 01:37.710
+You know, absolutely.
+
+01:37.710 --> 01:42.600
+We could use a database besides MongoDB and some of these, but we're just going to stick with MongoDB
+
+01:42.600 --> 01:47.460
+all the way through because this is not really a course about teaching you the basics of database design
+
+01:47.460 --> 01:48.520
+or something like that.
+
+01:48.540 --> 01:54.150
+We could have some of these services using Mongo and maybe one over here using host Chris or what have
+
+01:54.150 --> 01:54.540
+you.
+
+01:54.540 --> 01:57.660
+But we're just going to stay consistent and use Mongo all the way through.
+
+01:58.440 --> 02:02.790
+Do you notice that the expiration service, on the other hand, is going to be making use of Redis?
+
+02:02.820 --> 02:03.810
+You have not used Redis.
+
+02:03.840 --> 02:05.010
+Again, don't sweat it.
+
+02:05.010 --> 02:06.840
+Super easy to learn and pick up.
+
+02:07.410 --> 02:12.300
+We're using Redis on expiration for a very, very particular reason and you'll see why as soon as we
+
+02:12.300 --> 02:13.710
+start building out that service.
+
+02:14.560 --> 02:19.420
+Each of these different services are going to be making use of a shared common library.
+
+02:19.600 --> 02:22.960
+So we're going to refer to this common library right here simply as common.
+
+02:23.800 --> 02:25.390
+Just about everything else inside this diagram.
+
+02:25.390 --> 02:27.850
+Is there a reference to a technology or something like that?
+
+02:27.850 --> 02:32.320
+In this case, Common is going to be an NPM module that you and I are going to build to share a bunch
+
+02:32.320 --> 02:34.270
+of code among these different services.
+
+02:34.570 --> 02:39.490
+So we're going to be putting a lot of time into this common library to figure out some of the different
+
+02:39.490 --> 02:41.860
+middle layers and events.
+
+02:41.890 --> 02:46.540
+Who knows what else we're going to need that are going to be commonly used between all these different
+
+02:46.540 --> 02:47.320
+services.
+
+02:48.490 --> 02:53.500
+And then finally for an event bus, rather than building our own this time around, we're going to be
+
+02:53.500 --> 02:56.620
+using something else called the Nats streaming server.
+
+02:56.890 --> 03:02.830
+Now the term Nats right here, if you've ever done some router setup like a home router, I'm not talking
+
+03:02.830 --> 03:03.700
+about an express router.
+
+03:03.700 --> 03:06.730
+I'm talking about an actual wi fi router or a networking router.
+
+03:06.730 --> 03:11.770
+You might have heard of something called NAT like network address translation that is totally different
+
+03:11.770 --> 03:12.820
+than that streaming server.
+
+03:12.820 --> 03:17.590
+So if you have heard of the term Nat, not the same as NAT streaming server.
+
+03:17.590 --> 03:22.210
+Essentially this is an event bus, somewhat similar nature to the one that we built just a little bit
+
+03:22.210 --> 03:22.800
+ago.
+
+03:22.810 --> 03:26.890
+Of course, it's very, very different in its implementation, tremendously different, but it's more
+
+03:26.890 --> 03:29.290
+or less going to do the same thing as the event.
+
+03:29.290 --> 03:33.760
+Plus, we put together a little bit ago it's going to receive some events from our services and then
+
+03:33.760 --> 03:36.310
+echo those events out to all of our other services.
+
+03:36.310 --> 03:37.210
+That's pretty much it.
+
+03:38.130 --> 03:38.400
+Okay.
+
+03:38.400 --> 03:42.630
+So again, I'm just showing this diagram to give you a picture of what we're going to have to do for
+
+03:42.630 --> 03:43.630
+this application.
+
+03:43.680 --> 03:45.090
+So one more pause right here.
+
+03:45.090 --> 03:48.210
+We're going to start writing some code and doing some setup in just a moment.

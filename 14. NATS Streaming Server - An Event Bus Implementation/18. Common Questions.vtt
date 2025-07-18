@@ -1,0 +1,424 @@
+WEBVTT
+
+00:00.670 --> 00:05.560
+We just saw some scenarios in which this whole event based communication architecture seems to totally
+
+00:05.560 --> 00:06.520
+fall apart.
+
+00:06.820 --> 00:10.810
+In this video, I'm going to answer a couple of questions that you might have about all this stuff right
+
+00:10.810 --> 00:11.740
+from the get go.
+
+00:11.770 --> 00:15.790
+We'll then take a pause and then we'll go through some possible ways of solving these problems in the
+
+00:15.790 --> 00:16.840
+video after this one.
+
+00:16.840 --> 00:18.940
+So I'm going to try to keep this video a little bit shorter.
+
+00:19.150 --> 00:19.480
+Okay.
+
+00:19.480 --> 00:25.120
+So first big question you might have, remember, we are making use of async communication between our
+
+00:25.120 --> 00:26.110
+different services.
+
+00:26.260 --> 00:28.270
+That's why we're dealing with these event things.
+
+00:28.660 --> 00:32.740
+We had said earlier on inside the course that when we are working with microservices, we can have them
+
+00:32.740 --> 00:37.360
+communicate asynchronously via events or synchronously with direct requests.
+
+00:37.720 --> 00:42.970
+So at this point it might sound like this async communication style is just awful based upon all the
+
+00:42.970 --> 00:44.170
+problems I just mentioned.
+
+00:44.440 --> 00:48.310
+And you might think that it would be a lot easier if we just stuck to some kind of synchronous communication
+
+00:48.310 --> 00:49.020
+approach.
+
+00:49.030 --> 00:53.440
+Well, turns out all the same stuff happens with synchronous communications.
+
+00:53.980 --> 00:57.340
+So at that point you might say, well, the heck with this microservices stuff.
+
+00:57.340 --> 00:59.730
+Let's just go back to building monolith style apps.
+
+00:59.740 --> 01:04.330
+Well, it turns out all this stuff actually does happen with monolithic style applications, too.
+
+01:04.360 --> 01:07.090
+So let me show you a diagram just to expand on this first point.
+
+01:07.750 --> 01:08.080
+All right.
+
+01:08.080 --> 01:12.880
+So we're going to imagine that we are building the same kind of money depositing application, but now
+
+01:12.880 --> 01:18.040
+we have a more monolith style approach where we are not exchanging events or anything like that.
+
+01:18.610 --> 01:22.900
+So now in this scenario, we would imagine that maybe a user makes three requests in a row one request
+
+01:22.900 --> 01:25.780
+to deposit 70, deposit 40, and then withdraw 100.
+
+01:27.270 --> 01:31.320
+Now, even if we are using some kind of monolith style application, it is still incredibly likely that
+
+01:31.320 --> 01:34.680
+we are running multiple instances or copies of that application.
+
+01:34.980 --> 01:39.510
+So whenever a user makes these three requests right here, they will probably go to a load balancer
+
+01:39.510 --> 01:44.970
+of sorts, and then these requests will essentially be randomly assigned to one of these different instances.
+
+01:45.060 --> 01:52.050
+So we can imagine that the first request goes there and the second one to right here and the third one
+
+01:52.050 --> 01:52.770
+down here.
+
+01:53.790 --> 01:58.710
+So then each of these instances are going to race essentially and try to process that incoming request.
+
+01:59.010 --> 02:04.680
+So we might be in that same kind of scenario where maybe instance A and instance B have a lot of traffic
+
+02:04.680 --> 02:09.210
+incoming right now, for whatever crazy reason, maybe they are provisioned to some virtual machine
+
+02:09.210 --> 02:12.240
+that has lower specs than instance C down here.
+
+02:12.570 --> 02:18.450
+For whatever reason, we can very easily imagine that monoliths C down here or instance C might process
+
+02:18.450 --> 02:24.030
+this withdraw $100 request first so we would reach into the database, take a look at the user's balance.
+
+02:24.030 --> 02:25.170
+Oh, it's zero right now.
+
+02:25.170 --> 02:27.630
+Well, once again, we're in some huge error.
+
+02:27.990 --> 02:32.430
+So by just going back to some model, the style approach, we still deal with these concurrency issues.
+
+02:32.580 --> 02:38.670
+It just turns out that when we start using this microservices event based approach, these same concurrency
+
+02:38.670 --> 02:43.950
+issues just become a little bit more prominent because we're now talking about adding in this extra
+
+02:43.950 --> 02:49.740
+latency step of the Nats server and we're also talking about the possibility of having automatic retries
+
+02:49.740 --> 02:51.840
+or re deliveries of these different events.
+
+02:52.080 --> 02:56.700
+So because the system becomes more complex, because there are additional communication jumps inside
+
+02:56.700 --> 03:00.570
+of here, this whole concurrency issue just becomes a little bit more prominent.
+
+03:00.570 --> 03:02.340
+Well, to be honest, a lot more prominent.
+
+03:02.340 --> 03:06.000
+But it's still an issue even if we went back to an old style approach.
+
+03:07.910 --> 03:11.360
+So next up, you might come up with an immediate solution.
+
+03:11.360 --> 03:16.160
+If I asked you, Hey, solve this problem, here's one possible solution you might decide to come up
+
+03:16.160 --> 03:16.580
+with.
+
+03:17.410 --> 03:21.430
+There's a very common solution or a solution that people come up with, and then they very quickly realize,
+
+03:21.430 --> 03:23.110
+Oh, wait, that won't quite work out.
+
+03:23.470 --> 03:27.490
+So when we were going through all these different scenarios that everything would fail, it seemed like
+
+03:27.490 --> 03:33.430
+a lot of the issues kind of stemmed from the fact that we had two separate services processing events,
+
+03:33.430 --> 03:39.250
+because now there was a scenario where maybe one service was slower than the other or had communication
+
+03:39.250 --> 03:41.500
+issues with file storage or whatever else.
+
+03:41.800 --> 03:47.680
+So a very common solution people come up with is let's just run one copy of the service, one instance,
+
+03:48.040 --> 03:49.780
+think about what would happen if we did that.
+
+03:49.990 --> 03:52.420
+So we would say, let's throw that service out.
+
+03:52.450 --> 03:55.570
+Now we're just running one copy of the account service.
+
+03:56.380 --> 04:02.380
+So now as we start to publish events, deposit, deposit withdrawal, they'll go to hear what process
+
+04:02.380 --> 04:04.900
+that process that process that.
+
+04:05.740 --> 04:05.980
+Now.
+
+04:05.980 --> 04:08.170
+Even then, there's still a possibility of failure here.
+
+04:08.200 --> 04:13.060
+For example, this first event, we could have some issue opening up that file because of some temporary
+
+04:13.060 --> 04:14.220
+issue with the hard drive.
+
+04:14.230 --> 04:17.430
+So we might end up having some issue processing this first event.
+
+04:17.440 --> 04:22.330
+We might fail to process it entirely and it gets thrown back over essentially more or less.
+
+04:22.330 --> 04:25.060
+It doesn't actually get thrown back over, but we never acknowledge it.
+
+04:25.060 --> 04:31.300
+And so Nat's figures that it has to deliver it again, we might then successfully process $40 and then
+
+04:31.360 --> 04:32.800
+withdraw of 100 and boom.
+
+04:32.800 --> 04:34.570
+We're still back to the same issue as before.
+
+04:34.720 --> 04:39.460
+So this is not foolproof, but at least it kind of solves some the issues we ran into when we were running
+
+04:39.460 --> 04:40.630
+multiple instances.
+
+04:40.840 --> 04:44.200
+That's not the real big issue here, where we still have the possibility of failure.
+
+04:45.100 --> 04:50.080
+The big issue is that if we are only going to run one copy of the service now, all of a sudden we've
+
+04:50.080 --> 04:52.720
+got a processing bottleneck inside of our application.
+
+04:53.320 --> 04:58.960
+If we can only run one copy of the service, well, we are very severely constrained at how quickly
+
+04:58.960 --> 05:02.020
+our application can process data and how we can scale it up.
+
+05:02.050 --> 05:05.050
+Remember, generally two ways to scale up an application.
+
+05:05.050 --> 05:09.970
+We can scale it vertically where we are going to increase the specs that are dedicated or the amount
+
+05:09.970 --> 05:13.570
+of CPU and processing power that this service gets or horizontally.
+
+05:13.570 --> 05:16.090
+That's where we create more copies of the service.
+
+05:16.360 --> 05:19.720
+So if we're going to say right from the outset that we're only going to run one copy of the account
+
+05:19.720 --> 05:24.940
+service, all of a sudden we cannot scale horizontally and that can end up being a huge catastrophic
+
+05:24.940 --> 05:28.780
+issue down the line as our app starts to get more popular and more traffic.
+
+05:29.800 --> 05:31.180
+So I'm going to say solution one.
+
+05:31.210 --> 05:31.980
+It's not going to work.
+
+05:31.990 --> 05:32.950
+It's not an option.
+
+05:32.950 --> 05:38.650
+We always have to assume that we're going to be running multiple copies of any given service.
+
+05:39.390 --> 05:39.640
+Okay.
+
+05:39.660 --> 05:43.720
+Option number two or possible solution number two, that is also not going to work.
+
+05:43.740 --> 05:46.260
+Now, I don't really have a distinct plan here.
+
+05:46.260 --> 05:49.680
+This is more just a note that I want to throw out right now very quickly.
+
+05:50.280 --> 05:55.320
+So possible solution number two, you might try to figure out every possible concurrency issue inside
+
+05:55.320 --> 05:58.980
+of your app and you might decide that, hey, we're going to find all these possible issues and we're
+
+05:58.980 --> 06:01.830
+going to write code to solve every single last one.
+
+06:02.310 --> 06:04.770
+Well, I just want you to get it in your head right now.
+
+06:04.770 --> 06:06.900
+I really want you to internalize this.
+
+06:06.990 --> 06:12.060
+Inside of any application, there is an possibly infinite number of concurrency issues.
+
+06:12.060 --> 06:18.300
+There can be a lot of different things that could possibly go wrong, and you really feasibly cannot
+
+06:18.300 --> 06:21.380
+sit down and write code to handle every last issue.
+
+06:21.390 --> 06:23.340
+Now, of course, there are exceptions to this.
+
+06:23.340 --> 06:27.810
+If you are building some kind of spaceship or something like that, something that is absolutely critical
+
+06:27.810 --> 06:29.940
+in nature, that it always works no matter what.
+
+06:29.940 --> 06:35.280
+Of course there are exceptions, but if you are building some kind of like Twitter clone or something
+
+06:35.280 --> 06:39.780
+like that, does it really matter if, say, two tweets are out of order?
+
+06:39.780 --> 06:43.980
+Does it matter if two tweets are duplicated or forum posts?
+
+06:44.950 --> 06:45.930
+Or blog posts.
+
+06:45.940 --> 06:48.490
+Does that kind of stuff really matter at the end of the day?
+
+06:48.490 --> 06:53.140
+And are you going to dedicate a huge amount of engineering time and money to solve that problem?
+
+06:53.170 --> 06:56.360
+Well, I'm going to tell you right now, you're probably not.
+
+06:56.380 --> 07:00.940
+So there is a certain point where you might start to identify possible issues and you say, you know
+
+07:00.940 --> 07:01.120
+what?
+
+07:01.120 --> 07:03.780
+Realistically, that is just not likely to happen.
+
+07:04.010 --> 07:09.040
+It's not likely for a user to try to create five tweets at the same time while also deleting two of
+
+07:09.040 --> 07:11.650
+them and editing the other three or something like that.
+
+07:12.010 --> 07:14.470
+So you really got to sit down and make some engineering judgment.
+
+07:14.470 --> 07:16.440
+Is this actually worth trying to solve?
+
+07:16.450 --> 07:20.080
+Because a lot of the time you're probably going to inevitably say, No, it's not.
+
+07:20.780 --> 07:22.970
+So this isn't really a solution per se.
+
+07:23.000 --> 07:27.080
+I just want to throw this out there right away, because even in the app that we are going to build,
+
+07:27.080 --> 07:29.480
+you might start to say, Hey, Steven, wait a minute.
+
+07:29.480 --> 07:33.860
+In our ticketing application, if a user creates a ticket and then does this and then this and then
+
+07:33.860 --> 07:39.050
+this, well, they can end up an issue if the timing is just right and some service fails at the same
+
+07:39.050 --> 07:39.620
+time.
+
+07:40.130 --> 07:40.510
+Okay.
+
+07:40.520 --> 07:42.920
+I accept that there might be holes, there might be gaps.
+
+07:42.920 --> 07:48.200
+But again, at the end of the day, we probably cannot write code to capture every single case because,
+
+07:48.200 --> 07:50.900
+number one, it might not just might not matter.
+
+07:50.930 --> 07:53.960
+Number two, it might just take too much engineering time to fix.
+
+07:55.530 --> 07:55.800
+Okay.
+
+07:55.800 --> 07:57.180
+So again, kind of short video here.
+
+07:57.180 --> 07:59.310
+We're going to it was 8 minutes.
+
+07:59.310 --> 08:00.280
+I still failed.
+
+08:00.300 --> 08:02.460
+Well, at any rate, let's pause right here.
+
+08:02.460 --> 08:07.050
+We're going to come back to the next video and take a look at some possible strategies to solve these
+
+08:07.050 --> 08:07.980
+big issues.

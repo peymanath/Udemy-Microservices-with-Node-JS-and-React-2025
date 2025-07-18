@@ -1,0 +1,442 @@
+WEBVTT
+
+00:01.040 --> 00:05.660
+In this video, we're going to generate the JSON Web token and then store it inside of our cookie as
+
+00:05.660 --> 00:07.940
+a quick reminder on how to use cookie session.
+
+00:08.270 --> 00:13.010
+Once we have the JSON web token generated, we can take a look down at the example section.
+
+00:13.730 --> 00:18.200
+Here's the example section on the cookie section session documentation right here.
+
+00:18.200 --> 00:20.260
+That's how we store some information inside the cookie.
+
+00:20.270 --> 00:21.950
+We do a rec session.
+
+00:22.130 --> 00:26.420
+Record session is going to be an object that is created by the cookie session middleware.
+
+00:26.600 --> 00:31.340
+Any information we store on this object will be automatically serialized by cookie session and stored
+
+00:31.340 --> 00:32.310
+inside the cookie.
+
+00:32.330 --> 00:37.310
+So once we generate that JSON web token, we're going to set it on record session, and that's pretty
+
+00:37.310 --> 00:37.670
+much it.
+
+00:37.670 --> 00:38.690
+That's all we have to do.
+
+00:39.230 --> 00:41.880
+So how are we going to generate the JSON Web token itself?
+
+00:41.900 --> 00:43.970
+Well, we're going to use yet another package.
+
+00:44.150 --> 00:49.580
+So once again, on NPM, I'm going to do a search for JSON Web token.
+
+00:50.260 --> 00:54.790
+There are many libraries with a very similar name, so make sure you put JSON web token all one word
+
+00:54.790 --> 00:56.260
+with no dashes in it.
+
+00:56.680 --> 00:58.150
+I'll then go to the first result.
+
+00:58.180 --> 01:01.000
+It should have the exact name json web token.
+
+01:02.070 --> 01:04.470
+There's really just two things we need to know about this library.
+
+01:04.650 --> 01:09.360
+It has a method that allows us to create a JSON web token called sign.
+
+01:09.750 --> 01:13.410
+When we call sign, we're going to put in a payload as the first argument.
+
+01:13.530 --> 01:17.580
+The payload is going to be the information we actually want to store inside the JSON web token.
+
+01:17.970 --> 01:20.550
+The second argument is going to be a signing key.
+
+01:20.880 --> 01:24.390
+We will have a further discussion about this signing key in just a little bit.
+
+01:25.020 --> 01:27.240
+The other thing about this library, you need to understand.
+
+01:28.740 --> 01:31.440
+Is that there is a method called verify.
+
+01:31.830 --> 01:36.030
+So this is how we're going to make sure that a user did not somehow mess around with the JSON web token
+
+01:36.030 --> 01:36.990
+that was created.
+
+01:37.230 --> 01:41.780
+We are also going to use this method to pull information out of the JSON token as well.
+
+01:41.790 --> 01:44.130
+So in other words, the payload we had stored inside there.
+
+01:46.050 --> 01:46.380
+Okay.
+
+01:46.380 --> 01:48.360
+So let's install this back at our terminal.
+
+01:49.140 --> 01:50.850
+So I'll go back over to my terminal.
+
+01:50.880 --> 01:53.610
+We'll do an NPM, install JSON web token.
+
+01:53.610 --> 01:56.280
+And this library has the same issue as cookie session.
+
+01:56.280 --> 01:58.440
+It does not have native typescript support.
+
+01:58.440 --> 02:04.560
+So we have to add in a type definition file that we'll add in at types slash JSON Web token.
+
+02:05.130 --> 02:08.070
+Quick reminder, make sure you're inside of your auth project directory.
+
+02:08.860 --> 02:09.090
+Okay.
+
+02:09.130 --> 02:09.940
+Let's run that.
+
+02:10.890 --> 02:12.840
+These are once again very small modules.
+
+02:12.840 --> 02:14.970
+So the installation should be pretty quick.
+
+02:17.050 --> 02:20.080
+Once that's all installed, I'm going to go back over to my editor.
+
+02:20.790 --> 02:25.110
+I'm going to find my roots directory and then the sign up folder inside there.
+
+02:26.130 --> 02:27.150
+At the very top.
+
+02:28.030 --> 02:29.410
+I'm going to import.
+
+02:30.230 --> 02:31.340
+JWT.
+
+02:35.080 --> 02:37.360
+From JSON web token.
+
+02:40.320 --> 02:43.140
+I'll then go down towards the bottom of our route handler.
+
+02:44.040 --> 02:48.720
+So right after we save the user to the database, right after that is probably when we want to generate
+
+02:48.720 --> 02:53.610
+the JSON web token and then set it on the session on the REQ object.
+
+02:55.340 --> 02:57.320
+So right here, I'm going to add some comments just to guide myself.
+
+02:57.320 --> 03:03.950
+We're going to generate JSON Web token, store it on the session object.
+
+03:05.040 --> 03:05.340
+Okay.
+
+03:05.370 --> 03:06.210
+So let's get to it.
+
+03:07.020 --> 03:13.820
+To actually generate the JSON web token, we'll say const user, JWT is JWT sign.
+
+03:13.830 --> 03:18.270
+And then remember the first argument to this is the payload, the information we want to store inside
+
+03:18.270 --> 03:19.470
+the JSON web token.
+
+03:19.860 --> 03:22.140
+The only requirement that we have for that payload.
+
+03:22.910 --> 03:26.470
+Is that we want to store inside there some information about this user.
+
+03:26.480 --> 03:29.540
+So again, we don't want to just have the fact that a user is signed in.
+
+03:29.540 --> 03:31.790
+We don't want to just have an empty JSON web token.
+
+03:31.790 --> 03:36.500
+We want to know who this is and all of our other services that are going to access the information inside
+
+03:36.500 --> 03:37.010
+of here.
+
+03:37.280 --> 03:42.800
+So at present, the only real information that we have about a user is their ID that was generated by
+
+03:42.800 --> 03:43.670
+MongoDB.
+
+03:44.060 --> 03:47.000
+We've got their email and their password.
+
+03:47.180 --> 03:51.770
+We probably don't want to share the password around with the world even though it is hashed and salted.
+
+03:51.770 --> 03:54.650
+But we probably do want to share the ID and the email.
+
+03:56.040 --> 04:01.380
+So when we sign this thing or when we generate the JSON web token, we're going to provide a payload
+
+04:01.380 --> 04:04.260
+that has the idea of the user as user ID.
+
+04:05.380 --> 04:07.950
+We'll have the email of the user as user.
+
+04:08.350 --> 04:08.920
+Email.
+
+04:10.310 --> 04:11.400
+I'm still getting an air here.
+
+04:11.420 --> 04:15.440
+That's because we are not providing the second argument of the secret or private key.
+
+04:15.740 --> 04:19.850
+Now, as a reminder, I said just a moment ago, we're going to discuss this private key in just a moment
+
+04:19.850 --> 04:23.740
+and how to securely handle it in a Kubernetes and Docker environment.
+
+04:23.750 --> 04:28.580
+But for right now, we'll just leave in a PDF, so we're going to come back and replace that very shortly.
+
+04:29.900 --> 04:30.110
+Yes.
+
+04:30.110 --> 04:32.210
+That's going to generate our JSON web token.
+
+04:33.250 --> 04:34.470
+One little mistake here.
+
+04:34.480 --> 04:40.510
+If we double check the signature of this thing, it turns out that when we generate the JSON web token,
+
+04:40.510 --> 04:43.210
+we have either an async or synchronous mode.
+
+04:43.780 --> 04:49.610
+We can go back to the documentation, so it will run asynchronously if we provide a callback.
+
+04:49.630 --> 04:51.570
+In our case, we are not providing a callback.
+
+04:51.580 --> 04:56.170
+That means we should get the JSON web token back instantly after it's been created.
+
+04:57.370 --> 05:02.350
+So now we're going to take that user JSON Web token and we're going to store it on our session.
+
+05:02.740 --> 05:05.200
+So we'll do a rec session.
+
+05:05.940 --> 05:09.480
+Dot JWT is user JWT.
+
+05:13.050 --> 05:13.230
+Now.
+
+05:13.230 --> 05:14.940
+I'm still getting a little air right here.
+
+05:15.420 --> 05:16.380
+The reason for that?
+
+05:16.560 --> 05:22.050
+The type definition file that we installed for cookie session is not assuming that we actually have
+
+05:22.050 --> 05:24.660
+an object present as record session.
+
+05:25.080 --> 05:28.980
+So rather than trying to just directly set a property like this right here, which is what you saw back
+
+05:28.980 --> 05:33.510
+in the documentation, usually what we do with TypeScript, just to kind of circumvent this or get around
+
+05:33.510 --> 05:38.910
+this whole issue, we usually redefine the entire object and set it on rect session.
+
+05:39.180 --> 05:44.940
+So we'll create a new object, give it a JWT property, and then put our user JSON web token on there.
+
+05:44.990 --> 05:50.380
+And again, that's just because the type definition file that is being handed off to JSON or submitted
+
+05:50.430 --> 05:55.620
+to TypeScript doesn't want us to assume that there actually is an object on rect session.
+
+05:57.230 --> 05:58.660
+Okay, so that looks pretty good.
+
+05:58.670 --> 06:01.280
+So we generated our token, we set it on the session.
+
+06:01.790 --> 06:05.960
+The cookie session library is going to take this object, serialize it and then send it back to the
+
+06:05.960 --> 06:06.890
+user's browser.
+
+06:07.190 --> 06:12.980
+So last thing here, let's save this and let's do a quick test over in Postman.
+
+06:13.520 --> 06:14.870
+So back inside of Postman.
+
+06:17.200 --> 06:18.160
+Here we are right here.
+
+06:18.990 --> 06:23.130
+I'm going to change the email address to something that is unique once again.
+
+06:25.470 --> 06:31.230
+I'm going to make sure I've got a body request or sigh of body with raw and JSON selected.
+
+06:31.260 --> 06:35.700
+I'll make sure I've got a content type of application JSON and I'll go ahead and send this thing.
+
+06:36.800 --> 06:42.710
+Now, after I send it, we'll go over to the cookies tab right here, and you'll notice no cookies returned
+
+06:42.710 --> 06:46.280
+from the server, even though we successfully logged in to the application.
+
+06:46.640 --> 06:50.210
+The reason for this, once again, is because the cookie session middleware that we just wired up,
+
+06:50.210 --> 06:56.330
+we configured it to say ignore any cookies that or do not try to manage any cookies if the user is connecting
+
+06:56.330 --> 06:58.400
+over an HTTP connection.
+
+06:59.110 --> 07:04.210
+Right now we are making a request to ticketing dev and we have not specified the protocol, which means
+
+07:04.210 --> 07:06.880
+that postman is going to default to HTTP.
+
+07:07.090 --> 07:10.690
+If we change this to https colon, slash slash.
+
+07:11.520 --> 07:12.870
+And then make the request again.
+
+07:13.380 --> 07:13.860
+Okay.
+
+07:13.860 --> 07:20.690
+Well, emails and you got to get a unique email and once I do, now we are connecting over an HTTPS
+
+07:20.700 --> 07:21.420
+connection.
+
+07:21.600 --> 07:26.160
+If I go to the cookies tab now, I'll see that a cookie has been set.
+
+07:26.700 --> 07:31.210
+And so this right here, this is our actual JSON web token.
+
+07:31.230 --> 07:31.920
+That's it.
+
+07:33.110 --> 07:33.290
+Cool.
+
+07:33.350 --> 07:34.280
+That looks pretty good.
+
+07:34.430 --> 07:35.240
+A quick thing here.
+
+07:35.240 --> 07:40.880
+If you made this follow up request and it resulted in an error, if Postman said sorry, insecure connection
+
+07:40.880 --> 07:42.590
+or connect, connect or something like that.
+
+07:42.590 --> 07:45.740
+But it was working previously without the https.
+
+07:45.860 --> 07:47.000
+Then here's what to do.
+
+07:47.360 --> 07:49.550
+Go up to postman preferences.
+
+07:50.390 --> 07:55.610
+And then on this menu, you're going to make sure that SSL certificate verification is turned off.
+
+07:56.000 --> 08:00.900
+Because remember, right now we have an invalid temporary certificate being served by ingress engine
+
+08:00.920 --> 08:01.400
+x.
+
+08:03.060 --> 08:07.260
+After you turn that thing off, you should then able to be able to make a request with HTTPS and have
+
+08:07.260 --> 08:07.980
+it go through.
+
+08:08.930 --> 08:09.910
+All right, so that's it.
+
+08:09.920 --> 08:11.600
+We've now got our cookie being set.
+
+08:11.630 --> 08:16.460
+We've got our identifying piece of information on there, which means any time we make a follow up request
+
+08:16.460 --> 08:22.280
+to anything at ticketing, so any service and the rest of our application, this cookie right here will
+
+08:22.280 --> 08:22.910
+be included.
+
+08:22.910 --> 08:25.070
+And we're going to get our JSON Web token.
+
+08:25.890 --> 08:26.220
+Cool.
+
+08:26.220 --> 08:28.950
+So let's take a pause right here and continue in just a moment.

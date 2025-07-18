@@ -1,0 +1,382 @@
+WEBVTT
+
+00:01.090 --> 00:03.370
+Let's create our bottle to represent a ticket.
+
+00:03.370 --> 00:07.560
+So we're going to put together a new model file that's going to be just about identical to all the order
+
+00:07.570 --> 00:09.820
+stuff we just wrote out in my models directory.
+
+00:09.820 --> 00:12.730
+I'll make a new file called Tickets at the Top.
+
+00:12.730 --> 00:14.980
+I will import mangoes from.
+
+00:17.120 --> 00:17.960
+Mongoose.
+
+00:19.050 --> 00:21.510
+And then we'll create our three interfaces right away.
+
+00:22.140 --> 00:24.720
+We'll get an interface of ticket adders.
+
+00:26.060 --> 00:30.530
+An interface of ticket doc which is going to extend Mongoose document.
+
+00:32.510 --> 00:40.550
+At an interface of ticket model, which is going to extend mongoose model and we'll load in as a generic
+
+00:40.580 --> 00:41.660
+ticket dock.
+
+00:42.520 --> 00:47.530
+Now at this point, this is the first time that we are really seeing replication of data between services.
+
+00:47.710 --> 00:52.780
+We have already written out code that looks just about identical to this inside of our tickets service.
+
+00:53.080 --> 00:57.970
+So you might be curious, can we extract this code into our common shared library and then use that
+
+00:57.970 --> 01:00.430
+inside of both these services, orders and tickets?
+
+01:00.670 --> 01:02.560
+The answer is definitely.
+
+01:02.560 --> 01:03.970
+Definitely not.
+
+01:04.300 --> 01:05.440
+Definitely don't want to do it.
+
+01:05.680 --> 01:10.450
+What we are writing out right here is a implementation or essentially code to save data to the database.
+
+01:10.450 --> 01:14.440
+And this could potentially be very specific to the service that we are working in right now.
+
+01:14.920 --> 01:19.600
+So we are going to put some attributes inside of here that are just attributes that the order service
+
+01:19.600 --> 01:21.340
+alone needs to work correctly.
+
+01:21.910 --> 01:26.890
+The only thing that the order service really needs to know about a given ticket is if you go back over
+
+01:26.890 --> 01:27.880
+to this diagram.
+
+01:29.590 --> 01:32.830
+The ticket's title price and that version thing as well.
+
+01:32.830 --> 01:33.340
+Technically.
+
+01:33.340 --> 01:35.560
+Also ID I'm just not showing it on this diagram.
+
+01:35.890 --> 01:41.350
+There might be a tremendous number of additional pieces of information tied to a ticket that gets saved
+
+01:41.350 --> 01:43.210
+inside of the ticket service.
+
+01:43.210 --> 01:47.500
+But the order service doesn't care about all those additional properties that may or may not exist.
+
+01:47.500 --> 01:52.000
+The Order Service only cares about title, price, version and ID.
+
+01:52.030 --> 01:52.690
+That's it.
+
+01:52.690 --> 01:53.650
+Nothing else.
+
+01:54.070 --> 01:59.530
+So we definitely want to have different definitions of what a ticket is between orders and tickets.
+
+02:00.100 --> 02:05.530
+Beyond that, our order service might eventually grow to encapsulate things that can be ordered or purchased
+
+02:05.530 --> 02:07.060
+besides just tickets.
+
+02:07.060 --> 02:12.820
+So maybe we can also purchase, say, parking spots or something like that, like a parking pass or
+
+02:12.820 --> 02:15.370
+something for some sporting event or what have you.
+
+02:15.670 --> 02:20.200
+We would probably want to encapsulate that logic under this order service as well and allow a user to
+
+02:20.200 --> 02:22.000
+order a parking pass.
+
+02:22.330 --> 02:26.590
+But a parking pass might have a very different set of attributes than a ticket.
+
+02:27.330 --> 02:32.430
+So we would not want to essentially lock down the definition of what a ticket is between the order service
+
+02:32.430 --> 02:33.480
+and the ticket service.
+
+02:33.480 --> 02:38.160
+And that's why we're definitely going to make sure that we do not try to share the definition of exactly
+
+02:38.160 --> 02:42.150
+what a ticket is as it gets safe to the database between these different services.
+
+02:42.690 --> 02:45.830
+So with that in mind, let's continue on our implementation right here.
+
+02:45.840 --> 02:50.190
+So on the ticket, we want to have a title price and we're not going to worry about the version just
+
+02:50.190 --> 02:50.450
+yet.
+
+02:50.460 --> 02:53.000
+Remember, that has to do with that concurrency stuff.
+
+02:53.010 --> 02:57.300
+We're going to come back to that once we have the ability to actually see the concurrency stuff fail.
+
+02:57.720 --> 03:03.870
+So right now on Ticket Adders, we're going to have only a title that is a string, a price.
+
+03:03.870 --> 03:04.710
+That is a number.
+
+03:05.770 --> 03:07.510
+Same thing on our ticket, doc, right now.
+
+03:07.510 --> 03:09.250
+So titled as a string price.
+
+03:09.250 --> 03:10.480
+That is a number.
+
+03:11.900 --> 03:12.860
+And then on ticket muddle.
+
+03:12.860 --> 03:15.560
+Once again, we're going to have that method of built.
+
+03:18.090 --> 03:21.870
+This thing is going to get some actors that are of type ticket adders.
+
+03:23.770 --> 03:26.050
+And it's going to return a ticket, doc.
+
+03:27.500 --> 03:29.420
+Let's then build out our schema.
+
+03:34.160 --> 03:35.570
+On the first object inside of here.
+
+03:35.570 --> 03:38.420
+Let's list out all the different properties we want to have.
+
+03:38.450 --> 03:39.860
+Be persistent to our database.
+
+03:39.860 --> 03:44.210
+So we'll put in a title that is of type capital s string.
+
+03:44.210 --> 03:45.740
+Don't forget that capital on there.
+
+03:46.070 --> 03:48.860
+We definitely want to make sure that this thing is required.
+
+03:51.170 --> 03:52.220
+And then a price.
+
+03:53.530 --> 03:55.150
+There's going to be a type of number.
+
+03:55.810 --> 03:57.550
+We'll say this thing is required through.
+
+03:58.480 --> 04:01.180
+And we're going to assume that the price should always be positive.
+
+04:01.240 --> 04:03.550
+I'm going to put in a minimum price of zero.
+
+04:05.730 --> 04:08.550
+We do also have to define that to JSON method here as well.
+
+04:08.550 --> 04:12.810
+So as a second argument, we'll put in another object defined to JSON.
+
+04:13.800 --> 04:14.940
+You are transform.
+
+04:17.030 --> 04:19.250
+Received dock and the return value.
+
+04:19.610 --> 04:21.920
+And once again, let's dump ID.
+
+04:25.220 --> 04:27.920
+Delete ret underscore id looks good.
+
+04:29.410 --> 04:29.550
+Okay.
+
+04:29.680 --> 04:32.020
+After that, we'll define that build method.
+
+04:33.830 --> 04:35.840
+So ticket schema.
+
+04:38.740 --> 04:39.250
+All right, come on.
+
+04:39.250 --> 04:40.630
+Ticket schema.
+
+04:40.660 --> 04:41.350
+There we go.
+
+04:42.110 --> 04:43.370
+Static stop build.
+
+04:43.400 --> 04:47.300
+We're going to take in the set of attributes which are of type ticket adders.
+
+04:48.580 --> 04:50.260
+And the return a new ticket.
+
+04:53.880 --> 04:55.350
+With those letters.
+
+04:58.710 --> 05:03.540
+I'm getting an air around ticket schema, which makes me think I call this thing just schema up here.
+
+05:03.720 --> 05:06.140
+We can stay consistent one way or the other.
+
+05:06.150 --> 05:09.030
+I'll change the variable up here to ticket schema.
+
+05:11.620 --> 05:15.040
+So I got to get schema right there consistent with ticket schema right there.
+
+05:16.940 --> 05:19.190
+Then after that we will define the actual model.
+
+05:19.190 --> 05:22.160
+So ticket is mongoose model.
+
+05:23.980 --> 05:25.990
+Throw in the document type.
+
+05:26.940 --> 05:27.930
+The model type.
+
+05:28.500 --> 05:31.620
+We want to save this in a collection called Ticket.
+
+05:33.180 --> 05:35.100
+Throw in the schema as the second argument.
+
+05:36.940 --> 05:38.380
+And then finally we will export.
+
+05:39.550 --> 05:40.120
+Ticket.
+
+05:41.570 --> 05:41.780
+Now.
+
+05:41.780 --> 05:42.740
+Little gotcha here.
+
+05:42.740 --> 05:43.790
+Back inside of order.
+
+05:43.790 --> 05:49.640
+We need to import into this order file the definition of what a ticket document is so that all these
+
+05:49.640 --> 05:51.290
+interfaces actually work.
+
+05:51.800 --> 05:54.400
+So we need to go back to our ticket file that we just put together.
+
+05:54.410 --> 05:58.460
+We're going to go up to the very top where we define that interface of what a ticket document is.
+
+05:58.770 --> 06:02.060
+We'll make sure that we export that so we can import it over into the order.
+
+06:02.960 --> 06:04.470
+So I'll make sure I get it right there.
+
+06:04.490 --> 06:05.690
+I'm going to save this file.
+
+06:06.540 --> 06:12.930
+Well, then go back over to the order model file and at the top let's import ticket doc from.
+
+06:14.030 --> 06:14.660
+Ticket.
+
+06:15.170 --> 06:16.070
+And there we go.
+
+06:18.840 --> 06:20.790
+So we've now got the ability to create a ticket.
+
+06:20.790 --> 06:23.070
+We can save ticket to the database, we can load them.
+
+06:23.070 --> 06:28.080
+Once we have an instance of a ticket, we can assign that ticket to an order either when it gets created.
+
+06:28.080 --> 06:32.130
+Because remember, this interface is describing the properties that go into creating an order or and
+
+06:32.160 --> 06:36.840
+we can also assign a ticket to an order instance as well or in order document.
+
+06:37.020 --> 06:39.630
+Remember, this interface is about an instance of an order.
+
+06:40.530 --> 06:40.800
+All right.
+
+06:40.800 --> 06:45.240
+So I know at this point in time a lot of the stuff probably still, as with many things in this course,
+
+06:45.240 --> 06:46.830
+probably seems a little bit nasty.
+
+06:46.860 --> 06:51.600
+Trust me, as soon as we start to write out a little bit more code here and we start to run into issues
+
+06:51.600 --> 06:56.250
+specifically around some concurrency stuff and event handling, you're going to start to see it really
+
+06:56.250 --> 07:02.460
+quickly on why we've got these two separate models, why we are using this kind of population stuff
+
+07:02.460 --> 07:05.180
+and a lot of other things are going to start to become clear.
+
+07:05.190 --> 07:06.960
+So let's take a pause right here.
+
+07:07.050 --> 07:08.940
+Continue chugging on in the next video.

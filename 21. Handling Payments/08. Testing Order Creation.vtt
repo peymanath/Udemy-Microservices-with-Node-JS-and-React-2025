@@ -1,0 +1,328 @@
+WEBVTT
+
+00:01.540 --> 00:04.960
+As I mentioned at the end of the last video, we're going to write out a very quick test around the
+
+00:04.960 --> 00:06.100
+order created listener.
+
+00:06.130 --> 00:10.870
+Again, I'm sure at this point that you might be a bit tired of testing, but it still is just such
+
+00:10.870 --> 00:11.960
+a valuable thing to have.
+
+00:11.980 --> 00:15.000
+We can make sure that this code works without having to actually manually test it.
+
+00:15.010 --> 00:17.150
+So if you are tired of testing, don't sweat it.
+
+00:17.170 --> 00:20.680
+We're not going to really go over any new techniques or anything like that inside this video so you
+
+00:20.680 --> 00:22.000
+can skip over this one if you want to.
+
+00:22.030 --> 00:25.750
+Otherwise, stick around and we'll put the test together for this very, very quickly.
+
+00:26.470 --> 00:31.510
+So to get started inside of listeners, I'll make a new folder of Underscore, Underscore, Test, Underscore,
+
+00:31.510 --> 00:35.110
+Underscore, and then inside that I'll make a new file of order.
+
+00:35.140 --> 00:38.260
+Created listener tests.
+
+00:42.710 --> 00:46.040
+Then inside of here, as usual, let's build our set up function.
+
+00:47.800 --> 00:50.320
+The first thing I have to do is, well, build a listener for that.
+
+00:50.320 --> 00:54.760
+We're going to need the net's streaming server client from our Nets wrapper file.
+
+00:54.940 --> 00:57.850
+So we know those are at least two inputs we can do right away.
+
+00:58.120 --> 01:01.930
+So I will get nets wrapper from up three directories.
+
+01:04.810 --> 01:07.510
+And I will get my order created.
+
+01:07.510 --> 01:08.320
+Listener.
+
+01:09.530 --> 01:10.820
+From up one directory order.
+
+01:10.820 --> 01:11.660
+Create the listener.
+
+01:14.360 --> 01:20.030
+Well then make my order created listener and feed in that wrappers client.
+
+01:21.710 --> 01:29.060
+After that, we're going to create a order from scratch or I should say the data order event, or that
+
+01:29.060 --> 01:32.480
+we need to get our type for the order created event from our common module.
+
+01:33.020 --> 01:36.800
+So at the very top, we'll get our order created event.
+
+01:39.210 --> 01:40.410
+From our common module.
+
+01:41.710 --> 01:43.030
+So let's say that we're going to have some data.
+
+01:43.030 --> 01:46.570
+This will be of type order created event at data.
+
+01:48.330 --> 01:53.080
+And then inside of here, we definitely need to list out a realistic ID property for the order itself.
+
+01:53.100 --> 01:57.540
+All the other properties we could probably just make up, but at least the ID has to be realistic looking.
+
+01:57.540 --> 02:00.540
+And as usual for that we will directly import mongoose.
+
+02:01.590 --> 02:09.450
+From Mongoose and the idea of the order will be mongoose types object id that to hex string.
+
+02:12.460 --> 02:12.750
+Okay.
+
+02:12.760 --> 02:13.780
+So what else do we need here?
+
+02:13.810 --> 02:16.690
+Well, version status user ID expires at.
+
+02:17.200 --> 02:20.830
+So we'll put in a version of zero expires at.
+
+02:20.830 --> 02:21.610
+We're not really using that.
+
+02:21.610 --> 02:23.350
+So we could put in just whatever string.
+
+02:24.110 --> 02:24.840
+A user ID.
+
+02:24.860 --> 02:25.940
+We're also not releasing that.
+
+02:25.940 --> 02:27.350
+So through in whatever string.
+
+02:29.120 --> 02:30.190
+What else do we need here?
+
+02:30.250 --> 02:30.980
+A status.
+
+02:30.980 --> 02:32.340
+And then the ticket stuff.
+
+02:33.000 --> 02:37.890
+So for the status, we do need the order status enough from our common module.
+
+02:38.940 --> 02:42.990
+So we will add in an import for order status and now we can list out a realistic looking status right
+
+02:42.990 --> 02:43.500
+here.
+
+02:44.530 --> 02:46.150
+Of created.
+
+02:46.980 --> 02:49.740
+And then for our ticket this thing will have an ID again.
+
+02:49.750 --> 02:54.420
+Doesn't really matter what the idea is and needs to have price as well, which I will simply make ten.
+
+02:56.960 --> 02:57.120
+Okay.
+
+02:57.140 --> 02:58.520
+So there's our data object.
+
+02:59.690 --> 03:00.320
+As usual.
+
+03:00.320 --> 03:04.970
+Next thing we'll make is our message object that is going to have the mocked ack function.
+
+03:05.270 --> 03:08.510
+So at the very top I will as usual import the message type.
+
+03:09.260 --> 03:10.700
+From node net streaming.
+
+03:14.700 --> 03:18.330
+Well, then tell TypeScript to ignore what we're about to type right here.
+
+03:18.330 --> 03:20.130
+Because, remember, we're kind of cheating.
+
+03:20.130 --> 03:21.480
+Well, really cheating.
+
+03:21.720 --> 03:24.600
+Let's say this thing has a function.
+
+03:25.050 --> 03:26.580
+They'll be just fine.
+
+03:29.540 --> 03:31.070
+Yeah, I think that is it for a set up.
+
+03:31.070 --> 03:33.170
+So we're now going to return all this stuff.
+
+03:33.200 --> 03:36.410
+So at the very bottom of setup, I'll return listener.
+
+03:37.330 --> 03:41.440
+Data and message and we can start to write out our actual tests.
+
+03:41.960 --> 03:45.880
+We'll say it replicates the order info.
+
+03:48.500 --> 03:52.250
+And we'll also make another test something like it acts the message.
+
+03:56.410 --> 04:02.710
+In both cases, we're going to call the setup function and get back our listener data and message from
+
+04:02.710 --> 04:03.520
+a setup.
+
+04:05.610 --> 04:09.120
+And that do end await listener dot on message.
+
+04:10.100 --> 04:12.200
+Emphasis on the data and the message.
+
+04:12.860 --> 04:15.590
+And these first two lines right here, we need inside both tests.
+
+04:15.590 --> 04:18.740
+So I'm just going to copy paste those two lines down into the second test as well.
+
+04:20.250 --> 04:20.490
+Okay.
+
+04:20.490 --> 04:22.470
+So how are we going to actually do an expectation?
+
+04:22.470 --> 04:27.120
+Well, in the case of the first one, we can try to find an order inside of our orders collection and
+
+04:27.120 --> 04:30.060
+just make sure that it has maybe the correct price or something like that.
+
+04:30.300 --> 04:31.470
+So we could do that really quickly.
+
+04:31.470 --> 04:33.540
+We could say Order.
+
+04:34.580 --> 04:37.930
+Will be a wait order find by ID.
+
+04:38.510 --> 04:41.600
+We're going to try to find an order that was saved with data ID.
+
+04:42.420 --> 04:44.130
+We're making use of the order model right here.
+
+04:44.130 --> 04:46.710
+So let's make sure we add an import for that at the top of the file.
+
+04:47.640 --> 04:52.280
+So at the very top I will import order from up three directories.
+
+04:52.290 --> 04:53.610
+Models order.
+
+04:58.360 --> 05:02.170
+Once we fetch the order, we can make sure that it just has the correct price.
+
+05:02.170 --> 05:03.820
+Something very simple and straightforward.
+
+05:04.000 --> 05:07.210
+So say order, exclamation, don't forget that price.
+
+05:07.210 --> 05:09.100
+And that should equal data.
+
+05:09.370 --> 05:10.480
+Ticket price.
+
+05:12.190 --> 05:13.660
+And then for acting the message.
+
+05:14.440 --> 05:23.950
+We can do a message or expect message to have been called ere we go.
+
+05:25.400 --> 05:25.570
+Okay.
+
+05:25.610 --> 05:27.240
+So that should be it for our two tests.
+
+05:27.260 --> 05:28.280
+So let's save this file.
+
+05:28.280 --> 05:31.010
+We'll then go back over to our terminal and run them very quickly.
+
+05:31.890 --> 05:36.900
+I'll change into my payments directory and do an NP and run test.
+
+05:42.540 --> 05:44.550
+And looks good as usual.
+
+05:44.550 --> 05:47.520
+Let's comment out the two on message lines.
+
+05:48.120 --> 05:51.840
+So one and two, save it back over.
+
+05:52.230 --> 05:53.380
+Make sure it fails.
+
+05:53.400 --> 05:53.760
+Yep.
+
+05:53.760 --> 05:54.720
+Two failures.
+
+05:55.050 --> 05:56.520
+So I think we are looking good.
+
+05:59.070 --> 05:59.640
+All right.
+
+05:59.850 --> 06:03.150
+Well, like I said, a test that looks very similar to all the ones we had put together.
+
+06:03.150 --> 06:06.180
+But at least now we are pretty sure that this thing works as expected.
+
+06:06.750 --> 06:07.820
+So one more pause.
+
+06:07.830 --> 06:11.820
+We'll come back the next video and we're going to start to work on another listener for order canceled.

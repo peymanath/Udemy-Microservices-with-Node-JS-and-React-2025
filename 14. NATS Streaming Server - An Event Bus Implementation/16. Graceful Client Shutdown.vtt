@@ -1,0 +1,358 @@
+WEBVTT
+
+00:01.610 --> 00:06.170
+In the last video, we did a little bit of debugging to figure out why some messages went missing,
+
+00:06.170 --> 00:10.640
+and we eventually realized that there was a period of time after we killed a listener during this restart
+
+00:10.640 --> 00:12.050
+process inside of our terminal.
+
+00:12.080 --> 00:15.560
+We're that streaming server thought that that client still might be active.
+
+00:15.590 --> 00:19.130
+So we spoke about one way to help Nats figure out that the client wasn't active.
+
+00:19.130 --> 00:21.090
+We could adjust those heartbeat values.
+
+00:21.110 --> 00:25.130
+In this video, we're going to take a look at the other way of helping it, that streaming server understand
+
+00:25.130 --> 00:29.450
+that a closed client really is closed and that it should not try to send it any more messages.
+
+00:29.930 --> 00:35.540
+So to do so, we're going to add some code into our listener and our publisher inside this code that
+
+00:35.540 --> 00:36.380
+we're going to write out.
+
+00:36.380 --> 00:41.420
+We're going to add in some code to detect any time that our listener or publisher programs are about
+
+00:41.420 --> 00:42.800
+to be closed down.
+
+00:43.160 --> 00:47.270
+And as soon as we detect that they're about to be closed down, we're then going to intercept that and
+
+00:47.270 --> 00:53.120
+we're going to try to tell our Stan client or our Nats client that it needs to send the server a shutdown
+
+00:53.120 --> 00:57.440
+request and tell it, hey, just so you know, I'm going offline, consider me offline.
+
+00:57.440 --> 00:59.450
+Don't try to send me any more events.
+
+01:00.640 --> 01:03.540
+So here's what we're going to do inside of Stan on Kinect.
+
+01:03.550 --> 01:05.680
+We're going to first set up a little event handler.
+
+01:06.070 --> 01:09.760
+We're going to say inside of here, Stan, on close.
+
+01:10.300 --> 01:16.510
+So any single time or any time that we try to close this client or disconnect from the running server,
+
+01:16.690 --> 01:20.290
+we're going to do a console log of Nats.
+
+01:21.430 --> 01:22.990
+Connection closed.
+
+01:24.220 --> 01:30.640
+And then immediately after that, we'll do a processed exit, which is going to just kick us out and
+
+01:30.640 --> 01:32.140
+say, end this process.
+
+01:32.140 --> 01:33.310
+Don't do anything else.
+
+01:34.120 --> 01:36.040
+Then down at the very bottom, the file.
+
+01:36.460 --> 01:41.650
+I'm going to add in two handlers to watch for any single time that someone tries to close down this
+
+01:41.650 --> 01:42.460
+process.
+
+01:42.940 --> 01:47.290
+So an example of closing this down would be if we select this window right here and did a control C
+
+01:47.290 --> 01:51.340
+or whenever we manually restart it using the node dev tool.
+
+01:51.760 --> 01:54.340
+So we're going to write inside of here processed on.
+
+01:55.340 --> 01:57.050
+This autocomplete is really annoying.
+
+01:57.270 --> 01:59.750
+Ruston sig int.
+
+02:00.530 --> 02:02.150
+Whenever that occurs, we're going to run.
+
+02:02.150 --> 02:03.320
+Stand up close.
+
+02:04.550 --> 02:07.880
+And we'll do something very similar for cig term.
+
+02:13.570 --> 02:16.970
+So these are watching for interrupt signals or terminate signals.
+
+02:16.990 --> 02:19.030
+These are signals that are sent to this process.
+
+02:19.030 --> 02:25.090
+Any time that the node dev tries to restart our program or any time you hit control C at your terminal.
+
+02:25.660 --> 02:29.860
+So we're going to intercept those interrupt or terminate requests to our program.
+
+02:30.160 --> 02:33.580
+And whenever that happens, we're going to try to close down our client first.
+
+02:33.580 --> 02:35.380
+So we're saying, hey, don't kill us just yet.
+
+02:35.410 --> 02:37.240
+I need to close my connection.
+
+02:38.060 --> 02:41.430
+By calling Stan close, our client is going to reach out to the node net server.
+
+02:41.450 --> 02:43.250
+Say, don't send me any more messages.
+
+02:43.730 --> 02:47.930
+That's going to cause our client to successfully or hopefully successfully close down.
+
+02:48.050 --> 02:54.050
+And then after it closes down, it's then going to do the console log and then manually exit our program
+
+02:54.050 --> 02:54.770
+entirely.
+
+02:55.490 --> 02:55.740
+Okay.
+
+02:55.820 --> 02:56.750
+Let's save this.
+
+02:58.190 --> 03:00.710
+I'll then go back over to my terminal.
+
+03:02.090 --> 03:04.480
+It looks like I don't have any heirs over here from the get go.
+
+03:04.500 --> 03:05.220
+That's good.
+
+03:05.460 --> 03:08.430
+I'm not going to go back over to my monitoring window.
+
+03:08.460 --> 03:13.290
+I'm going to refresh and I'm just going to wait for a second for my list of subscriptions to go down
+
+03:13.290 --> 03:13.980
+to two.
+
+03:14.010 --> 03:19.260
+So right now, we don't we have not closed that last instance when we just saved our code.
+
+03:19.530 --> 03:24.150
+When we saved our code, we were closing down a copy of our program that did not have this extra stan
+
+03:24.150 --> 03:25.420
+close call inside of it.
+
+03:25.450 --> 03:27.590
+So I'm just going to wait about 20 seconds or so.
+
+03:27.600 --> 03:28.140
+There we go.
+
+03:28.140 --> 03:30.120
+I'm now down to two subscriptions.
+
+03:30.150 --> 03:35.910
+So now, in theory, if I go back over to my terminal and I restart one of those listeners, I should
+
+03:35.910 --> 03:42.180
+then be able to come back over to this window refresh almost immediately and still only see two subscriptions,
+
+03:42.480 --> 03:47.280
+because the program that I just closed down should have reached out to an answering server and told
+
+03:47.280 --> 03:48.720
+it Close me down.
+
+03:48.720 --> 03:52.650
+I don't exist anymore, so I'm going to flip back over to my terminal.
+
+03:52.980 --> 03:57.690
+I'm going to restart one of the listeners and then very quickly go back over to the browser, refresh
+
+03:57.690 --> 04:01.140
+the page and I'll only see the two subscriptions.
+
+04:01.500 --> 04:02.250
+Perfect.
+
+04:03.950 --> 04:08.960
+So now I should not suffer again from that problem of having some missing messages.
+
+04:09.080 --> 04:10.910
+Now, this is not 100%.
+
+04:10.940 --> 04:16.730
+Having said that, we're only going to attempt to close down that client if you receive one of these
+
+04:16.730 --> 04:18.470
+two interrupt messages right here.
+
+04:18.500 --> 04:24.380
+If you're on windows, windows does not always use the same kind of sig and sig term.
+
+04:24.380 --> 04:26.720
+So if you're on windows, this might not work correctly.
+
+04:26.930 --> 04:33.260
+In addition, if we forcibly kill this process, if we say just wipe this process out, then these handlers
+
+04:33.260 --> 04:35.180
+right here are not going to have a chance to run.
+
+04:35.720 --> 04:39.770
+So, for example, if I open up my activity monitor on Mac OS.
+
+04:40.550 --> 04:43.580
+I'm going to find the instances of Node.js that I'm running.
+
+04:44.570 --> 04:45.620
+Here they are right here.
+
+04:46.640 --> 04:48.890
+And I'm going to hopefully kill the right one.
+
+04:48.890 --> 04:52.310
+Let me pull open my terminal and I'm going to try to kill the one.
+
+04:53.900 --> 04:55.220
+That is running one of my listeners.
+
+04:55.220 --> 04:58.490
+And then immediately after that I'll go back over to the browser, refresh the page, and you're going
+
+04:58.490 --> 05:03.260
+to see that if I forcibly kill these things, well, that close event does not actually occur or that
+
+05:03.260 --> 05:04.520
+close request doesn't occur.
+
+05:05.120 --> 05:07.210
+So let's see which of these is probably the right one.
+
+05:07.220 --> 05:08.130
+I don't know what.
+
+05:08.130 --> 05:09.200
+Just go randomly.
+
+05:09.230 --> 05:10.580
+I'm going to force quit the first one.
+
+05:10.580 --> 05:11.660
+Oh, I got lucky.
+
+05:11.660 --> 05:13.730
+So I'm going to flip back over really quickly.
+
+05:13.730 --> 05:17.690
+Refresh and oh, I've got to start up the new one.
+
+05:18.570 --> 05:19.300
+There we go.
+
+05:19.320 --> 05:20.560
+Refresh and there we go.
+
+05:20.580 --> 05:22.210
+I've now got three clients.
+
+05:22.230 --> 05:27.590
+Erroneously, one of these is actually dead, and that streaming server just doesn't know it yet.
+
+05:27.600 --> 05:32.400
+So I'll once again have to rely upon that heartbeat mechanism to make sure that that streaming server
+
+05:32.400 --> 05:34.620
+actually marks one of these things as offline.
+
+05:35.540 --> 05:35.920
+Okay.
+
+05:35.930 --> 05:40.580
+Now, at this point, I just want to take a quick pause and say all this stuff probably seems like really
+
+05:40.580 --> 05:43.070
+crazy specific and way too in-depth.
+
+05:43.100 --> 05:50.210
+Well, you've got to keep in mind that very soon we're going to see that if one of these subscriptions
+
+05:50.210 --> 05:55.670
+is erroneously still alive, like we saw, that streaming server is going to try to send it an event.
+
+05:56.840 --> 05:58.130
+It's going to fail to be processed.
+
+05:58.130 --> 06:01.140
+And eventually, after 30 seconds now, streaming server is going to turn around and say, okay, I'm
+
+06:01.140 --> 06:04.070
+just going to take this event and send it to some other service.
+
+06:04.100 --> 06:09.590
+Well, in that period of time, in those ten, 20 seconds, 30 seconds, however long it takes for now
+
+06:09.590 --> 06:13.280
+streaming server to figure out that it needs to take this event and send it somewhere else.
+
+06:13.280 --> 06:15.770
+There might have been other events issued.
+
+06:16.420 --> 06:18.490
+And that's super interesting to think about.
+
+06:18.520 --> 06:24.070
+We might eventually have events inside of our application being processed in some not intended order
+
+06:24.070 --> 06:26.560
+because of all this subscription related stuff.
+
+06:27.150 --> 06:29.070
+So that might not sound like a big deal just yet.
+
+06:29.070 --> 06:30.630
+But let's take a quick pause right here.
+
+06:30.660 --> 06:31.500
+Come back the next video.
+
+06:31.500 --> 06:37.590
+I'll show you a couple of diagrams and help you understand how interesting things really get if we have
+
+06:37.590 --> 06:41.310
+events arriving inside of our application, outside of their intended order.

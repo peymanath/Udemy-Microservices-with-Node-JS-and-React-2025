@@ -1,0 +1,220 @@
+WEBVTT
+
+00:01.950 --> 00:03.390
+We've got our singleton put together.
+
+00:03.390 --> 00:07.290
+But now the big question is how do we actually use this from somewhere else inside of our project?
+
+00:07.710 --> 00:12.840
+Well, the first thing I want to do is improve the semantics around accessing the client inside of here
+
+00:12.840 --> 00:13.710
+a little bit more.
+
+00:13.740 --> 00:18.510
+Right now, we have marked the client instance variable as private, which means nothing else inside
+
+00:18.510 --> 00:20.790
+of our application can access this client.
+
+00:21.090 --> 00:25.680
+Remember that our ultimate goal here is inside of our new ticket route handler.
+
+00:25.920 --> 00:27.480
+So here's routes new.
+
+00:27.510 --> 00:32.580
+The ultimate goal is to be able to call ticket, create a publisher, and provide the client like the
+
+00:32.580 --> 00:34.770
+actual Nat's client as an argument to it.
+
+00:34.920 --> 00:40.260
+So we do need to somehow expose this client to the outside world, but just keep in mind that this client
+
+00:40.260 --> 00:42.890
+thing might at some point in times be undefined.
+
+00:42.900 --> 00:48.540
+So I want to expose this to outside people, but I also want to somehow throw in air or something very
+
+00:48.540 --> 00:49.230
+similar to that.
+
+00:49.260 --> 00:53.000
+If someone tries to access this client before it is actually ready to be used.
+
+00:53.010 --> 00:55.500
+So in other words, before we have actually called connect.
+
+00:56.390 --> 01:00.740
+So to do so, we're going to use a typescript getter that we're going to assign to this class.
+
+01:01.010 --> 01:04.790
+Inside the class, I'm going to add in Git and then client.
+
+01:05.390 --> 01:10.250
+So the idea here is that we're going to access the Nats client by using this client property.
+
+01:11.860 --> 01:16.720
+And if we try to call this thing or make use of this thing before we have actually use Kinect, I want
+
+01:16.720 --> 01:17.920
+to throw in air.
+
+01:18.460 --> 01:22.750
+So I'm going to say inside if you're if not this dot underscore client.
+
+01:23.710 --> 01:28.570
+Throw new air and we're going to throw an air with a text to something like cannot.
+
+01:29.850 --> 01:32.490
+Access Nets client before.
+
+01:33.390 --> 01:34.140
+Connecting.
+
+01:37.940 --> 01:39.620
+If we have already define the client.
+
+01:39.620 --> 01:44.870
+So in other words, if we have called Kinect already, then ask that if statement we will return this
+
+01:44.870 --> 01:46.460
+dot underscore client.
+
+01:48.990 --> 01:52.020
+So now we can go back over to our new route handler.
+
+01:52.980 --> 01:53.970
+Inside the roots directory.
+
+01:53.970 --> 01:55.080
+I'm inside the new file.
+
+01:55.950 --> 01:56.670
+At the very top.
+
+01:56.670 --> 02:01.770
+We can import Nat's wrapper from up one directory.
+
+02:01.800 --> 02:02.850
+Nats wrapper.
+
+02:04.120 --> 02:09.070
+And now when we attempt to publish that event, rather than passing a just client right there, we'll
+
+02:09.070 --> 02:12.220
+do that's wrapper dot client like so.
+
+02:13.630 --> 02:15.550
+So that's how we make use of a Gitter in TypeScript.
+
+02:15.550 --> 02:19.600
+We do not do a client with parentheses because that is not a function we just defined.
+
+02:19.600 --> 02:20.440
+It is a guitar.
+
+02:20.470 --> 02:23.860
+It's going to define the client property on the instance.
+
+02:24.100 --> 02:26.350
+So it's going to be just client by itself.
+
+02:28.160 --> 02:32.390
+If we try to access this client before it's actually been defined or before we've connected to nets.
+
+02:32.390 --> 02:36.350
+Like I said, this function is going to throw an error and so we'll see that light up and we'll know,
+
+02:36.350 --> 02:39.860
+Oh, we tried to access the Nets client before we actually tried to connect.
+
+02:40.960 --> 02:45.850
+Now with that guitar in place, we can also make a little update inside the promise down here.
+
+02:46.120 --> 02:50.710
+So now, rather than trying to say this dot underscore client and have to put in the nasty exclamation
+
+02:50.710 --> 02:55.360
+right there, we can instead just do this dot client in both them.
+
+02:58.000 --> 03:02.740
+And so if for some reason we assigned underscore client right here and then that thing got unassigned.
+
+03:02.860 --> 03:03.700
+Very unlikely.
+
+03:03.700 --> 03:04.690
+Extremely unlikely.
+
+03:04.690 --> 03:05.770
+Not really going to happen.
+
+03:05.770 --> 03:11.050
+But if that happened between that assignment and running the body of this promise, well, this will
+
+03:11.050 --> 03:14.380
+make sure we throw an error and say, hey, something really funny is going on.
+
+03:15.840 --> 03:16.200
+Okay.
+
+03:16.200 --> 03:17.760
+So that is just about it.
+
+03:17.760 --> 03:20.130
+So we've now got this singleton class.
+
+03:20.790 --> 03:25.410
+It has a connect method that we can await that connection on, which is fantastic.
+
+03:26.600 --> 03:29.540
+The Kinect method is going to take these connection properties also.
+
+03:29.540 --> 03:30.020
+Great.
+
+03:31.240 --> 03:35.680
+We only have one instance of this class floating around because we exported a class at the bottom.
+
+03:35.830 --> 03:39.600
+So that means that we can connect from inside of our index file.
+
+03:39.610 --> 03:44.110
+We can then access the client from any other file inside of our project, and we do not have to worry
+
+03:44.110 --> 03:46.120
+about any cyclical dependencies.
+
+03:46.630 --> 03:49.960
+So the singleton is now complete and it is looking pretty good.
+
+03:50.750 --> 03:54.110
+We're pretty much done with this as far as the kind of singleton side goes.
+
+03:54.110 --> 03:57.290
+But there is one last thing we're going to take care of inside of here.
+
+03:57.800 --> 04:03.440
+You might recall that back on our Nat's test little mini project, if we take a look at that listener
+
+04:03.680 --> 04:08.720
+file once again, you'll recall that we made a really big deal around making sure that we cleaned up
+
+04:08.720 --> 04:09.950
+our Nats connection.
+
+04:11.870 --> 04:14.150
+Whenever we were about to end this process.
+
+04:14.150 --> 04:17.590
+So we need to make sure that we do something very similar inside of our project as well.
+
+04:17.600 --> 04:23.150
+Whenever our project is about to be shut down, we want to make sure that we clean up our nets connection.
+
+04:24.590 --> 04:28.160
+So let's take care of that last little bit of recordkeeping in the next video.

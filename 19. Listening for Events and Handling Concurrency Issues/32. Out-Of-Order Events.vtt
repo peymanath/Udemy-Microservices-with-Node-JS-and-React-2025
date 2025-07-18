@@ -1,0 +1,274 @@
+WEBVTT
+
+00:00.880 --> 00:04.660
+Our tests around the ticket update listener are looking pretty good, but both the tests we have right
+
+00:04.660 --> 00:06.730
+now are really happy path tests.
+
+00:06.730 --> 00:09.100
+They're assuming that everything is working as expected.
+
+00:09.130 --> 00:14.230
+I would really like to add in at least one test to make sure that we can handle kind of bad scenarios
+
+00:14.230 --> 00:15.040
+as well.
+
+00:15.080 --> 00:18.070
+So let me show you a diagram and explain what I would like to test.
+
+00:19.310 --> 00:19.460
+Okay.
+
+00:19.490 --> 00:20.270
+Back to this diagram.
+
+00:20.270 --> 00:21.850
+We've looked at it many times.
+
+00:21.860 --> 00:25.910
+We're going to assume that inside of our orders database, we've got a ticket with an ID of Q and a
+
+00:25.910 --> 00:26.930
+version of one.
+
+00:27.930 --> 00:30.750
+Well, then imagine that these two events right here get emitted.
+
+00:30.930 --> 00:37.230
+And now maybe for whatever reason, we accidentally process this second update event first.
+
+00:37.800 --> 00:39.100
+That is not what we would want.
+
+00:39.120 --> 00:42.540
+We would want to always process this event with the version of 2/1.
+
+00:42.540 --> 00:47.850
+But as we've seen, it is entirely possible that we will accidentally process these things out of order.
+
+00:48.560 --> 00:54.290
+So in this scenario, we've got a version of three on the income event, but we still have only version
+
+00:54.290 --> 00:55.760
+one inside of our database.
+
+00:55.760 --> 00:59.300
+And so it's very clear that we are missing the event with version two.
+
+00:59.600 --> 01:04.340
+So in this scenario, we would want to either throw an error or at the very least make sure that we
+
+01:04.340 --> 01:06.200
+do not call the function.
+
+01:06.860 --> 01:10.970
+Remember, if we call the act function, that means we are acknowledging the message and we are telling
+
+01:10.970 --> 01:13.460
+that streaming server that this event has been processed.
+
+01:13.730 --> 01:18.050
+If we just don't call the ACT function, then that streaming server is going to try to emit this event
+
+01:18.050 --> 01:23.510
+again 5 seconds in the future and hopefully in that window we will have enough time to process the version
+
+01:23.510 --> 01:24.230
+two event.
+
+01:25.660 --> 01:26.080
+So that's it.
+
+01:26.080 --> 01:27.170
+That's all we're going to test.
+
+01:27.190 --> 01:29.740
+We're going to once again create an instance of our listener.
+
+01:30.100 --> 01:34.990
+We're going to create our data event, and we're going to give it a version kind of far into the future,
+
+01:34.990 --> 01:39.620
+and then just make sure that either we throw an error or at the very least that we do not call the EQ
+
+01:39.670 --> 01:40.360
+function.
+
+01:42.060 --> 01:42.360
+All right.
+
+01:42.360 --> 01:44.820
+So back inside, my editor, I'm going to go down to the very bottom.
+
+01:45.650 --> 01:48.700
+And I'll say it does not call EC.
+
+01:49.500 --> 01:51.060
+If the event.
+
+01:51.810 --> 01:53.580
+Is in the future?
+
+01:53.730 --> 01:54.660
+Or how about.
+
+01:55.490 --> 02:03.710
+If the event has a future version or how about has a skipped version number or something like that?
+
+02:03.710 --> 02:05.960
+I'm sure you could think of a better description than one I've got.
+
+02:06.110 --> 02:06.830
+Good enough.
+
+02:07.430 --> 02:09.410
+I'll make sure I mark this function as a sync.
+
+02:09.410 --> 02:12.710
+And then inside of here, we'll get message data.
+
+02:13.610 --> 02:14.510
+Listener.
+
+02:14.540 --> 02:17.810
+I don't think we need the ticket, but let's get it anyways.
+
+02:19.110 --> 02:20.100
+We might need it.
+
+02:21.850 --> 02:26.170
+So now we need to somehow make sure that our data object has a version that is far into the future.
+
+02:26.170 --> 02:27.850
+So a future version.
+
+02:28.690 --> 02:33.160
+We can do so very easily by just taking a look at the version property on there and setting it to some
+
+02:33.160 --> 02:34.570
+future version number.
+
+02:35.080 --> 02:37.810
+I'll just say data version equal to ten.
+
+02:38.050 --> 02:39.490
+That's definitely very far in the future.
+
+02:39.490 --> 02:44.530
+And certainly there are some missing version events between the one that our ticket has or the current
+
+02:44.530 --> 02:47.140
+tickets version and this version of ten right here.
+
+02:48.590 --> 02:50.720
+So now we will call our listener.
+
+02:51.800 --> 02:55.490
+On message with that data, object and message.
+
+02:56.680 --> 03:02.320
+So when we run this now, we should end up if we go back over to the listener itself, the year ticket
+
+03:02.320 --> 03:07.000
+update listener, when we run this query, we should not be finding a ticket at all.
+
+03:07.030 --> 03:10.330
+We should enter this if statement and end up throwing an error.
+
+03:11.300 --> 03:15.260
+And so we want to make sure that we somehow capture that error inside of our tests because we don't
+
+03:15.260 --> 03:17.570
+want to actually throw it inside the test itself.
+
+03:17.620 --> 03:21.890
+So we need to capture that thing and then hopefully also write out some kind of expectation that says
+
+03:21.890 --> 03:24.650
+that the message function does not get called.
+
+03:26.310 --> 03:30.090
+So to do so, I'm going to wrap the thing with a try.
+
+03:31.790 --> 03:33.050
+Catch statement.
+
+03:35.780 --> 03:38.700
+In this case, we're not really going to do anything inside of the catch.
+
+03:38.720 --> 03:42.680
+We're just using that catch to make sure that we do not throw an air out of this entire test, which
+
+03:42.680 --> 03:44.780
+would automatically cause the entire thing to fail.
+
+03:45.850 --> 03:52.750
+Then right after the Troika statement, we can put in an expectation it's going to expect message not
+
+03:52.990 --> 03:55.000
+to have been called.
+
+03:55.030 --> 03:55.910
+That's our goal here.
+
+03:55.930 --> 03:59.020
+We want to make sure that we did not call that ACH function.
+
+04:01.650 --> 04:01.830
+Okay.
+
+04:01.830 --> 04:02.820
+So let's save this.
+
+04:03.610 --> 04:05.530
+And see how we're doing back over at the terminal.
+
+04:07.270 --> 04:10.180
+And it looks like our update listener tests are still passing.
+
+04:10.210 --> 04:15.100
+As usual, let's try to make this thing fail just to make sure that the test is really working as expected.
+
+04:15.800 --> 04:17.370
+So how about in this scenario?
+
+04:17.390 --> 04:18.590
+Let's try changing.
+
+04:18.590 --> 04:20.300
+How about the data version right here?
+
+04:20.330 --> 04:22.100
+Let's just comment that out.
+
+04:22.980 --> 04:28.230
+So now we should have some accurate or correct version and we should be calling the act function.
+
+04:28.750 --> 04:30.330
+So I'll save that flip back over.
+
+04:33.440 --> 04:34.300
+And there we go.
+
+04:34.310 --> 04:37.490
+So we got an error here because the function was actually called.
+
+04:38.460 --> 04:38.880
+Cool.
+
+04:38.880 --> 04:41.430
+So I'll uncomment that and I think we're good to go.
+
+04:42.960 --> 04:43.350
+All right.
+
+04:43.350 --> 04:47.190
+So I think that's a good series of tests around our on message function.
+
+04:47.280 --> 04:48.330
+Let's take a pause right here.
+
+04:48.330 --> 04:50.460
+And as usual, continue in just a moment.

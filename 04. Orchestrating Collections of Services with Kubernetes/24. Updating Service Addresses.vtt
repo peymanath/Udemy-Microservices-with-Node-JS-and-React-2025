@@ -1,0 +1,352 @@
+WEBVTT
+
+00:00.890 --> 00:05.120
+In this video, we're going to go into our post application and update all the requests that we're making
+
+00:05.120 --> 00:09.410
+over to our event bus to use the name of the event bus service.
+
+00:09.830 --> 00:11.570
+Well, then do the same thing with the event bus.
+
+00:11.570 --> 00:13.250
+So we'll open up the event bus code.
+
+00:13.250 --> 00:17.990
+And any time we try to make a request over to our post service or the post application, we'll make
+
+00:17.990 --> 00:19.820
+sure we update that URL as well.
+
+00:20.030 --> 00:26.420
+Now, as you can guess, we are going to start to add in eventually some new pods for our comment stuff
+
+00:26.420 --> 00:28.010
+for moderation and query.
+
+00:28.250 --> 00:31.310
+Those are all going to need some services to be created as well.
+
+00:31.310 --> 00:35.210
+And we're going to need to make sure that for each of those services, we update all the appropriate
+
+00:35.210 --> 00:36.980
+URLs inside of our code base, too.
+
+00:37.160 --> 00:39.980
+So eventually we're going to have to update a lot of URLs.
+
+00:39.980 --> 00:44.990
+But right now, let's just focus on posts and event bus and just get those two things working.
+
+00:45.850 --> 00:46.210
+All right.
+
+00:46.210 --> 00:50.530
+So inside of our code editor, we're going to find our post application once again and find the indexed
+
+00:50.920 --> 00:51.460
+file.
+
+00:52.870 --> 00:57.520
+So here's where we are making a post request to slash posts or we have the handler for it.
+
+00:58.930 --> 01:01.120
+And this is where we reach out to our event bus.
+
+01:01.540 --> 01:04.180
+So no longer are we going to make a request to local host.
+
+01:04.180 --> 01:09.710
+Instead, we make a request to the service that is governing access to the event bus.
+
+01:09.730 --> 01:13.080
+So it will be event bus service.
+
+01:14.080 --> 01:19.300
+And it's absolutely always worth when you type in one of these service names inside of your code, always
+
+01:19.300 --> 01:25.150
+worth going over to your terminal doing a quick it'll get services and just double checking the spelling.
+
+01:26.350 --> 01:28.720
+And also double checking the port as well.
+
+01:29.380 --> 01:33.190
+So event bus XV at Port 4005.
+
+01:33.970 --> 01:34.840
+Does it line up?
+
+01:34.870 --> 01:35.980
+Yes, it does.
+
+01:37.660 --> 01:42.580
+I'll then continue down and see if there are any other requests being issued in here to our event bus.
+
+01:43.060 --> 01:43.320
+Nope.
+
+01:43.330 --> 01:44.290
+Don't think there are.
+
+01:44.860 --> 01:46.990
+So I'll save this file and close it.
+
+01:48.250 --> 01:49.480
+I'll then go over to my event.
+
+01:49.480 --> 01:52.750
+Plus, I'll open up the index file inside there as well.
+
+01:53.890 --> 01:58.600
+This is where we are making our series of requests to all the different sub or micro services we have
+
+01:58.600 --> 01:59.440
+inside of our app.
+
+02:00.300 --> 02:05.910
+So at present we don't have any implementation or comments, moderation or query.
+
+02:05.910 --> 02:08.210
+So I'm just going to temporarily comment those out.
+
+02:08.220 --> 02:13.590
+We'll come back and uncomment them very shortly as we start to bring the comments, moderation and query
+
+02:13.590 --> 02:15.870
+microservices live inside of our cluster.
+
+02:15.870 --> 02:19.950
+But for right now, if we tried to make requests to those endpoints, we would end up with an error.
+
+02:19.980 --> 02:21.300
+Probably not what we want.
+
+02:22.350 --> 02:25.380
+So we'll just leave behind the request to our posts.
+
+02:25.380 --> 02:26.400
+Microservice.
+
+02:27.840 --> 02:29.910
+I'm going to find local hosts right there.
+
+02:29.940 --> 02:33.090
+We no longer want to make a request to local host.
+
+02:33.100 --> 02:38.820
+Instead, we want to make requests to post cluster IP survey because that's how we get access to the
+
+02:38.820 --> 02:39.690
+post spot.
+
+02:41.060 --> 02:45.320
+Once again, I'll go to my terminal, do a CTL, get services and just verify the name.
+
+02:45.710 --> 02:46.100
+Yep.
+
+02:46.100 --> 02:50.300
+Posts Cluster IP XB at port 4000.
+
+02:52.500 --> 02:55.420
+So posts bluster.
+
+02:55.740 --> 02:59.370
+IP CRV still at port 4000.
+
+03:01.100 --> 03:01.400
+Cool.
+
+03:01.400 --> 03:02.690
+So I'll save this as well.
+
+03:03.490 --> 03:08.770
+So we've now made changes to two of our microservices and we need to somehow now deploy those.
+
+03:09.130 --> 03:12.220
+We spoke about how we update deployments just a little bit ago.
+
+03:12.220 --> 03:16.120
+So as a quick reminder, see, where's our diagram for it?
+
+03:16.990 --> 03:17.440
+Somewhere.
+
+03:17.440 --> 03:18.490
+Here it is right here.
+
+03:19.300 --> 03:20.830
+So we've made an update to our code.
+
+03:20.830 --> 03:26.230
+If we want to deploy that, we're going to rebuild the image or our event bus and four posts will then
+
+03:26.230 --> 03:31.240
+push those images to Docker Hub and then run the command queue, CTL, blah blah blah with the deployment
+
+03:31.240 --> 03:31.690
+name.
+
+03:32.860 --> 03:34.140
+So we've updated our code.
+
+03:34.150 --> 03:36.340
+Let's go and rebuild both those images.
+
+03:37.490 --> 03:38.870
+Again at my terminal.
+
+03:39.500 --> 03:41.840
+I'll change back into my.
+
+03:42.950 --> 03:44.240
+Event bus directory.
+
+03:45.000 --> 03:46.830
+And do a Docker build.
+
+03:47.910 --> 03:52.800
+Dash TX Stephen Grider Event Dash Bus Dot.
+
+03:52.800 --> 03:54.330
+Don't forget the dot at the end.
+
+03:57.370 --> 03:57.820
+There's that.
+
+03:57.820 --> 03:59.050
+I'll push that image.
+
+03:59.050 --> 04:00.610
+The Docker push.
+
+04:02.310 --> 04:03.240
+Event bus.
+
+04:06.950 --> 04:08.900
+That'll take just a minute or two.
+
+04:08.910 --> 04:10.080
+Or maybe it'll be really quick.
+
+04:10.100 --> 04:11.210
+Let's see how long it takes.
+
+04:11.900 --> 04:12.650
+Very good.
+
+04:12.710 --> 04:14.900
+So I'll go and do the same thing for post as well.
+
+04:15.100 --> 04:18.170
+They'll go up one directory, change into posts.
+
+04:19.810 --> 04:26.260
+We'll do a Docker, build your Docker ID, slash posts and a dot at the very end.
+
+04:29.300 --> 04:29.600
+Cool.
+
+04:30.110 --> 04:32.180
+And a darker push.
+
+04:34.030 --> 04:34.840
+Her posts.
+
+04:40.520 --> 04:40.910
+Cool.
+
+04:41.860 --> 04:42.280
+All right.
+
+04:42.280 --> 04:47.890
+So now to make sure that we update both of our deployments, we'll do the CTL rollout, restart deployment
+
+04:47.890 --> 04:51.580
+or our post deployment and the event plus deployment as well.
+
+04:52.540 --> 04:55.420
+If we forget the name of those deployments, we can always do a queue.
+
+04:55.560 --> 04:57.400
+It'll get deployments.
+
+04:58.950 --> 05:01.650
+So there's the name of the two deployments that we need to restart.
+
+05:02.190 --> 05:04.050
+So let's do the post 1/1.
+
+05:04.410 --> 05:08.370
+So we'll do a little rollout restart deployment.
+
+05:11.420 --> 05:12.650
+Those double.
+
+05:14.300 --> 05:19.360
+CTL Rollout Restart Event Bus Depot.
+
+05:20.280 --> 05:20.580
+Oh.
+
+05:20.700 --> 05:22.020
+Restart deployment.
+
+05:26.430 --> 05:27.090
+There we go.
+
+05:29.740 --> 05:33.220
+I'll then list out all my pods and make sure that they both just got restarted.
+
+05:33.220 --> 05:35.110
+So a little get pods.
+
+05:36.080 --> 05:37.220
+Oh, this is interesting.
+
+05:37.220 --> 05:42.680
+You'll notice that I ran this command quickly enough to see the old pod that was being executed for
+
+05:42.680 --> 05:43.930
+the event, plus deployment.
+
+05:43.940 --> 05:49.220
+It's now being terminated and is being replaced with this brand new one because we are trying to replace
+
+05:49.220 --> 05:53.570
+or restart or I should say yes, replace the pod that was already running.
+
+05:54.510 --> 05:55.800
+I'll do another get pod's.
+
+05:55.830 --> 05:58.550
+It looks like that other one has now been fully terminated.
+
+05:58.560 --> 06:00.690
+And we've now got just these two pots.
+
+06:02.580 --> 06:04.890
+Well, the last thing we need to do is a quick test.
+
+06:04.890 --> 06:06.570
+So we're going to open up postmen.
+
+06:06.570 --> 06:13.410
+We're going to try to manually create a post by issuing a post request to our post service or the post
+
+06:13.410 --> 06:14.400
+microservice.
+
+06:14.670 --> 06:19.560
+And then we'll make sure that the event bus and posts are somehow in communication by viewing their
+
+06:19.560 --> 06:22.710
+logs and making sure that they are exchanging some events.
+
+06:22.950 --> 06:26.700
+This video is running a little bit long, however, so let's take care of that little test in just a
+
+06:26.700 --> 06:27.210
+moment.

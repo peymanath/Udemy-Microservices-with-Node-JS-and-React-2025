@@ -1,0 +1,277 @@
+WEBVTT
+
+00:01.200 --> 00:05.310
+In this video, we're going to go through setting up ingress engine X on our Google Cloud cluster yet
+
+00:05.310 --> 00:05.810
+again.
+
+00:05.820 --> 00:09.330
+Now, this is going to end up being really easy and straightforward, so let's just get to it.
+
+00:09.510 --> 00:13.530
+I'm going to first go to the official documentation for Ingress Engine X yet again.
+
+00:15.210 --> 00:16.890
+I'll then go to deployment.
+
+00:18.820 --> 00:22.270
+I'll then go down to the mandatory command.
+
+00:22.270 --> 00:24.640
+So the mandatory command is this one right here.
+
+00:25.060 --> 00:27.040
+I'm going to copy that command.
+
+00:27.960 --> 00:29.340
+I'll go back over to my terminal.
+
+00:30.650 --> 00:34.070
+I'm going to make sure that I'm connected to the correct context.
+
+00:34.070 --> 00:38.420
+So if you are still running Docker for Mac or Docker for Windows, you'll want to open up that Kubernetes
+
+00:38.420 --> 00:44.840
+menu and just make sure that you're connected to the GCC or Google Kubernetes engine context right there.
+
+00:45.720 --> 00:48.360
+Well, then go ahead and paste that command in and run it.
+
+00:50.440 --> 00:50.570
+Now.
+
+00:50.650 --> 00:53.890
+It'll take just a moment or two to create all the appropriate objects.
+
+00:54.370 --> 00:54.870
+There we go.
+
+00:54.880 --> 00:56.080
+Everything's been created.
+
+00:56.540 --> 01:00.760
+And now if we go back over to the installation directions, you'll notice that there is a little bit
+
+01:00.760 --> 01:03.850
+of additional setup that we have to go through if we are using Google Cloud.
+
+01:04.060 --> 01:06.430
+So I'm going to click on that Google Cloud link right there.
+
+01:07.460 --> 01:10.940
+And you'll see that it is telling us to run this one additional command.
+
+01:11.360 --> 01:13.070
+So I'm going to also copy that.
+
+01:13.080 --> 01:15.110
+GC GCC command.
+
+01:15.880 --> 01:19.360
+Go back over to my console again and paste it.
+
+01:21.140 --> 01:21.850
+There we go.
+
+01:22.460 --> 01:22.700
+All right.
+
+01:22.700 --> 01:24.470
+Well, that's pretty much it for that setup.
+
+01:25.890 --> 01:30.180
+We have now installed Ingress Engine X on our Google Cloud cluster.
+
+01:30.540 --> 01:35.880
+So now we need to update our host file again so that whenever we try to go to ticketing dev rather than
+
+01:35.880 --> 01:40.440
+having it loop back to our local machine, we want to redirect it to that remote cluster.
+
+01:41.200 --> 01:46.180
+So let me just give you a quick reminder of what Ingress Gen X is really doing for us and what the step
+
+01:46.180 --> 01:47.830
+right here really, truly means.
+
+01:48.430 --> 01:50.620
+So we took a look at this diagram a while ago.
+
+01:50.860 --> 01:55.000
+You might recall that I told you that at some point in time we were going to deploy our cluster to some
+
+01:55.000 --> 01:58.780
+cloud provider, such as Google Cloud or Microsoft Azure.
+
+01:59.350 --> 02:03.160
+So the commands that we just executed created two things for us.
+
+02:03.190 --> 02:05.590
+It created first in Ingress Controller.
+
+02:05.620 --> 02:10.600
+That's the thing that runs inside of our cluster that has some of our routing rules tied to it.
+
+02:10.930 --> 02:12.940
+But it also created something else.
+
+02:12.940 --> 02:15.640
+It created something called a load balancer.
+
+02:16.730 --> 02:19.470
+This is tied directly to Google Cloud.
+
+02:19.490 --> 02:23.930
+It's essentially a Google Cloud thing that is running outside of our cluster entirely.
+
+02:24.530 --> 02:29.300
+So whenever we want to connect to our cluster now, we really want to attempt to connect to this load
+
+02:29.300 --> 02:30.620
+balancer right here.
+
+02:31.190 --> 02:35.450
+This is really relevant for when we go to update our host file because we need to at some point enter
+
+02:35.450 --> 02:37.100
+an IP address inside there.
+
+02:37.250 --> 02:41.930
+So when we go to our host file and we enter in the IP address, so we actually want to connect to whenever
+
+02:41.930 --> 02:47.120
+we go to ticketing dev, we want to enter in the IP address of this load balancer.
+
+02:48.190 --> 02:50.320
+To get the IP address for that load balancer.
+
+02:50.320 --> 02:53.500
+We're going to look it up on the Google Cloud dashboard.
+
+02:53.890 --> 02:55.930
+So, again, when we just ran those commands.
+
+02:56.810 --> 03:02.750
+It created this load balancer for us, which means we should be able to go to the Google Cloud Load
+
+03:02.750 --> 03:05.030
+Balancer page on this menu on the left hand side.
+
+03:05.030 --> 03:10.250
+And we should see that a load balancer was automatically created for us by our Kubernetes cluster,
+
+03:10.250 --> 03:12.980
+or more specifically, by ingress engine x.
+
+03:13.850 --> 03:17.510
+So I'm going to scroll down on the left hand side and go to the section called Networking.
+
+03:18.590 --> 03:19.970
+Then inside of networking.
+
+03:21.170 --> 03:25.070
+I'm going to find network services and go to load balancing.
+
+03:26.290 --> 03:27.250
+And then sight appear.
+
+03:27.250 --> 03:30.100
+We're going to see a load balancer that was created for us.
+
+03:30.130 --> 03:35.170
+It's got a randomly generated name and it apparently is pointing to our back and server.
+
+03:35.620 --> 03:39.880
+Now, you might notice a little warning right here, right now, something that says two instances are
+
+03:39.880 --> 03:40.510
+unhealthy.
+
+03:40.540 --> 03:41.290
+That's totally okay.
+
+03:41.320 --> 03:42.850
+We're going to ignore that for right now.
+
+03:43.720 --> 03:47.560
+I'm going to click on that load balancer that was just created for us, and it's then going to give
+
+03:47.560 --> 03:51.250
+us the IP address that our load balancer exists at.
+
+03:51.250 --> 03:58.150
+So again, this is the IP address of the load balancer that was created for us by the Ingress Engine
+
+03:58.150 --> 03:58.800
+X stuff.
+
+04:00.060 --> 04:04.710
+So that is the IP address that we want to tell our host file to connect to any time that we try to go
+
+04:04.710 --> 04:06.060
+to ticketing Dev.
+
+04:06.420 --> 04:09.390
+So let's open up our host file right now and enter in that IP.
+
+04:09.840 --> 04:11.550
+I'm going to copy that IP address.
+
+04:12.090 --> 04:16.950
+I'll then go over to my terminal and open up my Etsy host file yet again.
+
+04:17.900 --> 04:21.230
+Of course, if you're on windows, you'll want to make sure that you open up your host file on a Windows
+
+04:21.230 --> 04:21.880
+machine.
+
+04:21.890 --> 04:25.340
+Again, that's some file inside the system 32 directory.
+
+04:26.840 --> 04:31.880
+I'll then find ticketing Dev and I'm going to update the IP address like so.
+
+04:32.610 --> 04:37.530
+So now whenever we type in ticketing dev into our browser, we're going to actually connect to our load
+
+04:37.530 --> 04:39.300
+balancer inside of Google Cloud.
+
+04:40.280 --> 04:40.480
+Yes.
+
+04:40.480 --> 04:41.470
+I'm going to save this.
+
+04:41.860 --> 04:43.900
+I get that permissions ere again.
+
+04:43.900 --> 04:45.490
+So enter my password.
+
+04:46.690 --> 04:47.890
+And I'm good to go.
+
+04:49.750 --> 04:50.080
+All right.
+
+04:50.080 --> 04:51.450
+So that is it.
+
+04:51.510 --> 04:54.660
+It's now, in theory, less than we have to do is restart scaffold.
+
+04:54.670 --> 04:59.800
+When we restart scaffold, it should reload our off or I shouldn't really say reload.
+
+04:59.800 --> 05:04.830
+It's going to take our deployment config file and deploy it to the Google Cloud cluster.
+
+05:04.840 --> 05:09.040
+It's also going to take our set of routing rules and apply them to that cluster as well.
+
+05:09.430 --> 05:11.590
+So let's do that final test in the next video.

@@ -1,0 +1,391 @@
+WEBVTT
+
+00:02.000 --> 00:03.110
+Onto our next test.
+
+00:03.110 --> 00:08.030
+So we want to make sure that we can only access this root handler if the user is actually signed in.
+
+00:08.360 --> 00:12.650
+Let's first just create a test for this and we'll worry about the actual implementation.
+
+00:13.160 --> 00:15.770
+So I'm going to put in a body to this thing.
+
+00:17.700 --> 00:19.560
+I'm going to try to make a request over.
+
+00:24.230 --> 00:24.900
+To my app.
+
+00:25.550 --> 00:31.580
+I again want to make a post request to API tickets and again I'm going to send in an empty object.
+
+00:32.850 --> 00:36.230
+So in this scenario right here, we are not authenticated in any way.
+
+00:36.240 --> 00:42.090
+We are not sending this request with any kind of status code or any kind of cookie JSON, web token,
+
+00:42.090 --> 00:43.230
+anything like that.
+
+00:43.440 --> 00:48.360
+So if we just send this right here, this is going to simulate us making a request to this handler as
+
+00:48.360 --> 00:49.980
+if we were not signed in.
+
+00:51.710 --> 00:56.210
+So we need to now look at that response and make sure that it has a status code that is somehow telling
+
+00:56.210 --> 00:58.190
+us that we are not correctly authenticated.
+
+00:58.580 --> 01:02.510
+That means that we're going to have to get a quick reminder on what happens when we make a request that
+
+01:02.510 --> 01:04.910
+we are essentially not authenticated to make.
+
+01:05.480 --> 01:08.810
+It's going to go back over to my common library.
+
+01:08.840 --> 01:10.730
+Inside there, I'll find the ears directory.
+
+01:10.940 --> 01:15.770
+And you might recall that a while ago, back when we were working on the service, we put together a
+
+01:15.770 --> 01:18.380
+custom error called Not Authorized Error.
+
+01:18.680 --> 01:23.210
+This was the error that we would throw whenever a user tried to make a request to a root handler that
+
+01:23.210 --> 01:25.370
+they were not allowed to make a request to.
+
+01:26.200 --> 01:29.980
+So if we try to make a request to a handler that we're not authorized to access, we should be getting
+
+01:29.980 --> 01:31.780
+back a status code of 401.
+
+01:33.710 --> 01:37.940
+So back inside this test, we can either take a look at the response and write out something very similar
+
+01:37.940 --> 01:39.230
+to what we wrote out up here.
+
+01:39.230 --> 01:45.380
+So in other words, we could say expect response status to equal for a one, because in this case,
+
+01:45.380 --> 01:49.190
+we want to make sure that our not authenticated request gets rejected.
+
+01:49.220 --> 01:54.410
+Or alternatively, we could just chain on and expect statement to the request itself of 401.
+
+01:55.320 --> 02:01.230
+If we do that, we do not need to get access to the response itself or write out the separate expectation.
+
+02:03.870 --> 02:04.080
+Okay.
+
+02:04.110 --> 02:05.100
+Let's save this.
+
+02:05.850 --> 02:10.340
+We're going to go back over to my terminal again and I'll see that that second test is failing.
+
+02:11.270 --> 02:14.420
+So we expected or we want to see that we got a 401.
+
+02:14.420 --> 02:19.350
+But we actually got through to our handler with the status code of 200 coming back to us.
+
+02:19.370 --> 02:23.570
+So that means that right now we do not have any idea of authentication being tied to this route.
+
+02:23.570 --> 02:26.210
+HANDLER So we need to now go into our implementation.
+
+02:26.210 --> 02:31.040
+We need to make sure we add something in to say, hey, if the user is not authenticated, get them
+
+02:31.040 --> 02:31.640
+out of here.
+
+02:32.210 --> 02:33.440
+So how are we going to do that?
+
+02:33.530 --> 02:39.080
+Well, once again, you might recall that when we were working on our service, we kind of thought ahead
+
+02:39.080 --> 02:43.580
+and we realized that at some point in time, we would probably need some middleware to detect whether
+
+02:43.580 --> 02:45.890
+or not the user was actually authenticated.
+
+02:46.220 --> 02:51.170
+And to that end, we put together two different middleware as we put together a middleware called Current
+
+02:51.170 --> 02:51.860
+User.
+
+02:52.220 --> 02:54.620
+So I'm inside of my common module right now.
+
+02:54.950 --> 02:56.390
+Here's the current user middleware.
+
+02:56.720 --> 03:01.790
+The whole goal of this thing was to take a look at the incoming request session property and see if
+
+03:01.790 --> 03:03.260
+there's a JSON web token there.
+
+03:03.740 --> 03:06.110
+If there wasn't a token, we just called next.
+
+03:06.530 --> 03:12.560
+Otherwise, if there was, we attempted to decode the token and then set it on the current user property.
+
+03:13.380 --> 03:18.080
+The the current user middleware was just about defining that recurrent user property.
+
+03:18.080 --> 03:18.560
+That was it.
+
+03:18.560 --> 03:20.030
+That's all we cared about with this thing.
+
+03:21.240 --> 03:23.770
+The other middleware that we put together was require off.
+
+03:23.790 --> 03:25.320
+So I'm going to open that up really quick.
+
+03:26.040 --> 03:29.880
+The require off middleware is going to take a look at that current user property.
+
+03:30.120 --> 03:34.140
+And if it is not defined, we're going to throw a not authorized error.
+
+03:34.970 --> 03:39.680
+So all we really have to do to implement some level of authentication protection around our handler
+
+03:39.680 --> 03:44.720
+is wire up both the current user middleware and the require middleware as well.
+
+03:45.500 --> 03:46.370
+That's pretty much it.
+
+03:48.060 --> 03:49.380
+So where are we going to actually?
+
+03:49.380 --> 03:50.430
+Why are these things up?
+
+03:50.880 --> 03:55.830
+Well, every single request that comes into our application, if the user is authenticated or has a
+
+03:55.830 --> 03:59.460
+JSON web token, we probably want to do that current user lookup.
+
+03:59.850 --> 04:05.490
+So inside of our APTs file, we're going to import that current user middleware inside of here and wired
+
+04:05.490 --> 04:10.740
+up to our app so that every single incoming request is going to have that look up and see whether or
+
+04:10.740 --> 04:12.660
+not the user is authenticated.
+
+04:12.990 --> 04:16.710
+But if the user is not authenticated, we don't necessarily want to immediately reject them.
+
+04:16.770 --> 04:21.600
+Instead, we only want to reject requests that are coming in to a very specific route handlers.
+
+04:21.930 --> 04:27.540
+So for example, if someone is trying to look up a list of all tickets or look up a very specific ticket,
+
+04:27.540 --> 04:30.720
+we probably don't want to make someone be authenticated for that.
+
+04:31.140 --> 04:34.230
+So I don't really want to require authentication on these two handlers.
+
+04:34.230 --> 04:39.240
+But in order to make a post to create a ticket or to update a ticket, I probably do.
+
+04:39.420 --> 04:43.470
+So only some handlers need to have that require auth middleware wired up.
+
+04:43.710 --> 04:46.890
+So long story short, here's what we're going to do inside of APTs.
+
+04:46.950 --> 04:51.930
+I'm going to find my common module import and I'll add on the current user middleware.
+
+04:53.000 --> 04:55.790
+Well then connect that to my application down here app.
+
+04:56.030 --> 04:58.430
+Use burnt user.
+
+04:59.000 --> 05:02.060
+Make sure you add that middleware after Cookie's session.
+
+05:02.360 --> 05:07.400
+Cookie session has to run first so it can take a look at the cookie and set the rest session property.
+
+05:07.400 --> 05:12.050
+If we don't do that, then whenever a current user runs, it will be running too soon and rect session
+
+05:12.050 --> 05:12.980
+will not be set.
+
+05:15.010 --> 05:19.090
+So now if the user is authenticated, that will set the correct current user property.
+
+05:19.180 --> 05:22.240
+And now we can go over to our actual root handler.
+
+05:23.060 --> 05:29.660
+So inside of Roots notes, and this is where we will apply some actual authentication protection and
+
+05:29.660 --> 05:31.610
+make sure that the user is authenticated.
+
+05:32.180 --> 05:40.070
+So at the very top, this is where we will import the require auth middleware from my common module.
+
+05:40.780 --> 05:43.840
+And I will apply that as a middleware inside my route handler.
+
+05:44.910 --> 05:47.010
+The require off like so.
+
+05:48.410 --> 05:48.650
+Okay.
+
+05:48.680 --> 05:49.610
+Let's save that.
+
+05:50.510 --> 05:54.110
+Flip back over and now that test is passing.
+
+05:56.940 --> 05:57.450
+Cool.
+
+05:57.840 --> 06:02.360
+Now, I just kind of realized we should probably write out a test that kind of checks for the opposite.
+
+06:02.370 --> 06:07.290
+So if we want to write a test to make sure this thing can only be used at the user is signed in, we
+
+06:07.290 --> 06:12.390
+probably should have a test that says if the user is signed in, we should not return a status code
+
+06:12.390 --> 06:13.270
+of 400.
+
+06:13.290 --> 06:19.020
+I think that makes a little bit of sense because right now we could be signed in and who knows, maybe
+
+06:19.140 --> 06:21.000
+that request handler still isn't working correctly.
+
+06:21.000 --> 06:24.480
+So we should probably just write out a test to make sure that's working as expected.
+
+06:24.840 --> 06:27.720
+So I'm going to put in another test right here and I'll say.
+
+06:28.720 --> 06:31.840
+The user or how about returns?
+
+06:32.590 --> 06:33.340
+A.
+
+06:34.300 --> 06:38.920
+Status other than for one, if the user is signed in.
+
+06:44.910 --> 06:48.460
+Then to write out this test, we can do something very similar to what we did back up here.
+
+06:48.480 --> 06:52.950
+So in this case, we need to make sure that the status code is not equal to a 401.
+
+06:53.640 --> 06:55.470
+So let's write out a test for that.
+
+06:55.470 --> 06:56.580
+So we'll do a concert.
+
+06:56.610 --> 06:58.110
+Response is a weight.
+
+06:59.130 --> 07:00.330
+Request to EP.
+
+07:00.900 --> 07:03.690
+I'm going to make a post to API tickets.
+
+07:04.590 --> 07:13.440
+I will send an empty object and I will do and expect response status not to equal or one.
+
+07:16.710 --> 07:17.060
+All right.
+
+07:17.070 --> 07:18.210
+Now, if I flip back over.
+
+07:18.800 --> 07:20.650
+I will see an air around that test.
+
+07:20.660 --> 07:22.670
+It looks like that new test is failing entirely.
+
+07:22.970 --> 07:26.420
+The reason that is failing is because, well, we are still making a request right here that is not
+
+07:26.420 --> 07:28.160
+authenticated in any way.
+
+07:28.310 --> 07:33.470
+So we need to figure out some method or some methodology to make an authenticated request inside of
+
+07:33.470 --> 07:34.520
+our test environment.
+
+07:34.880 --> 07:39.740
+You might recall that when we put together our test suite back inside the service we had put together
+
+07:39.740 --> 07:44.270
+inside of our setup file that global sign in function right here.
+
+07:44.540 --> 07:46.880
+So I'm at the bottom of our setup file.
+
+07:47.650 --> 07:49.420
+We put this thing together over here.
+
+07:50.360 --> 07:54.050
+And unfortunately, this thing is only going to work correctly inside of our service.
+
+07:54.320 --> 07:56.000
+This video is running a little bit long, however.
+
+07:56.000 --> 07:57.290
+So let's take a pause right here.
+
+07:57.290 --> 08:00.560
+When we come back in the next video, I'm going to explain to you why this thing will only work in the
+
+08:00.680 --> 08:04.310
+service and then start to fix it up so we can use it over here inside of tickets.

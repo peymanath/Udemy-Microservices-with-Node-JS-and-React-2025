@@ -1,0 +1,319 @@
+WEBVTT
+
+00:01.100 --> 00:01.580
+Are back in.
+
+00:01.580 --> 00:06.320
+Services are now in a pretty good spot and we're going to start to move back over to the front end portion
+
+00:06.320 --> 00:07.280
+of our application.
+
+00:07.280 --> 00:09.860
+So specifically the next DJ's app.
+
+00:10.160 --> 00:14.540
+In this video, I want to give you a quick reminder on what we have done inside the client app so far,
+
+00:14.570 --> 00:17.420
+give you a quick reminder about a couple of important topics around.
+
+00:17.420 --> 00:22.970
+Next, as I think it started working on our next couple of pages for this thing, so let's get to it
+
+00:23.540 --> 00:24.980
+inside of my client directory.
+
+00:25.010 --> 00:27.230
+I'm going to find the indexed JS file.
+
+00:27.770 --> 00:32.840
+So this indexed JS file currently serves as the landing page or our client application.
+
+00:33.500 --> 00:37.190
+The only thing we are really showing on this landing page right now is some information about whether
+
+00:37.190 --> 00:40.460
+or not the user is currently signed in beyond this landing page.
+
+00:40.460 --> 00:42.020
+We also have some pages for handling.
+
+00:42.020 --> 00:44.300
+Sign in, sign out and sign up.
+
+00:44.300 --> 00:44.930
+That is it.
+
+00:44.930 --> 00:46.640
+That's all we have inside of here right now.
+
+00:46.940 --> 00:51.080
+So with that in mind, let's go take a look at a couple of mock ups and just start to picture exactly
+
+00:51.080 --> 00:52.190
+what we need to build.
+
+00:54.880 --> 00:55.210
+Okay.
+
+00:55.210 --> 00:56.610
+So we've got our sign up done.
+
+00:56.620 --> 00:57.930
+We've got sign in.
+
+00:57.940 --> 01:01.540
+So they're now going to start to move on to some of these other screens along the list.
+
+01:02.080 --> 01:06.370
+The next big screen that we're going to work on is going to be a list of tickets for sale.
+
+01:06.700 --> 01:09.610
+We're going to make this into the landing page of our app.
+
+01:09.610 --> 01:13.870
+So in other words, we're going to go to the indexed JS file inside of our pages directory and we're
+
+01:13.870 --> 01:16.810
+going to very quickly start to replace a lot of the code inside of here.
+
+01:16.960 --> 01:21.490
+Rather than just telling the user whether or not they are signed in, we are going to instead fetch
+
+01:21.490 --> 01:23.560
+a list of tickets and show them to the user.
+
+01:24.590 --> 01:28.550
+Whenever a user clicks on one of these tickets, we're then going to take them to a page that will give
+
+01:28.550 --> 01:31.070
+them more info about that specific ticket.
+
+01:32.080 --> 01:34.780
+A user should be able to click this purchase button right here.
+
+01:35.050 --> 01:39.400
+And when a user clicks on that purchase button, remember what that is going to do on our back end server.
+
+01:39.430 --> 01:45.280
+That is going to create a new order which expresses the intent for a user to purchase a ticket, kind
+
+01:45.280 --> 01:47.170
+of temporarily reserves the ticket.
+
+01:48.030 --> 01:52.050
+After user clicks on that purchase button, we're going to take them to another screen where we will
+
+01:52.050 --> 01:55.260
+display some details about the order that was just created.
+
+01:55.800 --> 01:58.570
+So we'll probably say, hey, you're trying to purchase this ticket.
+
+01:58.590 --> 02:03.300
+We'll show a little countdown timer right here to show how much longer the user has to actually enter
+
+02:03.300 --> 02:07.680
+their payment information and maybe also the price, even though I didn't really reflect it on this
+
+02:07.680 --> 02:08.250
+markup.
+
+02:09.220 --> 02:13.390
+If a user clicks on the pay button, we're then going to open up a little window.
+
+02:14.890 --> 02:16.480
+Tied to stripe jazz.
+
+02:16.780 --> 02:19.570
+So this little dialogue right here, we do not have to build that.
+
+02:19.570 --> 02:24.010
+We're going to instead use a third party library that is going to create this window for us and handle
+
+02:24.010 --> 02:26.590
+the entire stripe payment process automatically.
+
+02:27.730 --> 02:30.320
+That is kind of the primary flow that a user is going to go through.
+
+02:30.320 --> 02:34.210
+If they're going to see the list of tickets, they're going to look at a specific ticket click purchase
+
+02:34.210 --> 02:38.490
+that's going to create the order, click pay and then enter their payment information.
+
+02:38.500 --> 02:42.550
+And after that, in theory, the ticket at that point belongs to this user.
+
+02:43.610 --> 02:47.780
+Naturally, before you implement any of those screens, we probably also need the ability to create
+
+02:47.780 --> 02:48.500
+a ticket.
+
+02:48.650 --> 02:53.270
+So we'll make a very simple form, like the one you see right here that user can use to make a brand
+
+02:53.270 --> 02:53.960
+new ticket.
+
+02:55.530 --> 02:55.770
+Okay.
+
+02:55.770 --> 02:58.410
+So that's some of the different components we're going to have to create very quickly.
+
+02:58.830 --> 03:02.930
+Now, one of the big things that we're going to start to realize as we go back into the world of next
+
+03:02.940 --> 03:09.000
+days is that handling routing for some of these different screens is going to be just a little bit challenging.
+
+03:09.390 --> 03:13.170
+So I'm going to show you just one more quick diagram that's going to help kind of summarize some of
+
+03:13.170 --> 03:16.980
+the different pages that we're going to create in the next couple of videos and exactly some of the
+
+03:16.980 --> 03:17.490
+different routes.
+
+03:17.490 --> 03:18.840
+So we're going to write out for each of them.
+
+03:20.740 --> 03:20.980
+Okay.
+
+03:20.980 --> 03:25.210
+So in this diagram right here, we've got the different routes that a user is going to be able to visit
+
+03:25.210 --> 03:26.020
+inside of our app.
+
+03:26.530 --> 03:31.570
+We've got the corresponding file inside of our pages directory that we need to create.
+
+03:32.020 --> 03:36.400
+So remember to create a new route or essentially new page inside of our next application.
+
+03:36.400 --> 03:39.790
+We're going to create different files inside that page's directory right here.
+
+03:40.030 --> 03:44.800
+And the structure of this directory and the names of the files inside there is going to dictate or determine
+
+03:44.800 --> 03:46.990
+the different routes that a user can access.
+
+03:48.640 --> 03:51.820
+And then finally on the right hand side is the goal of each of these different routes.
+
+03:52.300 --> 03:56.560
+Now, we've already handled these first three right here, so those are pretty much done.
+
+03:56.560 --> 03:58.510
+We don't really have to worry about them too much.
+
+04:00.590 --> 04:04.100
+So we're going to first begin probably back on our list of tickets.
+
+04:04.100 --> 04:08.030
+Or alternatively, maybe we will do the ticket creation form one or the other.
+
+04:08.780 --> 04:12.950
+So we are going to make sure that inside that indexed file, we show the list of all tickets.
+
+04:13.370 --> 04:19.100
+We're also going to make sure that at a route of tickets new, which means that we need a tickets folder
+
+04:19.100 --> 04:22.820
+inside the pages directory and inside there we need a new JS file.
+
+04:22.820 --> 04:26.120
+That is, we're going to create our form to make a brand new ticket.
+
+04:28.100 --> 04:32.060
+Now, the other thing I want to point out here is that we have two different pages where we are showing
+
+04:32.060 --> 04:38.210
+details about a very particular ticket and a very particular order that would be really this age right
+
+04:38.210 --> 04:38.520
+here.
+
+04:38.540 --> 04:43.940
+This is some details about a particular ticket and this is some details about a very particular order.
+
+04:44.540 --> 04:49.940
+Usually whenever we are looking at a very particular record, we're going to reflect that records ID
+
+04:49.940 --> 04:51.140
+inside of the URL.
+
+04:51.470 --> 04:57.170
+So inside of this URL, we might have a path of something like orders slash and then the ID of the order
+
+04:57.170 --> 04:58.280
+that we are looking for.
+
+04:59.200 --> 05:00.190
+Same thing for tickets.
+
+05:00.190 --> 05:04.660
+We might have something like tickets and then the ID of the ticket that we want to look at.
+
+05:05.320 --> 05:12.010
+So handling IDs in next case is just a little bit complicated because of how we have to name the file
+
+05:12.010 --> 05:13.420
+inside of our pages directory.
+
+05:13.810 --> 05:17.730
+As we've seen, the names of these different files dictate the routes that are available.
+
+05:17.740 --> 05:22.780
+But in this case, we want to have kind of a parameter, a query parameter, some wild card that is
+
+05:22.780 --> 05:23.800
+a part of the URL.
+
+05:24.560 --> 05:26.510
+To create some wild card in the URL.
+
+05:26.510 --> 05:33.230
+When we make the corresponding page file, we're going to wrap that portion of the URL with square brackets.
+
+05:33.560 --> 05:37.130
+The square brackets means this is a wild card of sorts.
+
+05:38.300 --> 05:43.100
+Then inside the square brackets, we're going to put in the name of that query parameter and then we'll
+
+05:43.100 --> 05:48.590
+be able to receive that query parameter inside of our component and understand exactly inside the component
+
+05:48.590 --> 05:51.140
+which ticket we need to display details about.
+
+05:52.330 --> 05:56.860
+So if we take a look at this root syntax right here, which probably makes sense if you're coming from
+
+05:56.860 --> 06:01.630
+the world of express jazz to reflect that with a file inside of our pages directory, we would write
+
+06:01.630 --> 06:06.790
+out a file with the name of tickets, square brackets, ticket ID, and then we could get access to
+
+06:06.790 --> 06:09.250
+that ticket ID inside of our page component.
+
+06:11.030 --> 06:11.270
+Okay.
+
+06:11.270 --> 06:12.500
+So that's a lot of details.
+
+06:12.560 --> 06:15.530
+Let's take a quick pause right here and continue in just a moment.

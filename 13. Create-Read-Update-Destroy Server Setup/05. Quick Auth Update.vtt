@@ -1,0 +1,106 @@
+WEBVTT
+
+00:00.710 --> 00:02.540
+As I mentioned at the end of last video.
+
+00:02.540 --> 00:05.180
+Let's go over to our service really quickly.
+
+00:05.300 --> 00:08.570
+Inside the CRC directory, I will find the indexed file.
+
+00:09.020 --> 00:13.430
+So rather than having a hardcoded URL right here, let's instead move that over to the deployment file
+
+00:13.430 --> 00:15.410
+and set it up as an environment variable.
+
+00:16.130 --> 00:17.690
+So I'm going to take that string right there.
+
+00:17.690 --> 00:18.560
+I'm going to cut it.
+
+00:19.710 --> 00:22.230
+I'll then go and find my off deployment file.
+
+00:23.370 --> 00:24.590
+Here's the deployment file.
+
+00:24.600 --> 00:26.140
+I'll find the EMV section.
+
+00:26.160 --> 00:33.030
+I'll add in a new environment variable with the name of Mongo Uri and then set the value like so.
+
+00:34.950 --> 00:39.480
+We are inside the deployment file, so I'm going to triple check and make sure I've got off.
+
+00:39.960 --> 00:40.620
+Off.
+
+00:42.130 --> 00:43.210
+I'll then save this.
+
+00:43.940 --> 00:48.230
+And I will go back over to the index file again inside of the service.
+
+00:49.200 --> 00:51.760
+Now let's do the same thing we just did over inside of tickets.
+
+00:51.760 --> 00:56.500
+So I'll say if not process and v mongo uri.
+
+00:57.450 --> 00:58.500
+Your new air.
+
+01:00.110 --> 01:00.330
+Mango.
+
+01:00.520 --> 01:02.680
+Your eye must be defined.
+
+01:04.750 --> 01:08.770
+And then I will reference that as the first argument to connect the process.
+
+01:08.770 --> 01:11.140
+E and v mongo uri.
+
+01:13.410 --> 01:14.220
+I'll save.
+
+01:14.550 --> 01:16.920
+And then finally, let's just make sure this is still working.
+
+01:16.920 --> 01:18.270
+So I'll flip back over to my terminal.
+
+01:18.570 --> 01:23.040
+Looks like the deployment was restarted, so hopefully we are connecting to MongoDB.
+
+01:23.430 --> 01:28.290
+Now if you see an error here, remember there is some weirdness for some reason when we start to change
+
+01:28.290 --> 01:29.430
+environment variables.
+
+01:29.430 --> 01:33.810
+So if you see some kind of error and you're really sure you wrote everything correctly, I would encourage
+
+01:33.810 --> 01:35.220
+you to restart scaffold.
+
+01:36.200 --> 01:37.340
+All right, so that should be it.
+
+01:38.630 --> 01:39.080
+Okay.
+
+01:39.290 --> 01:41.770
+So we've got some good setup, complete with tickets.
+
+01:41.780 --> 01:42.950
+Let's take a pause right here.
+
+01:42.950 --> 01:46.940
+We're going to start writing out some route handlers, some tests and so on in the next video.

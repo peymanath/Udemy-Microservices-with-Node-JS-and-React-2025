@@ -1,0 +1,385 @@
+WEBVTT
+
+00:01.250 --> 00:06.350
+Our GitHub workflow is looking pretty good, but right now it is only running tests inside of our service.
+
+00:06.380 --> 00:10.610
+We definitely need to make sure that we run tests inside of all of our other services as well.
+
+00:10.910 --> 00:15.230
+There's two ways that we can implement some additional configuration to run tests inside of our other
+
+00:15.230 --> 00:16.010
+services.
+
+00:16.550 --> 00:19.520
+First, I'm going to go back to the code tab on GitHub.
+
+00:20.670 --> 00:26.340
+You'll notice inside of your there's a new folder of GitHub workflows that is all of where all of our
+
+00:26.340 --> 00:28.710
+different workflow configuration files get saved.
+
+00:29.420 --> 00:34.370
+If we open up the test, one that is the workflow, we just created a moment to go.
+
+00:34.790 --> 00:39.230
+So there are two different ways that we can make sure that we run tests in all of our other services.
+
+00:39.500 --> 00:44.180
+We can either add in some additional run statements to this thing so we can make sure that we've run
+
+00:44.180 --> 00:48.830
+some more commands, like change into the orders directory, install dependencies, and then run tests
+
+00:48.830 --> 00:53.390
+inside there and then have another line for the ticket service, another for expiration, another for
+
+00:53.390 --> 00:54.530
+payments and so on.
+
+00:54.920 --> 00:58.880
+That is definitely one way to do it, but that is going to make sure that we run all of our tests in
+
+00:58.880 --> 00:59.720
+series.
+
+00:59.750 --> 01:04.250
+In other words, we're going to run all the tests for the auth service first and then expiration and
+
+01:04.250 --> 01:06.350
+then orders and then tickets and so on.
+
+01:06.830 --> 01:11.090
+In total, it might end up taking several minutes to run all the different tests for our project.
+
+01:11.530 --> 01:16.460
+Well, there's technically another way that we could wire up all of these testing workflows to make
+
+01:16.460 --> 01:18.110
+them all run in parallel.
+
+01:18.590 --> 01:24.020
+We can create some additional workflows that also execute on the on pull request event.
+
+01:24.380 --> 01:29.330
+And for each of these additional workflows we can create, we'll have them change into each of our other
+
+01:29.330 --> 01:31.910
+individual services and run tests inside them.
+
+01:32.920 --> 01:37.960
+So essentially for each individual service we can create a different GitHub action and that's going
+
+01:37.960 --> 01:42.730
+to make sure that they all run in parallel or essentially at the same time, which is going to dramatically
+
+01:42.730 --> 01:44.770
+speed up our testing process.
+
+01:46.060 --> 01:49.780
+So with that in mind, we're going to go through all of our different services, create a different
+
+01:49.780 --> 01:51.370
+workflow file for each of them.
+
+01:52.130 --> 01:56.420
+I'm going to first begin by opening up or directly editing this file on GitHub.
+
+01:56.630 --> 02:01.400
+I just want to change the name of the file and the name of the workflow step, just to make sure that
+
+02:01.400 --> 02:05.930
+it's really clear that this is a set of tests for running the test in the service.
+
+02:06.350 --> 02:08.030
+So click on the edit this file.
+
+02:09.770 --> 02:14.570
+I'm going to change the name right here to s dash off.
+
+02:15.450 --> 02:18.000
+I'll change the name of the file as well to test the.
+
+02:22.020 --> 02:23.580
+I'll then commit these changes.
+
+02:27.190 --> 02:31.600
+I'm then going to copy everything inside of here, and we're going to create a couple of extra files
+
+02:31.600 --> 02:34.490
+for all of our other services that actually have tests inside them.
+
+02:34.510 --> 02:39.340
+Again, this is to get all these different tests to run in parallel whenever we create a pull request
+
+02:39.340 --> 02:40.690
+or merge in changes.
+
+02:41.360 --> 02:44.210
+So inside of my workflows directory I'll click on the workflows link.
+
+02:44.450 --> 02:46.520
+I'm going to manually create a new file.
+
+02:47.790 --> 02:50.820
+I'll give the file a name of tests orders.
+
+02:51.930 --> 02:52.440
+HTML.
+
+02:53.420 --> 02:55.580
+And I'll paste in all the stuff that we just copied.
+
+02:56.870 --> 02:59.690
+I'll then change tests off to test orders.
+
+03:01.130 --> 03:06.230
+And down inside this run step, I'll update it to change into the orders directory instead.
+
+03:08.770 --> 03:12.040
+I'll then go down to the bottom and commit those changes.
+
+03:14.810 --> 03:15.380
+All right.
+
+03:15.890 --> 03:20.030
+Now, really quick, one thing I want to mention here is that we never actually put together any test
+
+03:20.030 --> 03:21.800
+inside of our expiration service.
+
+03:22.190 --> 03:26.930
+So the only other services we have to create a workflow file for, besides off and orders which we just
+
+03:26.930 --> 03:29.270
+created, is payments and tickets.
+
+03:29.270 --> 03:32.720
+So we're going to create two other workflow files, one for tickets and one for payments.
+
+03:33.050 --> 03:34.490
+Let's take care of payments first.
+
+03:34.940 --> 03:39.830
+So again, inside of my workflows directory, I'll create a new file of test dash.
+
+03:41.500 --> 03:43.000
+Payments that eml.
+
+03:45.660 --> 03:47.170
+Well, then paste all that stuff in.
+
+03:47.190 --> 03:50.130
+I'll change the name right there to test payments.
+
+03:50.980 --> 03:54.820
+And I'll change the CD right there as well to payments.
+
+03:56.680 --> 03:56.980
+Okay.
+
+03:57.010 --> 03:58.090
+Go down to the bottom.
+
+03:58.860 --> 03:59.460
+Save it.
+
+04:00.990 --> 04:02.250
+And then just one more.
+
+04:02.460 --> 04:06.510
+We'll create another file of tests, tickets, html.
+
+04:07.430 --> 04:11.090
+Do the paste tests, dash tickets.
+
+04:12.350 --> 04:15.830
+And then change CD off into CD tickets.
+
+04:17.990 --> 04:21.050
+And then finally go down to the bottom and commit.
+
+04:22.570 --> 04:22.960
+Okay.
+
+04:22.990 --> 04:27.940
+So now we should, whenever we create a pull request, push changes to a polar request, run all for
+
+04:27.940 --> 04:31.240
+these jobs in parallel, which would significantly speed up our run.
+
+04:31.630 --> 04:35.800
+Before we test this, however, we do need to make sure that we go around to our orders, payments and
+
+04:35.800 --> 04:39.790
+tickets projects and add in that test colon CI script to each of them.
+
+04:41.060 --> 04:42.410
+So back inside, my editor.
+
+04:43.850 --> 04:48.110
+Or excuse me first inside of our terminal, let's make sure that we're making these changes to the master
+
+04:48.110 --> 04:48.770
+branch.
+
+04:49.220 --> 04:51.980
+So I'm going to change back over to Master first.
+
+04:53.180 --> 04:53.940
+Then I'll go back over.
+
+04:53.960 --> 04:55.030
+Technically, that didn't matter.
+
+04:55.040 --> 04:57.680
+We could have just made the changes while we were on the dev branch and then check out master.
+
+04:57.680 --> 04:58.130
+But whatever.
+
+04:58.130 --> 05:02.840
+I just want to make the point that we want to make these changes to the master branch.
+
+05:02.840 --> 05:07.850
+So now we're going to go around to our orders, payments and ticket services and add in that new test
+
+05:07.850 --> 05:08.490
+command.
+
+05:08.510 --> 05:14.300
+So first off, inside of orders, I'll find the package JSON file and I'll add in test CI.
+
+05:15.980 --> 05:16.730
+Just.
+
+05:17.830 --> 05:17.980
+Okay.
+
+05:18.100 --> 05:18.640
+There's one.
+
+05:18.640 --> 05:19.990
+I'll save the file and close it.
+
+05:20.620 --> 05:22.060
+Next up is payments.
+
+05:24.530 --> 05:26.780
+Stop it in test, Cy.
+
+05:27.510 --> 05:29.430
+Just save it.
+
+05:30.660 --> 05:32.700
+And then last one, our ticket service.
+
+05:34.920 --> 05:35.610
+Test.
+
+05:37.500 --> 05:38.220
+Sigh.
+
+05:40.180 --> 05:42.010
+Just and save it.
+
+05:43.510 --> 05:44.890
+All right, so let's save that.
+
+05:46.120 --> 05:47.650
+Well, then go back over to our terminal.
+
+05:49.160 --> 05:53.060
+We're going to commit these three change packages on files and then push them up.
+
+05:53.690 --> 05:54.830
+They'll do a get add.
+
+05:56.010 --> 05:58.530
+I need to make sure I add everything from my root project directory.
+
+05:58.530 --> 06:00.470
+I cannot add from directly inside of off.
+
+06:00.840 --> 06:02.850
+I'll do a get add from ticketing.
+
+06:03.180 --> 06:06.660
+Now if I do a get status, I should see those three files added.
+
+06:08.350 --> 06:12.670
+All commit those changes with the message of added test script.
+
+06:13.800 --> 06:17.610
+And before we try to push these changes, we did just make a change to our master branch.
+
+06:17.610 --> 06:19.470
+So we have to pull those changes down first.
+
+06:19.890 --> 06:22.560
+So I'll do a get pull origin master.
+
+06:24.860 --> 06:26.570
+That's going to merge in those changes.
+
+06:26.570 --> 06:28.970
+Once again, you're going to be prompted with an editor.
+
+06:28.970 --> 06:30.650
+You can just close the editor out.
+
+06:31.970 --> 06:34.190
+Merge those changes in and now I can push these up.
+
+06:34.190 --> 06:36.590
+So get push origin master.
+
+06:40.550 --> 06:40.910
+All right.
+
+06:40.910 --> 06:44.990
+Just to make sure that we are totally on the same page at this point in time, we should be able to
+
+06:44.990 --> 06:51.200
+go back over to GitHub, refresh our repository, see all four workflow files inside the master branch
+
+06:51.200 --> 06:54.560
+in the GitHub workflows file folder.
+
+06:55.080 --> 07:00.590
+And I should be able to also go back over to my main ticketing directory, go into, say, the payments
+
+07:00.590 --> 07:06.620
+service, take a look at the package JSON file and see the test CI script inside there.
+
+07:06.620 --> 07:10.610
+And you should be able to see that test CI script inside of the orders payments.
+
+07:10.610 --> 07:12.350
+Tickets, services package.
+
+07:12.350 --> 07:13.370
+JSON files.
+
+07:14.170 --> 07:14.470
+All right.
+
+07:14.470 --> 07:15.920
+So we've taken a long time here.
+
+07:15.940 --> 07:17.220
+So let's now take a pause.
+
+07:17.230 --> 07:18.490
+We're going to come back the next video.
+
+07:18.490 --> 07:20.840
+Make one more change to our dev branch.
+
+07:20.860 --> 07:25.570
+Push it up and then make sure that we run all the tests over our entire project in parallel.
+
+07:25.870 --> 07:27.820
+So we'll take care of that in just a moment.

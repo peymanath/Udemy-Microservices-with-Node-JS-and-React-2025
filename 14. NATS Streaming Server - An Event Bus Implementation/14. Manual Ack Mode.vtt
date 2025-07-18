@@ -1,0 +1,496 @@
+WEBVTT
+
+00:01.850 --> 00:06.800
+In the last video, we added in a second argument to the subscribe call to set up that Q group.
+
+00:06.830 --> 00:10.580
+Now it turns out that there are many other ways that we can customize a subscription.
+
+00:11.000 --> 00:15.260
+Only the first two arguments that you see right here, which is the name of the channel we want to listen
+
+00:15.260 --> 00:18.740
+for, and the Q group name are provided as simple strings.
+
+00:18.770 --> 00:22.970
+All the other options that we're going to provide to a subscribed call are going to be a little bit
+
+00:22.970 --> 00:24.380
+more complex to set up.
+
+00:24.410 --> 00:28.580
+Let me first show you how we can set some other options and we'll describe some of the different options
+
+00:28.580 --> 00:32.430
+that we very frequently want to change right above the subscription itself.
+
+00:32.450 --> 00:38.810
+I'm going to create a new variable called Options, and I'm going to get this from Stan subscription
+
+00:38.840 --> 00:40.190
+options like so.
+
+00:41.230 --> 00:47.830
+Now for most libraries in the JavaScript world, you would expect to set some options by maybe passing
+
+00:47.830 --> 00:50.440
+in an object to this or something like that.
+
+00:50.620 --> 00:53.890
+Well, that's not how it works with the node in that streaming library.
+
+00:54.010 --> 00:58.780
+Instead, if we want to set any additional options on this thing, we're going to change them on as
+
+00:58.780 --> 01:00.160
+additional method calls.
+
+01:00.280 --> 01:06.070
+So there are other options we can set on here, such as set deliver, all available.
+
+01:08.060 --> 01:09.150
+Got a typo in there.
+
+01:09.170 --> 01:10.310
+Available.
+
+01:10.700 --> 01:14.630
+There's another option called set manual mode.
+
+01:15.110 --> 01:18.560
+There's other options such as set max in flight.
+
+01:18.920 --> 01:20.990
+So these are all different options we can set.
+
+01:20.990 --> 01:24.650
+And to set them, we're going to change them on to the subscription options call.
+
+01:24.770 --> 01:30.920
+So in total, we might decide to set several different options by doing something like Set Deliver all
+
+01:30.920 --> 01:31.880
+available.
+
+01:34.020 --> 01:36.090
+And then maybe something else like set.
+
+01:37.430 --> 01:39.920
+Terrible name and so on.
+
+01:39.950 --> 01:42.170
+So this is how we are going to eventually set options.
+
+01:42.170 --> 01:44.450
+We chain on a bunch of additional method calls.
+
+01:44.690 --> 01:46.880
+Right now, I do not want to set any of these options.
+
+01:46.880 --> 01:49.400
+In particular, I just want to give you a quick demonstration.
+
+01:49.400 --> 01:51.410
+So I'm going to delete those chained on statements.
+
+01:52.120 --> 01:56.800
+After we create that options object, we will then provide it as the third argument to the subscribe
+
+01:56.800 --> 01:57.390
+call.
+
+01:57.400 --> 01:59.920
+So we will put in options right there like so.
+
+02:01.070 --> 02:01.340
+All right.
+
+02:01.340 --> 02:03.440
+So that is how we generally set options.
+
+02:03.440 --> 02:05.750
+But what are some options we actually care about?
+
+02:05.960 --> 02:07.080
+Well, let's now continue.
+
+02:07.100 --> 02:08.330
+We're going to take a look at a diagram.
+
+02:08.330 --> 02:13.250
+I'm going to show you one option that we're going to set for almost every subscription we create.
+
+02:13.610 --> 02:18.770
+So let's go back to our scenario where we have two separate copies of the Order service.
+
+02:19.400 --> 02:22.280
+Let's imagine that the Order Service has set up a queue group.
+
+02:23.000 --> 02:26.270
+And then maybe our publisher publishes some event to this channel.
+
+02:27.070 --> 02:30.620
+So as we just discussed, that streaming server is going to take this event.
+
+02:30.640 --> 02:35.020
+It's going to look at all the members of this queue group and decide to send the event off to just one
+
+02:35.020 --> 02:36.070
+of these services.
+
+02:36.370 --> 02:40.330
+So maybe in this case, the event is sent off to the first copy of the Order Service.
+
+02:41.190 --> 02:43.140
+So it's going to flow into the subscription.
+
+02:43.140 --> 02:48.090
+And then maybe inside there we decide to do some processing on that event and save some information
+
+02:48.090 --> 02:49.860
+to a database or something like that.
+
+02:50.580 --> 02:56.340
+Now let's further imagine for just a moment that as we go and try to save some data to that database,
+
+02:56.820 --> 02:58.680
+we fail entirely.
+
+02:58.710 --> 03:02.580
+Maybe we temporarily, temporarily lose our connection to the database.
+
+03:02.610 --> 03:06.090
+Maybe the database is down for some kind of upgrading or something like that.
+
+03:06.090 --> 03:11.580
+Or maybe the information we're trying to save is just plain invalid, and the database rejects the insertion
+
+03:11.580 --> 03:12.930
+or the save request.
+
+03:13.200 --> 03:19.440
+So whatever it is, let's imagine that as we tried to save data, we fail with some kind of error.
+
+03:20.470 --> 03:24.880
+Now, unfortunately, the default behavior, we can't change this and that's what we're going to use
+
+03:24.880 --> 03:26.230
+that options object for.
+
+03:26.260 --> 03:33.220
+The default behavior is to say that any time an event is received by a subscription, it is automatically
+
+03:33.220 --> 03:38.320
+marked as, Hey, we receive the event, this thing has been processed, everything is good to go.
+
+03:38.830 --> 03:43.540
+So the default behavior is if we end up with any kind of air inside of our subscription, when we receive
+
+03:43.540 --> 03:49.150
+that event, the event is essentially lost and we do not get some follow up opportunity to process it
+
+03:49.150 --> 03:50.620
+again or something like that.
+
+03:50.770 --> 03:55.750
+Now I want to repeat for a third time, this is the default behavior and we can change it and we definitely
+
+03:55.750 --> 03:56.470
+want to.
+
+03:57.100 --> 04:01.360
+The reason we would want to change this default behavior is that maybe there's some really, really
+
+04:01.360 --> 04:03.340
+critical information inside this event.
+
+04:03.640 --> 04:08.260
+For example, maybe this event has some information about a payment that a user just made.
+
+04:08.260 --> 04:13.030
+And we need to make sure that the order service knows that a payment was just created so that we can
+
+04:13.030 --> 04:15.730
+actually ship them some goods or something like that.
+
+04:17.250 --> 04:21.750
+So we really need to make sure that every single time we receive an event, if we end up with any kind
+
+04:21.750 --> 04:27.840
+of error, we have to somehow figure out how we can reprocess this event or attempt to process it a
+
+04:27.840 --> 04:28.710
+second time.
+
+04:29.750 --> 04:30.710
+So to do so.
+
+04:30.740 --> 04:34.340
+Like I said, we're going to add in an option to this options object.
+
+04:34.640 --> 04:37.160
+In particular, we're going to add in an option.
+
+04:37.880 --> 04:43.430
+Called set manual EQ mode and we're going to pass in true like so.
+
+04:44.510 --> 04:45.890
+So what does this option do?
+
+04:46.040 --> 04:50.360
+Well, as you can kind of guess from the name, it sets the manual EQ.
+
+04:50.360 --> 04:53.480
+EQ is short for acknowledgement mode to true.
+
+04:54.300 --> 04:59.580
+Like I said, the default behavior with all of our subscriptions is that as soon as we receive the event,
+
+04:59.760 --> 05:04.680
+the no net streaming library is going to turn back around to the net server and say, Hey, we received
+
+05:04.680 --> 05:06.360
+the event, everything is good to go.
+
+05:06.660 --> 05:12.210
+But if we rely upon that default behavior, if anything goes incorrectly inside of our message handler
+
+05:12.210 --> 05:13.610
+right here, then that's it.
+
+05:13.620 --> 05:15.510
+We're never going to hear about this event again.
+
+05:16.230 --> 05:18.900
+By setting manual mode to true.
+
+05:19.500 --> 05:24.240
+The No Nat streaming library is no longer going to automatically acknowledge or tell the Nat streaming
+
+05:24.240 --> 05:26.550
+library that we have received the event.
+
+05:26.550 --> 05:32.790
+And instead it will be up to you and I to run some processing on that event, possibly save some information
+
+05:32.790 --> 05:36.640
+to the database, and then after that entire process is complete.
+
+05:36.660 --> 05:42.810
+Only after will we then acknowledge the message and say, okay, everything has been processed successfully.
+
+05:44.030 --> 05:49.130
+If we do not acknowledge the incoming event, then the Nordstrom server is going to wait some amount
+
+05:49.130 --> 05:49.690
+of time.
+
+05:49.700 --> 05:51.650
+I believe it's 30 seconds by default.
+
+05:51.650 --> 05:56.510
+And then after 30 seconds of not getting an acknowledgement, it's going to automatically decide to
+
+05:56.540 --> 06:00.740
+take that event and send it on to some other member of that group.
+
+06:00.740 --> 06:05.270
+Or possibly if there's if we're not a part of a group, just send it back to the same service again
+
+06:05.270 --> 06:08.630
+and allow it to give it to have another shot at processing this thing.
+
+06:09.690 --> 06:15.510
+So let's add on manual mode of true and then going to save this file and we're going to see what happens
+
+06:15.510 --> 06:19.470
+if we do not add in any code to acknowledge that incoming event.
+
+06:20.180 --> 06:21.650
+So I'm going to go back over to my terminal.
+
+06:22.870 --> 06:24.260
+Looks like they've both restarted.
+
+06:24.270 --> 06:26.550
+They should now be in manual mode.
+
+06:26.550 --> 06:30.750
+So I'm now going to send another event by doing it over here.
+
+06:31.110 --> 06:36.090
+So let's see over here that now the second listener for me has received the event, but I am not going
+
+06:36.090 --> 06:37.170
+to acknowledge it.
+
+06:37.380 --> 06:41.850
+So right now that streaming server is pretty much just sitting there saying, okay, I sent them the
+
+06:41.850 --> 06:43.620
+event, but I haven't heard back yet.
+
+06:43.620 --> 06:48.630
+Gee, I sure hope everything is going okay and it's just sitting twiddling its thumbs, waiting to get
+
+06:48.630 --> 06:50.490
+an acknowledgement for the event.
+
+06:50.490 --> 06:54.870
+But we are not sending it because we are in manual mode.
+
+06:54.870 --> 06:59.100
+You and I have to add in some code to manually say, Hey, we received this event.
+
+07:00.170 --> 07:03.260
+And then after about 30 seconds, it looks like 30 seconds just passed.
+
+07:03.260 --> 07:07.970
+And that streaming server eventually gives up and says, okay, I don't think they processed this event
+
+07:07.970 --> 07:08.830
+successfully.
+
+07:08.840 --> 07:14.390
+I'm just going to go ahead and send it to another copy or another member of this group or possibly the
+
+07:14.390 --> 07:17.480
+same service if this thing is not a member of a queue group.
+
+07:17.750 --> 07:22.970
+And so that's why after 30 seconds, we saw event number 59, which is the same one up here, up here.
+
+07:23.300 --> 07:27.800
+Now, even for this first copy of the listener, we are not going to acknowledge this message either.
+
+07:27.800 --> 07:33.050
+So after another 30 seconds, that streaming server is going to say, okay, they failed as well.
+
+07:33.080 --> 07:35.780
+I'm going to try back with this original person down here.
+
+07:35.930 --> 07:37.880
+So it's going to send off event 59.
+
+07:37.880 --> 07:39.680
+Back to this first one again and again.
+
+07:39.680 --> 07:40.910
+We're not going to acknowledge it.
+
+07:40.910 --> 07:44.450
+Nats is going to wait another 30 seconds and i think you get the idea.
+
+07:45.610 --> 07:46.920
+So we can fix this.
+
+07:46.930 --> 07:53.290
+If we go back over to our subscription handler right here and then at some point in time inside of here,
+
+07:53.290 --> 07:59.020
+we have to call MSG, dot EC, and that's pretty much it.
+
+07:59.690 --> 08:04.280
+So Eck is going to tell the node net streaming library to reach back out to the gnat streaming server
+
+08:04.280 --> 08:07.550
+and tell it Hey, we received the message and it has been processed.
+
+08:07.820 --> 08:09.260
+So if we now save this.
+
+08:10.210 --> 08:11.110
+Flip back over.
+
+08:12.280 --> 08:15.280
+We are still processing event number 59.
+
+08:15.820 --> 08:20.770
+So that message is still out there in the wild and that streaming server is still trying to successfully
+
+08:20.770 --> 08:22.540
+deliver it to our cue group.
+
+08:22.810 --> 08:27.790
+So now at some point in time, we should see that message appear after about 30 seconds or so inside
+
+08:27.790 --> 08:28.990
+of these two windows.
+
+08:28.990 --> 08:29.860
+One of these two.
+
+08:30.070 --> 08:31.330
+And there it is right there.
+
+08:31.840 --> 08:35.200
+So now we receive 59 for like the fifth time or so.
+
+08:35.200 --> 08:38.860
+And as soon as we received it, we have now acknowledged that incoming event.
+
+08:39.190 --> 08:43.510
+And since we have acknowledged it, now that streaming server says, okay, it's been delivered, I'm
+
+08:43.510 --> 08:44.010
+done.
+
+08:44.020 --> 08:46.450
+I don't have to worry about Event 59 anymore.
+
+08:47.080 --> 08:48.310
+Now, quick note.
+
+08:48.310 --> 08:53.440
+If you do not see after restarting this thing, if you do not see another console log right here of
+
+08:53.440 --> 08:57.340
+event 59 or whatever number it is for you that is okay.
+
+08:57.520 --> 09:01.870
+So as soon as you add it in this message, stack right here and then save the file.
+
+09:01.870 --> 09:08.910
+If you did not see any further console logs, even if you dispatch another event, that is totally fine.
+
+09:08.920 --> 09:11.320
+I'm going to show you why that is in just a little bit.
+
+09:12.110 --> 09:12.410
+All right.
+
+09:12.410 --> 09:13.220
+So in total.
+
+09:14.430 --> 09:15.420
+That is.
+
+09:16.480 --> 09:18.880
+Our option of set manual mode.
+
+09:19.300 --> 09:22.870
+We put that in to make sure that we can successfully complete processing.
+
+09:22.870 --> 09:26.230
+And if we do not complete processing, maybe there's some error inside of here.
+
+09:26.230 --> 09:28.060
+We will not act the message.
+
+09:28.210 --> 09:32.560
+And that means that Nat streaming server is going to try to re deliver that message again so we get
+
+09:32.560 --> 09:34.600
+another opportunity to process it.
+
+09:35.230 --> 09:40.450
+I apologize for this really long video, but as you can guess, this manual mode to true is an extremely
+
+09:40.450 --> 09:45.130
+important setting because it's going to make sure that we always get the opportunity to process data
+
+09:45.130 --> 09:48.700
+even if something goes wrong in processing it in some earlier attempt.
+
+09:49.330 --> 09:51.910
+So let's pause right here and continue in just a moment.

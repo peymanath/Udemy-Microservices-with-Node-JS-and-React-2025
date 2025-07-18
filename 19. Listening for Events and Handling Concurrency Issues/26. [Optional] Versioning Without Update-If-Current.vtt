@@ -1,0 +1,988 @@
+WEBVTT
+
+00:01.070 --> 00:03.770
+This is going to be a optional video, 100% optional.
+
+00:03.770 --> 00:07.880
+So if you just want to stay focused on the topic at hand, pause the video right now and continue on.
+
+00:07.910 --> 00:11.060
+Otherwise, stick around and I'll tell you what we're going to discuss in this video.
+
+00:11.360 --> 00:16.430
+So I want you to notice how between our ticket service and the order service, we use that exact same
+
+00:16.430 --> 00:18.800
+module to manage all that versioning stuff.
+
+00:18.980 --> 00:21.200
+So we made use in both services.
+
+00:22.160 --> 00:25.580
+Of that module called Mongoose Update if current.
+
+00:25.760 --> 00:28.550
+Now, to be honest with you, that was kind of cheating.
+
+00:28.550 --> 00:33.100
+We are kind of cheating by using this module inside of both these different services.
+
+00:33.110 --> 00:34.340
+Let me tell you why.
+
+00:34.730 --> 00:40.940
+By using this service or that module, we are able to assume that this orders database right here in
+
+00:40.940 --> 00:44.420
+all the tickets inside of it are essentially going to manage themselves.
+
+00:44.420 --> 00:47.690
+So in other words, whenever we have some incoming event, come in.
+
+00:48.500 --> 00:53.210
+We're going to go through that process of subtracting the version number to find the appropriate record.
+
+00:53.240 --> 00:55.490
+We then apply some updates to that record.
+
+00:55.490 --> 01:01.670
+And then specifically, the real gotcha here is that this module, when we save the updated ticket,
+
+01:01.670 --> 01:06.530
+it is going to take the version number right here already inside of our database and increment it by
+
+01:06.530 --> 01:07.100
+one.
+
+01:07.610 --> 01:12.650
+So that module alone is responsible for updating the version number inside of our orders database right
+
+01:12.650 --> 01:13.100
+now.
+
+01:13.640 --> 01:14.800
+Is that a bad thing?
+
+01:14.810 --> 01:16.880
+Well, I would argue, yes, it is.
+
+01:16.880 --> 01:17.900
+And here's why.
+
+01:18.200 --> 01:21.470
+Right now, we are 100% aware of where these events are coming from.
+
+01:21.470 --> 01:25.910
+We know they are coming from the ticket service and we know exactly how the version numbers work inside
+
+01:25.910 --> 01:26.990
+that ticket service.
+
+01:26.990 --> 01:31.280
+We know that they start off at zero and they are incremented by one every single time.
+
+01:31.700 --> 01:38.120
+So we are able to make use of the mongoose update if current module inside the order service just because
+
+01:38.120 --> 01:42.410
+it matches the exact same versioning semantics as the ticket service.
+
+01:42.860 --> 01:48.050
+But there might be some kind of scenario out there at some future point in time where these ticket updated
+
+01:48.050 --> 01:51.590
+events are coming from a totally different kind of database.
+
+01:51.590 --> 01:53.360
+Maybe it's not a mongo database.
+
+01:53.360 --> 01:54.860
+Maybe it's something that doesn't use Mongoose.
+
+01:54.860 --> 01:57.890
+It might be a totally different kind of information store.
+
+01:58.130 --> 02:03.410
+And with these other kinds of information stores, we cannot necessarily always rely on them using the
+
+02:03.410 --> 02:09.470
+exact same versioning semantics as this mongoose mongoose update if current module.
+
+02:10.610 --> 02:16.340
+So inside of some alternate universe, we might have these events coming in from some other part of
+
+02:16.340 --> 02:19.610
+our application we don't really know, and they still might look identical.
+
+02:19.610 --> 02:22.850
+So they're still ticket created, ticket updated, tick up, ticket updated.
+
+02:22.850 --> 02:27.380
+But they might have an entirely different schema for applying versioning numbers.
+
+02:27.380 --> 02:32.930
+So they might start off with a version number of 100 and then increment by 100 for every successive
+
+02:32.930 --> 02:33.620
+version.
+
+02:33.620 --> 02:38.690
+And if that was the case, we could definitely not make use of this very easy to use module inside of
+
+02:38.690 --> 02:44.120
+our order service because it is always assuming that our versioning starts off at zero and increments
+
+02:44.120 --> 02:46.730
+by one every single time an update is issued.
+
+02:48.170 --> 02:53.810
+Besides having this very different kind of versioning, where we start off at 100 increment by 100 every
+
+02:53.810 --> 02:58.520
+single time, there might be some other database that's emitting these events or some other service
+
+02:58.520 --> 02:59.540
+that's emitting these events.
+
+02:59.540 --> 03:04.160
+And they might use a version that is a timestamp to indicate when this record was saved.
+
+03:04.900 --> 03:09.950
+And so once again, maybe that time stamp doesn't work too well with the Mongoose plugin we are using
+
+03:09.950 --> 03:14.870
+the mongoose plug in we are using does technically support time stamps, but let's imagine for whatever
+
+03:14.870 --> 03:18.020
+reason, these time stamps are not interoperable.
+
+03:18.020 --> 03:18.800
+For some reason.
+
+03:18.800 --> 03:19.280
+Who knows?
+
+03:19.280 --> 03:19.820
+I don't know.
+
+03:19.820 --> 03:24.260
+The point here is that we are kind of cheating by allowing all these version numbers inside the orders
+
+03:24.260 --> 03:27.290
+database to just be managed by that plugin.
+
+03:27.530 --> 03:32.990
+So the goal of this video, what I want to do, I want to try to remove that plugin from the orders
+
+03:32.990 --> 03:37.520
+service and I want to show you how we could implement all the same versioning kind of stuff and manage
+
+03:37.520 --> 03:43.160
+the version numbers, increment the version numbers on our own rather than relying upon the module that
+
+03:43.160 --> 03:43.850
+we installed.
+
+03:43.850 --> 03:45.020
+So that's the goal of this video.
+
+03:45.110 --> 03:47.240
+So if that doesn't sound interesting, no problem.
+
+03:47.240 --> 03:49.160
+Just pause video, skip on ahead.
+
+03:49.160 --> 03:52.970
+Just, you know, we are going to revert all the changes we're going to make in this video.
+
+03:52.970 --> 03:58.160
+So this is solely for informational purposes, just to understand that we are not really tightly coupled
+
+03:58.160 --> 04:01.260
+to this versioning module that we just installed yet.
+
+04:01.280 --> 04:03.890
+So with all that in mind, the first thing we have to do.
+
+04:04.790 --> 04:08.600
+To somehow replace this plug in is understand what it actually does.
+
+04:08.930 --> 04:12.170
+So there's really two primary goals of that plug in right now.
+
+04:12.200 --> 04:13.280
+Here's what it really does.
+
+04:14.140 --> 04:18.790
+So it's going to update the version number by one on records before they get saved.
+
+04:18.820 --> 04:20.050
+That's step number one.
+
+04:20.050 --> 04:21.310
+That's the first thing it does.
+
+04:22.350 --> 04:26.780
+The second thing that it really does is it customizes the find and update operation.
+
+04:26.790 --> 04:29.100
+So remember, that's when we actually save a record.
+
+04:29.820 --> 04:31.230
+When we save a record.
+
+04:31.320 --> 04:36.300
+Mongoose is going to make that request over to Mongo and it's going to say not only try to find some
+
+04:36.300 --> 04:41.010
+record with this ID and update it, this module is also going to modify that query and change it into
+
+04:41.010 --> 04:45.870
+find a record with this ID and this particular version number and update it.
+
+04:46.380 --> 04:48.900
+So that's the two things that this module is really doing for us.
+
+04:49.170 --> 04:52.950
+So these are the two behaviors that we need to somehow replace, so to speak.
+
+04:53.740 --> 04:55.630
+We're going to first focus on step number one.
+
+04:55.630 --> 05:00.310
+How are we going to somehow make sure that this version number can somehow get updated or whatever it
+
+05:00.310 --> 05:02.680
+is without having to rely on this module?
+
+05:03.130 --> 05:04.090
+Well, for that.
+
+05:05.100 --> 05:06.720
+I'm going to go back over to my listener.
+
+05:08.310 --> 05:13.080
+So inside the listener, at some point in time, we take some information out of this incoming event,
+
+05:13.080 --> 05:15.150
+set it on our ticket, and then save it.
+
+05:15.600 --> 05:20.880
+There is technically another piece of information on this data object, the version property.
+
+05:21.030 --> 05:26.730
+So the version that is contained inside the event is what we want to update our local ticket to have.
+
+05:26.730 --> 05:29.220
+Remember, that was super key and all these flow diagrams.
+
+05:29.220 --> 05:34.920
+So we went through back over here every single time we had said that we were going to say process this
+
+05:34.920 --> 05:38.640
+event, we were going to find the appropriate record inside the database by taking that version right
+
+05:38.640 --> 05:41.310
+there, subtracting one, and then finding the appropriate record.
+
+05:41.550 --> 05:43.410
+We would find this record right here.
+
+05:43.410 --> 05:49.500
+We would then update the price and then update the version on this thing to really not just incremented
+
+05:49.500 --> 05:54.960
+by one, but really what we're doing here is incrementing it to be equal to the version inside of this
+
+05:54.960 --> 05:55.620
+event.
+
+05:56.040 --> 06:00.450
+And so right now we are able to rely upon that plugin because it's going to increment by one for us
+
+06:00.450 --> 06:02.640
+automatically, which is really what we want.
+
+06:02.640 --> 06:06.390
+But again, what if this was a totally discontinuous version number?
+
+06:06.390 --> 06:09.060
+What if it was incrementing by 100 or something like that?
+
+06:09.060 --> 06:13.710
+Well, then we would have to somehow jump in and extract that version number and assign it to our record
+
+06:13.710 --> 06:14.820
+inside the database.
+
+06:16.310 --> 06:17.780
+So we would take three.
+
+06:17.810 --> 06:22.910
+Not just because we are taking two plus one, but we would assign version three specifically because
+
+06:22.910 --> 06:25.520
+that is what is inside this event right here.
+
+06:26.530 --> 06:32.410
+So how we can reflect that inside of our code when we pull off some data from or some information from
+
+06:32.440 --> 06:35.920
+that data object and then set it on our document and save it.
+
+06:35.950 --> 06:40.120
+We could also just pull off the version, assign it to our document.
+
+06:41.110 --> 06:42.010
+And that's it.
+
+06:42.840 --> 06:46.620
+So this now achieves the exact same thing that that plugin was doing for us.
+
+06:46.620 --> 06:51.300
+But now we are no longer coupled to this plug ins understanding of how these version numbers increment.
+
+06:51.300 --> 06:56.220
+Instead, we are using the precise version that was included inside of this data object.
+
+06:56.220 --> 06:59.580
+So now inside that data object, we could potentially have.
+
+07:01.500 --> 07:06.090
+Version numbers like this right here where they are incremented by 100 every single time, or we could
+
+07:06.090 --> 07:07.230
+potentially have timestamps.
+
+07:07.230 --> 07:08.160
+It really doesn't matter.
+
+07:08.160 --> 07:12.480
+We're just saying take whatever this new version number is inside this event, assign it to our record
+
+07:12.480 --> 07:15.030
+and save it, because now that is the current version.
+
+07:15.680 --> 07:18.190
+That can solve step number one right here.
+
+07:18.200 --> 07:23.180
+As easy as that was, we're just copying over that one property and that kind of handles this idea of
+
+07:23.180 --> 07:24.410
+updating that version number.
+
+07:25.070 --> 07:29.870
+So now step number two, we need to make sure that when we reach into our database to save this record,
+
+07:29.870 --> 07:32.720
+we need to somehow customize the query that is used.
+
+07:33.820 --> 07:36.340
+So this is where life gets just a little bit more challenging.
+
+07:37.330 --> 07:42.730
+I want to first show you some documentation over on Mongoose on how we can essentially inject something
+
+07:42.730 --> 07:44.920
+to customize this update operation.
+
+07:44.950 --> 07:48.300
+Now, just, you know, the mongoose documentation is not the best in the world.
+
+07:48.310 --> 07:52.870
+In addition, the TypeScript type definition file that we are using is also not really going to show
+
+07:52.870 --> 07:55.460
+us some information about this feature that I'm going to show you as well.
+
+07:55.480 --> 07:59.590
+So this is where we're going to get a little bit hacky, so to speak, just so you know.
+
+08:00.160 --> 08:06.460
+So if you take a look at the Mongoose documentation, we can see that on the model class, there's technically
+
+08:06.460 --> 08:08.530
+a dollar sign where property.
+
+08:09.370 --> 08:13.720
+And we can modify this dollar sign where property and this will attach some additional properties to
+
+08:13.720 --> 08:18.160
+the query that is executed when calling save and when is new is false.
+
+08:18.160 --> 08:23.770
+So in other words, long story short, this does exactly what that module does or what this update if
+
+08:23.770 --> 08:24.850
+current plugin does.
+
+08:25.210 --> 08:30.760
+This can allow us to kind of inject some additional criteria on the query that is issued when we try
+
+08:30.760 --> 08:31.870
+to update a record.
+
+08:31.870 --> 08:36.910
+So this is where we can add in some additional step and say, hey, we don't only want to find the record
+
+08:36.910 --> 08:41.110
+with the correct ID, we also want to find some correct record with the correct version and then update
+
+08:41.110 --> 08:41.950
+that record.
+
+08:42.460 --> 08:47.080
+So this property right here is essentially how we would kind of override or add in some additional query
+
+08:47.080 --> 08:47.830
+properties.
+
+08:49.040 --> 08:53.090
+Now, the reason I mentioned that the documentation is not great and that the type definition file is
+
+08:53.090 --> 08:56.600
+not great, is that understanding how to actually set this thing is a little bit challenging.
+
+08:56.600 --> 09:00.170
+So again, this is where life is going to get just a little bit hacky, but let's just write out the
+
+09:00.170 --> 09:02.510
+code and see where it goes.
+
+09:02.630 --> 09:06.590
+So back inside of my ticket muddle definition file.
+
+09:06.590 --> 09:08.780
+So this again is inside the order service.
+
+09:08.780 --> 09:11.210
+So inside of order service models tickets.
+
+09:12.430 --> 09:13.510
+I'm going to scroll down.
+
+09:16.410 --> 09:18.150
+Right after we set our ticket schema.
+
+09:19.060 --> 09:19.990
+And the plug in.
+
+09:20.500 --> 09:24.540
+While I'm here, I'm going to comment out the plugin so that we're not using this thing at all anymore.
+
+09:24.550 --> 09:26.170
+So now we're kind of on our own, right?
+
+09:26.170 --> 09:30.820
+We have to make sure that whenever we try to write some record to the database, we are writing to the
+
+09:30.820 --> 09:33.670
+correct record or the record with the right ID and the right version.
+
+09:35.010 --> 09:39.540
+So right after that, we're going to set up a pre save hook.
+
+09:42.370 --> 09:43.660
+Three, not preve.
+
+09:44.480 --> 09:48.380
+So this is a middleware that's going to run any time that we try to save a record.
+
+09:50.670 --> 09:54.240
+We're going to make sure that we provide a function with the function keyword because like many other
+
+09:54.240 --> 09:58.350
+middleware in Mongoose, the value of the document that we're trying to save is available inside this
+
+09:58.350 --> 09:59.670
+function as this.
+
+09:59.970 --> 10:04.110
+And if we used an arrow function here that would override the value of this inside the function, and
+
+10:04.110 --> 10:06.200
+all of a sudden things would not work as expected.
+
+10:06.210 --> 10:08.400
+We must make use of the function keyword.
+
+10:09.060 --> 10:12.900
+Also, remember that this function is going to receive a single argument of done.
+
+10:12.900 --> 10:16.740
+This is a callback function that we have to manually invoke once we've done everything we intend to
+
+10:16.740 --> 10:19.110
+do inside of this this middleware.
+
+10:19.350 --> 10:20.280
+My apologies.
+
+10:20.280 --> 10:21.570
+They're back over here.
+
+10:22.390 --> 10:28.630
+So inside of here, we are going to dynamically or kind of on the fly or reassign that dollar sign where
+
+10:28.630 --> 10:34.210
+property and we're going to put in some additional criteria on the save operation in how Mongoose is
+
+10:34.210 --> 10:37.960
+going to find the record to actually overwrite or update inside of MongoDB.
+
+10:38.440 --> 10:40.330
+We're going to say this dollar sign where?
+
+10:42.700 --> 10:44.890
+Is going to be an object.
+
+10:45.800 --> 10:52.310
+We're going to set version equal to whatever the current version is, minus one.
+
+10:52.700 --> 10:56.360
+So we'll say this target version.
+
+10:57.140 --> 10:58.460
+Minus one.
+
+10:59.000 --> 11:00.740
+And then right after that, I'm going to call Dunn.
+
+11:00.980 --> 11:04.700
+And you're going to notice that we get an error right here on Dollar Sign, where if I mouse over,
+
+11:04.700 --> 11:07.850
+it's going to say that a document does not have a dollar sign where property.
+
+11:07.880 --> 11:11.600
+So this is where the typescript type definition file for mongoose falls a little bit short.
+
+11:11.600 --> 11:13.610
+It doesn't understand that this property exists.
+
+11:13.610 --> 11:16.400
+So this is something that's kind of erroneous on TypeScript side.
+
+11:16.400 --> 11:18.560
+TypeScript just doesn't quite understand what's going on here.
+
+11:18.560 --> 11:22.340
+So this is another scenario where we're going to tell TypeScript, hey, just don't sweat it.
+
+11:22.370 --> 11:23.720
+We know what we're doing here.
+
+11:24.080 --> 11:26.540
+I'm going to put in a ignore like so.
+
+11:27.410 --> 11:28.790
+Just to get that air to go away.
+
+11:29.330 --> 11:30.240
+So what is this going to do?
+
+11:30.260 --> 11:31.400
+Well, it can do the exact same thing.
+
+11:31.430 --> 11:33.020
+Do we saw it in many of those different diagrams.
+
+11:33.020 --> 11:38.420
+When we reach out to MongoDB to save this record, we're not only going to say try to find a record
+
+11:38.420 --> 11:43.790
+with some appropriate ID, but also a version equal to the current version minus one.
+
+11:44.300 --> 11:47.180
+Now the minus one right here once again makes a really big assumption.
+
+11:47.180 --> 11:50.840
+It assumes that we are incrementing all these version numbers by one every single time.
+
+11:51.080 --> 11:52.760
+So if you were in a scenario.
+
+11:54.300 --> 11:58.110
+Where the version numbers were, say, being invented by 100.
+
+11:58.140 --> 12:02.820
+This is where to find the previous version, the one that we are trying to reach into our database and
+
+12:02.820 --> 12:03.330
+update.
+
+12:03.330 --> 12:07.860
+This is where we would change this -1 to -100 or whatever else.
+
+12:08.220 --> 12:12.180
+So this function right here is pretty much where we get the ability to kind of modify how the version
+
+12:12.180 --> 12:13.650
+is being changed over time.
+
+12:14.380 --> 12:16.960
+But in this case we actually are incrementing the version number by one.
+
+12:16.960 --> 12:19.210
+So we would put in simply minus one right here.
+
+12:20.520 --> 12:22.100
+And believe it or not, that is it.
+
+12:22.110 --> 12:24.750
+We now do not need that plug in anymore.
+
+12:25.480 --> 12:28.500
+So now to test this out, I'm going to save this file and I'm going to save the listener.
+
+12:29.190 --> 12:33.120
+And then we're going to attempt to create a new ticket and then we'll update it once or twice.
+
+12:33.120 --> 12:34.470
+And we're going to see that.
+
+12:34.470 --> 12:36.810
+Well, everything still works as expected.
+
+12:38.340 --> 12:40.020
+So I'm going to go back over to Postman.
+
+12:43.950 --> 12:45.210
+There we go in postman.
+
+12:45.210 --> 12:46.500
+I'm going to create yet another ticket.
+
+12:46.500 --> 12:51.150
+So I got my post tap here to API tickets to get created.
+
+12:51.420 --> 12:54.990
+I'll then take the idea that ticket that was just created go to my put tab.
+
+12:54.990 --> 13:00.750
+So making input requests to API tickets and I'll paste in my ID for the ticket I just made and then
+
+13:00.750 --> 13:03.000
+I'll update the price on this 1 to 500.
+
+13:03.510 --> 13:04.590
+I'm going to send that off.
+
+13:04.890 --> 13:10.050
+I'm going to go over to my terminal scaffold once again and just make sure that I don't get any errors.
+
+13:10.050 --> 13:12.420
+So it looks like everything's still worked as expected.
+
+13:12.420 --> 13:16.530
+That version query is still working, even though we're not using that plug in.
+
+13:16.860 --> 13:19.710
+And now if I wanted to, I could make yet another price change right here.
+
+13:19.710 --> 13:22.650
+Let's say go to 2000, send that off.
+
+13:23.070 --> 13:24.390
+Go back over to scaffold.
+
+13:24.720 --> 13:25.020
+Yep.
+
+13:25.020 --> 13:30.240
+Looks like it still works as well and we no longer have any reliance upon that outside module.
+
+13:30.240 --> 13:35.400
+And so, like I said, we can't update all these version numbers on the fly to fit the schema of version
+
+13:35.400 --> 13:39.390
+numbers being used by this outside service, which we might not actually have control over.
+
+13:39.840 --> 13:44.250
+Now last thing I want mention here is that although I am not receiving any errors, you still might
+
+13:44.250 --> 13:47.100
+not believe that all the data is being saved correctly.
+
+13:47.190 --> 13:52.650
+So as a last little step, let's figure out how to reach directly into our orders service database.
+
+13:52.650 --> 13:55.950
+We're going to figure out how to reach directly in there, take a look at the tickets collection and
+
+13:55.950 --> 13:59.280
+just make sure that these this ticket is being saved with the appropriate ID.
+
+14:00.580 --> 14:06.340
+So to reach into the orders service and look at some information inside of it, we're going to open
+
+14:06.340 --> 14:08.950
+up a new tab inside of our terminal.
+
+14:09.430 --> 14:14.890
+We're going to do a little get pods and we're going to find the pod that is running our orders.
+
+14:14.890 --> 14:18.190
+MongoDB instance to mine.
+
+14:18.220 --> 14:19.750
+Yours is going to be named very similar to mine.
+
+14:19.750 --> 14:23.320
+It'll be orders MongoDB people and then some long ID after it.
+
+14:23.620 --> 14:27.120
+We're going to copy that name and then we'll execute CTL.
+
+14:27.190 --> 14:28.690
+Dash it.
+
+14:29.520 --> 14:33.310
+Then the pod name and then Mongo at the very end.
+
+14:33.330 --> 14:37.560
+So this is going to execute the command Mongo inside the container inside this pod.
+
+14:37.560 --> 14:41.730
+And that is what is going to open up the mongo shell where we can then start to run some queries directly
+
+14:41.730 --> 14:43.350
+against the MongoDB database.
+
+14:44.570 --> 14:46.520
+And I misspelt ctl.
+
+14:47.860 --> 14:48.340
+Excuse me.
+
+14:48.340 --> 14:50.270
+I missed the actual command inside of here.
+
+14:50.290 --> 14:50.980
+That was my mistake.
+
+14:51.670 --> 14:54.730
+I.T. exec or exec I.T.?
+
+14:54.760 --> 14:55.480
+There we go.
+
+14:56.170 --> 14:57.910
+Then the name.
+
+14:59.850 --> 15:00.540
+Then Mongo.
+
+15:00.570 --> 15:01.360
+My mistake.
+
+15:01.380 --> 15:02.160
+That's better.
+
+15:02.900 --> 15:02.980
+Okay.
+
+15:03.050 --> 15:07.460
+So once I run that, I now have my mongo shell and I can start to run some commands against my mongo
+
+15:07.460 --> 15:08.210
+database.
+
+15:08.660 --> 15:11.840
+Now we are going to have to do one or two little administrative commands inside of here.
+
+15:11.840 --> 15:15.800
+We're going to first list all the DB's that exist inside this database.
+
+15:16.310 --> 15:17.690
+So there's our orders database.
+
+15:17.690 --> 15:20.750
+That's what we want to actually connect to and run some queries inside of.
+
+15:21.020 --> 15:25.460
+So we'll write out use orders.
+
+15:26.400 --> 15:31.710
+And now we can write out DB tickets and that will access the tickets collection inside the order database.
+
+15:32.190 --> 15:35.580
+So again, the entire idea here is I want to try to find the ticket.
+
+15:36.210 --> 15:40.110
+We had just created a moment ago and update it twice and just make sure that it has the appropriate
+
+15:40.110 --> 15:41.740
+version number, price and so on.
+
+15:41.760 --> 15:43.860
+Make sure all this stuff is actually being saved correctly.
+
+15:45.310 --> 15:49.540
+So to do so I could run DB tickets dot find.
+
+15:50.700 --> 15:56.360
+And I'm going to try to find a ticket with a price equal to whatever you had last set inside of here.
+
+15:56.370 --> 15:58.200
+So for me, it's a price of 2000.
+
+16:01.330 --> 16:04.900
+I'll run that and then I'll see all the tickets that match that particular price.
+
+16:04.930 --> 16:08.300
+If you get too many records right here, just make one more update to your ticket.
+
+16:08.320 --> 16:09.820
+Give it a very unique price.
+
+16:09.820 --> 16:14.730
+Maybe something like 1982.3.
+
+16:14.740 --> 16:15.340
+I don't know.
+
+16:16.040 --> 16:17.120
+Send off that update.
+
+16:17.450 --> 16:20.510
+And now that you've got a much more unique price, you can run that query again.
+
+16:21.220 --> 16:23.470
+With 1982.3.
+
+16:25.670 --> 16:29.450
+So we'll see now inside of here that we've got the version all set up correctly.
+
+16:29.480 --> 16:31.880
+It has been incremented by one every single time.
+
+16:31.880 --> 16:36.920
+And, well, it's got the exact same functionality, more or less as the module that we had been using
+
+16:36.920 --> 16:37.670
+previously.
+
+16:37.700 --> 16:39.380
+The update if current plugin.
+
+16:39.800 --> 16:40.520
+That's pretty much it.
+
+16:40.520 --> 16:45.530
+That is how we would implement this stuff on our own if we were using some kind of versioning schema
+
+16:45.530 --> 16:48.660
+that was not the same as the one that is assumed by this plugin.
+
+16:48.680 --> 16:53.090
+Again, this is most relevant if you're starting to get some events from some other service that uses
+
+16:53.090 --> 16:58.580
+a very different kind of database or maybe maybe it's not even using versions in the hundreds.
+
+16:58.580 --> 17:01.750
+I don't know of any database that does anything even remotely like that.
+
+17:01.760 --> 17:03.710
+I just want you to know that this was an option.
+
+17:04.460 --> 17:09.050
+What might be actually kind of relevant or appropriate is if there's some other versioning system where
+
+17:09.050 --> 17:12.830
+they don't start at versions of zero, maybe the first version as the version of one.
+
+17:12.830 --> 17:17.960
+Instead, that would have a different schema for versioning than this plugin and potentially things
+
+17:17.960 --> 17:18.920
+could start to break.
+
+17:19.600 --> 17:19.930
+Okay.
+
+17:19.930 --> 17:20.980
+So enough talking.
+
+17:21.010 --> 17:24.850
+Again, this is just kind of optional stuff just for something for you to know on the side.
+
+17:24.880 --> 17:26.700
+I am going to undo all the changes.
+
+17:26.710 --> 17:28.330
+We are going to stick with this plug in.
+
+17:28.870 --> 17:30.890
+Not the best assumption, not the best thing to use.
+
+17:30.910 --> 17:32.260
+Like I said, we're kind of cheating here.
+
+17:32.290 --> 17:35.170
+Nonetheless, I'm going to make use of it nonetheless.
+
+17:35.920 --> 17:38.770
+So I'm going to delete the middleware that is put together.
+
+17:39.250 --> 17:40.720
+I'm going to uncomment the plug in.
+
+17:43.880 --> 17:46.850
+I don't think there are any other changes we made inside of here.
+
+17:46.940 --> 17:48.590
+So I'm going to save this file.
+
+17:48.740 --> 17:53.450
+I'll then go back over to the listener and no longer are we going to copy that version number over.
+
+17:53.840 --> 17:59.360
+So I'll delete where we were pulling version off data and make sure I do not set it on the ticket anymore.
+
+18:00.460 --> 18:04.300
+So I'm going to save this and then I'm going to go and make one last test inside of Postman.
+
+18:04.310 --> 18:06.610
+Just make sure everything still works as expected.
+
+18:06.640 --> 18:10.870
+I'll change my price this time to how about 103.3?
+
+18:12.420 --> 18:13.290
+Send that off.
+
+18:13.680 --> 18:18.270
+I'm now onto version four and so go run a quick query inside of MongoDB once again.
+
+18:19.560 --> 18:20.820
+103.3.
+
+18:20.970 --> 18:21.480
+Yep.
+
+18:21.870 --> 18:22.530
+Version four.
+
+18:22.530 --> 18:23.310
+Fantastic.
+
+18:23.310 --> 18:27.240
+So we just swapped back over to that plug in and everything still worked as expected.
+
+18:27.240 --> 18:28.140
+Pretty awesome.
+
+18:28.680 --> 18:28.810
+Yeah.
+
+18:28.920 --> 18:30.370
+So again, just option a little video.
+
+18:30.390 --> 18:31.110
+Hope you enjoyed it.
+
+18:31.110 --> 18:33.930
+Let's take a pause right here and continue with our app in just a moment.

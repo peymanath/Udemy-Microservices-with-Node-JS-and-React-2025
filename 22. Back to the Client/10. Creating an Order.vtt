@@ -1,0 +1,385 @@
+WEBVTT
+
+00:01.460 --> 00:03.890
+Let's continue working on this ticket show component.
+
+00:03.890 --> 00:09.020
+So inside of here, we need to implement a get initial props function so we can load up some information
+
+00:09.020 --> 00:11.180
+about the ticket that we're trying to display to the user.
+
+00:11.630 --> 00:15.770
+So we'll add in a ticket show, get initial props.
+
+00:16.220 --> 00:17.810
+This will be an async function.
+
+00:19.520 --> 00:24.650
+And then we're going to receive the first two arguments of context and client.
+
+00:25.840 --> 00:28.800
+So context is going to be a very important argument in this case.
+
+00:28.840 --> 00:32.620
+The reason for that is that whenever we navigate to this ticket show component, we're going to have
+
+00:32.620 --> 00:38.080
+that ID inside the URL and we need to extract that ID so that we can understand exactly what ticket
+
+00:38.080 --> 00:41.650
+we're trying to fetch information about to extract that ID.
+
+00:42.810 --> 00:47.190
+We're going to take ticket ID from context dot query.
+
+00:48.440 --> 00:53.210
+We are specifically pulling out a property called Ticket ID because that is what we named this file.
+
+00:53.240 --> 00:58.100
+So whatever you name the file inside those square brackets, that is the query or part of the query
+
+00:58.100 --> 00:59.480
+that is going to be extracted.
+
+01:00.700 --> 01:05.590
+So now that ticket ID, we can take it and use it to make a request off to our API, specifically the
+
+01:05.590 --> 01:06.520
+ticket service.
+
+01:07.320 --> 01:09.360
+The endpoint that we're going to try to reach out to.
+
+01:09.390 --> 01:13.140
+We take a look at our ticket service really quickly is the show route.
+
+01:13.140 --> 01:17.430
+So we need to make a get request to API tickets and then the actual ID.
+
+01:21.750 --> 01:23.970
+So I'm going to extract data.
+
+01:24.890 --> 01:32.510
+From a weight Lionsgate and we'll use a template string here so make sure you got the back ticks API
+
+01:32.510 --> 01:34.850
+tickets ticket ID.
+
+01:36.510 --> 01:39.390
+And then we can return a object here.
+
+01:40.020 --> 01:43.650
+I'm going to assign data to the ticket property.
+
+01:43.650 --> 01:48.360
+So very similar to what we just saw inside of our index file or the landing page.
+
+01:48.390 --> 01:53.340
+This object right here is now going to be merged into all the different props that are provided to ticket
+
+01:53.340 --> 01:53.850
+show.
+
+01:54.210 --> 02:00.570
+So we can structure out just ticket and that's going to be whatever we just got back from our API.
+
+02:01.540 --> 02:04.930
+So then inside the component, we can start to show information from that ticket.
+
+02:06.110 --> 02:07.640
+Let's empty out that div.
+
+02:08.570 --> 02:10.490
+I'm going to replace it with an H one.
+
+02:12.460 --> 02:13.650
+Inside the H one.
+
+02:13.660 --> 02:15.850
+Let's put in just some information about the ticket.
+
+02:15.850 --> 02:17.080
+So how about.
+
+02:17.970 --> 02:19.410
+The tickets title.
+
+02:21.430 --> 02:24.040
+Maybe I will also show an H for.
+
+02:25.080 --> 02:28.110
+But the price I'll put in ticket price.
+
+02:29.380 --> 02:32.110
+And that should be at least enough for us to get started with.
+
+02:32.470 --> 02:33.580
+So I'm going to save this.
+
+02:33.970 --> 02:35.020
+I'll flip back over.
+
+02:35.690 --> 02:36.460
+And there we go.
+
+02:36.470 --> 02:38.510
+I've got my title and my price.
+
+02:40.410 --> 02:40.770
+Okay.
+
+02:40.800 --> 02:41.750
+Well, that was easy enough.
+
+02:41.760 --> 02:44.070
+So what is the real goal of this component?
+
+02:44.200 --> 02:49.800
+Remember, the real goal of ticket show is to present a button to the user that they can click to purchase
+
+02:49.800 --> 02:50.610
+this ticket.
+
+02:51.030 --> 02:55.430
+Now, when we say purchase a ticket, what we're really talking about here is creating an order.
+
+02:55.440 --> 02:59.190
+Remember, that is how a user expresses the intent to purchase a ticket inside of our app.
+
+02:59.550 --> 03:03.630
+So we need to show a button that says something like purchase whenever a user clicks that we're going
+
+03:03.630 --> 03:09.420
+to make a request to our back end, specifically the orders service and attempt to create an order referencing
+
+03:09.420 --> 03:10.530
+this ticket.
+
+03:10.860 --> 03:12.000
+So let's get to it.
+
+03:12.360 --> 03:16.140
+The first thing we probably need inside of here is a button element, something for the user to click
+
+03:16.140 --> 03:16.530
+on.
+
+03:17.830 --> 03:21.190
+I'll put in a button with the class name of BTN.
+
+03:21.220 --> 03:22.510
+BTN primary.
+
+03:24.150 --> 03:28.710
+And inside the button, I'll give it some text of purchase, just like we saw in the mockup.
+
+03:30.060 --> 03:33.930
+So now we need to make sure that whenever a user clicks on this thing, we make request to our order
+
+03:33.930 --> 03:34.680
+service.
+
+03:34.860 --> 03:39.600
+Once again, let's get a quick reminder on how we create an order by taking a quick glance at that order
+
+03:39.600 --> 03:40.260
+service.
+
+03:40.650 --> 03:46.440
+So going to find order, service, CRC routes and then new dots.
+
+03:47.200 --> 03:51.910
+So to create a new order, we're going to make a post request to API slash orders and all we really
+
+03:51.910 --> 03:54.250
+have to do here is include the ticket ID.
+
+03:54.280 --> 03:55.420
+That's pretty much it.
+
+03:56.110 --> 03:57.700
+Well, this should be pretty straightforward.
+
+03:58.710 --> 04:03.450
+So back inside of our components, we're going to once again import that use request hook that we had
+
+04:03.450 --> 04:04.530
+previously created.
+
+04:05.010 --> 04:07.290
+We will make use of the hook at the top of the component.
+
+04:07.290 --> 04:11.340
+Remember, that's going to give us that do request function that we can then call at any future point
+
+04:11.340 --> 04:13.050
+in time to run the request.
+
+04:14.850 --> 04:18.330
+So at the top I'm going to import, use, request.
+
+04:20.530 --> 04:22.660
+From up to directories.
+
+04:23.050 --> 04:25.000
+Folks use request.
+
+04:27.350 --> 04:28.850
+Then inside of the component.
+
+04:29.700 --> 04:34.650
+I'll get my due request function and the possible errors object.
+
+04:35.880 --> 04:37.500
+From calling it use request.
+
+04:39.310 --> 04:45.550
+And then remember to use requests we have to pass in the URL, the body, the method, and on success.
+
+04:45.880 --> 04:47.560
+So our URL in this case.
+
+04:48.390 --> 04:50.250
+Will the API orders.
+
+04:51.210 --> 04:53.160
+The method will be simply post.
+
+04:54.280 --> 04:57.820
+Our body is going to be the ID of the ticket that we want to purchase.
+
+04:58.120 --> 05:01.330
+So ticket ID is ticket ID.
+
+05:03.190 --> 05:04.990
+And then finally on success.
+
+05:06.070 --> 05:09.870
+Right now, we'll take the actual order that gets sent back to us.
+
+05:09.880 --> 05:14.120
+So remember on success is going to be invoked with whatever response we get back from the request.
+
+05:14.140 --> 05:17.410
+So in this case, hopefully it will be the order that was created.
+
+05:17.770 --> 05:20.890
+And then right now we'll just do a simple console log of that order.
+
+05:23.170 --> 05:27.940
+And finally, right above this button, we'll display the errors.
+
+05:28.690 --> 05:32.740
+So again, that's only if there is something wrong or something went wrong with the request.
+
+05:33.100 --> 05:37.150
+And then on the button itself, we'll put it on an on click.
+
+05:38.450 --> 05:42.380
+So anytime someone clicks this button, we will invoke due request.
+
+05:43.590 --> 05:46.190
+So I will call due request.
+
+05:46.350 --> 05:47.070
+Really important here.
+
+05:47.070 --> 05:51.420
+Remember, we are providing a reference to the do request function so that it can be called at some
+
+05:51.420 --> 05:52.590
+future point in time.
+
+05:52.830 --> 05:55.860
+So we do not want to have any parentheses on this thing.
+
+05:55.860 --> 06:00.210
+If you put parentheses on this, then do request will be called the instant this component is first
+
+06:00.210 --> 06:00.930
+rendered.
+
+06:00.930 --> 06:04.080
+So no parentheses just do request by itself.
+
+06:05.900 --> 06:06.350
+All right.
+
+06:06.350 --> 06:07.380
+I think this looks good.
+
+06:07.400 --> 06:09.170
+I think we're ready for another test.
+
+06:10.100 --> 06:11.040
+I'm going to save it.
+
+06:11.060 --> 06:12.260
+I'll flip back over.
+
+06:14.750 --> 06:15.770
+So there's my button.
+
+06:16.220 --> 06:18.650
+I'm going to pull open my network request log.
+
+06:19.610 --> 06:21.140
+And I'll hit purchase.
+
+06:21.950 --> 06:23.720
+Well, it looks like the request went off.
+
+06:23.750 --> 06:27.460
+I got back a status 201, which indicates that an order was created.
+
+06:27.470 --> 06:31.640
+And if I take a look at my console as well, I'll see the order printed out right here.
+
+06:32.150 --> 06:32.990
+This looks great.
+
+06:33.830 --> 06:38.870
+Now do keep in mind that the ticket corresponding to this has now been reserved in theory at least.
+
+06:38.870 --> 06:40.970
+Hopefully, everything on the back end is actually working.
+
+06:41.270 --> 06:46.610
+So if I now try to create another order right away, I should probably see an error message, something
+
+06:46.610 --> 06:48.590
+that says that the ticket is already reserved.
+
+06:49.040 --> 06:53.030
+So if we want to now create another order around this ticket, we're going to have to wait for the first
+
+06:53.030 --> 06:57.650
+order to time out, which right now we have encoded as being about 60 seconds.
+
+06:57.800 --> 07:02.360
+So if I were to wait around for another 30 seconds or so, I should be able to hit purchase again and
+
+07:02.360 --> 07:06.260
+see a second order created because the first one will have had expired.
+
+07:07.370 --> 07:07.580
+All right.
+
+07:07.580 --> 07:08.810
+Well, I'd say this looks pretty good.
+
+07:08.840 --> 07:09.830
+Good progress.
+
+07:10.370 --> 07:12.230
+We're going to take another pause right here.
+
+07:12.230 --> 07:16.340
+When we come back in the next video, we'll make sure that after we successfully create the order,
+
+07:16.340 --> 07:21.530
+we then navigate the user over to a page that's going to show details about the order and tell the user
+
+07:21.530 --> 07:23.900
+how much longer they have to actually pay the order.

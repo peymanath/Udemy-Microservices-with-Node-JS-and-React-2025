@@ -1,0 +1,316 @@
+WEBVTT
+
+00:00.780 --> 00:04.080
+We just discussed some of the different routes that we're going to add into our application.
+
+00:04.080 --> 00:09.180
+Before adding any of these routes, however, I want to fix up one or two small issues inside of our
+
+00:09.180 --> 00:09.570
+app.
+
+00:09.600 --> 00:14.520
+It turns out that when we last worked on our client app, we kind of left a little issue inside of here.
+
+00:14.520 --> 00:17.910
+And so I want to identify what that issue is and understand how to solve it.
+
+00:18.330 --> 00:23.580
+So we're going to first begin with a quick reminder on how next JS fetches data and provides it to our
+
+00:23.580 --> 00:24.600
+different components.
+
+00:25.770 --> 00:28.980
+So here's what is going to be going on inside of our application very shortly.
+
+00:29.190 --> 00:35.010
+We have the app component at the very top, and that is the underscore app file inside of our pages
+
+00:35.010 --> 00:35.900
+directory right here.
+
+00:35.910 --> 00:37.170
+Here's the app component.
+
+00:37.440 --> 00:41.880
+This component is responsible for rendering each of the different pages that we're going to create over
+
+00:41.880 --> 00:42.450
+time.
+
+00:42.840 --> 00:47.460
+So, for example, it's going to eventually display the landing page component within itself.
+
+00:47.670 --> 00:50.730
+Eventually the show ticket and show order and so on.
+
+00:51.520 --> 00:55.750
+Each of these child components are going to be displayed inside the app component because they are being
+
+00:55.750 --> 00:59.350
+provided to the app component as this component prop right here.
+
+00:59.560 --> 01:04.330
+So this component prop that is being displayed inside the app, that is the actual page that we are
+
+01:04.330 --> 01:05.380
+trying to show to the user.
+
+01:05.380 --> 01:09.130
+So the landing page, show tickets, sign in, sign up, whatever else.
+
+01:10.460 --> 01:15.200
+Now I want to walk through the process of how next jazz decides to show one of these components and
+
+01:15.200 --> 01:18.500
+how it fetches some data and provides that data to the component as well.
+
+01:18.890 --> 01:24.410
+So we're going to imagine for a second the entire flow that nex goes through whenever a user tries to
+
+01:24.410 --> 01:26.900
+navigate to the landing page component.
+
+01:26.900 --> 01:29.540
+So essentially our root route right here.
+
+01:30.920 --> 01:31.030
+Okay.
+
+01:31.150 --> 01:32.260
+So here's what's going to go on.
+
+01:33.770 --> 01:35.600
+First off, a user navigates to our route.
+
+01:35.600 --> 01:35.940
+Route.
+
+01:35.960 --> 01:37.730
+Essentially just forward slash.
+
+01:38.240 --> 01:44.150
+So because a user goes to that route, next JS is going to find the indexed JS file inside of the page's
+
+01:44.150 --> 01:44.900
+directory.
+
+01:45.170 --> 01:48.530
+And it's going to try to show the component that we are exporting from this file.
+
+01:48.680 --> 01:51.200
+In this case, it is the landing page component.
+
+01:52.220 --> 01:55.070
+So next is going to decide to show that landing page component.
+
+01:55.640 --> 02:01.130
+Once it decides to do so, it's then going to call the app components, get initial props function.
+
+02:01.580 --> 02:06.080
+So that is the initial prop function that we define inside of the app component file.
+
+02:06.620 --> 02:11.810
+The goal of this function is to fetch some data that is required to show the app component to the user.
+
+02:13.220 --> 02:17.970
+Now by default next is only going to call the app components, get initial props.
+
+02:17.990 --> 02:20.630
+It is not going to call the landing pages.
+
+02:21.050 --> 02:23.450
+Landing page components get initial props function.
+
+02:24.310 --> 02:28.480
+It would normally call that function if we had not implemented the app component.
+
+02:28.480 --> 02:32.740
+But you and I implemented the app component so that we could have some consistent layouts or essentially
+
+02:32.740 --> 02:35.950
+make sure that every page had that header at the top of the screen.
+
+02:36.310 --> 02:42.670
+So usually if we did not define the app component with the landing pages component, get initial function
+
+02:42.670 --> 02:45.340
+would be called, but in this case it is not going to be called.
+
+02:47.260 --> 02:49.340
+So next we'll call the app components get initial props.
+
+02:49.360 --> 02:54.610
+Function inside of there we are fetching a little bit of data in this case, we are trying to make requests
+
+02:54.610 --> 02:56.470
+to find who the current user is.
+
+02:56.920 --> 02:59.260
+We are doing that inside the app component.
+
+02:59.260 --> 03:00.310
+But here it is right here.
+
+03:01.280 --> 03:06.110
+That's where we fetch the current user and we make that request so that we can eventually take the current
+
+03:06.110 --> 03:11.060
+user and provide it to the header component so we can decide what set of buttons to show inside of it.
+
+03:13.070 --> 03:18.650
+In addition to fetching a little bit of data, you and I are also manually invoking the landing pages,
+
+03:18.650 --> 03:23.930
+get initial prompts function as well as that occurs inside the app component right here.
+
+03:24.900 --> 03:29.430
+We first checked to make sure that this child component that we were trying to display has a get initial
+
+03:29.700 --> 03:30.330
+function.
+
+03:30.330 --> 03:32.100
+And if it does, we call it.
+
+03:32.990 --> 03:38.060
+We then assigned the results of that initial function to page props and then return it.
+
+03:38.720 --> 03:43.430
+Those page props eventually show up inside of our app component and we pass them down into that child
+
+03:43.430 --> 03:44.750
+component as a prop.
+
+03:45.760 --> 03:49.720
+That is how we are eventually calling it initial props right here and making sure that the result of
+
+03:49.720 --> 03:52.720
+that gets provided to the landing page component.
+
+03:55.070 --> 03:57.980
+The very last step next is going to render the app component.
+
+03:58.400 --> 04:02.960
+It's going to provide all the data that was returned from the app components, get initial props function
+
+04:03.260 --> 04:07.220
+and the child component that we're trying to show on the screen, which in this case is the landing
+
+04:07.220 --> 04:07.880
+page.
+
+04:08.150 --> 04:13.100
+Then the app component will display the landing page and at the same time pass down all the data that
+
+04:13.100 --> 04:14.810
+was fetched by the landing pages.
+
+04:14.810 --> 04:16.160
+Get initial props function.
+
+04:17.220 --> 04:17.360
+Okay.
+
+04:17.580 --> 04:21.990
+So let's just a little reminder on what is going on behind the scenes now that we got that reminder
+
+04:21.990 --> 04:22.660
+out of the way.
+
+04:22.680 --> 04:27.660
+I want to show you a little issue that we left inside of our application when we last worked on it.
+
+04:28.170 --> 04:32.290
+Back inside my browser, I'm going to navigate to our application at ticketing dev.
+
+04:32.670 --> 04:37.440
+Now, remember, if you come here and you get a big security warning, you can bypass that warning in
+
+04:37.440 --> 04:41.220
+Chrome by writing out anywhere inside of the browser window itself.
+
+04:41.250 --> 04:42.810
+It's like the actual app window.
+
+04:42.930 --> 04:44.700
+This is unsafe.
+
+04:45.240 --> 04:46.870
+You're not going to write that into the console.
+
+04:46.890 --> 04:48.900
+You're just going to type it directly onto the screen.
+
+04:48.900 --> 04:51.000
+And that will bypass the security warning.
+
+04:52.830 --> 04:56.430
+And once you get the page loaded up, try going to the root root.
+
+04:56.430 --> 05:01.440
+And then once you're here, go to your network request log with your all the requests that have been
+
+05:01.440 --> 05:04.140
+made and click on the logo on the top left.
+
+05:04.680 --> 05:09.330
+As soon as you do that, you'll see that we are making two separate requests to fetch the current user.
+
+05:09.630 --> 05:10.560
+So why is that?
+
+05:11.040 --> 05:15.750
+Well, it is all because we have one request inside of our landing pages.
+
+05:15.750 --> 05:17.760
+Get initial props to fetch the current user.
+
+05:19.290 --> 05:21.630
+And we are doing the exact same thing inside of the app.
+
+05:21.630 --> 05:24.180
+Components get initial props function right there.
+
+05:24.180 --> 05:26.670
+We are making a request to fetch the current user as well.
+
+05:27.910 --> 05:32.050
+So the whole point here is that whenever we show a page, we are calling the app components, get initial
+
+05:32.050 --> 05:35.530
+props and the individual pages get initial props as well.
+
+05:35.710 --> 05:39.190
+And right now, both those functions are both attempting to fetch the current user.
+
+05:39.520 --> 05:40.590
+So we're going to fix this up.
+
+05:40.600 --> 05:45.940
+We're going to make sure that we only fetch the current user one time and that the app component, the
+
+05:45.940 --> 05:49.000
+app component is going to be the component that still fetches the current user.
+
+05:49.030 --> 05:54.400
+We're going to make sure that the app component passes down wherever the current user is into the current
+
+05:54.400 --> 05:57.520
+page or the child component that we are trying to show to the user.
+
+05:58.600 --> 05:58.900
+All right.
+
+05:58.900 --> 06:01.930
+So a lot of talking, a lot of reminders, a lot of lecturing in this video.
+
+06:01.930 --> 06:03.340
+So let's take a quick pause right here.
+
+06:03.340 --> 06:05.500
+Make this quick little fix in the next video.
+
+06:05.500 --> 06:09.010
+And we're going to also fix one other very quick little issue as well.

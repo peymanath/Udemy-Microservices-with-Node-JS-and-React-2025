@@ -1,0 +1,268 @@
+WEBVTT
+
+00:01.000 --> 00:05.380
+We've now got an initial implementation of our event bus, but together we're now going to start to
+
+00:05.380 --> 00:08.230
+go through our post service and our common service.
+
+00:08.530 --> 00:13.270
+Any time something interesting happens inside those services, such as creating a new post or creating
+
+00:13.270 --> 00:18.910
+a new comment, we're going to make sure that we send a request over to this event's endpoint in our
+
+00:18.910 --> 00:19.840
+event bus.
+
+00:19.840 --> 00:22.750
+And in that request, we're going to include the event.
+
+00:23.970 --> 00:28.860
+Event bus will then take that event and echo it out to all the different services running inside of
+
+00:28.860 --> 00:29.670
+our application.
+
+00:30.580 --> 00:36.040
+At present, our different services do not have this post events end point wired up, so when the event
+
+00:36.040 --> 00:40.540
+plus tries to send that request over, the request is going to fail due to a 404.
+
+00:41.170 --> 00:45.790
+As soon as we make sure that the event plus can emit this event will then go back over and start to
+
+00:45.790 --> 00:50.650
+implement these endpoints that the other services can listen to these events that are being emitted.
+
+00:51.190 --> 00:54.760
+But again, for right now, we're just going to make sure that the post service is going to emit this
+
+00:54.760 --> 00:56.860
+event any time someone creates a new post.
+
+00:58.080 --> 00:59.040
+So let's get to it.
+
+00:59.800 --> 01:05.020
+Between the last video and this one, I opened up my code editor inside of my root blog project directory.
+
+01:05.200 --> 01:09.820
+We're going to start to have to change between all four of these different services very quickly.
+
+01:09.820 --> 01:14.560
+And so it's just a lot easier to maneuver between them if we have all of our projects open inside of
+
+01:14.560 --> 01:17.320
+one editor as opposed to four separate editors.
+
+01:18.430 --> 01:20.800
+I'm going to find the post directory inside there.
+
+01:20.800 --> 01:23.680
+I'll find the indexed JS file at the very top.
+
+01:23.680 --> 01:25.930
+I'll immediately require an Axios.
+
+01:27.700 --> 01:28.360
+Like so.
+
+01:29.440 --> 01:32.350
+I'm then going to scroll down to our post endpoint.
+
+01:33.220 --> 01:37.320
+So this is the code that gets executed every single time someone tries to create a new post.
+
+01:37.340 --> 01:43.060
+So this would be a perfect time to try to emit an event saying, Hey, someone just made a new post.
+
+01:44.040 --> 01:51.210
+Right after we add the new post to our post collection, I'll use Axios to make a post request over
+
+01:51.210 --> 01:52.560
+to HTTP.
+
+01:52.590 --> 01:58.190
+Colon slash slash local host colon for 2005.
+
+01:58.200 --> 02:01.950
+Because remember, that is where our broker is running slash events.
+
+02:04.960 --> 02:09.160
+And then as the second argument, we'll put in the actual event that we want to send over.
+
+02:09.580 --> 02:13.550
+So for right now, we'll say that every event that we met is going to have two properties.
+
+02:13.570 --> 02:17.770
+The first one is going to be a type, and that type describes the event that just occurred.
+
+02:18.610 --> 02:23.200
+The second property will be a data property and that will have some information that further clarifies
+
+02:23.200 --> 02:24.550
+exactly what happened.
+
+02:24.670 --> 02:29.710
+So in the case of creating a post will probably include the actual post that was just created as the
+
+02:29.710 --> 02:30.670
+data property.
+
+02:31.060 --> 02:35.890
+Remember, the event that we send out throughout our application can have any structure we want.
+
+02:35.920 --> 02:37.150
+It doesn't even have to be an object.
+
+02:37.150 --> 02:40.800
+It can be a string or a number, any data you want to have.
+
+02:40.810 --> 02:44.770
+But usually we're going to make sure that all these events have a very consistent structure.
+
+02:44.980 --> 02:49.230
+We'll talk more about the design and sort of schema of events quite a bit over time.
+
+02:49.240 --> 02:52.900
+So for right now, we're just going to say that every event will have a type and data.
+
+02:54.270 --> 03:00.300
+Get the sea object right here is essentially the event that I want to have be emitted or my entire application.
+
+03:00.570 --> 03:03.180
+So I'm going to give it a type of post created.
+
+03:04.110 --> 03:08.200
+And then a data and data is going to be the post that we just made.
+
+03:08.280 --> 03:11.030
+I remember all of our posts have an ID and title.
+
+03:11.040 --> 03:12.870
+That's essentially what our post is.
+
+03:12.870 --> 03:17.490
+So we pretty much want to take that style of object right there, include it as the data property,
+
+03:17.790 --> 03:20.040
+we'll say ID and title.
+
+03:22.070 --> 03:25.750
+And then finally, this is an asynchronous operation making the network request.
+
+03:25.760 --> 03:30.710
+So we will add on async and await like so.
+
+03:32.990 --> 03:33.170
+Okay.
+
+03:33.200 --> 03:34.250
+I'm going to say this.
+
+03:35.070 --> 03:39.090
+We're going to flip back over to our browser and find our running React application.
+
+03:39.450 --> 03:43.760
+I'm going to refresh this page and as soon as I do, you'll notice that all the posts go away.
+
+03:43.770 --> 03:45.000
+That is totally fine.
+
+03:45.000 --> 03:49.440
+It's because, remember, all of our posts are being stored in memory with that post service.
+
+03:49.440 --> 03:53.760
+So as soon as we restart that server, all of our posts just disappear.
+
+03:54.790 --> 03:55.060
+All right.
+
+03:55.060 --> 03:56.580
+I'll go ahead and try to create a post.
+
+03:56.590 --> 03:58.960
+They'll call this new post and submit it.
+
+04:00.650 --> 04:05.750
+We don't have any kind of live reload on the React application, so I have to refresh the page as soon
+
+04:05.750 --> 04:06.110
+as I do.
+
+04:06.110 --> 04:07.970
+So I do see the new post up here.
+
+04:08.270 --> 04:09.650
+But what happened to that event?
+
+04:09.770 --> 04:11.690
+Well, let's go take a look at our terminal.
+
+04:11.690 --> 04:16.400
+We'll take a look at our server logs and we'll just make sure that the post service did try to send
+
+04:16.400 --> 04:18.230
+that event over to the event bus.
+
+04:20.690 --> 04:23.170
+So here are my terminal logs right here.
+
+04:23.180 --> 04:27.740
+This second window that I have right here that's kind of highlighted is the post service.
+
+04:27.770 --> 04:29.060
+I don't see any information there.
+
+04:29.060 --> 04:30.140
+That's very interesting.
+
+04:30.350 --> 04:34.730
+If I go down to the bottom window right here, that is where my event broker or event bus is living
+
+04:34.730 --> 04:35.750
+or actually running.
+
+04:36.560 --> 04:37.100
+At present.
+
+04:37.100 --> 04:39.110
+It looks like there is a couple of errors here.
+
+04:40.060 --> 04:42.500
+So all these errors are identical in nature.
+
+04:42.520 --> 04:45.640
+They all say request failed with status 404.
+
+04:46.030 --> 04:47.620
+So that is actually good.
+
+04:47.650 --> 04:53.200
+Remember, as I mentioned just a moment ago, our post service, common service and query service that
+
+04:53.200 --> 04:57.530
+doesn't even exist, exist yet does not have this post slash event's endpoint.
+
+04:57.550 --> 05:00.310
+They don't have any way of actually receiving these events.
+
+05:00.490 --> 05:05.350
+So even though the event bus is trying to send that event off, well, there's nothing to receive it,
+
+05:05.350 --> 05:07.570
+which is why we're getting that 404 error.
+
+05:07.990 --> 05:09.630
+So overall, let's say this looks good.
+
+05:09.640 --> 05:13.720
+We are definitely emitting an event to the event bus any time something interesting happens inside the
+
+05:13.720 --> 05:14.590
+post service.
+
+05:15.160 --> 05:17.710
+So let's take a pause right here and continue in just a moment.

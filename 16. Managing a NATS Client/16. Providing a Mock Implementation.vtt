@@ -1,0 +1,469 @@
+WEBVTT
+
+00:00.760 --> 00:06.130
+We've now got this import redirecting thing or file mocking, as it's referred to with just working.
+
+00:06.280 --> 00:08.950
+So now we need to figure out how to write a fake implementation.
+
+00:09.340 --> 00:12.940
+Let's take a look at a couple of diagrams and help you understand what I really mean by that.
+
+00:13.120 --> 00:18.880
+So to write out a fake implementation, we really have to take a very deep look at our Nat's wrapper
+
+00:18.880 --> 00:21.340
+file, the one inside of our CRC directory.
+
+00:21.340 --> 00:24.370
+And we need to understand what this class right here does.
+
+00:24.640 --> 00:28.540
+We need to understand what parts of it are used by other files that we are trying to test.
+
+00:28.540 --> 00:33.640
+And then we're going to provide some fake implementation of just the parts that are expected to be implemented,
+
+00:33.640 --> 00:35.650
+implemented by those other files.
+
+00:35.690 --> 00:37.570
+So again, let me just show you a couple of diagrams.
+
+00:38.340 --> 00:38.790
+Okay.
+
+00:39.950 --> 00:41.930
+So we have our new ticket route handler.
+
+00:41.930 --> 00:43.940
+That is what we are currently trying to test.
+
+00:43.970 --> 00:47.870
+The new ticket route handler is going to import the Nats wrapper file.
+
+00:48.140 --> 00:53.960
+Now, when it imports the real Nats wrapper file, it gets an object that looks like this, an object
+
+00:53.960 --> 00:58.970
+that has an underscore client property that is of type stan or remember nats client.
+
+00:59.180 --> 01:04.910
+It has a client property that gives us a Stan or Nats client and a connect function as well.
+
+01:05.390 --> 01:06.760
+How do I know that is the object?
+
+01:06.770 --> 01:10.190
+Well, we can just take a look at the real Nats wrapper file directly.
+
+01:10.550 --> 01:13.640
+So here's the real Nats wrapper file inside of here.
+
+01:13.640 --> 01:17.000
+We create a class, as you will recall, at the very bottom.
+
+01:18.180 --> 01:23.730
+We create an instance of that class and then we export it as a named export of Nat's wrapper.
+
+01:24.430 --> 01:31.210
+So what we eventually get inside of our new route handler is an instance of Nat's wrapper and an instance
+
+01:31.210 --> 01:34.080
+of rats gnats wrapper has underscore client.
+
+01:34.090 --> 01:37.150
+It has the get client and the connect function.
+
+01:37.880 --> 01:44.000
+So we now need to now take a look at how the new ticket handler actually uses the properties inside
+
+01:44.000 --> 01:44.900
+of this object.
+
+01:45.720 --> 01:49.720
+Well, the new ticket route handler does not care about the underscore client property.
+
+01:49.740 --> 01:54.300
+As a matter of fact, that client property, the underscore client property, is marked as private.
+
+01:54.330 --> 01:57.340
+We cannot access that thing at all inside of our new ticket route.
+
+01:57.390 --> 02:00.480
+HANDLER So that means we really don't care about it at all.
+
+02:01.740 --> 02:05.250
+The new ticket handler also does not care about the Kinect function.
+
+02:05.280 --> 02:10.380
+The Kinect function only gets invoked from the index file when our application is first starting up,
+
+02:10.380 --> 02:12.320
+when we are trying to actually run it for real.
+
+02:12.330 --> 02:13.770
+Not in a test environment.
+
+02:14.530 --> 02:16.920
+And so that leaves just the client property.
+
+02:16.930 --> 02:20.290
+This is the only property that our new ticket handler cares about.
+
+02:20.290 --> 02:25.870
+And that means that this is the only property that we need to define inside of our little fake implementation.
+
+02:26.570 --> 02:31.340
+Let's go into our fake implementation file right now and we're going to just define this client property
+
+02:31.340 --> 02:33.890
+and we won't worry about assigning it a value just yet.
+
+02:35.450 --> 02:35.560
+Okay.
+
+02:35.630 --> 02:38.300
+So I'm going to find my underscore underscore box.
+
+02:38.660 --> 02:41.600
+Here's my fake implementation file or the mock file.
+
+02:42.200 --> 02:45.770
+And inside this object, I'm going to define that client property.
+
+02:46.440 --> 02:48.900
+So we're going to come back and provide a value for it in just a moment.
+
+02:48.900 --> 02:53.730
+But before we do, we're going to go through a very similar process where we figure out where this client
+
+02:53.730 --> 02:58.920
+property is actually used, and we're then going to figure out how to fake that is implementation.
+
+03:00.500 --> 03:05.340
+So we know that this client property is taken and provided to the ticket created publisher.
+
+03:05.360 --> 03:09.980
+So we need to think about how the ticket creative publisher actually uses that client.
+
+03:10.520 --> 03:14.600
+So let's go and take a look at the ticket created publisher implementation.
+
+03:15.080 --> 03:16.880
+We can find that inside of our events.
+
+03:16.880 --> 03:18.350
+Publishers Ticket Created.
+
+03:18.350 --> 03:19.490
+Publisher File.
+
+03:20.270 --> 03:21.380
+So here's the publisher.
+
+03:21.830 --> 03:25.760
+You'll recall that this thing extends our base publisher class.
+
+03:25.940 --> 03:30.170
+And so the ticket creative publisher doesn't really do anything with the client directly.
+
+03:30.290 --> 03:35.180
+Instead, if we want to figure out how that client gets used, we need to go and take a little peek
+
+03:35.180 --> 03:37.100
+at our base publisher class.
+
+03:37.980 --> 03:40.920
+You'll recall that we implemented that inside of our common module.
+
+03:40.950 --> 03:45.660
+So let's go back over to our common module very quickly and take a look at what that publisher really
+
+03:45.660 --> 03:46.950
+does with the client.
+
+03:48.650 --> 03:50.210
+All right, here's my common module.
+
+03:50.240 --> 03:52.010
+Inside there is the CRC directory.
+
+03:52.010 --> 03:55.970
+Inside there is events, and inside of that is base publisher TS.
+
+03:57.800 --> 03:59.120
+So here's the base publisher.
+
+03:59.780 --> 04:00.680
+Base publisher.
+
+04:01.770 --> 04:04.020
+Expects to be provided that client property.
+
+04:05.050 --> 04:10.870
+And then internally the only thing it actually does with it is call the clients, publish function.
+
+04:11.260 --> 04:15.760
+When it calls the publish function, it's going to provide we're going to provide three arguments to
+
+04:15.760 --> 04:16.180
+it.
+
+04:16.180 --> 04:20.260
+This test subject some string ified data and a callback function.
+
+04:21.030 --> 04:27.330
+Then the expectation is that this callback function is going to eventually be invoked by the client.
+
+04:27.360 --> 04:29.340
+That is what the real client does.
+
+04:29.370 --> 04:34.770
+The real client is going to eventually call the callback function to indicate that the publish is complete.
+
+04:35.340 --> 04:37.440
+So with that in mind, a couple more diagrams.
+
+04:39.350 --> 04:39.700
+Okay.
+
+04:40.100 --> 04:40.430
+Sorry.
+
+04:40.430 --> 04:42.170
+I should have showed you this one just a moment ago.
+
+04:42.200 --> 04:45.710
+Purpose of this one was to just say we have our new ticket handler.
+
+04:45.710 --> 04:49.160
+It imports the Nats wrapper, and the only thing that it cares about inside there is the client.
+
+04:49.160 --> 04:50.870
+And the client gets passed off to the publisher.
+
+04:50.870 --> 04:51.980
+We just discuss that.
+
+04:52.400 --> 04:55.820
+So now inside of our base publisher, this thing takes the client.
+
+04:56.090 --> 04:57.500
+It has a published function.
+
+04:57.530 --> 04:59.210
+The base publisher has a published function.
+
+04:59.990 --> 05:05.210
+And the bass publisher is going to try to invoke this client, publish and it's going to call it with
+
+05:05.210 --> 05:07.870
+some subject data and a callback.
+
+05:07.880 --> 05:13.250
+And the expectation is that that callback is going to be invoked after the event is successfully published.
+
+05:13.820 --> 05:19.760
+So for us to continue to implement this kind of fake or mock class, we need to make sure.
+
+05:21.260 --> 05:22.010
+That.
+
+05:22.280 --> 05:24.750
+Let's go back to our block file really quickly.
+
+05:24.770 --> 05:30.980
+We need to make sure that this client thing right here is an object that has a object function.
+
+05:31.790 --> 05:37.970
+The public function needs to take in a subject that is a string data, that is a string and a callback
+
+05:37.970 --> 05:38.630
+function.
+
+05:38.900 --> 05:42.770
+And as soon as we receive that callback function, we should invoke it right away.
+
+05:43.190 --> 05:44.450
+So we're going to do that right now.
+
+05:45.750 --> 05:47.520
+So we're going to find client right here.
+
+05:47.820 --> 05:49.470
+This needs to be an object.
+
+05:49.830 --> 05:51.900
+It needs to have a publish function.
+
+05:53.130 --> 05:55.380
+I'm going to define this as an arrow function like so.
+
+05:56.140 --> 06:01.690
+And this published function needs to take in a subject that is a string data, that is a string and
+
+06:01.690 --> 06:02.860
+a callback function.
+
+06:03.250 --> 06:04.330
+That is a function.
+
+06:07.100 --> 06:12.020
+And then the expectation is that inside this Polish function, we are going to call a callback right
+
+06:12.020 --> 06:12.470
+away.
+
+06:15.200 --> 06:15.460
+Okay.
+
+06:15.530 --> 06:16.310
+And that is it.
+
+06:16.310 --> 06:20.750
+If we run this code right now, our test for the new handler should pass.
+
+06:20.750 --> 06:24.800
+But before we do, just want to make sure it's super crystal clear what is going on here, because this
+
+06:24.800 --> 06:26.630
+is some confusing stuff there.
+
+06:26.640 --> 06:28.850
+Just one more time to run through the entire setup.
+
+06:29.240 --> 06:31.010
+We have built out this mock file.
+
+06:31.730 --> 06:37.250
+When our tests are executed in the test environment, our new route handler hears the new handler is
+
+06:37.250 --> 06:41.240
+going to import that fake or the mock nats wrapper file.
+
+06:41.300 --> 06:44.930
+Out of that file, it's going to look for a named export of Nats wrapper.
+
+06:45.410 --> 06:50.690
+So the new handler is going to get this whole object right here.
+
+06:52.330 --> 06:56.590
+Then inside the new route handler, we're going to take that Nats wrapper object.
+
+06:56.770 --> 07:01.870
+We're going to pull off the client property and we're going to provide it to the ticket created publisher.
+
+07:02.230 --> 07:05.770
+So in other words, the ticket created publisher is going to receive.
+
+07:06.730 --> 07:09.250
+Just this object right here.
+
+07:09.250 --> 07:11.320
+That is the fake client we just put together.
+
+07:12.630 --> 07:17.280
+So that little object, just this object with a published function, is going to show up inside of our
+
+07:17.280 --> 07:19.530
+base publisher as client.
+
+07:20.750 --> 07:24.860
+The bass publisher is going to take that client, assign it to the this client property.
+
+07:25.190 --> 07:30.290
+And then at some point in time, our handler is going to call this publish function right here to try
+
+07:30.290 --> 07:31.850
+to publish some event.
+
+07:33.240 --> 07:34.170
+Internally.
+
+07:34.200 --> 07:36.720
+This thing is going to create a new promise and return it.
+
+07:36.720 --> 07:42.520
+And inside that promise, it's going to access this client publish, this client publish.
+
+07:42.540 --> 07:46.500
+That is the basic function we just put together right here.
+
+07:46.500 --> 07:49.050
+That is what is actually going to get executed.
+
+07:51.900 --> 07:56.100
+So it's going to call this client, publish, provide the subject, provide the data and this callback
+
+07:56.100 --> 07:56.760
+function.
+
+07:57.090 --> 08:01.200
+And then we want to make sure that the callback function gets executed right away so that the overall
+
+08:01.200 --> 08:02.700
+promise gets resolved.
+
+08:03.000 --> 08:08.880
+And that's why inside of our fake implementation right here, we receive the subject, the data and
+
+08:08.880 --> 08:09.750
+the callback function.
+
+08:09.750 --> 08:13.710
+And then inside all we did was all the callback as soon as we possibly could.
+
+08:15.010 --> 08:15.340
+Okay.
+
+08:15.340 --> 08:16.240
+So let's save all this.
+
+08:16.240 --> 08:21.670
+We're going to go back over to our terminal and now we'll see that our new test root handler has all
+
+08:21.670 --> 08:22.720
+of its test passing.
+
+08:23.600 --> 08:24.530
+That looks pretty great.
+
+08:25.070 --> 08:30.920
+If we try to run all of our tests now, so if I do a W to see the watch menu, I can then press a on
+
+08:30.920 --> 08:32.750
+my keyboard to run all tests.
+
+08:33.250 --> 08:33.830
+They'll do that.
+
+08:33.830 --> 08:36.620
+And we are going to see still a lot of tests failing.
+
+08:38.280 --> 08:38.840
+Here we go.
+
+08:38.850 --> 08:40.230
+So still a lot of test failing.
+
+08:40.260 --> 08:42.810
+The reason for that is that we now have.
+
+08:44.380 --> 08:50.740
+You might recall inside of our new test file, we have told the new test file or just to try to mock
+
+08:50.740 --> 08:54.580
+that file, but we have other test files that do not have the same mock statement.
+
+08:54.580 --> 08:58.620
+So we have to go around to our other test files and tell all of our other tests.
+
+08:58.630 --> 09:03.040
+Hey, if you ever tried to import the net's wrapper file instead, do a redirect.
+
+09:03.040 --> 09:04.660
+Get this other fake file.
+
+09:05.290 --> 09:08.710
+So let's take a pause right here and copy paste that thing around in just a moment.

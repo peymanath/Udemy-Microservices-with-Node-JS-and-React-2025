@@ -1,0 +1,100 @@
+WEBVTT
+
+00:00.930 --> 00:01.470
+In this video.
+
+00:01.470 --> 00:03.970
+We're going to get a quick reminder on how we create a listener.
+
+00:03.990 --> 00:09.120
+So you might recall that inside of our common module in the CRC directory and the events folder, we
+
+00:09.120 --> 00:11.430
+had created that base listener class.
+
+00:11.700 --> 00:13.440
+This was an abstract class.
+
+00:13.440 --> 00:18.060
+And so we're going to extend this to build out different classes inside of each of our services that
+
+00:18.060 --> 00:20.250
+are going to listen for very specific events.
+
+00:20.730 --> 00:25.650
+When we extend this listener, we're going to make sure we provide a event type as the generic type.
+
+00:26.220 --> 00:30.660
+And then inside of the child class, we're also going to be required to define a subject.
+
+00:30.660 --> 00:34.950
+So this can be a subject we want to listen to on that streaming server, a queue group name, and we'll
+
+00:34.950 --> 00:36.930
+get a reminder on what that's about really quickly.
+
+00:36.930 --> 00:42.090
+And then finally, the on message function, the on message function is what's going to actually receive
+
+00:42.090 --> 00:42.630
+an event.
+
+00:42.630 --> 00:45.150
+That's what we're going to implement some amount of business logic.
+
+00:45.660 --> 00:50.370
+The first argument is going to be the data inside the event, and the second argument will be a message
+
+00:50.370 --> 00:53.210
+and we'll get a reminder on what that message is in a little bit as well.
+
+00:54.100 --> 00:57.910
+The other thing I want to remind you about is that when we create an instance of a listener, we have
+
+00:57.910 --> 01:00.130
+to provide a Nat's client to it.
+
+01:01.670 --> 01:05.720
+When we create an instance of a listener and provide the next client that doesn't actually start this
+
+01:05.720 --> 01:06.620
+thing up listening.
+
+01:06.620 --> 01:10.990
+Instead, we have to call the Listen method, which we had defined down here.
+
+01:11.000 --> 01:15.530
+This is what is going to actually tell the client to start to subscribe or create a subscription and
+
+01:15.530 --> 01:18.410
+listen for events on a very particular subject or channel.
+
+01:18.980 --> 01:23.960
+Then whenever we receive a message, that is when we were going to actually call the on message function.
+
+01:25.390 --> 01:29.380
+So in total, in order to create a listener, we're going to create a new file inside of our different
+
+01:29.380 --> 01:29.950
+services.
+
+01:29.950 --> 01:32.980
+It's going to extend this base listener class.
+
+01:32.980 --> 01:36.940
+We're going to plug in the event type we want to listen for and then define a couple of different properties
+
+01:36.940 --> 01:37.570
+inside of it.
+
+01:37.570 --> 01:38.710
+And that's pretty much it.
+
+01:40.000 --> 01:43.450
+Now, as a reminder, the first listen we're going to put together is going to be listening for the
+
+01:43.450 --> 01:48.670
+ticket created event, and we're going to implement that inside of our order service.
+
+01:49.400 --> 01:53.450
+So let's take a quick pause right here and then start to implement this first listener in the next video.

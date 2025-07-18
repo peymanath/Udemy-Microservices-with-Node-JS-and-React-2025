@@ -1,0 +1,370 @@
+WEBVTT
+
+00:01.560 --> 00:04.860
+In this video, we're going to take a look at some of the different libraries and processes that we're
+
+00:04.860 --> 00:07.270
+going to go through to implement all this testing stuff.
+
+00:07.290 --> 00:12.990
+Now, as a reminder, we're going to really be focusing on this testing goal number one for our service.
+
+00:13.020 --> 00:17.670
+So we are going to write out some tests that are going to try to send a request off to our service and
+
+00:17.670 --> 00:22.920
+then make some assertion about the response or make sure that some data was written into MongoDB.
+
+00:23.160 --> 00:28.530
+We are not going to be worried right now about writing some tests or on models or event emitting and
+
+00:28.530 --> 00:29.250
+receiving.
+
+00:29.910 --> 00:34.140
+So with all that in mind, let's take a look at how we're going to wire up all this testing stuff.
+
+00:34.710 --> 00:37.860
+We're going to add in a new script to our package JSON file.
+
+00:37.860 --> 00:43.530
+Whenever we run the command and run test, we are going to start up a test runner called Gest.
+
+00:43.680 --> 00:48.240
+So Gest is the library that we're going to use to actually execute tests inside of our project.
+
+00:49.290 --> 00:53.610
+Then on the right hand side, this is pretty much what we're going to have just do.
+
+00:53.640 --> 00:55.170
+The wind just starts running.
+
+00:55.170 --> 00:58.650
+We're going to tell just to do the following things you see over here.
+
+00:59.460 --> 01:03.150
+First off, we're going to start up an in-memory copy of MongoDB.
+
+01:03.420 --> 01:06.630
+So this is going to be a copy of Mongo that's running in memory.
+
+01:06.660 --> 01:07.650
+In other words, it will not.
+
+01:07.800 --> 01:10.890
+You do not have to install Mongo directly onto your machine.
+
+01:11.160 --> 01:14.790
+Now, even if you already have mongo installed on your local machine, we are still going to use this
+
+01:14.790 --> 01:15.210
+in memory.
+
+01:15.210 --> 01:15.810
+Copy.
+
+01:15.840 --> 01:20.250
+There's a couple of reasons for that and we'll go through them as we start to wire up the in-memory
+
+01:20.250 --> 01:20.820
+copy.
+
+01:22.220 --> 01:24.320
+After that, we're going to start up our Express app.
+
+01:25.400 --> 01:30.440
+And then we'll use a library called Super Test to make fake requests to our express application.
+
+01:31.210 --> 01:34.960
+And then after that, we will run some assertions to make sure that the request did exactly what we
+
+01:34.960 --> 01:35.980
+expected it to do.
+
+01:35.980 --> 01:41.080
+So maybe respond with some particular data or wrote some particular data to MongoDB.
+
+01:42.100 --> 01:46.180
+Now I want to focus on this third step right here, the super test library.
+
+01:46.420 --> 01:51.510
+In order to get super test working well, we're going to do a little refactor to our project.
+
+01:51.520 --> 01:56.470
+So I want to show you some documentation around super test and help you understand why we're going to
+
+01:56.470 --> 01:57.520
+do this refactor.
+
+01:58.380 --> 01:59.630
+Inside of a new browser tab.
+
+01:59.640 --> 02:06.030
+I'm going to open up the documentation for super test by going to npr.org and then doing a search for
+
+02:06.030 --> 02:07.050
+super test.
+
+02:09.660 --> 02:10.800
+And here it is right here.
+
+02:12.330 --> 02:17.560
+I'm going to scroll down just a little bit and find the example section and cite this example section.
+
+02:17.580 --> 02:19.020
+They've got a little bit of code right here.
+
+02:19.320 --> 02:24.000
+Now, I took a screenshot of this code and put a diagram together around it, so I'm going to go back
+
+02:24.000 --> 02:26.100
+over and take a look at that screenshot.
+
+02:27.080 --> 02:30.210
+So here's that little bit of code that's inside the read me.
+
+02:30.230 --> 02:33.410
+And there's just something very important inside there that I want to point out.
+
+02:34.290 --> 02:40.890
+Right about in this section right here, they have some code to create an express server.
+
+02:41.400 --> 02:44.910
+Now, at present, you and I are doing that inside of our index file.
+
+02:44.940 --> 02:50.040
+Yes, technically, we create root handlers inside those other files and then we associate them all
+
+02:50.040 --> 02:51.900
+together inside the index file.
+
+02:51.990 --> 02:58.380
+But we actually create our express app like that express thing right there inside the index file.
+
+02:58.770 --> 03:00.060
+Why is that relevant?
+
+03:00.570 --> 03:05.580
+Well, down here is how we use super tests to actually test our express server.
+
+03:06.000 --> 03:09.840
+We have to get access to the express application variable.
+
+03:10.620 --> 03:13.200
+That is defined inside that index file.
+
+03:13.830 --> 03:19.290
+We're going to pass that express app into this request function that is coming from the super test library.
+
+03:19.650 --> 03:23.880
+And then we can make a request and write out some expectations around it.
+
+03:25.220 --> 03:26.780
+The whole thing I want to focus on here.
+
+03:26.780 --> 03:32.080
+The whole big point I'm trying to make is that we are creating our express application inside the index
+
+03:32.090 --> 03:32.660
+file.
+
+03:32.660 --> 03:37.430
+So at some point in time we are going to have to write out some code that's going to look a little bit
+
+03:37.430 --> 03:38.210
+like this.
+
+03:38.210 --> 03:45.260
+We're going to have to try to require the express application from that index file over to some testing
+
+03:45.260 --> 03:49.400
+file just so we can get access to that app variable.
+
+03:50.190 --> 03:53.690
+There's a little problem with that inside of our index file.
+
+03:53.700 --> 03:55.680
+We have a lot of startup code.
+
+03:55.710 --> 03:59.430
+We have some code to tell the Express app to start listening on some given port.
+
+03:59.520 --> 04:05.640
+We also have some hard coded stuff to say tell mongo or Mongoose to connect to our MongoDB database
+
+04:05.640 --> 04:07.500
+on some particular URL.
+
+04:08.040 --> 04:13.200
+So there are some very particular very hardcoded startup logic inside of indexes.
+
+04:13.410 --> 04:19.230
+But most in particular, I want to focus on the fact that inside of indexes we automatically start listing
+
+04:19.230 --> 04:21.360
+on Port 3000 inside there.
+
+04:21.630 --> 04:22.860
+Why is that relevant?
+
+04:23.100 --> 04:28.050
+Well, at some point in time, you and I might want to be able to run multiple different tests on the
+
+04:28.050 --> 04:29.160
+same machine.
+
+04:29.160 --> 04:32.400
+In other words, we might want to run some tests around.
+
+04:33.700 --> 04:34.780
+Our OTT service.
+
+04:34.780 --> 04:40.030
+At the same time that we are running some tests around our order service, the service and the Order
+
+04:40.030 --> 04:43.450
+Service might both be trying to listen on for 3000.
+
+04:43.960 --> 04:51.220
+So if we try to require in our express app from that index file and both the auth service and the ticket
+
+04:51.220 --> 04:55.450
+service or whatever else are listening on the same port, we're going to very quickly end up with an
+
+04:55.450 --> 05:00.610
+error and we will not be able to run tests from different services on the same machine at the same time
+
+05:00.610 --> 05:04.390
+just because they are both listening on the same port.
+
+05:05.390 --> 05:09.920
+So to get around this and to allow us to run tests from multiple services on the same machine at the
+
+05:09.920 --> 05:15.050
+same time, we're going to rely upon some default behavior or some nice functionality inside of super
+
+05:15.050 --> 05:15.710
+test.
+
+05:15.920 --> 05:20.600
+So back over here at the example section, you'll notice that it says If this server is not listening
+
+05:20.600 --> 05:25.400
+for connections, then it will automatically start to listen on an ephemeral port.
+
+05:25.610 --> 05:30.590
+Ephemeral port right here just means that super test is going to pick a random available port on your
+
+05:30.590 --> 05:34.420
+computer and have the Express app start to listen on that port.
+
+05:34.430 --> 05:39.560
+And so that feature right there will allow us to run tests from multiple different services at the same
+
+05:39.560 --> 05:42.410
+time and not have to worry about this port issue.
+
+05:43.730 --> 05:48.890
+However, if we want to take use of that functionality, that means that inside of our index file,
+
+05:48.890 --> 05:54.470
+we cannot have any code that's going to have the Express app automatically start to listen on Port 3000.
+
+05:54.860 --> 05:56.480
+So how are we going to fix this all up?
+
+05:56.510 --> 05:57.680
+Well, here's what we're going to do.
+
+05:57.710 --> 06:00.530
+Here's the refactor that we're going to go through in the next video.
+
+06:00.920 --> 06:05.960
+We're going to start to split out our index file into two different files.
+
+06:06.650 --> 06:08.270
+We're going to create a new file called App.
+
+06:08.270 --> 06:10.390
+JJ's inside of app, JJ's.
+
+06:10.400 --> 06:13.970
+We're going to create our express application and export it.
+
+06:14.570 --> 06:18.880
+The Express app that we create inside this file is not going to be listening on any port.
+
+06:18.890 --> 06:22.550
+So in other words, we are not going to have any code inside of app.
+
+06:22.550 --> 06:26.060
+JS That looks like this right here.
+
+06:27.010 --> 06:29.420
+We are not going to have anything inside this new app.
+
+06:29.420 --> 06:33.790
+JJ's file that's going to have our app start listing on Port 3000 or anything else.
+
+06:33.820 --> 06:38.980
+Instead, we're just going to export the app after we have wired up all the appropriate middleware root
+
+06:39.010 --> 06:40.120
+handlers and so on.
+
+06:41.160 --> 06:46.920
+We're then going to export that thing into the test file where it can then be safely used by super test.
+
+06:47.820 --> 06:54.330
+We will also import it into a new indexes file and inside of indexes is where we're going to have some
+
+06:54.330 --> 06:58.170
+actual code to start up our app and start listing on Port 3000.
+
+06:59.250 --> 07:03.480
+So whenever we want to actually run our application inside of a dev or a production environment, in
+
+07:03.480 --> 07:08.160
+other words, whenever we want to really start up our server for real, we're still going to execute
+
+07:08.160 --> 07:12.720
+the indexed JS file and that thing's just going to pull in the app that was declared over here.
+
+07:12.720 --> 07:17.220
+But we're going to have the separate file that exports just the app by itself, so we can still use
+
+07:17.220 --> 07:19.020
+it safely inside that test file.
+
+07:19.860 --> 07:20.190
+Oh.
+
+07:20.220 --> 07:20.790
+Okay.
+
+07:21.380 --> 07:22.400
+So that's pretty much it.
+
+07:22.400 --> 07:25.570
+I just want to help you understand why we are doing this refactor.
+
+07:25.580 --> 07:29.660
+Now, at this point, you might be saying, Stephen, this seems like kind of a big refactor just to
+
+07:29.660 --> 07:31.670
+get this super test library working.
+
+07:31.760 --> 07:36.680
+Well, it turns out that there are actually some huge benefits from creating our Express app inside
+
+07:36.680 --> 07:42.110
+of its own file and then doing some actual startup logic inside of this other file over here.
+
+07:42.110 --> 07:46.970
+And you're going to see some of those benefits later on as we start to work on some of our other services.
+
+07:47.570 --> 07:47.870
+All right.
+
+07:47.870 --> 07:51.170
+So a quick pause right here, and we're going to start to implement all this in the next video.

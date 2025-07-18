@@ -1,0 +1,217 @@
+WEBVTT
+
+00:01.860 --> 00:02.430
+In this video.
+
+00:02.430 --> 00:04.950
+We're going to tackle the show request handler.
+
+00:04.980 --> 00:08.790
+This request handler is going to get information about a very specific order.
+
+00:09.030 --> 00:13.260
+Once again, we're going to make sure that only authenticated users can access this handler.
+
+00:13.260 --> 00:18.990
+And we're also going to make sure that users can only access their own orders so one user cannot look
+
+00:18.990 --> 00:20.400
+at another user's orders.
+
+00:21.090 --> 00:24.900
+In total, this raw handler is going to look very similar to the index, one that we just put together.
+
+00:24.900 --> 00:26.910
+So let's just dive right in and get to it.
+
+00:27.660 --> 00:32.010
+Back inside my editor, I'll find my roots directory and we've already created the show file inside
+
+00:32.010 --> 00:32.400
+there.
+
+00:33.060 --> 00:35.190
+So your show is at the very top.
+
+00:35.190 --> 00:37.470
+We're going to add in a couple of different imports right away.
+
+00:37.980 --> 00:42.780
+Without a doubt, we need the require off middleware from our common module.
+
+00:43.620 --> 00:46.260
+I'm also going to get the order model.
+
+00:47.240 --> 00:52.460
+From up to directories or simply just one directory models order.
+
+00:54.770 --> 00:56.570
+Let's apply that require the middleware.
+
+00:56.570 --> 01:01.490
+So right above the OR right before the actual request handling function will add in require off.
+
+01:03.480 --> 01:10.680
+Then inside the handler itself, we're going to take the ID or the order ID off the request parameters
+
+01:10.830 --> 01:15.030
+and we'll just try to fetch some order out of our database using that order ID.
+
+01:16.140 --> 01:21.270
+So throw inside of your order is going to be a wait order find by ID.
+
+01:21.300 --> 01:26.220
+Remember, that is how we look up a very particular record based on its ID and the idea that we want
+
+01:26.220 --> 01:32.860
+to try to look up is going to be coming out of the request params object so it will be req params dot
+
+01:32.910 --> 01:33.840
+order id.
+
+01:35.470 --> 01:40.390
+We're really making a big assumption here, just assuming that the user is going to provide a accurate
+
+01:40.390 --> 01:43.630
+or what looks like a MongoDB ID right here.
+
+01:43.630 --> 01:48.640
+And we already had a discussion a little bit ago about doing some validation to make sure that a valid
+
+01:48.640 --> 01:49.810
+ID is provided.
+
+01:49.810 --> 01:54.970
+So we could add in a validation step to make sure that that params right there is looking like a real
+
+01:54.970 --> 01:56.260
+MongoDB ID.
+
+01:56.650 --> 01:58.750
+I'll leave that up to you if you want to add that in.
+
+02:00.790 --> 02:02.350
+So we're now going to fetch the order.
+
+02:02.350 --> 02:07.540
+And when we fetch the order, we probably want to also simultaneously retrieve the associated ticket
+
+02:07.540 --> 02:08.190
+as well.
+
+02:08.200 --> 02:11.830
+So we're going to once again use that populate system in Mongoose.
+
+02:11.830 --> 02:16.510
+So to say that we want to find this order and also simultaneously fetch the associated ticket, we're
+
+02:16.510 --> 02:20.410
+going to chain on to the very end dot populate ticket like so.
+
+02:21.450 --> 02:24.540
+So now this should give us our order and the associated ticket.
+
+02:27.040 --> 02:31.810
+When we run this query is entirely possible that we will not find any order whatsoever.
+
+02:31.810 --> 02:37.090
+So a user might provide an invalid ID, they might provide an ID for some order that has not yet been
+
+02:37.090 --> 02:37.610
+created.
+
+02:37.630 --> 02:38.470
+Who knows?
+
+02:38.500 --> 02:41.830
+The first thing we need to do is to make sure that we actually found in order.
+
+02:42.940 --> 02:48.130
+They'll say, if we did not find an order, then we probably want to throw a not found error until the
+
+02:48.130 --> 02:48.550
+user.
+
+02:48.550 --> 02:51.070
+Sorry, but we were not able to actually find anything.
+
+02:51.730 --> 02:56.050
+So if we get inside of here, we will throw a new not found air.
+
+02:58.280 --> 03:01.130
+Let's make sure we import that air from our common module.
+
+03:01.990 --> 03:03.790
+So not found air.
+
+03:04.860 --> 03:05.460
+Very good.
+
+03:06.950 --> 03:11.900
+Next up, if the user does not own this order, then we probably want to throw in error as well.
+
+03:11.900 --> 03:15.020
+So again, one user cannot look at another user's orders.
+
+03:16.060 --> 03:17.410
+So we'll say if.
+
+03:18.520 --> 03:20.920
+The order stopped user ID.
+
+03:20.920 --> 03:26.260
+So this thing's user ID if the person who owns this order is not equal to the idea of the person making
+
+03:26.260 --> 03:30.400
+the request, well, we need to throw a not authorized error or something like that.
+
+03:30.400 --> 03:36.250
+So let's say if the order is user ID is not equal to req current user.
+
+03:36.250 --> 03:39.130
+And don't forget the exclamation because we want to tell TypeScript.
+
+03:39.130 --> 03:44.110
+Don't worry, we already made sure that there is a current user property and then ID.
+
+03:45.080 --> 03:49.220
+Then we will throw a new, not authorized air.
+
+03:50.790 --> 03:54.150
+And once again, we need to make sure we import that from our common module.
+
+03:58.440 --> 04:02.790
+So if we get past both those little checks right there, then that means, hey, we found the ID or
+
+04:03.030 --> 04:05.480
+we found the order and we actually want to send this back to the user.
+
+04:05.490 --> 04:10.950
+So at the very bottom we can replace that empty object with order and send back the entire thing to
+
+04:10.950 --> 04:11.550
+the user.
+
+04:13.710 --> 04:14.400
+That should be it.
+
+04:14.430 --> 04:16.320
+Let's save this as usual.
+
+04:16.320 --> 04:21.210
+We don't have really any mechanism right now to effectively test this because we don't have the ability
+
+04:21.210 --> 04:24.180
+to really create tickets to associate with a given order.
+
+04:24.330 --> 04:28.170
+So once again, we're going to take a quick pause, come back the next video and write out a quick test.
+
+04:28.170 --> 04:32.970
+And don't worry, the test for this is going to go way faster than the index one we just put together.
+
+04:33.450 --> 04:34.440
+So let's take a pause right here.
+
+04:34.470 --> 04:36.180
+Get started on this in just a moment.

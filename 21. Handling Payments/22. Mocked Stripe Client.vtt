@@ -1,0 +1,247 @@
+WEBVTT
+
+00:00.970 --> 00:02.780
+Let's start to wrap up this test.
+
+00:02.800 --> 00:06.220
+So right after we make our request, we probably want to make sure that we get a response with that
+
+00:06.220 --> 00:07.780
+very particular status code.
+
+00:07.810 --> 00:12.280
+In this case, I'm going to expect that we get a status code back of 201 to indicate that a payment
+
+00:12.280 --> 00:13.510
+actually was created.
+
+00:13.810 --> 00:16.960
+Right now, our route handler is definitely not returning it to a one.
+
+00:16.960 --> 00:20.980
+It is returning a 200 by default just to make sure that we pass that part.
+
+00:20.980 --> 00:22.780
+I'll go back to the route handler really quickly.
+
+00:23.230 --> 00:24.490
+Here's the send statement.
+
+00:24.490 --> 00:27.340
+And again, ascend defaults to using a 200.
+
+00:27.610 --> 00:29.680
+So I'm going to chain on a status.
+
+00:32.170 --> 00:33.880
+Of 2a1 like so.
+
+00:36.260 --> 00:41.120
+Besides making sure that we get back at 201, we might want to also make sure that we call that Stripe
+
+00:41.120 --> 00:44.570
+API or the Stripe library with the correct set of arguments.
+
+00:44.930 --> 00:50.570
+So to do so, we need to somehow get access to that stripe mock function or really the create mock function
+
+00:50.570 --> 00:54.680
+we put together and make sure that this thing was invoked and make sure there was invoked with the correct
+
+00:54.680 --> 00:55.460
+arguments.
+
+00:56.210 --> 01:00.530
+So to do so at the very top of my test file, I'm going to add in an import.
+
+01:03.120 --> 01:06.210
+Or Stripe from up to directories.
+
+01:06.210 --> 01:06.840
+Stripe.
+
+01:07.970 --> 01:12.440
+Now remember, because we are mocking out the Stripe module right here when we write out this import
+
+01:12.440 --> 01:18.020
+for Stripe just is going to make sure that we get the Stripe file inside of our MOX directory, not
+
+01:18.020 --> 01:20.150
+the real version of the stripe file.
+
+01:21.570 --> 01:23.400
+So now back down inside of our test.
+
+01:25.070 --> 01:30.350
+We can write out some expectations around that mock function, very similar to all the different expectations
+
+01:30.350 --> 01:31.410
+we've written out before.
+
+01:31.430 --> 01:34.340
+We can make sure that the mock create function was called.
+
+01:34.340 --> 01:38.990
+We can make sure that was called with the correct arguments to get access to the actual arguments that
+
+01:38.990 --> 01:40.160
+that thing was called with.
+
+01:40.370 --> 01:43.400
+I'm going to create a variable right here called charge options.
+
+01:44.090 --> 01:46.400
+And this will come from Stripe charges.
+
+01:46.640 --> 01:52.460
+Create, mock and then remember off of here, we can take a look at all the times it was called.
+
+01:52.820 --> 01:56.110
+So calls that is going to be an array of arrays.
+
+01:56.120 --> 01:58.340
+So we could take a look at the first time it was called.
+
+01:58.730 --> 02:02.840
+And then for that first time, we could take a look at the first argument like so.
+
+02:04.730 --> 02:06.590
+And we are getting an air from TypeScript right here.
+
+02:06.590 --> 02:11.060
+TypeScript is saying, hey, this great thing does not have a mock property tied to it.
+
+02:11.240 --> 02:13.460
+Remember, we can teach TypeScript what's going on here.
+
+02:13.460 --> 02:18.980
+If we take just Stripe charges, create, put a set of parentheses around it, and then inside the parentheses
+
+02:18.980 --> 02:22.340
+write in as just a mock like so.
+
+02:24.470 --> 02:31.250
+Now charge options is going to be back inside of our handler, this object right here so we can make
+
+02:31.250 --> 02:33.320
+sure that this object has the correct properties.
+
+02:33.320 --> 02:38.390
+We can make sure that it has the appropriate currency, the correct amount, and the correct token as
+
+02:38.390 --> 02:38.840
+well.
+
+02:40.190 --> 02:43.970
+So we'll write out three expectations to make sure all those properties are set correctly.
+
+02:44.660 --> 02:47.960
+I'll take a look at charge options dot.
+
+02:48.890 --> 02:49.700
+Source.
+
+02:51.270 --> 02:53.970
+And I'll expect that to equal tock.
+
+02:54.030 --> 02:54.660
+Visa.
+
+02:55.870 --> 03:03.070
+I will expect charge options that amount to equal and the amount that we are charging should be at whatever
+
+03:03.070 --> 03:06.140
+amount or price we had listed on the order at times 100.
+
+03:06.160 --> 03:09.100
+So in this case my price was 20, so it will be 20 times 100.
+
+03:09.100 --> 03:11.410
+That's what I should have provided for amount.
+
+03:12.190 --> 03:13.870
+I'll put in 20 times 100.
+
+03:15.090 --> 03:19.140
+And then finally I will expect that charge options currency.
+
+03:20.420 --> 03:22.160
+Is equal to USD.
+
+03:23.000 --> 03:23.840
+And that should be it.
+
+03:24.830 --> 03:27.080
+Let's now save this and see how this test is doing.
+
+03:28.310 --> 03:29.540
+Back over at my terminal.
+
+03:29.900 --> 03:30.240
+Yep.
+
+03:30.270 --> 03:32.030
+Looks like it works as expected.
+
+03:32.630 --> 03:33.300
+As usual.
+
+03:33.320 --> 03:35.630
+Let's try to make this test break really quickly.
+
+03:35.630 --> 03:37.020
+So back inside the handler.
+
+03:37.040 --> 03:39.410
+I'll just comment out the striped charges.
+
+03:39.410 --> 03:40.280
+Create call.
+
+03:41.800 --> 03:42.490
+Save it.
+
+03:42.580 --> 03:46.090
+Now, if I flip back over, we're probably going to see some errors around those expectations that the
+
+03:46.090 --> 03:48.190
+thing was called with some specific arguments.
+
+03:48.640 --> 03:49.150
+Yep.
+
+03:49.150 --> 03:54.550
+So it looks like we get an error when we try to pull off the calls property from that mock because now
+
+03:54.550 --> 03:58.690
+the create function was probably never called, not even once.
+
+03:59.530 --> 03:59.770
+Yes.
+
+03:59.780 --> 04:00.760
+This looks pretty good.
+
+04:01.550 --> 04:01.670
+Now.
+
+04:01.670 --> 04:02.690
+It's definitely works.
+
+04:02.690 --> 04:07.610
+But of course the downside to this approach is that we are not really testing reaching out to the Stripe
+
+04:07.610 --> 04:12.590
+API itself and you might want to test and make sure, hey, we actually can reach out to the real Stripe
+
+04:12.590 --> 04:14.780
+API and provide some correct values.
+
+04:15.260 --> 04:19.950
+We'll take a pause right here and we'll take a look at an alternative way of testing this stuff.
+
+04:19.970 --> 04:20.720
+Totally optional.
+
+04:20.720 --> 04:22.790
+But let's go through anyhow in the next video.

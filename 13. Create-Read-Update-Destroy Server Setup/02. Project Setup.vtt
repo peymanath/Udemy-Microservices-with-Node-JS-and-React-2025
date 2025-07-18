@@ -1,0 +1,319 @@
+WEBVTT
+
+00:00.770 --> 00:04.140
+All right, my friends, let's start doing some setup for our tickets service.
+
+00:04.160 --> 00:08.570
+So, like I said, we're going to be copy pasting a lot of stuff over from the service, so let's get
+
+00:08.570 --> 00:09.050
+to it.
+
+00:09.500 --> 00:13.730
+Back inside of my editor, I'm going to find my root project directory and I'll create a new folder
+
+00:13.730 --> 00:15.770
+inside there called Simply Tickets.
+
+00:16.930 --> 00:20.350
+They're going to zoom in a little bit so you can see what I am about to do very easily.
+
+00:20.980 --> 00:23.140
+Inside of tickets, I'm going to expand that thing.
+
+00:23.170 --> 00:24.860
+I'm also going to expand off.
+
+00:25.540 --> 00:33.100
+Then inside the service I'm going to a multi select config package, JSON package lock, docker file
+
+00:33.100 --> 00:35.020
+and the Docker ignore file.
+
+00:36.480 --> 00:41.820
+I'm then going to copy all five of those files and I'm going to paste all of them into tickets.
+
+00:45.220 --> 00:48.520
+Then inside of tickets, I'm going to make a new directory called CRC.
+
+00:50.350 --> 00:52.570
+I'm going to go back up to the service.
+
+00:53.140 --> 00:55.000
+I'll expand shark inside of there.
+
+00:55.850 --> 01:03.320
+And out of this CRC directory all we want to get is index TZ apts and a test directory.
+
+01:03.800 --> 01:05.900
+So I'm going to multi select those three things.
+
+01:06.320 --> 01:07.940
+I'm going to copy all of those.
+
+01:09.600 --> 01:10.890
+Well, then collapse off.
+
+01:10.920 --> 01:14.580
+I'm going to go down to tickets and paste everything inside there.
+
+01:17.310 --> 01:18.480
+And that's pretty much it.
+
+01:19.650 --> 01:21.570
+We're not going to go through our tickets directory.
+
+01:21.570 --> 01:26.660
+We're going to find a couple of places where we still have some references back to the art service.
+
+01:26.670 --> 01:30.780
+We're going to make sure that we just replace any words referring to the service with tickets just to
+
+01:30.780 --> 01:31.830
+make sure it's really clear.
+
+01:31.830 --> 01:34.800
+Oh yeah, this is the package, just on file for tickets and so on.
+
+01:35.470 --> 01:37.290
+Okay, let's start off for inside of Docker.
+
+01:37.290 --> 01:38.720
+Ignore nothing inside there.
+
+01:38.730 --> 01:40.020
+How about the Docker file?
+
+01:40.140 --> 01:42.330
+Nothing specific about the inside of here.
+
+01:42.510 --> 01:44.100
+How about package JSON?
+
+01:44.430 --> 01:47.640
+Well, in the package JSON file, we've got a name of auth.
+
+01:48.030 --> 01:50.370
+Let's update that to tickets instead.
+
+01:52.690 --> 01:53.100
+Cool.
+
+01:53.860 --> 01:55.830
+Then let's go inside the QQ directory.
+
+01:55.840 --> 01:58.810
+I'm going to find indexed keys inside of here.
+
+01:58.810 --> 02:00.190
+We've got a couple of different errors.
+
+02:00.190 --> 02:04.540
+That's just because we have not installed any dependencies into this process, into this project just
+
+02:04.540 --> 02:04.990
+yet.
+
+02:05.500 --> 02:07.300
+So we'll ignore those errors right now.
+
+02:08.440 --> 02:13.570
+It looks like there is a direct connection string right here to connect to our mongo instance.
+
+02:13.960 --> 02:15.070
+So we'll have to update that.
+
+02:15.070 --> 02:16.930
+Let's just keep that in the back of our head for a moment.
+
+02:18.070 --> 02:20.440
+And I don't see it too much other stuff inside there.
+
+02:20.530 --> 02:22.080
+How about in the app file?
+
+02:22.510 --> 02:27.640
+Inside of here, we've got a lot of references to some routers that do not exist inside of our tickets
+
+02:27.640 --> 02:28.300
+project.
+
+02:28.540 --> 02:31.030
+So I'm going to delete those right away, just so I don't forget.
+
+02:33.420 --> 02:38.070
+I'll then go down to where we had wired those things up to our express application and delete that as
+
+02:38.070 --> 02:38.550
+well.
+
+02:40.330 --> 02:45.070
+If you see any errors inside of here where I don't, or if you see pretty much anything that appears
+
+02:45.070 --> 02:45.910
+to be wrong inside of here.
+
+02:45.940 --> 02:46.700
+Don't sweat it.
+
+02:46.720 --> 02:50.230
+A lot of errors will go away as soon as we start to install dependencies.
+
+02:51.380 --> 02:54.710
+I'm going to close the app to file one last location.
+
+02:54.710 --> 02:57.110
+Let's check really quickly inside the test folder.
+
+02:57.110 --> 02:58.860
+I'm going to take a look at setup tests.
+
+02:59.970 --> 03:01.230
+And so inside of here.
+
+03:01.530 --> 03:05.910
+Well, I don't really see too much inside of here that I'm all that worried about.
+
+03:06.920 --> 03:10.220
+I do some see some stuff about sign in down here at the bottom that we might have to update.
+
+03:10.220 --> 03:13.400
+But for the most part, I think we could probably just leave all this as is.
+
+03:14.360 --> 03:14.660
+Okay.
+
+03:14.660 --> 03:16.520
+So let's go back over to our terminal.
+
+03:16.640 --> 03:19.970
+We're going to install dependencies inside of this tickets folder.
+
+03:20.120 --> 03:26.000
+Naturally, we could have copied over the node modules directory itself, but I'm just going to install
+
+03:26.000 --> 03:27.260
+dependencies manually.
+
+03:27.290 --> 03:28.310
+No reason not to.
+
+03:30.050 --> 03:31.910
+So inside of tickets I'll do an NPM install.
+
+03:31.910 --> 03:32.750
+Simple enough.
+
+03:34.450 --> 03:34.900
+All right.
+
+03:34.900 --> 03:37.750
+So, like I said, definitely saved ourselves a lot of time.
+
+03:37.750 --> 03:41.320
+That would have been about an hour of writing out all that stuff from scratch if we had to.
+
+03:42.020 --> 03:47.030
+So let's finish up this video by building our image and pushing it off to Docker Hub.
+
+03:48.190 --> 03:49.270
+So back at my terminal.
+
+03:49.510 --> 03:50.350
+Oh, look at that.
+
+03:50.350 --> 03:53.800
+We have to wait once again for MongoDB memory to be installed.
+
+03:53.830 --> 03:58.300
+Like I said, that's why we added that thing to the development dependencies list so we don't have to
+
+03:58.300 --> 04:02.410
+download that thing every single time that we try to redeploy our image.
+
+04:02.920 --> 04:03.130
+All right.
+
+04:03.130 --> 04:06.070
+So I can open up a second terminal window inside of tickets.
+
+04:07.420 --> 04:07.990
+Inside of here.
+
+04:07.990 --> 04:09.190
+I'll try to build my image.
+
+04:09.460 --> 04:16.000
+So I'm going to do a Docker build T by Docker ID, flash tickets and then a dot.
+
+04:18.570 --> 04:22.890
+Doing the installation should only take a moment or so since we've got that only prod flag on there,
+
+04:22.890 --> 04:28.710
+which means we do not have to install or download and install that MongoDB memory binary, which means
+
+04:28.710 --> 04:31.350
+we're saving 80 megabytes off this install process.
+
+04:31.500 --> 04:33.450
+So someone's going to give this a second to finish up.
+
+04:33.450 --> 04:37.260
+And once it's all done, like I said, we're going make sure that we push this off to Docker Hub.
+
+04:37.650 --> 04:41.850
+And if you're curious why we do this in general, it's because when we try to run scaffold, which is
+
+04:41.850 --> 04:45.540
+something we're going to be doing in a little bit, Scaffold is going to try to reach out to Docker
+
+04:45.540 --> 04:48.360
+Hub to get an initial copy of this image to pull down.
+
+04:48.360 --> 04:49.320
+That's kind of the assumption.
+
+04:49.320 --> 04:52.110
+Scaffold assumes that you've already built this image once in the past.
+
+04:52.110 --> 04:55.950
+That's why we're going through this separate build image and push to Docker have process.
+
+04:55.950 --> 05:00.630
+As a reminder, if you are running your project on Google Cloud, you do not have to do this step.
+
+05:00.630 --> 05:03.000
+I probably should mention that before I ran the command, but.
+
+05:04.020 --> 05:04.740
+That's life.
+
+05:05.750 --> 05:05.950
+Okay.
+
+05:06.020 --> 05:08.990
+Looks like we're all built, so I'll do a Docker push.
+
+05:09.920 --> 05:10.760
+Even greater.
+
+05:11.970 --> 05:12.690
+Tickets.
+
+05:13.260 --> 05:14.820
+And that's going to push our image up.
+
+05:15.480 --> 05:15.720
+All right.
+
+05:15.720 --> 05:16.740
+Well, that's pretty much it.
+
+05:17.130 --> 05:18.840
+We're going to take a quick pause right here.
+
+05:18.870 --> 05:20.160
+Let's continue the next video.
+
+05:20.160 --> 05:24.240
+We're going to start to right out that Kubernetes deployment file and all this other stuff.

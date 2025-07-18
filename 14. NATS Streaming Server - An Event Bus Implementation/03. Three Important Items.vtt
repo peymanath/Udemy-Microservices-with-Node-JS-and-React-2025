@@ -1,0 +1,235 @@
+WEBVTT
+
+00:01.130 --> 00:04.730
+In this video, we're going to do some initial setup of the Net's streaming server.
+
+00:04.760 --> 00:08.630
+I first want to give you just a couple of very high level notes on it, and then we're going to start
+
+00:08.630 --> 00:13.610
+to deploy it into our Kubernetes cluster by writing, as you'd guess, a config file.
+
+00:14.210 --> 00:15.200
+So a couple of notes here.
+
+00:15.470 --> 00:20.840
+So we're making use of something called Nats streaming server to share events across all the different
+
+00:20.840 --> 00:22.550
+services inside of our application.
+
+00:23.030 --> 00:28.520
+You can find documentation for nats streaming server at dock's nats io.
+
+00:29.210 --> 00:30.620
+So I'm going to go there right now.
+
+00:31.190 --> 00:32.750
+Here's the documentation page.
+
+00:33.380 --> 00:37.560
+Now, something that is extremely important for you to understand right from the get go.
+
+00:37.580 --> 00:39.170
+This is extremely important.
+
+00:39.200 --> 00:44.180
+You are going to see a terminology of simply gnats and gnats streaming server.
+
+00:44.570 --> 00:50.180
+These are two separate programs, two different things, and they behave pretty darn differently.
+
+00:50.540 --> 00:52.460
+We are not making use of gnats.
+
+00:52.490 --> 00:58.670
+Gnats is a very simple, basic implementation of event sharing and that streaming server is built on
+
+00:58.670 --> 00:59.810
+top of gnats.
+
+00:59.840 --> 01:05.300
+It is a more advanced and more full of feature implementation that we are going to be making use of.
+
+01:05.450 --> 01:11.180
+So in all the documentation that we look at, in all the deployment instructions, everything, we always
+
+01:11.180 --> 01:17.300
+want to be making sure that we're taking a look at something that says Gnats streaming server 100% of
+
+01:17.300 --> 01:17.930
+the time.
+
+01:18.470 --> 01:22.880
+Having said that, throughout the remainder of this course, and particularly in this section, whenever
+
+01:22.880 --> 01:27.710
+I want to refer to that streaming server, I'm going to very frequently say simply gnats, just because
+
+01:27.710 --> 01:31.640
+saying that streaming server over and over and over again is going to be really annoying.
+
+01:32.290 --> 01:36.370
+So for you, just keep in mind, we're always going to want to look at documentation around Nats streaming
+
+01:36.370 --> 01:39.430
+server and this applies even to the official documentation.
+
+01:39.730 --> 01:43.960
+Once we come over here on the left hand side, we're going to see stuff that says Nat's concepts developing
+
+01:43.960 --> 01:45.100
+with Nat's and so on.
+
+01:45.430 --> 01:49.780
+That is all references to just plain Nat's, which we're not using.
+
+01:49.780 --> 01:51.580
+We are using Nat's streaming server.
+
+01:51.580 --> 01:55.240
+So the documentation we want to look at, we're going to scroll down on the left hand side.
+
+01:56.330 --> 01:59.180
+And eventually find Nats streaming concepts.
+
+02:00.080 --> 02:02.930
+These are the documentation sections we care about.
+
+02:03.440 --> 02:04.990
+Here is developing with Nat streaming.
+
+02:05.000 --> 02:05.990
+Yep we care about that.
+
+02:05.990 --> 02:07.210
+And here's nat streaming server.
+
+02:07.220 --> 02:08.390
+Yep, we care about that.
+
+02:08.600 --> 02:10.870
+So again, make sure you are not reading about Nats.
+
+02:10.880 --> 02:14.060
+Make sure you are reading about Nat's streaming server.
+
+02:14.850 --> 02:15.070
+Okay.
+
+02:15.150 --> 02:16.110
+So that might.
+
+02:17.330 --> 02:22.520
+Some of the different features of Nat streaming are going to be absolutely tremendous in how we eventually
+
+02:22.520 --> 02:26.600
+start to implement some of our different services and particularly how we shared data between them.
+
+02:26.780 --> 02:30.620
+So in the coming videos, we're going to get Nat streaming server up and running inside of our Kubernetes
+
+02:30.620 --> 02:31.190
+cluster.
+
+02:31.220 --> 02:35.840
+We're going to create a very small little project where we are just writing out some Node.js code to
+
+02:35.840 --> 02:40.550
+work with Nat streaming server directly so we can get a better idea of how it behaves, how it shares
+
+02:40.550 --> 02:43.230
+information around how events get persisted.
+
+02:43.250 --> 02:47.780
+How we can somehow synchronize new services that we add into our application and so on.
+
+02:48.750 --> 02:53.730
+We are going to run now streaming server inside of our Kubernetes cluster by using the official Docker
+
+02:53.730 --> 02:55.710
+image called Nats streaming.
+
+02:56.100 --> 03:01.200
+Let's go take a look at the image documentation on Docker Hub right now, just so we have a better idea
+
+03:01.200 --> 03:02.850
+of how we can get this thing up and running.
+
+03:03.240 --> 03:07.030
+So inside of a second browser tab, I'm going to navigate to Hub Docker.
+
+03:08.740 --> 03:11.680
+And then once here I will search for Nats at the top.
+
+03:12.840 --> 03:14.290
+And again, we're going to see it.
+
+03:14.310 --> 03:18.090
+One image called Nats and another called Nats streaming.
+
+03:18.420 --> 03:21.930
+So again, we want to make sure we are always going for nets streaming.
+
+03:24.200 --> 03:26.690
+On this page, we can take a look at some documentation.
+
+03:27.170 --> 03:31.820
+The documentation I really want to point out to you is at the very, very bottom of this page.
+
+03:32.640 --> 03:33.960
+So specifically.
+
+03:35.530 --> 03:37.120
+The command line options.
+
+03:37.500 --> 03:42.110
+So these are a ton of different options that we can provide when we create our deployment.
+
+03:42.130 --> 03:47.050
+I'll show you how we stick these in and these are going to customize Howard Nordstrom server behaves.
+
+03:47.050 --> 03:51.730
+Some of these options are really important for us to set and in some cases we definitely do not want
+
+03:51.730 --> 03:53.710
+to be using the default settings.
+
+03:54.490 --> 03:54.910
+All right.
+
+03:54.910 --> 03:57.300
+So in this video, we've really established three things.
+
+03:57.310 --> 04:00.130
+Number one, we're using that streaming server, not gnats.
+
+04:01.170 --> 04:04.230
+Number two, we're going to take a look at the Nats documentation.
+
+04:04.230 --> 04:07.950
+And when we do, we're going to make sure we take a look at the streaming documentation.
+
+04:08.460 --> 04:13.500
+And number three, we're going to run that streaming server inside of our Kubernetes cluster by deploying
+
+04:13.500 --> 04:15.450
+it like any other service in our app.
+
+04:16.400 --> 04:22.610
+And I guess number 3.5 or so, we definitely want to keep this page open, the Docker Hub documentation
+
+04:22.610 --> 04:26.660
+on the NAT streaming image so we can take a look at the different command line options that are available
+
+04:26.660 --> 04:27.260
+to us.
+
+04:27.860 --> 04:28.280
+All right.
+
+04:28.280 --> 04:29.240
+So a quick pause right here.
+
+04:29.240 --> 04:33.980
+We're going to start to deploy this into our cluster in the next video by writing a deployment.

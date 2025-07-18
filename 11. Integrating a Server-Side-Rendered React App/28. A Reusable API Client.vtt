@@ -1,0 +1,346 @@
+WEBVTT
+
+00:01.130 --> 00:04.450
+Our code definitely works right now, but it's really messy at present.
+
+00:04.460 --> 00:09.020
+Any time that we want to make a request inside of a initial prop function, we would have to set up
+
+00:09.020 --> 00:12.740
+this if statement we would have to write out this really long URL and so on.
+
+00:12.740 --> 00:17.750
+So I think that it would be worth our time to try to extract a lot of this logic into a separate helper
+
+00:17.750 --> 00:23.060
+file that we can more easily use any time that we need to make a request from a git initial props function.
+
+00:23.390 --> 00:24.650
+So here's my idea.
+
+00:26.010 --> 00:28.050
+I think that we should build a separate file.
+
+00:28.050 --> 00:31.710
+And inside there we're going to write out a helper function called Build Client.
+
+00:32.190 --> 00:37.260
+This build client function is going to take some incoming request that has those headers on it that
+
+00:37.260 --> 00:38.220
+we really care about.
+
+00:39.020 --> 00:44.810
+Then inside that function, we're going to have some logic to try to build a preconfigured version of
+
+00:44.810 --> 00:45.690
+Axios.
+
+00:45.710 --> 00:49.790
+That's going to be preconfigured to work regardless of what environment we are on.
+
+00:50.270 --> 00:53.390
+So the logic inside there is going to take a look at that incoming request.
+
+00:53.420 --> 00:58.250
+It's going to take a look at whether it is in the browser or the server environment, and then it will
+
+00:58.250 --> 01:03.200
+eventually return a version of Axios that has already been configured to work in either the browser
+
+01:03.200 --> 01:04.520
+or the server for us.
+
+01:04.910 --> 01:05.870
+So that's the idea.
+
+01:07.260 --> 01:11.550
+So let's create a new file that's going to house this build client function.
+
+01:13.690 --> 01:16.390
+Back inside my editor, I'm going to find the client directory.
+
+01:16.660 --> 01:19.660
+I'll create a new folder inside there called API.
+
+01:20.290 --> 01:25.090
+And then inside of that I'm going to make a new file called Build Client JS.
+
+01:27.360 --> 01:31.440
+Inside of here at the very top, I'm going to import Axios from Axios.
+
+01:33.370 --> 01:35.140
+I'll then do an export.
+
+01:36.570 --> 01:37.560
+Default.
+
+01:40.270 --> 01:44.800
+And I'm going to assume that the argument to this is going to be an object that's going to contain the
+
+01:44.800 --> 01:46.270
+request that we care about.
+
+01:46.600 --> 01:51.040
+I'm going to attempt to structure off the rec property from this incoming argument.
+
+01:52.880 --> 01:56.860
+So then inside of here, we need to essentially do very similar to what we just did back inside of get
+
+01:56.870 --> 01:57.570
+initial props.
+
+01:57.590 --> 02:00.260
+We need to first decide what environment we are in.
+
+02:00.530 --> 02:03.110
+So we will once again do a type of check on window.
+
+02:04.240 --> 02:12.370
+I'll say if type of window is equal to the string undefined, then that must mean we are on the server.
+
+02:13.460 --> 02:16.580
+Otherwise we must be on the browser.
+
+02:17.330 --> 02:21.630
+So now in each of these cases, we're going to create an instance of Axios that is Pre-configured to
+
+02:21.630 --> 02:24.150
+work in either the server or the browser.
+
+02:25.710 --> 02:29.820
+To do so I'm going to write out return Axios dot create.
+
+02:29.920 --> 02:33.010
+That's how we create a preconfigured version of Axios.
+
+02:33.030 --> 02:38.160
+Once we return this thing, it will be like a normal Axios client, but it will have some base URL or
+
+02:38.160 --> 02:42.180
+domain wired up to it, and we'll also have some headers wired up to it as well.
+
+02:42.960 --> 02:50.160
+So if we are on the server then we want to set a base u you URL for this axios instance to use.
+
+02:50.730 --> 02:53.460
+Notice that URL right here has capital URL.
+
+02:54.090 --> 02:57.960
+Then inside there we'll specify that really long domain that we saw just a moment ago.
+
+02:58.500 --> 03:06.600
+So in total it will be a http colon, slash slash ingress, engine x ingress and x SVC.
+
+03:08.180 --> 03:09.530
+Cluster local.
+
+03:10.100 --> 03:11.870
+Now please do double check your URL.
+
+03:11.900 --> 03:14.090
+Obviously a very easy to make a typo in there.
+
+03:15.650 --> 03:18.110
+We'll also set up some headers for this thing to use as well.
+
+03:19.320 --> 03:22.500
+So we want to use these same headers that are inside of the incoming request.
+
+03:22.500 --> 03:25.230
+So we'll put in rec dot headers.
+
+03:28.720 --> 03:32.980
+Now if we are on the browser, well, let's create a separate instance of Axios for that.
+
+03:33.250 --> 03:37.000
+So I'm going to do return Axios dot create.
+
+03:37.630 --> 03:41.110
+And in this case we really don't need to set any particular base URL.
+
+03:41.110 --> 03:44.380
+We will set it to a base URL of just forward slash like so.
+
+03:44.620 --> 03:48.220
+And we do not need to include any headers because the browser is going to take care of all that stuff
+
+03:48.220 --> 03:48.850
+for us.
+
+03:49.180 --> 03:52.600
+To be honest with you, we barely even need to put the base URL inside of here.
+
+03:52.630 --> 03:54.640
+We probably could just leave it off entirely.
+
+03:56.650 --> 03:57.060
+Okay.
+
+03:57.070 --> 03:58.080
+So that should be it.
+
+03:58.090 --> 04:02.890
+So now any time that we want to get a copy of Axios to use, we will import build client.
+
+04:02.890 --> 04:07.900
+We'll run this function and pass in some object that has the request on it.
+
+04:08.260 --> 04:11.260
+So let's go back over to our landing page and try making use of this.
+
+04:12.190 --> 04:13.960
+Back inside of index JRS.
+
+04:15.490 --> 04:16.330
+Right here.
+
+04:16.750 --> 04:17.920
+I'll go up to the very top.
+
+04:19.370 --> 04:21.620
+I should not need the Axios for any more.
+
+04:22.190 --> 04:30.620
+Instead I'm going to import build client from up one directory API build client.
+
+04:33.290 --> 04:35.530
+Bend down inside of get initial props.
+
+04:35.540 --> 04:38.420
+I should be able to delete everything inside there.
+
+04:41.130 --> 04:42.630
+And I will replace it with.
+
+04:44.010 --> 04:45.960
+Data is.
+
+04:46.880 --> 04:48.140
+Build client.
+
+04:49.430 --> 04:52.280
+I'm going to pass in an object that has the wreck property on it.
+
+04:53.570 --> 04:56.120
+Now you'll notice that I am now essentially duplicating this thing.
+
+04:56.120 --> 05:00.410
+I'm pulling just the rec property off and then I'm passing in wreck as an object.
+
+05:00.410 --> 05:05.360
+So rather than trying to pull anything off here, we're just going to receive this entire first argument.
+
+05:05.390 --> 05:08.570
+The first argument to this function we usually refer to as context.
+
+05:08.930 --> 05:14.000
+So we can now just take that entire context thing and pass it directly through to build client.
+
+05:15.780 --> 05:19.880
+Now, when we call Bill the client right here, remember, that's just going to give us our Axios instance.
+
+05:19.890 --> 05:22.380
+We still have to actually make a request using it.
+
+05:22.590 --> 05:27.660
+So I'm going to chain on a git and we'll make our actual request.
+
+05:28.200 --> 05:31.020
+So I'm going to make my request to API.
+
+05:32.000 --> 05:32.790
+Users.
+
+05:33.050 --> 05:34.220
+Current user.
+
+05:35.140 --> 05:39.520
+And because that is an async function, I'll make sure that I mark this entire thing as a weight.
+
+05:42.230 --> 05:44.840
+And then finally we'll return data at the very bottom.
+
+05:46.920 --> 05:48.060
+Okay, so that should be it.
+
+05:48.270 --> 05:52.590
+A really quick I just want to flip back over, make sure everything looks good.
+
+05:53.640 --> 05:54.810
+So I'm going to save this.
+
+05:54.810 --> 05:57.270
+I'm going to flip back over to the browser and do a quick test.
+
+05:57.840 --> 05:58.830
+I'll refresh.
+
+05:59.220 --> 06:01.110
+It looks like in the browser it worked correctly.
+
+06:02.410 --> 06:04.900
+And it looks like on the server it worked correctly as well.
+
+06:06.030 --> 06:07.830
+Well, I'd say this is working out pretty well.
+
+06:07.860 --> 06:09.360
+I would like to test one last thing.
+
+06:09.360 --> 06:12.030
+I want to test where we do a soft transition to the page.
+
+06:12.030 --> 06:14.310
+So I'm going to navigate over to sign up.
+
+06:14.460 --> 06:17.910
+I'll put in a fake email, a fake password sign up.
+
+06:18.150 --> 06:19.560
+Yep, that looks good as well.
+
+06:20.890 --> 06:22.370
+Well, this is pretty good.
+
+06:22.670 --> 06:27.170
+Now, one thing we might do, it's a little bit challenging to really understand what the awake keyword
+
+06:27.170 --> 06:29.870
+does when we have some chain method calls like this.
+
+06:29.900 --> 06:34.400
+So one thing you might do just to make this a little bit more legible, we might decide to define the
+
+06:34.400 --> 06:35.600
+client ahead of time.
+
+06:36.550 --> 06:42.430
+Using build client and then do a client target that would very easily improve the readability of this
+
+06:42.430 --> 06:44.920
+and just make it a little bit more obvious what was going on.
+
+06:45.670 --> 06:46.720
+So I'll save that as well.
+
+06:46.720 --> 06:48.610
+And everything should still work as expected.
+
+06:49.760 --> 06:50.000
+Okay.
+
+06:50.030 --> 06:50.800
+So that's pretty much it.
+
+06:50.810 --> 06:55.850
+So now moving forward, any time that we need to make a request from a get initial function, we're
+
+06:55.850 --> 06:59.930
+going to first build our client and then use that to make our actual request.
+
+07:01.050 --> 07:02.130
+Well, let's take a pause right here.
+
+07:02.160 --> 07:04.980
+Now that we've got this all working and will continue in just a moment.

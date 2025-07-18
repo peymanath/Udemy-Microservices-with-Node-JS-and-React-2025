@@ -1,0 +1,325 @@
+WEBVTT
+
+00:00.670 --> 00:05.560
+We've now fixed up posts and the React application, so let's go and write out our routing configuration
+
+00:05.560 --> 00:09.010
+inside of our ingress controller now that we have all these unique routes put together.
+
+00:09.460 --> 00:14.680
+So I'm going to find inside of my infra AIDS directory the ingress service.
+
+00:15.130 --> 00:17.530
+I'm going to find where we have paths list out right here.
+
+00:17.560 --> 00:21.970
+We're going to start to update this path and update or add in a couple of additional paths as well.
+
+00:22.270 --> 00:25.690
+So first off, as we just discussed, a request coming in to create a post.
+
+00:25.690 --> 00:31.510
+So one that is trying to go to the post odd is now going to have a path of post slash create.
+
+00:32.880 --> 00:35.460
+Then after that, I'm going to add in another path.
+
+00:36.280 --> 00:40.060
+So this one will be for let's get on to just slash post right here.
+
+00:40.060 --> 00:43.690
+If request comes in to slash posts, we want to send it to the query.
+
+00:43.870 --> 00:44.400
+Odd.
+
+00:46.640 --> 00:48.680
+My path will be slash posts.
+
+00:49.410 --> 00:55.680
+In that case, the back end is going to be the service that is named Weary CRV.
+
+00:56.750 --> 00:59.940
+Now let's get a quick reminder on what port that query service is running on.
+
+00:59.960 --> 01:04.100
+We can either print out all of our services at the terminal, or alternatively, we could just open
+
+01:04.100 --> 01:06.290
+up our post dash depot file right there.
+
+01:06.560 --> 01:09.050
+So here's the or not post, but query.
+
+01:09.910 --> 01:11.550
+So here's the query service.
+
+01:11.760 --> 01:13.800
+Looks like it's 4002.
+
+01:15.450 --> 01:18.330
+So a service port of 4002.
+
+01:19.850 --> 01:20.370
+Okay.
+
+01:20.420 --> 01:25.460
+Next up, we have a path of post slash, ID, slash comments.
+
+01:25.790 --> 01:30.290
+Now we are writing out some routing configuration that's going to be interpreted by engine X right now.
+
+01:30.290 --> 01:35.310
+And Engine X does not support the same kind of like wild card thing right there using a colon.
+
+01:35.330 --> 01:39.680
+Instead, we write up paths and if we ever expect to have some kind of wild card inside of it, we have
+
+01:39.680 --> 01:41.300
+to use a regular expression.
+
+01:41.870 --> 01:46.190
+So we are going to write out a path of slash, post, slash.
+
+01:46.190 --> 01:50.960
+And then here's our regular expression part question mark parentheses.
+
+01:51.680 --> 01:53.810
+Dot star like so.
+
+01:54.550 --> 01:56.530
+And then slash comments.
+
+01:57.880 --> 01:59.410
+So this is going to be a wild card.
+
+01:59.410 --> 02:05.380
+We can have any value we want to have inside there as long as it is followed by comments at the very
+
+02:05.380 --> 02:07.510
+end, it's going to match up to this path.
+
+02:08.510 --> 02:13.070
+In order to use regular expressions in a path right here, we do have to add in one additional line
+
+02:13.070 --> 02:15.020
+of configuration at the top of this file.
+
+02:15.230 --> 02:17.020
+So I'm going to scroll back up towards the top.
+
+02:17.030 --> 02:19.030
+I'm going to find that annotation section.
+
+02:19.040 --> 02:24.140
+And inside of here I'll add in one more annotation of Engine X dot Kubernetes.
+
+02:25.830 --> 02:27.630
+Excuse me, engine x ingress.
+
+02:27.630 --> 02:28.200
+There we go.
+
+02:28.620 --> 02:37.800
+Coober NetEase io use dash reg x and we'll put in true inside of a string.
+
+02:37.860 --> 02:39.540
+Notice that there are quotes around this.
+
+02:39.540 --> 02:41.250
+So it is not just true by itself.
+
+02:41.250 --> 02:43.530
+It is true with a set of single quotes around it.
+
+02:44.770 --> 02:49.000
+So again, that's going to allow us to use regular expressions in all of our path expressions.
+
+02:50.480 --> 02:53.450
+Now that we've got that put together, we can specify our back end.
+
+02:54.750 --> 02:56.520
+This would be a service name.
+
+02:56.520 --> 03:00.990
+And in this case, for this path, we want to reach out to our comments pod.
+
+03:01.980 --> 03:03.600
+So common spot right here.
+
+03:03.630 --> 03:08.310
+We'll make sure that we specify the comments service, the comments, dash CRV.
+
+03:10.160 --> 03:14.030
+The service port for that I do not recall off the top of my head, so I'm going to go and double check
+
+03:14.030 --> 03:15.710
+my common stash depot file.
+
+03:16.220 --> 03:17.570
+Here's the comet service.
+
+03:17.870 --> 03:20.450
+It is watching for traffic on Port 4001.
+
+03:22.130 --> 03:24.680
+So I'll put in my service port a 4001 right there.
+
+03:25.560 --> 03:29.790
+And then finally our very last path will be just slash by itself.
+
+03:30.060 --> 03:33.420
+Now for our React application, just slash by itself would work.
+
+03:33.420 --> 03:34.040
+Okay.
+
+03:34.050 --> 03:38.970
+But for a typical React application where you are using something like React router to handle routing
+
+03:38.970 --> 03:44.460
+around inside of your application in a single page app sort of approach, you would usually use a query
+
+03:44.460 --> 03:48.060
+or a reg x right here of dot star like.
+
+03:48.060 --> 03:53.280
+So that's going to make sure it matches any path and always try to show the React application.
+
+03:53.730 --> 03:57.870
+Now if you're going to write out a path like this, it always has to be at the very end.
+
+03:58.050 --> 04:02.460
+These paths are ordered from greatest importance down to the least importance.
+
+04:03.290 --> 04:08.060
+So if we put this at the end, it will match only after trying to match all these other paths.
+
+04:08.330 --> 04:12.680
+If we put this at the top, it will always go to the React app no matter what, which is not what we
+
+04:12.680 --> 04:13.190
+want.
+
+04:15.100 --> 04:17.050
+So then I'll put in my back end.
+
+04:17.840 --> 04:24.050
+With the service name of client CRV and a service port of 3000.
+
+04:25.390 --> 04:26.710
+All right, I'm going to save this.
+
+04:27.500 --> 04:29.150
+I'm going to go back over to my terminal.
+
+04:30.250 --> 04:32.230
+I'm inside of my AIDS directory.
+
+04:33.120 --> 04:36.690
+And we're going to make sure that we reapply the ingress SRV file.
+
+04:36.990 --> 04:38.430
+So it'll apply.
+
+04:38.790 --> 04:40.860
+F ingress s.
+
+04:40.890 --> 04:42.450
+R v html.
+
+04:44.430 --> 04:49.530
+It looks like we've updated our configuration successfully, so now we are ready to do a big final test
+
+04:49.530 --> 04:52.860
+and make sure our application is working before we do.
+
+04:52.890 --> 04:57.960
+I'm going to do a quick cube, it'll get pods and I'm going to verify that everything is up and running.
+
+04:58.350 --> 05:02.760
+If you have any errors, you'll need to make sure that those get resolved before we do this final test.
+
+05:03.690 --> 05:03.880
+Okay.
+
+05:03.930 --> 05:05.880
+I'm going to go back over to my browser.
+
+05:06.240 --> 05:10.620
+I'm going to go to post and I should see my React application here.
+
+05:10.800 --> 05:11.130
+Yep.
+
+05:11.130 --> 05:11.910
+Here it is.
+
+05:12.360 --> 05:15.760
+You might see one or two posts already listed inside of here if you do.
+
+05:15.780 --> 05:19.680
+That is because we created some posts a little bit ago using Postman.
+
+05:19.770 --> 05:22.740
+I deleted those posts just so I'd have a fresh slate right here.
+
+05:23.280 --> 05:27.690
+I'm going to create a brand new post, so I'll say new post number one.
+
+05:29.060 --> 05:32.120
+Remember, we don't have any kind of live reload or anything like that.
+
+05:32.120 --> 05:34.720
+So I'm going to refresh the page and there's my post.
+
+05:34.730 --> 05:35.480
+Very good.
+
+05:35.510 --> 05:38.030
+And then of course, we have to test out our comments as well.
+
+05:38.810 --> 05:43.670
+I'll put in new comment, submit it refresh, and there's my comment.
+
+05:43.940 --> 05:45.680
+Hey, that's it.
+
+05:46.550 --> 05:48.050
+Well, that is a lot of work.
+
+05:48.050 --> 05:53.900
+But after all this work, we've now got our application posted inside of a Kubernetes cluster.
+
+05:54.470 --> 05:58.200
+Of course, we're not quite done yet, as I mentioned in the last video.
+
+05:58.220 --> 06:02.640
+Right now, any time that we want to make a change to our code base, we have to make the change.
+
+06:02.660 --> 06:03.980
+We have to rebuild an image.
+
+06:03.980 --> 06:10.010
+We have to push the image up to Docker Hub and then run that up CTL rollout, restart deployment, blah,
+
+06:10.010 --> 06:11.020
+blah, blah command.
+
+06:11.030 --> 06:16.010
+And obviously that is way too involved for doing it, any type of typical development approach.
+
+06:16.010 --> 06:21.200
+So we definitely need a better way of making changes to our cluster inside of a development environment
+
+06:21.200 --> 06:22.430
+than what we have right now.
+
+06:23.000 --> 06:26.900
+As I mentioned, there is a tool that we're going to use to automate a ton of the stuff that we've been
+
+06:26.900 --> 06:28.460
+doing in these last videos.
+
+06:28.460 --> 06:32.360
+So we'll take a pause right here and start to take a look at that tool in just a moment.

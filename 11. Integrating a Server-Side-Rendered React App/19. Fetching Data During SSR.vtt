@@ -1,0 +1,259 @@
+WEBVTT
+
+00:01.350 --> 00:05.460
+In the last video, we had a quick discussion around how we fetch data during the server side rendering
+
+00:05.460 --> 00:06.250
+process.
+
+00:06.270 --> 00:08.400
+So let's get back to our topic at hand.
+
+00:08.430 --> 00:13.830
+We are trying to make sure that we can display on the initial response that comes back to the user's
+
+00:13.830 --> 00:17.970
+browser on that initial HTML document, whether or not the user is signed in.
+
+00:18.150 --> 00:23.130
+So we need to make a request to figure whether or not the user is authenticated during the server side
+
+00:23.130 --> 00:24.240
+rendering process.
+
+00:24.420 --> 00:30.360
+So that means that from inside of get initial props, we need to make a request off to our off service.
+
+00:30.630 --> 00:31.530
+That's our goal.
+
+00:32.130 --> 00:36.840
+We know that we are going to have to place this request inside of get initial props because only get
+
+00:36.840 --> 00:41.670
+initial props or get initial props is the only location where we can fetch data during the server side
+
+00:41.670 --> 00:42.780
+rendering process.
+
+00:43.170 --> 00:48.960
+So with all that in mind, let's go back over to our editor and find our indexed JS file at the very
+
+00:48.960 --> 00:49.430
+top.
+
+00:49.440 --> 00:53.160
+I'm going to import Axios from Axios.
+
+00:54.310 --> 00:56.560
+Now we're going to make Axios to make the request.
+
+00:56.560 --> 01:02.020
+And as I say that you might be curious, why are we using Axios when we just put together that use request
+
+01:02.050 --> 01:03.280
+hook a little bit ago?
+
+01:04.520 --> 01:08.780
+Remember, we created User Quest to make it really easy to make some kind of request and possibly handle
+
+01:08.780 --> 01:10.160
+any errors that might occur.
+
+01:10.730 --> 01:16.580
+The reason for this is that user request is a hook and hooks are used inside of react components.
+
+01:17.290 --> 01:19.690
+Get initial props right here is not a component.
+
+01:19.690 --> 01:21.460
+It is a plane function.
+
+01:21.760 --> 01:26.410
+We call this thing, or I should say next JZ calls this thing and we are required to immediately return
+
+01:26.410 --> 01:27.100
+some data.
+
+01:28.460 --> 01:31.790
+So we can only use user request inside of a react component.
+
+01:31.790 --> 01:36.620
+And as I just mentioned in the last video, we are not allowed to fetch data from inside of a component
+
+01:36.620 --> 01:38.750
+during the server side rendering process.
+
+01:38.750 --> 01:44.900
+We can only fetch data from inside of git initial props, so that's why we are using Axios instead of
+
+01:44.900 --> 01:45.860
+user request.
+
+01:47.160 --> 01:52.320
+All right, so let's make use of Axios to fetch some data from inside of get initial props.
+
+01:53.180 --> 01:55.460
+I'm going to put on the async keyword right here.
+
+01:57.270 --> 02:06.390
+I'm going to get a response from await Axios target API users current user.
+
+02:08.570 --> 02:12.470
+So then we're going to take the response right here, or more precisely, we're going to take the data
+
+02:12.470 --> 02:15.200
+out of it and return it from get initial props.
+
+02:15.440 --> 02:20.540
+As a quick reminder on what response we should really expect to receive back, I'm going to pull Open
+
+02:20.540 --> 02:22.850
+Postman very quickly, just to give you a quick reminder.
+
+02:26.180 --> 02:27.320
+All right.
+
+02:29.030 --> 02:31.790
+This thing is slow to open, but here we go.
+
+02:33.070 --> 02:35.920
+So I'm going to make a get request to users current user.
+
+02:37.100 --> 02:40.490
+And we expect to receive back an object that has a current user property.
+
+02:40.490 --> 02:44.000
+And if we are signed in, we should see an object there, otherwise we will see null.
+
+02:44.150 --> 02:47.390
+So that is the structure of data that we're going to expect to receive back.
+
+02:48.160 --> 02:50.920
+So that's going to be on the response data property.
+
+02:51.250 --> 02:55.480
+So from this function, we will return response data like so.
+
+02:56.250 --> 03:01.170
+That means that now inside of our component itself, we should get a current user property.
+
+03:03.430 --> 03:05.620
+So if right now, let's replace that console log.
+
+03:06.810 --> 03:09.570
+And just do a console log of current user.
+
+03:10.550 --> 03:10.820
+All right.
+
+03:10.820 --> 03:12.900
+So I think that this is ready to test.
+
+03:12.920 --> 03:16.320
+Now, I want you to know that the code we have inside of here is good.
+
+03:16.340 --> 03:17.300
+Everything inside of here.
+
+03:17.330 --> 03:19.550
+This is how we correctly fetch data.
+
+03:20.060 --> 03:26.150
+However, what we have right here is not going to work for some very interesting reasons, specifically
+
+03:26.150 --> 03:30.350
+because we're making use of this Kubernetes system and all this kind of crazy stuff.
+
+03:30.350 --> 03:34.700
+So, again, the code we have here is good, but we're going to have to add in a little bit of a configuration
+
+03:34.700 --> 03:39.680
+change to get this stuff to work just because of how we are making use of next JS, specifically inside
+
+03:39.680 --> 03:41.120
+of a Kubernetes environment.
+
+03:41.720 --> 03:42.680
+So let's save this.
+
+03:43.100 --> 03:44.990
+I'm going to flip back over to my browser.
+
+03:46.170 --> 03:48.660
+And then I'm going to refresh the page.
+
+03:48.840 --> 03:51.480
+When I do so I get a real nasty air.
+
+03:51.540 --> 03:54.030
+Air connection refused local host.
+
+03:54.030 --> 03:55.680
+That's essentially what that IP is.
+
+03:55.680 --> 03:56.610
+Or 80.
+
+03:57.030 --> 03:59.790
+Well, that might be a little bit unexpected.
+
+04:00.030 --> 04:01.950
+Let me show you something really interesting.
+
+04:02.160 --> 04:04.230
+Back over inside of indexes.
+
+04:04.770 --> 04:12.300
+I'm going to comment out, get initial props and I'm going to copy the Axios, get call to inside of
+
+04:12.300 --> 04:13.260
+my component.
+
+04:13.260 --> 04:15.360
+I'm not going to put a weight on there or anything like that.
+
+04:15.360 --> 04:18.660
+I'm just going to attempt to make the request from inside the browser.
+
+04:19.230 --> 04:21.840
+I'm then going to save this look back over.
+
+04:22.350 --> 04:24.720
+Now it looks like everything is loading up successfully again.
+
+04:24.720 --> 04:30.420
+But what's more relevant is you'll notice inside of my network request log I was able to successfully
+
+04:30.420 --> 04:32.550
+make the request off to our service.
+
+04:33.060 --> 04:35.340
+So let me summarize what just happened here.
+
+04:35.640 --> 04:42.450
+When we tried to make this request while we were executing this code on our server, it failed horribly
+
+04:42.450 --> 04:44.580
+and we saw that really mysterious error message.
+
+04:45.210 --> 04:50.220
+But when we were making that request from inside the browser, everything worked as expected.
+
+04:50.820 --> 04:53.100
+So there's some difference in environment here.
+
+04:53.100 --> 04:59.400
+Something is very different when we try to make the request on our server versus on our clients or really
+
+04:59.400 --> 05:00.720
+inside the browser itself.
+
+05:01.110 --> 05:02.100
+So let's take a pause right here.
+
+05:02.100 --> 05:06.060
+We're going to come back the next video, and I'm going to help you understand exactly why we're seeing
+
+05:06.060 --> 05:06.900
+this oddity.

@@ -1,0 +1,223 @@
+WEBVTT
+
+00:01.150 --> 00:02.890
+Let's move on to our next two tests.
+
+00:02.890 --> 00:06.730
+All we're going to be doing here is making sure that a title and a price are provided.
+
+00:06.730 --> 00:10.840
+If they are not, we're going to want to make sure that we return some kind of air to the user.
+
+00:11.290 --> 00:13.600
+So let's write out our test implementation first.
+
+00:13.840 --> 00:19.210
+So in this first one, let's attempt to send in a request with some kind of invalid title.
+
+00:19.240 --> 00:22.620
+Now, we haven't really said exactly what makes a title invalid.
+
+00:22.630 --> 00:28.300
+So for right now, let's assume that if we put in a empty title or no title at all, we should get back
+
+00:28.300 --> 00:29.350
+some kind of air.
+
+00:29.830 --> 00:33.060
+So I'm going to write out a wait request to app.
+
+00:34.050 --> 00:37.170
+I want to make a post to API tickets.
+
+00:38.150 --> 00:39.710
+I'm going to make sure this thing is authenticated.
+
+00:39.710 --> 00:41.240
+So we're going to set that cookie.
+
+00:42.200 --> 00:44.210
+With Global sign in.
+
+00:45.980 --> 00:47.780
+I'll then send along some data.
+
+00:48.080 --> 00:49.640
+So what data are we going to send here?
+
+00:49.670 --> 00:54.530
+Well, again, we want to make sure that the title is what we think is going to be valid or invalid,
+
+00:54.530 --> 00:56.840
+and we want to make sure that the price is valid.
+
+00:57.020 --> 01:00.050
+So I will first put in a title of How about empty string?
+
+01:00.320 --> 01:03.980
+And I'll put in a price of something that looks kind of valid to me.
+
+01:04.430 --> 01:06.080
+So I'm going to put in a number here of ten.
+
+01:06.110 --> 01:09.350
+Now, you might recall we had a diagram a little bit ago that said we were going to send in price as
+
+01:09.350 --> 01:10.020
+a string.
+
+01:10.040 --> 01:11.510
+We'll just ignore that for right now.
+
+01:11.570 --> 01:13.280
+So let's say price is going to be a number.
+
+01:14.980 --> 01:18.280
+So how are we going to say that this should result in some kind of error?
+
+01:18.310 --> 01:24.550
+Well, once again, let's think about how we handle invalid request or invalid request data.
+
+01:24.880 --> 01:29.980
+If we go back over to our common module, you might recall that we've got a middleware that we put together
+
+01:29.980 --> 01:32.260
+to help us validate incoming requests.
+
+01:32.800 --> 01:38.200
+So if something about the incoming request was not valid, we would throw a error of request validation
+
+01:38.200 --> 01:38.680
+error.
+
+01:39.660 --> 01:42.360
+Let's go take a look at what that era really looks like.
+
+01:42.360 --> 01:46.770
+So inside my ears directory, again, inside the common module, I will find request validation here.
+
+01:47.450 --> 01:48.560
+And so something is wrong.
+
+01:48.560 --> 01:49.900
+With the incoming request.
+
+01:49.910 --> 01:54.800
+We return a status code of 400 along with the actual error messages and whatnot.
+
+01:55.040 --> 01:56.910
+I don't really want to sweat the error messages right now.
+
+01:56.930 --> 02:00.110
+I kind of just want to make sure that we get back a status code of 400.
+
+02:01.840 --> 02:03.520
+So back inside of my test.
+
+02:04.580 --> 02:10.100
+After making this invalid request, I will expect a status code of 400.
+
+02:13.140 --> 02:17.940
+If we want to be even a little bit more complete, we could make that same request a second time.
+
+02:18.670 --> 02:23.020
+And in the second request we could say, let's not even send along a title at all.
+
+02:23.380 --> 02:28.750
+So if we send a title that is empty, or if we don't send a title in both cases, we should be marking
+
+02:28.750 --> 02:30.310
+that request as invalid.
+
+02:32.020 --> 02:33.010
+Well, that looks good to me.
+
+02:33.010 --> 02:34.180
+So I'm going to save the file.
+
+02:35.320 --> 02:37.420
+And it looks like we've got our failed test.
+
+02:38.850 --> 02:44.520
+Now we could go and fix up our handler right away, but let's just continue and write out the test for
+
+02:44.520 --> 02:48.330
+invalid price as well, because it's going to be just about identical to what we did right here.
+
+02:49.170 --> 02:53.670
+So I'm going to copy one of these request blocks again and move it down to the price stuff.
+
+02:55.220 --> 02:57.890
+So for price, let's take the same kind of approach.
+
+02:57.890 --> 03:02.870
+Let's first try to send in some data that feels like it should probably be invalid, and we'll try to
+
+03:02.870 --> 03:06.530
+send in another request that doesn't even have the property we're talking about at all.
+
+03:07.450 --> 03:09.550
+So I'm going to actually paste that thing in twice.
+
+03:11.740 --> 03:15.400
+On the first one, I will send in a title that is probably going to be valid.
+
+03:15.400 --> 03:19.310
+And the reason I'm saying probably here again is because we have not set up any validation rules yet.
+
+03:19.330 --> 03:22.090
+I'm just kind of taking a guess on what we probably want to have.
+
+03:22.450 --> 03:28.140
+So now on the first one, I'm going to provide a price that is present, but probably not a valid value.
+
+03:28.150 --> 03:30.220
+So in this case, I'm going to put in negative ten.
+
+03:30.250 --> 03:34.570
+Chances are we probably don't want a user listing stuff for negative values.
+
+03:34.570 --> 03:38.030
+So we're probably going to want to say that a price has to be greater than zero.
+
+03:38.050 --> 03:40.780
+And so this right here should probably result in some kind of error.
+
+03:41.480 --> 03:46.460
+Then on the second one, we will once again put in a valid title, but I won't put in a price at all.
+
+03:47.560 --> 03:47.720
+Yes.
+
+03:47.820 --> 03:48.520
+That looks good.
+
+03:49.060 --> 03:49.990
+Save this again.
+
+03:50.080 --> 03:50.950
+We'll back over.
+
+03:51.370 --> 03:54.610
+And we now have both of our validation tests failing.
+
+03:55.520 --> 03:55.730
+Okay.
+
+03:55.760 --> 03:56.510
+That's good.
+
+03:57.110 --> 03:59.870
+So let's go over to our actual request handler.
+
+04:02.540 --> 04:03.530
+Here it is right here.
+
+04:04.590 --> 04:06.720
+I don't want to have this video running too long.
+
+04:06.720 --> 04:10.860
+So let's take a quick pause right here and we'll start to put in some logic to validate that income
+
+04:10.860 --> 04:12.270
+request in just a moment.

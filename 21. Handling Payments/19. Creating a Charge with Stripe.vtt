@@ -1,0 +1,304 @@
+WEBVTT
+
+00:00.770 --> 00:05.600
+We've now got our API key all set up inside of our cluster and we have installed the Stripe library
+
+00:05.600 --> 00:07.070
+into our payments project.
+
+00:07.730 --> 00:12.080
+And before we open up our route handler and make use of the Stripe library itself, we're going to first
+
+00:12.080 --> 00:17.090
+create a separate file that is going to be responsible for importing and instantiating a copy of the
+
+00:17.090 --> 00:18.110
+Stripe Library.
+
+00:18.350 --> 00:19.730
+Let me show you how to do that.
+
+00:19.820 --> 00:22.910
+Inside the CRC directory, I'll make a new file called Stripe.
+
+00:24.320 --> 00:28.070
+Then inside of here, we're going to import Stripe from Stripe.
+
+00:30.140 --> 00:33.380
+And before we make use of this, this is really a class right here.
+
+00:33.380 --> 00:37.220
+And to make use of the Stripe library, we have to create an instance out of that class.
+
+00:37.490 --> 00:41.330
+The entire purpose of this file is to really just create an instance out of this stripe library and
+
+00:41.330 --> 00:44.810
+then export it so it can be used in other locations inside of our project.
+
+00:45.230 --> 00:50.780
+So I'm going to do an export const stripe is new stripe.
+
+00:52.670 --> 00:57.290
+And then to this object right here or the constructor, we're going to provide two different arguments.
+
+00:57.590 --> 01:01.820
+The first argument is going to be our API key, and you might recall we already wired that up.
+
+01:01.850 --> 01:08.270
+It should be accessible inside of our project as process EMV dot stripe underscore key.
+
+01:09.400 --> 01:13.710
+As usual, TypeScript doesn't really believe that we have properly defined this environment variable,
+
+01:13.720 --> 01:17.470
+so we're going to tell TypeScript don't sweat it and put the exclamation on their.
+
+01:18.620 --> 01:23.000
+Then as a second argument, we're going to provide an options object inside this object.
+
+01:23.000 --> 01:25.280
+We're going to enter an API version.
+
+01:25.880 --> 01:30.470
+When you start to enter a string for the API version, you might get some autocomplete pop up.
+
+01:30.830 --> 01:34.880
+If you get autocomplete and you see a date different than mine, then go ahead and use it.
+
+01:35.090 --> 01:39.230
+Otherwise, if you do not see any autocomplete at all, then use exactly what I'm using right here,
+
+01:39.230 --> 01:41.300
+which is 2020 0302.
+
+01:43.510 --> 01:43.720
+Okay.
+
+01:43.810 --> 01:48.040
+So we've now got a single file that's going to import stripe, create an instance of this library,
+
+01:48.040 --> 01:49.930
+and make it available to the rest of our project.
+
+01:50.200 --> 01:55.150
+So now we can take this back over to our route handler, import the Stripe instance, and use it to
+
+01:55.150 --> 01:56.650
+charge a user's credit card.
+
+01:57.750 --> 01:59.220
+Back inside my roots directory.
+
+01:59.220 --> 02:01.200
+I'll find the new file.
+
+02:02.470 --> 02:03.520
+Not the very top.
+
+02:04.660 --> 02:10.930
+I will add in import or stripe from upland directory.
+
+02:15.060 --> 02:15.330
+All right.
+
+02:15.330 --> 02:19.680
+So now the question is, how do we actually charge a user's credit card using the stripe library?
+
+02:19.950 --> 02:24.660
+Well, I pulled up some documentation so we can take a look at it and get a better idea of how we actually
+
+02:24.660 --> 02:29.130
+take some token that is going to be incoming to our rent handler and charge some money with it.
+
+02:30.420 --> 02:35.100
+If you want to follow along, you can navigate to the official Stripe documentation at Stripe slash
+
+02:35.100 --> 02:36.480
+doc slash API.
+
+02:37.370 --> 02:41.390
+Once here on the left hand side, we're going to scroll down a little bit and find a section called
+
+02:41.390 --> 02:42.230
+charges.
+
+02:42.890 --> 02:47.480
+So a charge once again, this is how we actually charge some money to a user's credit card.
+
+02:48.530 --> 02:51.660
+We want to find the section inside of here called Create a Church.
+
+02:51.680 --> 02:53.030
+That's what we're trying to do right now.
+
+02:54.460 --> 02:56.830
+You can see a code example over here on the right.
+
+02:57.100 --> 02:59.710
+So we've already made our instance of the Stripe library.
+
+02:59.710 --> 03:04.330
+And if we want to create a charge and build a user for some amount of money, we're going to call Stripe
+
+03:04.570 --> 03:09.070
+charges create and then we will provide some options inside of an object.
+
+03:10.490 --> 03:15.320
+There are technically only two options that are required, but we're going to enter in possibly a third
+
+03:15.320 --> 03:15.950
+or fourth.
+
+03:16.670 --> 03:20.600
+So the first two things that are required are in amount property.
+
+03:20.840 --> 03:24.630
+And it's really important to note that the amount property is not going to be in units of dollars.
+
+03:24.650 --> 03:30.740
+Instead, Stripe works by the smallest currency unit, as they refer to right here, which in the US
+
+03:30.740 --> 03:33.170
+currency system is sense, not dollars.
+
+03:33.840 --> 03:37.610
+So as we have been handling ticket prices throughout our app, we've always been treating those ticket
+
+03:37.610 --> 03:38.720
+prices as dollars.
+
+03:38.720 --> 03:44.030
+And we just need to make sure that before we create a charge, we convert that dollar value into cents,
+
+03:44.030 --> 03:46.790
+which essentially means we just need to multiply it by 100.
+
+03:48.020 --> 03:50.390
+The second required option is a currency code.
+
+03:50.780 --> 03:52.490
+So me, I'm working with the US dollars.
+
+03:52.490 --> 03:55.040
+I'm going to put in a currency code of USD.
+
+03:57.670 --> 04:03.070
+Now there is technically another required property, even though they really market as optional is the
+
+04:03.070 --> 04:03.960
+source property.
+
+04:03.970 --> 04:07.030
+So this is where we are going to be charging some money from.
+
+04:07.300 --> 04:12.340
+There are many different viable sources we can provide, but one viable source to create a charge from
+
+04:12.340 --> 04:13.330
+is a token.
+
+04:13.540 --> 04:18.040
+And as I've said many times, this token is going to be coming into our request and we can essentially
+
+04:18.040 --> 04:23.500
+view this token as kind of a pre authorization thing, something that says here's something that represents
+
+04:23.500 --> 04:25.930
+a credit card and we can build it for some amount of money.
+
+04:27.890 --> 04:28.190
+Now.
+
+04:28.190 --> 04:31.160
+Optionally, we could also provide a description property.
+
+04:32.170 --> 04:35.750
+The description property is not really used for anything related to the charge itself.
+
+04:35.770 --> 04:38.830
+Instead, it's just a little description to go along with the charge.
+
+04:38.860 --> 04:43.210
+It will show up on our stripe dashboard and possibly show it to users as well when they actually look
+
+04:43.210 --> 04:44.950
+at their credit card billing statements.
+
+04:44.980 --> 04:48.670
+So if we wanted to, we could definitely fill in a description as well, but I'm not going to include
+
+04:48.670 --> 04:48.970
+it.
+
+04:50.230 --> 04:50.440
+Okay.
+
+04:50.440 --> 04:51.820
+So that all in mind.
+
+04:51.820 --> 04:53.080
+Let's go back over to our editor.
+
+04:53.080 --> 04:58.360
+We're going to make use of the stripe thing created charge and add in a couple of different options.
+
+05:01.480 --> 05:02.770
+I'm going to scroll down a little bit.
+
+05:02.770 --> 05:05.320
+And right after we do our three checks right here.
+
+05:05.650 --> 05:09.730
+I'll then do and await stripe dot charges create.
+
+05:11.200 --> 05:13.170
+Well then provide those three different options.
+
+05:13.180 --> 05:16.510
+So first is currency, which will be at USD.
+
+05:18.330 --> 05:25.890
+Next up is the amount of money that we want to charge, which will be the amount as order price.
+
+05:25.920 --> 05:27.930
+And again, that is a dollar value right there.
+
+05:27.930 --> 05:31.710
+So we need to convert it into cents by multiplying by 100.
+
+05:33.040 --> 05:37.600
+And finally, we also have to provide a source for this charge where the money is going to come from.
+
+05:37.750 --> 05:40.930
+And that's going to be the token that is incoming into our request handler.
+
+05:41.470 --> 05:46.690
+We've already structured off that token property, off the request body, so we can just enter in token
+
+05:46.690 --> 05:47.410
+like so.
+
+05:48.350 --> 05:49.070
+And that should be it.
+
+05:49.070 --> 05:52.670
+That should create a charge and build a user for some amount of money.
+
+05:53.730 --> 05:55.200
+It's going to save this as is.
+
+05:55.200 --> 05:56.100
+But as you could guess.
+
+05:56.100 --> 06:00.750
+Well, we probably want to somehow test this out to make sure it works as expected.
+
+06:01.020 --> 06:02.010
+Let's take a pause right here.
+
+06:02.010 --> 06:05.700
+When we come back, the next video, we're going to figure out some way to manually test this, then
+
+06:05.700 --> 06:08.160
+eventually write an automated test around it.

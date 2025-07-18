@@ -1,0 +1,181 @@
+WEBVTT
+
+00:00.870 --> 00:04.950
+Our project is now looking pretty good and now it's time for us to actually deploy it.
+
+00:05.250 --> 00:06.420
+This is going to be a lot of fun.
+
+00:06.420 --> 00:10.650
+We're going to walk through the process of creating a production style deployment pipeline.
+
+00:11.010 --> 00:15.080
+And when we talk about deployment, it's not really just about making sure that our code is live somewhere.
+
+00:15.090 --> 00:19.890
+Instead, it's about the entire workflow and how we make sure that we can make changes somehow.
+
+00:19.890 --> 00:23.910
+Save those changes and make sure those changes get deployed somewhere automatically.
+
+00:24.510 --> 00:27.300
+So we're going to build out an entire workflow process here.
+
+00:27.300 --> 00:30.150
+We're not just going to look alone at doing the deployment stuff.
+
+00:30.750 --> 00:31.080
+All right.
+
+00:31.080 --> 00:32.910
+So, of course, a couple of quick diagrams.
+
+00:33.540 --> 00:35.040
+So here's the entire idea.
+
+00:35.340 --> 00:40.290
+At some point in time, you might have multiple different teams working on a single product.
+
+00:40.590 --> 00:43.320
+These two teams might be working on very different services.
+
+00:43.320 --> 00:48.330
+And after they make some changes to the services, we should expect that those changes will be eventually
+
+00:48.330 --> 00:51.000
+deployed into some production Kubernetes cluster.
+
+00:51.540 --> 00:56.430
+So we need a workflow to make sure that multiple teams can be working on the same project at the same
+
+00:56.430 --> 01:01.980
+time and eventually merge all these changes together and deploy them in some meaningful fashion without
+
+01:01.980 --> 01:04.650
+having some nasty conflicts or errors along the way.
+
+01:05.950 --> 01:10.840
+So I'm going to show you a little diagram or a workflow that I've personally used in many projects,
+
+01:10.840 --> 01:14.090
+and I know many, many other engineers use in projects as well.
+
+01:14.110 --> 01:17.020
+It's a pretty foolproof diagram or really workflow.
+
+01:17.050 --> 01:20.590
+The first time you learn it, it's a little bit confusing, but once you understand the idea behind
+
+01:20.590 --> 01:25.450
+it, the workflow is pretty bulletproof and it's going to work in the vast, vast majority of scenarios.
+
+01:25.810 --> 01:26.860
+Okay, so here it is.
+
+01:27.860 --> 01:29.360
+So this is the overall diagram.
+
+01:29.390 --> 01:31.910
+I'm going to zoom in and we're going to walk through it step by step.
+
+01:34.150 --> 01:39.130
+So we're starting off on your local machine where you are going to be working on some changes to some
+
+01:39.130 --> 01:40.300
+particular service.
+
+01:40.660 --> 01:45.310
+So we're going to imagine that you are making a change to, say, the ticket service after you have
+
+01:45.310 --> 01:46.310
+made your changes.
+
+01:46.330 --> 01:51.130
+You are then going to commit that code or those changes to a git branch.
+
+01:51.460 --> 01:53.320
+So we're going to create a branch with Git.
+
+01:53.410 --> 01:55.750
+We're going to commit all of our changes to that branch.
+
+01:56.050 --> 02:01.360
+The only requirement here is that we make changes and we commit them to any branch besides the master
+
+02:01.360 --> 02:02.020
+branch.
+
+02:02.050 --> 02:06.130
+We're going to treat the master branch as a very special branch in this workflow.
+
+02:06.970 --> 02:10.810
+After we have committed those changes will then push that branch up to GitHub.
+
+02:11.690 --> 02:13.700
+Then our workflow jumps over to GitHub.
+
+02:15.410 --> 02:17.570
+GitHub is going to receive that updated branch.
+
+02:18.080 --> 02:22.340
+You are then going to manually create a pull request through the github UI.
+
+02:22.370 --> 02:27.680
+A polar request is a request to essentially merge some changes from one branch into another branch.
+
+02:27.950 --> 02:31.790
+In this case, we're going to make a polar request to merge changes from the branch you just created
+
+02:31.790 --> 02:33.740
+into the master branch.
+
+02:34.670 --> 02:39.740
+The instant that we create that pull request, we are going to configure GitHub to automatically run
+
+02:39.740 --> 02:41.480
+all the tests inside of our project.
+
+02:41.990 --> 02:47.180
+So by just creating this pull request, we're going to make sure that GitHub runs all those different
+
+02:47.180 --> 02:48.770
+tests we have created over time.
+
+02:50.560 --> 02:56.170
+After all those tests pass, we are then going to merge our pull request into the master branch.
+
+02:56.440 --> 03:00.160
+Like I said, the master branch is going to be a very special branch inside of our app.
+
+03:00.250 --> 03:04.780
+Whenever we make a change to the master branch, we're going to configure GitHub so that it automatically
+
+03:04.780 --> 03:08.410
+deploys all of our changes to our live Kubernetes cluster.
+
+03:09.020 --> 03:12.670
+And you'll notice that in this entire workflow, we haven't really said that much about deployment or
+
+03:12.670 --> 03:14.410
+where we are deploying our app to.
+
+03:14.710 --> 03:20.230
+So this is really a very generic general workflow that you can use to deploy code to any kind of target,
+
+03:20.230 --> 03:22.990
+be it Google Cloud, AWS or anything else.
+
+03:24.240 --> 03:24.570
+All right.
+
+03:24.570 --> 03:28.240
+So now that we've seen a very rough outline here, we're going to take a quick pause.
+
+03:28.260 --> 03:32.550
+When we come back, the next video, we're going to create a repository on our local machine.
+
+03:32.760 --> 03:35.220
+We're also going to create a repository on GitHub.
+
+03:35.250 --> 03:38.040
+We're going to tie the two together and just do a little bit of setup.

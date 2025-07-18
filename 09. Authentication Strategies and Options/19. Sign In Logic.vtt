@@ -1,0 +1,337 @@
+WEBVTT
+
+00:00.920 --> 00:02.840
+Let's continue with our sign up flow.
+
+00:02.960 --> 00:06.300
+So we need to take the email and password out of the body.
+
+00:06.320 --> 00:08.420
+The requests, those have now been validated.
+
+00:08.420 --> 00:13.910
+So we're going to then run a query on our collection of users inside of our MongoDB database.
+
+00:13.910 --> 00:16.340
+We're going to try to find a user with that same email.
+
+00:17.160 --> 00:17.280
+Okay.
+
+00:17.410 --> 00:21.510
+So I'm going to flip back over to my sign in root handler because we want to run a query.
+
+00:21.520 --> 00:24.880
+We need to import the user model at the very top of the file.
+
+00:25.210 --> 00:31.720
+So up here at the top, I'm going to import user from up one directory models user.
+
+00:34.140 --> 00:36.000
+I'll then go back down to my root handler.
+
+00:36.420 --> 00:40.260
+You're going to run a query inside of here, which means we're definitely going to be making use of
+
+00:40.260 --> 00:42.080
+that async await syntax.
+
+00:42.090 --> 00:44.610
+So I'm going to mark the enclosing function as async.
+
+00:45.650 --> 00:50.780
+And then going to pull the email and the password out of the body of the request.
+
+00:51.770 --> 00:55.880
+I'll then run a query and try to find some user inside of our database with this email.
+
+00:56.480 --> 01:00.230
+They'll do existing user is a weight user.
+
+01:00.500 --> 01:03.200
+Find one and I'll try to look at that email.
+
+01:05.020 --> 01:07.180
+So then we can immediately do a quick check.
+
+01:07.950 --> 01:14.340
+If there is no existing user, if we fail to find one, then we want to throw in air immediately and
+
+01:14.340 --> 01:16.620
+bail out of everything inside this request handler.
+
+01:17.100 --> 01:21.570
+So this would be another good scenario, another good place to make use of that very generic custom
+
+01:21.570 --> 01:24.150
+air we had put together called bad request air.
+
+01:24.630 --> 01:29.190
+You might think that this would be a scenario to throw a kind of four, four or something like user
+
+01:29.190 --> 01:30.600
+not found or something like that.
+
+01:30.600 --> 01:36.390
+But remember, whenever we are handling validation or semi authentication, whenever dealing with authentication,
+
+01:36.390 --> 01:41.640
+we usually prefer to share as much or as little information as possible.
+
+01:41.670 --> 01:43.610
+I got all those words opposite.
+
+01:43.620 --> 01:50.010
+We want to share as little information about why things go poorly during failed authentication attempts,
+
+01:50.010 --> 01:54.390
+because the more information we give to someone, it might be information we are providing to a malicious
+
+01:54.390 --> 01:54.900
+user.
+
+01:55.410 --> 02:00.120
+So if someone tries to sign up or sign in with an email that doesn't exist, we don't want to tell them
+
+02:00.120 --> 02:01.400
+that that email doesn't exist.
+
+02:01.410 --> 02:05.280
+We just want to say Sorry, but you provided us some bad login credentials.
+
+02:05.280 --> 02:08.630
+Or we can just say login request failed, something like that.
+
+02:08.640 --> 02:13.350
+So that's why you're going to use that very generic custom error of bad request error.
+
+02:14.740 --> 02:15.760
+At the very top.
+
+02:15.910 --> 02:17.500
+I'm going to import that air.
+
+02:18.760 --> 02:20.710
+That request air.
+
+02:22.380 --> 02:23.460
+From Ayers.
+
+02:23.880 --> 02:24.750
+Bad request here.
+
+02:27.320 --> 02:29.750
+And I'll make sure that I throw that down inside the if statement.
+
+02:29.750 --> 02:36.020
+So throw knew bad request air and remember we can optionally provide a reason for the error.
+
+02:36.050 --> 02:40.560
+So I'm just going to give a very simple, very direct message that's very generic in nature.
+
+02:40.580 --> 02:45.500
+I'll just say invalid credentials to say sorry but failed.
+
+02:47.490 --> 02:50.470
+All right, so if we make it past that check, the next thing we have to do.
+
+02:50.490 --> 02:55.560
+Look in our diagram, we need to store the password that was supplied inside the request with the hash
+
+02:55.560 --> 02:57.230
+password of the stored user.
+
+02:57.240 --> 03:01.740
+And remember, we already put together a nice little class to take care of this stuff for us.
+
+03:02.430 --> 03:07.440
+So back inside of our services directory, we've got that password file.
+
+03:08.280 --> 03:11.730
+So here's the class we put together and we've got that compare method.
+
+03:12.300 --> 03:13.440
+We're going to call it Compare.
+
+03:13.560 --> 03:17.040
+The first argument is going to be the stored password off the user that we just fetched.
+
+03:17.160 --> 03:19.880
+And the second argument will be the supplied password.
+
+03:19.890 --> 03:22.140
+So the one that was given to us inside the request.
+
+03:23.300 --> 03:27.950
+So back inside of S.A.T.s at the very top, let's import password.
+
+03:27.950 --> 03:30.580
+And you know, I really regret the name of this class.
+
+03:30.590 --> 03:34.730
+It really should have been something like Password Manager or something similar, but we're in pretty
+
+03:34.730 --> 03:36.650
+deep at this point, so we're going to stick with that.
+
+03:37.590 --> 03:40.590
+I'm going to get that from the services directory.
+
+03:40.830 --> 03:41.460
+Password.
+
+03:46.230 --> 03:46.590
+All right.
+
+03:46.590 --> 03:50.040
+After we have that statement, we're going to compare those two passwords.
+
+03:50.040 --> 03:53.580
+And remember, the compare passwords method is going to return a Boolean.
+
+03:54.120 --> 03:56.730
+So we'll do passwords match.
+
+03:57.490 --> 04:03.070
+So that's going to be a true or false and then end a wait because comparing the passwords is asynchronous.
+
+04:04.890 --> 04:06.120
+Password Dot.
+
+04:07.050 --> 04:07.860
+Compare.
+
+04:10.850 --> 04:15.680
+Our first argument is going to be and if we forget, as I just did, hover over that thing.
+
+04:15.980 --> 04:16.340
+All right.
+
+04:16.340 --> 04:18.860
+First one is the stored password off the existing user.
+
+04:18.860 --> 04:21.800
+And the second argument is the password that came in the request.
+
+04:22.070 --> 04:25.970
+So I'm going to pass an existing user password.
+
+04:26.580 --> 04:27.960
+And then password.
+
+04:32.030 --> 04:32.240
+Okay.
+
+04:32.390 --> 04:33.140
+That looks good.
+
+04:34.420 --> 04:36.520
+So now passwords match is going to be a boolean.
+
+04:36.820 --> 04:40.030
+If it is false, that means, well, we got some invalid credentials.
+
+04:40.030 --> 04:43.510
+And so once again, we'll probably want to throw another error just like that right there.
+
+04:43.780 --> 04:48.280
+So if not, passwords match, that is false.
+
+04:48.730 --> 04:51.970
+Then throw a new bad request.
+
+04:52.870 --> 04:54.670
+Ere invalid.
+
+04:55.550 --> 04:56.360
+Credentials.
+
+04:59.410 --> 05:03.070
+And then finally, if we get past that statement right there, last thing we have to do.
+
+05:03.160 --> 05:09.310
+Our user is now logged in, so we need to once again generate a JSON web token and send it back inside
+
+05:09.310 --> 05:10.030
+of the cookie.
+
+05:10.540 --> 05:14.680
+That's going to essentially be the exact same logic we've just put together inside of sign up a moment
+
+05:14.680 --> 05:15.160
+ago.
+
+05:15.670 --> 05:22.600
+If we go back over to our sign up route handler, we've got where we generated the JSON web token and
+
+05:22.600 --> 05:28.450
+then we start it on that session object and sent the response back rather than rewriting all this code.
+
+05:28.720 --> 05:30.400
+Let's just do a simple copy paste.
+
+05:30.640 --> 05:35.380
+This course is already getting a little bit long, so we're going to do as much copy pasting or reuse
+
+05:35.380 --> 05:37.360
+this code as we reasonably can.
+
+05:38.020 --> 05:40.360
+So I'm going to paste inside of sign in.
+
+05:41.370 --> 05:43.800
+Our step to generate the JSON web token.
+
+05:45.410 --> 05:47.660
+We're going to assign that to the session object.
+
+05:49.350 --> 05:51.840
+And then we're going to send back our response.
+
+05:51.990 --> 05:56.670
+However, when we send back the response, we are no longer creating a new record inside of our database.
+
+05:56.670 --> 05:59.040
+So traditionally we would send back a 200.
+
+05:59.880 --> 06:04.560
+In addition, right now we are sending back a user variable that does not exist inside this file.
+
+06:05.680 --> 06:12.040
+So we need to rename a user throughout here over to existing user because that's what we assigned that
+
+06:12.040 --> 06:13.840
+variable or the result of that query to.
+
+06:14.770 --> 06:19.030
+So I'm going to find number one right there and change it to existing user.
+
+06:20.210 --> 06:21.050
+Number two.
+
+06:22.550 --> 06:24.110
+And then down here, number three.
+
+06:25.220 --> 06:25.940
+Looks good.
+
+06:26.490 --> 06:27.770
+Another very final step.
+
+06:27.800 --> 06:31.640
+Let's make sure that we import the JSON Web token library into this file.
+
+06:32.240 --> 06:33.380
+So we'll go up to the top.
+
+06:33.920 --> 06:38.690
+Add in an import for JSON Web token from JSON Web token.
+
+06:39.920 --> 06:42.680
+And that should be it for sign in.
+
+06:43.570 --> 06:45.280
+Well, this video was just a little bit long.
+
+06:45.280 --> 06:48.850
+So let's take a pause right here and we'll test this thing out in just a moment.

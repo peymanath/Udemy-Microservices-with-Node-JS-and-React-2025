@@ -1,0 +1,235 @@
+WEBVTT
+
+00:00.850 --> 00:04.750
+We've now got our two listeners put together or we're not quite done with them just yet.
+
+00:04.750 --> 00:08.710
+Remember, we still have to create an instance of them and tell them to start listening for incoming
+
+00:08.710 --> 00:10.900
+events whenever our application first starts up.
+
+00:11.110 --> 00:13.510
+So we've been doing that inside of our index file.
+
+00:13.540 --> 00:15.010
+Let's do that again right now.
+
+00:15.340 --> 00:20.200
+Inside the index file at the very top, I'm going to import the two listeners we just created.
+
+00:20.530 --> 00:21.820
+That is order.
+
+00:23.000 --> 00:24.230
+Cancelled listener.
+
+00:25.610 --> 00:27.170
+We're going to get that from events.
+
+00:27.170 --> 00:27.890
+Listeners.
+
+00:27.890 --> 00:30.080
+Order canceled listener.
+
+00:32.960 --> 00:36.140
+And then our order created listener.
+
+00:37.320 --> 00:40.710
+From events listeners order created listener.
+
+00:43.630 --> 00:45.790
+Then right after we create our Nets rapper.
+
+00:46.630 --> 00:51.580
+So all this Napster related stuff, right after all that, we'll create an instance of what those listeners
+
+00:51.580 --> 00:52.780
+will pass in the Nats wrapper.
+
+00:52.780 --> 00:55.480
+And don't forget, we also have to call that Listen method.
+
+00:55.870 --> 00:59.500
+So we'll do a new order related listener.
+
+01:00.280 --> 01:00.650
+Parson.
+
+01:00.650 --> 01:02.090
+That's rapper client.
+
+01:03.120 --> 01:04.350
+And then I'll listen on that.
+
+01:05.740 --> 01:07.540
+And then same thing for order cancelled.
+
+01:13.060 --> 01:13.960
+And there we go.
+
+01:14.700 --> 01:18.150
+Now this is going to be a really fun to save and see it start to run.
+
+01:18.180 --> 01:22.920
+Remember, we have been creating a couple of different orders behind the scenes in the last couple of
+
+01:22.920 --> 01:24.150
+sections and whatnot.
+
+01:24.360 --> 01:28.110
+So every time we create an order, every time we cancelled it, all those different events have been
+
+01:28.110 --> 01:30.330
+getting saved by our net streaming server.
+
+01:30.360 --> 01:34.950
+Assuming, of course, you have not restarted that streaming server recently and dumped all those different
+
+01:34.950 --> 01:35.550
+events.
+
+01:36.000 --> 01:37.650
+So as soon as we save this file.
+
+01:38.700 --> 01:42.720
+This service is going to restart and it's going to create a subscription to listen for all the events
+
+01:42.720 --> 01:46.050
+on the order created and the order canceled channels.
+
+01:46.440 --> 01:49.830
+We're then going to start to receive all the events we've missed out on over time.
+
+01:49.980 --> 01:54.150
+So the instant that everything restarts, we should very quickly start to see the expiration service
+
+01:54.150 --> 01:56.400
+starting to backfill all the relevant data.
+
+01:56.430 --> 02:01.230
+And again, this is what really makes the idea of bringing up some service in the future possible and
+
+02:01.230 --> 02:06.000
+having it rather quickly get all the relevant data that it needs by listening to all the events that
+
+02:06.000 --> 02:07.800
+had previously been published.
+
+02:08.280 --> 02:09.220
+Let's give this a shot.
+
+02:09.240 --> 02:12.240
+I'm going to save the file and then go back over to Scaffold.
+
+02:14.170 --> 02:14.590
+Okay.
+
+02:14.590 --> 02:16.120
+So I got my change right there.
+
+02:16.980 --> 02:23.670
+And then in my case, it looks like I restarted my Nats streaming server right before this video or
+
+02:23.670 --> 02:24.950
+actually earlier today.
+
+02:24.960 --> 02:29.130
+So I've not actually not created any order since then, which is why I see nothing right here.
+
+02:29.130 --> 02:34.380
+But hopefully if you did not recently restart now streaming server or your entire cluster, then you
+
+02:34.380 --> 02:36.810
+should see some number of events getting processed.
+
+02:37.200 --> 02:38.370
+That's in theory.
+
+02:38.820 --> 02:43.110
+So to really make sure this thing works, we should probably at least try to create one order and make
+
+02:43.110 --> 02:45.660
+sure that the event gets processed by the payment service.
+
+02:46.860 --> 02:48.690
+As usual to create an order.
+
+02:48.690 --> 02:50.190
+We will open up post, man.
+
+02:52.120 --> 02:54.040
+I'm going to make sure that I am authenticated.
+
+02:55.710 --> 02:56.000
+Yep.
+
+02:56.040 --> 02:58.950
+Looks like I'm authenticated and I'll try to create a ticket.
+
+02:58.950 --> 03:03.150
+And then in order for that ticket, they'll make a post request to create a ticket.
+
+03:04.460 --> 03:04.640
+Okay.
+
+03:04.640 --> 03:06.710
+There's my ticket ID, I'm going to copy it.
+
+03:07.220 --> 03:09.440
+And I still have a tab open right here for a post.
+
+03:09.440 --> 03:11.390
+Request to orders to create a new order.
+
+03:11.720 --> 03:13.250
+I'm going to paste in that ticket ID.
+
+03:14.200 --> 03:15.070
+Send it off.
+
+03:15.460 --> 03:21.040
+And now if I flip back over, I should see a whole bunch of stuff here I see on the expiration service.
+
+03:21.280 --> 03:22.720
+Or maybe not expiration, but payments.
+
+03:22.720 --> 03:23.530
+There it is right there.
+
+03:23.530 --> 03:26.470
+Message received order created to the payment service.
+
+03:26.710 --> 03:29.110
+So it looks like it probably worked as expected.
+
+03:30.430 --> 03:35.980
+If we wait about the 60 seconds or so, we will eventually also see the payment service receive another
+
+03:35.980 --> 03:36.310
+event.
+
+03:36.310 --> 03:38.230
+It will be the order canceled event.
+
+03:38.440 --> 03:40.840
+And so, again, that should be about 60 seconds or so.
+
+03:40.880 --> 03:43.360
+So it encourage you to maybe just wait for that thing to show up.
+
+03:43.360 --> 03:44.200
+Just to confirm.
+
+03:44.200 --> 03:45.940
+Yep, I got that event coming across.
+
+03:46.670 --> 03:46.790
+Okay.
+
+03:46.960 --> 03:50.560
+Well, that's pretty much it for the orders side of our payment service.
+
+03:50.560 --> 03:53.470
+So we're going to start to take a look at how we handle payments in the next video.

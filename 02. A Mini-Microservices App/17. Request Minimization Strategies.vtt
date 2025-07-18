@@ -1,0 +1,232 @@
+WEBVTT
+
+00:00.940 --> 00:05.800
+Real quick note, if you skipped over the entire React application, chances are you downloaded the
+
+00:05.800 --> 00:07.530
+completed code from the last lecture.
+
+00:07.540 --> 00:10.900
+If you did so, make sure you read the text note inside that lecture.
+
+00:11.170 --> 00:15.160
+But you need to make sure that you overwrite your entire current project with all the code from that
+
+00:15.160 --> 00:15.940
+zip file.
+
+00:16.060 --> 00:21.700
+We made two small changes, really, one small change and two locations to the post service and the
+
+00:21.700 --> 00:22.760
+comment service.
+
+00:22.780 --> 00:28.240
+You need to make sure that you get those updates after you update those files, make sure you rerun
+
+00:28.240 --> 00:30.670
+NPM install in the post and directories.
+
+00:31.120 --> 00:31.420
+Okay.
+
+00:31.420 --> 00:32.530
+So let's get back to it.
+
+00:33.190 --> 00:37.870
+In the last video, we finished up with the React application and we saw that while we were able to
+
+00:37.870 --> 00:41.950
+see all of our different posts and comments associated with them, there was a downside here.
+
+00:41.950 --> 00:47.740
+And that downside is that for every single post we load up, we are making one request to our common
+
+00:47.750 --> 00:51.070
+service to get all the comments associated with that post.
+
+00:51.340 --> 00:55.900
+So in my case, I've got three posts right here and I ended up having to make three separate requests
+
+00:55.900 --> 00:58.630
+to our common service to get the comments for each one.
+
+00:59.880 --> 01:02.070
+So in other words, we're in this kind of scenario right now.
+
+01:02.660 --> 01:08.990
+We are making a get request to some post end point that's giving us back in array more or less of posts.
+
+01:09.110 --> 01:12.920
+And then for every one of those, we have to make a follow up request.
+
+01:13.190 --> 01:16.280
+This is incredibly, incredibly inefficient.
+
+01:16.430 --> 01:20.510
+So I think they would really be worth our time to figure out how to maybe condense all this stuff down
+
+01:20.510 --> 01:22.160
+to just one request.
+
+01:22.370 --> 01:27.860
+I want to be able to make one request, one singular request, and get all of our posts and all the
+
+01:27.860 --> 01:30.470
+associated comments for those posts as well.
+
+01:30.680 --> 01:32.450
+That's what I want to try to do.
+
+01:33.020 --> 01:38.330
+Now, if we were trying to do this in a sort of monolith architecture, this would be really easy and
+
+01:38.330 --> 01:39.980
+straightforward to do so.
+
+01:39.980 --> 01:44.720
+If we were building a monolith right now, we could maybe say that if we ever make a get request to
+
+01:44.720 --> 01:49.880
+slash posts and add on a query string that says something like comments equals true, maybe that would
+
+01:49.880 --> 01:54.860
+be some sign to our monolith server that we want to get a list of our posts with all of the relevant
+
+01:54.860 --> 01:57.170
+comments embedded in those posts as well.
+
+01:57.970 --> 02:01.750
+Just be super straightforward, super easy with a monolith approach.
+
+02:01.750 --> 02:04.190
+But of course, we're not using a monolith.
+
+02:04.210 --> 02:06.970
+How are we going to solve this with what we have available?
+
+02:07.000 --> 02:09.130
+How are we going to serve this with microservices?
+
+02:10.140 --> 02:14.910
+Right now, we only have the ability to make a request to either the post service or the comment service.
+
+02:14.910 --> 02:18.480
+So we need to figure out some way of solving this problem.
+
+02:19.090 --> 02:20.260
+Well to solve this.
+
+02:20.260 --> 02:24.220
+It really goes back to something we discussed a little bit ago, the different styles of communication
+
+02:24.220 --> 02:25.570
+between services.
+
+02:26.050 --> 02:30.220
+So we're going to take a look at two possible solutions here and the pros and cons of both.
+
+02:30.220 --> 02:35.230
+These solutions are going to be very similar to those methods of async and sync communication that we
+
+02:35.230 --> 02:36.400
+discussed a little bit ago.
+
+02:36.850 --> 02:40.330
+So first, begin with the solution based on synchronous communication.
+
+02:40.870 --> 02:46.450
+With this type of solution, we might say that we are going to continue to make a get request to our
+
+02:46.450 --> 02:51.210
+post service and then maybe to make sure that we get all the relevant comments embedded.
+
+02:51.220 --> 02:57.670
+We could add some code to our post service to reach out automatically to our common service and say,
+
+02:57.670 --> 03:02.200
+Hey, give me all the comments you have associated with these post IDs.
+
+03:03.110 --> 03:06.080
+The comment service would then reply with all the relevant comments.
+
+03:06.500 --> 03:10.850
+Then the post service would take those comments, assemble them all together with the relevant posts,
+
+03:10.850 --> 03:13.880
+and then send the entire bundle back over to the browser.
+
+03:14.510 --> 03:18.800
+So again, this is one possible solution that relies upon synchronous communication.
+
+03:19.340 --> 03:23.660
+The downsides to this approach are identical to the downsides that we discussed earlier when we are
+
+03:23.660 --> 03:25.730
+first talking about synchronous communication.
+
+03:26.390 --> 03:31.820
+So while this approach is conceptually pretty darn easy to understand, well, there's a lot of downsides
+
+03:31.820 --> 03:33.140
+to this approach as well.
+
+03:34.250 --> 03:37.640
+The first off, it introduces a dependency between these services.
+
+03:37.670 --> 03:41.480
+This is another thing we have to track and understand inside of our application.
+
+03:42.780 --> 03:46.200
+If we ever have the comet service go down for any reason.
+
+03:46.200 --> 03:50.790
+So if this thing just mysteriously disappears, all of a sudden our post service is probably not going
+
+03:50.790 --> 03:52.020
+to work correctly either.
+
+03:54.110 --> 03:59.120
+If that request from the post service over to the Common Service fails, then the overall request is
+
+03:59.120 --> 04:00.050
+going to fail as well.
+
+04:00.050 --> 04:02.930
+So we will show neither posts nor comments.
+
+04:04.050 --> 04:08.840
+We also are introducing another kind of round trip request here between one service and another.
+
+04:08.850 --> 04:13.560
+So if for any reason that request is slow, then the overall request coming from the browser is going
+
+04:13.560 --> 04:16.440
+to be delayed or the response is going to be delayed as well.
+
+04:17.070 --> 04:20.370
+And once again, we discussed this back on the synchronous communication stuff.
+
+04:20.370 --> 04:23.940
+Right now, our application just consists of two separate services.
+
+04:23.940 --> 04:29.040
+But if we started to add in a bunch more services and for some reason fetching comments from the Common
+
+04:29.040 --> 04:33.780
+Service required some calls to other services, we're going to start to build up this tree or really
+
+04:33.780 --> 04:38.850
+a web of different requests, which really exaggerates all these earlier problems as well.
+
+04:39.750 --> 04:44.280
+So even though this is conceptually easy for you and I, it is perhaps not the best solution from an
+
+04:44.280 --> 04:45.480
+engineering standpoint.
+
+04:46.470 --> 04:50.450
+Now that we have taken a look at the synchronous communication approach, let's pause right here and
+
+04:50.450 --> 04:53.480
+then take a look at a second possible solution that we could use.

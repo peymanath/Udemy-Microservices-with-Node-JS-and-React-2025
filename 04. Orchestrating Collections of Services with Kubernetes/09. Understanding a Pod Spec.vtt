@@ -1,0 +1,274 @@
+WEBVTT
+
+00:01.060 --> 00:04.750
+This first config file is pretty straightforward in nature, but let's go to the second line by line
+
+00:04.750 --> 00:07.960
+and just make sure that the purpose of every line is really crystal clear.
+
+00:07.990 --> 00:09.160
+So a quick diagram.
+
+00:09.830 --> 00:09.920
+Okay.
+
+00:10.020 --> 00:13.410
+On the left hand side, I've got every line out of that config file and on the right hand side I've
+
+00:13.410 --> 00:14.490
+got a couple of notes.
+
+00:14.880 --> 00:17.370
+The first thing we wrote was API version V one.
+
+00:17.700 --> 00:22.590
+It turns out that Kubernetes is actually a really extensible when you install Kubernetes on your local
+
+00:22.590 --> 00:23.010
+machine.
+
+00:23.010 --> 00:28.560
+It comes with a preset list of different objects we can create, so we can create things like pods,
+
+00:28.560 --> 00:30.390
+deployment services and so on.
+
+00:30.750 --> 00:34.830
+We can also tell Kubernetes about custom objects that we want to create as well.
+
+00:35.280 --> 00:40.650
+The goal of API version right here is to tell Kubernetes about the pool of objects that we want to draw
+
+00:40.650 --> 00:41.130
+from.
+
+00:41.370 --> 00:47.130
+So in this case, we are telling Kubernetes, Look at the default V1 Kubernetes list of objects that
+
+00:47.130 --> 00:48.030
+we can create.
+
+00:49.420 --> 00:53.500
+Then on the right next line, right after that, we specify the exact type of object that we want to
+
+00:53.500 --> 00:54.940
+create from that pool.
+
+00:55.210 --> 00:58.240
+So in this case, we want to create an object of type pod.
+
+00:58.270 --> 01:01.450
+And remember, a pod is going to wrap up a container.
+
+01:01.450 --> 01:05.740
+And for our definition or our purposes, a pod is more or less like a container.
+
+01:06.760 --> 01:08.320
+Next up was metadata.
+
+01:08.410 --> 01:10.900
+Metadata is going to include some different options.
+
+01:10.900 --> 01:13.390
+So we want to apply to the object we're about to create.
+
+01:14.480 --> 01:18.710
+By far, the most common option that we're going to apply is the name property.
+
+01:18.890 --> 01:24.020
+So by providing a name right here, we are saying that when this pod is created, we want the pod to
+
+01:24.020 --> 01:30.620
+be given a name of both when we are back at our terminal a moment ago and we ran that command k gift
+
+01:30.620 --> 01:33.880
+pods, we saw the name print up right here of posts.
+
+01:33.890 --> 01:36.800
+Yeah, that is the metadata name property right there.
+
+01:37.160 --> 01:44.120
+So if we had changed post to something else like my odd with those and then try to create this thing
+
+01:44.120 --> 01:47.000
+again, it would instead have a name of my pod with posts.
+
+01:49.160 --> 01:54.950
+After that, we have the spec, the spec or specification is going to have a list of configuration options
+
+01:54.950 --> 01:56.660
+for the port that we're about to create.
+
+01:57.020 --> 02:02.090
+This is a very precise definition that controls exactly what should be going on inside this pod and
+
+02:02.090 --> 02:03.440
+how the pod should behave.
+
+02:04.600 --> 02:07.690
+The only required property we have to throw in here is containers.
+
+02:08.170 --> 02:10.190
+Containers is going to be an array.
+
+02:10.210 --> 02:13.240
+That's what the little dash right there meant inside of our YAML file.
+
+02:13.600 --> 02:17.980
+The dash means that we want to add in a array entity right here.
+
+02:17.980 --> 02:20.890
+So we could technically have many containers inside this one pod.
+
+02:20.890 --> 02:22.210
+But in our case we have just one.
+
+02:22.210 --> 02:23.770
+So one array entry.
+
+02:27.250 --> 02:28.450
+For that one array entry.
+
+02:28.450 --> 02:32.410
+We're going to provide some configuration for this one container that's going to be created inside the
+
+02:32.410 --> 02:32.950
+pod.
+
+02:33.490 --> 02:36.880
+The container that's going to be created will be given a name of posts as well.
+
+02:37.360 --> 02:41.230
+Now, one thing I want to mention really quickly is that the name properties here don't really have
+
+02:41.230 --> 02:42.520
+a lot of big importance.
+
+02:42.520 --> 02:44.900
+You can provide a name of whatever makes sense to you.
+
+02:44.920 --> 02:48.910
+In this case, I gave the pod and the container inside of it an identical name.
+
+02:49.180 --> 02:50.620
+Is that bad practice?
+
+02:50.650 --> 02:55.180
+Well, not really, because, again, our pod is only going to be running one container.
+
+02:55.480 --> 02:58.870
+So it's kind of okay to have the pod and container have the exact same name.
+
+03:00.010 --> 03:05.320
+The only real purpose of a name for us in this context, in the course, is to help us with debugging
+
+03:05.320 --> 03:09.850
+and help us understand exactly what pod we're looking at or what container we are working with.
+
+03:10.880 --> 03:16.400
+We also provide the image property and this is going to be the exact tag applied to some image.
+
+03:17.200 --> 03:21.700
+One thing that you might note here is that I put on a version number here at the very end, you might
+
+03:21.700 --> 03:27.850
+recall from your background in Docker that if we do not provide a version at the very end, then Docker
+
+03:27.850 --> 03:35.110
+will default to putting on latest in all scenarios if you ever apply or try to create a pod that has
+
+03:35.110 --> 03:40.060
+latest on the end right there or doesn't have anything which implies latest, then Kubernetes default
+
+03:40.060 --> 03:45.940
+behavior is to try to reach out to Docker Hub and find this image listed on Docker Hub.
+
+03:46.210 --> 03:50.080
+We have not pushed this image to Docker Hub, so if we had done that, we would have resulted in an
+
+03:50.080 --> 03:50.560
+error.
+
+03:51.900 --> 03:58.560
+By putting on an exact version, Kubernetes says, Oh, well, I'm going to assume that if this image
+
+03:58.710 --> 04:00.840
+is located on the computer that I'm running on.
+
+04:00.840 --> 04:04.500
+So essentially your computer right now, it's just going to go ahead and use that image directly.
+
+04:04.500 --> 04:10.800
+So in other words, when it's latest or an implicit latest, which would mean that we just don't have
+
+04:10.800 --> 04:11.460
+anything at all.
+
+04:11.490 --> 04:16.350
+Kubernetes assumes that it needs to go out to Docker Hub and try to find the latest image as opposed
+
+04:16.350 --> 04:18.370
+to using the image that is already on your computer.
+
+04:18.390 --> 04:22.950
+So by putting on that version, we're just saying, hey, if you find that version on the local computer,
+
+04:22.950 --> 04:23.510
+just use it.
+
+04:23.520 --> 04:25.080
+Don't try to reach out to Docker Hub.
+
+04:25.950 --> 04:29.120
+Now, functionally, you don't really have to worry about that distinction in practice.
+
+04:29.130 --> 04:31.200
+In other words, just don't sweat this too much.
+
+04:31.230 --> 04:32.370
+Don't read too much into it.
+
+04:32.400 --> 04:37.020
+We only really put this on here to avoid any errors coming up on this first pod that we are creating,
+
+04:37.020 --> 04:40.440
+because obviously it would've been kind of nasty to have a air up here immediately.
+
+04:40.860 --> 04:45.210
+So usually when we write out a pod spec or a deployment spec, we're usually just going to specify the
+
+04:45.210 --> 04:48.330
+image in the form that you see right here and not worry too much about it.
+
+04:50.180 --> 04:50.440
+Okay.
+
+04:50.450 --> 04:51.890
+So that's it for our config file.
+
+04:52.160 --> 04:56.290
+Now, we also ran a command or two in the last video we ran get pods.
+
+04:56.300 --> 04:57.560
+So let's do a quick pause right here.
+
+04:57.560 --> 05:00.860
+And I want to expand on the K get pods by CTL.
+
+05:00.890 --> 05:03.750
+I'll tell you about what that Kay is right there in just a moment.
+
+05:03.770 --> 05:05.720
+You're probably wondering why I was able to run that.
+
+05:05.750 --> 05:06.920
+I'll tell you about that in just a moment.
+
+05:06.920 --> 05:08.000
+Just a little shortcut.
+
+05:08.330 --> 05:12.230
+So when we run to get pods, there's a variety of other commands that you need to know.
+
+05:12.230 --> 05:15.530
+So we'll take a quick pause right here and expand on some of these commands in just a moment.

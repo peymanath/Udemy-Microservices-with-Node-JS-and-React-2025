@@ -1,0 +1,346 @@
+WEBVTT
+
+00:00.580 --> 00:04.900
+I know he spent a lot of time talking about annotations and inference, but we've got just one last
+
+00:04.900 --> 00:07.330
+little subtopic to discuss, which is objects.
+
+00:07.930 --> 00:12.100
+Now, this discussion is going to go a lot more quickly because all we're really discussing here is
+
+00:12.100 --> 00:17.800
+how we do stuff like object structuring, which we kind of saw an example of in argument list just a
+
+00:17.800 --> 00:18.610
+second ago.
+
+00:18.700 --> 00:23.680
+So let's just flip directly back over to our code editor and talk about how to work with objects around
+
+00:23.680 --> 00:24.880
+this annotation stuff.
+
+00:25.330 --> 00:30.270
+So instead of my annotations directory, I'm going to make another file called Objects Dots.
+
+00:30.910 --> 00:35.890
+And then inside of here I want to declare a new object called Profile, and this will be a profile for
+
+00:35.890 --> 00:36.730
+a person.
+
+00:36.730 --> 00:39.610
+So maybe they have a name like Alex.
+
+00:39.880 --> 00:41.740
+Maybe they have an age like 20.
+
+00:42.730 --> 00:47.650
+And we'll say that this person also has some coordinates like their physical location in the world.
+
+00:47.920 --> 00:50.410
+So I'm going to abbreviate that as simply chords.
+
+00:51.070 --> 00:56.020
+And then I'll give them a latitude and a longitude property inside there.
+
+00:56.470 --> 00:58.330
+So we've got a nested object right here.
+
+00:58.660 --> 01:03.730
+We've got the latitude and longitude representing this person's physical location in the world.
+
+01:04.790 --> 01:10.220
+Now, last thing I want to add to this object is a method, a method that will change the age of this
+
+01:10.220 --> 01:10.880
+person.
+
+01:10.880 --> 01:15.920
+So obviously we could do something like, you know, profile that age equals 20, but let's make a separate
+
+01:15.920 --> 01:17.900
+function just to have a nice function to call.
+
+01:18.750 --> 01:22.140
+All right, so one more property will add in here is set age.
+
+01:22.290 --> 01:28.440
+And rather than defining this as like a function like so I want to try using the S 2015 syntax for defining
+
+01:28.440 --> 01:30.510
+a method inside of an object object.
+
+01:30.960 --> 01:32.580
+So instead I'll say set age.
+
+01:32.730 --> 01:35.760
+I'll put my argument list in and then the function body.
+
+01:36.520 --> 01:41.590
+So let's try adding in some annotation for this function right here using the same rules that we just
+
+01:41.590 --> 01:42.190
+learned.
+
+01:42.670 --> 01:49.900
+So I'm going to put in a age as an argument and then the type of this argument which will be a number.
+
+01:50.770 --> 01:55.300
+If we're just updating this person's age, I don't really expect to return anything from this function.
+
+01:55.300 --> 01:58.540
+So I'm going to annotate the return type as being void like so.
+
+01:59.300 --> 02:01.880
+So then we can write out our implementation inside the function.
+
+02:01.880 --> 02:04.340
+We can say, This is H.
+
+02:05.500 --> 02:05.860
+All right.
+
+02:05.860 --> 02:11.320
+So that's an example of a function being defined inside of an object with the function annotation on
+
+02:11.320 --> 02:11.710
+it.
+
+02:12.220 --> 02:17.320
+So let's now try doing a little bit of S 2015 D structuring and pulling some different properties out
+
+02:17.320 --> 02:18.580
+of this profile object.
+
+02:18.970 --> 02:23.620
+So for example, let's try D structuring out the age property right here and figure out what the exact
+
+02:23.620 --> 02:24.910
+syntax for that would be.
+
+02:25.830 --> 02:29.880
+So of course we could do something like concert age is profiled at age.
+
+02:29.970 --> 02:32.880
+Like I said, we want to use D structuring instead.
+
+02:33.540 --> 02:36.120
+So instead I'm going to write out just profile.
+
+02:37.020 --> 02:39.480
+And we can do normal structuring like so.
+
+02:40.140 --> 02:46.080
+Now, if we really wanted to put a type annotation on here for some reason, like maybe we fall into
+
+02:46.080 --> 02:49.980
+one of those three categories that we discussed earlier right here.
+
+02:50.100 --> 02:54.960
+If we really wanted to put on some annotation directly onto the variable right here, we could do so
+
+02:54.960 --> 02:59.880
+by writing out a colon and then the structure of the profile object.
+
+02:59.880 --> 03:05.640
+So we would not just say, Oh, this thing is going to have like page, that is a number.
+
+03:05.790 --> 03:11.040
+Instead, we have to list out the structure of profile and the different properties that we want it
+
+03:11.040 --> 03:11.790
+to have.
+
+03:12.240 --> 03:18.570
+So in this case, we would put down curly braces, age and number like so.
+
+03:19.500 --> 03:23.730
+So notice how this seems to kind of like violate the rules of annotations.
+
+03:24.000 --> 03:28.050
+Previously, when we were talking about variable annotations, we had said, Oh yeah, we just put the
+
+03:28.050 --> 03:32.610
+type of the variable or the type of value that we're going to assign to this variable.
+
+03:33.000 --> 03:35.130
+So we're creating a variable right here called H.
+
+03:35.130 --> 03:40.440
+And so you might think that we only have to label it with the type that age is going to refer to, which
+
+03:40.440 --> 03:41.220
+would be number.
+
+03:41.310 --> 03:42.620
+That's not the case.
+
+03:42.630 --> 03:48.120
+If we want to use D structuring, we have to write out the expected structure of profile over here on
+
+03:48.120 --> 03:48.780
+the right hand side.
+
+03:48.780 --> 03:54.060
+So I expect this value right here to have a structure that is an object with an H property.
+
+03:54.060 --> 03:55.140
+That is a number.
+
+03:56.350 --> 04:01.660
+So now to make things just a little bit more complicated, let's try also structuring out our latitude
+
+04:01.660 --> 04:03.010
+and longitude as well.
+
+04:03.010 --> 04:06.580
+So this is going to be some nasty stuff, but it'll be some pretty good practice.
+
+04:07.240 --> 04:09.940
+So we would write out one set of curly braces.
+
+04:11.390 --> 04:13.340
+We would say, look at the courts property.
+
+04:13.950 --> 04:17.670
+And then tried to pull out latitude and longitude out of there.
+
+04:18.270 --> 04:21.450
+And we want to get all that from the pro file object like so.
+
+04:22.540 --> 04:22.750
+Okay.
+
+04:22.750 --> 04:27.030
+So if we were just doing plain destruction without an annotation, that is what it would look like.
+
+04:27.040 --> 04:30.550
+So it'd be just identical to the normal s 2015 syntax.
+
+04:31.000 --> 04:35.380
+But once again, if we fell into one of these conditions where we had to put in an annotation, all
+
+04:35.380 --> 04:40.780
+we would have to do is once again kind of mirror the object structure that we expect profile to be.
+
+04:41.230 --> 04:43.050
+So it's going to be a little bit nasty here.
+
+04:43.060 --> 04:48.160
+Right after the D structuring we can put in a colon, then we'll start to describe the structure of
+
+04:48.160 --> 04:49.450
+the profile object.
+
+04:49.990 --> 04:51.430
+So I'll put a set of curly braces.
+
+04:51.430 --> 04:53.980
+I'm going to say that this thing is going to have a property cord's.
+
+04:54.780 --> 04:56.280
+That's going to be an object.
+
+04:57.010 --> 05:00.820
+And inside of that inner object, we've got a lat property that is a number.
+
+05:02.550 --> 05:05.700
+And an LNG property that is a number as well.
+
+05:05.730 --> 05:10.080
+Now this is a really long line, so I'm going to save the file really quickly just to get it to reformat
+
+05:10.080 --> 05:11.850
+so you can see the whole line in total.
+
+05:12.690 --> 05:18.450
+So once again, kind of unexpectedly, we do not just list out the expected type of lat and long.
+
+05:18.630 --> 05:21.960
+And I think this example right here will give you a better idea of why that is.
+
+05:22.380 --> 05:27.550
+If we consider back up here, if we had only put number, well, what would happen if we wanted to de
+
+05:27.600 --> 05:33.690
+structure multiple properties and also pull out, say this person's name as well, which was the string
+
+05:34.140 --> 05:37.860
+if this was the case, his number referring to the type of age or name.
+
+05:38.070 --> 05:43.350
+So this is why we have to kind of double up on the structure whenever we are doing the structuring.
+
+05:43.680 --> 05:45.900
+So age is a number and name would be a string.
+
+05:45.900 --> 05:49.950
+We have to label the type of all the different properties coming out of that object.
+
+05:50.820 --> 05:53.680
+Now in this case, you'll notice I've got a little air here around name.
+
+05:53.690 --> 05:54.710
+That's really fine.
+
+05:54.710 --> 05:59.300
+It's just because the way my project is structured, chances are you see an air here as well that says
+
+05:59.300 --> 06:01.370
+something like name was also declared.
+
+06:01.610 --> 06:03.260
+If you see that, totally fine.
+
+06:03.260 --> 06:04.370
+You can't ignore it.
+
+06:05.710 --> 06:07.270
+All right, so that's it around objects.
+
+06:07.270 --> 06:11.800
+Like I said, I just wanted to very quickly talk about de structuring around objects and what annotations
+
+06:11.800 --> 06:18.190
+for them look like and also how we talk in function declarations inside or there as well with some annotations.
+
+06:19.170 --> 06:20.640
+Okay, so that's pretty much it.
+
+06:20.670 --> 06:24.000
+On type annotations and type inference.
+
+06:24.000 --> 06:29.100
+So we've gone over several plain definitions, went over some examples we spoke about why we care about
+
+06:29.100 --> 06:32.970
+these, remember, is because we want to make sure TypeScript is aware the type of all the variables
+
+06:32.970 --> 06:33.750
+we work with.
+
+06:33.750 --> 06:39.180
+And we also discussed when we're going to use annotations and when we're going to fall back to inference.
+
+06:40.300 --> 06:46.270
+Whenever working with functions, we're going to rely upon annotations 100% of the time for both arguments
+
+06:46.270 --> 06:47.710
+and return types.
+
+06:47.920 --> 06:52.690
+When we're working with variables, we're going to rely upon type inference as much as we possibly can
+
+06:52.690 --> 06:57.100
+unless we are relying upon or in one of these three scenarios right here.
+
+06:57.980 --> 06:58.220
+All right.
+
+06:58.220 --> 07:02.540
+So now that we've got through a lot of this kind of boring stuff, let's take a quick pause right here
+
+07:02.540 --> 07:05.270
+and continue on our next subject in the next video.

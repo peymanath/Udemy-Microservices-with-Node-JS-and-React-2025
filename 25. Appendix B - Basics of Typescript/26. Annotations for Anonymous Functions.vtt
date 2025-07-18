@@ -1,0 +1,82 @@
+WEBVTT
+
+00:01.020 --> 00:05.700
+In this video, we're going to take a look at some alternate forms of syntax around annotations for
+
+00:05.700 --> 00:06.450
+functions.
+
+00:06.780 --> 00:12.240
+So underneath my two functions I already have, I'm going to define another one called Divide, and
+
+00:12.240 --> 00:14.850
+you'll notice I'm going to use the keyword function right here.
+
+00:15.120 --> 00:19.740
+So how do we use these annotations with a function defined with the function keyword?
+
+00:19.770 --> 00:21.570
+Well, basically the exact same way.
+
+00:21.930 --> 00:23.640
+So we'll have two arguments.
+
+00:24.450 --> 00:28.080
+A and B, and we need to annotate both them.
+
+00:28.080 --> 00:32.340
+So we'll say A is going to be A number and B is going to be a number as well.
+
+00:32.970 --> 00:38.070
+Then to annotate the return type of this, again, right after the argument list, we'll put in a colon
+
+00:38.340 --> 00:40.620
+and then the type of value we expect to return.
+
+00:41.310 --> 00:43.080
+Then we can return.
+
+00:43.840 --> 00:45.880
+A divided baby like so.
+
+00:47.540 --> 00:51.980
+Now this syntax is going to also work for anonymous functions assigned to variables too.
+
+00:52.160 --> 00:54.380
+So I could say const multiply.
+
+00:56.140 --> 00:57.280
+Will be a function.
+
+00:58.590 --> 01:03.420
+This will take two arguments of A and B, once again, both numbers.
+
+01:05.240 --> 01:09.680
+And again, right after that argument list, we can annotate the return type as well.
+
+01:10.250 --> 01:12.900
+And so then inside the function A times B like so.
+
+01:12.920 --> 01:14.210
+And that's pretty much it.
+
+01:15.040 --> 01:21.730
+So any time that we need to define a function using an arrow, a named function, or an anonymous function
+
+01:21.730 --> 01:26.050
+assigned to a variable, we're always going to see a near identical form of syntax.
+
+01:26.050 --> 01:30.130
+It's always going to be the arguments with the colon and then the expected type.
+
+01:30.370 --> 01:35.830
+And then immediately after the closing parentheses, we will do another colon and the expected type
+
+01:35.860 --> 01:37.450
+of the return value from the function.
+
+01:37.450 --> 01:38.530
+And that's pretty much it.
+
+01:39.270 --> 01:42.430
+Get a quick pause here and we'll talk about one less thing in the next video.

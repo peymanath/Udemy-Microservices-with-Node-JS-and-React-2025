@@ -1,0 +1,340 @@
+WEBVTT
+
+00:01.030 --> 00:04.900
+We've now got all four of our different primary route handlers put together.
+
+00:04.930 --> 00:07.570
+We're now going to go back into our current user route handler.
+
+00:07.600 --> 00:11.590
+We're going to take a look at some of the logic inside of here and start to extract it into two separate
+
+00:11.590 --> 00:12.010
+middleware.
+
+00:12.430 --> 00:14.740
+So let me tell you exactly why we're going to do this.
+
+00:15.870 --> 00:19.810
+At some point in time, we're going to have some other services running inside of our project.
+
+00:19.830 --> 00:24.870
+Right now we only have service, but at some point we will also have users, tickets, orders, whatever
+
+00:24.870 --> 00:28.080
+else and all these other services we put together.
+
+00:28.080 --> 00:33.570
+We are going to inevitably, at some point in time, have some income and request from a user who may
+
+00:33.570 --> 00:38.460
+or may not be logged in to things that we're almost definitely going to have to do at some point in
+
+00:38.460 --> 00:43.230
+time is check to see whether or not that user is logged in and if they are not.
+
+00:43.260 --> 00:46.800
+We are probably going to want to prevent access to some given route handler.
+
+00:47.340 --> 00:51.600
+The other thing that we are just about definitely going to have to do is take the information out of
+
+00:51.600 --> 00:56.250
+the JSON Web token payload and set it on recurrent user.
+
+00:56.670 --> 00:58.620
+There's nothing special about recurrent user.
+
+00:58.620 --> 01:00.660
+This is just a very common property to use.
+
+01:00.660 --> 01:05.310
+Any time that you want to present some information about the current user and get access to it inside
+
+01:05.310 --> 01:06.330
+of our root handler.
+
+01:06.950 --> 01:11.540
+So again, these are two middle wears that we're just about definitely going to want to have at some
+
+01:11.540 --> 01:12.290
+point in time.
+
+01:12.290 --> 01:16.820
+So we might as well create them right now as long as we are handling all this authentication stuff and
+
+01:16.820 --> 01:19.730
+we've got this idea of JSON Web tokens fresh in our minds.
+
+01:20.460 --> 01:23.970
+So in this video and the next one or two, let's create these two middleware.
+
+01:24.330 --> 01:28.410
+We're going to first create the middleware that's just going to extract information out of that payload
+
+01:28.410 --> 01:35.310
+and set it on recurrent user so that it can be can be consumed by further handlers or middleware down
+
+01:35.310 --> 01:36.000
+our chain.
+
+01:37.420 --> 01:37.530
+Okay.
+
+01:37.600 --> 01:41.170
+So back inside, my editor, I'm going to find that middleware directory once again.
+
+01:42.660 --> 01:44.580
+And we're going to create a new file inside there.
+
+01:45.910 --> 01:47.660
+Called current user.
+
+01:48.000 --> 01:48.640
+It's.
+
+01:50.080 --> 01:54.820
+And then inside of here, we're going to add in one or two imports at the top and then set up the middleware
+
+01:54.820 --> 01:55.480
+function.
+
+01:56.540 --> 02:00.770
+So I'm going to import request response.
+
+02:02.120 --> 02:05.630
+And the next function that types from Express.
+
+02:06.460 --> 02:12.760
+I'm also going to import JWT from JSON web token because of course we are going to want to decode our
+
+02:12.760 --> 02:14.440
+JSON Web token at some point.
+
+02:16.070 --> 02:20.510
+Then we'll go ahead and export a new function called current user.
+
+02:24.640 --> 02:29.850
+This thing is going to take some number of arguments because this is not an error handling middleware.
+
+02:29.860 --> 02:33.640
+It's going to take three arguments of rec, rez and next.
+
+02:33.640 --> 02:37.030
+So we will put those arguments in and annotate each of them as well.
+
+02:37.360 --> 02:45.490
+So rec is of type request, rez is of type response and next is of type next function like so.
+
+02:48.720 --> 02:51.230
+So inside of here, what we want to do is pretty straightforward.
+
+02:51.240 --> 02:56.070
+We are only trying to figure out whether or not the user is logged in and if they are, we want to extract
+
+02:56.070 --> 03:00.090
+information out of that payload and set it on recurrent user.
+
+03:00.090 --> 03:02.520
+And again, there's nothing special about that current user property.
+
+03:02.520 --> 03:08.100
+It's just a very common property to set to describe who the current user is inside of an express application.
+
+03:08.930 --> 03:13.280
+If the user is not logged in, we are not going to throw in air or anything like that.
+
+03:13.280 --> 03:16.790
+That is going to be the job of the other middleware we are going to put together.
+
+03:16.940 --> 03:20.900
+So the only job of this one is to say, hey, if you're logged in, I'm going to extract information
+
+03:20.900 --> 03:23.330
+on that payload and set it on this given property.
+
+03:24.520 --> 03:24.820
+All right.
+
+03:24.820 --> 03:30.400
+So we will first put together a quick check to decide whether or not the user has a JSON Web token.
+
+03:30.490 --> 03:34.810
+And this is going to end up being very similar to the logic we had put together back over here inside
+
+03:34.810 --> 03:36.640
+of our current user handler.
+
+03:37.640 --> 03:38.840
+So we're going to say if.
+
+03:40.610 --> 03:43.040
+There is no session object.
+
+03:43.040 --> 03:45.560
+So remember, that's why we've got that little exclamation.
+
+03:46.520 --> 03:49.250
+Or if there is no JWT property.
+
+03:49.250 --> 03:52.730
+So remember that little question mark right there is going to get TypeScript to kind of expand this
+
+03:52.730 --> 03:55.010
+entire statement into two separate checks.
+
+03:55.010 --> 03:57.350
+We're going to first make sure that session is defined.
+
+03:57.350 --> 04:01.010
+And if it is, then we will try to access the JWT property.
+
+04:02.590 --> 04:08.950
+So if we do not have a session object or if JWT is not defined, we want to return and move on to the
+
+04:08.950 --> 04:10.780
+next middleware inside of our chain.
+
+04:11.610 --> 04:15.720
+So we will put inside a return next like so.
+
+04:18.770 --> 04:24.440
+Then if we get past that point, we're going to want to decode the JSON Web token once again, very
+
+04:24.440 --> 04:26.420
+similar to what we did back inside of current user.
+
+04:26.420 --> 04:31.100
+If there's anything wrong with the decoding process, we're going to probably want to make sure that
+
+04:31.100 --> 04:36.020
+we capture that error and send back or continue on saying, Oh, well, the user must not be logged
+
+04:36.020 --> 04:36.440
+in.
+
+04:37.690 --> 04:40.180
+So I'm going to add in a try.
+
+04:40.950 --> 04:42.360
+Atch statement.
+
+04:43.100 --> 04:44.240
+Inside of the try.
+
+04:44.540 --> 04:48.020
+We will try to get the payload out of that JSON web token.
+
+04:48.440 --> 04:49.550
+So remember how we do that.
+
+04:49.550 --> 04:51.730
+We call JWT Verify.
+
+04:52.400 --> 04:56.240
+We will pass in the JSON web token which is REQ session JWT.
+
+04:56.780 --> 05:00.020
+And then the second argument is going to be our actual token.
+
+05:00.750 --> 05:03.380
+Which is process and v.
+
+05:03.880 --> 05:05.130
+JWT ki.
+
+05:05.780 --> 05:07.670
+Once again, we've gone over this three times.
+
+05:07.680 --> 05:12.980
+TypeScript thinks that this variable might be undefined, but we already did a check for that back inside
+
+05:12.980 --> 05:14.330
+of our index file.
+
+05:14.330 --> 05:17.870
+So we're going to put the exclamation on there to just say, Hey, TypeScript, don't sweat it.
+
+05:17.870 --> 05:19.130
+This thing is defined.
+
+05:21.470 --> 05:26.900
+Now, if anything goes wrong with trying to extract the information that we will add end up inside of
+
+05:26.900 --> 05:27.950
+our catch statement.
+
+05:28.220 --> 05:31.880
+So we could put in a next right here to just try to continue on.
+
+05:31.880 --> 05:36.020
+But it turns out that no matter what, whether or not this thing throws an error, we really want to
+
+05:36.020 --> 05:38.290
+call next to continue on to our next middleware.
+
+05:38.300 --> 05:40.820
+So we don't necessarily have to put that inside the catch statement.
+
+05:40.820 --> 05:46.640
+Instead, we can just add it in right after like so because again, whether or not we decode that token
+
+05:46.640 --> 05:50.000
+successfully, we always want to continue on to the next middleware.
+
+05:51.560 --> 05:53.330
+So now that we've got that payload.
+
+05:55.210 --> 05:57.790
+We need to actually set it on our request object.
+
+05:57.830 --> 05:59.710
+Again, we are setting on the request object.
+
+05:59.710 --> 06:04.840
+So for their middle wears or other route handlers down this chain can figure out automatically who the
+
+06:04.840 --> 06:05.890
+current user is.
+
+06:06.280 --> 06:10.780
+So what we would like to do is rec current user is payload.
+
+06:11.350 --> 06:12.640
+That would be ideal.
+
+06:12.640 --> 06:15.130
+But as soon as we do that we get an error from TypeScript.
+
+06:15.240 --> 06:19.930
+Script is saying Hey, there's no current user property on a request object.
+
+06:20.560 --> 06:24.970
+So turns out that this is going to be just a little bit harder to do than we might have expected.
+
+06:25.000 --> 06:31.690
+You and I want to add in a new property to an existing object type that is already defined inside of
+
+06:31.690 --> 06:33.190
+a type definition file.
+
+06:33.220 --> 06:37.960
+And as far as type script is concerned, we cannot just arbitrarily add in new properties.
+
+06:38.110 --> 06:41.230
+So we need to figure out some way to tell TypeScript, Hey, don't sweat it.
+
+06:41.230 --> 06:41.980
+It is okay.
+
+06:42.010 --> 06:45.220
+There actually is a current user property for a request object.
+
+06:45.730 --> 06:49.420
+So we're going have to figure out how to work with TypeScript a little bit more closely and tell it
+
+06:49.420 --> 06:52.090
+that it is okay that we are adding in this additional property.
+
+06:52.120 --> 06:54.880
+Let's take a pause right here and then tackle that in just a moment.

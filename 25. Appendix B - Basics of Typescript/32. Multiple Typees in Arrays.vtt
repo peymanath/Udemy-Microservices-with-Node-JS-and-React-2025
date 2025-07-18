@@ -1,0 +1,142 @@
+WEBVTT
+
+00:01.120 --> 00:05.830
+In this video, I want to show you how we can still use arrays with multiple different types of values
+
+00:05.830 --> 00:06.640
+inside them.
+
+00:06.940 --> 00:10.900
+So let's flip back over to our code editor and once again, write out a quick example.
+
+00:11.050 --> 00:14.140
+So I'm going to put in a new comment down here that says Flexible Types.
+
+00:14.560 --> 00:18.610
+And then I'm going to declare a new array called important dates like so.
+
+00:19.440 --> 00:23.460
+So this is going to be an array that contains some different important date values.
+
+00:23.580 --> 00:28.530
+Maybe some of them are going to be instances of date objects, and maybe some of them are going to be
+
+00:28.530 --> 00:31.530
+strings that contain like a date inside them.
+
+00:31.950 --> 00:34.940
+So in other words, I want to have two different types inside this array.
+
+00:34.950 --> 00:38.730
+Some are going to be instances of data objects, some are going to be strings.
+
+00:39.120 --> 00:43.440
+So to do so, I could simply write out a new date and then like an actual string in here.
+
+00:43.440 --> 00:46.500
+So 20, 30, maybe ten, ten.
+
+00:46.500 --> 00:52.590
+Like, so if I now hover over important dates, I'll see an updated little type annotation here.
+
+00:53.010 --> 00:56.910
+So in this case, notice that little pipe operator right there, we've spoken about that very briefly
+
+00:56.910 --> 00:57.570
+before.
+
+00:57.750 --> 01:00.660
+That's kind of like an or statement for types.
+
+01:00.990 --> 01:06.570
+So this can be read as saying this is going to be an array that contains elements that are a string
+
+01:06.630 --> 01:08.190
+or a date.
+
+01:08.640 --> 01:12.690
+So everything inside this array can be treated as a string or a date object.
+
+01:13.550 --> 01:16.310
+Now it is important to understand this annotation right here.
+
+01:16.310 --> 01:21.890
+If you ever happen to say only, initialize the array with date objects and we hover over this once
+
+01:21.890 --> 01:22.400
+again.
+
+01:22.400 --> 01:25.820
+TypeScript now thinks that this array will only contain dates.
+
+01:25.820 --> 01:31.130
+So if we wanted to specifically say that this array can contain multiple different types, we would
+
+01:31.130 --> 01:35.690
+once again have to add in a manual annotation here so I could put in a colon.
+
+01:35.900 --> 01:42.290
+And then just like that syntax we saw in that tooltip, we would say date or string and then the square
+
+01:42.290 --> 01:43.430
+brackets right after.
+
+01:43.910 --> 01:49.640
+And so now once again, if I hover over important dates, we've overridden type inference and said specifically
+
+01:49.640 --> 01:53.060
+this array contain can contain either type of value.
+
+01:53.570 --> 01:59.210
+So now right after that, we could do important dates, push and add in a string.
+
+01:59.210 --> 02:01.040
+Well, let's do a really string, real string here.
+
+02:01.040 --> 02:03.410
+So 20, 30, ten, ten.
+
+02:04.310 --> 02:08.360
+And important dates don't push new date like so.
+
+02:08.780 --> 02:14.180
+And as you might guess, if we now try to put in a new value that is just like a plane number, we will
+
+02:14.180 --> 02:17.870
+see an error because that is neither a string nor a date object.
+
+02:19.510 --> 02:24.670
+Now, as we mentioned before, you will want to put in this annotation if you ever do not initialize
+
+02:24.670 --> 02:28.030
+the array with a date literal and a string literal.
+
+02:28.060 --> 02:32.170
+Alternatively, if you initialize it with an empty array, you will want to have the annotation on there
+
+02:32.170 --> 02:32.830
+as well.
+
+02:32.950 --> 02:37.150
+If we don't put on that annotation with an empty array, we're always going to end up with an array
+
+02:37.150 --> 02:40.720
+of the any type which we always want to avoid as much as possible.
+
+02:41.900 --> 02:42.140
+All right.
+
+02:42.140 --> 02:46.340
+So that's how we put in multiple different types of values into one single array.
+
+02:46.790 --> 02:51.440
+Now, let's take a quick pause right here and talk about where we are going to actually make use of
+
+02:51.440 --> 02:52.600
+these type two arrays.
+
+02:52.610 --> 02:54.640
+And as you might guess, it's probably going to be everywhere.
+
+02:54.650 --> 02:56.870
+So quick pause and I'll see you in just a minute.

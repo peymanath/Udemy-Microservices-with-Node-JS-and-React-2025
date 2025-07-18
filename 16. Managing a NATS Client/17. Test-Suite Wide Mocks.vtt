@@ -1,0 +1,124 @@
+WEBVTT
+
+00:00.680 --> 00:05.420
+We're now going to go around to our different test files and make sure that they all set up that just
+
+00:05.420 --> 00:09.410
+mock call so that we get that fake implementation as opposed to the real one.
+
+00:10.260 --> 00:13.170
+All right, so I'm going to go to my new test file.
+
+00:14.360 --> 00:15.200
+Here it is right here.
+
+00:15.560 --> 00:21.740
+I'm going to find the Jesse MacLean a copy that, and then I'll go around to the other test root handler
+
+00:21.740 --> 00:22.610
+files I have.
+
+00:23.060 --> 00:29.000
+So I could go into indexed tests and then paste that at the top and then repeat that for the other two
+
+00:29.000 --> 00:29.390
+as well.
+
+00:29.390 --> 00:30.470
+That's definitely an option.
+
+00:30.470 --> 00:34.160
+But maybe doing this copy paste everywhere is not super efficient.
+
+00:34.160 --> 00:36.020
+So let me show you a slightly different approach.
+
+00:36.320 --> 00:41.600
+Rather than listing out this mock inside of every single one of our test files, I'm going to go back
+
+00:41.600 --> 00:44.600
+to the new test file and delete it from right there.
+
+00:45.170 --> 00:48.770
+And instead I'm going to go and find my test directory inside there.
+
+00:48.770 --> 00:50.630
+The setup file.
+
+00:52.240 --> 00:54.790
+Inside of here right before the before all statement.
+
+00:54.970 --> 01:00.010
+I'm going to add in that just mock and I'll make sure that I update the root because now it is just
+
+01:00.010 --> 01:03.090
+up one folder to get to that net wrapper file.
+
+01:03.100 --> 01:06.520
+So I'm going to set it to Dot dot Nats wrapper.
+
+01:07.210 --> 01:11.440
+This makes sure that all the different tests inside of our entire project are always going to use the
+
+01:11.440 --> 01:14.320
+mocked or the fake version of Nat's wrapper.
+
+01:14.650 --> 01:16.360
+That is definitely something we want.
+
+01:16.360 --> 01:17.170
+In this case.
+
+01:17.170 --> 01:22.630
+We do not want any of our different files in the test environment to try to get the real next client,
+
+01:22.630 --> 01:26.380
+because that thing is going to try to make contact the real NAT server.
+
+01:26.380 --> 01:27.850
+Again, not what we want.
+
+01:29.010 --> 01:30.420
+So I didn't try to save this.
+
+01:31.420 --> 01:32.530
+Flipped back over to my terminal.
+
+01:32.530 --> 01:34.630
+Now I should see all my tests passing.
+
+01:35.640 --> 01:36.480
+It looks good.
+
+01:37.450 --> 01:41.800
+You'll notice that we now also have a lot of console logs from all the successful event publishers as
+
+01:41.800 --> 01:42.250
+well.
+
+01:42.820 --> 01:47.050
+Now all this stuff definitely works, but, you know, there is something that is now missing from all
+
+01:47.050 --> 01:47.860
+of our tests.
+
+01:48.280 --> 01:53.560
+One thing that's super critical inside of our new test handler new handler excuse me.
+
+01:53.560 --> 01:59.950
+And the update handler is to make sure that we not only save a ticket, but that we also publish a event
+
+01:59.950 --> 02:00.670
+as well.
+
+02:01.120 --> 02:05.860
+So I think that it would be really nice if we could somehow test and make sure that we are truly publishing
+
+02:05.860 --> 02:06.910
+some event.
+
+02:07.210 --> 02:11.260
+So let's figure out how to add in some tests and make sure that these events are actually being published
+
+02:11.260 --> 02:12.190
+in the next video.

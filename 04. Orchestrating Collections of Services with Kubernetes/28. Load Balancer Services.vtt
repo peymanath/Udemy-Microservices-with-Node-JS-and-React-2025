@@ -1,0 +1,241 @@
+WEBVTT
+
+00:01.460 --> 00:05.570
+The last big thing we need to do inside of our cluster is integrate that React application.
+
+00:05.600 --> 00:08.730
+This is going to be one of the last big topics we cover around Kubernetes.
+
+00:08.750 --> 00:13.550
+I know all this Kubernetes stuff has been a little bit of a slog, but we are almost at the end.
+
+00:13.550 --> 00:18.950
+And I want to repeat just one more time that even though doing a lot of stuff by hand is kind of annoying,
+
+00:18.950 --> 00:22.700
+a little bit tedious, after we get through this last topic, we're going to start to look at a tool
+
+00:22.700 --> 00:26.630
+that's going to automate a lot of the stuff for us and make our lives a little bit easier.
+
+00:26.990 --> 00:27.320
+All right.
+
+00:27.320 --> 00:31.400
+With that in mind, let's take a look at how we're going to get that react application inside of your.
+
+00:32.340 --> 00:36.480
+So our React application is actually the Create React App Development server.
+
+00:36.840 --> 00:42.030
+We're going to house this thing inside of a pod, so we're going to create a new Docker image or our
+
+00:42.030 --> 00:44.250
+React application or the development server.
+
+00:44.580 --> 00:49.020
+We're then going to create a container inside of a pod and place it inside of our cluster.
+
+00:49.770 --> 00:55.290
+One thing I want to clarify about what this React app dev server does is that whenever a user opens
+
+00:55.290 --> 00:57.990
+up their browser and navigates to our application.
+
+00:58.910 --> 01:02.840
+We're going to really be attempting to connect to that React app dev server.
+
+01:03.260 --> 01:08.390
+The only goal of that dev server is to take code that you and I write inside of a React application
+
+01:08.390 --> 01:12.350
+and then generate some HTML JavaScript and CSS files out of it.
+
+01:12.860 --> 01:19.460
+So during the initial navigation attempt to our application running inside this cluster, the only thing
+
+01:19.460 --> 01:23.960
+this React app dev server is doing is returning some HTML, CSS and JavaScript.
+
+01:24.650 --> 01:31.610
+What this React app server is not doing is making any requests at any point in time, over to posts,
+
+01:31.610 --> 01:34.820
+over to comments, query anything like that.
+
+01:35.180 --> 01:39.740
+The actual requests for data are being issued from the user's browser.
+
+01:40.370 --> 01:45.770
+So we send over that HTML, CSS and JavaScript stuff, then the React app boots up inside the user's
+
+01:45.770 --> 01:51.050
+browser and then inside of the browser, the React app is going to try to reach out to the query service
+
+01:51.050 --> 01:57.380
+and get some posts and comments after serving up the initial HTML, CSS and JavaScript stuff.
+
+01:57.410 --> 02:04.340
+The development server, it is no longer relevant whatsoever, so no requests are being issued from
+
+02:04.340 --> 02:07.010
+that dev server directly over to our other pots.
+
+02:07.040 --> 02:09.350
+All these requests are coming from the browser.
+
+02:10.000 --> 02:12.640
+So this starts to open up a kind of interesting question.
+
+02:12.670 --> 02:17.560
+How are we going to make sure that the React app can somehow make requests to all of these different
+
+02:17.560 --> 02:18.190
+pots?
+
+02:18.790 --> 02:22.840
+We need to reach out to at least the query service comments and posts.
+
+02:22.840 --> 02:26.380
+The React app doesn't technically need to reach out to moderation, but whatever.
+
+02:26.380 --> 02:27.850
+Let's forget that for just a second.
+
+02:28.780 --> 02:32.890
+So to make sure that the React app can reach out to all these different pods and the containers running
+
+02:32.890 --> 02:36.040
+inside them, we have two options available to us.
+
+02:36.070 --> 02:39.000
+One option is going to be pretty bad and we're definitely not going to do it.
+
+02:39.010 --> 02:42.310
+I just want to show you this option and make sure you understand that we're not going to do this in
+
+02:42.310 --> 02:43.540
+any serious application.
+
+02:43.540 --> 02:44.770
+So here's possibility.
+
+02:44.770 --> 02:46.390
+Number one, probably not good.
+
+02:46.390 --> 02:47.650
+We don't want to do this.
+
+02:48.190 --> 02:52.390
+So option number one, to make sure that the React application can reach out to these different pods,
+
+02:52.390 --> 02:57.220
+we could create a node port service for post common query and moderation.
+
+02:58.450 --> 03:03.880
+Remember that a node port service is going to expose a pod to the outside world or to traffic outside
+
+03:03.880 --> 03:04.570
+the cluster.
+
+03:05.020 --> 03:09.640
+So inside of our React application, we could write out some code that would make requests to these
+
+03:09.640 --> 03:14.110
+different node port services and access the underlying pods to get all the information that is required.
+
+03:14.560 --> 03:19.030
+The reason that this is not a good approach is that, remember, when we create a node port service,
+
+03:19.030 --> 03:21.750
+we are essentially opening up a random port.
+
+03:21.760 --> 03:26.410
+We can't technically specify an exact port, but more or less let's just say it's a random port inside
+
+03:26.410 --> 03:27.190
+of our cluster.
+
+03:27.340 --> 03:32.470
+And so if we ever changed a node port, there's the possibility that, who knows, maybe the port that
+
+03:32.470 --> 03:33.850
+we get assigned would be different.
+
+03:33.850 --> 03:38.110
+And so if we ever start to change these ports, we would have to go back to a React application and
+
+03:38.110 --> 03:42.970
+change the port inside of our code and update it to reflect the new node port.
+
+03:43.890 --> 03:48.420
+So this is probably not a good option for that reason and for a couple of others as well.
+
+03:48.870 --> 03:53.700
+Rather than trying to expose all of our pods using node ports, we're going to take a look at that last
+
+03:53.700 --> 03:58.350
+kind of service that we had discussed in the previous set of videos around services in general.
+
+03:58.950 --> 04:02.580
+So this is what we are going to do and this is what we're going to do in production environment, in
+
+04:02.580 --> 04:03.720
+a development environment.
+
+04:03.720 --> 04:06.030
+This is the right way to do this stuff.
+
+04:06.390 --> 04:09.060
+We're going to create a load balancer service.
+
+04:09.600 --> 04:15.300
+The goal of this load balancer service is to have one single point of entry into our entire cluster.
+
+04:15.780 --> 04:20.310
+We're then going to make sure that our React application is going to make requests to access that load
+
+04:20.310 --> 04:23.070
+balancer service, and then we're going to place some logic.
+
+04:23.070 --> 04:29.220
+So actual code or configuration inside of this load balancer service that's going to take these incoming
+
+04:29.220 --> 04:31.980
+requests and then root them off to the appropriate pod.
+
+04:32.250 --> 04:35.820
+And just to be clear, when I say write it off to the appropriate pod, once again, what we're really
+
+04:35.820 --> 04:40.260
+reaching out to is the cluster IP service that we're going to create for each of these different pods.
+
+04:41.180 --> 04:45.140
+So the React app is going to reach out to load balancer requests gets forwarded on to the appropriate
+
+04:45.140 --> 04:45.650
+pod.
+
+04:46.410 --> 04:49.770
+Response comes through the load balancer and back to the React application.
+
+04:51.130 --> 04:54.700
+So this is all going to be around really this load balancer service.
+
+04:54.880 --> 04:58.450
+We do, of course, have to go through writing out some more configuration, building another image
+
+04:58.450 --> 05:00.250
+and so on for the React application.
+
+05:00.250 --> 05:01.660
+So that's going to be a pretty small part.
+
+05:01.690 --> 05:04.840
+What we're really focused on here is this load balancer service.
+
+05:05.620 --> 05:09.040
+All right, so now that we've got an idea of what we need to do, a quick pause right here and we'll
+
+05:09.040 --> 05:13.180
+get some notes on this load balancer service and the general strategy in just a moment.

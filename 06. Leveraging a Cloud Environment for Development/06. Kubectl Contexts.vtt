@@ -1,0 +1,181 @@
+WEBVTT
+
+00:01.530 --> 00:04.980
+It looks like my Kubernetes cluster right here is still being created, but there's a little bit of
+
+00:04.980 --> 00:05.790
+setup that we can do.
+
+00:05.790 --> 00:10.530
+In the meantime, I want to give you a quick reminder that right now, if we open up our terminal,
+
+00:10.710 --> 00:13.260
+we can run cubes, it'll get pods.
+
+00:13.260 --> 00:17.850
+And when we do so, we're going to see some information about the cluster on our local machine.
+
+00:18.300 --> 00:19.860
+So now here's something interesting.
+
+00:19.860 --> 00:23.640
+How do we somehow connect to the cluster that we just created in Google Cloud?
+
+00:23.970 --> 00:29.070
+Well, to access different clusters, we're always going to end up using the same cube CTL command.
+
+00:29.370 --> 00:33.480
+Behind the scenes, there are some configuration options that are being applied to Cube CTL.
+
+00:33.900 --> 00:38.700
+When we change those configuration options, it's going to change which cluster we are connecting to.
+
+00:38.790 --> 00:40.920
+Let me show you a diagram just to help you understand.
+
+00:41.820 --> 00:42.210
+All right.
+
+00:42.210 --> 00:43.920
+So quick diagram right here.
+
+00:44.560 --> 00:47.560
+So on our local machine, we are currently running Cube CTL.
+
+00:47.680 --> 00:50.980
+Behind the scenes, Cube CTL uses something called context.
+
+00:51.250 --> 00:55.120
+Contacts can be thought of essentially as some different connection settings.
+
+00:55.180 --> 01:01.780
+They list out some authorization credentials, some users, some IP addresses, a lot of different information
+
+01:01.780 --> 01:06.460
+to tell Cube, CTL how to connect that to different clusters that exist in the world.
+
+01:07.060 --> 01:12.400
+Right now, we are connecting to our local cluster through a context that was created when we first
+
+01:12.400 --> 01:15.700
+installed Docker for Windows or Docker for Mac on your machine.
+
+01:16.150 --> 01:20.920
+As a matter of fact, if you go to your Docker icon right now and then mouse over Kubernetes, you'll
+
+01:20.920 --> 01:22.900
+see something that says context right there.
+
+01:22.900 --> 01:25.570
+And our current context is Docker Dash Desktop.
+
+01:26.880 --> 01:32.070
+So this context right here has some connection settings inside of it to tell us how to connect to our
+
+01:32.070 --> 01:33.090
+local cluster.
+
+01:33.690 --> 01:39.960
+We need to add in a second context, a new context that's going to tell CTL how to connect to the cluster
+
+01:39.960 --> 01:41.850
+that we just created in Google Cloud.
+
+01:42.300 --> 01:43.800
+There's two ways we can do this.
+
+01:43.800 --> 01:50.010
+We can either use the Google Cloud dashboard over here and go through a series of different menus to
+
+01:50.010 --> 01:54.360
+find some little config that we would copy paste into a file on our local machine.
+
+01:54.750 --> 01:56.730
+That would be one way to add the context.
+
+01:56.910 --> 02:03.060
+Another way that is a lot easier is to instead install a tool called the Google Cloud SDK.
+
+02:03.300 --> 02:07.680
+This is a command line tool that we can use to interface with Google Cloud automatically.
+
+02:08.160 --> 02:13.560
+The Google Cloud SDK does a ton of different things, but one thing that it does for us is create these
+
+02:13.560 --> 02:19.920
+different contexts for us automatically and update on our local machine and teach it how to connect
+
+02:19.920 --> 02:22.530
+to the clusters that we are creating in Google Cloud.
+
+02:23.130 --> 02:28.620
+So we are now going to install this Google Cloud SDK and it's going to automatically manage these context
+
+02:28.620 --> 02:32.310
+things for us to install the Google Cloud SDK.
+
+02:32.520 --> 02:34.890
+We're going to go to the address you see right here on the screen.
+
+02:35.280 --> 02:37.890
+Now, these URLs, of course, break every now and then.
+
+02:37.890 --> 02:42.450
+So if you try to go to this address and it doesn't work, all you have to do is do a quick Google search
+
+02:42.450 --> 02:46.230
+for Google Cloud SDK and you'll see a link come up for it right away.
+
+02:47.550 --> 02:50.310
+So I'm going to take that URL and visit it inside of a new tab.
+
+02:51.090 --> 02:56.220
+All then be prompted here with installation directions for a variety of different operating systems.
+
+02:56.340 --> 03:00.000
+So as you guess, just go ahead and select your appropriate operating system.
+
+03:00.890 --> 03:03.140
+And it will show you some installation directions.
+
+03:03.680 --> 03:09.830
+Now, in every case, there's going to be kind of a series of different installation paths in here.
+
+03:10.130 --> 03:12.710
+So you'll see one that says something like Before you begin.
+
+03:12.920 --> 03:15.140
+And those will be some steps to do initially.
+
+03:15.440 --> 03:19.190
+And then eventually it'll have something about initialize the SDK.
+
+03:19.430 --> 03:21.800
+You do not have to initialize the SDK just yet.
+
+03:21.800 --> 03:24.110
+You and I are going to do that together in the next video.
+
+03:24.530 --> 03:30.020
+So all you have to do is go through the process of installing the Sdhc and then going through any additional
+
+03:30.020 --> 03:35.510
+steps that it recommends, such as this optional one right here to get access to the cloud sdhc very
+
+03:35.510 --> 03:36.710
+easily through your terminal.
+
+03:37.040 --> 03:40.190
+Again, you do not want to run the g cloud init command.
+
+03:40.190 --> 03:42.380
+We're going to do that together in just a moment.
+
+03:43.160 --> 03:43.430
+All right.
+
+03:43.430 --> 03:45.110
+So go ahead and install this thing.
+
+03:45.140 --> 03:48.770
+We'll come back in the next video and we'll go to that initialization process together.

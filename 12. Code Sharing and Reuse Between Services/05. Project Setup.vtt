@@ -1,0 +1,406 @@
+WEBVTT
+
+00:00.950 --> 00:04.850
+Now that we've published an initial version of our package, it is time to actually go back through
+
+00:04.850 --> 00:07.880
+all of our code and start moving stuff over to this common library.
+
+00:08.300 --> 00:12.980
+And before we do so, quick note on how we're going to actually execute code inside of here and make
+
+00:12.980 --> 00:14.600
+it available to other projects.
+
+00:15.050 --> 00:19.700
+So we've written out a lot of TypeScript middleware error handling stuff and so on that we want to share
+
+00:19.700 --> 00:21.020
+with other services.
+
+00:21.020 --> 00:22.790
+How are we going to share this typescript?
+
+00:22.940 --> 00:25.880
+Well, just something to keep in mind inside this common library.
+
+00:25.880 --> 00:29.420
+We are going to be writing out TypeScript with a very particular version.
+
+00:29.690 --> 00:34.550
+In the future, we might try to install this thing into a service that is using a different version
+
+00:34.550 --> 00:35.450
+of TypeScript.
+
+00:35.660 --> 00:40.640
+We do not want to have any version issues between one version of TypeScript and use inside this common
+
+00:40.670 --> 00:43.180
+library and another version being used in some service.
+
+00:43.190 --> 00:43.550
+All right.
+
+00:43.550 --> 00:49.480
+In the future, in addition, we might not even be writing out services using TypeScript at all.
+
+00:49.490 --> 00:52.220
+We might be writing them using plain JavaScript.
+
+00:52.640 --> 00:54.800
+So to solve both these possible issues.
+
+00:55.760 --> 01:00.350
+Our common library is going to be written as TypeScript, so we're going to have TypeScript middleware
+
+01:00.380 --> 01:01.940
+error handling stuff and so on.
+
+01:01.940 --> 01:08.420
+But before publishing our code, we're going to transfer file it inside this common library into JavaScript.
+
+01:08.420 --> 01:13.010
+So we're going to write TypeScript, publish JavaScript, and that's going to mean that we can very
+
+01:13.010 --> 01:17.510
+easily use this code anywhere, at any point in time without any issues whatsoever.
+
+01:19.000 --> 01:21.010
+So at a very practical level, what does this mean?
+
+01:21.040 --> 01:25.420
+Well, it just means we need to set up some tooling inside this shared library to take all the typescript
+
+01:25.420 --> 01:28.570
+we write inside of it and convert it into plain JavaScript.
+
+01:28.600 --> 01:29.620
+That's pretty much it.
+
+01:29.920 --> 01:33.850
+So in this video, we're going to install a couple of dependencies that's going to make it really easy
+
+01:33.850 --> 01:38.710
+for us to build our package into JavaScript code and eventually publish that stuff.
+
+01:39.630 --> 01:40.290
+To get started.
+
+01:40.290 --> 01:41.850
+I'm going to go back over to my terminal.
+
+01:42.180 --> 01:43.800
+Inside of my common directory.
+
+01:43.830 --> 01:49.020
+I'm going to first get started by generating a typescript config file or config file.
+
+01:49.620 --> 01:50.190
+So I'm going to run.
+
+01:50.190 --> 01:50.880
+Tsk.
+
+01:50.910 --> 01:51.240
+Dash.
+
+01:51.240 --> 01:52.140
+Dash in it.
+
+01:52.760 --> 01:54.990
+That'll generate a config file.
+
+01:57.020 --> 02:01.010
+I'm then going to install TypeScript into this project with npm install.
+
+02:02.000 --> 02:02.810
+TypeScript.
+
+02:03.350 --> 02:07.970
+I'm also going to install something else we're going to use for a little bit of assistance in this tooling
+
+02:07.970 --> 02:10.340
+process called Dell CLI.
+
+02:11.290 --> 02:15.880
+And I'm going to install both these as development dependencies.
+
+02:16.510 --> 02:21.200
+So I only want to have these installed when we're doing development on the common package.
+
+02:21.220 --> 02:25.390
+I do not want to install them if we are adding this package into some other service.
+
+02:26.900 --> 02:32.330
+Now that we've got that put together, I'm going to go back over to my editor and we're going to manually
+
+02:32.330 --> 02:34.110
+write out a little typescript file.
+
+02:34.150 --> 02:38.840
+We're going to try to eventually turn it into some plain JavaScript and publish it.
+
+02:39.870 --> 02:43.980
+So inside of Common, I'm going to create a new folder called Z.
+
+02:44.960 --> 02:47.060
+Inside of that, I'm going to make a file called.
+
+02:47.980 --> 02:49.930
+Index dots.
+
+02:50.560 --> 02:55.120
+And then inside of here, we're going to write out just a little bit of sample typescript code and eventually
+
+02:55.120 --> 02:58.810
+try to transfer, file it down to JavaScript and publish it.
+
+02:59.990 --> 03:02.840
+So let's write out something that actually looks kind of typescript.
+
+03:03.020 --> 03:05.210
+I'll put inside of your interface.
+
+03:05.820 --> 03:06.570
+Color.
+
+03:07.300 --> 03:08.920
+And how about we'll have red?
+
+03:08.920 --> 03:09.880
+That's a number.
+
+03:10.460 --> 03:11.650
+Lou, that's a number.
+
+03:12.990 --> 03:13.500
+And Green.
+
+03:13.500 --> 03:14.310
+That's a number.
+
+03:15.640 --> 03:17.470
+And they'll just create some kind of variable.
+
+03:18.400 --> 03:19.250
+Called color.
+
+03:19.270 --> 03:21.190
+I'm going to annotate it as type color.
+
+03:22.860 --> 03:24.480
+And I'll put in a red of ten.
+
+03:24.480 --> 03:25.620
+Blue ten.
+
+03:25.620 --> 03:26.850
+Green ten.
+
+03:28.200 --> 03:31.470
+And then how about a simple console log of color?
+
+03:32.120 --> 03:32.340
+Okay.
+
+03:32.340 --> 03:35.910
+So at this point, we have some typescript code instead of here, as we will as soon as we start to
+
+03:35.910 --> 03:39.000
+move over all of that common code from the service.
+
+03:39.090 --> 03:44.670
+So now I want to make sure that we've got a really easy way to take this index file and simply convert
+
+03:44.670 --> 03:45.790
+it into JavaScript.
+
+03:45.810 --> 03:47.460
+That's all I really want to do here.
+
+03:48.270 --> 03:50.760
+So we're going to open up our package JSON file.
+
+03:51.410 --> 03:52.940
+We're going to find our script section.
+
+03:52.940 --> 03:56.010
+We're going to add something inside of here to build our project.
+
+03:56.030 --> 04:00.800
+It's going to take all the typescript and turn it into JavaScript that we can then publish very easily.
+
+04:02.650 --> 04:05.110
+I'm going to find the existing test command and delete it.
+
+04:07.900 --> 04:11.350
+I'm then going to replace it with a build command.
+
+04:12.020 --> 04:16.820
+Whenever we run built, I want to execute the command task inside of our project.
+
+04:17.550 --> 04:22.410
+That's going to run the TypeScript compiler and we're going to set up the TypeScript compiler to find
+
+04:22.410 --> 04:26.370
+that indexed file and turn it into, you guessed it, JavaScript code.
+
+04:27.790 --> 04:31.110
+To do so we do have to provide a little bit of configuration to TypeScript.
+
+04:31.120 --> 04:36.010
+We need to tell it where to find our source code and where to place it after it has been turned into
+
+04:36.010 --> 04:36.670
+JavaScript.
+
+04:37.120 --> 04:41.320
+We're going to write that stuff out inside that config file that we generated just a moment ago.
+
+04:42.930 --> 04:43.740
+Inside of here.
+
+04:43.740 --> 04:45.540
+We're going to add in a couple of different options.
+
+04:45.540 --> 04:49.350
+Mostly, we're going to uncomment some of these default things to get placed inside of here.
+
+04:50.250 --> 04:52.320
+We're going to first find declaration.
+
+04:53.420 --> 04:54.590
+And uncomment that.
+
+04:54.740 --> 04:59.060
+That makes sure that when we turn our TypeScript into JavaScript, it's going to also generate a type
+
+04:59.060 --> 05:00.010
+definition file.
+
+05:00.020 --> 05:04.940
+So even if we stall install this module into a service that uses TypeScript, we'll still have a type
+
+05:04.940 --> 05:09.410
+definition file that will allow TypeScript to figure out what is going on inside of our common module.
+
+05:11.360 --> 05:14.510
+I'm then going to find out later right here.
+
+05:14.510 --> 05:19.400
+I'm going to uncomment that and I'm going to change the path to build like so.
+
+05:20.620 --> 05:25.900
+So after generating our JavaScript code, we're going to take everything got generated and stick it
+
+05:25.900 --> 05:29.020
+into a new folder inside of our common directory called Build.
+
+05:31.260 --> 05:33.120
+And that is pretty much it.
+
+05:33.970 --> 05:36.520
+I think there's nothing else inside of here that we're going to worry about.
+
+05:36.850 --> 05:37.150
+Yep.
+
+05:37.150 --> 05:37.780
+That's it.
+
+05:38.510 --> 05:38.680
+Yes.
+
+05:38.780 --> 05:45.350
+Let's save both these files, the config and the package JSON and then going to go over to my terminal.
+
+05:46.150 --> 05:47.260
+And I'll execute.
+
+05:47.260 --> 05:48.970
+NPM, run, build.
+
+05:50.350 --> 05:55.150
+That should take the TypeScript file we wrote out, convert it into JavaScript and then write it into
+
+05:55.150 --> 05:56.230
+that build directory.
+
+05:56.410 --> 05:57.910
+And sure enough, there it is right there.
+
+05:59.410 --> 06:03.160
+So we've now got an index dogs file only JavaScript inside there.
+
+06:03.760 --> 06:08.490
+And we've also got a type definition file as well that's declaring or defining all the different types
+
+06:08.500 --> 06:10.450
+that we had used inside of our project.
+
+06:11.510 --> 06:13.040
+So this is definitely a good step forward.
+
+06:13.800 --> 06:18.030
+Now, one thing that we're going to add in here very quickly, any time we make a change to our project,
+
+06:18.030 --> 06:23.820
+it's very common to want to remove everything inside of the build directory before we rebuild it, not
+
+06:23.820 --> 06:27.600
+just make sure that we are doing a very fresh, clean build every single time.
+
+06:28.310 --> 06:28.790
+For that.
+
+06:28.790 --> 06:31.250
+That's why we installed this dell cli tool.
+
+06:32.270 --> 06:34.970
+I can add in another script here called Clean.
+
+06:36.670 --> 06:42.430
+And whenever we run clean, I'm going to execute Dell Build Star.
+
+06:44.370 --> 06:48.840
+So if we run the clean script, it's going to delete the build directory so we can rebuild our project
+
+06:48.840 --> 06:54.270
+from scratch without worrying about having any kind of leftover build stuff or anything like that.
+
+06:55.170 --> 07:00.120
+And then going to update the build command to make sure that we always attempt to clean before we build.
+
+07:00.450 --> 07:04.860
+So I'll put in NPM ran clean and TSC likes to.
+
+07:07.300 --> 07:07.590
+Yeah.
+
+07:07.630 --> 07:08.770
+I'll then go back over.
+
+07:10.610 --> 07:12.650
+I'm going to execute NPM, run, build again.
+
+07:13.980 --> 07:19.680
+So that's going to delete the build directory and then rebuild the project using the TypeScript compiler.
+
+07:20.220 --> 07:21.030
+And so I'll see.
+
+07:21.030 --> 07:21.270
+Yep.
+
+07:21.270 --> 07:25.290
+Still got everything inside of here, deleted everything and re created it.
+
+07:26.770 --> 07:28.600
+So this is a good start right here.
+
+07:28.720 --> 07:31.010
+There's just a little bit more config we have to do.
+
+07:31.030 --> 07:33.490
+So quick pause and we'll continue in just a moment.

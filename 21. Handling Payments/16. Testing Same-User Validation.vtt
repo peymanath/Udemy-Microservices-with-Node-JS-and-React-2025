@@ -1,0 +1,301 @@
+WEBVTT
+
+00:00.990 --> 00:04.390
+Let's move on to our last test, where we're going to make sure that we return a 404.
+
+00:04.410 --> 00:06.480
+If we trying to purchase a canceled order.
+
+00:06.660 --> 00:10.590
+Now, this test is going to be just a little bit tricky because it implies that we're going to get passed
+
+00:10.590 --> 00:15.180
+this check right here where we make sure that the person making the request is the same person who originally
+
+00:15.180 --> 00:16.200
+created the order.
+
+00:16.440 --> 00:21.210
+Now, what this check right here effectively means for our test is that when we initially create the
+
+00:21.210 --> 00:26.430
+order, we have to stick in a user ID or assign a user ID to the order and then make a request with
+
+00:26.430 --> 00:28.410
+that same user ID.
+
+00:28.830 --> 00:32.340
+That is actually kind of challenging right now with our current authentication setup.
+
+00:32.400 --> 00:34.640
+Remember to authenticate ourselves inside of our tests.
+
+00:34.650 --> 00:36.750
+We call that global sign in function.
+
+00:36.900 --> 00:40.920
+And you might recall that that global sign in function was defined inside of our test directory and
+
+00:40.920 --> 00:42.360
+the setup file.
+
+00:42.930 --> 00:46.770
+So about halfway down here is that global sign function.
+
+00:47.580 --> 00:52.500
+And the first thing we do is create a user or essentially a payload to stick into the JSON web token
+
+00:52.500 --> 00:54.120
+with a random ID.
+
+00:54.450 --> 00:59.670
+So we essentially need to extract that ID right there in, assign it to the user ID property of the
+
+00:59.670 --> 01:01.410
+order that we are trying to purchase.
+
+01:03.020 --> 01:07.850
+Now we can definitely try to figure out some way to maybe return or give us access to that ID right
+
+01:07.850 --> 01:09.440
+there from the sign and function.
+
+01:09.440 --> 01:14.750
+But a way easier way to do this would be to just make an optional argument to the sign in function where
+
+01:14.750 --> 01:17.690
+we could provide an ID ahead of time if we wanted to.
+
+01:17.720 --> 01:20.450
+And that's what we're going to do, way easier and more straightforward.
+
+01:20.960 --> 01:26.660
+So I'm going to say that the sign function is going to receive an optional argument of ID.
+
+01:27.230 --> 01:29.780
+Oh, wrong place for the question mark.
+
+01:30.110 --> 01:32.150
+So I'll say that ID is an optional argument.
+
+01:32.150 --> 01:34.520
+That's what the question mark right there refers to.
+
+01:34.820 --> 01:36.260
+And it will be of type string.
+
+01:37.700 --> 01:41.270
+Then for payload right here rather than always generating a random ID.
+
+01:42.010 --> 01:48.130
+We will say if we provided an ID, then use the ID otherwise.
+
+01:49.070 --> 01:50.240
+Generate a new one.
+
+01:50.980 --> 01:52.150
+And so that's how we would express that.
+
+01:52.150 --> 01:57.760
+We can say ID or so if ID is not defined, then we will execute the case right here.
+
+01:57.790 --> 02:03.190
+And if ID is provided, is provided, we will not execute the word case and we will just assign the
+
+02:03.190 --> 02:05.230
+ID that was provided to the ID property.
+
+02:07.500 --> 02:08.460
+That's pretty much it.
+
+02:08.490 --> 02:10.200
+It's now back inside of our test file.
+
+02:12.370 --> 02:13.480
+For our test right here.
+
+02:15.230 --> 02:17.660
+I'm going to first create a new user ID.
+
+02:19.230 --> 02:24.990
+So once again, that will be a mongoose type object id to hex string.
+
+02:26.260 --> 02:31.210
+Well, then use that to build up a new order and we will assign this as the user ID for the order itself
+
+02:31.570 --> 02:34.030
+rather than building an entire order from scratch right here.
+
+02:34.060 --> 02:38.560
+I'll just copy paste some code that we had written on the previous test because all that stuff is 100%
+
+02:38.560 --> 02:39.250
+reusable.
+
+02:39.530 --> 02:40.100
+They'll copy it.
+
+02:40.120 --> 02:41.380
+That entire block right there.
+
+02:42.360 --> 02:43.980
+And then paste it in underneath.
+
+02:44.340 --> 02:47.400
+And now rather than randomly generating the user ID.
+
+02:48.470 --> 02:51.950
+All instead provide the user ID that we had just generated a moment ago.
+
+02:54.250 --> 02:56.990
+So now we can make our actual request to purchase this thing.
+
+02:57.850 --> 03:02.290
+When we make the request, we will make sure that we provide the user ID that we had just generated
+
+03:02.290 --> 03:03.730
+to that sign in function.
+
+03:04.360 --> 03:11.470
+And so it will be a wait request app will make a post request to API payments.
+
+03:12.470 --> 03:16.190
+And we will set the cookie to global sign in.
+
+03:16.700 --> 03:20.690
+And then very quickly right here to the sign and function that we'll provide that user ID that we had
+
+03:20.690 --> 03:23.720
+previously generated the user ID like so.
+
+03:25.300 --> 03:30.250
+And you'll notice I'm getting an air here that it's probably because TypeScript is just being a little
+
+03:30.250 --> 03:30.930
+bit angry.
+
+03:30.940 --> 03:32.740
+I'm going to save this and then reload.
+
+03:32.770 --> 03:35.110
+I might have just not saved that set up test file.
+
+03:36.320 --> 03:37.400
+I think that made it work.
+
+03:37.430 --> 03:38.450
+Nope, it didn't.
+
+03:38.780 --> 03:40.490
+Let me check that setup test file again.
+
+03:41.450 --> 03:41.720
+Now.
+
+03:41.720 --> 03:42.620
+It's it's there.
+
+03:42.650 --> 03:43.750
+Oh, you know what it is?
+
+03:43.760 --> 03:45.950
+We need to update our interface as well.
+
+03:45.980 --> 03:47.300
+My mistake back up here.
+
+03:47.300 --> 03:48.560
+Here's our interface.
+
+03:48.560 --> 03:52.780
+We have to say that this thing is going to take an optional ID as a string.
+
+03:52.790 --> 03:53.570
+That's better.
+
+03:56.860 --> 03:57.130
+Okay.
+
+03:57.160 --> 03:57.860
+Much better.
+
+03:57.880 --> 03:59.920
+Now everything's working as expected.
+
+04:03.450 --> 04:08.070
+And of course, before we actually make this request, one other update we have to make on the status
+
+04:08.070 --> 04:09.030
+property for the order.
+
+04:09.030 --> 04:12.600
+When we build it, we also have to update the order status to cancelled because that's what we were
+
+04:12.600 --> 04:14.370
+really trying to test out here.
+
+04:14.790 --> 04:18.000
+We'll change the order status to cancelled like so.
+
+04:19.000 --> 04:21.100
+Now we can actually finish up the test itself.
+
+04:21.700 --> 04:23.230
+So I'm going to send along.
+
+04:24.630 --> 04:29.520
+An order ID of order ID and a token of whatever.
+
+04:30.570 --> 04:34.890
+And then I will expect to get back a status of 400.
+
+04:37.540 --> 04:37.650
+Okay.
+
+04:37.740 --> 04:39.780
+So let's save that and see how the tests are doing.
+
+04:40.320 --> 04:40.860
+Back over here.
+
+04:40.860 --> 04:42.780
+It looks like it's all working as expected.
+
+04:42.780 --> 04:43.590
+As usual.
+
+04:43.590 --> 04:44.820
+Let's make this thing fail.
+
+04:44.850 --> 04:46.320
+So how about this time to make it fail?
+
+04:46.320 --> 04:47.970
+I will just never save the order.
+
+04:48.270 --> 04:51.450
+So that should give us a 404 instead of the expected 400.
+
+04:52.700 --> 04:53.030
+And.
+
+04:53.030 --> 04:53.810
+Yep, there we go.
+
+04:54.710 --> 04:54.840
+Okay.
+
+04:54.980 --> 04:55.820
+So that is it.
+
+04:55.820 --> 04:57.440
+That is some initial testing.
+
+04:57.860 --> 05:02.270
+So now that we've got this order kind of prepped and ready to be purchased, we're now going to take
+
+05:02.270 --> 05:07.970
+a look at how to use the Stripe API library just a little bit more in depth and eventually integrate
+
+05:07.970 --> 05:09.800
+it into our into our project.

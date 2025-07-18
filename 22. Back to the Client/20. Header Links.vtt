@@ -1,0 +1,97 @@
+WEBVTT
+
+00:01.130 --> 00:03.170
+Let's get these two links on our header.
+
+00:03.170 --> 00:06.020
+So I want to have a direct link to the page where we create a ticket.
+
+00:06.140 --> 00:10.460
+I also want to have a direct link to a new page that we're going to create in just a moment that's going
+
+00:10.460 --> 00:12.890
+to list out all the different orders that the user has created.
+
+00:13.490 --> 00:15.390
+So first off, how do we add stuff to the header?
+
+00:15.410 --> 00:18.830
+Well, remember inside of our client.
+
+00:20.060 --> 00:21.380
+Opponent's folder.
+
+00:21.380 --> 00:22.970
+We've got the header JS file.
+
+00:23.850 --> 00:28.560
+And we put together this clever little system right here of some different links to decide whether we
+
+00:28.560 --> 00:32.190
+want to show one set of links based upon whether the user is logged in or not.
+
+00:32.670 --> 00:36.990
+So I'm going to add in right above the sign out configuration thing right there.
+
+00:37.350 --> 00:41.100
+Another two possible links I can say if there is a current user.
+
+00:41.100 --> 00:45.120
+So in other words, if the user is logged in, then I want to have an additional link.
+
+00:45.800 --> 00:49.220
+With a label of sell tickets.
+
+00:50.320 --> 00:53.080
+And if a user clicks on that, I want to direct them to.
+
+00:53.880 --> 00:55.740
+Tickets slash new.
+
+01:01.120 --> 01:03.340
+And then right after that, I'm going to add in one other link.
+
+01:03.340 --> 01:05.170
+I'll say if the user is logged in.
+
+01:06.210 --> 01:10.170
+Give me another link that has a label of something like my orders.
+
+01:11.240 --> 01:13.370
+And we do not have this route put together just yet.
+
+01:13.370 --> 01:18.020
+But I'm sure you can imagine that we probably want to give this thing a route of something like just
+
+01:18.020 --> 01:19.100
+slash orders.
+
+01:19.310 --> 01:24.050
+So if we go to slash orders, I want to show a listing of all the orders the user has created.
+
+01:25.780 --> 01:25.970
+Okay.
+
+01:26.020 --> 01:26.890
+Let's save that.
+
+01:28.690 --> 01:29.860
+Go do a quick test.
+
+01:30.100 --> 01:34.270
+Looks like we've now got those links inside the header, so I should be able to click on it, sell tickets,
+
+01:34.270 --> 01:36.340
+and go directly to the create a ticket form.
+
+01:37.140 --> 01:38.910
+And if I click on my orders right now.
+
+01:38.910 --> 01:39.210
+Yep.
+
+01:39.210 --> 01:43.470
+Again, we have not implemented this just yet, so let's pause right here and then put together this
+
+01:43.470 --> 01:46.740
+listing of all orders that belong to this user in just a moment.

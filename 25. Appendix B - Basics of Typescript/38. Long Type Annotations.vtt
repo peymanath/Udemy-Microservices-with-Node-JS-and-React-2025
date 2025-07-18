@@ -1,0 +1,265 @@
+WEBVTT
+
+00:00.800 --> 00:04.670
+In this video, we're going to start writing out some code to get a better understanding of how interfaces
+
+00:04.670 --> 00:05.180
+work.
+
+00:05.420 --> 00:09.050
+You'll notice I'm back inside my code editor and inside of my root project directory.
+
+00:09.050 --> 00:11.240
+I'm going to make a new file called Interfaces.
+
+00:11.570 --> 00:12.290
+It's.
+
+00:13.440 --> 00:13.830
+All right.
+
+00:13.830 --> 00:16.920
+So inside of here, we're not going to write out an interface just yet.
+
+00:16.950 --> 00:21.090
+Instead, I first want to define an object that represents a car.
+
+00:21.420 --> 00:25.650
+We're then going to write a function that kind of operates on that object, and we'll start to introduce
+
+00:25.650 --> 00:26.580
+interfaces.
+
+00:26.910 --> 00:30.600
+So to get started, I'm going to make a variable called Old Civic.
+
+00:31.750 --> 00:32.470
+Like so.
+
+00:33.580 --> 00:37.600
+Ticino A Civic is a type of car or like a vehicle of sorts.
+
+00:37.600 --> 00:39.160
+So it's a Honda Civic.
+
+00:39.190 --> 00:43.270
+By saying Old Civic, I just mean to indicate that we are going to make an object that represents a
+
+00:43.270 --> 00:45.130
+civic that was made many years ago.
+
+00:45.760 --> 00:51.010
+So inside this object, I'm going to add a couple of different properties to describe exactly some things
+
+00:51.010 --> 00:52.240
+about the Civic.
+
+00:52.420 --> 00:56.440
+So I'm going to give it a model property, actually, let's give it a name instead that's just a little
+
+00:56.440 --> 00:57.280
+bit more clear.
+
+00:57.640 --> 01:00.220
+So this car is going to have a name of Civic.
+
+01:00.760 --> 01:06.190
+I'll then give it a year that it was built of 2000 and then a broken property to describe whether or
+
+01:06.190 --> 01:08.260
+not this vehicle still runs.
+
+01:08.410 --> 01:10.390
+So I'll say it's broken.
+
+01:10.630 --> 01:11.230
+True.
+
+01:12.730 --> 01:16.570
+Now that we've put that object together, I want to try creating a function that's going to take in
+
+01:16.570 --> 01:19.720
+this object and just print out some different properties about it.
+
+01:20.170 --> 01:23.680
+So I'm going to define a function called print vehicle.
+
+01:28.510 --> 01:30.480
+Then I'm going to add in a single argument.
+
+01:30.490 --> 01:33.220
+So we want to call this function with a car.
+
+01:33.730 --> 01:37.690
+I'm going to refer to this argument as how about just like vehicle?
+
+01:37.720 --> 01:38.650
+That makes sense.
+
+01:39.040 --> 01:43.900
+And then remember, we need to add in a type annotation to describe exactly what properties or what
+
+01:43.930 --> 01:45.250
+type vehicle is.
+
+01:45.640 --> 01:48.650
+Right now, if I hover over a vehicle, it says that it is of type any.
+
+01:48.670 --> 01:54.730
+Remember, we want to avoid any types inside of our application and we saw how to add in a annotation
+
+01:54.730 --> 01:57.130
+for an object inside of a function just a moment ago.
+
+01:57.130 --> 02:02.800
+So we're going to put in the set of curly braces or a colon right there, and then a set of curly braces,
+
+02:03.190 --> 02:07.300
+and then we'll list out all the different properties that we expect this argument to have.
+
+02:07.300 --> 02:08.920
+And they're different types.
+
+02:09.400 --> 02:13.060
+So I expect a vehicle to have a name that is a string.
+
+02:13.930 --> 02:18.930
+Remember inside this type annotation to separate different properties will place a set of or a semicolon
+
+02:18.930 --> 02:19.590
+like so.
+
+02:20.440 --> 02:22.750
+I didn't expect a vehicle to have a year.
+
+02:22.750 --> 02:24.190
+That is a number.
+
+02:25.180 --> 02:27.460
+I'm going to zoom out for a second so you can see this whole line.
+
+02:28.880 --> 02:33.080
+And I expect a vehicle to have a broken flag that is going to be a Boolean.
+
+02:34.170 --> 02:37.260
+Finally, I'm going to add in a type annotation to the return of this function.
+
+02:37.260 --> 02:39.810
+So right after the argument list, I'll put in a colon.
+
+02:40.140 --> 02:43.590
+I don't expect this function to return anything, so I'm going to give it a type annotation.
+
+02:43.590 --> 02:44.940
+Avoid like so.
+
+02:45.240 --> 02:47.700
+Remember, void means our function returns nothing.
+
+02:49.790 --> 02:50.030
+All right.
+
+02:50.030 --> 02:51.140
+I'm going to zoom back in.
+
+02:52.670 --> 02:55.100
+So now inside of here we can do our actual implementation.
+
+02:55.100 --> 02:58.520
+So I'll just do a couple of console logs using properties from the vehicle.
+
+02:58.820 --> 03:02.300
+I'm going to use an S 2015 template string, so I'm going to use some back text here.
+
+03:02.750 --> 03:08.240
+We'll do some things like let's say, how about name and I'll do vehicle name.
+
+03:09.320 --> 03:11.170
+I'll do another little statement here.
+
+03:11.180 --> 03:13.610
+I'll do something like yea.
+
+03:14.440 --> 03:17.170
+The Hickel year.
+
+03:18.610 --> 03:20.770
+And then one more for the broken flag as well.
+
+03:22.410 --> 03:23.430
+So broken.
+
+03:24.540 --> 03:25.890
+Well, typo there.
+
+03:25.890 --> 03:26.520
+And there we go.
+
+03:26.550 --> 03:28.560
+Vehicle broken.
+
+03:30.100 --> 03:30.640
+Cool.
+
+03:31.300 --> 03:35.410
+So now we should be able to call a print vehicle and pass in old civic.
+
+03:35.860 --> 03:39.250
+Old civic structure is a name that is string year.
+
+03:39.250 --> 03:41.440
+That is a number and broken, that is a boolean.
+
+03:41.710 --> 03:45.130
+And so that meets the type annotation we just put on that argument right there.
+
+03:45.130 --> 03:48.070
+So we should be able to pass an old Civic and not have any issue.
+
+03:48.610 --> 03:55.210
+So I'm going to take a print vehicle and pass in Old Civic and everything looks good to me.
+
+03:55.210 --> 03:55.930
+Perfect.
+
+03:56.620 --> 03:57.040
+All right.
+
+03:57.040 --> 04:00.220
+Now I say perfect, but maybe not quite perfect.
+
+04:00.220 --> 04:04.390
+There's one little issue inside this file right now, so I bet you can guess what it is.
+
+04:04.690 --> 04:07.780
+This type annotation right here is really long.
+
+04:07.810 --> 04:09.070
+It's kind of hard to read.
+
+04:09.070 --> 04:13.930
+And if we had any more properties on this object, that type annotation would become even harder to
+
+04:13.930 --> 04:14.470
+read.
+
+04:14.860 --> 04:20.350
+In addition, if we added in more functions that expected to be we expected to call with Old Civic.
+
+04:20.350 --> 04:25.330
+We would then be duplicating this type annotation for each of those different functions.
+
+04:26.160 --> 04:30.180
+And so we would have this really long annotation right here duplicated several times throughout this
+
+04:30.180 --> 04:30.750
+file.
+
+04:30.960 --> 04:33.990
+So as you might imagine, yeah, that's probably not the best.
+
+04:34.410 --> 04:35.810
+So let's take a quick pause right here.
+
+04:35.820 --> 04:40.440
+We're going to come back the next video and figure out how we can improve this file by using an interface.

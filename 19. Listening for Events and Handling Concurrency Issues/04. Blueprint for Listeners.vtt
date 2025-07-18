@@ -1,0 +1,196 @@
+WEBVTT
+
+00:01.100 --> 00:02.890
+Let's get started working on our first listener.
+
+00:02.900 --> 00:05.300
+It's going to be the ticket created listener.
+
+00:05.690 --> 00:08.800
+So instead of my order service, I'll find the events directory inside there.
+
+00:08.810 --> 00:11.030
+I'll make a new folder of listeners.
+
+00:12.360 --> 00:16.110
+And then inside of listeners, I'll make a new file of ticket created.
+
+00:16.110 --> 00:16.770
+Listener.
+
+00:17.130 --> 00:17.690
+Yes.
+
+00:19.530 --> 00:22.170
+Well, then start to put some implementation together right away.
+
+00:22.200 --> 00:25.410
+We're going to end up with a couple of different import statements at the very top.
+
+00:25.590 --> 00:27.900
+So let's add in a couple of different imports.
+
+00:28.350 --> 00:30.840
+First, we will get the message type.
+
+00:32.600 --> 00:34.040
+From Nanette Streaming.
+
+00:35.120 --> 00:37.020
+I'm going to get my subjects, you know?
+
+00:37.780 --> 00:39.790
+By listener base class.
+
+00:40.510 --> 00:43.330
+And the ticket created event.
+
+00:43.750 --> 00:45.430
+All those from my common module.
+
+00:48.510 --> 00:51.630
+I'm also going to get my ticket model.
+
+00:51.660 --> 00:56.340
+So from my model's directory right here, I'll get ticket.
+
+00:57.260 --> 00:59.030
+From up to directories.
+
+01:00.440 --> 01:01.310
+Models.
+
+01:02.170 --> 01:02.710
+Ticket.
+
+01:04.920 --> 01:08.010
+And I think that's probably all we need for right now.
+
+01:09.030 --> 01:11.610
+So let's start to put the actual implementation for this thing together.
+
+01:11.850 --> 01:18.600
+So first off, we're going to export a class of ticket created listener and very similar to what we're
+
+01:18.600 --> 01:19.920
+doing with our different publishers.
+
+01:19.920 --> 01:24.150
+We are going to be extending an abstract class, in this case listener.
+
+01:24.750 --> 01:28.380
+And remember, this is a generic, which means we have to provide a type.
+
+01:28.380 --> 01:32.040
+And the type we're going to stick in here is the type of event that we're going to listen for, which
+
+01:32.040 --> 01:33.450
+is ticket created event.
+
+01:33.780 --> 01:36.780
+So I will plug in ticket related event like so.
+
+01:38.120 --> 01:42.290
+Well then see our class name light up and TypeScript is telling us that there are three different properties
+
+01:42.290 --> 01:46.400
+we have to implement inside of here, all because we are extending that abstract class.
+
+01:46.400 --> 01:50.120
+So we have to implement on message your group name and subject.
+
+01:50.360 --> 01:51.890
+We'll first start off with subject.
+
+01:52.220 --> 01:56.000
+So we'll write in the subject right here and we're going to use the exact same system that we use back
+
+01:56.000 --> 01:57.100
+on our publishers.
+
+01:57.110 --> 02:02.420
+We're going to define or declare the subject property and we're going to give it the very specific type
+
+02:02.420 --> 02:03.490
+that this thing is going to be.
+
+02:03.500 --> 02:06.500
+So we'll say subjects ticket created.
+
+02:07.430 --> 02:09.650
+And then we're going to actually assign it a value.
+
+02:09.680 --> 02:15.410
+Those subjects dot ticket created and remember this kind of two step process right here is to make sure
+
+02:15.410 --> 02:20.420
+that TypeScript enforces us, to never be able to change that subject property at any point in time.
+
+02:21.680 --> 02:21.800
+Now.
+
+02:21.800 --> 02:24.440
+Next up, we're going to define our Q group name.
+
+02:24.770 --> 02:31.100
+So Q group name in this case is going to be our orders service.
+
+02:31.280 --> 02:34.910
+And like I said, I'll give you a reminder on what that group name is in just a moment.
+
+02:36.850 --> 02:40.060
+And then finally we'll define our on message function.
+
+02:41.080 --> 02:42.830
+So this is going to receive two arguments.
+
+02:42.850 --> 02:47.350
+First is going to be the data from inside of our event, and the second is going to be the message from
+
+02:47.350 --> 02:49.060
+the node net streaming library.
+
+02:49.790 --> 02:55.520
+So put in here data and that's going to be up type ticket related event at data.
+
+02:56.420 --> 02:59.660
+And the second argument will be message and that will be of type message.
+
+03:01.160 --> 03:01.460
+All right.
+
+03:01.460 --> 03:05.510
+So I apologize for kind of speeding through this and saying, oh, yeah, we'll come back to this and
+
+03:05.510 --> 03:07.850
+we'll come back to this and this message thing and so on.
+
+03:07.850 --> 03:11.600
+But I really just want to throw this code together because this is going to be very similar to what
+
+03:11.600 --> 03:13.280
+all of our different listeners look like.
+
+03:13.400 --> 03:18.230
+All of our different listeners are going to extend the listener base class, have the event type plugged
+
+03:18.230 --> 03:22.520
+into it, and then define a subject, a group name, and then on message.
+
+03:23.060 --> 03:27.050
+Now that we've established this kind of as the blueprint that we're going to be copy pasting over and
+
+03:27.050 --> 03:28.040
+over and over again.
+
+03:28.040 --> 03:29.150
+Another quick pause right here.
+
+03:29.150 --> 03:33.890
+When we come back to the next video, we're going to get a reminder on what that group name is, why
+
+03:33.890 --> 03:38.780
+we have this weird annotation for data right here, and a reminder on what this message thing is as
+
+03:38.780 --> 03:39.290
+well.

@@ -1,0 +1,121 @@
+WEBVTT
+
+00:00.540 --> 00:05.620
+In the last section, we had a long discussion about the relationship between a container and an image.
+
+00:05.640 --> 00:11.160
+We had said that a container is a running process, along with a subset of physical resources on your
+
+00:11.160 --> 00:14.520
+computer that are allocated to that process specifically.
+
+00:15.000 --> 00:19.620
+We also spoke a little bit about the relationship between an image and a running container.
+
+00:19.650 --> 00:24.810
+Remember, an image is really kind of a snapshot of the file system, along with a very specific startup
+
+00:24.810 --> 00:25.770
+command as well.
+
+00:26.460 --> 00:30.870
+Now, one thing that I want to mention very quickly here in the last section, we spoke a little bit
+
+00:30.870 --> 00:36.120
+about the separation or the kind of the isolation of these resources through a technique called name
+
+00:36.120 --> 00:36.810
+spacing.
+
+00:36.900 --> 00:42.240
+And we also said that we could limit the amount of resources used by these control group things as well.
+
+00:42.480 --> 00:48.060
+Now, this feature of name spacing and control groups is not included by default with all operating
+
+00:48.060 --> 00:52.830
+systems, even though in the last section I had kind of specifically said like, Oh yeah, your operating
+
+00:52.830 --> 00:59.940
+system has a kernel to these features of name spacing and control groups are specific to the Linux operating
+
+00:59.940 --> 01:00.690
+system.
+
+01:00.930 --> 01:06.700
+So name spacing control groups belong to Linux, not to Windows, not to Mac OS.
+
+01:06.720 --> 01:11.280
+So that might make you kind of question or wonder, how are you running Docker right now?
+
+01:11.330 --> 01:16.350
+You know, we are running a Docker client and we are running Docker containers on a mac OS or a Windows
+
+01:16.350 --> 01:17.370
+operating system.
+
+01:17.550 --> 01:20.490
+How is that happening if these are Linux specific features?
+
+01:20.500 --> 01:22.530
+Well, here's what's happening behind the scenes.
+
+01:23.710 --> 01:29.710
+When you installed Docker for Windows or Docker for Mac just a moment ago, in the last couple of sections,
+
+01:29.710 --> 01:33.130
+you installed a Linux virtual machine.
+
+01:33.280 --> 01:38.860
+So, so long as Docker up here is running, you technically have a Linux virtual machine running on
+
+01:38.860 --> 01:39.880
+your computer.
+
+01:40.360 --> 01:44.910
+Inside of this virtual machine is where all of these containers are going to be created.
+
+01:44.920 --> 01:50.740
+So inside the virtual machine, we have a Linux kernel and that Linux kernel is going to be hosting
+
+01:50.740 --> 01:53.200
+running processes inside of containers.
+
+01:53.200 --> 01:58.930
+And it's that Linux kernel that's going to be in charge of limiting access or kind of constraining access
+
+01:58.930 --> 02:02.800
+or isolating access to different hardware resources on your computer.
+
+02:03.100 --> 02:07.960
+You can actually kind of see this Linux virtual machine in practice by opening up your terminal right
+
+02:07.960 --> 02:08.350
+now.
+
+02:08.350 --> 02:13.180
+And if you run that Docker version command again and look at your server, you'll notice that there's
+
+02:13.180 --> 02:19.360
+actually an OS entry on here and you'll notice that it probably doesn't have your operating system listed.
+
+02:19.360 --> 02:23.710
+Mine, for example, right here says very specifically Linux as the operating system.
+
+02:23.890 --> 02:29.050
+So that is kind of specifying that I'm running a Linux virtual machine and that's what's being used
+
+02:29.050 --> 02:32.590
+to host all these different containers that you and I are going to be working with.
+
+02:33.160 --> 02:35.270
+So just a little bit of interesting trivia.
+
+02:35.290 --> 02:36.880
+Now, let's take another quick break right here.
+
+02:36.880 --> 02:41.800
+We're going to continue the next section and start digging into the Docker client a little bit more.
+
+02:41.800 --> 02:43.810
+So a quick break and I'll see you in just a minute.

@@ -1,0 +1,250 @@
+WEBVTT
+
+00:01.110 --> 00:05.100
+In the last video, we installed the Google Cloud SDK on our local machine.
+
+00:05.100 --> 00:08.700
+And remember, the entire reason we're doing this is to have it automatically manage these different
+
+00:08.700 --> 00:13.680
+contexts, things that are going to teach CTL how to connect to different clusters.
+
+00:14.100 --> 00:20.490
+So back at my command line, I should now be able to run G Cloud like so and see some help information
+
+00:20.490 --> 00:21.090
+appear.
+
+00:21.210 --> 00:25.170
+If you do not see any help information appear, that means there is something wrong with your installation
+
+00:25.170 --> 00:27.120
+and you'll need to do a little bit of troubleshooting.
+
+00:28.550 --> 00:28.910
+All right.
+
+00:28.910 --> 00:34.490
+So now that we've got Google Cloud installed, we're going to first log in to the Cloud SDK.
+
+00:34.760 --> 00:38.360
+So I'm going to type out G cloud off, log in.
+
+00:41.290 --> 00:45.010
+A little window will appear in attempt to log me into my Google account.
+
+00:45.160 --> 00:49.690
+You'll need to make sure that you log into the same exact Google account that you used when you first
+
+00:49.690 --> 00:51.650
+signed up for the Google Cloud platform.
+
+00:51.670 --> 00:52.600
+A moment to go.
+
+00:53.230 --> 00:55.120
+So for me that is my account listed right here.
+
+00:55.120 --> 00:59.140
+So go ahead and click on it after I click on that thing and allow.
+
+00:59.880 --> 01:04.440
+I'll then get redirected over to some other page like this right here.
+
+01:04.890 --> 01:08.970
+Once I see this page, I can now close it and then go back over to my terminal.
+
+01:11.560 --> 01:16.990
+So I'm now logged in to the G Cloud SDK, and now we're going to run another command that's going to
+
+01:16.990 --> 01:22.060
+initialize the Google Cloud SDK and tell it a little bit about our particular project that we're trying
+
+01:22.060 --> 01:22.630
+to run.
+
+01:23.200 --> 01:25.120
+I'm going to run G Cloud.
+
+01:26.030 --> 01:31.790
+In it now I have already initialized g-cloud once previously in the past, so I'm going to see some
+
+01:31.790 --> 01:34.510
+different output here than what you are probably going to see.
+
+01:34.520 --> 01:40.070
+So when I run it, I see some stuff that says, Hey, you've already got some configuration and I can
+
+01:40.070 --> 01:42.980
+either re initialize a configuration or create a new one.
+
+01:43.070 --> 01:48.620
+You might see something that immediately tries to take you through the process of creating a configuration.
+
+01:49.230 --> 01:53.700
+So if you see something that just says, okay, fantastic, let's create a new configuration, that's
+
+01:53.700 --> 01:54.090
+great.
+
+01:54.090 --> 01:57.750
+But for me, I'm going to go ahead and click re initialize this configuration.
+
+02:00.780 --> 02:05.160
+Once I do so, I'll then be prompted to select which account I want to use for the configuration.
+
+02:05.160 --> 02:08.160
+So I'm going to use the account that I just signed in with a moment to go.
+
+02:10.390 --> 02:16.000
+Now we'll be given a list of all the different projects that exist inside your Google Cloud account.
+
+02:16.030 --> 02:20.260
+I have a ton of different projects right now, so you'll see a huge list right here.
+
+02:20.260 --> 02:23.590
+But for you personally, you'll probably see a much smaller list.
+
+02:23.620 --> 02:26.560
+Unless you've already use this Google Cloud account in the past.
+
+02:27.100 --> 02:30.100
+You might not immediately see your project listed in here.
+
+02:30.430 --> 02:35.050
+That's because we have given our project a name of ticketing dash dev.
+
+02:35.200 --> 02:39.670
+But behind the scenes, Google Cloud has assigned this thing a random identifier.
+
+02:39.670 --> 02:44.410
+So to figure out exactly what your real project name is, you can click on that little project selector
+
+02:44.410 --> 02:44.980
+up there.
+
+02:45.640 --> 02:49.750
+Find your project in the list and then find the ID column on the right hand side.
+
+02:49.900 --> 02:56.410
+So you will see that my actual project ID is Pacific Destiny, blah blah blah, not ticketing dash dev.
+
+02:57.440 --> 03:02.240
+So I'm going to go back over to my project list right here, and I'm going to find specific destiny.
+
+03:02.240 --> 03:05.510
+And again, for you, it's very likely going to be something very different.
+
+03:06.210 --> 03:07.020
+So I will see.
+
+03:07.020 --> 03:08.900
+My project ID is right there.
+
+03:08.910 --> 03:10.530
+It's number 17.
+
+03:11.740 --> 03:15.290
+So we are being prompted to enter in the number of our project.
+
+03:15.310 --> 03:18.790
+So for me it's 17, so I'll enter in 17 like so.
+
+03:20.170 --> 03:23.870
+After that, we are being asked to set a default region and zone.
+
+03:23.890 --> 03:25.210
+We want to do this.
+
+03:25.210 --> 03:27.970
+So we're going to enter in a yes or Y for yes.
+
+03:28.720 --> 03:31.300
+And it will be given a big list of regions here.
+
+03:31.780 --> 03:33.670
+We're going to find the region.
+
+03:34.500 --> 03:38.100
+That we selected when we created our Kubernetes cluster just a moment ago.
+
+03:38.340 --> 03:41.570
+So you might recall that I created my cluster in US Central one.
+
+03:41.580 --> 03:46.800
+See, if you don't remember where you created yours, you can go back to the Kubernetes menu by clicking
+
+03:46.800 --> 03:51.570
+the menu on the top left hand side, then going down to Kubernetes engine and clusters.
+
+03:51.750 --> 03:53.370
+And we'll take you back to the screen.
+
+03:53.940 --> 03:57.360
+You can then find location right there, and that is your region.
+
+03:57.750 --> 04:01.800
+So you're going to find that location on this list and then find the corresponding number.
+
+04:02.160 --> 04:04.140
+So for me, it was US Central one, see?
+
+04:04.140 --> 04:05.790
+So my number is seven.
+
+04:06.600 --> 04:11.130
+If you do not see your number listed on here, you'll notice that in the help options down here, there
+
+04:11.130 --> 04:13.170
+are many more regions available.
+
+04:13.800 --> 04:17.430
+And if you don't see yours listed, you'll enter in the word list and then hit enter and we'll show
+
+04:17.430 --> 04:19.350
+you all the additional regions.
+
+04:20.260 --> 04:20.530
+Okay.
+
+04:20.530 --> 04:23.110
+So I'm going to enter in number seven in my case and hit enter.
+
+04:23.800 --> 04:25.090
+And that is pretty much it.
+
+04:26.650 --> 04:30.440
+So we have now set up Google Cloud and we've told it about our account.
+
+04:30.460 --> 04:35.740
+We've logged in, we've told it about our project and we told it about the region that we are connecting
+
+04:35.740 --> 04:36.010
+to.
+
+04:36.040 --> 04:40.240
+Technically, its region and zone are two different things, but I'm going to use the terms a little
+
+04:40.240 --> 04:43.030
+bit interchangeably here because it's just not super relevant for us.
+
+04:43.840 --> 04:44.110
+Okay.
+
+04:44.110 --> 04:46.700
+So we've now just configured Google Cloud SDK.
+
+04:46.720 --> 04:52.300
+We have not begun to tell Google Cloud SDK to manage this context stuff.
+
+04:52.450 --> 04:54.040
+We're going to take a quick pause right here.
+
+04:54.040 --> 04:59.170
+And then in the next video, we will tell Google Cloud that we want it to handle all this context stuff
+
+04:59.170 --> 04:59.920
+and tell it.
+
+04:59.960 --> 05:02.530
+Tell you how to connect to our cluster.

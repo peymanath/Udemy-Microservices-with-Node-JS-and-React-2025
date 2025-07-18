@@ -1,0 +1,223 @@
+WEBVTT
+
+00:01.000 --> 00:05.170
+In the last video, we established that we need to make sure that all of our different services respond
+
+00:05.170 --> 00:09.700
+to some invalid incoming data with a very similarly structured response.
+
+00:09.970 --> 00:14.530
+So I'm not saying that it should always be an array of objects, but I'm am saying that we need to put
+
+00:14.530 --> 00:19.240
+some thought into this and make sure that we've got some consistent structure for every kind of response
+
+00:19.240 --> 00:22.210
+we ever expect to send back from any service.
+
+00:23.490 --> 00:25.810
+Now, I do want to clarify one quick thing.
+
+00:25.830 --> 00:30.210
+Right now, we are really just talking about the case in which we send over some invalid data inside
+
+00:30.210 --> 00:32.700
+a request to one of our given services.
+
+00:32.910 --> 00:35.970
+So in other words, we're really just talking about this scenario right now.
+
+00:36.450 --> 00:42.990
+So in scenario number one, we're talking about sending some request over to our service with an email
+
+00:42.990 --> 00:44.870
+of, let's say, gibberish.
+
+00:44.880 --> 00:46.530
+That is clearly not an email.
+
+00:46.920 --> 00:50.310
+So at some point in time, we're going to run that email through express validator.
+
+00:50.310 --> 00:53.790
+And as soon as we do so, boom, something blows up, we throw an error.
+
+00:53.820 --> 00:58.830
+We're not really throwing in air per se, but we are an error state and we need to stop our request
+
+00:58.830 --> 01:03.360
+handler early and send back some kind of a response to whoever made this request.
+
+01:03.690 --> 01:08.550
+But again, Express Validator is not the only thing that is going to be producing some kind of error
+
+01:08.550 --> 01:10.260
+that we need to send back to the user.
+
+01:10.590 --> 01:16.110
+There are many, many other scenarios, only an infinite number of other scenarios where we are going
+
+01:16.110 --> 01:21.150
+to have to stop our request handler early and send back some kind of response and all these different
+
+01:21.150 --> 01:21.780
+responses.
+
+01:21.780 --> 01:26.310
+No matter the source, whether it's express validator or something else, we want to make sure that
+
+01:26.310 --> 01:29.310
+they all have this very identical structure.
+
+01:29.640 --> 01:33.960
+So let's start to think about some of those other scenarios where something might go wrong and we will
+
+01:33.960 --> 01:38.670
+have to send back some kind of response that we want to make sure it has this identical structure,
+
+01:38.670 --> 01:41.370
+just so the React app can parse that air very easily.
+
+01:42.460 --> 01:43.970
+So here's another scenario right here.
+
+01:43.990 --> 01:45.790
+Let's consider scenario number two.
+
+01:45.820 --> 01:49.210
+Maybe we have some incoming requests with an email of test at test.
+
+01:50.290 --> 01:54.580
+Well, we could throw that into express validator and express validator would say, oh, yeah, that's
+
+01:54.580 --> 01:55.390
+a valid email.
+
+01:55.390 --> 01:56.560
+Everything looks good.
+
+01:57.130 --> 02:01.420
+So that would then go on to the next step of a request handler where we might check to see if that email
+
+02:01.420 --> 02:02.470
+is already in use.
+
+02:02.800 --> 02:07.090
+And let's imagine that in this scenario, maybe someone has already signed up with an email of test
+
+02:07.090 --> 02:07.450
+at test.
+
+02:08.770 --> 02:13.450
+So once we do this check right here, we once again would probably throw us some kind of error or we
+
+02:13.450 --> 02:17.710
+would need to throw or send an error back to whoever made this request.
+
+02:17.980 --> 02:20.980
+And so we've got the red x right there to indicate something went wrong.
+
+02:20.980 --> 02:22.900
+We need to send an error response back.
+
+02:24.180 --> 02:28.330
+So in this case it is not express validator that is producing some kind of air.
+
+02:28.350 --> 02:31.260
+It is this totally unrelated chunk of code.
+
+02:31.590 --> 02:37.170
+So again, we need to make sure that not only Express Validator knows how to send back a response of
+
+02:37.170 --> 02:38.210
+this structure right here.
+
+02:38.220 --> 02:42.780
+We need to make sure that many other places inside of our code can send back an identical structure
+
+02:42.780 --> 02:43.410
+as well.
+
+02:43.950 --> 02:45.120
+The list even goes on from there.
+
+02:45.150 --> 02:46.920
+Let's consider scenario number three.
+
+02:47.340 --> 02:50.640
+So maybe with scenario number three, we have an email of test at test.
+
+02:52.140 --> 02:53.400
+That is a valid email.
+
+02:53.400 --> 02:56.610
+So it will get past express validator maybe in this case.
+
+02:56.610 --> 03:00.240
+We're going to check to see if the email is already in use and maybe it's not maybe as an email that
+
+03:00.240 --> 03:01.650
+we can sign up with.
+
+03:02.100 --> 03:07.080
+And then maybe at that case, we or in this case, we try to sign up with a new user, but for some
+
+03:07.080 --> 03:10.890
+reason maybe our database connection is down or something like that.
+
+03:11.460 --> 03:15.720
+So once again, we have some kind of error that is going to be produced by our application and we need
+
+03:15.720 --> 03:22.830
+to somehow capture that error and send back some response to the user once again with a completely identical
+
+03:22.830 --> 03:23.700
+structure.
+
+03:24.210 --> 03:29.460
+So what I'm trying to say here in this series of diagrams is that we have no idea where something is
+
+03:29.460 --> 03:31.380
+going to go wrong inside of our application.
+
+03:31.590 --> 03:36.810
+We might have something go wrong from Express Validator, it might go wrong during some kind of internal
+
+03:36.810 --> 03:41.010
+validation, and it might go wrong even at the database access level.
+
+03:41.250 --> 03:42.840
+And in all these different scenarios.
+
+03:42.840 --> 03:49.590
+We need to somehow capture these errors as they are occurring and sent back this identical looking structure
+
+03:49.590 --> 03:50.520
+no matter what.
+
+03:50.940 --> 03:56.040
+Because again, we don't want our React application to have to understand how to parse a billion of
+
+03:56.040 --> 03:57.150
+different kinds of errors.
+
+03:57.150 --> 04:02.250
+We just want to have this one identical structure that it will be used for absolutely everything that
+
+04:02.250 --> 04:03.960
+goes wrong inside of our application.
+
+04:05.140 --> 04:05.590
+Okay.
+
+04:05.590 --> 04:10.750
+So now that we've got kind of a scope of this problem and we understand that we really need to have
+
+04:10.750 --> 04:12.250
+some robust air handling.
+
+04:12.280 --> 04:13.450
+One more pause right here.
+
+04:13.480 --> 04:17.260
+We're going to start to investigate how we're going to implement all this using EXPRESS.

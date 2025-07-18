@@ -1,0 +1,316 @@
+WEBVTT
+
+00:00.790 --> 00:04.990
+We just put together our first ingress config file, but inside of here was a kind of mysterious rule
+
+00:04.990 --> 00:06.280
+that said host of post.
+
+00:07.240 --> 00:09.730
+Let me tell you a little bit more about what is going on inside of here.
+
+00:10.750 --> 00:16.450
+So when we make use of Kubernetes, we can absolutely just host one single application at one single
+
+00:16.450 --> 00:17.170
+domain.
+
+00:17.440 --> 00:21.010
+But with Kubernetes, well, we can host a ton of infrastructure.
+
+00:21.010 --> 00:24.670
+We're not necessarily limited to just hosting one singular application.
+
+00:24.850 --> 00:30.130
+So in other words, we could host many different apps at many different domains inside of a single Kubernetes
+
+00:30.130 --> 00:30.640
+cluster.
+
+00:30.640 --> 00:32.860
+We could have some app tied to my app.
+
+00:33.820 --> 00:39.020
+Another totally different app at Post Tracker and yet another at blog app.com.
+
+00:39.370 --> 00:43.780
+The infrastructure for all these different applications at these different domains can be hosted inside
+
+00:43.780 --> 00:45.760
+of one single Kubernetes cluster.
+
+00:46.590 --> 00:52.460
+Ingress Engine X is set up, assuming that you might be hosting many different apps at different domains.
+
+00:52.470 --> 00:54.910
+So that's what this host property right here is all about.
+
+00:54.930 --> 01:00.060
+We are saying that the config that we're about to write in this little section right here is all tied
+
+01:00.060 --> 01:02.610
+to an app hosted at Jpost.com.
+
+01:03.810 --> 01:06.730
+Now there's kind of a good side and bad side to this.
+
+01:06.750 --> 01:11.910
+The bad side is that in the development environment, we are used to accessing all of our different
+
+01:11.910 --> 01:13.620
+running servers at local.
+
+01:13.620 --> 01:19.830
+Host So how does this kind of routing rule or this idea of having some specific domain really stack
+
+01:19.830 --> 01:21.420
+up with ingress engine X?
+
+01:21.870 --> 01:26.820
+Well, in the development environment, what we have to do is trick our local machine into thinking
+
+01:26.820 --> 01:30.240
+that post is equivalent to local host.
+
+01:30.690 --> 01:35.820
+So in other words, whenever we try to connect to post, we're going to trick our computer to connecting
+
+01:35.820 --> 01:41.700
+to our local machine rather than the real post that I'm sure exists out there somewhere online.
+
+01:42.470 --> 01:45.590
+To trick our local machine into connecting to local host.
+
+01:45.590 --> 01:51.350
+Whenever we go to post, we're going to make a little configuration change on your computer to your
+
+01:51.350 --> 01:52.490
+host file.
+
+01:53.720 --> 01:59.510
+Your host file, which is available on Windows and macOS or Linux, is where we can set up a series
+
+01:59.510 --> 02:01.040
+of additional little routing rules.
+
+02:01.040 --> 02:06.320
+And we can say any time we tried to go to Jpost.com instead, just connect to our local machine.
+
+02:06.620 --> 02:12.560
+Again, this is going to somehow trick or make ingress engine x think that we are coming to it from
+
+02:12.560 --> 02:17.150
+post and it's going to apply all the routing rules that are shown in this section right here.
+
+02:17.690 --> 02:23.030
+Long story short, we just have to add in one line of config to this file, different file location
+
+02:23.030 --> 02:24.660
+depending upon your operating system.
+
+02:24.680 --> 02:25.970
+That's the long and short of it.
+
+02:26.120 --> 02:27.350
+So let's get to it.
+
+02:27.530 --> 02:32.120
+Now, naturally, I am on macOS, so I'm going to open up my Etsy slash host file.
+
+02:32.120 --> 02:33.050
+That is not a directory.
+
+02:33.050 --> 02:35.030
+That's a file inside my code editor.
+
+02:35.300 --> 02:38.510
+If you're on windows, you will open up that file instead.
+
+02:39.460 --> 02:40.630
+So I'm going to do that right now.
+
+02:42.990 --> 02:44.460
+And here's my host file.
+
+02:44.760 --> 02:46.560
+Yours will probably look very similar to this.
+
+02:46.560 --> 02:50.640
+Maybe you'll have a couple of extra lines in here at the very bottom of this file.
+
+02:50.670 --> 02:55.330
+I'm going to add in 127001 and then post.
+
+02:56.100 --> 02:57.720
+Notice there is a space in between.
+
+02:58.290 --> 02:59.100
+Very important.
+
+02:59.100 --> 03:00.750
+If you are on mini cube.
+
+03:00.750 --> 03:05.580
+If you are making you some mini cube, you are not going to write in 127001 right here.
+
+03:05.590 --> 03:10.380
+Instead you will write in whatever the result of mini cube IP is.
+
+03:10.380 --> 03:13.530
+So if you are on mini cube or making use of it, run this command.
+
+03:13.530 --> 03:18.960
+Take the IP that gets printed up right there and put it right there instead of 127001.
+
+03:20.060 --> 03:26.660
+So now whenever we try to connect to post your operating system is going to say, oh, rather than going
+
+03:26.660 --> 03:31.760
+to the real post somewhere out on the Internet, I'm going to instead connect to the local machine.
+
+03:31.760 --> 03:35.000
+Me right here at 127001.
+
+03:36.140 --> 03:36.410
+Okay.
+
+03:36.440 --> 03:38.300
+After making that change, I'm going to save the file.
+
+03:38.330 --> 03:41.180
+Chances are you're going to see some kind of permission warning.
+
+03:41.600 --> 03:45.800
+If you're on windows, you're probably going to need to open up your code editor again in administration
+
+03:45.800 --> 03:46.310
+mode.
+
+03:46.700 --> 03:49.670
+If you're on macOS, you can make use of Visual Studio code.
+
+03:49.670 --> 03:53.570
+You can just hit that little button right there, put in your password and you're good to go.
+
+03:53.570 --> 03:54.530
+File is saved.
+
+03:56.690 --> 03:57.140
+Okay.
+
+03:57.140 --> 04:03.590
+So now inside of our browser or postman, whatever else, if we go to post, we are going to be actually
+
+04:03.590 --> 04:05.870
+make a request to 127001.
+
+04:06.260 --> 04:08.990
+That request is going to go into ingress serve.
+
+04:09.980 --> 04:15.770
+It's going ingress and Gen X is going to think that we are trying to visit post and so it's going to
+
+04:15.770 --> 04:17.810
+apply the routing rules you see right here.
+
+04:19.950 --> 04:22.980
+All right, so let's go back over to our browser and we're going to test this out.
+
+04:23.220 --> 04:30.570
+So inside of a new browser tab, we are going to navigate to post slash posts that should, behind the
+
+04:30.570 --> 04:37.640
+scenes make a request to our post cluster IP service, which actually makes a request to our post pod.
+
+04:37.650 --> 04:43.770
+And you and I know if by going into our post index file, if we make a request to slash post, that
+
+04:43.770 --> 04:47.280
+should send us back all the different posts that we have created inside the service.
+
+04:47.550 --> 04:49.440
+So let's try navigating to that right now.
+
+04:49.440 --> 04:50.760
+And there we go.
+
+04:50.760 --> 04:52.440
+I've got my list of posts.
+
+04:53.580 --> 04:54.420
+Yay!
+
+04:55.960 --> 04:56.930
+So this is great.
+
+04:56.950 --> 04:59.020
+We've now got our list of posts right here.
+
+04:59.020 --> 05:05.590
+We are able to access some pod and most importantly, we didn't have to reach out directly to this pod.
+
+05:05.590 --> 05:09.250
+In other words, I didn't have to type in some URL that says go to my post pod.
+
+05:09.250 --> 05:14.710
+Instead I put in just a very normal URL and behind the scenes ingress engine x is going to take this
+
+05:14.710 --> 05:16.900
+request and route it off to the appropriate service.
+
+05:16.900 --> 05:20.110
+And that service in turn is going to read it off to the appropriate pod.
+
+05:21.500 --> 05:21.800
+Okay.
+
+05:21.800 --> 05:23.750
+So hopefully everything is working for you.
+
+05:23.810 --> 05:27.710
+There's definitely many locations throughout all the stuff where things can go wrong.
+
+05:27.830 --> 05:31.450
+If you're running into trouble, remember, try doing a little bit of troubleshooting on your own.
+
+05:31.460 --> 05:36.320
+Google is a great tool, great friend to have around, but if you still can't get it, always feel free
+
+05:36.320 --> 05:39.200
+to hop over to the discussion board and I'll do my best to help you out.
+
+05:39.200 --> 05:42.260
+But do remember if you have a problem, I really need to see your code.
+
+05:42.260 --> 05:44.720
+So do test your code on GitHub first.
+
+05:45.720 --> 05:48.840
+Well, we've now proven that we can get access to a pod.
+
+05:49.570 --> 05:54.160
+So now we have to go back through all of our different services.
+
+05:55.450 --> 05:56.310
+Where's our diagram?
+
+05:56.320 --> 05:56.740
+Here we go.
+
+05:56.740 --> 05:59.710
+We need to go back through all of our different services, all these different pods.
+
+05:59.710 --> 06:04.090
+We need to add in some routing rules to that ingress engine X config file.
+
+06:04.180 --> 06:08.740
+And we also need to make sure that at some point in time we also create a deployment for our React app
+
+06:08.740 --> 06:11.350
+as well, but still just a little bit left.
+
+06:11.350 --> 06:13.510
+But we are definitely almost at the end here.
+
+06:13.510 --> 06:15.880
+It's a quick pause and we'll continue in just a minute.

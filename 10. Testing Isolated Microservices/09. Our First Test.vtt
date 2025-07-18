@@ -1,0 +1,319 @@
+WEBVTT
+
+00:00.770 --> 00:03.530
+It's now time for us to start to write out an actual test.
+
+00:03.530 --> 00:08.930
+So in this video we're going to write a very simple test around our sign up route handler because we
+
+00:08.930 --> 00:11.960
+are trying to write a test around the sign up route handler.
+
+00:11.960 --> 00:15.260
+We're going to create a folder inside of the routes directory.
+
+00:15.530 --> 00:20.060
+So new folder called Underscore, underscore, test, underscore, underscore.
+
+00:20.910 --> 00:25.230
+When we make use of jest, we follow the convention that if we are trying to test a given file, we
+
+00:25.230 --> 00:29.700
+make a folder inside the same directory called underscore, underscore, test like that right there.
+
+00:29.730 --> 00:34.830
+And then inside that directory we'll make a new file that has the name of the file that we are trying
+
+00:34.830 --> 00:35.550
+to test.
+
+00:35.550 --> 00:39.150
+So sign up then tests.
+
+00:39.570 --> 00:42.120
+So we're going to follow the same convention for testing everything.
+
+00:42.120 --> 00:46.290
+Whenever we want to test something inside of a file, make a folder in the same directory, call it
+
+00:46.290 --> 00:48.510
+underscore, underscore, test, underscore, underscore.
+
+00:48.540 --> 00:54.090
+Make a file inside there with the same name as the original file, but with tests at the very end.
+
+00:55.670 --> 01:00.110
+So then inside this file we're going to write out, like I said, a very simple test and figure out
+
+01:00.110 --> 01:00.950
+how to run it.
+
+01:01.590 --> 01:06.390
+So at the very top, we're going to first import requests from super test.
+
+01:07.160 --> 01:12.110
+So remember, super test is the thing that's going to allow us to fake a request to the express application.
+
+01:12.680 --> 01:18.380
+Well, then add in an import statement to get the app that we had declared inside of the app file.
+
+01:18.590 --> 01:22.520
+So we will get app from up directory up.
+
+01:25.740 --> 01:28.160
+And then we can start to write out a test statement.
+
+01:28.170 --> 01:31.560
+So we will write out it and then a description for this test.
+
+01:31.860 --> 01:35.340
+This very first test that we are going to put together, we're just going to make sure that we can send
+
+01:35.340 --> 01:42.720
+in a post request to this sign up route right here with a valid email and password and get some kind
+
+01:42.720 --> 01:43.680
+of response.
+
+01:43.680 --> 01:49.170
+So I just wanted to send in a post request to that route with an email, a password in the body.
+
+01:49.170 --> 01:53.250
+And we're going to make sure that we get a response that has a status of 201.
+
+01:53.250 --> 01:55.320
+That's all we're going to do for this very first test.
+
+01:56.620 --> 02:03.640
+So inside the string right here, I'm going to put in a description of it returns a201 on successful
+
+02:04.210 --> 02:04.900
+sign up.
+
+02:06.250 --> 02:09.370
+Then as a second argument, we will put in an async function.
+
+02:10.600 --> 02:13.750
+All the different tests that we are going to put together with super tests are going to follow a very
+
+02:13.750 --> 02:14.680
+similar structure.
+
+02:14.950 --> 02:16.930
+We are going to return.
+
+02:19.070 --> 02:21.760
+Request we're going to pass in app.
+
+02:22.900 --> 02:25.900
+And then we're going to chain on a number of different methods to it.
+
+02:26.080 --> 02:27.640
+So the first thing were going to chain on.
+
+02:28.470 --> 02:33.740
+Is to tell this thing where we want to make the request to and what method we want to use for the request.
+
+02:33.750 --> 02:41.190
+So in our case we want to make a post request and we want to make the post request to a root of API
+
+02:41.190 --> 02:42.450
+users sign up.
+
+02:42.750 --> 02:45.270
+So we'll do slash API.
+
+02:45.300 --> 02:47.280
+Slash users slash sign up.
+
+02:49.430 --> 02:51.530
+We will then send off the request.
+
+02:51.950 --> 02:56.420
+And when we do so, we're going to specify some information to include in the body of the request.
+
+02:56.480 --> 03:00.680
+So this right here is going to be provided as the body, as I mentioned, for this first test.
+
+03:00.680 --> 03:05.060
+We want to make sure we send along a valid email and a valid password to sign up with.
+
+03:05.510 --> 03:07.310
+So I'm going to specify an email.
+
+03:08.600 --> 03:09.050
+Test.
+
+03:09.050 --> 03:12.200
+Test and a password of.
+
+03:12.950 --> 03:13.550
+Password.
+
+03:15.890 --> 03:18.020
+So this is going to actually send the request off.
+
+03:18.020 --> 03:22.970
+If we then want to make some assertions about the response, we will train them on to the very end.
+
+03:23.240 --> 03:28.820
+So for example, we can write in, expect, and then put in the status code that we expect to receive
+
+03:28.820 --> 03:29.780
+in the response.
+
+03:29.990 --> 03:32.930
+In this case, we expect to get a status code of 201 back.
+
+03:33.660 --> 03:34.200
+And that's it.
+
+03:34.200 --> 03:37.530
+That's everything we need to write out for a very basic and straightforward test.
+
+03:38.220 --> 03:42.360
+Now you will notice that I marked this function as async, even though we did not use the awake keyword
+
+03:42.360 --> 03:43.200
+inside of here.
+
+03:43.440 --> 03:44.970
+I'm just doing that out of habit.
+
+03:45.000 --> 03:49.020
+We will eventually attempt to make multiple requests inside of a single test.
+
+03:49.290 --> 03:52.200
+When we do, we're going to have to start to use the O8 keyword.
+
+03:52.200 --> 03:57.150
+And so I found that it's easier to just add on async from the get go and not have to worry about adding
+
+03:57.150 --> 04:01.590
+on adding it on at some point in the future or forgetting to add it on and being given some kind of
+
+04:01.590 --> 04:02.100
+error.
+
+04:03.700 --> 04:09.250
+Well, then save this file and to run it we will go over to our terminal and run npm run test inside
+
+04:09.250 --> 04:10.570
+our auth directory.
+
+04:12.060 --> 04:15.980
+So I'll change into auth and then npm run test.
+
+04:15.990 --> 04:20.160
+Now just, you know, the first time we run this, we are going to probably see an error which is OC,
+
+04:20.160 --> 04:21.660
+but let's run it anyways.
+
+04:22.880 --> 04:23.030
+Okay.
+
+04:23.240 --> 04:24.800
+So it looks like the test is running.
+
+04:27.030 --> 04:30.780
+Now the very first test that we run is going to take a little bit to actually start up.
+
+04:31.780 --> 04:34.150
+And it looks like we'll come back to why it took so long.
+
+04:34.150 --> 04:34.690
+Just a moment.
+
+04:34.690 --> 04:38.700
+What's more relevant is that we got a 400 bad request back.
+
+04:38.710 --> 04:40.030
+So why is that?
+
+04:40.390 --> 04:45.610
+Well, you might recall if we take a look at the implementation of our sign up route handler, here
+
+04:45.610 --> 04:47.080
+is sign ups right here.
+
+04:47.880 --> 04:49.770
+Inside of you're at some point in time.
+
+04:51.060 --> 04:54.510
+We attempt to create a new JSON web token.
+
+04:55.440 --> 05:01.020
+When we attempt to create that JSON web token, we try to access an environment variable of JWT underscore
+
+05:01.020 --> 05:01.560
+key.
+
+05:02.070 --> 05:07.410
+We had previously been making a check to ensure that this thing was defined inside of our indexed file,
+
+05:07.530 --> 05:14.970
+but right now we have split up our indexed and APTs files into two separate files, so we are no longer
+
+05:14.970 --> 05:17.400
+making sure that this environment variable exists.
+
+05:17.490 --> 05:20.970
+As a matter of fact, it doesn't exist right now when we are running all of our code inside this test
+
+05:20.970 --> 05:21.660
+environment.
+
+05:22.020 --> 05:27.480
+This environment variable only gets defined when we run our code inside of a pod because remember we
+
+05:27.480 --> 05:32.370
+had specified for this environment variable to be defined inside of our deployment config file.
+
+05:33.490 --> 05:37.570
+So to get this air to go away, all we need to do is to make sure that we define this environment variable
+
+05:37.570 --> 05:38.680
+at some point in time.
+
+05:39.800 --> 05:44.180
+There are many different ways to define a environment variable in a kind of test environment.
+
+05:44.210 --> 05:46.670
+So we're going to take just a very simple, very direct way.
+
+05:46.670 --> 05:50.570
+It's not necessarily the best way of doing it, but it's going to get that air to go away right away.
+
+05:50.990 --> 05:53.240
+I'm going to go back to the setup file.
+
+05:53.420 --> 05:55.430
+I'm going to find the for all statements.
+
+05:55.430 --> 06:01.070
+And inside there, we're just going to directly set the environment variable with a process and B JWT
+
+06:01.100 --> 06:04.370
+underscore key and we'll set it equal to whatever string.
+
+06:04.940 --> 06:08.180
+Again, not the best way of handling this, but it's going to work for right now.
+
+06:08.720 --> 06:13.220
+I'm going to save this and I should be able to then go back over to my terminal and see that my test
+
+06:13.220 --> 06:14.120
+is now passing.
+
+06:14.360 --> 06:14.990
+Awesome.
+
+06:15.380 --> 06:18.230
+So we've gone through the process of writing out one full test.
+
+06:18.460 --> 06:21.110
+We're going to start to write out a lot more tests very quickly.
+
+06:21.110 --> 06:23.780
+So we'll take a quick pause right here and continue in just a moment.

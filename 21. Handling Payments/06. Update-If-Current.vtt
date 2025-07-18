@@ -1,0 +1,61 @@
+WEBVTT
+
+00:00.680 --> 00:06.230
+Before we move on from our order, I would like to add in that mongoose update if current plug in remember
+
+00:06.230 --> 00:09.530
+that's going to make sure that we always process all of our different events in the correct order.
+
+00:09.950 --> 00:17.540
+So back up my terminal, I'm going to change into the payments directory and then install Mongoose update
+
+00:17.540 --> 00:18.950
+if current.
+
+00:21.330 --> 00:24.690
+That is a super small module, so it should install really quickly.
+
+00:25.420 --> 00:27.900
+Then once we've got it, we'll go back over to our model file.
+
+00:28.890 --> 00:29.580
+At the very top.
+
+00:29.580 --> 00:34.740
+I will add in an import statement for update if current plugin.
+
+00:36.200 --> 00:39.680
+From Mongoose update if current.
+
+00:42.500 --> 00:44.270
+Then down right underneath our schema.
+
+00:44.300 --> 00:46.760
+So here's the order schema right after that.
+
+00:48.230 --> 00:51.020
+Latin in order schema set.
+
+00:51.050 --> 00:55.640
+We want to set the version key to version.
+
+00:55.640 --> 01:00.200
+Remember that's going to override Mongoose and tell it to not use that underscore underscore v flag.
+
+01:01.780 --> 01:03.520
+And then we will wire up the plug in itself.
+
+01:03.520 --> 01:09.220
+So order schema plug in and pass in update if current plug in.
+
+01:10.810 --> 01:11.860
+And that should be it.
+
+01:13.930 --> 01:14.130
+Yes.
+
+01:14.140 --> 01:15.040
+I'll save this file.
+
+01:15.080 --> 01:17.320
+Quick pause right here and continue in just a minute.

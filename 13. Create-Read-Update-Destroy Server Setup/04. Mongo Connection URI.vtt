@@ -1,0 +1,436 @@
+WEBVTT
+
+00:00.610 --> 00:01.330
+At the very end.
+
+00:01.330 --> 00:06.550
+A last video I had opened up the tickets index file and I'd mentioned that we still had a URL right
+
+00:06.550 --> 00:10.090
+here to connect to the incorrect MongoDB instance.
+
+00:10.210 --> 00:11.960
+So this is definitely really bad.
+
+00:11.980 --> 00:15.670
+We've got some code inside of here that could have very easily gone on caught.
+
+00:15.700 --> 00:20.320
+We might have accidentally deployed this ticket service into production and had it connect to the wrong
+
+00:20.320 --> 00:21.820
+MongoDB database.
+
+00:21.820 --> 00:23.080
+Definitely not good.
+
+00:23.470 --> 00:27.160
+So let's try to figure out some way to solve this and catch issues like this in the future.
+
+00:27.490 --> 00:29.320
+Here's one way we could do it very easily.
+
+00:29.350 --> 00:35.350
+You might recall that back inside of our infra directory if we open up our tickets deployment file.
+
+00:36.200 --> 00:41.070
+When we define this pod spec right here, we have the ability to define some different environment variables.
+
+00:41.090 --> 00:46.370
+I think that one easy way to solve this issue potentially in the future would be to add in the URL to
+
+00:46.370 --> 00:48.470
+connect to as an environment variable.
+
+00:49.210 --> 00:50.710
+So let's try doing that right now.
+
+00:50.830 --> 00:56.380
+We're going to make this change both to our ticket service and to the authentication one as well, because
+
+00:56.380 --> 00:59.170
+the authentication service is also doing the same thing.
+
+00:59.170 --> 01:01.210
+It's got a hard coded URL right there.
+
+01:02.030 --> 01:06.290
+We're going to first start with the ticket stuff, so make sure you are inside of the tickets deployment
+
+01:06.290 --> 01:11.880
+file and make sure you have open the indexed file inside of the tickets directory.
+
+01:11.900 --> 01:14.900
+Make sure you're not changing the wrong files right now.
+
+01:15.960 --> 01:16.160
+Okay.
+
+01:16.200 --> 01:18.330
+So inside of the tickets deployment file.
+
+01:19.060 --> 01:20.910
+I'm going to find the EMV section.
+
+01:20.920 --> 01:23.230
+We're going to add in a new environment variable right here.
+
+01:23.560 --> 01:28.420
+I'm going to add in a new variable with the name of Mongo underscore Uri.
+
+01:29.580 --> 01:32.610
+And then I'm going to set its value directly right here.
+
+01:32.610 --> 01:33.840
+So I'm going to put in value.
+
+01:34.350 --> 01:37.470
+I'm going to go back over to my ticket's indexed file.
+
+01:38.420 --> 01:40.340
+I'm going to find that URL right there.
+
+01:41.300 --> 01:42.170
+I'm going to cut it.
+
+01:43.810 --> 01:47.200
+I'll then go back over to the deployment file and paste in that string.
+
+01:48.530 --> 01:52.970
+Now this string is still referencing the authentication MongoDB instance.
+
+01:52.970 --> 01:57.740
+So let's update that and make sure we are connecting to the tickets, one that we just created the deployment
+
+01:57.740 --> 01:59.030
+file for a moment ago.
+
+01:59.630 --> 02:05.120
+If you need a reminder inside of our tickets, MongoDB or Mongo double file, we can take a look at
+
+02:05.120 --> 02:06.800
+the name of the service at the bottom.
+
+02:06.800 --> 02:09.380
+The name of the service is tickets, Mongo CRV.
+
+02:09.380 --> 02:15.740
+That is what we are trying to connect to so we can find off Mongo XLV and update it to tickets.
+
+02:16.810 --> 02:22.150
+And then remember inside of a MongoDB database, there can technically be multiple different databases.
+
+02:22.390 --> 02:25.400
+That's what the name right here at the very end is referring to.
+
+02:25.420 --> 02:28.900
+That's the name of the database inside of this database that we're trying to create.
+
+02:29.350 --> 02:32.530
+So we're going to update that to tickets not strictly required.
+
+02:32.530 --> 02:37.300
+We can have a database name of anything we want, but I found it's usually best to just put some consistent
+
+02:37.300 --> 02:38.140
+name inside there.
+
+02:39.530 --> 02:43.970
+Now one thing I want to mention is that we have now hardcoded a connection URL inside of a deployment
+
+02:43.970 --> 02:44.540
+file.
+
+02:44.570 --> 02:50.300
+If we were to commit this file right now to get and then say push it up to GitHub, anyone in the world
+
+02:50.300 --> 02:52.340
+would be able to see this URL right here.
+
+02:52.580 --> 02:53.750
+Is that a problem?
+
+02:54.050 --> 02:56.060
+I would really strongly argue.
+
+02:56.060 --> 02:56.550
+No.
+
+02:56.570 --> 02:57.920
+It is not an issue.
+
+02:57.950 --> 02:59.630
+Although there is a URL right here.
+
+02:59.630 --> 03:03.320
+This URL is only accessible if someone is inside of our cluster.
+
+03:03.350 --> 03:08.330
+The only reason I would be concerned about putting my URL right here as a plain string out online is
+
+03:08.330 --> 03:15.110
+if there was a username and password associated or required to log in or connect to this MongoDB instance.
+
+03:15.380 --> 03:20.930
+If there was a username and password required, I would definitely not want to write it out right here
+
+03:20.930 --> 03:21.950
+as plain text.
+
+03:22.280 --> 03:27.560
+But as long as we are just connecting to some plain URL without any security around it, and as long
+
+03:27.560 --> 03:33.620
+as we also have this deployment file that very plainly spells out exactly how to connect to this thing,
+
+03:33.740 --> 03:38.360
+I again, I'm going to strongly argue and say, no, it's really not an issue to put this thing right
+
+03:38.360 --> 03:39.500
+here as a plain string.
+
+03:40.040 --> 03:45.590
+If we did care about that, if we had a username and password authentication scheme with MongoDB, then
+
+03:45.590 --> 03:50.750
+all we'd have to do is define this environment variable inside of a secret, just as we did with the
+
+03:50.750 --> 03:52.100
+JSON web token key.
+
+03:54.570 --> 03:57.150
+So that should be it, at least for the deployment file.
+
+03:57.450 --> 04:00.870
+So I'm going to save the ticket's deployment file and close it.
+
+04:02.230 --> 04:05.290
+I'm now left inside of my ticket's indexed file.
+
+04:05.710 --> 04:10.780
+So inside of here, we need to make sure that we try to connect to the MongoDB instance with the URI
+
+04:10.810 --> 04:12.940
+that is provided inside that environment variable.
+
+04:13.590 --> 04:17.580
+You might recall that before we can access any environment variable, we do have to make sure that it
+
+04:17.580 --> 04:18.540
+actually is defined.
+
+04:18.540 --> 04:21.270
+Otherwise TypeScript is going to get really unhappy with us.
+
+04:21.570 --> 04:24.190
+So I'm going to do another very similar check to what we did before.
+
+04:24.210 --> 04:30.210
+I'm going to say if not process EMV Mongo URI.
+
+04:30.720 --> 04:32.310
+Now let's throw a new air.
+
+04:33.410 --> 04:37.370
+And I'll say Mongo, you or I must be defined.
+
+04:38.820 --> 04:44.340
+And then we can pass the environment variable in as the first argument to Mongoose connect the process
+
+04:44.550 --> 04:46.410
+of Mongo.
+
+04:47.220 --> 04:47.940
+You're right.
+
+04:50.900 --> 04:51.530
+All right.
+
+04:52.830 --> 04:53.880
+So let's save this.
+
+04:55.510 --> 04:59.710
+I'm going to go back over to my terminal and I just want to take a look at scaffold and make sure that
+
+04:59.710 --> 05:01.320
+everything booted up just fine.
+
+05:01.330 --> 05:01.750
+Yep.
+
+05:01.750 --> 05:02.920
+Looks like it definitely did.
+
+05:03.460 --> 05:08.500
+Now to test this and make sure that we actually are connecting to Mongo through that environment variable,
+
+05:08.530 --> 05:14.470
+I could go back over to the deployment file for tickets I could find where we just defined that environment
+
+05:14.470 --> 05:16.180
+variable and comment that out.
+
+05:16.840 --> 05:22.780
+If I then save this file scaffold should update the deployment that will cause our pod to be recreated
+
+05:22.780 --> 05:24.160
+without the environment variable.
+
+05:24.160 --> 05:26.770
+And then we should see an error at our terminal.
+
+05:27.190 --> 05:32.530
+And before I save this and confirm that everything is working as expected, I want you to know I have
+
+05:32.530 --> 05:38.110
+noticed some really strange inconsistencies with setting environment variables and then changing them
+
+05:38.110 --> 05:39.100
+or removing them.
+
+05:39.280 --> 05:43.960
+So if I do not immediately see an error, I'm not going to be super concerned right away.
+
+05:43.990 --> 05:49.420
+We should see an error, but if I don't, I might be able to solve the issue by just restarting scaffold.
+
+05:49.750 --> 05:52.210
+Long story short, let's just save this and see what happens.
+
+05:52.360 --> 05:53.200
+So I'll save the file.
+
+05:53.200 --> 05:54.190
+I'm going to flip back over.
+
+05:54.220 --> 05:56.680
+I'll see that the deployment was configured.
+
+05:57.100 --> 05:59.320
+Then we should see a new pod being created.
+
+05:59.320 --> 06:03.760
+I know this is a new pod because it has a different ID than the previous one running our tickets pod.
+
+06:04.150 --> 06:05.230
+And now in this scenario.
+
+06:05.230 --> 06:08.620
+Yeah, it looks like it's not quite working as expected here.
+
+06:08.620 --> 06:11.200
+I should not have been able to connect to MongoDB.
+
+06:11.230 --> 06:15.160
+I should have gotten an error saying that Mongo URI is not defined.
+
+06:15.610 --> 06:20.650
+One way to try to fix this, I can go back over to the index file and I'm going to try to just hard
+
+06:20.650 --> 06:22.900
+save this file again so I can hit command s.
+
+06:23.740 --> 06:28.540
+Scaffold is going to think that the file was just updated and it should try to sync the file, which
+
+06:28.540 --> 06:30.820
+should cause node to restart my server.
+
+06:31.120 --> 06:32.020
+So I'll flip back over.
+
+06:32.020 --> 06:35.170
+And now it looks like yeah, it did work right here.
+
+06:35.170 --> 06:41.050
+So I see that error but also looks like for some reason my server also started back up successfully
+
+06:41.050 --> 06:41.890
+anyways.
+
+06:41.890 --> 06:46.420
+So again I have noticed some weirdness around doing these environment variable checks.
+
+06:47.350 --> 06:50.890
+It only seems to be occurring once you start to initially make that change.
+
+06:50.890 --> 06:54.520
+But the next time you restart scaffold, usually it seems like the issue goes away.
+
+06:54.520 --> 06:58.600
+Just to prove that I'm going to stop scaffold, everything gets deleted.
+
+06:59.380 --> 07:02.770
+I'm going to wait for everything to actually be terminated.
+
+07:06.150 --> 07:08.880
+And for some reason, it always seems to take a little bit too long.
+
+07:08.910 --> 07:09.600
+Here we go.
+
+07:10.080 --> 07:11.190
+I'll start it back up.
+
+07:14.340 --> 07:19.260
+And now when my ticket service starts back up, all this environment variable stuff should be fixed,
+
+07:19.260 --> 07:22.860
+so I should see an air start to appear right away if it is not defined.
+
+07:23.430 --> 07:24.150
+And there we go.
+
+07:24.150 --> 07:25.050
+There's the big error.
+
+07:25.440 --> 07:32.070
+Mongo uri must be defined and I just keep getting that air and air again because scaffold keeps on trying
+
+07:32.070 --> 07:33.420
+to restart my pod.
+
+07:33.630 --> 07:37.560
+Or to be more precise, the deployment does and I just keep throwing the same air over and over.
+
+07:38.670 --> 07:43.830
+So this is definitely a good improvement for making sure that we capture and just recognize that, oh
+
+07:43.830 --> 07:48.690
+yeah, we need to update this MongoDB, you or I, any time that we start to copy paste this stuff over
+
+07:48.690 --> 07:49.740
+to another service.
+
+07:49.740 --> 07:51.450
+So last step, I'm going to uncomment that.
+
+07:51.450 --> 07:52.590
+I'm going to save the file.
+
+07:53.420 --> 07:54.590
+I'll go back over to my terminal.
+
+07:54.590 --> 07:57.710
+And now I should be back to seeing everything working correctly.
+
+07:57.980 --> 07:58.550
+Very good.
+
+07:59.770 --> 08:00.930
+All right, quick pause right here.
+
+08:00.940 --> 08:04.120
+We're then going to go over to our service and do the exact same thing.
+
+08:04.120 --> 08:06.040
+We're going to set up an environment variable.
+
+08:06.490 --> 08:10.600
+We're going to reference that environment variable inside of our index file, all inside of auth.
+
+08:10.600 --> 08:12.100
+That'll be really quick, I promise.
+
+08:12.100 --> 08:13.900
+So let's take care of it in just a moment.

@@ -1,0 +1,361 @@
+WEBVTT
+
+00:00.900 --> 00:03.240
+We've built our image and pushed it off to Docker Hub.
+
+00:03.240 --> 00:07.560
+Again, only required if you're running Docker on your local machine, not if you're running Docker
+
+00:07.560 --> 00:09.360
+or Kubernetes on Google Cloud.
+
+00:09.870 --> 00:10.530
+Let's move on.
+
+00:10.530 --> 00:15.030
+We're going to start to write out our Kubernetes file for the deployment and service to run our test
+
+00:15.030 --> 00:15.750
+service.
+
+00:16.350 --> 00:19.920
+Back inside, my editor, I'm going to find my infra directory.
+
+00:20.710 --> 00:22.200
+Inside the folder.
+
+00:22.240 --> 00:25.780
+I'll make a new file called Tickets Double HTML.
+
+00:27.990 --> 00:33.000
+Now inside of here, we're going to write out a very familiar looking deployment and service config.
+
+00:33.000 --> 00:38.280
+So once again, rather than doing all this from scratch, let's just do a copy paste from our off deployment.
+
+00:38.280 --> 00:42.180
+It really is going to be completely identical, except wherever we have the word auth, we're going
+
+00:42.180 --> 00:43.830
+to replace it with the word tickets.
+
+00:44.370 --> 00:46.440
+So I will open up the auth deployment file.
+
+00:46.440 --> 00:47.940
+I'm going to copy the contents.
+
+00:48.360 --> 00:51.720
+I'll then go over to the newly created tickets double file.
+
+00:52.050 --> 00:53.100
+I'm going to paste this in.
+
+00:54.460 --> 00:56.950
+And I'll go through here every single place I see.
+
+00:57.280 --> 00:58.930
+I will replace it with tickets.
+
+00:59.170 --> 01:00.700
+So I'm going to do one.
+
+01:01.840 --> 01:02.560
+To.
+
+01:03.540 --> 01:04.200
+Three.
+
+01:06.020 --> 01:06.710
+Or.
+
+01:08.540 --> 01:09.350
+And five.
+
+01:10.320 --> 01:11.910
+So five in the deployment section.
+
+01:11.910 --> 01:13.860
+Make sure you have updated all of those as well.
+
+01:14.100 --> 01:18.800
+You'll notice that inside of here we've still got a reference to that environment variable of JWT.
+
+01:19.050 --> 01:20.940
+Do we need this for the ticket service?
+
+01:20.970 --> 01:22.590
+Yes, absolutely.
+
+01:22.590 --> 01:27.070
+Because our ticket service, remember, it's going to try to handle authentication by itself.
+
+01:27.090 --> 01:31.710
+The ticket service is going to need to decide whether or not a request includes a valid JSON web token.
+
+01:31.710 --> 01:36.000
+And we can only validate a token if we have the original key that we created the token with.
+
+01:36.030 --> 01:39.270
+So our ticket service definitely needs the JSON web token key.
+
+01:40.300 --> 01:40.570
+Okay.
+
+01:40.600 --> 01:44.440
+Now that we've done those five updates up here, let's go down to the service itself.
+
+01:44.470 --> 01:48.550
+So here's the cluster IP service and we will update one.
+
+01:50.330 --> 01:50.990
+To.
+
+01:52.200 --> 01:52.770
+Three.
+
+01:54.760 --> 01:57.130
+Once I've got that all done, I'll save this file.
+
+01:59.130 --> 01:59.510
+All right.
+
+01:59.520 --> 02:00.510
+So that's pretty much it.
+
+02:00.930 --> 02:03.590
+We are done with writing out that Kubernetes deployment file.
+
+02:03.600 --> 02:06.370
+We're now going to move on to updating our scaffold YAML file.
+
+02:06.390 --> 02:09.030
+Again, this is all about setting up that file sinking.
+
+02:10.720 --> 02:12.550
+I'll find the scaffold yaml file.
+
+02:14.540 --> 02:15.950
+I'm going to go down to the bottom.
+
+02:17.400 --> 02:22.180
+Let's find out about the art section right here really is our template, to be honest with you.
+
+02:22.200 --> 02:23.340
+I'm going to copy that.
+
+02:25.120 --> 02:27.190
+And then paste it down at the very bottom.
+
+02:27.790 --> 02:29.410
+I'll fix up some indentation.
+
+02:32.730 --> 02:35.550
+And then I'm going to update off over two tickets.
+
+02:42.390 --> 02:46.680
+It looks like the source right here can stay the same because we still want to sync everything inside
+
+02:46.680 --> 02:48.000
+that CRC directory.
+
+02:48.360 --> 02:51.030
+So that should pretty much be it for the scaffold yaml file.
+
+02:51.640 --> 02:53.010
+I will save this.
+
+02:54.400 --> 02:58.690
+Now, the very last thing we have to do, let's make sure that we write out the Kubernetes file for
+
+02:58.690 --> 03:02.650
+the MongoDB deployment and the cluster IP service for it as well.
+
+03:02.890 --> 03:03.820
+And guess what?
+
+03:03.820 --> 03:07.540
+Do you think we're going to be able to copy the authentication Mongo deployment?
+
+03:07.630 --> 03:09.530
+Yes, absolutely we can.
+
+03:09.550 --> 03:11.470
+It's going to be 100% identical.
+
+03:12.330 --> 03:17.670
+So inside the cage directory I'll make a new file called tickets mongo devel html.
+
+03:19.910 --> 03:22.690
+I will open up the Mongo deployment file.
+
+03:22.700 --> 03:27.020
+I'm going to copy everything inside of here, then go back over to the tickets mongo deployment file
+
+03:27.020 --> 03:27.920
+we just created.
+
+03:28.460 --> 03:33.050
+I'll paste everything inside and then once again, anywhere we see the word auth, we will replace it
+
+03:33.050 --> 03:33.980
+with tickets.
+
+03:34.430 --> 03:36.350
+So I will do one.
+
+03:37.200 --> 03:37.890
+To.
+
+03:39.020 --> 03:39.680
+Three.
+
+03:40.730 --> 03:41.290
+For.
+
+03:43.880 --> 03:45.470
+Make sure you've got for updates.
+
+03:46.280 --> 03:51.860
+I'll then go down to my cluster IP service and I'm going to do update one.
+
+03:52.870 --> 03:53.740
+And to.
+
+03:56.920 --> 03:57.340
+Okay.
+
+03:57.790 --> 03:59.980
+Let's save this and close it out.
+
+04:00.720 --> 04:01.500
+Well, that is it.
+
+04:01.500 --> 04:03.640
+That is how we would normally create a new service.
+
+04:03.660 --> 04:05.580
+Well, almost exactly how we do it.
+
+04:05.610 --> 04:11.130
+Obviously, we might not want to do that copy paste of another service because who knows what dependencies
+
+04:11.130 --> 04:15.960
+we might be pulling over that we don't actually want or some config or who knows what else.
+
+04:16.050 --> 04:19.020
+But at least inside this course, that's how we're going to create a new service.
+
+04:19.260 --> 04:23.220
+The last thing I'm going to do is make sure that I can get scaffold up and running successfully.
+
+04:23.310 --> 04:24.930
+So I'm going to go back over to my terminal.
+
+04:24.960 --> 04:27.210
+I'm going to find the terminal window running scaffold.
+
+04:27.240 --> 04:30.090
+I would recommend you shut scaffold down entirely.
+
+04:30.690 --> 04:36.000
+And then after closing it, do a little get pods and make sure that all the different pods actually
+
+04:36.000 --> 04:37.080
+do get terminated.
+
+04:37.710 --> 04:43.020
+It might take a moment or two so we can run the command a couple of times and eventually.
+
+04:43.020 --> 04:43.710
+There we go.
+
+04:43.710 --> 04:44.520
+They're all dead.
+
+04:45.150 --> 04:48.630
+So I'll then start my scaffold back up with Scaffold Dev.
+
+04:49.020 --> 04:49.940
+Now a quick note.
+
+04:49.950 --> 04:52.500
+You might see an air start to appear.
+
+04:52.500 --> 04:54.070
+It might be a big red air.
+
+04:54.090 --> 04:59.490
+It might say something like Cannot pull image or can't find image your dock or ID slash tickets.
+
+04:59.490 --> 05:02.550
+If you see an air like that, here's what you should do.
+
+05:02.760 --> 05:04.770
+Go back over to your tickets directory.
+
+05:05.580 --> 05:13.710
+Rebuild the image manually so inside of tickets rerun that docker build dash t your docker ID tickets
+
+05:13.710 --> 05:14.340
+dot.
+
+05:15.230 --> 05:16.100
+Run that.
+
+05:17.170 --> 05:18.190
+Do another doctor.
+
+05:18.190 --> 05:18.850
+Push.
+
+05:23.050 --> 05:28.390
+And then after the push is complete, restart scaffold again and hopefully after that the air should
+
+05:28.390 --> 05:29.410
+be going away.
+
+05:29.740 --> 05:30.680
+So go ahead, give that a shot.
+
+05:30.700 --> 05:35.140
+Hopefully everything gets up and running and at some point inside this log, there's a lot of information
+
+05:35.140 --> 05:35.530
+inside of it.
+
+05:35.530 --> 05:40.180
+Now, we should see something that says tickets to people connected to MongoDB and listening on Port
+
+05:40.180 --> 05:40.990
+3000.
+
+05:41.500 --> 05:42.790
+Well, it looks good for me.
+
+05:43.680 --> 05:47.040
+I do want you to recall we are connecting to MongoDB inside of here.
+
+05:47.040 --> 05:52.480
+But remember right now we are connecting to the wrong instance of MongoDB inside of tickets.
+
+05:52.500 --> 05:54.990
+If we go back over to our editor, find tickets.
+
+05:55.930 --> 05:56.680
+index.HTML.
+
+05:57.880 --> 05:58.430
+Remember?
+
+05:58.450 --> 05:59.890
+Wrong url right there.
+
+05:59.890 --> 06:01.600
+So we need to make sure that we fix that thing up.
+
+06:02.380 --> 06:03.180
+Quick pause right here.
+
+06:03.190 --> 06:04.780
+Let's continue in just a moment.

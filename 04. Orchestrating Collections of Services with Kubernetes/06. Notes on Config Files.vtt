@@ -1,0 +1,166 @@
+WEBVTT
+
+00:00.820 --> 00:01.420
+In this video.
+
+00:01.420 --> 00:06.400
+We're going to learn more about these config files that we're going to write to create actual pods,
+
+00:06.400 --> 00:08.050
+services and deployments.
+
+00:08.080 --> 00:11.020
+So let's take a look at a couple of notes on these config files.
+
+00:12.010 --> 00:12.330
+Okay.
+
+00:12.340 --> 00:16.630
+So first off, these config files that we're going to write are going to tell Kubernetes about the different
+
+00:16.630 --> 00:20.290
+deployments, pods and services that we want to create inside of our cluster.
+
+00:20.470 --> 00:25.150
+By the way, collectively, we refer to deployments, pods, services and other similar things that
+
+00:25.150 --> 00:27.190
+we create in Kubernetes as objects.
+
+00:27.340 --> 00:32.080
+So in other words, we are creating config files to create and configure objects.
+
+00:33.530 --> 00:38.000
+Is config files are going to be written entirely in YAML syntax if you're not familiar with yaml.
+
+00:38.030 --> 00:38.630
+Don't sweat it.
+
+00:38.630 --> 00:42.500
+It's really easy syntax to pick up, especially if you're already familiar with JSON.
+
+00:42.530 --> 00:46.310
+It's essentially JSON with just less curly braces and whatnot.
+
+00:47.270 --> 00:51.350
+Now, the next couple of notes I'm going to write out here are going to seem a little bit strange for
+
+00:51.350 --> 00:55.070
+right now, but as soon as we start writing our first config file, I think they will make a little
+
+00:55.070 --> 00:55.820
+bit more sense.
+
+00:55.820 --> 00:59.180
+So I'm just going to say them right now because they are so important to understand.
+
+00:59.330 --> 01:02.450
+We're not going to understand it just yet, but you'll see it in just a moment.
+
+01:03.440 --> 01:08.920
+So first off, whenever we write a config file, we're always going to store these files with our projects.
+
+01:08.930 --> 01:13.430
+So in other words, we're going to commit these to get and make sure that we store them in some kind
+
+01:13.430 --> 01:14.600
+of source control.
+
+01:14.900 --> 01:20.270
+The reason for that is that these config files that we write are really documentation of what our Kubernetes
+
+01:20.270 --> 01:21.410
+cluster is doing.
+
+01:21.440 --> 01:26.600
+The config files can tell another engineer who starts to look at your code about the different deployments,
+
+01:26.600 --> 01:28.850
+services and pods that you have created.
+
+01:28.850 --> 01:31.040
+And it's really the best documentation.
+
+01:31.040 --> 01:34.340
+You're going to have to tell other engineers what your cluster is doing.
+
+01:35.520 --> 01:39.060
+With that in mind, it is possible to create these object things.
+
+01:39.060 --> 01:45.120
+So again, an object is deployment pod service without using config files and I highly recommend that
+
+01:45.120 --> 01:46.590
+you do not do this.
+
+01:46.680 --> 01:51.990
+You should not create objects directly at the command line by writing in commands to create an object.
+
+01:52.020 --> 01:57.600
+We're always going to write out these config files because they are going to be, again, a source of
+
+01:57.600 --> 02:02.820
+documentation to tell you in other people in the future exactly what is going on inside your cluster.
+
+02:03.000 --> 02:08.160
+And the reason I say this so prominently is because once you start to read the Kubernetes documentation,
+
+02:08.160 --> 02:13.110
+they're going to tell you to run commands at your terminal to directly create objects without using
+
+02:13.110 --> 02:14.130
+any config file.
+
+02:14.460 --> 02:20.490
+I highly recommend you only follow the Kubernetes documentation for testing purposes and learning purposes.
+
+02:20.490 --> 02:25.860
+Do not create resources or objects directly at the terminal in a production environment.
+
+02:25.920 --> 02:31.530
+There are a couple of exclusions to that rule and we'll talk about what those exclusions are later on.
+
+02:32.630 --> 02:37.040
+The other thing is that blog posts, in addition, will frequently tell you to run commands to create
+
+02:37.040 --> 02:39.350
+objects as opposed to using these config files.
+
+02:39.350 --> 02:43.340
+And if you see a blog post that tells you to do that, just close the blog post because honestly the
+
+02:43.340 --> 02:46.060
+person is probably not giving you the best advice.
+
+02:46.070 --> 02:50.990
+Yeah, you can use the command, but who knows what else in that blog post are cutting corners on as
+
+02:50.990 --> 02:51.370
+well.
+
+02:51.380 --> 02:56.390
+Now I don't really mean to smash on anyone who is going with that approach inside of a blog post, but
+
+02:56.390 --> 02:57.830
+it's just my personal opinion.
+
+02:58.010 --> 03:00.200
+Use a config file at all times.
+
+03:00.770 --> 03:03.380
+So now at this point in time, you're probably saying, okay, like whatever.
+
+03:03.380 --> 03:04.370
+Stephen, get to it.
+
+03:04.370 --> 03:05.780
+What is in a config file?
+
+03:05.810 --> 03:06.680
+All right, I'm with you.
+
+03:06.680 --> 03:07.430
+I understand.
+
+03:07.460 --> 03:11.120
+So one more pause and we're going to write out our first config file in the next video.

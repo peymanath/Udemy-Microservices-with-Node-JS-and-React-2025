@@ -1,0 +1,319 @@
+WEBVTT
+
+00:00.830 --> 00:02.760
+Our payment service is just about complete.
+
+00:02.790 --> 00:07.130
+Last thing we have to do is emit an event saying that, well, we successfully charged an order.
+
+00:07.250 --> 00:10.670
+Now, one thing I want to point out is that we looked at this diagram a little bit ago, and inside
+
+00:10.670 --> 00:16.220
+the payment service, this box right here was meant to reflect a collection of charge objects.
+
+00:16.610 --> 00:20.270
+Just, you know, when I first put this diagram together, I was going to call the payments collection
+
+00:20.270 --> 00:21.020
+charges.
+
+00:21.020 --> 00:25.490
+But then as we started to go through these videos, I realized that calling this collection charges
+
+00:25.490 --> 00:30.020
+and also having Stripe API meant as something called charges was really confusing.
+
+00:30.020 --> 00:34.460
+And that's why I eventually ended up changing the name of the collection itself over to payments that
+
+00:34.460 --> 00:37.190
+kind of reflected the name of the service itself pretty well as well.
+
+00:37.670 --> 00:42.140
+So with that in mind, we should probably change the name of this event down here to something like
+
+00:42.230 --> 00:43.490
+payment created.
+
+00:44.910 --> 00:45.600
+As well.
+
+00:47.580 --> 00:49.590
+So we're going to go back over to our common module.
+
+00:49.590 --> 00:54.120
+We're going to define a new interface for a payment created event.
+
+00:54.600 --> 00:58.800
+We're then going to make sure that after we create a new payment, we just emit or publish this event
+
+00:58.800 --> 01:04.200
+that says, Hey, a payment was just created, and then presumably either our order service or perhaps
+
+01:04.200 --> 01:07.500
+the ticket service, some other service is going to listen for this event.
+
+01:07.500 --> 01:12.480
+And as soon as it sees it, it's going to say, okay, this order or ticket has been paid for time to
+
+01:12.480 --> 01:15.210
+release this ticket to whoever just paid for it.
+
+01:16.330 --> 01:17.320
+So that's pretty much it.
+
+01:18.060 --> 01:23.040
+We'll get started first by going back over to our common module and defining a new event of payment
+
+01:23.040 --> 01:23.790
+created.
+
+01:26.010 --> 01:30.490
+So back inside of our common module, I'll find the QQ directory inside the events folder.
+
+01:30.510 --> 01:35.190
+I'll make a new file of payment created events.
+
+01:40.200 --> 01:42.390
+Also open up my subject's file.
+
+01:43.110 --> 01:46.680
+I'll make sure that we add in a new subject so that we can use that inside this new event.
+
+01:47.250 --> 01:49.440
+So I'm going to add in a new subject of.
+
+01:50.480 --> 01:51.380
+Amy created.
+
+01:52.210 --> 01:52.630
+Payment.
+
+01:52.630 --> 01:53.920
+Colon, read it.
+
+01:55.890 --> 02:01.680
+Then inside of our event file at the top, let's import subjects from subjects.
+
+02:02.820 --> 02:07.590
+And then we will export a interface called payment related event.
+
+02:08.810 --> 02:15.800
+As usual, this thing is going to have a subject property that is subjects not created.
+
+02:19.300 --> 02:20.650
+And then a data property.
+
+02:21.100 --> 02:24.760
+So whenever we create a payment and we tell the rest of the world that a payment was just created,
+
+02:24.760 --> 02:27.640
+well, we're just going to share all the information tied to the payment.
+
+02:27.650 --> 02:33.310
+So we'll share the idea of the payment itself, the ID of the stripe charge and the idea of the order
+
+02:33.310 --> 02:33.970
+as well.
+
+02:34.790 --> 02:39.370
+I can say that this thing is going to have an ID as a string and order ID as a string.
+
+02:40.410 --> 02:42.390
+And a stripe I.D. as a string as well.
+
+02:43.520 --> 02:48.290
+At present, no other part of our application really needs a stripe ID whatsoever because we don't have
+
+02:48.290 --> 02:51.750
+any other part of our app that's actually going to reach out to the Stripe API.
+
+02:51.770 --> 02:56.120
+But once again, kind of thinking towards the future here, maybe we eventually will have some additional
+
+02:56.120 --> 03:00.560
+service that verifies payments or handles returns or who knows what.
+
+03:00.560 --> 03:04.250
+And so there might eventually be another service in the future that needs that stripe ID.
+
+03:04.700 --> 03:08.480
+Either way, it doesn't really cost us a lot to throw that extra property inside of here, so we'll
+
+03:08.480 --> 03:09.290
+just include it.
+
+03:10.890 --> 03:12.840
+So there is our event definition.
+
+03:12.840 --> 03:14.190
+So I'm going to close that file out.
+
+03:14.700 --> 03:20.160
+Don't forget, we do have to export that new event from the Common Module's Index file.
+
+03:20.730 --> 03:28.500
+So inside of indexes at the bottom, we'll add in another export from events payment related event.
+
+03:31.010 --> 03:32.900
+After saving all three those files.
+
+03:32.900 --> 03:35.590
+So index subjects and the new event file.
+
+03:35.600 --> 03:40.160
+Let's go ahead and republish the common module and then update the version of it used in all of our
+
+03:40.160 --> 03:41.810
+different services, or at least for right now.
+
+03:41.810 --> 03:43.070
+How about just payments?
+
+03:45.400 --> 03:46.600
+So back at my terminal.
+
+03:47.650 --> 03:51.280
+I'm going to change into my common module.
+
+03:52.790 --> 03:53.450
+Come on.
+
+03:55.000 --> 03:55.630
+There we go.
+
+03:55.960 --> 03:57.370
+And do an NP run pub.
+
+03:59.940 --> 04:02.160
+It looks like I'm on version 24 by this point.
+
+04:05.750 --> 04:09.890
+So I'll just make sure that gets published and I'll very quickly go around to all my different services
+
+04:09.890 --> 04:11.780
+and just update their versions really quickly.
+
+04:12.810 --> 04:14.760
+I'm going to first start off with the payment service.
+
+04:16.160 --> 04:18.830
+So inside of payments and PM update.
+
+04:22.970 --> 04:23.630
+All right.
+
+04:23.900 --> 04:27.470
+I'm going to copy that update command because I'm going to run it once or twice after this.
+
+04:28.310 --> 04:32.840
+So I'll then go back out and change into orders and run the same command.
+
+04:35.360 --> 04:38.390
+And then finally I'll do it once again just for our tickets service.
+
+04:38.400 --> 04:41.780
+We don't really need to update expiration right now because the expiration service doesn't have anything
+
+04:41.780 --> 04:43.400
+to do with the idea of payments.
+
+04:44.650 --> 04:47.710
+We'll go back out to tickets update.
+
+04:48.520 --> 04:49.690
+And that will be the last one.
+
+04:49.690 --> 04:52.420
+So I just updated payments, orders and tickets.
+
+04:54.500 --> 04:55.160
+All right.
+
+04:57.160 --> 05:00.300
+It's now back inside of our payment service.
+
+05:02.460 --> 05:03.420
+There's payments.
+
+05:04.390 --> 05:06.130
+I'm going to find my events directory.
+
+05:06.280 --> 05:09.520
+Inside of events, I'll make a new folder of publishers.
+
+05:10.360 --> 05:12.790
+And then inside of that, I'll make a new file of.
+
+05:13.740 --> 05:16.670
+He meant created publisher.
+
+05:16.680 --> 05:17.550
+That's.
+
+05:20.340 --> 05:23.850
+I know this video is a little bit long, but our publishers are really easy and straightforward to put
+
+05:23.850 --> 05:24.270
+together.
+
+05:24.270 --> 05:26.850
+So let's just write out the publisher really quickly.
+
+05:27.330 --> 05:35.370
+At the very top, I will import my subjects publisher, base, class and the payment created event.
+
+05:36.730 --> 05:37.900
+For my common module.
+
+05:39.560 --> 05:42.800
+You'll notice I'm getting an error around payment created event as usual.
+
+05:42.860 --> 05:48.140
+I'll have to do is reload this window or restart my editor and TypeScript should realize that we have
+
+05:48.140 --> 05:49.250
+that new type available.
+
+05:49.400 --> 05:49.760
+Yep.
+
+05:49.760 --> 05:50.360
+There we go.
+
+05:52.100 --> 05:56.540
+All right, I'll then export a new class of payment created publisher.
+
+05:58.030 --> 06:01.210
+That's going to extend my publisher base class.
+
+06:01.210 --> 06:06.010
+That is a generic type, so I will stick in the payment related event.
+
+06:07.320 --> 06:14.190
+And then I will list out my subject as subjects payment created and the value as subjects dot payment
+
+06:14.190 --> 06:14.880
+created.
+
+06:14.940 --> 06:15.720
+And there we go.
+
+06:15.720 --> 06:16.680
+There's our publisher.
+
+06:18.550 --> 06:20.050
+Kate, let's take a quick pause right here.
+
+06:20.060 --> 06:21.000
+When we come back, the next video.
+
+06:21.020 --> 06:23.120
+We'll just make sure that right after.
+
+06:23.900 --> 06:26.670
+We create our charge and our payment and save the payment.
+
+06:26.690 --> 06:30.620
+We will then publish a new event to tell the rest of the world that a payment has been created.

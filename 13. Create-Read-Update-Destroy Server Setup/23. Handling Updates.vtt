@@ -1,0 +1,223 @@
+WEBVTT
+
+00:01.690 --> 00:05.800
+Let's put together an initial implementation of our update request handler.
+
+00:06.040 --> 00:09.520
+Inside the Roots Directory, I'll make a new file of update CSS.
+
+00:10.650 --> 00:12.150
+But inside of here, the very top.
+
+00:12.480 --> 00:16.650
+Once again, we'll get express request response.
+
+00:17.580 --> 00:18.750
+From Express.
+
+00:20.600 --> 00:26.090
+I will definitely be needing the body validator from express validator.
+
+00:27.310 --> 00:31.960
+I'm definitely going to need a couple of different middle wears from our common library.
+
+00:33.480 --> 00:33.990
+In total.
+
+00:33.990 --> 00:35.530
+I'm just going to kind of take a guess here.
+
+00:35.550 --> 00:38.040
+I think we probably need to validate the incoming request.
+
+00:38.400 --> 00:41.370
+I think we probably need to handle the case in which a ticket is not found.
+
+00:41.370 --> 00:42.960
+So how about that not found error.
+
+00:43.850 --> 00:47.440
+We probably want to have some kind of authentication restriction around this route.
+
+00:47.450 --> 00:49.160
+HANDLER So let's get required off.
+
+00:50.050 --> 00:53.620
+We want to handle the case in which a user is trying to edit a ticket that they do not own.
+
+00:53.620 --> 00:55.690
+So how about not authorized?
+
+00:57.520 --> 00:58.080
+Air.
+
+00:58.540 --> 01:00.820
+And I think that's probably good for right now.
+
+01:01.820 --> 01:08.120
+And then finally after that, let's get our ticket model from up one directory models ticket.
+
+01:11.710 --> 01:12.550
+Radar router.
+
+01:16.020 --> 01:16.800
+On that router.
+
+01:16.800 --> 01:21.870
+I'm going to associate a put method to API tickets.
+
+01:22.170 --> 01:23.160
+Colon ID.
+
+01:25.590 --> 01:27.510
+I'm going to have an async route handler.
+
+01:29.600 --> 01:32.180
+I'm going to receive a request.
+
+01:34.920 --> 01:36.360
+And response.
+
+01:36.570 --> 01:40.740
+I'm going to leave that thing empty for just a moment and I'll go down and immediately export this thing
+
+01:40.740 --> 01:42.300
+and then wired up to our app.
+
+01:42.510 --> 01:45.000
+So I will export router as.
+
+01:45.420 --> 01:47.670
+How about update ticket?
+
+01:49.370 --> 01:50.060
+Router.
+
+01:51.490 --> 01:51.710
+Okay.
+
+01:51.760 --> 01:52.840
+I'll save this thing.
+
+01:52.990 --> 01:55.570
+Let's go back over to our sports file.
+
+01:58.200 --> 02:01.500
+Inside of here towards the top right after all of our other routers.
+
+02:02.520 --> 02:05.430
+I'll get update ticket router.
+
+02:09.850 --> 02:10.000
+Nope.
+
+02:10.060 --> 02:11.470
+Not index, but update.
+
+02:11.470 --> 02:12.190
+That's better.
+
+02:13.400 --> 02:15.650
+And we can associate that with our app down here.
+
+02:15.650 --> 02:18.530
+So app use update ticket router.
+
+02:20.350 --> 02:20.980
+All right.
+
+02:21.040 --> 02:22.780
+A lot of wire up, but we're done.
+
+02:23.180 --> 02:27.730
+So now let's start to put together some implementation on this thing to at least make those first two
+
+02:27.730 --> 02:28.590
+tests pass.
+
+02:28.600 --> 02:33.430
+So we want to make sure that if we ask for an ID that doesn't exist, let's send back a four or four.
+
+02:34.380 --> 02:38.940
+We also want to make sure that if the user is not authenticated, we sent back a 401.
+
+02:39.330 --> 02:42.260
+Well, the authentication step is definitely pretty straightforward.
+
+02:42.270 --> 02:49.350
+So for that, right before our route handler, we can add in our require auth middleware.
+
+02:49.350 --> 02:50.910
+So I'll do require off.
+
+02:51.780 --> 02:52.530
+Like so.
+
+02:54.410 --> 02:55.690
+And that should definitely work.
+
+02:55.840 --> 03:00.460
+We can definitely save this and test right now, but let's try to implement or put in some implementation
+
+03:00.460 --> 03:06.130
+for that other one where we return a four or four if the provided ID does not exist inside of our tickets
+
+03:06.130 --> 03:06.910
+collection.
+
+03:07.620 --> 03:12.960
+So for that very similar to what we did on the Git method just a little bit ago, let's try to pull
+
+03:12.960 --> 03:17.580
+the ticket that the user is looking for out of our tickets collection using our ticket model.
+
+03:18.180 --> 03:21.780
+So we can do a ticket is a weight.
+
+03:23.730 --> 03:25.830
+Tickets filed by ID.
+
+03:27.280 --> 03:29.830
+Alpecin req params id.
+
+03:31.020 --> 03:33.450
+Then if there is not a ticket.
+
+03:34.820 --> 03:38.090
+Let's throw a new not found air.
+
+03:40.770 --> 03:45.360
+And then finally, just to make sure that all those other tests do not stall and have to time out,
+
+03:45.360 --> 03:49.980
+remember, that's a 5/2 waiting period by default with just let's just send back some response right
+
+03:49.980 --> 03:50.370
+here.
+
+03:50.370 --> 03:55.260
+So even if we don't actually do the update, at least all those tests will immediately resolve.
+
+03:55.680 --> 03:57.970
+So I'll do a rest send.
+
+03:57.990 --> 03:59.760
+We'll just send back the entire ticket for now.
+
+04:01.090 --> 04:02.260
+And then going to save this file.
+
+04:02.260 --> 04:04.450
+Let's go back over to our terminal and see how we're doing.
+
+04:05.790 --> 04:07.400
+It looks like those tests are passing.
+
+04:07.430 --> 04:08.060
+Very good.
+
+04:08.360 --> 04:12.320
+So let's take a quick pause right here and we'll continue with the remaining tests.
+
+04:13.630 --> 04:14.650
+In just a moment.

@@ -1,0 +1,220 @@
+WEBVTT
+
+00:01.000 --> 00:05.380
+Now that we've seen a couple of examples of res, I want to walk through some kind of corner cases around
+
+00:05.380 --> 00:05.800
+them.
+
+00:05.800 --> 00:08.950
+So essentially I want to discuss why we care about these arrays.
+
+00:08.950 --> 00:14.230
+Like what so big a deal about arrays in TypeScript that we're making this into a separate topic.
+
+00:14.410 --> 00:15.430
+Well, here's why.
+
+00:15.760 --> 00:20.320
+When we work with the RES in TypeScript, we got a couple of different advantages in a couple of different
+
+00:20.320 --> 00:21.640
+downsides as well.
+
+00:22.030 --> 00:27.670
+So first off, TypeScript can help us when we make a typed array by helping us do type inference whenever
+
+00:27.670 --> 00:30.520
+we are pulling a value out of an array.
+
+00:30.700 --> 00:32.260
+Let's see a quick example of that.
+
+00:32.860 --> 00:34.450
+So back over inside my code editor.
+
+00:34.450 --> 00:38.980
+I'm going to put a little comment down right here and I'll say help with inference.
+
+00:40.290 --> 00:43.290
+When extracting values.
+
+00:43.440 --> 00:48.720
+So in other words, if we look at our carmakers array right here, we know that it is an array of strings.
+
+00:49.020 --> 00:51.600
+TypeScript knows that as well through type inference.
+
+00:52.140 --> 00:57.210
+So that means that if we ever pull an element out of this array, either by using, say, the pop method
+
+00:57.210 --> 01:03.810
+or by direct index access, TypeScript will know that we are going to be pulling out a string and help
+
+01:03.810 --> 01:08.070
+us with type inference with the new variable that we're assigning this this value to.
+
+01:08.250 --> 01:10.200
+So let's look take a look at an example of that.
+
+01:10.200 --> 01:14.040
+Let's say that I'm making a new variable right here and I'm going to call it something like car.
+
+01:15.300 --> 01:21.990
+If I then take car makers and do an index access to it, I can now hover over car and you'll see that
+
+01:21.990 --> 01:26.250
+type inference has come into play and TypeScript knows that this variable is going to be a string.
+
+01:26.640 --> 01:31.980
+It knows this because it knows that car makers is an array of strings and we just pulled one value out
+
+01:31.980 --> 01:32.490
+of it.
+
+01:33.830 --> 01:36.560
+Likewise, this also works if we try a pop method.
+
+01:36.560 --> 01:38.600
+So let's say we've got my car.
+
+01:39.040 --> 01:43.940
+We do like carmakers pop like so to remove the last element in the array.
+
+01:44.270 --> 01:47.930
+Once again, TypeScript knows that carmakers has an array of strings.
+
+01:47.930 --> 01:53.690
+So when we call pop, it's going to return an instance of a string so we can once again hover over my
+
+01:53.690 --> 01:54.410
+car and we see.
+
+01:54.410 --> 01:58.100
+Yup, TypeScript has correctly inferred that my car is going to be a string.
+
+01:59.900 --> 02:00.080
+All right.
+
+02:00.080 --> 02:02.900
+So that's one benefit of making use of arrays in TypeScript.
+
+02:03.440 --> 02:09.440
+Secondly, TypeScript can help us prevent or help prevent us from adding in incompatible values into
+
+02:09.440 --> 02:11.600
+an array if we have correctly type the array.
+
+02:11.930 --> 02:18.110
+So for example, back over here once again, we can say prevent incompatible.
+
+02:19.730 --> 02:20.540
+Values.
+
+02:20.690 --> 02:26.240
+So once again, if we take our carmakers array right here, that only contains strings and we try to
+
+02:26.240 --> 02:31.040
+add in some element that is not a string like, let's say a number, we'll very quickly see an error
+
+02:31.040 --> 02:36.020
+message type script is telling us here, hey, you're trying to put in a number to a collection that
+
+02:36.020 --> 02:37.880
+is only supposed to contain strings.
+
+02:38.300 --> 02:42.140
+So that's going to help us from putting in dissimilar elements into one single array.
+
+02:42.900 --> 02:47.670
+And once again, if we want to have multiple different types in an array, we definitely can do that.
+
+02:47.670 --> 02:50.080
+But we have to use some special syntax to do so.
+
+02:50.100 --> 02:52.410
+We'll take a look at an example of that in just a moment.
+
+02:53.720 --> 02:54.590
+All right, third.
+
+02:54.740 --> 03:00.830
+Any time we declare an array, we get a lot of help with built in functions like map for each reduce
+
+03:00.830 --> 03:04.610
+and so on whenever we are iterating over a collection of elements.
+
+03:05.090 --> 03:07.910
+So for example, if we flip back over once again.
+
+03:09.630 --> 03:11.880
+We get help with map or for each and reduce.
+
+03:11.880 --> 03:19.080
+So for example, if we do car maker's map, we can add in a function right here that will be called
+
+03:19.080 --> 03:20.760
+with every element in the array.
+
+03:21.120 --> 03:27.690
+So I'm going to receive each car as a string and from this I'm going to return, say a string as well.
+
+03:27.690 --> 03:29.670
+We'll just do a straight pass through here.
+
+03:30.120 --> 03:33.480
+So I'll take the car and return it immediately.
+
+03:34.240 --> 03:39.010
+So TypeScript is going to make sure that the value that we are putting into this function right here
+
+03:39.010 --> 03:40.390
+will be a string.
+
+03:41.450 --> 03:45.950
+And so because of that, because TypeScript knows that car is going to be a string, we get access to
+
+03:45.950 --> 03:49.410
+a lot of different autocomplete on the variable that comes in here.
+
+03:49.430 --> 03:54.440
+So for example, if I put in a dot right after car, I can then see the autocomplete appear with all
+
+03:54.440 --> 03:56.300
+the different methods that belong to strings.
+
+03:56.300 --> 03:59.150
+So for example, I can do a to upper.
+
+03:59.920 --> 04:01.230
+Case like so.
+
+04:02.610 --> 04:07.530
+So any time we start working with MAP for each reduce or any similar helpers, TypeScript is going to
+
+04:07.530 --> 04:12.420
+give us autocomplete on the variable being passed into this function right here, which is a nice little
+
+04:12.420 --> 04:13.110
+benefit.
+
+04:14.360 --> 04:14.720
+All right.
+
+04:14.720 --> 04:19.490
+Now, the last item we're going to talk about right here is that we can, in fact, put different types
+
+04:19.490 --> 04:20.870
+of elements inside of an array.
+
+04:21.710 --> 04:24.980
+Let's take a quick pause, though, because there's a couple of different corner cases around this and
+
+04:24.980 --> 04:26.990
+some interesting syntax we need to understand.
+
+04:26.990 --> 04:27.860
+At the same time.
+
+04:27.860 --> 04:30.230
+It's a quick pause and we'll see you in just a minute.

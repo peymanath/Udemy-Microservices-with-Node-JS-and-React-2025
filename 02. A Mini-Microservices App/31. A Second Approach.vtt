@@ -1,0 +1,256 @@
+WEBVTT
+
+00:00.700 --> 00:05.080
+We're now going to take a look at a second option for adding in this moderation service and adding in
+
+00:05.080 --> 00:06.450
+some events to support it.
+
+00:06.460 --> 00:08.110
+So here's option number two.
+
+00:08.350 --> 00:12.980
+Option number two is going to be very similar to option number one with very one very small difference.
+
+00:13.000 --> 00:17.110
+As a matter of fact, option number two is probably what you thought option number one was going to
+
+00:17.110 --> 00:17.500
+be.
+
+00:18.130 --> 00:19.450
+Okay, so let's walk through it.
+
+00:19.600 --> 00:22.450
+We're still going to have a user submit a comment to the current service.
+
+00:22.450 --> 00:27.250
+We are still going to have the comment service emit an event of something like comment created.
+
+00:28.000 --> 00:31.930
+The event plus is still going to send that event off to the moderation service.
+
+00:31.930 --> 00:37.270
+But now we're going to also have it go off to the query service and actually be processed by the query
+
+00:37.270 --> 00:38.050
+service.
+
+00:38.050 --> 00:43.450
+So this is similar to what is going on inside of our application right now without adding in this moderation
+
+00:43.450 --> 00:44.050
+feature.
+
+00:44.830 --> 00:49.780
+As soon as the query service CS come and created, we're going to have the query service persist some
+
+00:49.780 --> 00:54.400
+information about that comment and critically it's also going to have a default status of something
+
+00:54.400 --> 00:55.210
+like pending.
+
+00:57.350 --> 01:03.050
+The query service is going to instantly know about this comment, even if it takes some amount of time
+
+01:03.050 --> 01:06.950
+for the moderation service to process and actually moderate the given comment.
+
+01:08.700 --> 01:12.690
+So now we can imagine that if a user goes over to our application and they enter in a comment right
+
+01:12.690 --> 01:18.630
+here and hit submit, we're going to instantly emit comment created and that event will instantly go
+
+01:18.630 --> 01:22.800
+over to the query service and the query service will have this record of the comment.
+
+01:22.800 --> 01:27.240
+So as soon as the user refreshes the page in theory, they will see that comment appear right away.
+
+01:27.240 --> 01:32.340
+And because we know its status is pending, we can show a nice little kind of picture of that thing,
+
+01:32.340 --> 01:36.450
+something like this right here, or a nice little something note that says this comment is awaiting
+
+01:36.450 --> 01:37.260
+moderation.
+
+01:38.260 --> 01:41.440
+Now, of course, we still want to go ahead and moderate this comment.
+
+01:41.680 --> 01:45.370
+So the comment created is still going to go to moderation service.
+
+01:45.520 --> 01:50.200
+And at some point in time in the future, maybe seconds, months, who knows what?
+
+01:50.200 --> 01:54.760
+It will still continue to even emit an event of something like comment moderated.
+
+01:56.110 --> 01:57.850
+This will go over to the query service.
+
+01:58.180 --> 02:03.910
+The query service will see it and update the status of that given comment to, approved or rejected
+
+02:03.910 --> 02:05.200
+or whatever it needs to be.
+
+02:06.170 --> 02:07.430
+So that's option number two.
+
+02:07.880 --> 02:12.230
+This definitely solves the issue of a user submitting a comment and not immediately seeing it up here
+
+02:12.230 --> 02:13.120
+on the screen.
+
+02:13.130 --> 02:18.440
+But it does also kind of persist an issue that we did not discuss about option number one.
+
+02:18.440 --> 02:22.070
+It's an issue that's present in option number one and option number two as well.
+
+02:22.160 --> 02:26.210
+So let me tell you about what the issue is that is common with one and two.
+
+02:27.300 --> 02:31.230
+I want you to really think about the query service right now and what its job is.
+
+02:31.260 --> 02:34.680
+That query service is all about presentation logic.
+
+02:34.950 --> 02:37.250
+As a matter of fact, its name is query service.
+
+02:37.260 --> 02:42.960
+It's about making a query or storing some data and serving that data up very quickly to users.
+
+02:43.470 --> 02:48.420
+So right now, it's really joining just two resources, just the post and comments.
+
+02:48.420 --> 02:52.770
+But at some point in time, the future, we could totally imagine that there might be other resources
+
+02:52.770 --> 02:59.400
+that it joins together as well, such as maybe upvotes, downvotes, images, who knows what else.
+
+02:59.400 --> 03:03.450
+This query service might take many different resources and jam them all together.
+
+03:04.620 --> 03:07.110
+And that's what this query service is really all about.
+
+03:07.500 --> 03:08.880
+So quick question for you.
+
+03:09.360 --> 03:16.380
+Does it make sense for this presentation service to understand how to process this very precise update
+
+03:16.380 --> 03:19.440
+to a comment like a common moderated event?
+
+03:19.470 --> 03:24.210
+Does it make sense for the query service to understand how to process an event like this?
+
+03:24.840 --> 03:30.660
+Well, right now it's kind of easy to say yes, because the comment moderated event really just means
+
+03:30.690 --> 03:35.460
+go and find this comment and update its status to approved or rejected or whatever else.
+
+03:35.610 --> 03:40.590
+So processing this event very simple and straightforward in nature, it's one line of code, more or
+
+03:40.590 --> 03:41.160
+less.
+
+03:41.700 --> 03:45.240
+What I want you to think about a real world commenting system.
+
+03:45.660 --> 03:50.820
+Think about all of the different ways in which a real world commenting system or a real world comment
+
+03:50.820 --> 03:52.470
+might be able to be updated.
+
+03:53.340 --> 03:58.470
+A real world comment, you might be able to moderate it, you might be able to upload it to downvote
+
+03:58.470 --> 04:00.570
+it, you might be able to promote it.
+
+04:00.570 --> 04:05.550
+So maybe a moderator or someone in charge of a website can say, this is a really high quality comment.
+
+04:05.550 --> 04:08.160
+I want to boost it up towards the top of all the comments.
+
+04:08.790 --> 04:11.010
+You might be able to make a comment anonymous.
+
+04:11.010 --> 04:12.920
+You might be able to flag it as searchable.
+
+04:12.930 --> 04:17.970
+You might be able to market as an advertised comment, like a comment that someone paid money to promote
+
+04:17.970 --> 04:18.750
+in some way.
+
+04:19.590 --> 04:25.260
+Each of these different precise updates to a comment has some very precise business logic associated
+
+04:25.260 --> 04:28.080
+with it to update the definition of that comment.
+
+04:29.700 --> 04:33.000
+So if we continue down this line of saying that our.
+
+04:33.790 --> 04:38.630
+Where his service is going to be able to process this comment moderated event.
+
+04:38.650 --> 04:42.970
+We're essentially saying that somewhere down the line we might end up in a scenario like this one right
+
+04:42.970 --> 04:49.360
+here where the query service needs to understand how to handle this multitude of different possible
+
+04:49.360 --> 04:51.370
+updates that can be made to a comment.
+
+04:52.460 --> 04:57.710
+And you can easily imagine that if there were other services like our query service, maybe something
+
+04:57.710 --> 05:03.260
+to process weekly updates for popular blog posts, or maybe something that functions as a recommendation
+
+05:03.260 --> 05:03.950
+service.
+
+05:03.950 --> 05:08.450
+And if those had to store the idea of what a comment is as well, in theory, they might also have to
+
+05:08.450 --> 05:09.560
+handle these events.
+
+05:09.920 --> 05:15.620
+And so we start to get into this scenario where every possible way of changing a comment has to be handled
+
+05:15.620 --> 05:18.320
+by a ton of different services.
+
+05:18.440 --> 05:22.250
+And as you can imagine, yeah, this is not even remotely what we want.
+
+05:22.730 --> 05:29.090
+So even though this all works and this is a more or less viable approach for our current application
+
+05:29.090 --> 05:32.450
+as it stands right now, I'm going to suggest that maybe it's not the best solution.
+
+05:32.750 --> 05:36.860
+So we're going to take one more pause, come back to the next video and discuss option number three.

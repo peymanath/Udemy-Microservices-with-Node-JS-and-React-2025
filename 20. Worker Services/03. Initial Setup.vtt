@@ -1,0 +1,322 @@
+WEBVTT
+
+00:00.910 --> 00:05.140
+In this video, we're going to do a little bit of basic setup of the expiration service.
+
+00:05.140 --> 00:09.310
+So we're going to create a new sub project directory, install some dependencies, all that kind of
+
+00:09.310 --> 00:10.270
+low level stuff.
+
+00:10.270 --> 00:11.500
+Let's get to it right away.
+
+00:12.380 --> 00:16.520
+Back inside of my editor, I'm going to create a new directory called Expiration.
+
+00:17.500 --> 00:17.710
+Now.
+
+00:17.710 --> 00:23.860
+I would love to add in a ton of stuff for this base project from scratch, but just to save time in
+
+00:23.860 --> 00:28.240
+the context of this course, we're going to instead copy over a couple of different files from our ticket
+
+00:28.240 --> 00:30.220
+service just to save some time.
+
+00:30.940 --> 00:37.150
+So inside of my tickets directory I'm going to do a multi select of Docker, ignore the Docker file
+
+00:37.360 --> 00:40.840
+package JSON and the config JSON file as well.
+
+00:41.590 --> 00:44.800
+Once I've got all four files, I'm then going to copy all of them.
+
+00:46.770 --> 00:50.250
+And then paste them into the expiration directory that we just created.
+
+00:52.360 --> 00:53.740
+Inside of exploration.
+
+00:53.740 --> 00:57.040
+I'm also going to create a Z directory.
+
+00:58.240 --> 01:04.220
+And we'll copy over one or two things from the Z folder inside of tickets inside of the ticket service.
+
+01:04.240 --> 01:10.870
+I'll find the SSC directory and once again we will do a multi select this time of Nats wrapper index,
+
+01:10.870 --> 01:13.330
+RTS and the MOX directory.
+
+01:13.510 --> 01:14.980
+So three things in total.
+
+01:15.800 --> 01:17.480
+I'm going to copy those three things.
+
+01:18.470 --> 01:22.910
+And then paste them into the Exploration Service's CRC directory that we just created.
+
+01:24.390 --> 01:27.770
+So at this point you should have an identical directory structure.
+
+01:27.780 --> 01:28.570
+Please double check.
+
+01:28.590 --> 01:32.670
+Just make sure you've got everything identical to what I show inside the expiration service.
+
+01:34.040 --> 01:34.200
+Okay.
+
+01:34.310 --> 01:38.390
+Once you've got that all set up, we're then going to go through a couple of these different files and
+
+01:38.390 --> 01:43.130
+just clean them up, get them ready for the expiration service instead of the very particular setup
+
+01:43.130 --> 01:44.750
+they have for the ticket service.
+
+01:45.470 --> 01:47.690
+Well, first begin with the package JSON file.
+
+01:48.230 --> 01:52.610
+So we're going to go through here and remove a couple of different dependencies and add one or two as
+
+01:52.610 --> 01:53.060
+well.
+
+01:55.130 --> 01:58.400
+Inside of the package JSON file inside the expiration service.
+
+01:58.580 --> 02:01.520
+We'll update the name right here to expiration.
+
+02:01.520 --> 02:04.400
+Not actually required, but might as well do it while we're here.
+
+02:05.740 --> 02:08.110
+Well, then go and take a look at our dependency list.
+
+02:08.930 --> 02:14.720
+We've got a lot of dependencies inside of here related to handling network requests or HTTP requests,
+
+02:14.810 --> 02:20.220
+specifically everything around express tokens and sessions, cookies, all that stuff.
+
+02:20.240 --> 02:24.920
+We do not need any of that stuff for the expiration service, so we're going to remove a lot of these
+
+02:24.920 --> 02:26.000
+different dependencies.
+
+02:26.450 --> 02:30.260
+I'm going to highlight everything from type's cookie session right here.
+
+02:31.380 --> 02:33.280
+All the way down to Mongoose.
+
+02:33.300 --> 02:34.560
+Update if current.
+
+02:35.690 --> 02:38.120
+And I'm going to delete all those dependencies.
+
+02:39.020 --> 02:42.200
+So now we are left with just for just the four you see right here.
+
+02:44.500 --> 02:49.480
+Next up inside the dev dependency section, I'm going to delete types super test.
+
+02:50.720 --> 02:55.940
+I will delete MongoDB memory server and I will delete super test as well.
+
+02:56.860 --> 02:58.620
+So we're left with just these three.
+
+02:58.630 --> 02:59.530
+Nothing else.
+
+03:01.720 --> 03:02.080
+Okay.
+
+03:02.110 --> 03:02.800
+Looks good.
+
+03:03.420 --> 03:04.680
+I'm going to save this file.
+
+03:04.710 --> 03:09.090
+We'll then go back over to our terminal and we're going to install these dependencies and add in one
+
+03:09.090 --> 03:10.170
+or two others.
+
+03:11.330 --> 03:16.460
+So back at my terminal, I've already changed into my new expiration directory to make sure you change
+
+03:16.460 --> 03:17.930
+into expiration as well.
+
+03:18.890 --> 03:23.120
+Then once inside there, we're going to install two packages.
+
+03:23.810 --> 03:24.740
+One is both.
+
+03:24.740 --> 03:27.920
+So that is the job processing manager that we're going to use.
+
+03:29.720 --> 03:33.050
+We're also going to get the type definition file for ball as well.
+
+03:33.050 --> 03:34.990
+So that's at types ball.
+
+03:37.140 --> 03:38.040
+I'm going to run that.
+
+03:39.300 --> 03:43.860
+And when we run an install for these two packages, those are the only packages that get installed.
+
+03:43.890 --> 03:48.570
+We then have to run a normal NPM install to make sure that everything else we list inside of our package
+
+03:48.570 --> 03:50.670
+JSON file gets added in as well.
+
+03:51.300 --> 03:55.380
+So after that first command completes, I'll then do a normal NPM install.
+
+03:57.790 --> 03:58.090
+All right.
+
+03:58.090 --> 03:59.200
+That's going to take a moment or two.
+
+03:59.230 --> 04:00.460
+So I'll just let it do its thing.
+
+04:00.460 --> 04:04.330
+And I'm going to flip back over where we will keep doing just a little bit of additional setup.
+
+04:07.450 --> 04:11.410
+So next thing we're going to do is take a look at our indexed file and we're going to clean up a lot
+
+04:11.410 --> 04:14.830
+of stuff inside of here that is not going to be used inside of our exploration service.
+
+04:15.760 --> 04:20.560
+So inside of index keys, again, inside the expiration service, I'm going to delete the import for
+
+04:20.560 --> 04:21.250
+Mongoose.
+
+04:21.760 --> 04:23.500
+I'll delete the import for app.
+
+04:24.730 --> 04:27.400
+I'll delete the two imports for these two listeners.
+
+04:32.340 --> 04:37.830
+Well, then start to clean up these 2/1 environment variable checks so we don't need a JSON web token
+
+04:37.830 --> 04:41.880
+key or a mongo URI, but we will leave around the next three.
+
+04:43.520 --> 04:44.890
+Then going down a little bit.
+
+04:44.900 --> 04:51.650
+We still need all this stuff around Nats wrapper, the Nats wrapper, client clothes and the processed
+
+04:51.650 --> 04:52.940
+stuff right there as well.
+
+04:54.150 --> 04:58.140
+But then after that, we're going to delete the two listeners.
+
+04:59.990 --> 05:04.730
+We'll delete the Mongoose Kinect statement and the console log that says Connected to MongoDB.
+
+05:06.200 --> 05:08.150
+And then finally, we will delete the app.
+
+05:08.150 --> 05:08.540
+Listen.
+
+05:08.540 --> 05:09.800
+Call at the very bottom.
+
+05:12.020 --> 05:12.950
+And that's it.
+
+05:16.240 --> 05:18.070
+So I'll save this file and close it.
+
+05:19.470 --> 05:21.540
+Two other files I want to check really quickly.
+
+05:21.540 --> 05:23.160
+So if we take a look at Nat's wrapper.
+
+05:23.580 --> 05:26.480
+All right, we just have some stuff inside of here around that mock.
+
+05:26.490 --> 05:28.230
+Nothing we really need to fix up right now.
+
+05:28.930 --> 05:34.210
+And then inside the nats wrapper file, we do have an import for node net streaming.
+
+05:34.210 --> 05:35.020
+That's fine.
+
+05:35.140 --> 05:37.300
+We are seeing a couple of errors here around TypeScript.
+
+05:37.300 --> 05:39.800
+You may or may not see these errors at all.
+
+05:39.820 --> 05:41.800
+If you do see these errors like I do.
+
+05:41.830 --> 05:45.160
+The way to fix them is once again command shift p on your keyboard.
+
+05:46.190 --> 05:48.680
+And search for reload window.
+
+05:49.850 --> 05:51.800
+Alternatively, you can just restart your editor.
+
+05:54.000 --> 05:54.300
+All right.
+
+05:54.300 --> 05:56.040
+That looks a lot better for me.
+
+05:56.760 --> 05:58.810
+So that's pretty much it with some initial setup.
+
+05:58.830 --> 06:00.060
+We're going to take a pause right here.
+
+06:00.060 --> 06:04.680
+When we come back, the next video, we're going to build an initial Docker image for this exploration
+
+06:04.680 --> 06:05.310
+service.
+
+06:05.310 --> 06:10.080
+We'll then create a couple of different Kubernetes config files to create a new deployment for our exploration
+
+06:10.080 --> 06:13.020
+service and also create that Redis instance as well.

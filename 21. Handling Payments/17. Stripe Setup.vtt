@@ -1,0 +1,208 @@
+WEBVTT
+
+00:00.990 --> 00:05.040
+We've now got some code in place to make sure that we should accept the payment that the user is trying
+
+00:05.040 --> 00:06.020
+to provide to us.
+
+00:06.030 --> 00:07.950
+So we've done all these validation steps.
+
+00:07.950 --> 00:13.020
+So now down here we're going to try to take the token that was provided inside this initial request,
+
+00:13.020 --> 00:16.650
+reach out to the Stripe API and actually charge the user's credit card.
+
+00:16.860 --> 00:20.400
+Let's first take a look at a diagram just to help you understand exactly what's going to go on with
+
+00:20.400 --> 00:21.000
+this step.
+
+00:22.110 --> 00:22.530
+All right.
+
+00:22.530 --> 00:23.130
+Here we go.
+
+00:23.830 --> 00:25.390
+We've got our payment service.
+
+00:25.420 --> 00:30.400
+Our ultimate goal is to reach out to the Stripe API and charge the users credit card for some amount.
+
+00:30.550 --> 00:35.470
+At this point inside of our payment service, inside that route handler, we just have a token, which
+
+00:35.470 --> 00:41.200
+is an authorization to charge the user for some amount of money in order to actually charge the user's
+
+00:41.200 --> 00:41.910
+credit card.
+
+00:41.920 --> 00:45.940
+We're going to install the Node.js Stripe SDK.
+
+00:45.940 --> 00:50.710
+So this is essentially an NPM module that has a little bit of code inside of it to allow us to very
+
+00:50.710 --> 00:52.780
+easily communicate with the Stripe API.
+
+00:53.440 --> 00:57.670
+We're going to use this module and we're going to call a method inside there to charge the user's credit
+
+00:57.670 --> 00:58.180
+card.
+
+00:58.270 --> 01:02.890
+When we do so, we're going to provide the token that was included inside the request to our request
+
+01:02.890 --> 01:03.460
+handler.
+
+01:03.460 --> 01:09.340
+And we're also going to include an API key that is going to identify our application to the Stripe API.
+
+01:10.620 --> 01:13.280
+So to move forward, we have to do two different things.
+
+01:13.290 --> 01:17.640
+We have to install the Stripe SDK into our payments project.
+
+01:17.850 --> 01:21.750
+We also have to sign up for a Stripe account and get an API key.
+
+01:22.020 --> 01:24.720
+So we're going to go through both those steps inside this video.
+
+01:25.110 --> 01:29.370
+Let's first install the Stripe SDK back at my terminal.
+
+01:29.910 --> 01:34.890
+I'm going to change into my payments directory and then do an NPM install stripe.
+
+01:35.430 --> 01:36.480
+That's pretty much it.
+
+01:37.330 --> 01:38.530
+So I'm going to run this command.
+
+01:38.530 --> 01:41.140
+Very small module should install rather quickly.
+
+01:42.020 --> 01:42.190
+Okay.
+
+01:42.350 --> 01:43.370
+That was easy enough.
+
+01:43.910 --> 01:49.400
+Next up, we're going to go to the stripe website, sign up for an account and get an API key.
+
+01:50.320 --> 01:54.520
+So to do so inside of a new browser tab, I'm going to navigate to Stripe.
+
+01:57.630 --> 02:04.080
+Now just, you know, the strip landing page and the documentation changes its look and theme rather
+
+02:04.080 --> 02:04.860
+frequently.
+
+02:04.860 --> 02:09.180
+So if you come to this page and it looks different than what I see, that is totally okay.
+
+02:09.390 --> 02:12.590
+The Stripe API itself rarely changes.
+
+02:12.600 --> 02:17.550
+It's actually pretty famous for being a rather stable API, so even if some stuff on this page looks
+
+02:17.550 --> 02:21.960
+a little bit different, it's probably going to be totally just fine because the API itself is pretty
+
+02:21.960 --> 02:22.980
+darn stable.
+
+02:23.890 --> 02:26.380
+So once a year, we're going to try to create a new account.
+
+02:26.620 --> 02:30.700
+You can either click on sign in on the top right, or just click the green start now button.
+
+02:32.240 --> 02:34.280
+Well, then sign up for a new account.
+
+02:35.190 --> 02:37.200
+So I'm going to create a new account myself as well.
+
+02:43.580 --> 02:45.470
+And it does not like my password.
+
+02:45.860 --> 02:46.370
+There we go.
+
+02:46.400 --> 02:47.090
+Good enough.
+
+02:53.750 --> 02:54.260
+All right.
+
+02:54.260 --> 02:55.040
+There we go.
+
+02:56.640 --> 02:58.560
+Really demanding on that password.
+
+03:00.260 --> 03:05.180
+So once we sign in for the very first time, we'll come to a landing screen that looks like this.
+
+03:05.420 --> 03:09.080
+The only thing we really want to do right now is try to find our API key.
+
+03:09.820 --> 03:14.200
+The other thing we're going to have to do just, you know, we have to verify our email address.
+
+03:14.200 --> 03:16.090
+So you will want to open up your email.
+
+03:16.120 --> 03:18.100
+You will get an email from Stripe.
+
+03:18.100 --> 03:21.160
+It's probably going to look a little something like this right here.
+
+03:21.160 --> 03:22.990
+So it says, just click this link.
+
+03:22.990 --> 03:24.730
+Just make sure you do exactly what it says.
+
+03:24.730 --> 03:26.890
+Just click on Verify Email address.
+
+03:27.980 --> 03:33.680
+So once we have verified our account, we're then going to either click on Get Test API keys right here.
+
+03:33.710 --> 03:39.530
+If you do not see that link on the main page, you can also find developers on the left tab, click
+
+03:39.530 --> 03:42.020
+on developers and then click on API keys.
+
+03:42.530 --> 03:47.270
+Either way, you will come to a page that looks like this and you're going to see a publishable key
+
+03:47.270 --> 03:48.800
+and a secret key.
+
+03:49.880 --> 03:51.980
+So we're going to leave this page open for just a moment.
+
+03:52.010 --> 03:53.450
+We're going to take a pause right now.
+
+03:53.450 --> 03:58.580
+And when we come back, the next video, we're going to set up the Stripe SDK inside of our project.

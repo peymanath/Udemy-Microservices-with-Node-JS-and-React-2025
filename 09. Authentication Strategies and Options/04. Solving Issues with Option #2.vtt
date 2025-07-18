@@ -1,0 +1,412 @@
+WEBVTT
+
+00:01.680 --> 00:05.280
+As I mentioned just a moment ago, we are going with fundamental option number two in this video.
+
+00:05.280 --> 00:09.150
+I'm going to tell you one way in which we could get around this really big security issue.
+
+00:09.180 --> 00:10.560
+This video is optional.
+
+00:10.560 --> 00:13.080
+So if you do not want to hear this explanation, no problem.
+
+00:13.080 --> 00:14.580
+Just move on to the next video.
+
+00:14.610 --> 00:16.890
+Otherwise, stick around and let's get to it.
+
+00:16.980 --> 00:20.880
+Now, I want you to understand right away that we are not going to implement the strategy that I'm going
+
+00:20.880 --> 00:21.510
+to suggest here.
+
+00:21.510 --> 00:26.760
+And the reason for that is that it is a tremendous amount of extra work, and we already have a lot
+
+00:26.790 --> 00:28.660
+on our plate as it stands right now.
+
+00:28.680 --> 00:33.990
+So what I'm going to show you is a very viable strategy, without a doubt, but we are not going to
+
+00:33.990 --> 00:36.030
+go through it just for the sake of time.
+
+00:36.070 --> 00:36.480
+Okay.
+
+00:36.480 --> 00:37.830
+So here's the general idea.
+
+00:38.430 --> 00:40.530
+We're still going to have user ABC.
+
+00:41.660 --> 00:45.980
+I tend to sign in or something like that with some centralized authentication service.
+
+00:45.990 --> 00:49.530
+We're going to do the check on email password and they eventually hand back a token.
+
+00:49.530 --> 00:51.630
+But here is the big change.
+
+00:51.630 --> 00:52.590
+Here is the key.
+
+00:52.980 --> 00:58.320
+When we send back that JSON web token or that cookie or whatever it is, we're going to somehow make
+
+00:58.320 --> 01:02.850
+sure that that thing is only viable for the next 15 minutes.
+
+01:03.150 --> 01:04.200
+How would we do that?
+
+01:04.200 --> 01:09.870
+Well, there are mechanisms around JSON Web tokens in particular for making sure that it's really clear
+
+01:10.020 --> 01:14.430
+that this token is only viable for some set period of time.
+
+01:14.880 --> 01:20.250
+So we can actually have some authentication mechanism that is going to expire after 15 minutes.
+
+01:20.760 --> 01:23.880
+That 15 minutes that I'm listing right here is totally arbitrary.
+
+01:23.910 --> 01:25.260
+It could be 15 seconds.
+
+01:25.260 --> 01:26.700
+It could be 15 days.
+
+01:26.700 --> 01:30.570
+For this example, I'm just going to say that we're going to have some mechanism for authentication
+
+01:30.570 --> 01:33.000
+that only works for 15 minutes.
+
+01:34.510 --> 01:39.580
+So with that in mind, let's now imagine what would happen if user ABC attempted to make a request to
+
+01:39.580 --> 01:41.770
+purchase some ticket through our order service.
+
+01:42.220 --> 01:43.930
+So again, here's user ABC.
+
+01:44.110 --> 01:45.970
+They're going to make a request to purchase a ticket.
+
+01:47.410 --> 01:52.310
+And they are going to supply a JSON Web token cookie, whatever that is, 30 minutes old.
+
+01:52.390 --> 01:56.230
+So in this scenario, we're going to say that they have some expired mechanism.
+
+01:56.800 --> 02:00.520
+So when they make this request, we're then going to ask if this person is logged in.
+
+02:01.260 --> 02:03.030
+Because we are following option number two.
+
+02:03.060 --> 02:08.130
+We are going to rely upon our order service to take a look at that JSON Web token and decide if the
+
+02:08.130 --> 02:09.330
+user is authenticated.
+
+02:11.160 --> 02:16.740
+So we're going to run some logic to look at that token and critically inside this logic where you're
+
+02:16.740 --> 02:18.570
+going to add something to say.
+
+02:18.570 --> 02:24.780
+If that JSON web token is older than 30 minutes, then this person is not authenticated.
+
+02:25.630 --> 02:27.190
+If they have an expired token.
+
+02:27.190 --> 02:30.070
+There are two ways that we can deal with it very easily.
+
+02:30.310 --> 02:35.290
+We can either have our order service or this logic running inside of here attempt to reach out to the
+
+02:35.290 --> 02:39.580
+authentication service and get a new refreshed token.
+
+02:40.410 --> 02:44.550
+So we could reach out directly with a synchronous request to the authentication service, get a refresh
+
+02:44.550 --> 02:51.450
+token, and then when we respond to the overall request, we could include the new refresh token and
+
+02:51.450 --> 02:53.100
+send it back to user ABC.
+
+02:54.130 --> 02:59.350
+That is one possible approach and it would allow us to refresh the token all in one request while still
+
+02:59.350 --> 03:01.000
+achieving the overall goal.
+
+03:01.660 --> 03:06.640
+Now the nice thing about this approach is that it requires us, if this token is expired, to reach
+
+03:06.640 --> 03:08.290
+out to the authentication service.
+
+03:08.590 --> 03:13.690
+And so that would be a time for the authentication service to chime in and say, hey, this person is
+
+03:13.690 --> 03:14.240
+banned.
+
+03:14.260 --> 03:16.720
+Don't allow them access or something like that.
+
+03:17.840 --> 03:21.620
+The other strategy we can take here if we do not want to have the synchronous communication, we could
+
+03:21.620 --> 03:26.420
+say that if the JSON web token is older than 30 minutes, then we are just going to reject the overall
+
+03:26.420 --> 03:27.200
+request.
+
+03:27.290 --> 03:32.600
+So we could return early and send back an error and tell them, Hey, before you make a request to us,
+
+03:32.600 --> 03:34.580
+you need to go and refresh your token.
+
+03:34.850 --> 03:39.740
+And so rather than doing the synchronous request ourselves, we can tell our client that they have to
+
+03:39.740 --> 03:44.110
+go over to the authentication service and refresh that token on their own.
+
+03:44.120 --> 03:45.650
+And then once that was done.
+
+03:46.440 --> 03:52.950
+Once they got the updated token that would now be, say, 10 seconds old.
+
+03:53.650 --> 03:58.690
+Now they can make the follow up request or repeat the same request again to purchase a ticket with the
+
+03:58.690 --> 04:00.370
+brand new refresh token.
+
+04:02.370 --> 04:05.580
+So this definitely solves kind of the issue.
+
+04:06.060 --> 04:11.790
+We still have a window here, a window of 15 minutes where we could potentially ban a user and then
+
+04:11.790 --> 04:15.510
+they could continue making requests in the window of those 15 minutes.
+
+04:15.780 --> 04:20.760
+And so this is where it really starts to get into your personal implementation, into your application,
+
+04:20.760 --> 04:22.860
+and to the requirements of what you are building.
+
+04:23.070 --> 04:26.820
+You might be building an app where that 15 minute window is tolerable.
+
+04:26.940 --> 04:28.630
+You might be able to say, Oh, yeah, 15 minutes.
+
+04:28.650 --> 04:29.290
+No problem.
+
+04:29.310 --> 04:33.180
+You could even take it down to 5 minutes or a minute.
+
+04:33.420 --> 04:37.860
+And there might be some window of time that you would be happy with and saying, Yeah, if a person
+
+04:37.860 --> 04:40.970
+gets banned, they can still make requests in the span of time.
+
+04:40.980 --> 04:41.730
+I don't care.
+
+04:42.480 --> 04:47.610
+But maybe you are working on some even more secure app where you say, no, there cannot be any period
+
+04:47.610 --> 04:53.420
+of time where a user gets banned and then can make follow up requests and still be authenticated.
+
+04:53.430 --> 04:56.760
+If that is the case, don't worry, I still got a solution for you.
+
+04:57.210 --> 05:01.980
+So if you really need to tighten that window and to make sure that as soon as the user gets marked as
+
+05:01.980 --> 05:05.170
+banned, they are effectively banned as quickly as possible.
+
+05:05.190 --> 05:06.300
+Here's what we would do.
+
+05:07.680 --> 05:07.980
+Get.
+
+05:07.980 --> 05:14.490
+So in this approach, we would imagine that a administration user would make a request to ban user ABC.
+
+05:15.120 --> 05:17.400
+So very similar to what we discussed before.
+
+05:17.790 --> 05:23.250
+Inside of our service, we would have some user management logic and we would reach out to our database
+
+05:23.250 --> 05:26.490
+and mark user ABC as not having access anymore.
+
+05:26.490 --> 05:30.270
+So effectively they are banned as far as the authentication service is concerned.
+
+05:30.690 --> 05:35.550
+But we want to reflect this change immediately with all of our services as well, and we would probably
+
+05:35.550 --> 05:41.010
+want to do so using the same communication patterns as we've already seen, in other words, using events
+
+05:41.010 --> 05:42.840
+as opposed to synchronous requests.
+
+05:43.350 --> 05:44.790
+So here's how we would handle that.
+
+05:45.560 --> 05:50.990
+Right after we update the database, we would then also emit a user band event or something very similar
+
+05:50.990 --> 05:51.560
+to it.
+
+05:51.590 --> 05:55.970
+It'd be some kind of event that says, Hey, all services out there, anyone who's listening do not
+
+05:55.970 --> 05:58.160
+allow this user to access the application.
+
+05:58.960 --> 06:00.700
+So we had sent that out to our event bus.
+
+06:00.700 --> 06:05.860
+And that event that might look like this right here would be sent off to all of our different services.
+
+06:07.830 --> 06:12.630
+Then inside each of our services, we could take that information out of that event.
+
+06:12.630 --> 06:18.960
+So something that says do not allow access to user ABC and we could persist it in some very short lived
+
+06:18.960 --> 06:21.960
+cash or some kind of short lived data store.
+
+06:21.990 --> 06:27.660
+Something to say, Hey, here's all the users who should be banned and who we should revoke access to.
+
+06:28.020 --> 06:32.940
+Now, the reason I'm saying short lived in memory cache here is that, remember, we don't really want
+
+06:32.940 --> 06:37.350
+to be storing a list for all eternity of the users who are banned.
+
+06:37.380 --> 06:40.020
+Users might get banned or unbanned all the time.
+
+06:40.020 --> 06:40.830
+Who knows?
+
+06:41.130 --> 06:46.470
+The reason I'm saying short lived right here is that we can just persist this data for 15 minutes,
+
+06:46.470 --> 06:52.290
+the same duration of time as the life cycle or the lifetime of these JSON web tokens.
+
+06:52.680 --> 06:56.370
+Because after 15 minutes, we don't need the store anymore.
+
+06:56.580 --> 07:02.790
+After 15 minutes, our service is going to immediately no or immediately see that incoming JSON web
+
+07:02.790 --> 07:04.020
+tokens are expired.
+
+07:04.020 --> 07:07.590
+And so immediately they will reject the request.
+
+07:07.590 --> 07:13.500
+But within those 15 minutes, we can temporarily store this information that this user should be banned.
+
+07:13.740 --> 07:17.520
+So the reason I'm saying short lived in memory cache here is that we do not need to persist this for
+
+07:17.520 --> 07:18.210
+all time.
+
+07:18.210 --> 07:23.940
+We only need to persist this list of banned users in each individual service for an amount of time equal
+
+07:23.940 --> 07:27.720
+to the lifetime of our authentication mechanism.
+
+07:29.240 --> 07:34.310
+So the upside to this approach is that we can immediately ban a user from all of our different services.
+
+07:34.580 --> 07:39.470
+The downside is that, well, we have to have some implementation in each service for listening to this
+
+07:39.470 --> 07:44.750
+event, storing this list of users, and then comparing whenever we run some authentication logic.
+
+07:45.290 --> 07:49.940
+So once again, not that big a deal to add that code into each service because we could implement that
+
+07:49.940 --> 07:50.990
+in some shared library.
+
+07:50.990 --> 07:54.260
+But again, it is just extra complexity that we need to be aware of.
+
+07:55.050 --> 07:56.120
+All right, so that's it.
+
+07:56.130 --> 08:02.210
+That is how we could still implement option number two and not have any window whatsoever inside there.
+
+08:02.220 --> 08:06.300
+Now, again, we're not going to implement this stuff because really far out there.
+
+08:06.300 --> 08:11.640
+And I would really prefer in this course to show you a lot more actual application level business logic
+
+08:11.640 --> 08:15.060
+kind of stuff, then go over more and more authentication stuff.
+
+08:15.360 --> 08:19.410
+But I did want you to understand that, yes, we can go with option number two and still have a very
+
+08:19.410 --> 08:20.520
+secure approach.
+
+08:20.820 --> 08:20.980
+Okay.
+
+08:21.090 --> 08:25.230
+So now we've gone over this quick pause and we will start to implement option number two in the next
+
+08:25.230 --> 08:25.770
+video.

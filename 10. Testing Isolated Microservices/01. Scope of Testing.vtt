@@ -1,0 +1,223 @@
+WEBVTT
+
+00:01.000 --> 00:02.750
+Our art service is now looking pretty good.
+
+00:02.770 --> 00:05.520
+We've got all the custom air handling middleware routes.
+
+00:05.530 --> 00:07.030
+It's all coming together.
+
+00:07.060 --> 00:10.810
+But you might recall that when we first started this project, I had mentioned that we were going to
+
+00:10.840 --> 00:12.900
+really put a good focus on testing.
+
+00:12.910 --> 00:15.540
+And at this point, we have not done any automated testing.
+
+00:15.550 --> 00:18.880
+We have done testing using Postman, but no automated tests.
+
+00:18.880 --> 00:22.000
+So naturally we're going to start to fix that up inside the section.
+
+00:22.210 --> 00:27.580
+We're going to first begin with a quick overview of how we handle testing in a microservices type environment.
+
+00:28.530 --> 00:33.660
+The first big thing that we need to understand is that testing with microservices is really a big question
+
+00:33.660 --> 00:36.240
+of what the scope of our tests are going to be.
+
+00:36.690 --> 00:40.890
+So we're going to write out some code that is going to test our app in an automated fashion, and we
+
+00:40.890 --> 00:44.220
+need to decide exactly what we are trying to test.
+
+00:44.820 --> 00:50.010
+There's a wide variety or a wide spectrum of different things we can try to test inside of one single
+
+00:50.010 --> 00:50.580
+test.
+
+00:51.820 --> 00:55.550
+The list I have right here of four different things is by no means an exhaustive list.
+
+00:55.570 --> 00:59.800
+I just want to point out that there are many different things we can try to test inside of a single
+
+00:59.800 --> 01:00.520
+test go.
+
+01:01.160 --> 01:07.190
+So we might first decide at the most basic level to test a single piece of code in isolation.
+
+01:07.190 --> 01:09.440
+And so an example of that would be something like a middleware.
+
+01:09.680 --> 01:13.970
+This would be a very traditional style of test, something you might refer to as a unit test.
+
+01:14.820 --> 01:19.230
+The next level of complexity or the next kind of larger piece of scope would be to test how different
+
+01:19.230 --> 01:21.030
+pieces of code work together.
+
+01:21.060 --> 01:25.620
+An example of that would be maybe if we tried to simulate a request flowing through some different middleware
+
+01:25.620 --> 01:28.140
+together and then eventually off to a route handler.
+
+01:28.710 --> 01:31.800
+Now, as I go through these two notes right here, it might make a little bit more sense to kind of
+
+01:31.800 --> 01:32.760
+visualize this.
+
+01:32.760 --> 01:37.980
+So I put together a little diagram of more or less what our application looks like right now and some
+
+01:37.980 --> 01:40.800
+parts to represent what it might look like in the future as well.
+
+01:40.800 --> 01:45.240
+So we do not yet have an orders ticketing or payment service, but we will at some point.
+
+01:46.160 --> 01:50.120
+So this first piece of scope right here would be if we were just trying to test one single piece of
+
+01:50.120 --> 01:55.520
+code that might be like if we wrote out a test to just take a look at the required middleware and figure
+
+01:55.520 --> 01:57.530
+out whether or not that thing is working correctly.
+
+01:58.740 --> 02:02.760
+The next larger piece of scope would be to test multiple pieces of code working together.
+
+02:02.760 --> 02:08.360
+And so that'd be kind of like if we had a request coming in and had it flow through the require auth
+
+02:08.400 --> 02:11.280
+middleware and then up to some sign up root handler.
+
+02:11.310 --> 02:15.360
+Now in this case, we're not going to ever wire up, require auth and sign up together.
+
+02:15.360 --> 02:20.370
+I just mean to suggest that we could have a test that spans across different pieces of code.
+
+02:21.890 --> 02:26.480
+The next larger piece of scope would be to test how multiple components work together.
+
+02:26.510 --> 02:28.190
+Now I want to use the term component here.
+
+02:28.190 --> 02:29.660
+I'm not referring to React.
+
+02:29.690 --> 02:33.320
+I'm talking about different programs that we are running inside of our app.
+
+02:33.620 --> 02:40.550
+So for example, that would be if we were trying to test how our service interacts with MongoDB or how
+
+02:40.550 --> 02:42.890
+our service interacts with the event bus.
+
+02:44.040 --> 02:48.810
+And then finally, the largest piece of scope, the largest thing we can really test in one go would
+
+02:48.810 --> 02:51.210
+be to test how different services work together.
+
+02:51.540 --> 02:58.110
+So, for example, we might try to launch our order service and the ticketing service at the exact same
+
+02:58.110 --> 03:03.750
+time and then have one emit some kind of event and then expect it to be received by the other service
+
+03:03.750 --> 03:06.270
+and for it to be processed in some very particular way.
+
+03:07.270 --> 03:11.650
+So again, we really need to think about the scope of every test that we start to write out.
+
+03:11.980 --> 03:16.540
+Now, of course, when we start to look at this list, you might say, or trend towards this item down
+
+03:16.540 --> 03:20.320
+here at the bottom, you might say, Oh yeah, let's just test how all these different services work
+
+03:20.320 --> 03:22.510
+together, because that kind of simulates reality.
+
+03:22.810 --> 03:25.280
+Well, that might make a lot of sense when we say it.
+
+03:25.300 --> 03:27.070
+We might want want to write tests like that.
+
+03:27.070 --> 03:32.890
+But unfortunately, the reality is that writing tests like this is very, very complicated inside of
+
+03:32.890 --> 03:34.600
+a microservices environment.
+
+03:35.170 --> 03:39.550
+If we want to test how the order service and the ticketing service interact with each other, we need
+
+03:39.550 --> 03:44.770
+to think about how to construct some kind of environment quickly and cost effectively to actually test
+
+03:44.770 --> 03:45.490
+this stuff.
+
+03:45.700 --> 03:48.700
+So, I mean, at a very practical level, how would we do that?
+
+03:48.700 --> 03:53.860
+Would we launch some kind of test, Kubernetes cluster and then launch the order service and ticketing
+
+03:53.860 --> 03:54.910
+service inside there?
+
+03:55.090 --> 03:57.930
+How would we somehow issue requests to these things?
+
+03:57.940 --> 04:01.360
+How would we somehow assert the result of any request we make?
+
+04:01.600 --> 04:05.980
+It's just a very complicated thing that starts to get really challenging when we start to figure out
+
+04:05.980 --> 04:08.560
+or try to figure out how multiple services work together.
+
+04:09.340 --> 04:14.440
+So with that in mind, we are not going to focus too much on how we can test different services working
+
+04:14.470 --> 04:15.100
+together.
+
+04:15.130 --> 04:19.900
+Instead, we're going to try to test these different services, more or less in isolation.
+
+04:20.640 --> 04:21.750
+So let's take a pause right here.
+
+04:21.750 --> 04:22.230
+When we come back.
+
+04:22.260 --> 04:25.530
+The next video I'm going to show you the different kinds of tests that you and I are going to focus
+
+04:25.530 --> 04:27.630
+on writing inside of our different projects.

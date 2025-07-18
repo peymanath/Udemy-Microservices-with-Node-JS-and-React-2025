@@ -1,0 +1,316 @@
+WEBVTT
+
+00:00.640 --> 00:04.570
+We have connected to our net server successfully, so we're now going to attempt to publish some data
+
+00:04.570 --> 00:05.200
+to it.
+
+00:05.230 --> 00:09.550
+Let me first show you a quick diagram just to introduce a couple of different pieces of terminology
+
+00:09.550 --> 00:10.960
+on how we're going to publish data.
+
+00:11.970 --> 00:12.240
+Okay.
+
+00:12.240 --> 00:16.290
+So in this diagram on the left hand side, we've got our publisher and the listener.
+
+00:16.560 --> 00:18.150
+We have not yet put the listener together.
+
+00:18.150 --> 00:21.450
+But I want to give you a brief description of what we're going to eventually do inside there.
+
+00:21.900 --> 00:27.210
+Then on the right hand side is our NAT streaming server, and inside there is some list of channels.
+
+00:27.270 --> 00:32.340
+Remember, in the Nats world, we always publish information to a very specific channel.
+
+00:32.950 --> 00:36.770
+So here's how we actually share information around inside of our publisher.
+
+00:36.780 --> 00:42.030
+We're going to come up with some piece of data that we want to share with everything else that's listening
+
+00:42.030 --> 00:43.080
+to the stat server.
+
+00:43.470 --> 00:46.200
+So we're going to create some object or something like that.
+
+00:46.680 --> 00:49.140
+We're then also going to come up with a subject.
+
+00:49.170 --> 00:53.430
+A subject is the name of the channel that we want to share this information with.
+
+00:54.230 --> 00:58.520
+For you and I, we're going to imagine that we are trying to share some data about a ticket that was
+
+00:58.520 --> 01:00.380
+just created inside of our application.
+
+01:00.470 --> 01:02.720
+So our data is going to be essentially a ticket.
+
+01:02.720 --> 01:06.140
+It will be something it has an ID, a title and a price.
+
+01:07.400 --> 01:11.520
+Our subject or the name of the channel that we want to share this information with.
+
+01:11.570 --> 01:16.130
+We're going to give it a name that kind of describes the type of data that we're trying to share.
+
+01:16.280 --> 01:21.020
+So in our case, we are trying to share some data related to the creation of a ticket.
+
+01:21.110 --> 01:25.400
+The name of our channel will be Ticket Colon created.
+
+01:26.720 --> 01:31.550
+We're going to take this data and the subject and pass it in to the stand client.
+
+01:31.880 --> 01:35.930
+The stand client is then going to reach over to the gnat streaming server.
+
+01:36.410 --> 01:41.480
+When it reaches over, it's going to say, Hey, we want to share some information, specifically this
+
+01:41.480 --> 01:47.090
+data over the channel or the subject name of ticket created.
+
+01:48.760 --> 01:54.220
+Then that streaming server is then going to add ticket colon created to its overall list of channels.
+
+01:54.590 --> 01:56.110
+It'll then take our data.
+
+01:57.020 --> 02:00.410
+And broadcast it out of that channel to anyone who's listening.
+
+02:01.060 --> 02:05.350
+Now at present inside of our application, we don't really have any implementation for the listener
+
+02:05.350 --> 02:05.980
+at all.
+
+02:06.340 --> 02:10.360
+So if we try to share data or publish some data on this channel right now.
+
+02:11.270 --> 02:16.610
+That server will say, okay, I will try to do this, but just so you know, no one's really listening.
+
+02:16.620 --> 02:18.660
+So we can always attempt to publish data.
+
+02:19.020 --> 02:21.640
+And if no one's listening, well, that's pretty much it.
+
+02:21.660 --> 02:26.250
+Our data is just going to be emitted into the void, and no one's really going to hear from us about
+
+02:26.250 --> 02:27.240
+whatever just occurred.
+
+02:28.030 --> 02:30.790
+So at some point in time, we will create this listener.
+
+02:31.360 --> 02:35.620
+When we make the listener, we're going to have a subject that we want to listen to.
+
+02:35.650 --> 02:40.150
+So in our case, the subject we want to listen to or the channel we want to listen to will be ticket
+
+02:40.150 --> 02:40.870
+created.
+
+02:42.810 --> 02:48.600
+So we'll take ticket created and pass it also into the stand client that's going to tell the stand client
+
+02:48.600 --> 02:55.620
+to tell the gnat server that any time some information is published from this channel, we want to receive
+
+02:55.620 --> 03:00.390
+a copy of that information and will receive that information in something called the subscription.
+
+03:00.660 --> 03:05.430
+So a subscription is what is going to actually listen for some information and tell us whenever some
+
+03:05.430 --> 03:06.840
+information is received.
+
+03:07.810 --> 03:08.100
+Okay.
+
+03:08.110 --> 03:09.430
+So it's kind of a high level overview.
+
+03:09.430 --> 03:13.340
+And mostly I just want to show you some different important pieces of terminology.
+
+03:13.360 --> 03:17.860
+So the subject is the name of the channel we want to publish information to.
+
+03:18.130 --> 03:20.320
+The channel is something that we listen to.
+
+03:21.100 --> 03:25.520
+The subscription is what's going to actually listen to the channel and eventually it receives some data.
+
+03:26.420 --> 03:31.160
+Let's now go back over to our publisher file and we're going to try to publish an event.
+
+03:33.190 --> 03:34.120
+Back inside a publisher.
+
+03:34.600 --> 03:38.380
+Right after our log, I'm going to write out the data object.
+
+03:38.380 --> 03:40.600
+So this will be the information we want to share.
+
+03:41.550 --> 03:45.680
+We're going to, again, kind of pretend that we're sharing information about a ticket being created.
+
+03:45.690 --> 03:47.580
+So we'll give this thing some ID.
+
+03:49.440 --> 03:52.350
+A title of concert and maybe a price of 20.
+
+03:52.770 --> 03:59.160
+Now there is a little gotcha around gnats, and the gotcha is that we can only essentially share strings
+
+03:59.160 --> 04:01.020
+or essentially raw data.
+
+04:01.650 --> 04:07.620
+What we have right here is an object that we want to share, so we cannot share directly a plain JavaScript
+
+04:07.620 --> 04:08.280
+object.
+
+04:09.210 --> 04:14.100
+In order to share this or send over to the net streaming server, we first have to convert it into JSON,
+
+04:14.100 --> 04:15.630
+which is a plane string.
+
+04:15.630 --> 04:20.370
+So essentially all of our data before we send over to that streaming server, we just have to convert
+
+04:20.370 --> 04:21.780
+it into JSON.
+
+04:22.050 --> 04:24.510
+So I'm going to wrap that with JSON.
+
+04:25.230 --> 04:26.010
+String ify.
+
+04:27.450 --> 04:28.110
+Like so.
+
+04:30.190 --> 04:34.120
+Then after that, we'll call the standard publish function.
+
+04:34.240 --> 04:36.850
+The publish function is how we actually publish some data.
+
+04:36.850 --> 04:41.680
+When we call publish, we're going to pass in the name of the channel or the subject we want to publish
+
+04:41.680 --> 04:45.370
+this information to, and we'll also pass in the data we want to share as well.
+
+04:46.000 --> 04:47.950
+So we'll call, stand, publish.
+
+04:48.160 --> 04:50.170
+The first argument is going to be the subject name.
+
+04:50.170 --> 04:52.300
+So in our case that is ticket colon created.
+
+04:52.600 --> 04:54.970
+The second argument is the data we want to share.
+
+04:55.570 --> 04:57.700
+There's then an optional third argument.
+
+04:57.700 --> 04:59.200
+So we do not have to do this.
+
+04:59.200 --> 05:00.430
+We can if we want to.
+
+05:00.850 --> 05:03.280
+The third argument is a callback function.
+
+05:03.790 --> 05:07.960
+This function is going to be invoked after we publish this data.
+
+05:07.960 --> 05:11.170
+So inside of here we might just put in a simple console log and say.
+
+05:12.190 --> 05:13.720
+Event published.
+
+05:16.780 --> 05:18.190
+Let's now save this file.
+
+05:18.520 --> 05:23.920
+Just so you know, the node dev program that we're using inside of our package JSON script is going
+
+05:23.920 --> 05:27.490
+to automatically rerun the publisher file as soon as we save it.
+
+05:27.490 --> 05:33.430
+So as soon as we save this, we should see that we reconnect to our Nats cluster or NAT server and then
+
+05:33.430 --> 05:35.170
+attempt to publish some information.
+
+05:35.500 --> 05:40.900
+So I'm going to save this, go back over to my terminal and sure enough I see a you're connected to
+
+05:40.900 --> 05:43.000
+Nats and then event published.
+
+05:44.030 --> 05:44.390
+All right.
+
+05:44.390 --> 05:46.910
+Well, that's the basics of how we publish events.
+
+05:47.600 --> 05:52.130
+Now, just, you know, in the world of gnats, rather than referring to this data that we send along
+
+05:52.130 --> 05:56.350
+as a event or something like that, it is more commonly referred to as a message.
+
+05:56.360 --> 06:00.830
+So you will see a lot of stuff in the Nats documentation referring to this data or this information
+
+06:00.830 --> 06:05.270
+we're sending out as a message, whereas in this course we're referring to it as an event because that's
+
+06:05.270 --> 06:07.070
+really what it is to us.
+
+06:07.070 --> 06:07.760
+It's an event.
+
+06:07.760 --> 06:11.330
+It's something that occurred inside of our app that we want to share with other services.
+
+06:12.630 --> 06:17.280
+Now that we've got our publisher put together with a very basic implementation, we're going to take
+
+06:17.280 --> 06:20.220
+a pause and then tackle our listener in the next video.

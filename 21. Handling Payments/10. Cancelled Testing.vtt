@@ -1,0 +1,328 @@
+WEBVTT
+
+00:01.030 --> 00:02.830
+Let's put a test together around our order.
+
+00:02.830 --> 00:06.280
+Cancel Listener As I mentioned, this is an entirely optional video.
+
+00:06.280 --> 00:09.880
+So if you don't want to do any testing, if you're just tired of it inside this course, no problem.
+
+00:09.880 --> 00:11.950
+Just pause right here and move on to the next video.
+
+00:12.250 --> 00:14.260
+Otherwise, stick around and let's get to it.
+
+00:14.680 --> 00:16.720
+Let's get started inside of our test directory.
+
+00:16.750 --> 00:18.580
+I'll make a new file of order.
+
+00:19.120 --> 00:21.760
+Cancelled listener test?
+
+00:22.840 --> 00:23.440
+Yes.
+
+00:26.680 --> 00:30.190
+And then inside of here, once again, we'll make a set up function.
+
+00:31.240 --> 00:32.380
+It'll be async.
+
+00:33.080 --> 00:36.920
+At the top, we'll immediately add in a bunch of different imports and then write out the entire setup
+
+00:36.920 --> 00:37.550
+function.
+
+00:38.340 --> 00:40.830
+So as usual, we definitely need our order.
+
+00:42.360 --> 00:45.420
+Cancel listener from up one directory order.
+
+00:45.510 --> 00:46.470
+Cancel listener.
+
+00:47.480 --> 00:49.280
+We definitely need our Nets rapper.
+
+00:50.280 --> 00:51.540
+From up three directories.
+
+00:51.540 --> 00:52.710
+We'll get that Nats wrapper.
+
+00:54.460 --> 00:55.990
+Let's create the listener right away.
+
+00:56.020 --> 01:02.560
+So make a listener as new order, insult listener and pass in my Nats wrapper.
+
+01:05.810 --> 01:09.270
+After that, we're going to create a new order and save it to our database.
+
+01:09.290 --> 01:11.960
+This is going to be the order that we're going to eventually try to cancel.
+
+01:12.410 --> 01:15.650
+So at the top, once again, I will import my order model.
+
+01:17.330 --> 01:18.890
+From up three directories.
+
+01:23.130 --> 01:26.730
+Well, then create an order with order build.
+
+01:29.690 --> 01:33.050
+And we do have to provide a different a few different properties for this thing.
+
+01:33.050 --> 01:39.200
+So we do have to give it a realistic looking ID, a version probably hardcoded at zero, and then a
+
+01:39.200 --> 01:45.080
+user ID at the price and the status for the ID and the status, we're going to need the Mongoose Library
+
+01:45.080 --> 01:49.130
+to generate the ID and we'll need our order status enum from our common module.
+
+01:49.340 --> 01:51.200
+Let's add those imports at the very top.
+
+01:56.940 --> 01:59.520
+And our order status from.
+
+02:00.360 --> 02:01.320
+The common module.
+
+02:02.170 --> 02:02.310
+Okay.
+
+02:02.490 --> 02:04.860
+So now inside a border built we'll pass it.
+
+02:04.860 --> 02:10.260
+An ID coming from mongoose types dot object ID to hex string.
+
+02:12.950 --> 02:14.210
+I'll give it a status of order.
+
+02:14.210 --> 02:14.630
+Status?
+
+02:15.800 --> 02:16.490
+Created.
+
+02:18.730 --> 02:20.500
+A price of how about ten?
+
+02:20.620 --> 02:22.300
+A user ID of whatever.
+
+02:22.720 --> 02:24.760
+And what other property am I missing here?
+
+02:24.760 --> 02:25.090
+Let's see.
+
+02:25.090 --> 02:25.570
+Version.
+
+02:25.570 --> 02:28.420
+Of course we'll give it a version of zero.
+
+02:31.390 --> 02:33.520
+Then immediately after creating the order, let's save it.
+
+02:33.520 --> 02:36.310
+So we'll do an order save.
+
+02:36.340 --> 02:38.260
+And we'll make sure to await that.
+
+02:41.480 --> 02:41.560
+Okay.
+
+02:41.630 --> 02:43.220
+So that is our initial setup.
+
+02:43.220 --> 02:47.660
+So now we can create a data object that's going to try to mark this order as being cancelled.
+
+02:48.540 --> 02:53.690
+So for that we're definitely going to need our order cancelled event interface from the common module.
+
+02:53.700 --> 02:55.050
+Let's import that as well.
+
+02:55.380 --> 02:58.500
+So order cancelled event.
+
+03:02.370 --> 03:05.250
+And then after we create our order, we'll make our data object.
+
+03:05.610 --> 03:07.080
+It will be of type order.
+
+03:07.080 --> 03:09.510
+Cancelled event at data.
+
+03:12.090 --> 03:15.990
+So we need to make sure that this thing has the same ID as the order we had just created.
+
+03:16.230 --> 03:18.930
+We'll give it an ID coming from order ID.
+
+03:20.060 --> 03:22.670
+And there's a couple of other properties we have to define as well.
+
+03:23.210 --> 03:27.770
+We need to make sure this thing also has a version, a ticket, and inside there should be some kind
+
+03:27.770 --> 03:28.430
+of ID.
+
+03:28.760 --> 03:31.310
+The idea that ticket doesn't really matter because we're not using it here.
+
+03:31.340 --> 03:36.080
+All that really matters is the version number, and the version should definitely be the previous version
+
+03:36.080 --> 03:37.010
+plus one.
+
+03:38.790 --> 03:39.780
+I'll give it a version.
+
+03:40.560 --> 03:41.250
+Add one.
+
+03:44.500 --> 03:49.840
+Then we'll give it a ticket with an ID and again, we can give it any ID we want because we're not really
+
+03:49.840 --> 03:50.860
+using that ID.
+
+03:53.050 --> 03:54.910
+And then finally our message object.
+
+03:55.330 --> 04:01.000
+So for the message object, as usual, we will import the message type from node that streaming at the
+
+04:01.000 --> 04:01.480
+top.
+
+04:05.700 --> 04:10.320
+I'm going to tell TypeScript to ignore this next line and we'll make our message.
+
+04:14.790 --> 04:17.010
+So it'll have the function it's going to just mock.
+
+04:17.100 --> 04:19.470
+Same exact thing we've done many times before.
+
+04:20.300 --> 04:23.060
+Now that we've got everything put together as usual, time to return it.
+
+04:23.060 --> 04:27.680
+So we return listener data message and the order as well.
+
+04:32.320 --> 04:37.330
+So we can write out the actual test and we'll say it updates the status of the order.
+
+04:39.620 --> 04:44.660
+And I'll make a second test just to say again, axe the message.
+
+04:49.340 --> 04:53.810
+We'll structure off our listener data, message and order.
+
+04:55.290 --> 04:56.760
+From calling a wait setup.
+
+04:58.480 --> 05:05.500
+And then await the listeners on message function to which we'll pass in our data and message.
+
+05:07.450 --> 05:10.650
+And then, as usual, we really want those two lines inside of both our tests.
+
+05:10.660 --> 05:12.280
+So I will copy paste them down.
+
+05:13.750 --> 05:15.700
+So for updating the status of the order.
+
+05:15.700 --> 05:17.290
+Well, I bet you could guess what we're going to do there.
+
+05:17.290 --> 05:21.960
+We're going to re fetch the order out of the database and make sure that its status was updated to cancelled.
+
+05:21.970 --> 05:22.990
+That's pretty much it.
+
+05:25.190 --> 05:32.960
+They'll give an updated order and that will come from await order find by ID and we want to look out
+
+05:32.960 --> 05:38.390
+the order ID so that the existing order one of these, the same ID right there, the order ID.
+
+05:39.370 --> 05:45.370
+And we can expect the updated order exclamation status to equal.
+
+05:46.490 --> 05:49.880
+The order status enum cancelled property.
+
+05:54.810 --> 05:55.020
+Okay.
+
+05:55.140 --> 05:57.130
+And then our second test right here.
+
+05:57.150 --> 05:58.740
+I bet you could guess what we're gonna do here.
+
+05:59.160 --> 05:59.460
+Yep.
+
+05:59.460 --> 06:05.130
+Just a simple expect message to have been called, and that's it.
+
+06:06.660 --> 06:09.930
+Let's flip back over to our terminal and make sure these two tests are passing.
+
+06:10.470 --> 06:11.710
+So back over at my terminal?
+
+06:11.730 --> 06:12.020
+Yep.
+
+06:12.030 --> 06:13.470
+Looks like everything is good to go.
+
+06:13.770 --> 06:19.140
+However, as usual, we'll do a quick comment out of the on message call on both and just make sure
+
+06:19.140 --> 06:20.850
+we now have two test failures.
+
+06:22.520 --> 06:23.540
+Get to failures.
+
+06:23.540 --> 06:25.790
+That means that our tests are working as expected.
+
+06:26.090 --> 06:31.220
+So I will uncomment both those, await listener on message calls and we are all set with this test.
+
+06:31.970 --> 06:36.050
+Again, I know I've said it so many times, really boring test looks identical to everything else,
+
+06:36.050 --> 06:38.960
+but again, we now know that this thing works as expected.
+
+06:39.140 --> 06:42.080
+So let's pause right here and move on to our next topic in just a moment.

@@ -1,0 +1,337 @@
+WEBVTT
+
+00:00.730 --> 00:05.580
+We are all done with our exploration service and it is now emitting the exploration complete event.
+
+00:05.590 --> 00:09.970
+So we're now going to travel back in time, go back over to the oil service and make sure that we build
+
+00:09.970 --> 00:12.040
+a listener to listen for this event.
+
+00:12.520 --> 00:17.440
+As soon as the Order Service sees exploration complete, we're going to find the relevant order inside
+
+00:17.440 --> 00:20.320
+the order's collection and market as cancelled.
+
+00:20.860 --> 00:25.570
+We might have to do one or two other things related to canceling in order, but we'll discuss that in
+
+00:25.570 --> 00:26.260
+due time.
+
+00:26.710 --> 00:31.720
+When we cancel the order, we are probably also going to want to emit an order cancelled event from
+
+00:31.720 --> 00:33.130
+the order service as well.
+
+00:33.860 --> 00:38.660
+But right now, let's just focus on the order service and the listener for exploration complete.
+
+00:39.230 --> 00:44.240
+Now to build out this listener, we first need to update our common module inside of the Order Service.
+
+00:44.390 --> 00:49.640
+Remember, we update our module just a moment ago and add it in the expiration complete event, but
+
+00:49.640 --> 00:53.210
+we never updated the version of that module inside of our order service.
+
+00:54.170 --> 00:55.370
+So back at my terminal.
+
+00:57.180 --> 01:00.300
+I'm going to change into orders and then update.
+
+01:01.430 --> 01:02.720
+My comment module.
+
+01:08.130 --> 01:08.430
+All right.
+
+01:08.430 --> 01:09.090
+Very good.
+
+01:09.780 --> 01:11.190
+Now go back over to my editor.
+
+01:11.730 --> 01:13.800
+I'm going to find my orders directory.
+
+01:14.250 --> 01:20.100
+I'll find listeners inside there, and we'll add in a brand new listener with the name of, you guessed
+
+01:20.100 --> 01:22.080
+it, expiration.
+
+01:23.190 --> 01:24.810
+Complete listener.
+
+01:25.440 --> 01:26.000
+Yes.
+
+01:27.770 --> 01:27.910
+Now.
+
+01:27.920 --> 01:31.140
+We put together several listeners over time, but I don't know about you.
+
+01:31.160 --> 01:34.350
+I just have a hard time of remembering how to put these things together.
+
+01:34.370 --> 01:36.980
+Just remember, you can always rely on TypeScript.
+
+01:37.070 --> 01:41.030
+The one thing at a minimum, we have to remember, we have to import listener.
+
+01:41.940 --> 01:43.260
+From our common module.
+
+01:43.960 --> 01:47.260
+We can then make our class of exploration complete.
+
+01:47.800 --> 01:48.550
+Listener.
+
+01:51.350 --> 01:54.590
+That will extend listener and then TypeScript is going to take it from there.
+
+01:54.890 --> 01:58.310
+We've been over this many times, so let's just speed through the rest of this implementation.
+
+01:58.580 --> 02:02.000
+We need to import our event to provide to the generic type.
+
+02:02.030 --> 02:04.710
+We need to import our group name subjects.
+
+02:04.730 --> 02:09.170
+We've got to get our message type and we've got to get I think that's it, actually.
+
+02:09.650 --> 02:10.550
+So from listener.
+
+02:11.660 --> 02:13.060
+Let's get the subject now.
+
+02:13.720 --> 02:16.180
+And the expiration complete event.
+
+02:17.140 --> 02:19.900
+We'll get our message type.
+
+02:20.770 --> 02:22.540
+From node nets streaming.
+
+02:25.170 --> 02:26.430
+And then what else.
+
+02:26.880 --> 02:27.440
+I think that's.
+
+02:27.450 --> 02:27.900
+Is that it?
+
+02:27.900 --> 02:30.150
+I think I feel like I mentioned one other, but whatever.
+
+02:30.450 --> 02:32.070
+Oh, the Q group name, naturally.
+
+02:32.640 --> 02:33.420
+There we go.
+
+02:35.580 --> 02:36.450
+From same directory.
+
+02:36.630 --> 02:37.130
+Group name.
+
+02:37.140 --> 02:37.830
+There we go.
+
+02:38.010 --> 02:42.000
+Okay, so now on our listener, we'll stick in that type expiration complete event.
+
+02:43.110 --> 02:44.880
+Throw in the Q group name.
+
+02:47.940 --> 02:49.830
+Throw in a subject of subjects.
+
+02:50.190 --> 02:51.960
+Exploration complete.
+
+02:52.680 --> 02:54.720
+Subjects exploration complete.
+
+02:55.500 --> 03:00.330
+And then finally on message work that as a sink.
+
+03:01.250 --> 03:06.590
+Receive some data which will be of type expiration complete event at data.
+
+03:07.310 --> 03:09.890
+And then get our message, which is subtype message.
+
+03:10.800 --> 03:11.160
+There we go.
+
+03:11.160 --> 03:12.090
+There's our listener.
+
+03:12.690 --> 03:15.540
+Again, it's all the same stuff between all these different listeners.
+
+03:15.840 --> 03:20.310
+I tried to factor all this code down to be the absolute minimum, and this is pretty much what I came
+
+03:20.310 --> 03:20.940
+up with.
+
+03:20.970 --> 03:25.350
+We could probably figure out a way to more easily generalize cue group name, but in general this is
+
+03:25.350 --> 03:26.490
+pretty darn compact.
+
+03:27.480 --> 03:27.720
+All right.
+
+03:27.720 --> 03:29.010
+Anyways, back on topic.
+
+03:29.430 --> 03:34.770
+So we've got this incoming data that describes some order or the attempt to say that an order should
+
+03:34.770 --> 03:35.640
+be cancelled.
+
+03:35.970 --> 03:40.350
+The first thing we have to do is take a look inside of our orders collection and find the relevant order.
+
+03:40.860 --> 03:41.760
+So at the very top.
+
+03:44.010 --> 03:45.780
+Let's import our order.
+
+03:46.840 --> 03:48.370
+From up to directories.
+
+03:48.370 --> 03:49.540
+Models order.
+
+03:53.510 --> 03:56.720
+Then instead of on message, we can find our order.
+
+03:56.720 --> 03:59.390
+So we'll do an await order.
+
+03:59.600 --> 04:04.670
+Find by ID and remember this event right here has one single property.
+
+04:04.670 --> 04:06.920
+It has the order ID property.
+
+04:06.920 --> 04:11.150
+And if we ever forget that, naturally we can do a command click on expiration and complete event at
+
+04:11.150 --> 04:12.470
+the top and we'll tell us.
+
+04:12.500 --> 04:13.820
+Okay, here's the data property.
+
+04:13.820 --> 04:15.080
+It has an order ID.
+
+04:15.900 --> 04:18.090
+So that is the idea of the order that we want to find.
+
+04:18.180 --> 04:22.110
+So inside of find by ID, we will reference data order ID.
+
+04:23.960 --> 04:28.160
+Then as usual, TypeScript is not sure if this thing is actually defined or not, so we just have to
+
+04:28.160 --> 04:29.120
+do a quick check.
+
+04:29.120 --> 04:30.680
+Make sure that order is defined.
+
+04:31.770 --> 04:33.370
+So if there's not an order.
+
+04:34.440 --> 04:38.970
+Let's throw a new air and say border not found.
+
+04:44.340 --> 04:46.890
+Then after that, we need to update this thing status.
+
+04:47.310 --> 04:50.640
+To update the status, we're going to need that order status enum.
+
+04:50.670 --> 04:55.020
+Remember, we had previously defined that inside of our common module and that was going to describe
+
+04:55.020 --> 04:57.300
+all the possible statuses that an order can have.
+
+04:57.720 --> 05:01.350
+So we will import order status from our common module.
+
+05:07.000 --> 05:11.560
+Then right after the if statement we'll do an order set up.
+
+05:11.560 --> 05:13.620
+Not that set.
+
+05:13.630 --> 05:14.320
+There we go.
+
+05:14.920 --> 05:19.630
+And I want to change the status to order status that cancelled.
+
+05:22.120 --> 05:24.760
+And there might be one other thing we should do here as well.
+
+05:24.760 --> 05:30.100
+Remember, the order is going to contain a reference directly to the ticket that it is reserving.
+
+05:30.370 --> 05:35.170
+And so we need to kind of make a decision here and decide whether or not we want to clear out that reference.
+
+05:35.170 --> 05:41.470
+So, in other words, whether we want to say ticket is something like NULL, does that make sense or
+
+05:41.470 --> 05:42.010
+does it not?
+
+05:42.040 --> 05:43.780
+Should we keep a reference to the order?
+
+05:44.080 --> 05:46.280
+Well, that's something that we should probably discuss a little bit.
+
+05:46.300 --> 05:47.530
+So let's take a quick pause right here.
+
+05:47.530 --> 05:48.280
+I'm going to save this file.
+
+05:48.280 --> 05:51.340
+That's why you're seeing my code jump all over the place so I can say this file.
+
+05:51.340 --> 05:55.480
+We'll take a quick pause, and we're going to decide whether or not it makes sense to reset the ticket
+
+05:55.480 --> 05:57.670
+property on this newly canceled order.
+
+05:57.820 --> 06:00.580
+The quick pause right here, and we'll continue in just a moment.

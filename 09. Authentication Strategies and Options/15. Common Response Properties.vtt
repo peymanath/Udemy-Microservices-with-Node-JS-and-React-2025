@@ -1,0 +1,220 @@
+WEBVTT
+
+00:00.650 --> 00:05.360
+We are now able to sign up for a new account and when we do so, we get back that JSON web token, which
+
+00:05.360 --> 00:06.910
+means everything is looking pretty good.
+
+00:06.920 --> 00:08.840
+Well, almost as usual.
+
+00:08.870 --> 00:13.560
+Still, one or two very small things I want to point out when we do this request to sign up.
+
+00:13.580 --> 00:16.760
+Notice how we are sending back our complete user model.
+
+00:17.030 --> 00:19.220
+There's a couple of issues with this response right now.
+
+00:19.460 --> 00:24.740
+Sending back the user model is not the worst thing in the world during that signup request, because
+
+00:24.740 --> 00:29.750
+it's going to allow whoever made this request to see, well, our definition of this person.
+
+00:30.140 --> 00:33.590
+So we can confirm, say the email was signed up with correctly.
+
+00:33.590 --> 00:36.330
+Maybe there's the ID that we want to use immediately.
+
+00:36.350 --> 00:39.440
+There's definitely some information inside of here that we want to make use of.
+
+00:39.620 --> 00:42.810
+However, there are other properties that definitely should not be in here.
+
+00:42.830 --> 00:47.000
+So, for example, obviously the password should not be included in the response.
+
+00:47.300 --> 00:53.390
+In addition, there's this other flag or other property of underscore underscore V that's tied to mongoose,
+
+00:53.390 --> 00:55.940
+and it's something it's actually going to be relevant later on inside the course.
+
+00:56.240 --> 00:59.600
+But right now, we're just going to say that we really don't want to have that property inside this
+
+00:59.600 --> 01:00.320
+response.
+
+01:00.800 --> 01:05.000
+So we definitely want to make sure that we remove password and underscore underscore V.
+
+01:05.090 --> 01:09.590
+Now, normally that would be a very simple thing to do, but well, there is a reason I'm making this
+
+01:09.590 --> 01:11.140
+into a longer discussion.
+
+01:11.150 --> 01:15.050
+So let me tell you what this reason is or what the kind of issue here is.
+
+01:16.420 --> 01:16.750
+All right.
+
+01:16.750 --> 01:20.770
+So as usual, remember, we've got our service orders and payments.
+
+01:20.770 --> 01:25.450
+And even though we are building all this stuff out using Node and Express, it is entirely possible.
+
+01:25.450 --> 01:29.860
+If you ever start to really build out a microservices application that your different services will
+
+01:29.860 --> 01:31.330
+have different implementations.
+
+01:31.330 --> 01:33.850
+So Ruby on Rails, Java, Spring, whatever else.
+
+01:34.180 --> 01:39.130
+In addition to having different code or languages inside these each of these services, they also might
+
+01:39.130 --> 01:44.800
+have their own different databases, different databases to suit different needs for each service.
+
+01:45.220 --> 01:50.110
+So right now on our service we are making use of MongoDB, but you might be working on a service at
+
+01:50.110 --> 01:55.930
+some point in the future for the same exact project that instead uses MySQL or another one that uses
+
+01:55.930 --> 01:56.770
+Postgres.
+
+01:57.690 --> 02:02.420
+So is there anything that's going to come up as we start to look at using these different databases,
+
+02:02.430 --> 02:04.170
+any big issues, perhaps?
+
+02:04.350 --> 02:06.120
+Well, there definitely is.
+
+02:06.270 --> 02:09.810
+I want you to consider a very simple little funny thing.
+
+02:10.230 --> 02:12.420
+So we are making use of MongoDB.
+
+02:12.450 --> 02:16.560
+Mongo has some very interesting semantics around the ID field.
+
+02:16.890 --> 02:21.900
+MongoDB internally records the ID as underscore ID.
+
+02:23.800 --> 02:27.370
+And you can even see that with the response we got back inside a post man.
+
+02:27.370 --> 02:31.150
+We've got underscore ID right here that is the idea this record.
+
+02:32.080 --> 02:35.410
+MongoDB is the only database out of these three at least.
+
+02:35.410 --> 02:36.400
+Perhaps there are others out there.
+
+02:36.400 --> 02:40.360
+I don't want to say the only database in the world, but out of these three it's the only database that
+
+02:40.360 --> 02:44.260
+uses those semantics reflecting the ID as underscore ID.
+
+02:45.090 --> 02:49.520
+My SQL follows a more typical standard of simply ID.
+
+02:49.560 --> 02:51.390
+Same thing with PostgreSQL as well.
+
+02:52.020 --> 02:52.980
+So why is this relevant?
+
+02:53.010 --> 02:55.890
+Well, it all goes back to our front end application.
+
+02:56.010 --> 03:00.540
+Remember, we spent a huge amount of time earlier on inside this course dealing with making sure that
+
+03:00.540 --> 03:04.890
+we always had very consistent error messages going back to whoever makes requests.
+
+03:05.100 --> 03:10.770
+We need to make sure that the exact same is true as much as possible whenever we attempt to fetch normal
+
+03:10.770 --> 03:11.850
+data as well.
+
+03:12.210 --> 03:18.150
+So if I make a request to my all service orders or payments asking for just one record or trying to
+
+03:18.150 --> 03:26.370
+sign up to order create a payment, whatever it is I would expect on my front end to always get consistent
+
+03:26.370 --> 03:27.720
+looking responses.
+
+03:28.050 --> 03:33.900
+And that means that rather than having underscore ID right here, which is very atypical in general,
+
+03:34.050 --> 03:36.660
+really, we want to have simply ID.
+
+03:37.470 --> 03:38.370
+And that's pretty much it.
+
+03:38.370 --> 03:40.020
+That's what I'm making this big deal around.
+
+03:40.140 --> 03:46.080
+We don't want to have these semantics that are very specific to MongoDB being exposed on our front end.
+
+03:46.350 --> 03:48.960
+Instead, we want to have very consistent responses.
+
+03:48.960 --> 03:53.220
+No matter what we are making a request or which service we are making the request to.
+
+03:53.990 --> 03:54.920
+So that's pretty much it.
+
+03:56.280 --> 04:02.220
+In addition to removing this password field and underscore underscore V, we should also do a little
+
+04:02.220 --> 04:08.310
+bit of reformatting on that key of underscore ID as well, and we can definitely take care of this very
+
+04:08.310 --> 04:11.250
+easily back inside of our signup request.
+
+04:11.250 --> 04:16.470
+Handler So right here we could add in just a little bit of logic to just pull out, say, the email
+
+04:16.470 --> 04:22.140
+and the ID, assign that ID property to a better key or something like that.
+
+04:22.140 --> 04:26.580
+But there's really definitely a better way of handling this and making sure that we only have to worry
+
+04:26.580 --> 04:31.770
+about this in one single location inside of our code base, rather than having to duplicate this ID
+
+04:31.770 --> 04:37.320
+remapping logic and all that stuff inside of other root handlers like sign in or current user as well.
+
+04:37.770 --> 04:40.830
+Now that we understand the issue, let's fix this up in just a moment.

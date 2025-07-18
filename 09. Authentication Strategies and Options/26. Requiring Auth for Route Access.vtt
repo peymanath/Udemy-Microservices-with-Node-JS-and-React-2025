@@ -1,0 +1,373 @@
+WEBVTT
+
+00:01.220 --> 00:03.620
+In this video, we're going to create that second middleware.
+
+00:03.710 --> 00:07.910
+The goal of this middleware is to reject any incoming request if the user is not logged in.
+
+00:08.270 --> 00:09.960
+So it's going to be very simple in nature.
+
+00:09.980 --> 00:14.540
+All we have to do, since we already put that other one together, is take a look at the recurrent user
+
+00:14.540 --> 00:15.160
+property.
+
+00:15.170 --> 00:18.700
+If recurrent user is not defined, that means the user is not logged in.
+
+00:18.710 --> 00:22.670
+So we are going to reject the request or essentially respond with an error.
+
+00:22.940 --> 00:27.020
+So let's get started on that middleware right away because it's going to be pretty easy to put together.
+
+00:28.090 --> 00:29.290
+All right, so back over here.
+
+00:29.290 --> 00:35.330
+I'm going to find my middle wears directory and I'll make a new file inside there called Require Offsets.
+
+00:36.430 --> 00:42.910
+Then inside of here at the very top, once again we will import request, response and next function
+
+00:43.420 --> 00:44.500
+from Express.
+
+00:46.240 --> 00:49.630
+I'll then put together a function called require off.
+
+00:51.850 --> 00:57.010
+And once again, for the argument list, we'll put in a wreck of request.
+
+00:57.820 --> 01:00.550
+RAZ response and next.
+
+01:01.370 --> 01:02.420
+Next function.
+
+01:04.180 --> 01:06.610
+So we are going to really make a big assumption here.
+
+01:06.610 --> 01:11.860
+We're going to assume that we will never use the required auth middleware without previously running
+
+01:11.860 --> 01:13.450
+the current user middleware.
+
+01:13.720 --> 01:18.250
+So in other words, by the time this request shows up inside of require auth, we should have already
+
+01:18.250 --> 01:20.610
+checked to see if there is a JSON web token present.
+
+01:20.620 --> 01:25.060
+We should have already attempted to decode it and set it on the correct current user property.
+
+01:25.180 --> 01:30.460
+So again, if recurrent user is not defined, that means we need to reject this request and respond
+
+01:30.460 --> 01:36.370
+with an error so we can do something like if there is no recurrent user property.
+
+01:37.650 --> 01:39.330
+Then we should return early.
+
+01:40.000 --> 01:44.050
+And we can do something like a resend or a one.
+
+01:45.060 --> 01:47.610
+A for one, you will recall means forbidden.
+
+01:48.920 --> 01:49.910
+And the weekend.
+
+01:50.060 --> 01:51.800
+Excuse me, that should be a status.
+
+01:52.280 --> 01:53.710
+And then we could send back something.
+
+01:53.720 --> 01:55.500
+It looks like our common air structure.
+
+01:55.520 --> 01:56.030
+Remember that?
+
+01:56.030 --> 01:57.680
+Common air structure is that structure.
+
+01:57.680 --> 01:59.600
+We encoded it in all those custom ears.
+
+01:59.810 --> 02:03.710
+Now, as soon as I start looking at this, we're kind of going back to that same similar scenario when
+
+02:03.710 --> 02:08.570
+we were talking about all those custom air things where we are trying to manually write out how to respond
+
+02:08.570 --> 02:10.940
+or how to handle some kind of air condition.
+
+02:11.330 --> 02:16.100
+So as soon as I see this right here, I think maybe rather than trying to manually write out the response
+
+02:16.100 --> 02:21.380
+right here, maybe you would make a lot more sense to create yet another custom air inside of our project
+
+02:21.380 --> 02:27.200
+to handle any time a user tries to access some kind of resource that they are not authorized to access.
+
+02:27.590 --> 02:33.200
+So in other words, long story short, let's create another custom air to handle this response or the
+
+02:33.200 --> 02:37.250
+case in which a user is trying to access a route that they do not have access to.
+
+02:38.090 --> 02:40.790
+So inside of my ears directory, I'm going to make a new file.
+
+02:41.520 --> 02:46.490
+Called not authorized air ducts.
+
+02:48.110 --> 02:50.810
+So we're going to create yet another custom error inside of here.
+
+02:53.180 --> 02:57.800
+Remember to do so we will import custom air at the top from.
+
+02:58.990 --> 02:59.800
+Customer.
+
+03:00.950 --> 03:06.890
+We will then create an export a class we're going to call it not authorized air and it's going to be
+
+03:06.890 --> 03:09.290
+extending custom air.
+
+03:10.910 --> 03:13.460
+Once again, TypeScript is going to guide us and how to implement this.
+
+03:13.460 --> 03:18.410
+So we need to implement that serialized error method and the status code method as well.
+
+03:19.040 --> 03:25.910
+So for the status code, we probably want a status code of 401, which in HTTP parlance means, hey,
+
+03:25.910 --> 03:28.670
+you're not authorized or you are forbidden from accessing this.
+
+03:29.830 --> 03:32.710
+We can then put on the method of serialize errors.
+
+03:35.800 --> 03:40.870
+And recall that if we mouse over that thing, we will be told that we have to return an array of objects
+
+03:40.870 --> 03:43.360
+where each object has a message and possibly a field.
+
+03:43.420 --> 03:48.220
+So in our case, we'll just send back a hard coded message, something that says, Hey, you are not
+
+03:48.220 --> 03:49.000
+authorized.
+
+03:49.720 --> 03:56.380
+So I will return an array of objects that has a message property and I'll put inside.
+
+03:56.380 --> 03:58.660
+They're not authorized.
+
+04:01.470 --> 04:01.920
+Okay.
+
+04:02.310 --> 04:05.560
+Last thing we're going to put inside of here is a constructor once again.
+
+04:05.580 --> 04:09.900
+Remember, we are just putting in the constructor to set up that set prototype of thing that is required
+
+04:09.900 --> 04:12.660
+because we are ultimately extending a built in class.
+
+04:13.430 --> 04:14.960
+So I'll put in a constructor.
+
+04:17.150 --> 04:18.200
+I will call super.
+
+04:19.030 --> 04:22.760
+Now we'll do an object set prototype of.
+
+04:23.590 --> 04:24.220
+This.
+
+04:24.830 --> 04:25.850
+And not.
+
+04:26.920 --> 04:29.110
+Authorized air prototype.
+
+04:29.470 --> 04:32.080
+You'll notice that we have an air around our super color right here.
+
+04:32.080 --> 04:37.120
+That is because the parent constructor of Custom Air expects to be called with some message or some
+
+04:37.120 --> 04:39.580
+kind of string describing exactly what went wrong.
+
+04:39.850 --> 04:41.830
+So we can just use the same string we use down here.
+
+04:41.830 --> 04:44.860
+We can put in something like not authorized.
+
+04:47.370 --> 04:47.640
+Okay.
+
+04:47.640 --> 04:48.680
+So there's our customer.
+
+04:48.690 --> 04:49.950
+So let's save this file.
+
+04:51.110 --> 04:53.450
+We'll then go back over to the require off middleware.
+
+04:53.450 --> 04:58.250
+And again, rather than throwing or trying to send back some manual response right here, we can instead
+
+04:58.250 --> 05:02.600
+just throw that error that we had just created and our error handling middleware will take care of everything
+
+05:02.600 --> 05:03.200
+from there.
+
+05:03.840 --> 05:07.590
+So at the top we will import not authorized air.
+
+05:08.970 --> 05:10.710
+From Aires.
+
+05:13.140 --> 05:18.900
+And then, rather than returning right there, we can throw a new, not authorized air.
+
+05:21.110 --> 05:25.580
+Now, assuming that the user is logged in, if they are logged in and they get past this if statement,
+
+05:25.580 --> 05:30.230
+we want to allow the user to continue on to the next middleware or possibly our actual root handling
+
+05:30.230 --> 05:30.890
+function.
+
+05:31.280 --> 05:35.900
+So if they get past that statement, we will just call the next function and that should be it.
+
+05:38.450 --> 05:39.830
+All right, let's save this.
+
+05:40.400 --> 05:46.680
+Now, we don't have any route handlers inside of this app that need to have some kind of require off
+
+05:46.700 --> 05:47.630
+middleware on them.
+
+05:47.630 --> 05:53.000
+So we're going to very temporarily apply it to the current user middleware or assuming the current user
+
+05:53.000 --> 05:53.900
+route handler.
+
+05:54.170 --> 05:59.660
+So we are going to temporarily make sure that you must be logged in in order to access current user.
+
+06:01.340 --> 06:03.650
+So I'm going to go and find that current user route handler.
+
+06:04.130 --> 06:06.710
+At the very top, I will import the middleware we just created.
+
+06:07.160 --> 06:08.510
+So require off.
+
+06:09.500 --> 06:12.890
+From middle wears require auth.
+
+06:13.610 --> 06:18.890
+And then remember, our big assumption here is that we are always going to run require auth right after
+
+06:18.890 --> 06:20.150
+using current user.
+
+06:21.980 --> 06:25.550
+Or I shouldn't say right after, but at some point after current user.
+
+06:25.760 --> 06:28.070
+So I will put in require auth like so.
+
+06:29.920 --> 06:31.230
+All right, so let's save this.
+
+06:31.240 --> 06:33.730
+Then we can go back over to Postman and test it out.
+
+06:34.120 --> 06:36.940
+Now, at present, I am signed in inside a postman.
+
+06:37.180 --> 06:41.800
+So if I send this request off to get current user right now, it should still succeed.
+
+06:41.800 --> 06:43.000
+Yep, definitely does.
+
+06:43.270 --> 06:48.190
+But if I go over to that third tab where I can't log out, so I'll send that in.
+
+06:48.190 --> 06:50.530
+So now I'm no longer signed into the application.
+
+06:50.950 --> 06:55.480
+If I now try to print out current user again, I should get an error back something that says Sorry,
+
+06:55.480 --> 06:59.530
+you can't access this route because you are not logged in, so I will send this.
+
+06:59.770 --> 07:01.450
+And sure enough, there we go.
+
+07:01.600 --> 07:04.480
+So I get back an error with the message of not authorized.
+
+07:05.270 --> 07:06.670
+All right, fantastic.
+
+07:06.680 --> 07:10.760
+So we've now got these two utility middle wears put together that we're probably going to need to use
+
+07:10.760 --> 07:15.200
+at some point in time, even if we don't really need them inside of our service just yet.
+
+07:15.740 --> 07:20.420
+Now back inside of current user, the route handler current user, I am going to delete the require
+
+07:20.450 --> 07:25.610
+off middleware right there because again we were just doing a very quick test and I will delete require
+
+07:25.640 --> 07:31.460
+auth right there and you know, we're not using JWT inside of you anymore, so I'll delete that as well.
+
+07:33.180 --> 07:34.230
+All right, that's it.
+
+07:34.830 --> 07:37.530
+Well, we've got those two utility middle wears put together.
+
+07:37.530 --> 07:41.940
+And I think overall, our entire service is now in a pretty good state.
+
+07:42.270 --> 07:45.930
+So let's take a quick pause right here and figure out exactly what we need to do next.

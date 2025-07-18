@@ -1,0 +1,274 @@
+WEBVTT
+
+00:01.360 --> 00:02.880
+Let's move on to our next test.
+
+00:02.890 --> 00:07.550
+So in this one, we're going to make sure that a error is returned if the ticket is already reserved.
+
+00:07.570 --> 00:09.550
+So what does it mean to have reserved ticket?
+
+00:09.580 --> 00:14.740
+Well, as you will recall, inside of our ticket model just a little bit ago, we put together that
+
+00:14.740 --> 00:16.120
+is reserved function.
+
+00:17.100 --> 00:22.560
+So we are saying that a ticket is reserved if there is already an order inside of our database that
+
+00:22.560 --> 00:28.080
+has that ticket associated with it and the order has a status of created a waiting payment or complete.
+
+00:28.560 --> 00:33.720
+So in order to do a little bit of setup for this test, we have to first create a ticket, save it to
+
+00:33.720 --> 00:38.850
+the database, then create an order, save it to the database, and make sure that the order and the
+
+00:38.850 --> 00:41.040
+ticket are associated with each other.
+
+00:41.580 --> 00:43.570
+Then we'll finally make the request.
+
+00:43.590 --> 00:46.860
+So a little bit of setup for this test to get started.
+
+00:46.880 --> 00:48.510
+I will go up to the top of the file.
+
+00:49.590 --> 00:51.090
+And import order.
+
+00:53.030 --> 00:54.290
+From up to directories.
+
+00:54.290 --> 00:55.550
+Models order.
+
+00:57.190 --> 00:58.090
+And ticket.
+
+01:00.020 --> 01:01.580
+Model's ticket.
+
+01:04.330 --> 01:05.800
+Then down inside of our test.
+
+01:07.000 --> 01:08.700
+We will first create a ticket.
+
+01:10.400 --> 01:11.930
+And then save it to the database.
+
+01:12.380 --> 01:16.760
+If we forget about the different properties that a ticket requires to create one, we always mouse over
+
+01:16.760 --> 01:20.990
+the little error right there and TypeScript will tell us we have to provide a title and a price.
+
+01:22.470 --> 01:26.190
+So we'll put in a title of concert and a price of 20.
+
+01:27.270 --> 01:28.830
+Well, then go ahead and save this ticket.
+
+01:28.830 --> 01:30.570
+So I'll do in a weight ticket.
+
+01:30.930 --> 01:31.680
+Save.
+
+01:35.390 --> 01:36.200
+Then after that.
+
+01:37.450 --> 01:38.800
+We'll go ahead and create our order.
+
+01:38.800 --> 01:43.960
+And when we create the order, we will make sure that we associate this ticket and put the order in
+
+01:43.960 --> 01:45.580
+the correct state as well.
+
+01:46.390 --> 01:48.460
+So we will add in order.
+
+01:49.270 --> 01:50.560
+Is ordered up, built.
+
+01:52.690 --> 01:56.800
+And once again, if we forget what we have to provide here, we can mess over and we have to provide
+
+01:56.800 --> 02:00.280
+a user ID status expires that and ticket.
+
+02:02.390 --> 02:05.240
+The ticket will be the ticket that we just created a moment ago.
+
+02:05.240 --> 02:07.880
+So I will stick in ticket like so.
+
+02:08.810 --> 02:10.280
+Next up, a user ID.
+
+02:10.310 --> 02:11.270
+Nothing special about this.
+
+02:11.270 --> 02:12.860
+We could just put in some random ID.
+
+02:14.430 --> 02:19.800
+Then the status and the status of this order member is going to come off of our order status.
+
+02:20.400 --> 02:23.730
+So we do have to make sure we also import order status at the top of the file.
+
+02:24.210 --> 02:25.350
+So I'm going to go back up to the top.
+
+02:25.350 --> 02:29.220
+I'm going to find where we import order and I'll get order status.
+
+02:31.690 --> 02:35.440
+And for status we will enter order status dot.
+
+02:36.370 --> 02:37.060
+Created.
+
+02:38.170 --> 02:43.540
+And then finally very last property the expires at time so four expires at.
+
+02:45.500 --> 02:51.060
+We'll put in a new date like so now if we put a new date right here, that implies that the ticket or
+
+02:51.060 --> 02:55.350
+assuming the order is going to expire essentially instantly, but that doesn't really matter.
+
+02:55.370 --> 03:01.190
+There's nothing inside of our reservation code right now or whether or not deciding a ticket is reserved.
+
+03:01.190 --> 03:04.160
+That's going to take a look at the orders expires at property.
+
+03:04.640 --> 03:08.690
+So we're not going to ever have our order service necessarily look at that expires that property to
+
+03:08.690 --> 03:10.820
+decide if this thing is expired.
+
+03:10.850 --> 03:16.940
+Instead, we're going to always rely upon the status flag right here to decide if the order is expired.
+
+03:17.180 --> 03:21.320
+That might sound a little bit confusing or a little bit backwards, but it really comes down to how
+
+03:21.320 --> 03:25.030
+we are going to implement a expiration service later on in the future.
+
+03:25.040 --> 03:29.900
+The expiration service is going to be the thing in charge of marking an order as being expired.
+
+03:29.930 --> 03:33.020
+Not the presence of this expires at flag.
+
+03:33.380 --> 03:33.740
+I know.
+
+03:33.740 --> 03:34.680
+A little bit confusing.
+
+03:34.700 --> 03:35.380
+Don't sweat it.
+
+03:35.390 --> 03:37.010
+We'll see why that is later on.
+
+03:39.200 --> 03:43.640
+All right, so after we create the order, we'll then go ahead and save it to our database.
+
+03:43.640 --> 03:44.570
+So order!
+
+03:45.020 --> 03:45.650
+Save!
+
+03:46.900 --> 03:52.000
+So now we can make our request and we should get back that status code of 400 saying sorry, but this
+
+03:52.000 --> 03:53.470
+ticket's already been reserved.
+
+03:54.230 --> 03:55.850
+So put in and await.
+
+03:56.610 --> 03:57.690
+Request to EP.
+
+03:58.950 --> 04:02.610
+We want to make a post to API orders.
+
+04:04.960 --> 04:07.630
+We need to set that cookie, though.
+
+04:07.630 --> 04:10.030
+Cookie Global sign in.
+
+04:13.490 --> 04:16.150
+We will send along the idea of the ticket that we are trying to reserve.
+
+04:16.160 --> 04:18.950
+So ticket ID is ticket ID.
+
+04:21.120 --> 04:24.990
+And then finally, we will expect to get back a 400.
+
+04:26.220 --> 04:27.390
+And that should be it.
+
+04:28.790 --> 04:29.930
+So let's save this.
+
+04:30.800 --> 04:33.950
+Flipped back over and looks like we are good to go.
+
+04:34.520 --> 04:38.330
+Now, once again, I don't really know if that test is failing or passing erroneously.
+
+04:38.330 --> 04:40.640
+So in this case I could very easily just change this.
+
+04:40.640 --> 04:45.290
+Expect right here and say, Hey, we expect this to resolve with a 401.
+
+04:45.710 --> 04:47.020
+If I save that flip back over.
+
+04:47.030 --> 04:48.800
+No, we are definitely getting correctly.
+
+04:48.800 --> 04:50.090
+400 bad request.
+
+04:52.830 --> 04:53.210
+Okay.
+
+04:53.220 --> 04:54.270
+So looks good.
+
+04:55.040 --> 04:56.510
+All right, just one more test.
+
+04:56.510 --> 04:57.530
+So quick pause right here.
+
+04:57.530 --> 04:59.920
+And the last test will really be pretty straightforward.
+
+04:59.930 --> 05:03.020
+It's really just going to be a request like this, and we're going to make sure that we get back some
+
+05:03.020 --> 05:04.640
+kind of success status code.

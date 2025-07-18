@@ -1,0 +1,766 @@
+WEBVTT
+
+00:00.970 --> 00:02.940
+We've now seen the basics of microservices.
+
+00:02.950 --> 00:08.020
+We've learned a little bit about Docker, Kubernetes Scaffold, and now it's time to take all this knowledge
+
+00:08.020 --> 00:10.330
+and kick off our next big project.
+
+00:10.360 --> 00:15.370
+This next project is going to be significantly larger, significantly larger than the one we just worked
+
+00:15.370 --> 00:15.830
+on.
+
+00:15.850 --> 00:20.770
+Before we get started on, however, I want to go over a couple of big notes or important things we
+
+00:20.770 --> 00:22.630
+learned about this first application.
+
+00:22.960 --> 00:24.580
+So a couple of different lessons here.
+
+00:25.120 --> 00:29.230
+The first thing I want to reflect on is that the big challenge that we really ran into around all this
+
+00:29.230 --> 00:34.800
+microservices stuff was handling data that truly was the biggest challenge in this first application.
+
+00:34.810 --> 00:38.670
+It's only going to get worse as we start to work with some more complicated data model.
+
+00:38.680 --> 00:43.360
+So if we have anything beyond, say, just a blog in comments we're working with, that data between
+
+00:43.360 --> 00:47.350
+multiple different services is going to start to become even more challenging.
+
+00:48.200 --> 00:51.860
+We learned that there are more than one way to share data between services.
+
+00:51.890 --> 00:55.280
+We spoke about the differences between sync and async communication.
+
+00:55.670 --> 00:59.690
+There really is a sliding scale on async versus async communication.
+
+00:59.930 --> 01:02.600
+So we can have fully sync, we can have fully async.
+
+01:02.630 --> 01:04.790
+We can also have a combination of the two.
+
+01:05.270 --> 01:09.590
+You and I are going to focus on async communication between services on this course.
+
+01:09.860 --> 01:13.970
+The reason for this and the reason we're doing this over sync communication is that, to be honest with
+
+01:13.970 --> 01:19.040
+you, sync communication is generally a little bit easier or possibly I should say, a lot easier to
+
+01:19.040 --> 01:23.960
+implement, even though it kind of has some downsides in an actual production environment.
+
+01:24.500 --> 01:25.700
+Because it is easy.
+
+01:25.700 --> 01:29.910
+I figured, Hey, it's a course, let's focus on how to do the hard things right.
+
+01:29.930 --> 01:34.220
+You want to have a guide or someone to tell you some things to be aware of when you're going through
+
+01:34.220 --> 01:34.760
+hard stuff.
+
+01:34.760 --> 01:36.480
+And so I want to show you hard stuff.
+
+01:36.500 --> 01:38.200
+I don't want to show you the easy stuff.
+
+01:39.890 --> 01:46.580
+Async communication focuses on communicating changes to our data whenever something happens using events.
+
+01:46.790 --> 01:52.910
+So we take these events which can be as we saw, a object can be an array, a string, a number, any
+
+01:52.910 --> 01:54.590
+message we can possibly imagine.
+
+01:54.740 --> 01:57.650
+We take these events and we send them to an event bus.
+
+01:57.770 --> 02:02.630
+If it is then up to that event bus to take that event and send it around to all the different services
+
+02:02.630 --> 02:03.920
+inside of our application.
+
+02:03.920 --> 02:07.670
+And each of those different services can react that event in some way.
+
+02:08.970 --> 02:13.950
+One of the really nice things about async communication is that every service generally ends up being
+
+02:13.950 --> 02:15.390
+a rather self-sufficient.
+
+02:15.420 --> 02:20.760
+Now, of course, as I mentioned multiple times, no, these things are not truly self sufficient because
+
+02:20.760 --> 02:23.720
+they are relying upon events coming in from outside sources.
+
+02:23.730 --> 02:29.190
+But if any other service starts to go down, we can generally still have the rest of our application
+
+02:29.190 --> 02:33.510
+work because we do not have strict dependencies between our different services.
+
+02:35.190 --> 02:36.690
+We also learned a little bit about Docker.
+
+02:36.690 --> 02:40.530
+We saw that it's really easy to use Docker to package up all these services.
+
+02:40.530 --> 02:42.440
+And we also saw that Kubernetes.
+
+02:42.450 --> 02:44.760
+Yeah, it was definitely a pain to set up.
+
+02:45.520 --> 02:48.190
+Going through the basics of Pod's deployment services.
+
+02:48.190 --> 02:51.460
+I'm sure through some of that you were saying, Stephen, why are we doing this?
+
+02:51.460 --> 02:56.380
+And I know that really was a slog to get through, but at the end of the day, Kubernetes is going to
+
+02:56.380 --> 03:01.300
+make it a lot easier to deploy our microservices and scale them up over time as well.
+
+03:01.630 --> 03:06.370
+Without a doubt, Kubernetes is the way to go, even if it is a little bit of a pain to get started
+
+03:06.370 --> 03:06.880
+with.
+
+03:08.850 --> 03:09.120
+All right.
+
+03:09.120 --> 03:13.200
+So these were some of our big lessons, some big things that we said, okay, hey, this is something
+
+03:13.200 --> 03:14.220
+to pay attention to.
+
+03:14.250 --> 03:18.330
+But in addition to lessons, we also had some really big pains.
+
+03:18.420 --> 03:22.170
+There was a lot of kind of painful things we had to deal with as we were working through this first
+
+03:22.170 --> 03:23.010
+application.
+
+03:23.220 --> 03:26.040
+So I want to focus on some of these different painful things.
+
+03:26.070 --> 03:30.990
+I want to take a look at some solutions that we're going to start to implement in this next application.
+
+03:31.650 --> 03:33.670
+Now, this is not an exhaustive list right here.
+
+03:33.690 --> 03:36.370
+There are some other things that were pains beyond what I'm just saying.
+
+03:36.390 --> 03:40.410
+I'm really just highlighting some of the big ticket items because these are going to be items that we're
+
+03:40.410 --> 03:43.440
+going to handle much differently in the second application.
+
+03:44.130 --> 03:48.150
+So first off, we technically had a decent amount of duplicated code.
+
+03:48.360 --> 03:54.390
+I kind of not really I guess, but we had a lot of very similar looking code in each of our services.
+
+03:54.390 --> 03:58.700
+We had all the same kind of express setup, all the same looking root handlers.
+
+03:58.710 --> 04:04.560
+We ended up having kind of duplicated logic around sending down posts or comments between query and
+
+04:04.560 --> 04:06.210
+the post service incumbent services.
+
+04:06.240 --> 04:08.370
+Without a doubt there was some amount of duplicated code.
+
+04:10.140 --> 04:15.000
+Next up, it was definitely a very challenging to picture the flow of events between all these different
+
+04:15.000 --> 04:15.790
+services.
+
+04:15.810 --> 04:21.150
+So at some point in time, I showed you some diagrams to introduce that idea of the moderation service,
+
+04:21.150 --> 04:25.860
+and I laid out three different options for how to handle some events flowing between each one.
+
+04:26.130 --> 04:29.760
+And I'll be honest with you, when I was putting those videos together, even I was watching these videos
+
+04:29.760 --> 04:33.090
+and saying, wait, what, how how is this stuff going on?
+
+04:33.090 --> 04:33.990
+Why is this happening?
+
+04:33.990 --> 04:35.280
+Why is what?
+
+04:35.490 --> 04:40.560
+And so I think that understanding the flow of events between these services and understanding when events
+
+04:40.560 --> 04:42.960
+get dispatched is kind of challenging.
+
+04:42.960 --> 04:45.540
+And so I think that we need to figure out a better way to handle that.
+
+04:46.320 --> 04:50.460
+It was also really challenging to remember what properties and event should have.
+
+04:50.970 --> 04:56.010
+So we were working between multiple different projects and we would have inside of one project we would
+
+04:56.100 --> 05:00.120
+emit an event and then we would attempt to receive that in another service.
+
+05:00.570 --> 05:06.030
+So we were essentially sharing information across a boundary and we didn't have any good documentation
+
+05:06.030 --> 05:11.820
+in place or anything like that to understand the different properties or even the names of those properties
+
+05:11.820 --> 05:16.770
+or even the types of data that those properties were referring to in our events.
+
+05:16.890 --> 05:20.190
+And so it was incredibly easy to make a typo.
+
+05:21.050 --> 05:26.600
+We might emit an event in one service and give it a property with the name of like username and then
+
+05:26.600 --> 05:27.910
+maybe another service.
+
+05:27.920 --> 05:32.810
+We tried to receive that event and accidentally wrote out a property name in there off the incoming
+
+05:32.810 --> 05:35.960
+event referencing like name instead of username.
+
+05:36.560 --> 05:41.390
+That a doubt remembering those properties are really challenging, even if it doesn't really seem so
+
+05:41.390 --> 05:42.110
+right now.
+
+05:43.620 --> 05:48.030
+Finally when not finally we got a couple more on here, but the next one, it was kind of hard to test
+
+05:48.030 --> 05:49.410
+some of these different event flows.
+
+05:49.410 --> 05:54.950
+So for example, that moderation thing, to test out moderation, we first had to create a post.
+
+05:54.960 --> 05:56.670
+We then had to create a comment.
+
+05:56.670 --> 05:58.620
+We had to then refresh the page.
+
+05:58.620 --> 06:00.660
+We then had to go through the other possibilities.
+
+06:00.660 --> 06:06.930
+So a comment with Orange in the comments without orange, maybe a different spelling of orange, maybe
+
+06:06.930 --> 06:08.130
+orange capitalized.
+
+06:08.160 --> 06:12.330
+There were some event flows where maybe it wasn't really hard, but it was certainly tedious to test
+
+06:12.330 --> 06:13.680
+out the event flows.
+
+06:14.040 --> 06:15.900
+So we had to refresh multiple times.
+
+06:15.900 --> 06:18.620
+We had to think about all these different edge cases, all that kind of stuff.
+
+06:18.630 --> 06:20.940
+I'm going to say that was kind of painful.
+
+06:22.310 --> 06:24.360
+Now, two other things that you might have encountered.
+
+06:24.390 --> 06:29.670
+You might have had your computer start to get kind of laggy while running Kubernetes and Scaffold and
+
+06:29.670 --> 06:32.370
+maybe having your browser open and all this other stuff.
+
+06:32.580 --> 06:36.360
+So you might be at a point right now where you're saying, Gee, am I going to be able to develop all
+
+06:36.360 --> 06:38.760
+these services locally, like on my own machine?
+
+06:39.330 --> 06:43.800
+And then finally, something that I mentioned very briefly during this first application, there is
+
+06:43.800 --> 06:49.650
+kind of an interesting case if you really start to think through the flow of events inside of our application.
+
+06:49.800 --> 06:54.360
+In other words, looking at this point right here, what if someone created a comment after editing
+
+06:54.360 --> 06:59.400
+five others and then editing another post and then while at the same time creating a post?
+
+06:59.520 --> 07:05.280
+And I just want you to imagine that maybe there is some kind of like magic series of events where if
+
+07:05.280 --> 07:09.780
+we emitted some series of events very quickly inside of our application, we might actually be able
+
+07:09.780 --> 07:15.390
+to break our data model, for example, maybe some events would flow around our application out of order.
+
+07:15.810 --> 07:22.590
+Imagine the case in which maybe someone created a post and then simultaneously, like in the same microsecond
+
+07:22.650 --> 07:24.930
+created a comment attached to that post.
+
+07:25.170 --> 07:29.940
+We were making some really big assumptions inside this application about the order of events flowing
+
+07:29.940 --> 07:30.570
+around.
+
+07:30.690 --> 07:35.460
+What would happen if someone created a post and a comment associated with that at the same time?
+
+07:35.460 --> 07:41.130
+And then maybe for some reason the comment creation event showed up inside of our comment service before
+
+07:41.130 --> 07:42.210
+post creation.
+
+07:42.980 --> 07:47.600
+Our comment service was assuming that there was always going to be a post inside of its little in-memory
+
+07:47.600 --> 07:50.580
+data structure to associate an incoming comment with.
+
+07:50.600 --> 07:58.730
+So if we for some reason received a comment creation event before a post creation, our entire application
+
+07:58.730 --> 07:59.120
+would break.
+
+07:59.120 --> 08:05.150
+And so this note right here is meant to say what if there is some really weird series of events while
+
+08:05.150 --> 08:10.270
+some really crazy scenario is going on that might potentially break our application?
+
+08:10.280 --> 08:11.900
+How do we figure those things out?
+
+08:11.900 --> 08:13.490
+How do we write code to deal with them?
+
+08:13.790 --> 08:16.700
+That's something that I kind of alluded to, but we never really answered.
+
+08:18.330 --> 08:20.940
+So for all these painful things, you got a solution.
+
+08:21.450 --> 08:23.880
+Before I show you the solutions, however, just a quick note.
+
+08:25.350 --> 08:27.030
+For this next project we're going to work on.
+
+08:27.030 --> 08:32.040
+We're going to make some really big changes to our development process to accommodate some of these
+
+08:32.040 --> 08:33.300
+different painful things.
+
+08:33.660 --> 08:39.510
+And I kind of suspect that some people watching this course might really dislike some of the decisions
+
+08:39.510 --> 08:41.940
+or changes that we're going to make to our development process.
+
+08:42.090 --> 08:43.080
+You might not like them.
+
+08:43.080 --> 08:45.210
+You might totally disagree with what we're about to do.
+
+08:45.240 --> 08:46.950
+You might say, Oh, Steven, I don't want to do that.
+
+08:46.950 --> 08:48.030
+That sounds like a pain.
+
+08:48.390 --> 08:52.350
+And I got to be honest with you, I would not be making these changes to our development process if
+
+08:52.350 --> 08:56.580
+I did not really, really think that this was the right way to build microservices.
+
+08:56.820 --> 09:00.050
+Seriously, this next project, we're really not cutting a lot of corners.
+
+09:00.060 --> 09:01.860
+We're cutting a couple of corners, I'll be honest with you.
+
+09:01.860 --> 09:07.080
+And I'm going to very much point out where those corners are, but we're really not going to be cutting
+
+09:07.080 --> 09:07.650
+a lot of corners.
+
+09:07.650 --> 09:12.000
+And I want to so I want to show you the right way to do it, as many things as possible.
+
+09:13.130 --> 09:15.500
+So then mind, here's how we're going to solve these problems.
+
+09:15.530 --> 09:16.310
+Here's what we're going to do.
+
+09:16.310 --> 09:19.250
+And I know this is a long video, so I'm going to kind of wrap this up rather quickly.
+
+09:20.210 --> 09:20.420
+All right.
+
+09:20.420 --> 09:23.510
+So first off, let's duplicate a code to solve this.
+
+09:23.540 --> 09:25.430
+Let's zoom in over here on the right hand side.
+
+09:27.060 --> 09:34.290
+We are going to build a central library as a module and we're going to throw in a ton of code into that
+
+09:34.290 --> 09:37.320
+library that we're going to share between all of our different services.
+
+09:37.830 --> 09:42.120
+So we are going to be building out a collection of different express servers for this next application.
+
+09:42.120 --> 09:46.920
+And a lot of these express applications are going to have a lot of common code inside them rather than
+
+09:46.920 --> 09:48.580
+duplicating that code all over the place.
+
+09:48.600 --> 09:51.060
+We're going to build one central library.
+
+09:51.420 --> 09:56.490
+We're going to throw in a lot of express related code, a lot of other associated code as well.
+
+09:56.490 --> 10:00.450
+And then we're going to install that library inside of all of our services.
+
+10:00.630 --> 10:04.980
+So this is going to be really great because we're going to have a lot of fantastic code reuse.
+
+10:05.160 --> 10:09.780
+The downside to this, however, is that we might end up having to work on that library at the very
+
+10:09.780 --> 10:10.860
+start of this project.
+
+10:10.860 --> 10:15.210
+And so there will be some scenarios where I'm going to tell you, Oh yeah, we need a middleware to
+
+10:15.210 --> 10:18.300
+handle authentication, and so it should look like this.
+
+10:18.300 --> 10:20.370
+And you might say, Wait, how do you know it should look like this?
+
+10:20.370 --> 10:22.920
+Stephen or where are we going to use this middleware?
+
+10:22.920 --> 10:26.460
+And you're just going to have to trust me and understand we're going to use this somewhere.
+
+10:26.460 --> 10:30.450
+We're just writing this code up front so we have it and we don't have to worry about this really tedious,
+
+10:30.450 --> 10:35.220
+express related stuff when we're trying to really focus on handling data and microservices.
+
+10:37.040 --> 10:40.820
+Next up, kind of hard to picture the flow of events between these different services.
+
+10:40.820 --> 10:44.660
+So our solution or the solution I wrote right here doesn't quite answer this or solve it.
+
+10:44.660 --> 10:51.020
+But suffice it to say, we're going to define all of our events in this shared library so we can have
+
+10:51.020 --> 10:54.260
+a very precise definition of what all these different events are.
+
+10:54.290 --> 10:58.400
+We're going to make sure that all the very all the different properties are very crystal clear in their
+
+10:58.400 --> 11:00.320
+spelling, their type, all that kind of stuff.
+
+11:00.320 --> 11:05.420
+And this is going to go a long way to helping us understand what different events we have going between
+
+11:05.420 --> 11:09.650
+our services and possibly in some cases, the order in which they're flowing around as well.
+
+11:11.550 --> 11:15.030
+Next up, speaking of hard to remember, properties moving forward.
+
+11:15.030 --> 11:17.720
+And this is the first item where I think you might say, wait, what?
+
+11:17.730 --> 11:18.710
+We're doing this.
+
+11:18.720 --> 11:21.000
+Yeah, we're going to start to write everything in TypeScript.
+
+11:21.180 --> 11:23.610
+If you don't know TypeScript, that's entirely possible.
+
+11:23.610 --> 11:23.880
+It is.
+
+11:23.880 --> 11:24.480
+Okay.
+
+11:24.660 --> 11:28.890
+At the very end of this course, I have another appendix that's going to give you an overview of TypeScript,
+
+11:28.890 --> 11:31.950
+certainly more than enough to get through the rest of this course.
+
+11:32.280 --> 11:36.500
+And to be honest with you, I think that possibly a lot of the value in this course is going to be our
+
+11:36.570 --> 11:41.400
+kind of around learning TypeScript and applying it in a kind of microservices sort of world, because
+
+11:41.400 --> 11:45.480
+we're going to write some extremely reusable and flexible code here.
+
+11:45.510 --> 11:51.180
+I seriously have put in a tremendous amount of time on really polishing the code quality for this second
+
+11:51.180 --> 11:51.840
+application.
+
+11:51.840 --> 11:56.850
+So you might be unhappy that we're using TypeScript on the second half of this course, but again,
+
+11:56.850 --> 11:57.930
+I can't say enough.
+
+11:58.320 --> 12:00.030
+It really is the right way to do this.
+
+12:00.030 --> 12:01.830
+And I have a couple more things I want to say about that.
+
+12:01.830 --> 12:04.290
+But again, long video, so I'm just going to keep going.
+
+12:06.020 --> 12:08.210
+Next up, it was really hard to test some event flows.
+
+12:08.210 --> 12:11.840
+I mean, maybe not really hard for this application, but trust me for this next one, it is going to
+
+12:11.840 --> 12:13.160
+be really hard to test the flows.
+
+12:13.160 --> 12:16.790
+There's going to be very precise series of steps we have to go through in the browser.
+
+12:16.790 --> 12:20.720
+That's going to be kind of a nightmare, kind of annoying to have to do.
+
+12:20.810 --> 12:24.020
+And having to test this stuff manually, it only goes so far.
+
+12:24.020 --> 12:29.510
+So moving forward, we're going to start to write tests for a lot of the functionality we've put together,
+
+12:29.510 --> 12:34.520
+really around a lot of the data and around some of the different express things, but not for some of
+
+12:34.520 --> 12:35.630
+the more common middleware.
+
+12:35.630 --> 12:36.950
+So we're going to put together.
+
+12:36.950 --> 12:40.670
+So we're not going to go totally overboard with tests, but we're going to write a lot of tests moving
+
+12:40.670 --> 12:44.870
+forward as opposed to immediately trying to just click around stuff in the browser to test.
+
+12:47.250 --> 12:52.650
+Next up, if your machine is starting to get laggy running Kubernetes, I am going to show you fairly
+
+12:52.650 --> 12:57.900
+briefly how to run a Kubernetes cluster in the cloud in a sort of development environment.
+
+12:58.080 --> 13:00.570
+So this is not going to be a production style cluster.
+
+13:00.570 --> 13:05.940
+This is going to be a cluster specifically intended to allow you to do development on a large Kubernetes
+
+13:05.940 --> 13:06.600
+cluster.
+
+13:07.080 --> 13:12.120
+In the case that you might be running too many services to really execute on your own local machine.
+
+13:12.540 --> 13:17.040
+So you can kind of imagine that if you're working at a company that has dozens of different microservices,
+
+13:17.040 --> 13:21.240
+you might need to have some kind of testing or development environment that works with all those different
+
+13:21.240 --> 13:22.020
+services.
+
+13:22.020 --> 13:27.660
+And maybe a dozen or two dozen, three dozen services is too much to run on some old laptop.
+
+13:28.020 --> 13:33.180
+And so the way we solve that is by creating a cluster in the cloud, a development style cluster, and
+
+13:33.180 --> 13:37.050
+then we're going to use this same kind of scaffold workflow with that remote cluster.
+
+13:37.170 --> 13:41.580
+So the real goal of all this or this line item right here is to solve any performance issues that you
+
+13:41.580 --> 13:42.300
+might have.
+
+13:42.600 --> 13:46.980
+Now, I do want you to know right away, chances are if you are going to create a development cluster
+
+13:46.980 --> 13:50.640
+in the cloud, very likely that you'll end up having to pay money for it.
+
+13:50.760 --> 13:55.740
+You might fit underneath the free tier or it might be entirely free, but it is very much possible that
+
+13:55.740 --> 13:56.670
+you will have to spend money.
+
+13:56.670 --> 13:58.080
+Just want throw that out there right now.
+
+14:00.030 --> 14:06.780
+Then finally handling this really crazy data stuff where who knows, if we click on this and then create
+
+14:06.780 --> 14:10.080
+some other resource and then edit it at the exact same instant.
+
+14:10.530 --> 14:14.970
+Again, that's something we kind of touched on, but we didn't really have any good solution for it.
+
+14:15.330 --> 14:16.680
+Really no solution whatsoever.
+
+14:16.680 --> 14:18.840
+We had nothing to mitigate problems like that.
+
+14:19.200 --> 14:22.410
+So that's going to be a huge focus in this next application.
+
+14:22.410 --> 14:27.990
+We're going to have unending focus on data consistency and making sure that if events come into our
+
+14:27.990 --> 14:33.840
+application in some out of order, out of sequence or who knows what, we are going to have some code
+
+14:33.840 --> 14:36.090
+or some idea of how to deal with that.
+
+14:37.080 --> 14:37.440
+Okay.
+
+14:37.440 --> 14:43.860
+So again, if you are not happy about TypeScript, if you are not happy about writing tests, I apologize
+
+14:44.070 --> 14:45.090
+to some degree.
+
+14:45.420 --> 14:49.950
+But again, I would not be saying, yeah, we got to use TypeScript in tests if I did not really think
+
+14:49.950 --> 14:51.290
+it was the right way to do this.
+
+14:51.300 --> 14:56.520
+And again, I've got some more notes or thoughts on TypeScript in test with microservices, but too
+
+14:56.520 --> 14:58.140
+much for an already long video.
+
+14:58.470 --> 15:00.300
+So we're going to call this good right now.
+
+15:00.300 --> 15:01.530
+We're going to take a pause right here.
+
+15:01.530 --> 15:04.890
+We're going to come back the next video and we're going to start to take a look at a couple of mock
+
+15:04.890 --> 15:06.180
+ups for the next application.
+
+15:06.180 --> 15:10.860
+We're going to start and we're going to start to think about the overall architecture of it as well.

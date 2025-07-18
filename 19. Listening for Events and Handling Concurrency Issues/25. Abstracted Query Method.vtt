@@ -1,0 +1,307 @@
+WEBVTT
+
+00:01.390 --> 00:06.220
+Well, we definitely have fixed up some of these concurrency issues, but as usual, I'm still not entirely
+
+00:06.220 --> 00:08.250
+happy with our implementation.
+
+00:08.260 --> 00:10.990
+I think there are one or two things that we could definitely improve upon.
+
+00:11.110 --> 00:15.730
+The first thing I want to point out inside of our ticket update listener, we've got this really ugly
+
+00:15.730 --> 00:16.720
+query here now.
+
+00:16.750 --> 00:21.640
+So you've got to find one where we have to add in this somewhat complicated set of filters, as you
+
+00:21.640 --> 00:25.690
+can imagine, duplicating this around to a bunch of other listeners in the future would start to get
+
+00:25.690 --> 00:27.430
+really tiring really quickly.
+
+00:27.940 --> 00:32.830
+Not only is there this kind of mysterious underscore ID where we've been trying to stick to this ID
+
+00:32.830 --> 00:39.220
+convention quite a bit, but we also have this data version minus one, and it's really likely, in
+
+00:39.220 --> 00:42.670
+my opinion, that some other engineers are going to look at this minus one at some point in time and
+
+00:42.670 --> 00:44.710
+say, Why would we subtract minus one?
+
+00:44.710 --> 00:45.820
+Let's dump that.
+
+00:45.880 --> 00:48.240
+And if we did that, everything would start to break.
+
+00:48.250 --> 00:52.690
+So putting the minus one in here, I don't really like having to break out these two separate properties
+
+00:52.690 --> 00:53.710
+of ID and version.
+
+00:53.710 --> 00:54.630
+Also not great.
+
+00:54.640 --> 00:57.490
+Long story short, I think we can do better than this.
+
+00:58.250 --> 01:02.330
+So we're going to build a little helper method on our ticket model directly.
+
+01:02.420 --> 01:07.880
+This ticket model is going to take in this entire data object right here and then essentially do the
+
+01:07.880 --> 01:09.170
+exact same query.
+
+01:09.200 --> 01:14.210
+But we're just going to kind of wrap everything else, everything up and hide away these nasty implementation
+
+01:14.210 --> 01:17.540
+details such as underscore ID and data, version minus one.
+
+01:18.660 --> 01:23.160
+So to get started, instead of my order service, I'll find the models directory tickets.
+
+01:24.170 --> 01:26.240
+Well, then find my ticket model.
+
+01:26.780 --> 01:29.330
+Here's the ticket model interface, to be precise.
+
+01:29.660 --> 01:34.850
+We're going to add in a new method directly to the model itself that's going to just facilitate us in
+
+01:34.850 --> 01:38.120
+doing a query for a ID plus a version.
+
+01:39.090 --> 01:43.140
+So inside of here, inside the ticket model interface, I'm going to add in a new query method.
+
+01:43.140 --> 01:43.740
+We'll call it.
+
+01:43.740 --> 01:47.220
+How about find by event?
+
+01:47.400 --> 01:49.800
+Not the best name, really?
+
+01:49.800 --> 01:51.030
+Maybe there's a better name.
+
+01:51.030 --> 01:56.730
+I don't really want to call it find by ID and version because we're not really finding by version,
+
+01:56.730 --> 02:00.000
+we're doing a find by ID and previous version.
+
+02:00.000 --> 02:05.100
+And so that would lead us to a name of something like that, which is just way too long, in my opinion.
+
+02:05.520 --> 02:08.970
+It certainly is clear about what's going on, but I don't know.
+
+02:08.970 --> 02:11.190
+So I'm going to just stick with find by event.
+
+02:11.460 --> 02:15.990
+And the assumption here is that I'm going to pass in some kind of event or data object.
+
+02:15.990 --> 02:20.550
+This method will pull off the ID and version properties, subtract one from the version and use that
+
+02:20.550 --> 02:23.520
+to run the same query we had written just a moment ago.
+
+02:25.000 --> 02:29.860
+So let's say that this is going to receive some kind of event ish object, and I'll just put a type
+
+02:29.860 --> 02:32.440
+annotation for it right here directly in line.
+
+02:32.470 --> 02:35.380
+I'll say that whatever we pass in must have an ID.
+
+02:36.100 --> 02:37.060
+That is a string.
+
+02:38.520 --> 02:40.680
+Any version that is a number.
+
+02:41.940 --> 02:44.520
+And then from this, we're going to return.
+
+02:45.460 --> 02:46.540
+A promise.
+
+02:47.420 --> 02:52.530
+That is going to resolve with either a ticket doc or null.
+
+02:52.550 --> 02:54.250
+That's how we would express that.
+
+02:54.260 --> 02:59.480
+So we will either actually find a ticket document or we won't find anything matching this ID and version
+
+02:59.480 --> 03:00.200
+criteria.
+
+03:00.980 --> 03:03.110
+That would be our annotation for the return type.
+
+03:04.410 --> 03:07.390
+So now to actually implement this method, we'll scroll down a little bit.
+
+03:07.410 --> 03:09.650
+We already went through this process with the build method.
+
+03:09.660 --> 03:12.750
+All we have to do is add a new function to this static object.
+
+03:13.200 --> 03:18.870
+So I'll add in ticket schema dot statics dot find by event.
+
+03:21.480 --> 03:23.230
+And we'll write out our implementation.
+
+03:25.020 --> 03:29.340
+So this will take that same kind of data object or event object, whatever we want to call it.
+
+03:30.000 --> 03:33.480
+All that matters is that it has an ID that is a string.
+
+03:34.210 --> 03:36.400
+And a version that is a number.
+
+03:37.020 --> 03:40.800
+Then inside of here, all we're really going to do is run the same query we had just put together inside
+
+03:40.800 --> 03:41.580
+of our listener.
+
+03:42.520 --> 03:43.990
+So I will return.
+
+03:45.120 --> 03:45.830
+Ticket.
+
+03:46.710 --> 03:47.880
+Find one.
+
+03:48.580 --> 03:52.660
+We're going to look for underscore ID equal to event ID.
+
+03:55.070 --> 03:58.160
+And a version equal to version minus one.
+
+03:59.440 --> 04:00.940
+Ask any event person.
+
+04:01.860 --> 04:02.490
+That's better.
+
+04:03.920 --> 04:04.940
+And that should be it.
+
+04:05.630 --> 04:06.860
+So I'll save this file.
+
+04:08.060 --> 04:09.830
+I'm then going to go back over to our listener.
+
+04:10.340 --> 04:14.360
+And now we can clean up this query right here and hide away these kind of nasty details.
+
+04:14.360 --> 04:19.400
+So we're going to turn this entire thing into a weight ticket dot bind by event.
+
+04:21.680 --> 04:24.410
+And I'll pass in that data object like so.
+
+04:28.560 --> 04:30.180
+Oh, we should probably do another quick test.
+
+04:30.180 --> 04:35.730
+So I'm going to save this and once again go through the process of creating a ticket and updating it.
+
+04:35.760 --> 04:40.090
+Alternatively, we could just try to make another update to the ticket we had made an update to.
+
+04:40.110 --> 04:41.100
+Just a moment ago.
+
+04:41.100 --> 04:44.610
+I think that would actually be the best because now we can actually test and make sure everything works
+
+04:44.610 --> 04:46.500
+with incrementing version numbers as well.
+
+04:46.860 --> 04:49.290
+So I've still got the previous ticket I had created actually.
+
+04:49.290 --> 04:49.560
+You know what?
+
+04:49.560 --> 04:52.980
+I don't personally, because I just deleted all my tickets in the last video.
+
+04:53.100 --> 04:54.630
+Too bad for me, but for you.
+
+04:54.630 --> 04:55.230
+Absolutely.
+
+04:55.230 --> 04:59.070
+You can try to make the same post request and then go back over to scaffold and make sure that everything
+
+04:59.070 --> 05:00.630
+got processed without any errors.
+
+05:00.630 --> 05:04.170
+So for me personally, I'm going to have to create very quickly a new ticket.
+
+05:05.150 --> 05:09.800
+But the idea and make my update and I'll make a second update just so it's similar to what you're doing.
+
+05:10.280 --> 05:13.010
+So now I should have two updates that have been processed successfully.
+
+05:13.040 --> 05:16.090
+If I go back over to Scaffold, I will see down here.
+
+05:16.100 --> 05:16.700
+Fantastic.
+
+05:16.700 --> 05:22.900
+I got a message received of to get created and then a ticket updated and a ticket updated.
+
+05:22.910 --> 05:27.050
+And very critically I don't see any errors, which means everything still works as expected.
+
+05:27.530 --> 05:27.950
+Cool.
+
+05:29.600 --> 05:30.050
+All right.
+
+05:30.050 --> 05:33.320
+Well, this is definitely a good improvement and something that I think we'll probably carry through
+
+05:33.320 --> 05:37.250
+to other scenarios where we need to select a record by its version as well.
+
+05:37.640 --> 05:38.600
+So let's take a pause right here.
+
+05:38.630 --> 05:42.410
+There's one other thing I want to mention around this implementation in just a moment.

@@ -1,0 +1,241 @@
+WEBVTT
+
+00:01.590 --> 00:04.810
+In this video, we're going to focus on how to build out this shared library.
+
+00:04.830 --> 00:09.240
+We're going to first take a look at how we can somehow share code between multiple different services.
+
+00:09.270 --> 00:13.800
+We're going to outline three different ways to share a code between the service and the ticket service.
+
+00:13.830 --> 00:14.820
+Now, just be clear.
+
+00:14.820 --> 00:19.170
+There are more than three ways to share code between projects, but we're going to be mostly focused
+
+00:19.170 --> 00:20.760
+on these three different methods.
+
+00:20.790 --> 00:26.940
+So method number one for sharing code between two projects is to just do a very direct copy paste.
+
+00:27.210 --> 00:29.020
+So we could go into our service.
+
+00:29.040 --> 00:34.860
+We could find all those middle where's all the custom air handling stuff and so on, and do a direct
+
+00:34.860 --> 00:38.580
+copy paste of that code over to this new ticket service we're going to put together.
+
+00:39.120 --> 00:42.000
+And there's definitely a very big downside to this approach.
+
+00:42.270 --> 00:47.520
+If we start to copy paste stuff over, we might then go back over to our service and start to make changes
+
+00:47.520 --> 00:48.730
+to this common code.
+
+00:48.750 --> 00:51.150
+And so maybe we are now on version two over here.
+
+00:51.390 --> 00:53.460
+How would we know what files changed?
+
+00:53.490 --> 00:57.630
+How would we somehow get those files synced over to the ticket service?
+
+00:57.750 --> 01:00.000
+We would have to do a direct copy paste again.
+
+01:00.450 --> 01:04.440
+And when we did that direct copy paste, it might be really challenging for us to keep in mind exactly
+
+01:04.470 --> 01:05.370
+what changed.
+
+01:05.400 --> 01:08.280
+So it'd be kind of hard to document these changes over time.
+
+01:09.470 --> 01:12.530
+I think you can probably we don't really need to spend a lot of time on this.
+
+01:12.530 --> 01:17.120
+I think you can probably kind of instinctually sense that doing a direct copy paste this code between
+
+01:17.120 --> 01:20.330
+projects is probably not the best way to do any kind of code sharing.
+
+01:20.330 --> 01:24.350
+So I just want to mention it, but we're not really going to consider this as a serious option.
+
+01:25.390 --> 01:25.630
+Met.
+
+01:25.630 --> 01:29.260
+The number two is to use what is called a git sub module.
+
+01:29.500 --> 01:33.040
+If you are familiar with git then you might have heard of sub modules.
+
+01:33.130 --> 01:39.280
+A sub module is whenever we have one git repository and we want to somehow include another git repository
+
+01:39.280 --> 01:39.970
+inside there.
+
+01:40.390 --> 01:46.510
+So we might create a git repo for our service and our ticket service would then create a third repo
+
+01:46.510 --> 01:48.040
+for all of our common code.
+
+01:48.740 --> 01:54.710
+We would then add in this common repo into our off and tickets repos as a sub module.
+
+01:54.950 --> 01:57.800
+And so you can imagine that we kind of take a copy of this thing.
+
+02:00.830 --> 02:04.700
+And put it directly in right there and right there.
+
+02:05.830 --> 02:10.540
+Now the upside to this approach is that we have all of these common code inside of version control.
+
+02:10.540 --> 02:14.980
+And so we know at all times exactly what version of the common code we are running between these two
+
+02:14.980 --> 02:16.070
+different projects.
+
+02:16.090 --> 02:20.350
+We also have some really solid documentation on what gets changed between different versions.
+
+02:20.740 --> 02:25.880
+The downside to this approach is that using get some modules in general is just a little bit challenging.
+
+02:25.900 --> 02:30.220
+There's some different complicated commands whenever you create a new git repository.
+
+02:30.250 --> 02:32.770
+Setting up some modules is always a little bit of a pain.
+
+02:32.770 --> 02:37.570
+And so this definitely is a valid option, but there's just a little bit of pain associated with it.
+
+02:38.050 --> 02:44.920
+So third option we're going to take a look at is publishing all this common code as an NPM package.
+
+02:45.520 --> 02:47.290
+So this is what we are going to do.
+
+02:47.500 --> 02:49.270
+We're going to take all this common code.
+
+02:49.270 --> 02:51.160
+We're going to move it into a new project.
+
+02:51.160 --> 02:55.470
+We're then going to publish this as a package to the NPM registry.
+
+02:55.480 --> 02:59.950
+So we might give it a name of something like git ticks, dash common or something like that.
+
+03:00.460 --> 03:05.290
+Then inside of each of our different services that need this common code, we will simply install it
+
+03:05.290 --> 03:10.570
+as a NPM dependency using that same kind of NPM install command you are already familiar with.
+
+03:11.050 --> 03:15.430
+The nice thing about this approach is that we can still version the code inside this common repository
+
+03:15.430 --> 03:16.780
+or this common library.
+
+03:17.020 --> 03:23.740
+So our service might use version 001 of this common library and a ticket service might use, say, version
+
+03:23.740 --> 03:24.820
+002.
+
+03:25.240 --> 03:29.710
+So if we ever start to make a change to this Git Ticks library, no problem.
+
+03:29.710 --> 03:34.630
+We can still have all of our other services using the older version until we eventually get around to
+
+03:34.630 --> 03:39.700
+making updates and adjusting them and saying, okay, let's now use version zero or two over inside
+
+03:39.700 --> 03:40.750
+the service.
+
+03:41.480 --> 03:43.430
+So we're going to use option number three right here.
+
+03:44.000 --> 03:47.810
+Now, this definitely solves a lot of issues, but there are some really big downsides.
+
+03:47.840 --> 03:52.190
+This means that any time that we want to change our common code, we're going to have to make our change,
+
+03:52.220 --> 03:57.770
+push it up to the NPM registry, then go over to our different services and update our version to the
+
+03:57.770 --> 03:58.520
+latest.
+
+03:58.520 --> 04:00.910
+And that's just kind of a tedious process.
+
+04:00.920 --> 04:04.550
+We are going to eventually write out a little script that's going to kind of automate some of the stuff
+
+04:04.550 --> 04:04.940
+for us.
+
+04:04.940 --> 04:09.410
+But I just want to point out that it is a little bit tedious and there will be times where we start
+
+04:09.410 --> 04:14.090
+to write some code in an update to this common repository or this common library, and then we will
+
+04:14.090 --> 04:14.750
+publish it.
+
+04:14.750 --> 04:19.520
+We will update our ticket service with the newest version, and then we'll say, Oh my gosh, we just
+
+04:19.520 --> 04:20.540
+made a little mistake.
+
+04:20.540 --> 04:26.180
+So we'll have to go back over to the library, make the update, rebuild it, push it again, update
+
+04:26.180 --> 04:27.410
+ticket service again.
+
+04:27.410 --> 04:32.150
+In other words, there will be times where it's a little bit of a pain, but this kind of has the best
+
+04:32.150 --> 04:33.650
+of all the different options.
+
+04:34.220 --> 04:34.490
+Okay.
+
+04:34.580 --> 04:38.960
+So with that might mind another quick pause right here in the next video, we're going to go ahead and
+
+04:38.960 --> 04:40.460
+create this common library.
+
+04:40.460 --> 04:45.050
+We're going to start to set it up as an NTP module and then start to move all of our common code over
+
+04:45.050 --> 04:45.560
+to it.

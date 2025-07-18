@@ -1,0 +1,163 @@
+WEBVTT
+
+00:01.280 --> 00:03.620
+In the last video, we created our first GitHub hook.
+
+00:03.650 --> 00:05.620
+We're now going to try to test this thing out.
+
+00:05.630 --> 00:10.950
+So our ultimate goal is to be able to create a pull request and see all the tests for specifically our
+
+00:11.180 --> 00:12.740
+service get executed.
+
+00:13.010 --> 00:17.000
+Now, one thing I want to point out is that inside this little script we put in NPM, run test, colon
+
+00:17.030 --> 00:17.560
+PSI.
+
+00:17.600 --> 00:18.410
+So why is that?
+
+00:18.860 --> 00:23.420
+Well, whenever we run our tests inside of this GitHub environment, we need to make sure that our test
+
+00:23.420 --> 00:25.940
+suite exits automatically at some point in time.
+
+00:26.390 --> 00:31.820
+Right now, our NPM run test command is going to start up just inside the watcher mode.
+
+00:31.820 --> 00:35.690
+So it's going to run continuously just watching for changes to be made to our source code.
+
+00:35.930 --> 00:38.180
+We do not want that when we're running our tests on GitHub.
+
+00:38.180 --> 00:41.930
+We want just one run of our test suite and we want to exit entirely.
+
+00:42.290 --> 00:47.420
+So rather than running NPM test directory directly, we're going to instead create a new script called
+
+00:47.420 --> 00:48.710
+Test Colon PSI.
+
+00:48.740 --> 00:52.700
+That is going to run our test suite exactly one time and then automatically exit.
+
+00:53.060 --> 00:56.480
+So let's go back over to our service and make that change very quickly.
+
+00:57.110 --> 01:00.050
+Inside my service, I'll find the package dot JSON file.
+
+01:01.970 --> 01:08.080
+I'll find the script section inside there and I'm going to add in a new script of Test Colon Sci.
+
+01:09.980 --> 01:10.790
+And the command for that.
+
+01:10.790 --> 01:12.020
+We're going to put it in jest.
+
+01:12.350 --> 01:13.580
+And we actually don't even need that.
+
+01:13.580 --> 01:15.110
+No cache command on there at all.
+
+01:15.140 --> 01:19.490
+We definitely do not want watch all as you imagine, that's what starts up our test suite in the watcher
+
+01:19.490 --> 01:19.970
+mode.
+
+01:20.810 --> 01:21.950
+So then save this.
+
+01:22.400 --> 01:24.110
+We're going to go over to our terminal.
+
+01:24.110 --> 01:28.100
+We're going to commit these changes on the master branch because this is some initial configuration
+
+01:28.100 --> 01:28.880
+we're going through.
+
+01:28.910 --> 01:32.690
+Then we're going to push this up to GitHub and then after that we'll make some other small change to
+
+01:32.690 --> 01:37.340
+our project to kind of simulate making a change this thing in the real world, and then push it up to
+
+01:37.340 --> 01:39.380
+GitHub and walk through our entire workflow.
+
+01:40.500 --> 01:42.060
+So back over at my terminal.
+
+01:43.180 --> 01:44.110
+I'll do a get status.
+
+01:44.110 --> 01:45.340
+Take a look at the files.
+
+01:45.340 --> 01:45.970
+I've changed.
+
+01:46.270 --> 01:47.950
+Just that package stays on file.
+
+01:48.660 --> 01:50.970
+So I'll add that and then commit it.
+
+01:53.970 --> 01:54.990
+But the message.
+
+01:55.950 --> 01:59.070
+And then finally, I'm going to push this up once again to the master branch.
+
+01:59.100 --> 02:01.560
+So get push origin master.
+
+02:03.470 --> 02:04.100
+And.
+
+02:04.100 --> 02:05.060
+All right, my mistake.
+
+02:05.060 --> 02:07.760
+We just made a change on GitHub to the master branch.
+
+02:07.760 --> 02:09.830
+We have to pull those changes down first.
+
+02:10.010 --> 02:12.980
+We need to do a git pull or origin master.
+
+02:13.130 --> 02:14.060
+That's better.
+
+02:16.000 --> 02:21.190
+You're probably going to see a little Ed pop up asking you to provide a merge message to go through
+
+02:21.190 --> 02:21.970
+that process.
+
+02:21.970 --> 02:26.650
+And then once we merge everything, then we can do a get push origin master.
+
+02:30.940 --> 02:32.290
+All right, so there's our changes.
+
+02:32.290 --> 02:36.190
+So now in theory, our GitHub workflow is all ready to be tested.
+
+02:36.460 --> 02:38.500
+Let's pause once more, come back in next video.
+
+02:38.500 --> 02:42.220
+Try making a change and simulate the real workflow that we're going to go through.

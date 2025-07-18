@@ -1,0 +1,184 @@
+WEBVTT
+
+00:01.080 --> 00:03.720
+Well, it looks like my cluster is now all up and ready.
+
+00:03.810 --> 00:08.610
+We're now going to try to connect to that cluster from our local machine using ETL.
+
+00:08.850 --> 00:13.080
+We're only doing this so that we can later debug our cluster, get logs and stuff like that.
+
+00:13.110 --> 00:16.300
+We are generally not going to manually deploy anything to our cluster.
+
+00:16.320 --> 00:20.730
+Again, we're only connecting to it to debug it and understand what is going on inside.
+
+00:21.860 --> 00:25.670
+Remember that in order to connect two different clusters, we're going to use Cube Kettle.
+
+00:25.850 --> 00:31.820
+We discussed this very briefly much earlier on inside the course as a very quick reminder up CTL decides
+
+00:31.820 --> 00:35.570
+on how to connect to some given cluster by using something called context.
+
+00:35.960 --> 00:41.780
+The context refers to some configuration settings that tells CTL how to connect to, say, a local cluster
+
+00:41.780 --> 00:46.970
+that you're running on your machine, maybe one on Google Cloud or maybe the one that we just created
+
+00:46.970 --> 00:48.200
+on Digital Ocean.
+
+00:49.030 --> 00:54.340
+So we're going to have to create a second context to tell you how to connect to that cluster that we
+
+00:54.340 --> 00:55.270
+just created.
+
+00:56.010 --> 01:00.570
+To create the second context, we're going to use the command line tool for interacting with digital
+
+01:00.570 --> 01:01.650
+ocean directly.
+
+01:02.400 --> 01:06.810
+We can get some instructions on how to install this digital ocean command line tool.
+
+01:07.230 --> 01:11.050
+If we go back over to our Digital Ocean page and click on right here.
+
+01:11.070 --> 01:13.470
+Number two, install management tools.
+
+01:15.080 --> 01:17.360
+You'll then see a link right here to dock.
+
+01:17.430 --> 01:20.750
+Tell that is the command line tool that we want to install.
+
+01:21.170 --> 01:24.350
+If you do not see this little pop up window right here, no problem.
+
+01:24.350 --> 01:27.110
+Just open up a new browser tab and go to GitHub.
+
+01:27.740 --> 01:29.570
+Digital Ocean Deal.
+
+01:30.360 --> 01:31.220
+That's how I pronounce it.
+
+01:31.230 --> 01:33.140
+I don't know if that's actually how you're supposed to pronounce it.
+
+01:33.150 --> 01:34.920
+Dostal dactyl.
+
+01:35.070 --> 01:35.820
+Good enough.
+
+01:36.700 --> 01:39.160
+So once a year we can find some installation directions.
+
+01:40.720 --> 01:44.200
+As usual, if you are on Mac OS, life is really easy.
+
+01:44.200 --> 01:45.460
+You can just use homebrew.
+
+01:45.910 --> 01:50.920
+Otherwise, if you are on Linux or Windows, you can scroll down a little bit more.
+
+01:50.950 --> 01:52.920
+Take a look at how to just download the binary.
+
+01:52.930 --> 01:57.100
+If you're on Linux, if you're on Windows, you're probably going to want to download the installer
+
+01:57.100 --> 01:57.730
+instead.
+
+02:00.040 --> 02:01.930
+So go ahead and do the installation.
+
+02:02.320 --> 02:08.800
+Once the installation is complete, you should be able to open up your terminal, run at ductile and
+
+02:08.800 --> 02:10.390
+see some help like this appear.
+
+02:11.450 --> 02:16.460
+Once Tactile is installed, we have to then initialize it or essentially authenticate yourself with
+
+02:16.460 --> 02:17.900
+your digital ocean account.
+
+02:18.290 --> 02:21.620
+To do so, we're going to run the command ductile off init.
+
+02:22.100 --> 02:23.660
+But first we have to do one other thing.
+
+02:23.660 --> 02:25.020
+I kind of jumped ahead right there.
+
+02:25.040 --> 02:26.540
+Let's not run that command just yet.
+
+02:27.080 --> 02:31.220
+So to actually authenticate ourselves, we do have to go back over to the Digital Ocean Dashboard.
+
+02:31.880 --> 02:35.390
+Over here, we're going to find on the bottom left hand side API.
+
+02:36.780 --> 02:39.020
+But then going to generate a new token.
+
+02:39.030 --> 02:44.640
+So this is an access token that gives you full access programmatically over your digital ocean account.
+
+02:46.120 --> 02:47.630
+You can enter in a name right here.
+
+02:47.650 --> 02:51.790
+I'm going to put in ductile too, because I've already got one called ductile.
+
+02:54.000 --> 02:56.070
+And I'll be presented with that token right there.
+
+02:56.370 --> 02:59.820
+Now, just, you know, by the time you watch this video, I will have already deleted this token,
+
+02:59.820 --> 03:01.530
+so don't bother trying to use this one.
+
+03:02.370 --> 03:03.840
+So you will copy that token.
+
+03:04.540 --> 03:07.030
+You'll then run that dactyl off in it.
+
+03:07.180 --> 03:10.300
+Once you run that, you'll be prompted to paste in the token.
+
+03:10.300 --> 03:13.990
+So paste it in hit enter and then you should be authenticated.
+
+03:15.070 --> 03:19.600
+So once we've got Dr. Elle up and running, we can then use it to install a context to connect to our
+
+03:19.600 --> 03:22.430
+cluster into our local copy of ETL.
+
+03:22.750 --> 03:26.590
+But at this point, we've already done a couple of things, and these next series of commands we're
+
+03:26.590 --> 03:28.890
+going to run are going to be just a little bit confusing.
+
+03:28.900 --> 03:32.260
+So let's pause right here and then make use of ductile in just a moment.

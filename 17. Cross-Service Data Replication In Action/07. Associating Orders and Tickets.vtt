@@ -1,0 +1,331 @@
+WEBVTT
+
+00:01.550 --> 00:03.830
+We're doing some validation on the income request.
+
+00:03.830 --> 00:04.750
+So now we need to start.
+
+00:04.760 --> 00:07.190
+Think about the body of this request handler.
+
+00:07.220 --> 00:11.960
+Remember, the entire goal of this request handler is to take in some information about a ticket that
+
+00:11.960 --> 00:18.680
+the user is trying to purchase and then create an order record and save an order to our MongoDB database.
+
+00:19.070 --> 00:23.270
+Any time we talk about saving information to our database, that always means that we need to create
+
+00:23.270 --> 00:24.530
+a mongoose model.
+
+00:24.890 --> 00:28.000
+Right now, our orders project does not have any models tied to it.
+
+00:28.010 --> 00:32.840
+So before we can continue with building out this request handler, we have to create a mongoose model
+
+00:32.840 --> 00:35.090
+to describe what in order is.
+
+00:35.180 --> 00:39.140
+So in this video, we're going to talk a little bit more about exactly what an order is and how we're
+
+00:39.140 --> 00:40.910
+going to model it inside of our database.
+
+00:41.800 --> 00:42.130
+All right.
+
+00:42.130 --> 00:45.250
+So back in this diagram over here, we were talking about the order service.
+
+00:45.250 --> 00:49.720
+We said that this thing was going to have a collection of orders and every order would have a user ID
+
+00:49.780 --> 00:54.820
+status expires at and it would also somehow reference a ticket as well.
+
+00:56.170 --> 01:01.630
+So when we talk about saving orders to the database, well, inevitably, we also need to think about
+
+01:01.630 --> 01:06.610
+how we're going to save tickets to the database and most importantly, how we are going to relate these
+
+01:06.610 --> 01:07.810
+two things together.
+
+01:07.840 --> 01:10.200
+And that's what I really want to discuss in this video.
+
+01:10.210 --> 01:13.390
+How are we going to somehow relate in order to a ticket?
+
+01:14.350 --> 01:17.200
+So we need to associate these two things together somehow.
+
+01:17.470 --> 01:22.600
+We're going to have inside of our database, presumably in some fashion, a collection of different
+
+01:22.600 --> 01:24.440
+tickets that are available to be purchased.
+
+01:24.460 --> 01:29.020
+And once the user tries to create an order, we need to somehow mark that ticket as being reserved or
+
+01:29.020 --> 01:31.150
+associated with a very particular order.
+
+01:31.940 --> 01:37.520
+So when we start to discuss associating records together with MongoDB, there are two primary strategies
+
+01:37.520 --> 01:38.590
+that we can use.
+
+01:38.600 --> 01:43.040
+So we're going to take a look at the two primary strategies we can use to associate in order with a
+
+01:43.040 --> 01:43.550
+ticket.
+
+01:44.810 --> 01:49.070
+So option number one or strategy number one is referred to as embedding.
+
+01:50.210 --> 01:54.280
+So with him in bed meant strategy we might have in order like this right here.
+
+01:54.290 --> 01:59.510
+So this would be an order document we would have the user ID status expires that and then to somehow
+
+01:59.510 --> 02:05.480
+associate in order with a ticket, we could embed the information about that ticket directly inside
+
+02:05.480 --> 02:06.500
+the order itself.
+
+02:06.590 --> 02:12.140
+So in other words, we would have a ticket property and that would be a plain object with some ID,
+
+02:12.170 --> 02:14.630
+some price for the ticket and some title as well.
+
+02:15.230 --> 02:19.670
+This would make it really easy to figure out what orders are concerned with, what tickets.
+
+02:20.210 --> 02:24.800
+So we can very easily look up an order and say, Oh, right here on the ticket property.
+
+02:24.800 --> 02:27.500
+This is the ticket that the user is attempting to purchase.
+
+02:27.920 --> 02:30.740
+So this is one way that we can associate orders and tickets together.
+
+02:30.740 --> 02:35.210
+But there are some definite big downsides to it for our particular application.
+
+02:36.530 --> 02:39.110
+So here's or downside number one.
+
+02:39.850 --> 02:45.700
+Whenever a user tries to make a request to create an order, we need to make sure that that ticket that
+
+02:45.700 --> 02:48.310
+they're trying to order is not already reserved.
+
+02:48.910 --> 02:54.550
+So if we start to embed these tickets inside of each order, making sure that a ticket is not already
+
+02:54.550 --> 02:58.360
+reserved, it's going to start to get just a little bit challenging to query because we're going to
+
+02:58.360 --> 03:01.840
+essentially have to take a look at all the different orders that have been created over time.
+
+03:02.350 --> 03:05.440
+Take a look at the tickets embedded inside of each one.
+
+03:05.740 --> 03:12.250
+Take a look at the ID and make sure that ID is not equal to the ID that is inside of this incoming request.
+
+03:13.730 --> 03:17.600
+If an ID is already listed inside of an existing order, or if a ticket is already listed inside of
+
+03:17.600 --> 03:20.260
+an existing order, that means the ticket would be in use.
+
+03:20.270 --> 03:25.700
+So downside number one to option number one is that query to make sure that ticket is not in use, just
+
+03:25.700 --> 03:26.840
+a little bit challenging.
+
+03:27.410 --> 03:32.960
+But there is a way bigger downside, something that makes this embedding approach just about impossible
+
+03:32.960 --> 03:35.420
+to implement for our particular application.
+
+03:36.960 --> 03:42.420
+So remember, we're going to have our ticket service and it's going to eventually emit events like ticket
+
+03:42.420 --> 03:44.130
+created and ticket updated.
+
+03:44.430 --> 03:47.040
+These events will be received by the Order Service.
+
+03:47.610 --> 03:52.240
+Now, every ticket that gets created is not going to be immediately assigned to an order.
+
+03:52.260 --> 03:57.120
+There will be some point in time where someone creates a ticket to sell, and then it's just listed
+
+03:57.120 --> 03:59.460
+on our website waiting for someone to purchase it.
+
+03:59.640 --> 04:06.600
+So we need a way to essentially have tickets represented or inside of our order service without actually
+
+04:06.600 --> 04:09.330
+associating them directly with an order.
+
+04:09.780 --> 04:14.220
+In other words, there has to be a separate pool, a pool of records that say, here's a list of all
+
+04:14.220 --> 04:16.560
+the tickets that no one has tried to purchase yet.
+
+04:18.270 --> 04:23.670
+So this option number one strategy where we embed tickets inside of an order document really just not
+
+04:23.670 --> 04:28.860
+feasible because we really cannot have some kind of standby pool of tickets that are awaiting to be
+
+04:28.860 --> 04:29.580
+purchased.
+
+04:30.060 --> 04:32.220
+So we are not going to be making use of embedding.
+
+04:32.250 --> 04:34.520
+Instead, we're going to take a look at a different strategy.
+
+04:34.530 --> 04:36.580
+So this is kind of general strategy.
+
+04:36.600 --> 04:40.560
+Number two, we're associating records with MongoDB and Mongoose.
+
+04:40.830 --> 04:46.140
+We're going to use a feature inside of Mongoose called the Ref or Population Feature.
+
+04:46.590 --> 04:50.160
+So it's ref or population feature, however you want to refer to it.
+
+04:50.340 --> 04:57.000
+We're going to have a collection of documents about orders and a collection of documents about tickets.
+
+04:57.000 --> 05:00.060
+So a orders collection and a tickets collection.
+
+05:01.000 --> 05:05.470
+Then inside of every order, they can optionally have a reference to a ticket.
+
+05:05.920 --> 05:10.990
+So we will have some ticket property and this will essentially somehow be a reference over to a ticket
+
+05:10.990 --> 05:13.000
+inside of our tickets collection.
+
+05:13.980 --> 05:15.540
+So two separate collections.
+
+05:15.900 --> 05:21.120
+This will make it really easy for us to query all the different tickets and figure out if a given ticket
+
+05:21.120 --> 05:22.450
+is in use or not.
+
+05:22.470 --> 05:27.390
+We can also very easily find all the different tickets that are still awaiting to be purchased and list
+
+05:27.390 --> 05:30.990
+them out separately on the React side of our application as well.
+
+05:33.040 --> 05:35.220
+So this is the strategy we're going to use.
+
+05:35.230 --> 05:37.660
+We're going to use the ref or population feature.
+
+05:37.690 --> 05:42.160
+Now, the reason I'm making such a real big deal around this stuff, you know, when we looked at this
+
+05:42.160 --> 05:45.430
+diagram over here, it might have already been kind of obvious to you of.
+
+05:45.430 --> 05:46.360
+Oh, yeah, okay.
+
+05:46.720 --> 05:48.220
+Collection of orders, collection tickets.
+
+05:48.220 --> 05:51.040
+And so this video might seem a little bit unnecessary.
+
+05:51.280 --> 05:56.320
+The big reason I'm giving you this explanation is that later on, this relationship that we're setting
+
+05:56.320 --> 06:00.550
+up for some features we're going to build in a little bit is actually going to become really, really,
+
+06:00.550 --> 06:01.540
+really important.
+
+06:01.870 --> 06:06.940
+And on top of that, setting up this relationship with Mongoose, where we have some ticket property
+
+06:06.940 --> 06:08.960
+on the order document referring to a ticket.
+
+06:08.980 --> 06:12.670
+There's actually a little trick or two that you need to be aware of around that as well.
+
+06:13.330 --> 06:17.900
+So that's why we did this kind of extra video just to kind of clarify the relationship between the stuff.
+
+06:17.920 --> 06:22.450
+So at the end of the day, the strategy that we're going to move forward with, we're going to have
+
+06:22.450 --> 06:25.580
+a collection of orders, a collection of tickets.
+
+06:25.630 --> 06:31.570
+We're going to relate the two together or associate the two together using this ref or population feature.
+
+06:31.900 --> 06:34.230
+I'll show you how this feature works if you're not familiar with it.
+
+06:34.240 --> 06:38.110
+Otherwise, you can always take a look at the Mongoose documentation and understand a little bit more
+
+06:38.110 --> 06:39.130
+about how it works.
+
+06:39.570 --> 06:40.660
+Okay, quick pause right here.
+
+06:40.660 --> 06:44.620
+When we come back, the next video, we're going to start to write out an implementation for our order
+
+06:44.620 --> 06:47.310
+document and then the ticket document right after that.
+
+06:47.320 --> 06:47.920
+So quick pass.
+
+06:47.950 --> 06:49.030
+I'll see you in just a minute.

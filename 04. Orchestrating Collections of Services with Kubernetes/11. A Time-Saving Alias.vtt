@@ -1,0 +1,148 @@
+WEBVTT
+
+00:01.410 --> 00:07.170
+Two videos ago, you might have seen me very quickly write out a command as they get pods as opposed
+
+00:07.170 --> 00:07.720
+to cubes.
+
+00:07.740 --> 00:08.970
+It'll get pods.
+
+00:09.180 --> 00:10.440
+Now, if you run, kay, get pause.
+
+00:10.440 --> 00:12.650
+Right now, I could just about guarantee you're going to get an error.
+
+00:12.660 --> 00:15.900
+Something that says Unknown Command K or something very similar.
+
+00:16.440 --> 00:18.310
+Let me tell you a little bit more about this shortcut.
+
+00:18.330 --> 00:19.890
+This is something that I do personally.
+
+00:19.890 --> 00:23.700
+You're going to see very few other people do this, but it's something I found that it's really effective
+
+00:23.700 --> 00:27.480
+just to save my self a tiny little bit of time every single day.
+
+00:28.220 --> 00:31.100
+I found that writing out the word CTL is just a little bit annoying.
+
+00:31.100 --> 00:34.700
+I make typos in it all the time, and that's just annoying.
+
+00:34.700 --> 00:35.540
+I don't want to do it.
+
+00:35.870 --> 00:43.400
+So instead I set up an alias on my computer, but any time I write out K it will be automatically translated
+
+00:43.400 --> 00:43.980
+into Cube.
+
+00:44.000 --> 00:50.630
+CTL For me, the exact process of how you do this is going to vary based upon your personal computer
+
+00:50.630 --> 00:51.230
+setup.
+
+00:51.740 --> 00:54.500
+So I personally use a shell called Z Shell.
+
+00:54.530 --> 00:58.880
+That means that the program that is running inside of my terminal and interpreting the commands that
+
+00:58.880 --> 01:03.410
+I run in or I type in that command or that program is called Z Shell.
+
+01:03.950 --> 01:06.650
+You might be using something called Bash instead.
+
+01:06.860 --> 01:07.820
+I don't really know.
+
+01:07.820 --> 01:10.760
+It really comes down to what you are doing on your local machine.
+
+01:10.760 --> 01:14.480
+So in setting up this alias, you are going to have to do a little bit of research.
+
+01:14.480 --> 01:16.670
+Let me show you how I do it on Z Shell.
+
+01:17.710 --> 01:23.560
+So I would open up inside my code editor, my z shell RC file if you are running bash it would probably
+
+01:23.560 --> 01:25.030
+be bash RC instead.
+
+01:28.120 --> 01:29.080
+So I can open that up.
+
+01:29.080 --> 01:33.820
+And inside of here I got a little bit of shell configuration and then a list of different aliases.
+
+01:33.820 --> 01:38.110
+So these are commands that I could type in to my terminal, and they will be automatically expanded
+
+01:38.110 --> 01:39.430
+into something else instead.
+
+01:39.730 --> 01:43.250
+But for me, I write an alias K equals Q CTL.
+
+01:43.270 --> 01:46.600
+So again, anytime I put in K, it'll be expanded automatically.
+
+01:47.050 --> 01:52.510
+I've also got a little shortcut for Docker PS as well, so I can type in just DPS and that will list
+
+01:52.510 --> 01:56.010
+out all my running terminals or all assuming all my running console containers.
+
+01:56.020 --> 01:57.680
+So many pieces of terminology here.
+
+01:57.700 --> 01:59.740
+It will list out all my different running containers.
+
+02:00.920 --> 02:05.030
+So again, you might see me throughout the course writing out just kay, if you ever see me.
+
+02:05.030 --> 02:05.280
+Right.
+
+02:05.300 --> 02:05.560
+Kay.
+
+02:05.570 --> 02:09.830
+I do not mean to in this course, I mean to show you the exact command every single time.
+
+02:09.830 --> 02:13.580
+But every now and then, if I'm trying to do something very quickly, I might accidentally fall back
+
+02:13.580 --> 02:14.720
+to writing out Kay instead.
+
+02:14.720 --> 02:16.250
+And if I do, so my apologies.
+
+02:16.670 --> 02:20.540
+I do recommend you try out this little alias on your own if you can figure out how to set it up because
+
+02:20.540 --> 02:22.250
+it is just a nice little time saver.
+
+02:22.760 --> 02:23.480
+Okay, so that's it.
+
+02:23.480 --> 02:25.340
+That's all I want to discuss here.
+
+02:25.340 --> 02:26.540
+Continue in just a minute.

@@ -1,0 +1,229 @@
+WEBVTT
+
+00:01.640 --> 00:06.050
+In this video, we're going to try to write out a test or two around the sign out functionality.
+
+00:06.320 --> 00:10.190
+Now, once again, just like the last video, we're not really going to see anything that new in the
+
+00:10.190 --> 00:11.030
+world of testing.
+
+00:11.030 --> 00:15.200
+So if you really just want to get on to some the more interesting stuff, skip to the next video once
+
+00:15.200 --> 00:15.530
+again.
+
+00:15.530 --> 00:19.580
+Otherwise, stick around and let's write out a single test around the sign out route handler.
+
+00:20.260 --> 00:25.720
+So once again, inside my test directory, I'll make a new file of sign out tests.
+
+00:26.600 --> 00:31.490
+At the top, we will import a request from super test.
+
+00:32.730 --> 00:36.180
+And app from up to directories app.
+
+00:38.050 --> 00:42.210
+So as you guess, all we really want to do here is attempt to sign up for an account.
+
+00:42.220 --> 00:44.290
+Once we sign up, we should be logged in.
+
+00:44.800 --> 00:50.410
+And then after that we'll make another request to sign out and we should be able to make a assertion
+
+00:50.410 --> 00:54.820
+on the response we get back something to say that the cookie has been cleared or something like that.
+
+00:54.970 --> 00:59.110
+We'll probably have to inspect the actual response that gets sent back to figure out exactly how to
+
+00:59.110 --> 01:00.560
+write out this expectation.
+
+01:00.580 --> 01:02.800
+Let's just get started writing out the test first.
+
+01:03.760 --> 01:09.610
+We're going to put together in its statement inside of here, we'll say it clears the cookie after signing
+
+01:09.610 --> 01:10.000
+out.
+
+01:13.140 --> 01:17.010
+So inside of here again, we need to first sign up for an account so that we are authenticated.
+
+01:17.280 --> 01:19.770
+So we'll do in a wait request over to app.
+
+01:20.840 --> 01:24.350
+I'll make a post to API users sign up.
+
+01:25.440 --> 01:28.080
+And we'll send off an email that is valid.
+
+01:29.120 --> 01:30.560
+And a password.
+
+01:31.840 --> 01:32.980
+That is valid as well.
+
+01:33.010 --> 01:38.710
+And then once again, we will make sure that we get back a status code of not one but 201.
+
+01:40.730 --> 01:43.580
+So again, this is just going to make sure that we are successfully signed up.
+
+01:44.130 --> 01:46.380
+So then after that, we'll make our request.
+
+01:46.400 --> 01:50.120
+It's going to be a post request to API user sign out.
+
+01:50.420 --> 01:55.250
+And again on the response, we should be able to inspect that set cookie header and figure out exactly
+
+01:55.250 --> 01:56.150
+what gets sent back.
+
+01:56.150 --> 02:00.440
+When we sign out, we'll have to console.log that thing to figure out exactly how we should write that
+
+02:00.440 --> 02:01.130
+assertion.
+
+02:02.240 --> 02:07.670
+They'll do a concert response is a wait request to app.
+
+02:07.760 --> 02:10.730
+We'll do a post in this case to API users.
+
+02:10.730 --> 02:12.680
+Sign out in this case.
+
+02:15.370 --> 02:18.790
+We're going to send along an empty object because it is a post request.
+
+02:20.750 --> 02:23.870
+And then we will expect to get back again a 200.
+
+02:26.100 --> 02:29.380
+The 200 is not strictly necessary here or this expectation.
+
+02:29.400 --> 02:32.520
+It's really just to say, hey, we completed the request successfully.
+
+02:33.900 --> 02:38.940
+Now we need to do a console.log on that response and take a look at exactly what happens to that set
+
+02:38.970 --> 02:41.550
+cookie header when we try to clear that session.
+
+02:41.820 --> 02:47.130
+So I will do for right now just a console log of response target set cookie.
+
+02:51.340 --> 02:52.480
+All right, we'll save this.
+
+02:52.480 --> 02:53.860
+Go back over to our terminal.
+
+02:54.860 --> 02:58.580
+We've got that new test file inside there and there is our console.log.
+
+02:59.420 --> 03:05.090
+So it looks like whenever we try to sign out, we get back an empty session right there.
+
+03:05.090 --> 03:07.070
+Or essentially we're setting this to no data.
+
+03:07.070 --> 03:10.670
+And the cookie is also set to expire way long ago in the past.
+
+03:11.300 --> 03:16.460
+So we could try to just copy this thing right here entirely and say that the set cookie header should
+
+03:16.460 --> 03:17.410
+be equal to this.
+
+03:17.420 --> 03:18.800
+That'd be one strategy.
+
+03:18.980 --> 03:21.260
+So I could really just copy that.
+
+03:21.290 --> 03:22.850
+Maybe just that string right there.
+
+03:25.960 --> 03:30.010
+And then put in an expectation that looks like expect response.
+
+03:31.220 --> 03:35.460
+But get that cookie that gives us back an array, as you just saw.
+
+03:35.480 --> 03:36.590
+So it is an array.
+
+03:37.130 --> 03:39.160
+So we can take a look at the first entry inside there.
+
+03:39.200 --> 03:41.630
+Then we could say that must be equal to.
+
+03:43.450 --> 03:46.600
+And then put in that exact string that we saw inside of our terminal.
+
+03:47.760 --> 03:49.710
+So again, this would be one approach right here.
+
+03:49.740 --> 03:53.970
+Alternatively, we could just say set cookie is defined as we had previously.
+
+03:53.970 --> 03:55.680
+That would also be 100% valid.
+
+03:55.890 --> 03:57.000
+It's really up to you.
+
+03:57.030 --> 04:00.240
+I don't really expect the response right here or the structure to ever change.
+
+04:00.240 --> 04:04.650
+I think that it will always look like this forever, so I feel kind of okay using that string.
+
+04:04.650 --> 04:08.880
+But again, if you want to have a little bit more generic expectation, you could once again just say,
+
+04:08.880 --> 04:12.240
+Oh yeah, that set cookie header is defined, by the way, totally fine.
+
+04:13.400 --> 04:13.730
+All right.
+
+04:13.730 --> 04:17.180
+I am going to save this and run the test just one time to make sure it works.
+
+04:17.810 --> 04:18.950
+Self look back over.
+
+04:20.150 --> 04:20.810
+Very good.
+
+04:21.410 --> 04:21.740
+All right.
+
+04:21.740 --> 04:23.490
+Well, that is it for sign out.
+
+04:23.550 --> 04:27.620
+So we're now going to move on, quick pause and then take a look at current user, which is going to
+
+04:27.620 --> 04:29.930
+have some new stuff that we're going to have to consider.
+
+04:30.260 --> 04:31.460
+I'll see you in just a moment.

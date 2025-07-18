@@ -1,0 +1,340 @@
+WEBVTT
+
+00:00.940 --> 00:01.960
+All right, let's get to it.
+
+00:01.960 --> 00:03.790
+Let's build out this signing thing.
+
+00:03.880 --> 00:06.070
+The first thing we'll do is build out that payload.
+
+00:07.080 --> 00:10.650
+So again, this will be a plane object that has the ID of our user.
+
+00:10.830 --> 00:12.520
+We can just make up an ID right here.
+
+00:12.540 --> 00:13.530
+Doesn't really matter.
+
+00:14.260 --> 00:16.120
+And then put in some fake email as well.
+
+00:16.120 --> 00:17.770
+So I'll put in something like test at test.
+
+00:19.380 --> 00:22.650
+After that, we're going to take that payload and create a JSON web token.
+
+00:22.650 --> 00:24.270
+Using this as the payload.
+
+00:24.570 --> 00:28.300
+To create the JSON Web token, we have to make use of that JWT library.
+
+00:28.320 --> 00:30.270
+Let's import that at the top of this file.
+
+00:30.570 --> 00:35.190
+Up here, I'm going to import JWT from JSON web token.
+
+00:37.040 --> 00:40.970
+You might recall on the JWT library there is that sign method.
+
+00:41.000 --> 00:44.240
+The sign method is how we actually create a JSON web token.
+
+00:44.480 --> 00:49.640
+When we call sign, we have to provide the JSON web token key and that is our key right there.
+
+00:49.640 --> 00:53.150
+So we'll reference process and V JWT underscore key.
+
+00:55.900 --> 01:00.620
+So I'll say token is JWT sign.
+
+01:00.910 --> 01:07.030
+We're going to pass in the payload as the first argument and the second will be our process and v jwt
+
+01:07.060 --> 01:07.540
+key.
+
+01:09.080 --> 01:12.050
+Once again, TypeScript says, Hey, you can't just reference this variable.
+
+01:12.050 --> 01:13.160
+It might be undefined.
+
+01:13.190 --> 01:19.280
+Well, we know that we've already defined it because we will have executed DB for all function earlier
+
+01:19.280 --> 01:19.730
+on.
+
+01:19.790 --> 01:22.360
+So we are pretty darn sure this thing will be defined.
+
+01:22.370 --> 01:26.630
+So I'm going to once again add in that exclamation to say, Hey, TypeScript, just don't sweat it,
+
+01:26.630 --> 01:27.260
+please.
+
+01:28.930 --> 01:29.250
+Okay.
+
+01:29.260 --> 01:34.090
+Well, then take that token and build it into our session object.
+
+01:34.330 --> 01:38.380
+We'll say session is JWT token.
+
+01:40.270 --> 01:42.430
+Now we're going to turn that thing into JSON.
+
+01:43.400 --> 01:44.240
+So let's call this.
+
+01:44.240 --> 01:48.830
+How about session json and I'll be json string ify.
+
+01:49.720 --> 01:50.350
+Session.
+
+01:51.670 --> 01:52.990
+Now, here's kind of the hard part.
+
+01:53.020 --> 01:55.850
+We have to take that thing and encode it as base 64.
+
+01:55.870 --> 01:59.800
+So how do we turn a string into base 64 in Node.js?
+
+01:59.830 --> 02:02.040
+Well, a little bit of complicated stuff.
+
+02:02.050 --> 02:03.430
+It's not really that complicated.
+
+02:03.460 --> 02:04.420
+Here's what we're going to do.
+
+02:04.840 --> 02:13.480
+Let's say base 64 is buffered from we'll pass in that session JSON and then to string.
+
+02:14.920 --> 02:16.210
+Base 64.
+
+02:16.240 --> 02:16.930
+That's pretty much it.
+
+02:16.930 --> 02:21.070
+That's how we take a string and turn it into base 64 encoded string in Node.
+
+02:22.520 --> 02:26.600
+And then finally we're going to take that whole base 64 encoded thing right there and make sure that
+
+02:26.600 --> 02:27.560
+we return it.
+
+02:27.560 --> 02:31.310
+And that same kind of template we just saw back over inside of our Chrome developer console.
+
+02:31.400 --> 02:37.220
+So we need to make sure we have express colon ssh equals and then the entire encoded session.
+
+02:39.090 --> 02:40.290
+So we will return.
+
+02:41.200 --> 02:42.000
+A template string.
+
+02:42.010 --> 02:42.830
+Make sure you got those back.
+
+02:42.850 --> 02:47.410
+Tix express express colon ssh equals.
+
+02:47.800 --> 02:48.520
+And then.
+
+02:49.320 --> 02:50.940
+Base 64.
+
+02:52.350 --> 02:53.340
+And that's pretty much it.
+
+02:54.960 --> 02:55.890
+So not that bad.
+
+02:56.380 --> 02:59.290
+Now, if you want to, I would encourage you to go back.
+
+02:59.310 --> 03:04.260
+You can remove these comments and you can definitely refactor all this stuff down to like two or three
+
+03:04.260 --> 03:06.660
+lines of code or really two or three expressions or so.
+
+03:06.660 --> 03:08.970
+If you want to do that, certainly feel free to do so.
+
+03:09.730 --> 03:10.180
+Otherwise.
+
+03:10.180 --> 03:12.280
+There is one other little fix we need to add in.
+
+03:12.310 --> 03:14.410
+You'll notice that we're now getting an error up here.
+
+03:14.740 --> 03:20.350
+You might recall that in order to declare a global function, we had to add in this little bit of typescript
+
+03:20.350 --> 03:21.010
+up here.
+
+03:21.710 --> 03:24.320
+So previously we had the signing function.
+
+03:25.020 --> 03:29.610
+We are going to make our request inside of that thing to sign up and all that whatnot.
+
+03:29.610 --> 03:32.700
+And so we had to make sure that we were saying that this thing was going to be a promise.
+
+03:32.700 --> 03:33.870
+That is no longer the case.
+
+03:33.870 --> 03:35.700
+We are now just returning a string.
+
+03:37.830 --> 03:40.230
+So we can go down to just that like so.
+
+03:41.080 --> 03:45.160
+Now, one little gotcha here when we are returning this string.
+
+03:46.000 --> 03:46.630
+Right here.
+
+03:46.630 --> 03:48.520
+That definitely looks correct to us.
+
+03:48.880 --> 03:52.330
+And it definitely seems to match up with what we have in Cookie right here.
+
+03:52.360 --> 03:56.620
+Well, unfortunately, the expectation when we're using super test is that we include all of our different
+
+03:56.620 --> 03:58.150
+cookies in an array.
+
+03:58.180 --> 04:03.730
+And so just to make a super test really happy, we really have to put that into an array like so.
+
+04:05.440 --> 04:09.460
+And if we're going to do that, then we need to make sure we also update the type annotation up here
+
+04:09.460 --> 04:11.830
+to returning a array of strings.
+
+04:13.870 --> 04:17.320
+And now my air should be all gone.
+
+04:19.240 --> 04:19.830
+As a gun.
+
+04:19.840 --> 04:20.890
+Nope, it's not.
+
+04:22.320 --> 04:22.680
+It looks like.
+
+04:22.680 --> 04:24.150
+Oh, I left the async keyword on there.
+
+04:24.150 --> 04:24.820
+My mistake.
+
+04:24.840 --> 04:25.590
+That's better.
+
+04:26.350 --> 04:30.610
+Take off that async keyword as soon as async is on typescript things that we're returning a promise
+
+04:30.610 --> 04:30.760
+here.
+
+04:30.760 --> 04:32.370
+We technically are returning a promise.
+
+04:32.380 --> 04:33.820
+We just have to take it off.
+
+04:34.320 --> 04:35.380
+Okay, so that's it.
+
+04:36.360 --> 04:38.820
+Let's go ahead and test this thing out.
+
+04:39.610 --> 04:41.750
+So we're going to go back over to our new test file.
+
+04:41.770 --> 04:45.430
+We're going to find the little test right here.
+
+04:45.790 --> 04:47.710
+We were making sure that we did not get a 401.
+
+04:47.710 --> 04:48.910
+If we were signed in.
+
+04:49.300 --> 04:54.490
+So we need to make sure that before we make this request, we attached a cookie that's going to prove
+
+04:54.490 --> 04:55.780
+that we are authenticated.
+
+04:56.360 --> 05:01.850
+So right after post, remember, we set a cookie by calling set.
+
+05:02.670 --> 05:03.300
+Cookie.
+
+05:03.600 --> 05:09.630
+And then inside of here we can call sign in and it's actually global sign in because we're trying to
+
+05:09.630 --> 05:11.100
+refer to a global variable.
+
+05:12.690 --> 05:14.060
+All right, big test.
+
+05:14.070 --> 05:15.030
+Let's save this.
+
+05:15.900 --> 05:18.900
+Let back over a it's passing awesome.
+
+05:19.830 --> 05:21.380
+Just to make sure it really is passing.
+
+05:21.390 --> 05:24.900
+Let's do a console.log in this test of response status.
+
+05:26.310 --> 05:26.860
+I'll save this.
+
+05:26.880 --> 05:28.540
+Flip back over and I'll see.
+
+05:28.560 --> 05:33.030
+Yeah, we definitely got through that kind of authentication wall, so that's pretty much it.
+
+05:34.030 --> 05:35.410
+Well, that's definitely worked out.
+
+05:35.440 --> 05:39.340
+Let's take a pause right here, and we will move on to our remaining tests in the next video.

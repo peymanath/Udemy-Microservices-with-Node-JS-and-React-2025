@@ -1,0 +1,193 @@
+WEBVTT
+
+00:01.790 --> 00:06.020
+Our digital ocean cluster is up and running, we can connect to it and now it's time to start to deploy
+
+00:06.020 --> 00:07.160
+our application to it.
+
+00:07.490 --> 00:11.270
+I'm going to show you a diagram very quickly that's going to outline how we are going to use a GitHub
+
+00:11.270 --> 00:16.220
+action workflow to automatically deploy all of our different services to this running cluster.
+
+00:17.030 --> 00:19.550
+So the first time we look at this diagram, it's going to be a little bit confusing.
+
+00:19.550 --> 00:20.900
+So let me walk you through it.
+
+00:21.380 --> 00:23.300
+Each of these vertical series right here.
+
+00:23.300 --> 00:28.430
+So we've got one vertical series right there, another one right there and so on, represents a different
+
+00:28.430 --> 00:33.080
+workflow file that we're going to put together, or essentially a separate GitHub action.
+
+00:33.790 --> 00:37.270
+So in total, we're going to have about seven different workflow files.
+
+00:37.990 --> 00:42.460
+In each of these different workflow files, we are going to have a little bit of configuration that's
+
+00:42.460 --> 00:46.870
+going to run any time that we merge a pull request into the master branch.
+
+00:47.290 --> 00:52.570
+Whenever we merge a pull request into the master branch, we're going to inspect each of our different
+
+00:52.570 --> 00:56.170
+services so the service client expiration and so on.
+
+00:56.590 --> 01:02.050
+And if anything had changed inside of that service or specifically inside of our folder, client folder,
+
+01:02.050 --> 01:06.520
+expiration folder and so on, then we're going to go through the series of steps that you see on the
+
+01:06.520 --> 01:07.450
+right hand side.
+
+01:09.000 --> 01:13.290
+So long story short, just to repeat that one more time, because this is a confusing diagram.
+
+01:13.320 --> 01:18.390
+Every time that we merge a polar request into the master branch, we're going to see if anything changed
+
+01:18.390 --> 01:19.980
+inside of that directory.
+
+01:19.980 --> 01:23.340
+And if it did, we're going to go through this series of steps.
+
+01:24.410 --> 01:29.210
+So that series of steps, we're going to first take everything inside that art directory and build a
+
+01:29.210 --> 01:30.400
+new image out of it.
+
+01:30.420 --> 01:34.760
+So that's a normal Docker image, similar to how we've done it many, many times in the past.
+
+01:35.640 --> 01:38.910
+We're then going to take that image and push it off to Docker Hub.
+
+01:40.080 --> 01:42.870
+After that, we're going to reach out to our running cluster.
+
+01:42.870 --> 01:49.170
+So our cluster on digital ocean and we're going to update our deployment for the service and we're going
+
+01:49.170 --> 01:53.850
+to tell that deployment to use the newest version of the auth image that is available, the one that
+
+01:53.850 --> 01:55.920
+we had just pushed off to Docker Hub.
+
+01:58.270 --> 02:01.360
+So that is it for each of our individual six services.
+
+02:01.690 --> 02:06.640
+The actual workflow files or the GitHub action files are going to be almost identical in nature.
+
+02:06.970 --> 02:11.020
+The reason we are creating all these workflow files separately is just so we can make sure that we do
+
+02:11.020 --> 02:15.610
+not rebuild and deploy images if nothing has changed inside of a given service.
+
+02:15.910 --> 02:20.440
+In addition, this is also going to make it really easy for us to change the building process for a
+
+02:20.440 --> 02:23.140
+particular service if we need to at some point in time.
+
+02:23.770 --> 02:27.850
+For example, we might decide to rewrite the payment service using a different programming language
+
+02:27.850 --> 02:28.810
+at some point.
+
+02:28.810 --> 02:32.590
+And so we would want to make sure that we could very easily customize how that payment service gets
+
+02:32.590 --> 02:33.990
+built at some point.
+
+02:34.000 --> 02:37.060
+And maybe we need to push it off to a different provider.
+
+02:37.060 --> 02:37.900
+Who knows?
+
+02:38.760 --> 02:43.200
+We can do that very easily by creating a separate workflow for each of our different services.
+
+02:44.990 --> 02:47.270
+Now beyond each of our individual services.
+
+02:47.270 --> 02:52.190
+Remember, we also have that set of Kubernetes config files, which is where we create all of our different
+
+02:52.190 --> 02:57.740
+actual services, where we define our ingress service and where we also define all the different deployments
+
+02:57.740 --> 02:58.520
+themselves.
+
+02:58.940 --> 03:03.380
+So as an additional workflow, in addition to all these other six that we're going to put together,
+
+03:03.380 --> 03:07.820
+we're going to have one other workflow that is always going to be executed at all times.
+
+03:09.310 --> 03:12.990
+And we're going to make sure that we reach into that infra directory.
+
+03:13.880 --> 03:18.080
+And we're going to apply all the YAML files inside there to our cluster.
+
+03:18.260 --> 03:18.800
+Remember that?
+
+03:18.800 --> 03:19.910
+The infra directory.
+
+03:20.670 --> 03:23.910
+Right here is where all of our Kubernetes config files live.
+
+03:24.400 --> 03:29.080
+So if we make any changes to these config files, we're just going to reapply them to our cluster.
+
+03:30.000 --> 03:30.420
+That's it.
+
+03:30.420 --> 03:31.560
+That's the general plan.
+
+03:33.290 --> 03:37.670
+So total, we're got to create, well, seven different config files.
+
+03:38.520 --> 03:42.000
+Now, to be honest with you, we're really only going to great to at the end of the day we're really
+
+03:42.000 --> 03:47.280
+just going to create the fourth one and then pretty much copy paste it or client expiration and so on.
+
+03:47.640 --> 03:50.640
+And the only other one that we really have to write from scratch is infra.
+
+03:51.000 --> 03:55.440
+So although we do have to create several different files, we really only have to create two from scratch
+
+03:55.440 --> 03:58.920
+and then from there on it will really just be a job of copy paste.
+
+03:59.690 --> 03:59.820
+Okay.
+
+03:59.820 --> 04:04.170
+So now that we understand the plan break here, we're going to start to implement this in just a moment.

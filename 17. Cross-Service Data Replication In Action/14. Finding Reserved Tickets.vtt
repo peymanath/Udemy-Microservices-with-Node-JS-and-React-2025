@@ -1,0 +1,298 @@
+WEBVTT
+
+00:01.390 --> 00:05.530
+We now need to take a look at the ticket that we just fetched out of the database and decide whether
+
+00:05.530 --> 00:07.210
+or not this thing has been reserved.
+
+00:07.540 --> 00:12.510
+So to do this step right here, we really have to understand what it means to be reserved.
+
+00:12.520 --> 00:14.370
+How is a ticket reserved in general?
+
+00:14.380 --> 00:16.090
+What does it mean to be reserved?
+
+00:16.390 --> 00:20.860
+Well, remember, we spent a lot of time to talk about Mongoose and how we're going to associate an
+
+00:20.860 --> 00:22.120
+order with a ticket.
+
+00:22.120 --> 00:24.810
+So we spoke about Mongoose and that ref and populate feature.
+
+00:24.820 --> 00:27.070
+We also took a look at a couple of code snippets.
+
+00:27.520 --> 00:33.310
+So if a ticket is reserved, that means that it has been associated with an order.
+
+00:34.490 --> 00:40.900
+And on top of that, the order document must have a status of not cancelled.
+
+00:40.910 --> 00:46.100
+So if an order is cancelled, the order is cancelled, it is not valid and the ticket that it is associated
+
+00:46.100 --> 00:48.440
+with is not a valid reservation anymore.
+
+00:48.440 --> 00:53.360
+And so that should mean that the ticket is available to be registered or reserved by another order.
+
+00:54.190 --> 00:58.600
+So what we really have to write out right here, we have to write out some kind of query that's going
+
+00:58.600 --> 01:01.810
+to take a look at all the different orders inside of our order collection.
+
+01:02.020 --> 01:08.290
+We have to find one order where the ticket is equal to the ticket that we just reserved and where it's
+
+01:08.290 --> 01:11.350
+status is anything but canceled.
+
+01:11.950 --> 01:13.360
+That's essentially a criteria.
+
+01:13.390 --> 01:16.090
+I'm going to put a comment here just to kind of iterate all that stuff.
+
+01:16.090 --> 01:17.860
+So we need to run query.
+
+01:19.660 --> 01:21.760
+To look at all orders.
+
+01:22.860 --> 01:25.170
+And we want to find an order.
+
+01:26.110 --> 01:28.180
+Where the ticket is.
+
+01:28.180 --> 01:30.700
+The ticket we just fetched.
+
+01:30.700 --> 01:31.760
+Or I should say.
+
+01:31.780 --> 01:34.420
+How about the one we just found on the line right above?
+
+01:35.410 --> 01:40.150
+And the orders status is not cancelled.
+
+01:40.840 --> 01:41.800
+So if we.
+
+01:42.930 --> 01:44.780
+Find an order from this.
+
+01:44.790 --> 01:48.360
+That means the ticket is reserved.
+
+01:49.500 --> 01:50.980
+So that's essentially a criteria.
+
+01:51.000 --> 01:52.440
+That's what we're trying to do right here.
+
+01:53.540 --> 01:54.740
+So how are we going write this query out?
+
+01:54.770 --> 01:59.300
+Well, really just comes down to doing a little bit of research with Mongoose and whatnot.
+
+01:59.330 --> 02:01.100
+Let's just take a look at what the query is.
+
+02:01.220 --> 02:02.780
+So we're going to say Order.
+
+02:04.120 --> 02:06.610
+Is a wait order dot.
+
+02:08.200 --> 02:09.040
+Find one.
+
+02:10.070 --> 02:15.020
+So we're going to try to find one order in our order collection that satisfies the following criteria.
+
+02:15.320 --> 02:19.730
+We want to find one where the ticket is equal to the ticket that we just found.
+
+02:20.650 --> 02:22.750
+So Mongoose is going to take this right here.
+
+02:22.750 --> 02:26.950
+It's going to essentially pull off just the idea that ticket and then take a look at all the orders
+
+02:26.950 --> 02:31.180
+inside of our collection and find one where the ticket is equal to the ticket we just found.
+
+02:31.940 --> 02:33.590
+And the next part is a bit more tricky.
+
+02:33.590 --> 02:37.610
+It's where we're going to take a look at all the statuses and make sure that we get an order status
+
+02:37.610 --> 02:39.890
+where it is not equal to canceled.
+
+02:41.280 --> 02:42.500
+So we're going to ride out.
+
+02:42.510 --> 02:46.080
+We're going to take a look at all the statuses of all these different orders.
+
+02:47.190 --> 02:51.600
+And we're going to add in an object here with the inn operator.
+
+02:52.560 --> 02:54.660
+So notice we've got dollar sign in right there.
+
+02:54.870 --> 02:57.210
+This is a special MongoDB operator.
+
+02:57.210 --> 03:02.190
+So this is going to cause MongoDB to take a look at all of our orders and it's going to find a status
+
+03:02.190 --> 03:06.960
+where the status is in some set of values that we're going to write in in an array right here.
+
+03:08.410 --> 03:14.350
+So we want to try to find an order where the status is equal to order status dot created.
+
+03:15.150 --> 03:23.100
+Or order status dot awaiting payment or order status.
+
+03:23.400 --> 03:26.130
+Paid or order status.
+
+03:26.220 --> 03:27.250
+We don't have a paid one, do we?
+
+03:27.270 --> 03:28.980
+We have a complete.
+
+03:33.140 --> 03:37.250
+I'm going to very quickly go up to the top of the file import order status from our common module and
+
+03:37.250 --> 03:39.530
+then describe once again what's going on with this query.
+
+03:40.070 --> 03:43.190
+So back up here from my common module, I will get order status.
+
+03:44.230 --> 03:46.090
+And all those areas should now go away.
+
+03:47.680 --> 03:47.950
+Okay.
+
+03:47.950 --> 03:50.720
+So this query right here does pretty much what we just wrote out inside this comet.
+
+03:50.740 --> 03:56.050
+It's going to try to find an order or existing inside of our database that is taking a look at the ticket
+
+03:56.050 --> 04:00.760
+we just found and has a status that is created awaiting payment or complete.
+
+04:00.940 --> 04:06.610
+If we find an order that is referencing this ticket and has been created, is awaiting payment or is
+
+04:06.610 --> 04:11.950
+complete, that means the ticket is already reserved and the user who is making this request cannot
+
+04:11.950 --> 04:15.010
+attempt to reserve the ticket that they're trying to reserve.
+
+04:16.370 --> 04:21.110
+A better name for this variable right here rather than order might be something like existing order
+
+04:21.200 --> 04:25.310
+to say, hey, this is some existing order that someone else has already created.
+
+04:26.340 --> 04:27.240
+It's not right after that.
+
+04:27.240 --> 04:31.700
+If we find some existing order, we might not actually get a result from this query.
+
+04:31.710 --> 04:36.750
+So if we find an existing order, if it's actually defined, then that means that this ticket is already
+
+04:36.750 --> 04:38.790
+reserved and we want to return early from this route.
+
+04:38.790 --> 04:41.220
+Handler So very similar to what we just did above.
+
+04:42.900 --> 04:45.930
+We can say if existing order.
+
+04:49.410 --> 04:52.860
+And notice in this case that we're not putting on the exclamation.
+
+04:52.890 --> 04:56.790
+Previous one had an exclamation because we wanted to handle the case in which there was not a ticket.
+
+04:56.790 --> 05:02.010
+In this case, we want to say if there is an order, then we want to return early and we want to send
+
+05:02.010 --> 05:03.480
+back or throw some kind of air.
+
+05:04.050 --> 05:08.010
+So in this case, we'll throw a new bad request air.
+
+05:09.800 --> 05:12.050
+Let's make sure we import that at the top as well.
+
+05:12.940 --> 05:17.710
+So at our common module once again, I'll get bad request error.
+
+05:24.420 --> 05:28.260
+Now, I've still got an error here because we are supposed to provide a message describing why this
+
+05:28.260 --> 05:31.300
+request failed so we could put in some kind of message to send back to the user.
+
+05:31.310 --> 05:35.100
+Something like ticket is already reserved.
+
+05:36.430 --> 05:37.180
+And that's it.
+
+05:39.820 --> 05:43.690
+Now, as we look at this code right here, I just want you to notice that, well, this is kind of a
+
+05:43.690 --> 05:46.420
+lot of logic to stuff into a root handler.
+
+05:46.660 --> 05:50.740
+In addition, there might be other scenarios inside of our application, specifically inside this order
+
+05:50.740 --> 05:54.940
+service, where you want to figure out whether or not a ticket has been reserved.
+
+05:55.210 --> 05:56.680
+So we're going to take a quick pause right here.
+
+05:56.680 --> 06:01.060
+When we come back, the next video, we're going to take this logic and refactor it out to a separate
+
+06:01.060 --> 06:05.710
+file, because as you will soon see, there actually are some other scenarios where we want to figure
+
+06:05.710 --> 06:07.960
+out whether or not a ticket has been reserved.
+
+06:08.050 --> 06:08.890
+So quick pause.
+
+06:08.890 --> 06:10.270
+Let's take care of that in just a moment.

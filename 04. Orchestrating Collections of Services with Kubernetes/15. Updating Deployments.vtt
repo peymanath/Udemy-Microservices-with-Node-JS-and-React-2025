@@ -1,0 +1,286 @@
+WEBVTT
+
+00:00.700 --> 00:05.950
+A couple of videos ago, I told you that we use deployments because we can very easily update the version
+
+00:05.950 --> 00:07.910
+image used by each of our different pods.
+
+00:07.930 --> 00:13.270
+So for example, if we make a change to our post project and we rebuild the image, we might want to
+
+00:13.300 --> 00:17.920
+redeploy our application and have our deployment run this new version to instead.
+
+00:18.580 --> 00:22.810
+In this video, we're going to start to walk through two different ways of actually applying this update.
+
+00:23.530 --> 00:27.760
+So in this video in particular, we're going to take a look at method number one for updating the image
+
+00:27.760 --> 00:29.140
+used by a deployment.
+
+00:29.350 --> 00:33.520
+You're not going to see method number one use very often in professional deployments.
+
+00:33.520 --> 00:35.140
+And I'll tell you why in just a moment.
+
+00:35.170 --> 00:39.280
+Let's first go through the series of steps and then we'll all describe exactly why you're not going
+
+00:39.280 --> 00:40.480
+to see this used very often.
+
+00:41.780 --> 00:44.630
+So step one, we're going to make a change to our project code.
+
+00:44.660 --> 00:45.950
+Let's do that right away.
+
+00:46.250 --> 00:51.140
+I'm going to open up my code editor and inside of my post project directory, I will find the indexed
+
+00:51.470 --> 00:52.040
+file.
+
+00:52.670 --> 00:57.500
+So we're going to imagine that we make some change to this project, maybe down here at the very bottom
+
+00:57.500 --> 00:58.010
+at APT.
+
+00:58.130 --> 01:04.820
+Listen right above that console log that says listing on 4000 I'll put in a console log of about version
+
+01:04.820 --> 01:05.480
+20.
+
+01:06.450 --> 01:10.680
+So we'll say that we are trying to deploy this new version, 20 of our code base.
+
+01:11.100 --> 01:12.810
+So that's the change that we're going to make.
+
+01:14.010 --> 01:17.940
+Once we made that changed, we're then going to rebuild our post image.
+
+01:17.940 --> 01:22.800
+And when we rebuild the image, we're going to tag that image with some new version number.
+
+01:23.850 --> 01:25.620
+To do so we'll go back to our terminal.
+
+01:26.940 --> 01:33.330
+I'll change back into my post project directory and we will rebuild that image by running Docker.
+
+01:33.330 --> 01:41.520
+Build t your docker ID posts then a colon and I'll put a new version number in here.
+
+01:41.850 --> 01:45.690
+So for example, I can put in 005.
+
+01:45.720 --> 01:49.740
+I'll imagine this is version five or something like that of my post project.
+
+01:50.610 --> 01:54.330
+I'll then put a space and then the dot right there, remember that designates that we want to build
+
+01:54.330 --> 01:56.670
+the image out of everything inside this post directory.
+
+01:58.050 --> 02:01.410
+So I run that and now I've got ose 005.
+
+02:02.640 --> 02:06.960
+So we've now got a new image with a appropriate image version tied to it.
+
+02:08.370 --> 02:12.780
+So now the next thing we're going to do, we're going to find our deployment config file and we're going
+
+02:12.780 --> 02:15.390
+to update the version of the image inside there.
+
+02:16.110 --> 02:19.500
+So back inside my editor, I'll find the post config file.
+
+02:20.850 --> 02:25.490
+And I'll update the image version right here to 005.
+
+02:28.020 --> 02:29.220
+Well, then save this file.
+
+02:29.370 --> 02:35.070
+And now we need to tell Kubernetes to use this new updated config file by just making a change to a
+
+02:35.070 --> 02:35.770
+config file.
+
+02:35.790 --> 02:37.980
+Nothing changes inside of our cluster.
+
+02:38.280 --> 02:41.580
+Kubernetes is not actually aware that this file even exists.
+
+02:41.850 --> 02:47.310
+Whenever we make a change to a config file, we have to feed it back into the cluster using that same
+
+02:47.310 --> 02:49.170
+cube to apply command.
+
+02:49.710 --> 02:54.870
+Whenever you apply a config file, Kubernetes is going to know whether this is a config file that has
+
+02:54.870 --> 02:58.380
+already been fed into it before or if it's something brand new.
+
+02:58.830 --> 03:04.110
+In this case, we have a config file that we've already fed in once, so Kubernetes is going to know
+
+03:04.110 --> 03:09.150
+that we are trying to make a change to an existing object as opposed to creating a new object.
+
+03:09.780 --> 03:12.330
+It's going to take a look at all the different config options.
+
+03:12.330 --> 03:17.280
+It's going to see that the only thing that has changed inside of here is the version image or the image
+
+03:17.280 --> 03:18.060
+of the version.
+
+03:18.060 --> 03:22.800
+And so it's going to make that one single change to our existing deployment as opposed to creating a
+
+03:22.800 --> 03:24.450
+new deployment or something like that.
+
+03:26.450 --> 03:28.010
+So let's go back over to our terminal.
+
+03:28.890 --> 03:34.710
+I'm going to change back into our infra eight's directory, which is where our deployment file is sitting.
+
+03:35.480 --> 03:38.900
+And we will do a little apply with that file.
+
+03:43.050 --> 03:43.710
+There we go.
+
+03:44.040 --> 03:48.390
+You'll notice that it says as soon as we apply this thing that this deployment was configured.
+
+03:48.420 --> 03:52.770
+You might recall that when we first created the deployment, it said that the deployment was created.
+
+03:53.100 --> 03:58.080
+So we can definitely tell that Kubernetes understands that this is a config file related to a deployment
+
+03:58.080 --> 03:59.100
+that already exists.
+
+03:59.100 --> 04:03.600
+So rather than creating a new deployment, it configured or change the configuration of the one that
+
+04:03.600 --> 04:04.500
+already exists.
+
+04:05.430 --> 04:09.150
+So now we should be able to do a little bit deployments.
+
+04:10.510 --> 04:12.130
+It looks like we have one pod running.
+
+04:12.790 --> 04:14.920
+And if I do a cube, it'll get pods.
+
+04:15.220 --> 04:18.730
+There's our newly created or newly restarted pod.
+
+04:18.760 --> 04:24.070
+You'll notice that as an age of 32 seconds, which means that this pod was just created using the new
+
+04:24.070 --> 04:25.660
+version of our image.
+
+04:26.230 --> 04:28.840
+I should now be able to get logs out of this pod right here.
+
+04:28.840 --> 04:32.710
+So I'll copy the pod name and do a little logs.
+
+04:33.100 --> 04:34.480
+And then the name of the pod.
+
+04:35.940 --> 04:41.400
+And now right here I'll see V 20, which means that our deployment or our new change right here was
+
+04:41.400 --> 04:43.620
+just successfully deployed through the deployment.
+
+04:44.580 --> 04:45.060
+Okay.
+
+04:45.060 --> 04:46.680
+So that is method one.
+
+04:46.680 --> 04:49.770
+Number one, very updating the image that is used by a deployment.
+
+04:49.950 --> 04:53.370
+Now, at the start of the video, I told you that you're not going to see this used very frequently.
+
+04:53.790 --> 04:59.280
+And the reason for that is that back inside of our config file, we are specifying a very precise version
+
+04:59.280 --> 05:00.000
+right here.
+
+05:01.550 --> 05:06.560
+The reason that this is a problem is that any time we want to make a change to our application or redeploy
+
+05:06.560 --> 05:12.020
+our application, we would have to always open up this config file and make a change to that little
+
+05:12.020 --> 05:13.190
+number right there.
+
+05:13.580 --> 05:17.780
+Over time, you're going to see that these deployment files start to get really, really large.
+
+05:17.780 --> 05:22.820
+And so we'd really would like to not have to open up this file very often and make changes to it, because
+
+05:22.820 --> 05:27.410
+every single time we make a change to a file, there's always a possibility of adding in some kind of
+
+05:27.410 --> 05:27.920
+error.
+
+05:28.570 --> 05:33.460
+So it would be really great if we did not have to specify a version inside of here at all.
+
+05:33.670 --> 05:39.850
+It'd be great if we could just somehow tell Kubernetes to always use the latest version of a given image.
+
+05:39.880 --> 05:41.200
+That would be fantastic.
+
+05:41.800 --> 05:44.570
+And that's what method number two is going to be based upon.
+
+05:44.590 --> 05:48.790
+We're going to figure out a way to tell Kubernetes to use the latest version of an image.
+
+05:48.790 --> 05:53.830
+And we're going to figure out a way to tell Kubernetes to automatically update itself or reset up our
+
+05:53.830 --> 05:58.330
+deployment any time that version changes as well, or any time we create a new image as well.
+
+05:59.050 --> 06:00.250
+So let's take a pause right here.
+
+06:00.250 --> 06:02.800
+We'll take a look at method number two in just a moment.

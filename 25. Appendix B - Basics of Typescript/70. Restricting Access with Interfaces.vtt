@@ -1,0 +1,271 @@
+WEBVTT
+
+00:01.090 --> 00:04.900
+We've now seen several different ways of putting together ad marker in a bad fashion.
+
+00:04.900 --> 00:09.010
+So in this video, we're going to focus on the correct solution or maybe not the correct solution.
+
+00:09.010 --> 00:10.270
+Maybe the best solution.
+
+00:10.630 --> 00:10.840
+All right.
+
+00:10.840 --> 00:11.710
+So let's get to it.
+
+00:12.530 --> 00:16.910
+Just a quick reminder here right now, the issue with our current approach is that custom map has a
+
+00:16.910 --> 00:21.290
+direct dependency on all the different classes inside of our application that we might want to show
+
+00:21.290 --> 00:22.010
+on the map.
+
+00:22.010 --> 00:25.880
+So custom map depends upon user, it depends upon company.
+
+00:25.880 --> 00:30.860
+And if we ever had like a car lot or a park or anything else, custom map would depend upon them as
+
+00:30.860 --> 00:31.400
+well.
+
+00:31.760 --> 00:37.490
+So to fix this issue, we're going to invert this dependency, so to speak, rather than custom map.
+
+00:37.490 --> 00:42.950
+Depending upon all these different classes, we're going to say, Hey, class user, if you want to
+
+00:42.950 --> 00:48.320
+work with a map, it is up to you to satisfy the maps, requirements and company.
+
+00:48.320 --> 00:52.550
+If you want to show up on the map, you have to satisfy the maps requirements.
+
+00:52.850 --> 00:54.740
+So how are we going to invert that dependency?
+
+00:54.860 --> 00:58.430
+Well, here's what we're going to do at the top of the custom map file.
+
+00:58.430 --> 01:00.980
+We're going to add in a little bit of configuration.
+
+01:00.980 --> 01:07.580
+And this configuration up there is essentially going to be some instructions on how a object can be
+
+01:07.580 --> 01:10.010
+an argument to the add marker function.
+
+01:10.740 --> 01:15.240
+So at the very top of that file, we're going to say, hey, every other class inside of our application,
+
+01:15.240 --> 01:21.420
+every other class, if you want to be shown on the map, or in other words, if you want to be a argument
+
+01:21.420 --> 01:24.510
+to add marker, here's what you have to do.
+
+01:25.080 --> 01:30.030
+So inside those directions, we're going to say to show up on the map, you have to have a location,
+
+01:30.030 --> 01:30.750
+property.
+
+01:31.900 --> 01:32.850
+Remember, that's the key.
+
+01:32.860 --> 01:36.040
+You have to have a location property that is an object.
+
+01:36.370 --> 01:40.240
+And that object has to have a latitude that is a number and a longitude.
+
+01:40.240 --> 01:41.020
+That is a number.
+
+01:41.790 --> 01:42.750
+Every other class.
+
+01:42.750 --> 01:49.320
+As long as you have location with Latin lung, then you are eligible to be added as an argument to add
+
+01:49.320 --> 01:49.920
+marker.
+
+01:51.140 --> 01:53.390
+So how are we going to put together those directions?
+
+01:53.420 --> 01:56.310
+Well, we're going to make use of interfaces.
+
+01:56.330 --> 02:00.530
+Remember, we spoke about interfaces a couple of videos ago and we looked at a diagram very similar
+
+02:00.530 --> 02:01.190
+to this.
+
+02:01.520 --> 02:07.280
+We spoke about how we can use an interface to kind of behave as like a gatekeeper of sorts to a method.
+
+02:07.910 --> 02:12.890
+So we're going to create an interface that defines what it means to be malleable.
+
+02:13.070 --> 02:18.200
+We're going to define in this interface a set of instructions to all the other classes inside of our
+
+02:18.200 --> 02:24.500
+application that tell all those other classes how they can be eligible to be an argument to add marker.
+
+02:25.100 --> 02:31.610
+So then it's going to be up to all of those other classes to opt in to being malleable, and they can
+
+02:31.610 --> 02:36.920
+be so by having that location property with the latitude and longitude that our numbers.
+
+02:37.680 --> 02:42.960
+So that's how we're going to kind of invert this dependency rather than saying, oh, our add mark or
+
+02:42.960 --> 02:47.070
+method has to accommodate a user and a company and a park and so on.
+
+02:47.160 --> 02:53.790
+Instead, user has to choose to fulfill the interface or satisfy the interface by having the correct
+
+02:53.790 --> 02:57.060
+properties with the correct names in the correct types.
+
+02:57.450 --> 03:02.490
+If a user does that, then user has qualified to be an argument to add marker.
+
+03:04.190 --> 03:04.520
+All right.
+
+03:04.520 --> 03:08.810
+So this is like one of the prime best examples I can show you of interfaces.
+
+03:08.810 --> 03:13.400
+And once again, like I've said a billion times, we're going to see this relationship right here in
+
+03:13.400 --> 03:15.410
+every application we're going to work on.
+
+03:16.100 --> 03:19.400
+So let's try putting together an implementation right now and see what it looks like.
+
+03:19.670 --> 03:24.710
+So to get started, I'm going to flip back over to my editor and at the top of custom map, I'm going
+
+03:24.710 --> 03:28.730
+to define an interface called Map Able.
+
+03:29.090 --> 03:37.040
+So this right here is going to be our instructions to every other class on how they can be an argument.
+
+03:39.160 --> 03:40.810
+To add marker.
+
+03:41.440 --> 03:45.380
+So every other class can look at this interface and say, Oh, I want to be tappable.
+
+03:45.400 --> 03:47.050
+I want to be an argument to add marker.
+
+03:47.050 --> 03:47.870
+And if they want to.
+
+03:47.890 --> 03:50.980
+All they have to do is satisfy the properties we listed here.
+
+03:51.430 --> 03:57.430
+So to be map able to be an argument, to add marker, you have to have a location property that is an
+
+03:57.430 --> 04:04.180
+object and that object has to have a latitude property that is a number and a lag or longitude that
+
+04:04.180 --> 04:05.350
+is a number as well.
+
+04:05.950 --> 04:11.740
+If another class or just any other object inside of our application has a location that is the latitude
+
+04:11.740 --> 04:15.310
+and longitude, they can be an argument to add marker.
+
+04:15.980 --> 04:20.060
+So to make sure that's actually the case, last thing we have to do is go back down to add marker and
+
+04:20.060 --> 04:21.770
+we're going to change the type on here.
+
+04:21.770 --> 04:23.780
+We're going to say it to be an argument.
+
+04:23.780 --> 04:28.430
+To add marker, you have to satisfy the malleable interface that we just created.
+
+04:28.430 --> 04:29.240
+Like so.
+
+04:31.140 --> 04:31.530
+Okay.
+
+04:31.530 --> 04:32.160
+So that's it.
+
+04:32.160 --> 04:33.120
+That's the idea.
+
+04:33.360 --> 04:40.950
+So now we have an add marker function that can take any argument so long as it satisfies interface.
+
+04:41.400 --> 04:48.000
+So now if we start to add in like a class for park or car lots or grocery store or dentist or whatever
+
+04:48.000 --> 04:48.960
+it is hospital.
+
+04:48.960 --> 04:54.330
+As long as they satisfy this interface right here, they can be an argument to add marker.
+
+04:55.630 --> 05:00.100
+One thing I want to throw out there really quickly, because we didn't super closely discuss this when
+
+05:00.100 --> 05:05.080
+we were talking about interfaces, is that a single value inside of TypeScript can have multiple different
+
+05:05.080 --> 05:05.710
+types?
+
+05:06.070 --> 05:11.680
+So even though we're talking about having like users right here in company, an instance of a user has
+
+05:11.680 --> 05:16.930
+type user, but it can also fulfill the interface tappable and if it fulfills that interface, then
+
+05:16.960 --> 05:19.330
+user can also be of type TAPPABLE.
+
+05:19.360 --> 05:22.660
+So a single value can technically have multiple different types.
+
+05:22.690 --> 05:24.490
+I just want to clarify that really quickly.
+
+05:25.260 --> 05:25.500
+All right.
+
+05:25.500 --> 05:26.920
+So let's take another quick pause right here.
+
+05:26.940 --> 05:31.050
+We're going to come back the next video and fix up the rest of our code to make sure that we can pass
+
+05:31.050 --> 05:33.900
+in a user and a company to this method.
+
+05:34.020 --> 05:35.610
+So I'll see you in just a minute.

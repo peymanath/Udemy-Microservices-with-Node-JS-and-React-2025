@@ -1,0 +1,259 @@
+WEBVTT
+
+00:00.900 --> 00:04.130
+In all these commands we've been running with Docker, Create and Start.
+
+00:04.140 --> 00:07.160
+There's kind of one oddity that I want to show you really quickly.
+
+00:07.170 --> 00:12.720
+Let's do a container creation and then a start and you'll see some kind of weird behavior.
+
+00:12.870 --> 00:19.500
+I'm going to run Docker, create busy box, and then we're going to set up that ping command again.
+
+00:19.500 --> 00:24.420
+So I'll say ping google.com that's going to create the container.
+
+00:24.420 --> 00:30.780
+I can then copy the ID right here and do Docker start and paste that ID and you'll notice that I did
+
+00:30.780 --> 00:35.040
+not put in the dash a so I have not attached this container.
+
+00:35.340 --> 00:42.180
+When I run that command I see the ID of the container echoed back to me and then I can do a docker logs
+
+00:42.180 --> 00:45.030
+and paste that ID in and I'll see that.
+
+00:45.030 --> 00:45.300
+Yep.
+
+00:45.300 --> 00:51.270
+It is in fact running the ping command and if I do the Docker command, I can see that container is
+
+00:51.270 --> 00:54.180
+running and it's continuing to execute the ping command.
+
+00:54.660 --> 00:56.850
+Now there's just one kind of odd thing here.
+
+00:56.850 --> 00:59.550
+How do we actually stop this container?
+
+00:59.580 --> 01:04.380
+Remember, the ping command is going to essentially go on forever and we have to actually send it a
+
+01:04.380 --> 01:05.340
+signal until it.
+
+01:05.340 --> 01:07.710
+Hey, Ping command, please stop like you're all done.
+
+01:07.710 --> 01:09.780
+No need to reach out to Google anymore.
+
+01:10.500 --> 01:13.620
+So we need to figure out a way to stop this running container.
+
+01:13.620 --> 01:18.810
+In the past, we've just been hitting control C on our keyboard, or we've allowed the container to
+
+01:18.810 --> 01:22.770
+automatically stop itself, as was the case with the Echo Command.
+
+01:23.100 --> 01:31.260
+So in order to stop a container that seems to be running amok on its own, we can issue either the Docker
+
+01:31.260 --> 01:34.410
+Stop Command or the Docker Kill Command.
+
+01:34.680 --> 01:35.130
+Both.
+
+01:35.130 --> 01:39.210
+These are going to stop the running container, but they look like they kind of do the same thing here.
+
+01:39.210 --> 01:40.950
+So what's the difference between them?
+
+01:41.100 --> 01:43.140
+Well, here's what happens behind the scenes.
+
+01:43.230 --> 01:50.460
+When you issue a Docker stop command, a hardware signal is sent to the process or the primary process
+
+01:50.460 --> 01:51.990
+inside that container.
+
+01:52.080 --> 01:58.050
+In the case of Docker, stop, we send a sig term message which is short for terminate signal.
+
+01:58.350 --> 02:03.180
+It's a message that's going to be received by the process, telling it essentially to shut down on its
+
+02:03.180 --> 02:03.960
+own time.
+
+02:04.230 --> 02:09.510
+Sig term is used any time that you want to stop a process inside of your container and shut the container
+
+02:09.510 --> 02:14.760
+down and you want to give that process inside there a little bit of time to shut itself down and do
+
+02:14.760 --> 02:16.080
+a little bit of cleanup.
+
+02:16.320 --> 02:22.050
+A lot of different programming languages have the ability for you to listen for these signals inside
+
+02:22.050 --> 02:22.950
+of your code base.
+
+02:22.950 --> 02:27.960
+And as soon as you get that signal, you could attempt to do a little bit of cleanup or maybe save some
+
+02:27.960 --> 02:31.200
+file or emit some message or something like that.
+
+02:31.590 --> 02:40.320
+On the other hand, the Docker kill command issues a sig kill or kill signal to the primary running
+
+02:40.320 --> 02:41.910
+process inside the container.
+
+02:41.910 --> 02:48.090
+Sick kill essentially means you have to shut down right now and you do not get to do any additional
+
+02:48.090 --> 02:48.690
+work.
+
+02:50.320 --> 02:56.890
+So ideally we always stop a container with the Docker stop command in order to get the running process
+
+02:56.890 --> 02:59.440
+inside of it a little bit of time to shut itself down.
+
+02:59.620 --> 03:04.450
+Otherwise, if it feels like the container has locked up and it's not responding to the Docker stop
+
+03:04.450 --> 03:07.540
+command, then we could issue Docker kill instead.
+
+03:07.840 --> 03:11.800
+Now, one kind of little oddity or interesting thing about Docker stop.
+
+03:11.800 --> 03:14.020
+When you issue Docker, stop to a container.
+
+03:14.020 --> 03:19.510
+If the container does not automatically stop in 10 seconds, then Docker is going to automatically fall
+
+03:19.510 --> 03:21.940
+back to issuing the Docker Kill Command.
+
+03:22.060 --> 03:27.460
+So essentially Docker stop is us being nice, but it has only got 10 seconds to actually shut down.
+
+03:27.580 --> 03:33.130
+So let's now try using these commands on that kind of runaway container that we have right now.
+
+03:33.520 --> 03:40.360
+So again, do Docker PS and I'll see that the ping Google Command or simply ping google.com container
+
+03:40.360 --> 03:41.200
+is still running.
+
+03:41.320 --> 03:48.190
+So I'm going to take the ID right there and I'll issue a Docker stop and then I'll paste that ID in.
+
+03:48.960 --> 03:51.630
+And then we're going to wait and notice how we're kind of waiting here.
+
+03:51.630 --> 03:54.300
+We're going to end up waiting just about 10 seconds.
+
+03:54.960 --> 04:03.360
+We're waiting 10 seconds because it turns out that the ping command does not properly respond to a sig
+
+04:03.360 --> 04:04.710
+term message.
+
+04:04.740 --> 04:08.790
+The ping command doesn't really have the ability to say, Oh, yeah, I understand you want me to shut
+
+04:08.790 --> 04:12.720
+down the ping command is rather I don't know what's the term for it.
+
+04:12.750 --> 04:16.220
+The ping command wants to do its own thing and it just wants to run forever.
+
+04:16.230 --> 04:21.360
+And so after we waited those 10 seconds, eventually the kill signal was sent to it, telling it, Hey,
+
+04:21.360 --> 04:22.560
+Ping, you're done.
+
+04:22.590 --> 04:23.250
+Get out of here.
+
+04:23.250 --> 04:24.180
+Shut yourself down.
+
+04:24.180 --> 04:26.670
+And so that's why we had to wait a couple of seconds.
+
+04:26.880 --> 04:28.830
+Let's now take that container ID again.
+
+04:28.830 --> 04:33.240
+We're going to start the container back up and try killing it this time with using Docker kill.
+
+04:33.990 --> 04:39.900
+So I'll first start the container back up with Docker Start and I'll paste the ID in and then I'll issue
+
+04:39.900 --> 04:45.000
+a Docker kill and paste the ID again and this time you're going to see that's it.
+
+04:45.000 --> 04:45.930
+Instantly dead.
+
+04:45.930 --> 04:46.980
+No grace, period.
+
+04:46.980 --> 04:48.300
+Just get out of here.
+
+04:49.470 --> 04:50.400
+All right, so that's it.
+
+04:50.400 --> 04:54.570
+That's the two commands that we're going to use for closing down containers that are running.
+
+04:54.690 --> 04:58.320
+Remember, you can always get the idea of the container ahead of time with Docker.
+
+04:58.320 --> 05:02.760
+PS, you can copy the ID and then run either Docker Stop or Docker kill.
+
+05:02.760 --> 05:07.560
+And in general, I do recommend use Docker stop to give the processes inside there a chance to shut
+
+05:07.560 --> 05:08.100
+down.
+
+05:08.250 --> 05:13.110
+And if they don't shut down nicely, nicely, as we saw with the ping command, eventually Docker is
+
+05:13.110 --> 05:16.170
+going to fall back to issuing a kill on the container instead.
+
+05:16.650 --> 05:17.010
+All right.
+
+05:17.010 --> 05:17.760
+So that's pretty much it.
+
+05:17.760 --> 05:20.910
+Let's take another brief pause and continue in the next section.

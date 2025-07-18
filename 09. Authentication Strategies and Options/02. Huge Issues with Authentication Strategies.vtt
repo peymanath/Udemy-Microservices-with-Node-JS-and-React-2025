@@ -1,0 +1,388 @@
+WEBVTT
+
+00:00.940 --> 00:06.100
+We just took a look at authentication solution number one, where we had a reliance or dependency on
+
+00:06.100 --> 00:07.500
+some central service.
+
+00:07.510 --> 00:11.920
+We took a look at a slight variation of that where we had some central gateway that would essentially
+
+00:11.920 --> 00:13.930
+block unauthenticated requests.
+
+00:13.930 --> 00:15.490
+And we also had another one.
+
+00:15.490 --> 00:19.780
+This was option number two, where we said that we were going to teach each service how to authenticate
+
+00:19.780 --> 00:20.980
+an incoming request.
+
+00:21.040 --> 00:25.510
+So now I really made it sound as though option number two was pretty great because we don't have any
+
+00:25.510 --> 00:27.580
+dependency on any outside service.
+
+00:27.580 --> 00:33.040
+So everything else inside of our application could crash and come down tumbling burned to the ground.
+
+00:33.040 --> 00:33.730
+Absolutely.
+
+00:33.730 --> 00:36.640
+But our order service is still going to work correctly.
+
+00:36.700 --> 00:37.420
+That sounds great.
+
+00:37.420 --> 00:39.310
+But yeah, there's definitely some downsides.
+
+00:39.310 --> 00:41.320
+So let's understand what these downsides are.
+
+00:41.890 --> 00:47.230
+Okay, so for just a minute, I want you to understand or imagine the following sequence of actions.
+
+00:47.560 --> 00:51.190
+Let's imagine that some user comes to our application to sign in.
+
+00:51.190 --> 00:53.770
+We are going to call them user ABC.
+
+00:54.460 --> 00:59.680
+So this user ABC comes to our application to sign in through our authentication service, which at all
+
+00:59.680 --> 01:01.000
+times is what we intended.
+
+01:01.180 --> 01:05.020
+The authentication service at all times will be in charge of signing up and signing in.
+
+01:05.140 --> 01:10.150
+That sign up sign in process is not related to this discussion of where we're going to put this logic
+
+01:10.150 --> 01:11.980
+to decide if a user is authenticated.
+
+01:13.500 --> 01:15.720
+So user ABC makes a request to sign in.
+
+01:15.750 --> 01:17.960
+They supply some email and password.
+
+01:17.970 --> 01:22.410
+We have some sign and logic where we're going to check that email and password against our stored ones,
+
+01:22.680 --> 01:25.580
+including that whole hashing process and all that whatnot.
+
+01:25.590 --> 01:30.240
+And in this scenario, we'll imagine that this user, ABC supplied the correct email and password.
+
+01:30.480 --> 01:33.000
+So we say, hey, correct email, correct password.
+
+01:33.000 --> 01:33.900
+Fantastic.
+
+01:33.930 --> 01:36.000
+Here is a token to identify.
+
+01:36.000 --> 01:41.250
+You include it on all follow up requests and this is what is going to identify you to the different
+
+01:41.250 --> 01:43.590
+services inside of our application.
+
+01:44.100 --> 01:49.230
+So we will send back a JSON web token, a cookie, whatever it is, who knows?
+
+01:49.230 --> 01:54.510
+We send back something that this user can use to authenticate themselves with our different services.
+
+01:55.260 --> 01:56.250
+So that's step one.
+
+01:56.760 --> 02:01.620
+Now let's imagine that we are following fundamental option number two.
+
+02:01.950 --> 02:09.570
+So that means that user ABC can take this JSON web token cookie or whatever and they can use it to do
+
+02:09.570 --> 02:12.930
+just about anything inside of our application that is tied to authentication.
+
+02:12.930 --> 02:18.570
+So they can use that thing that we just gave them to purchase a ticket or do whatever else.
+
+02:18.570 --> 02:23.820
+And very critically, when they try to purchase a ticket, we are not going to go back out and communicate
+
+02:23.820 --> 02:25.530
+to that authentication service.
+
+02:25.650 --> 02:32.100
+We are just taking a look at that single JSON web token that this user has 100% control over.
+
+02:32.310 --> 02:35.370
+So we're just going to take that thing and say, all right, is this thing valid?
+
+02:35.370 --> 02:36.030
+Yeah, it is.
+
+02:36.030 --> 02:36.270
+Okay.
+
+02:36.300 --> 02:36.870
+You are signed in.
+
+02:36.870 --> 02:37.740
+Fantastic.
+
+02:38.490 --> 02:39.840
+So now we set the scene.
+
+02:39.840 --> 02:46.080
+Let's now imagine what might happen after user ABC gets that identifying token.
+
+02:47.740 --> 02:52.900
+So let's imagine that it turns out that user ABC is actually not the nicest person in the world.
+
+02:53.200 --> 02:55.700
+Maybe it turns out that this is some malicious user.
+
+02:55.720 --> 03:00.640
+Maybe it's some employee at our company who just got fired for doing something really nasty.
+
+03:00.970 --> 03:07.480
+At any rate, let's imagine that we have some administrator user inside our application who urgently
+
+03:07.480 --> 03:10.240
+needs to ban user ABC.
+
+03:10.540 --> 03:16.810
+We need to make sure that user ABC cannot access any of our services anymore because we are very much
+
+03:16.810 --> 03:21.070
+certain that this is a bad person who's going to do some nasty stuff to our application.
+
+03:21.930 --> 03:26.670
+So we're going to imagine that admin user is going to submit a request once again to our authentication
+
+03:26.670 --> 03:32.400
+service because hey, it makes sense to handle some stuff like banning user inside of an authentication
+
+03:32.400 --> 03:33.030
+service.
+
+03:33.450 --> 03:37.440
+So they're going to submit that request and they're going to specify the user to ban.
+
+03:38.240 --> 03:42.680
+So we'll send that off to maybe some new request handler inside our authentication service related to
+
+03:42.680 --> 03:43.710
+user management.
+
+03:43.730 --> 03:48.360
+And inside there, we're going to have some code to say, okay, we want to ban user ABC.
+
+03:48.470 --> 03:49.220
+Okay, got it.
+
+03:49.310 --> 03:50.420
+Well, fantastic.
+
+03:50.420 --> 03:54.710
+Let's go and update the database to reflect that this user is now banned.
+
+03:55.070 --> 03:59.210
+And so even though we don't have any property like this tied to our user model, we can imagine that
+
+03:59.210 --> 04:04.610
+maybe we would add in a property to our user model as restoring inside of MongoDB, build something
+
+04:04.610 --> 04:08.190
+like has access or is banned or something like that.
+
+04:08.210 --> 04:11.510
+Some flag to say whether or not this user is banned.
+
+04:12.110 --> 04:18.020
+So in this case, because we are banning a user, maybe we would flip has access over to false.
+
+04:18.760 --> 04:22.150
+So this user no longer should have access to our application.
+
+04:22.820 --> 04:29.590
+So now in theory, part of our app, one of the services inside of our app says that user ABC is banned.
+
+04:30.650 --> 04:32.360
+But what is really going on?
+
+04:32.360 --> 04:36.290
+What happens if a user user ABC now makes a follow up request?
+
+04:37.270 --> 04:38.710
+Well, let's imagine the flow.
+
+04:38.730 --> 04:39.930
+What would really go on here?
+
+04:41.540 --> 04:43.490
+So let's say that after being banned.
+
+04:43.760 --> 04:48.170
+User ABC now makes a request to purchase a ticket once again.
+
+04:48.500 --> 04:53.780
+And at this point, we've determined that user ABC is a bad person who knows what they're doing, but
+
+04:53.780 --> 04:57.320
+we do not want them to get access to anything inside of our app.
+
+04:57.530 --> 05:01.190
+So we would definitely, without a doubt want to reject this request.
+
+05:01.430 --> 05:05.560
+But remember, user ABC still has that original JSON web token.
+
+05:05.570 --> 05:06.620
+They still got that cookie.
+
+05:06.620 --> 05:09.000
+It is 100% in their control.
+
+05:09.020 --> 05:13.490
+We cannot somehow reach directly into their computer and tell them, Hey, you need to delete this thing
+
+05:13.490 --> 05:14.210
+right away.
+
+05:14.510 --> 05:19.430
+User ABC has 100% control of that token that proves that they are authenticated.
+
+05:20.110 --> 05:23.470
+So what would happen when they now make a request to purchase this ticket?
+
+05:24.010 --> 05:25.690
+Well, they would send that request in.
+
+05:27.040 --> 05:29.050
+It would be going to our order service.
+
+05:29.440 --> 05:31.720
+Our order service would have this ticket purchase logic.
+
+05:31.720 --> 05:33.730
+We would check to see if this person is logged in.
+
+05:33.730 --> 05:38.800
+So we would take that JSON web token, which is still 100% valid because we have not been able to tinker
+
+05:38.800 --> 05:41.800
+with it at all because it's in control of user ABC.
+
+05:42.070 --> 05:47.260
+So we would inspect that thing and decide if the user is authenticated and we would say, Yeah, they
+
+05:47.260 --> 05:47.710
+are.
+
+05:47.710 --> 05:54.070
+It's a valid token, no problem with it whatsoever because at no point in time did we go over to our
+
+05:54.310 --> 05:58.840
+service and check to see if this user should have access.
+
+05:58.840 --> 06:00.790
+We're 100% decoupled from this thing.
+
+06:00.790 --> 06:02.260
+There's no coupling whatsoever.
+
+06:02.260 --> 06:05.250
+We don't care what the audit service has to say.
+
+06:05.260 --> 06:10.630
+So even though the service is 100% certain that this user should not have access to our application,
+
+06:10.630 --> 06:13.210
+at no point using option number two.
+
+06:13.210 --> 06:15.130
+Because remember, that's what we're discussing here.
+
+06:15.130 --> 06:20.410
+At no point with option number two do we ever go over to that service to figure out whether or not this
+
+06:20.410 --> 06:22.240
+person is still authenticated.
+
+06:23.580 --> 06:26.490
+So that is the core issue with this approach.
+
+06:26.520 --> 06:32.090
+Even though we get this fantastic separation of services, we don't have any dependencies.
+
+06:32.100 --> 06:37.950
+There are still going to be scenarios where we try to update data in one location tied to a user status,
+
+06:38.280 --> 06:41.720
+but all the other services are not going to hear about that update.
+
+06:41.730 --> 06:42.690
+They don't know.
+
+06:42.690 --> 06:47.880
+They don't have any logic to be told, Hey, this user is now banned or something like that because
+
+06:47.880 --> 06:50.040
+there's no direct connection between the two.
+
+06:50.870 --> 06:54.140
+That is the fundamental problem with option number two.
+
+06:54.530 --> 07:00.480
+So hopefully now you can start to see why all this authentication stuff is a really nasty thing.
+
+07:00.500 --> 07:01.760
+It is an unsolved problem.
+
+07:01.760 --> 07:03.350
+There's no single solution out there.
+
+07:03.350 --> 07:04.910
+That is just the right way to do it.
+
+07:05.060 --> 07:10.250
+We have to pick the best way out of all the options we have available, and we can also try to figure
+
+07:10.250 --> 07:13.820
+out some clever ways to work around some of these restrictions.
+
+07:15.130 --> 07:15.390
+Okay.
+
+07:15.400 --> 07:20.520
+So now that we see that handling the stuff is way more complicated than you might guess at first glance.
+
+07:20.530 --> 07:21.730
+Let's take a pause right here.
+
+07:21.730 --> 07:25.810
+We're going to come back the next video, and I'm going to tell you about the solution that we are going
+
+07:25.810 --> 07:29.260
+to take, even though it still has some downsides.
+
+07:29.740 --> 07:30.910
+So a quick pause.
+
+07:30.940 --> 07:32.050
+Continue in just a minute.

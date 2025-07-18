@@ -1,0 +1,232 @@
+WEBVTT
+
+00:00.570 --> 00:06.570
+In the last section we saw that making a change to our index file and then rebuilding the image caused
+
+00:06.570 --> 00:09.110
+the copy step to be completely invalidated.
+
+00:09.120 --> 00:14.760
+We had to rerun copy and every step after it, which means we had to sit through and wait for all of
+
+00:14.760 --> 00:18.190
+our dependencies to be installed through run and install.
+
+00:18.210 --> 00:23.040
+So in this section, we're going to try to figure out a way to avoid having to completely reinstall
+
+00:23.040 --> 00:27.570
+all dependencies just because we made a little change to one of the source code files inside of our
+
+00:27.570 --> 00:28.260
+project.
+
+00:28.530 --> 00:29.610
+So here's what we'll do.
+
+00:29.640 --> 00:34.290
+We're going to take our current build process inside of the Docker file, and we're going to split the
+
+00:34.290 --> 00:38.400
+copy copy operation out into two different steps.
+
+00:38.790 --> 00:44.370
+The only thing that NPM install right here requires in order to run successfully is the package JSON
+
+00:44.370 --> 00:44.890
+file.
+
+00:44.910 --> 00:45.980
+That's all we care about.
+
+00:45.990 --> 00:50.400
+We don't care about the indexed JS file or any other file inside of here.
+
+00:50.730 --> 00:57.210
+So during this initial copy step, I'm going to say the only thing that I want to copy is the package
+
+00:57.360 --> 00:58.350
+JSON file.
+
+00:59.780 --> 01:04.730
+So I just changed the instruction right here and now says, look, in the current working directory
+
+01:04.730 --> 01:11.840
+or look in the directory specified by the build context argument of Docker run or Docker build and find
+
+01:11.840 --> 01:18.740
+the package JSON file and then copy that into the current working directory of the container.
+
+01:19.220 --> 01:25.970
+We'll then rerun or we will then run NPM install and then after we install all those dependencies,
+
+01:25.970 --> 01:28.550
+we'll copy over everything else.
+
+01:28.550 --> 01:32.390
+And so we'll do a copy slash dot slash like so.
+
+01:33.990 --> 01:37.500
+So think about what is going to happen now as you start to work on your project.
+
+01:37.530 --> 01:44.010
+You can make as many changes as you want to the index file and it will not invalidate the cache for
+
+01:44.010 --> 01:45.420
+either of these steps right here.
+
+01:45.570 --> 01:52.680
+The only time that NPM is NPM install is going to be executed again is if we make a change to that step
+
+01:52.680 --> 01:54.450
+or any step above it.
+
+01:54.450 --> 01:59.100
+And so in other words, the really only effect is going to have is if we make a change to the package
+
+01:59.280 --> 02:05.910
+JSON file, that's really the only situation in which NPM install will normally be executed again during
+
+02:05.910 --> 02:07.050
+the build process.
+
+02:07.820 --> 02:12.350
+All right, so let's try building this again and then starting the container up and just making sure
+
+02:12.350 --> 02:13.970
+that everything still works.
+
+02:15.170 --> 02:16.690
+All right, so I'm going to flip back over.
+
+02:16.700 --> 02:24.470
+I'll do a Docker build Dash T Steven Grider again, your Docker ID, not mine simple web.
+
+02:24.950 --> 02:28.160
+And then we'll specify the build context with that simple dot.
+
+02:28.790 --> 02:30.080
+So I'm going to rerun this.
+
+02:30.080 --> 02:35.210
+Now we have made a change to the Docker files, so we are going to see some steps rerun and then we
+
+02:35.210 --> 02:38.300
+eventually get our successfully tagged and build image.
+
+02:38.300 --> 02:42.710
+Now before trying to run it, I want you to run the same command a second time.
+
+02:42.710 --> 02:43.640
+So same thing.
+
+02:43.640 --> 02:45.230
+No changes whatsoever.
+
+02:46.210 --> 02:51.070
+So that time it went extremely quickly because we were able to use the cached version of every single
+
+02:51.070 --> 02:51.670
+step.
+
+02:51.760 --> 02:57.130
+So now let's imagine that we are doing some normal changes to our application and a normal change would
+
+02:57.130 --> 02:59.370
+probably be a change to the index file.
+
+02:59.380 --> 03:02.770
+So maybe we decide that we don't want to say bye there anymore.
+
+03:03.490 --> 03:06.970
+Maybe instead we want to send back, how are you doing?
+
+03:07.450 --> 03:13.030
+So we've now made a change the index file and we definitely need to rebuild our image because we do
+
+03:13.030 --> 03:19.000
+not have any support for kind of hot reloading of the indexed file or a project file into the container.
+
+03:19.000 --> 03:21.340
+So we have to rebuild the image.
+
+03:22.360 --> 03:23.530
+So we'll go back over.
+
+03:23.530 --> 03:26.800
+I'm going to rerun the same command for a third time.
+
+03:28.380 --> 03:33.690
+And we saw that it executed very quickly because the only change that we made to any step along the
+
+03:33.690 --> 03:35.780
+way was step number five.
+
+03:35.790 --> 03:38.670
+We copied over the entire contents of that directory.
+
+03:38.670 --> 03:41.790
+Docker detected that we made a change to one of those files.
+
+03:41.790 --> 03:48.180
+And so it reran that step and every step after it, but we did not have to rerun the NPM install step
+
+03:48.180 --> 03:54.000
+and reinstall those modules which would have taken in our application not very long, but in a real
+
+03:54.000 --> 03:56.640
+application, it could take several minutes to run.
+
+03:57.270 --> 03:57.570
+All right.
+
+03:57.570 --> 04:02.280
+So the real lesson to learn here is that, yes, it does make a difference.
+
+04:02.280 --> 04:07.920
+The order in which you put all these instructions into your Docker file and wherever possible, it is
+
+04:07.920 --> 04:14.010
+kind of nice to segment out the copy operations to make sure that you are only copying the bare minimum
+
+04:14.010 --> 04:15.840
+for each successive step.
+
+04:16.710 --> 04:17.160
+All right.
+
+04:17.160 --> 04:19.440
+So that's pretty much it for this application.
+
+04:19.440 --> 04:25.860
+Now, I hope that it was not terribly annoying for me to show you kind of like some of the wrong way
+
+04:25.860 --> 04:28.050
+of doing things and then correct them along the way.
+
+04:28.050 --> 04:32.970
+I hope that it was kind of nice to see the error messages appear and see the changes that we made.
+
+04:33.000 --> 04:36.930
+Of course, we could have put the right Docker file together from the get go, but I don't know.
+
+04:36.930 --> 04:42.090
+You probably may have not learned quite as much as seeing the errors occur and then fixing them in as
+
+04:42.090 --> 04:42.780
+they occurred.
+
+04:43.590 --> 04:43.830
+Now.
+
+04:43.830 --> 04:49.650
+I think this application has turned out pretty well, but it's definitely a very, very basic operation.
+
+04:49.650 --> 04:51.330
+So let's take a quick break right now.
+
+04:51.330 --> 04:56.640
+We're going to come back the next section and we'll start working on a much more advanced Docker project.
+
+04:56.640 --> 04:58.140
+So I'll see you in just a minute.

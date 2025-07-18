@@ -1,0 +1,472 @@
+WEBVTT
+
+00:01.300 --> 00:05.560
+Hopefully you have now successfully installed scaffold to make sure that it is installed successfully.
+
+00:05.590 --> 00:08.650
+I'm going to open up my terminal and just run the command scaffold.
+
+00:09.620 --> 00:13.080
+If you run that command, you should see a bunch of help information like this right here.
+
+00:13.100 --> 00:17.210
+If you see something that says command not recognized, well, you need to double check your scaffold
+
+00:17.210 --> 00:18.110
+installation.
+
+00:18.980 --> 00:23.480
+Now that we've got scaffold installed, we are going to configure it by writing out yet another config
+
+00:23.480 --> 00:24.140
+file.
+
+00:24.170 --> 00:29.360
+This config file is going to tell scaffold how to manage all the different subprojects inside of our
+
+00:29.360 --> 00:29.960
+cluster.
+
+00:30.890 --> 00:35.030
+Inside of my code editor, I'm going to find my root project directory and I'm going to create a new
+
+00:35.030 --> 00:38.030
+file inside there called Scaffold Dot HTML.
+
+00:39.080 --> 00:42.380
+The config that we're going to write inside of here is going to look rather similar to a lot of the
+
+00:42.380 --> 00:46.340
+configuration that we've already written to apply to a Kubernetes cluster.
+
+00:46.490 --> 00:49.990
+But everything we write inside of here does not get applied to Kubernetes.
+
+00:50.000 --> 00:52.550
+Instead, it is just consumed by scaffold directly.
+
+00:52.550 --> 00:56.060
+And scaffold is a tool that runs outside of our cluster.
+
+00:57.840 --> 00:59.970
+So let's start to write out some configuration.
+
+01:00.390 --> 01:03.360
+A lot of these scaffold files we're going to write are going to be just about identical.
+
+01:03.360 --> 01:07.920
+So this is another scenario where you pretty much just learn it once and then start to kind of copy
+
+01:07.920 --> 01:09.810
+paste stuff around when appropriate.
+
+01:10.540 --> 01:10.810
+All right.
+
+01:10.810 --> 01:16.450
+So we're going to write out API version Scaffold V2, Alpha three.
+
+01:17.530 --> 01:19.870
+I'm going to put in a kind of config.
+
+01:21.160 --> 01:27.070
+A deploy with a nested cube, CTL, a nested manifest.
+
+01:27.430 --> 01:33.920
+And then we're going to put in an array entry, which means a little dash and then dot slash infra a
+
+01:34.480 --> 01:35.200
+star.
+
+01:36.690 --> 01:41.400
+So this first little bit of config right here or this really is our first important piece of config
+
+01:41.400 --> 01:42.450
+is what I should say.
+
+01:42.900 --> 01:48.810
+This is telling scaffold that there is a collection of different config files intended for Kubernetes
+
+01:48.810 --> 01:51.150
+inside of the infra aids directory.
+
+01:51.780 --> 01:56.820
+So by adding in this manifest line, we are telling scaffold that we want it to watch all of these different
+
+01:56.820 --> 01:57.840
+YAML files.
+
+01:58.410 --> 02:04.140
+Any time that we make a change to one of those files, Scaffold is going to automatically reapply that
+
+02:04.140 --> 02:06.240
+config file to our Kubernetes cluster.
+
+02:06.240 --> 02:12.060
+So in other words, it's going to save us from the hassle of having to run up CTL Apply F over and over
+
+02:12.060 --> 02:15.840
+and over again any time that we create a file or make a change to a file.
+
+02:17.180 --> 02:18.560
+By listing out manifests.
+
+02:19.280 --> 02:24.740
+Scaffold is also going to make sure to create all these or apply all these any time that we start scaffold
+
+02:24.740 --> 02:25.160
+up.
+
+02:25.310 --> 02:30.770
+It's also going to delete all the config or all the objects associated with these config files whenever
+
+02:30.770 --> 02:32.180
+we stop scaffold as well.
+
+02:32.360 --> 02:34.380
+So in total, this is really doing three things.
+
+02:34.400 --> 02:36.890
+When we start up scaffold, apply these files.
+
+02:37.220 --> 02:41.840
+When we make a change, apply these files whenever we stop scaffold.
+
+02:42.260 --> 02:45.890
+Find all the objects related to these config files and delete them.
+
+02:45.890 --> 02:47.240
+Don't delete the files themselves.
+
+02:47.240 --> 02:51.020
+Just delete the objects that are created by them inside of our Kubernetes cluster.
+
+02:51.590 --> 02:55.730
+This is really the part where this is fantastic for working between different projects, because whenever
+
+02:55.730 --> 02:58.550
+we start up scaffold, we're going to apply all these objects.
+
+02:58.550 --> 03:03.350
+Whenever we stop scaffold to go work on another project, all the objects related to these will be deleted
+
+03:03.350 --> 03:05.900
+and we'll end up with a relatively clean cluster.
+
+03:06.990 --> 03:07.230
+Okay.
+
+03:07.230 --> 03:09.090
+So that's part one of our config file.
+
+03:09.390 --> 03:10.530
+Now on to step two.
+
+03:10.560 --> 03:15.270
+We're going to put in a build local push of false.
+
+03:16.020 --> 03:21.240
+So by default, whenever scaffold makes a change to one of our images or rebuilds an image, it's going
+
+03:21.240 --> 03:25.770
+to try to push it up to Docker Hub that is not actually required when we're using scaffold.
+
+03:25.770 --> 03:29.220
+So we're going to disable that default behavior with the setting right here.
+
+03:30.610 --> 03:32.470
+Next up is artifacts.
+
+03:34.030 --> 03:35.330
+And I got a typo in there.
+
+03:35.350 --> 03:36.190
+Artifacts.
+
+03:36.190 --> 03:37.510
+Make sure you got the right spelling.
+
+03:38.690 --> 03:40.010
+This is going to be an array.
+
+03:40.040 --> 03:43.220
+We're going to write out one array entry and we'll discuss what it is doing.
+
+03:43.670 --> 03:49.880
+I'm going to put in image of my Docker ID, so for you it should be your dock ID slash client.
+
+03:50.920 --> 03:53.620
+Well, then put in a context of client.
+
+03:54.740 --> 04:01.100
+I'll put in Docker with nested Docker file and the value of that is going to be a Docker file with a
+
+04:01.100 --> 04:02.300
+capital D.
+
+04:04.670 --> 04:06.050
+I'll then put in sync.
+
+04:06.870 --> 04:07.740
+Manual.
+
+04:08.570 --> 04:09.770
+An array entry.
+
+04:10.860 --> 04:18.030
+A source that is going to be a string of Z star star star DJs.
+
+04:19.110 --> 04:22.560
+With a DST or destination of period.
+
+04:23.820 --> 04:24.060
+Okay.
+
+04:24.060 --> 04:25.290
+So what does this all about?
+
+04:25.530 --> 04:30.960
+Let's artefact section is telling scaffold about something inside of our project that it needs to maintain.
+
+04:31.230 --> 04:36.810
+We're essentially saying that there is going to be some pod that is running code out of the client directory
+
+04:36.810 --> 04:38.010
+inside of our project.
+
+04:38.730 --> 04:41.130
+So in this case, client directory right here.
+
+04:42.050 --> 04:48.410
+Whenever something changes inside this directory, scaffold is going to try to take those changes and
+
+04:48.410 --> 04:50.180
+somehow update our pod.
+
+04:50.450 --> 04:53.330
+There are two ways in which scaffold is going to try to update our pod.
+
+04:53.720 --> 04:59.270
+First off, if we make a change to a JavaScript file as indicated by this little matcher right here,
+
+04:59.270 --> 05:04.610
+if we make a change to a JavaScript file, then scaffold is going to try to take that change file and
+
+05:04.610 --> 05:06.960
+just directly throw it into our pod.
+
+05:07.000 --> 05:08.450
+It's going to literally take that file.
+
+05:08.450 --> 05:11.450
+We update it and copy it directly into the pod itself.
+
+05:11.450 --> 05:14.600
+So our pod is going to always have the latest code inside of it.
+
+05:15.200 --> 05:20.780
+If we ever make a change to anything inside this client directory that is not matched up by this CRC
+
+05:20.780 --> 05:26.300
+or this entire little rule right here, then scaffold is going to instead try to rebuild the entire
+
+05:26.300 --> 05:26.930
+image.
+
+05:27.410 --> 05:31.870
+So for example, imagine if we installed a new dependency into our client project.
+
+05:31.880 --> 05:36.740
+Whenever we install a new dependency that's going to update our package JSON file, technically package
+
+05:36.740 --> 05:38.660
+lock and technically node modules as well.
+
+05:38.660 --> 05:43.100
+But basically it is making a change to our project that is not changing a JavaScript file.
+
+05:43.520 --> 05:48.230
+So because we made a change to a file that is not matching up to this little matcher right here, scaffold
+
+05:48.230 --> 05:53.690
+is going to decide to completely rebuild our image and update the deployment tied to it.
+
+05:54.950 --> 05:56.540
+So it's going to rebuild this image.
+
+05:56.570 --> 06:00.540
+It's going to use this client directory as the source of the image.
+
+06:00.560 --> 06:04.370
+Then once the image is built, it's going to throw it as the update into our cluster.
+
+06:05.150 --> 06:08.090
+So those are the two things that this big rule right here is really doing.
+
+06:08.090 --> 06:13.220
+Either update these files in place or if it's a different file, rebuild the entire image.
+
+06:14.140 --> 06:19.000
+So we're now going to go through and essentially duplicate this rule for all of our other little sub
+
+06:19.000 --> 06:20.140
+projects inside of here.
+
+06:20.140 --> 06:24.280
+So for comments, event bus moderation posts and query.
+
+06:26.200 --> 06:29.920
+I'm going to copy this rule rather than just rewrite all of it.
+
+06:30.490 --> 06:34.320
+Now, when you copy this stuff, you might have a little bit of automatic formatting kick in.
+
+06:34.330 --> 06:35.320
+I definitely did.
+
+06:35.990 --> 06:36.910
+Oh, let's see.
+
+06:36.910 --> 06:42.250
+So if you get that automatic formatting and you tried to fix the indentation, just make sure you don't
+
+06:42.250 --> 06:45.190
+mess up any of the previous stuff, as I just did right there.
+
+06:46.880 --> 06:47.960
+We should have something like this.
+
+06:47.990 --> 06:51.660
+We should see dashed image and then dash the image down there.
+
+06:51.680 --> 06:53.510
+Make sure you got the right indentation as well.
+
+06:54.110 --> 06:56.780
+So now we will update this block for the comments.
+
+06:57.200 --> 07:00.800
+So this image is called your Docker ID slash comments.
+
+07:00.830 --> 07:03.530
+The context is comments, same docker file.
+
+07:03.530 --> 07:06.910
+But in this case, our file synching is going to be a little bit different.
+
+07:06.920 --> 07:11.390
+Remember, only the React application had an RC directory, everything else.
+
+07:11.390 --> 07:14.090
+So say comments, moderation, etc..
+
+07:14.750 --> 07:16.010
+No CRC directory.
+
+07:16.010 --> 07:21.200
+We only have a direct indexed JS file inside there, so we will update that little selector to be just
+
+07:21.200 --> 07:22.940
+start edges like so.
+
+07:23.890 --> 07:25.810
+So make sure you get that update on CRC.
+
+07:26.570 --> 07:29.300
+And then we're going to once again copy this thing.
+
+07:32.190 --> 07:34.380
+I'll make sure I fix up the indentation.
+
+07:39.580 --> 07:40.300
+Here we go.
+
+07:41.380 --> 07:43.450
+So again, makes you get the correct indentation.
+
+07:44.080 --> 07:47.860
+And on this next one, we'll update for event bus.
+
+07:49.570 --> 07:52.030
+So update one update to.
+
+07:53.450 --> 07:53.780
+Okay.
+
+07:53.810 --> 07:54.440
+Next one.
+
+07:54.440 --> 07:58.310
+I'll do another paste in a fix my indentation again.
+
+08:01.650 --> 08:03.030
+There's event bus right above.
+
+08:03.060 --> 08:04.980
+Here's the copy paste I just put in.
+
+08:05.010 --> 08:10.950
+This one I will make for this one I'm going to make for moderation.
+
+08:14.320 --> 08:17.260
+I will do yet another mix up the indentation.
+
+08:17.260 --> 08:19.450
+Again, I'm not going to tell you to fix the indentation this time.
+
+08:19.450 --> 08:22.600
+I'm sure you understand that probably has to be done.
+
+08:23.390 --> 08:24.500
+So we took care of moderation.
+
+08:24.500 --> 08:29.420
+We're on to posts and posts and just one more.
+
+08:30.350 --> 08:31.400
+I'll paste in.
+
+08:33.190 --> 08:34.390
+That indentation.
+
+08:36.530 --> 08:39.640
+And this last one is query and query.
+
+08:39.650 --> 08:42.410
+So at this point, I really encourage you to do a double check.
+
+08:42.560 --> 08:45.860
+We should have inside this array one.
+
+08:46.710 --> 08:47.280
+To.
+
+08:48.270 --> 08:48.840
+Three.
+
+08:49.560 --> 08:55.230
+For five and six blocks, they should be all in the same indentation level.
+
+08:56.050 --> 08:59.110
+Double check all the image names and the context name as well.
+
+08:59.500 --> 09:01.690
+So I have going in order from top to bottom.
+
+09:01.690 --> 09:05.290
+Client comments, event plus moderation posts and query.
+
+09:06.360 --> 09:06.660
+All right.
+
+09:06.660 --> 09:10.590
+I apologize for the long video, but that is it for our scaffold HTML file setup.
+
+09:11.050 --> 09:12.090
+So let's take a pause right here.
+
+09:12.090 --> 09:16.470
+We're going to make use of scaffold in the next video and see how it really improves our development
+
+09:16.470 --> 09:17.130
+workflow.

@@ -1,0 +1,262 @@
+WEBVTT
+
+00:01.160 --> 00:04.430
+All right, let's get started working on this event bus implementation.
+
+00:04.640 --> 00:08.990
+To get started, we're going to first create a new folder inside of our project directory to house all
+
+00:08.990 --> 00:10.820
+the code for this event bus.
+
+00:11.030 --> 00:12.170
+So I'm back at my terminal.
+
+00:12.410 --> 00:14.600
+I'm going to open up yet another terminal window.
+
+00:14.600 --> 00:19.550
+So I've now got four, got one for the React app, one for posts, one for comments.
+
+00:19.550 --> 00:20.750
+I'm down here in the new one.
+
+00:21.140 --> 00:25.910
+In the new one, I'm going to change back to my blog directory, which is housing all of my three overall
+
+00:25.910 --> 00:26.690
+services.
+
+00:27.140 --> 00:32.120
+Then in this folder I'm going to create a new folder called Events.
+
+00:32.870 --> 00:34.220
+We'll call it How about Event Bus?
+
+00:34.220 --> 00:37.580
+Just be really clear, I'll then change into that directory.
+
+00:39.150 --> 00:41.400
+Let me make this window just a little bit larger.
+
+00:42.370 --> 00:46.000
+Inside of here, we're going to generate a new package json file.
+
+00:46.000 --> 00:48.520
+So that's an NP init dash y.
+
+00:50.840 --> 00:52.340
+And then we're going to install.
+
+00:53.680 --> 00:56.020
+Express Node one.
+
+00:56.960 --> 00:58.010
+Axios.
+
+00:59.380 --> 01:01.340
+And I think that is about it.
+
+01:01.360 --> 01:01.660
+Yep.
+
+01:01.660 --> 01:02.290
+That's it.
+
+01:03.810 --> 01:04.940
+We'll go ahead and run that.
+
+01:04.950 --> 01:08.700
+And then after this is done, I'm going to open up my code editor inside this directory.
+
+01:16.700 --> 01:20.540
+All right, so as usual, we're going to create an index file inside of here.
+
+01:22.840 --> 01:25.390
+At the very top, we're going to import Express.
+
+01:29.600 --> 01:31.190
+We're going to get body passer.
+
+01:35.050 --> 01:36.640
+And we'll get Axios as well.
+
+01:39.400 --> 01:41.890
+I'm then going to create a new express application.
+
+01:44.770 --> 01:48.150
+All then associate the body parser JSON middleware with this app.
+
+01:48.160 --> 01:51.670
+So we'll do an API use body parser JSON.
+
+01:53.660 --> 01:56.010
+And then that's pretty much it for the initial setup.
+
+01:56.030 --> 02:01.400
+Now all we have to do is implement this endpoint to watch for incoming events, as we just saw in this
+
+02:01.400 --> 02:05.960
+diagram back over here, it's going to be a post request handler that's going to watch for post request
+
+02:05.960 --> 02:07.340
+to slash events.
+
+02:07.460 --> 02:12.470
+Any time we receive an event or it's going to turn right back around, make a series of requests to
+
+02:12.470 --> 02:13.820
+these different servers.
+
+02:15.810 --> 02:19.260
+So we'll set up a post request handler on events.
+
+02:20.670 --> 02:22.770
+I'm going to put in my callback right here.
+
+02:24.560 --> 02:28.610
+We're going to get our event, which we're going to assume is just going to be the request body.
+
+02:28.970 --> 02:32.990
+So whatever comes along in the request body, that is going to be our event.
+
+02:33.230 --> 02:35.830
+We don't know if it's going to be a JSON object.
+
+02:35.840 --> 02:38.510
+We don't know if it's going to be a string, a number, who knows what?
+
+02:38.570 --> 02:42.890
+All we know is that we're going to take whatever is inside that request body and send it off to all
+
+02:42.890 --> 02:44.420
+of our different running services.
+
+02:46.390 --> 02:51.520
+So now that we've got that event, we're going to make our series of post requests to our other running
+
+02:51.520 --> 02:52.300
+services.
+
+02:52.300 --> 02:54.910
+So we'll do an Axios post.
+
+02:55.930 --> 03:01.630
+To HTTP, own slash slash local host or thousand slash events.
+
+03:02.080 --> 03:05.320
+And the data that we're going to send along is that exact event.
+
+03:08.550 --> 03:10.710
+I'm then going to duplicate that line twice.
+
+03:12.120 --> 03:14.730
+And I'll put in localhost 4001.
+
+03:15.620 --> 03:17.720
+And then localhost 4002.
+
+03:19.970 --> 03:25.610
+And then finally at the very bottom, we'll do a resend and we'll just say any time someone tries to
+
+03:25.640 --> 03:28.730
+emit an event, we'll just send back something that says status.
+
+03:28.850 --> 03:29.500
+Okay.
+
+03:30.140 --> 03:32.270
+Just to indicate that everything worked as expected.
+
+03:34.230 --> 03:36.870
+Now there is one downside to the implementation we have right here.
+
+03:36.870 --> 03:40.800
+We are assuming that all three of these post requests are always going to succeed.
+
+03:41.400 --> 03:45.300
+We don't have any handling code around the possibility of one of them failing.
+
+03:45.540 --> 03:48.630
+That's just something I want to point out right now, because it's going to start to become a little
+
+03:48.630 --> 03:53.040
+bit relevant as we start to implement each of these different event endpoint handlers.
+
+03:55.090 --> 03:55.390
+Okay.
+
+03:55.420 --> 03:59.290
+So now finally at the very bottom, we're going to make sure that this thing is listening.
+
+03:59.290 --> 04:00.280
+So we'll put on an app.
+
+04:00.490 --> 04:04.510
+Listen, we're going to have this listen to 4005.
+
+04:04.510 --> 04:06.400
+Notice how I skipped a couple of ports right here.
+
+04:06.400 --> 04:12.160
+So we've got our posts, our comments, soon to be our query service, and then our event bus is just
+
+04:12.160 --> 04:14.320
+going to go directly up to 4005.
+
+04:15.860 --> 04:18.290
+I'll put in my callback and I'll do a console.log.
+
+04:19.590 --> 04:22.080
+Listing on 4005.
+
+04:25.510 --> 04:30.250
+So that is it for a very simple, very basic event plus implementation.
+
+04:30.850 --> 04:34.090
+Now, last thing we're going to do, we're going to open up that package, JSON file.
+
+04:35.050 --> 04:36.960
+We're going to update our script inside of here.
+
+04:36.970 --> 04:40.510
+So I'm going to delete the default test one and replace it with the start script.
+
+04:40.510 --> 04:43.220
+Once again will do node on index.
+
+04:47.090 --> 04:47.510
+Okay.
+
+04:47.510 --> 04:49.430
+So let's go back over to our terminal.
+
+04:50.170 --> 04:52.750
+I've got my fourth terminal window right here.
+
+04:52.750 --> 04:55.890
+So again, react to those comments.
+
+04:55.900 --> 04:56.890
+Event bus.
+
+04:56.920 --> 05:01.210
+I'm inside of event bus and inside there I'll do an NPM start.
+
+05:02.620 --> 05:05.860
+And so I should see a listing on 4005.
+
+05:06.280 --> 05:06.940
+Very good.
+
+05:07.750 --> 05:12.610
+Now that we've got our very simple event bus put together, let's take a pause right here in the next
+
+05:12.610 --> 05:16.930
+video, we're going to make sure that whenever someone creates a post or a comment, we're going to
+
+05:16.930 --> 05:19.660
+emit an event over to our event bus.
+
+05:20.080 --> 05:22.210
+So a quick pause and I'll see you in just a minute.

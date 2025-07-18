@@ -1,0 +1,364 @@
+WEBVTT
+
+00:01.110 --> 00:03.350
+Let's move on to our three remaining tests here.
+
+00:03.360 --> 00:08.370
+The next one, we're going to try to create a ticket and then update it with a different user that should
+
+00:08.370 --> 00:10.050
+return a status code of 401.
+
+00:10.470 --> 00:14.700
+Now, this is going to be just a little bit more tricky than it might appear at first glance.
+
+00:14.730 --> 00:16.170
+Remember how I had said that?
+
+00:16.170 --> 00:21.750
+It's kind of nice to create a ticket by making an actual request to our ticket creation endpoint.
+
+00:21.780 --> 00:27.120
+So in other words, we're going to want to write in some initial logic inside of here to create a ticket
+
+00:27.390 --> 00:28.160
+like this.
+
+00:28.180 --> 00:30.840
+We're going to want to do something that says Request to app.
+
+00:31.960 --> 00:34.630
+Make a post to API tickets.
+
+00:36.250 --> 00:37.840
+Set the cookie.
+
+00:40.350 --> 00:41.820
+With Global sign in.
+
+00:43.620 --> 00:44.760
+Then we'll send along.
+
+00:45.540 --> 00:49.500
+Some title of whatever and price of about 20.
+
+00:50.570 --> 00:53.660
+That will create some initial ticket that we can then try to edit.
+
+00:54.420 --> 00:55.380
+Now, here's the key thing.
+
+00:55.380 --> 01:01.140
+When we actually create this ticket, the ticket is going to have a user ID equal to whatever user ID
+
+01:01.140 --> 01:04.050
+is extracted from the cookie that we include.
+
+01:04.770 --> 01:08.730
+We're then ideally going to want to make some kind of follow up request right here that's going to attempt
+
+01:08.730 --> 01:10.710
+to edit this ticket that's been created.
+
+01:11.190 --> 01:15.570
+And when we make this follow up request, we're going to try to use the same exact cookie.
+
+01:15.960 --> 01:18.330
+It's going to have the same user ID inside there.
+
+01:18.510 --> 01:24.630
+And so right now we only have essentially exactly one user ID floating around the entire application.
+
+01:24.810 --> 01:28.710
+So we can't really fake being a different user who does not own the ticket.
+
+01:29.520 --> 01:30.300
+To solve this.
+
+01:30.300 --> 01:32.730
+Let's go back over to our set up test file.
+
+01:32.970 --> 01:35.820
+Inside of my test directory, I'll find setup tests.
+
+01:37.540 --> 01:38.980
+So here's the sign in function.
+
+01:39.190 --> 01:41.470
+And right here is where we set the ID.
+
+01:41.500 --> 01:47.140
+So again, that ID is hardcoded for every single user that we tried to authenticate as inside of our
+
+01:47.140 --> 01:48.100
+test environment.
+
+01:48.460 --> 01:54.400
+So to fix this problem up, I think we should just very simply randomly generate an ID whenever we call
+
+01:54.400 --> 01:55.020
+sign in.
+
+01:55.030 --> 01:59.620
+So every single time we call sign in, we're going to pretend we are just an entirely different user.
+
+02:00.580 --> 02:05.530
+Now what if we need to make the same request or make two different requests as the same user in a row?
+
+02:05.560 --> 02:06.310
+No problem.
+
+02:06.310 --> 02:10.540
+We can just call, sign in once, save a reference to the cookie that gets returned, and then make
+
+02:10.540 --> 02:12.850
+as many requests as that user as we wish.
+
+02:13.060 --> 02:16.480
+So not the worst thing in the world to randomly generate this ID.
+
+02:16.510 --> 02:22.390
+Let's use that same kind of object ID thing that we saw from Mongoose that we've now used once or twice
+
+02:22.390 --> 02:22.990
+before.
+
+02:23.260 --> 02:26.710
+We've already imported Mongoose into this file right there.
+
+02:27.860 --> 02:34.510
+So we should be able to very easily replace that hardcoded ID with new mongoose types.
+
+02:34.540 --> 02:39.100
+Object id two x string.
+
+02:40.150 --> 02:40.780
+Like so.
+
+02:42.240 --> 02:42.510
+All right.
+
+02:42.510 --> 02:43.650
+So that should definitely work.
+
+02:44.850 --> 02:46.930
+It's now back inside of my update test file.
+
+02:47.170 --> 02:51.460
+I've got one request right here that is going to attempt to rate the ticket.
+
+02:52.290 --> 02:56.550
+When we make this request, that ticket is going to be assigned some ID.
+
+02:56.580 --> 03:01.710
+We need to capture that ID so that we can somehow make a follow up request specifying the same ID.
+
+03:01.740 --> 03:05.220
+So in short, I'm going to make sure that I capture the response that comes back.
+
+03:08.050 --> 03:11.830
+Then after that, I will attempt to create another request right here.
+
+03:11.830 --> 03:14.410
+So another await request to EP.
+
+03:15.220 --> 03:17.590
+This one is going to be our actual edit request.
+
+03:17.890 --> 03:20.140
+So I need to make sure that when I do this put.
+
+03:21.650 --> 03:24.680
+I specify using a template string.
+
+03:24.680 --> 03:27.080
+So back to right there, API tickets.
+
+03:29.020 --> 03:30.880
+And then the ID of the ticket.
+
+03:30.880 --> 03:33.490
+We had just created the response.
+
+03:34.560 --> 03:35.220
+Body.
+
+03:35.290 --> 03:35.820
+ID.
+
+03:38.790 --> 03:40.980
+We're not going to pretend that we're a totally different user.
+
+03:40.980 --> 03:45.900
+So we'll set our cookie and call global sign in a second time.
+
+03:46.380 --> 03:49.920
+When we call it a second time, we'll now have a new randomly generated ID.
+
+03:50.220 --> 03:54.420
+So as far as our app is concerned, we are trying to access this thing as a different user.
+
+03:55.600 --> 03:59.140
+Well, then go ahead and send the update that I want to make.
+
+03:59.470 --> 04:02.020
+Now, how we update this thing not super relevant.
+
+04:02.290 --> 04:06.520
+All we need to do here is make sure we provide some valid title and price.
+
+04:07.270 --> 04:12.190
+So I'll put in a title of some new random string and some new price.
+
+04:13.240 --> 04:16.000
+The only thing we really care about here is that we get back a 401.
+
+04:16.030 --> 04:17.620
+That the update gets rejected.
+
+04:17.860 --> 04:20.350
+So I will expect a41.
+
+04:22.680 --> 04:27.240
+Now, one thing we could optionally do here, after making this request, we are only checking to see
+
+04:27.240 --> 04:28.530
+that we get a 401.
+
+04:28.710 --> 04:34.290
+If we had some pretty broken code, we might mistakenly send back A for one and still process the update
+
+04:34.290 --> 04:35.090
+anyways.
+
+04:35.100 --> 04:40.980
+So optionally, you could do a follow up request to retrieve details about this ticket and verify that
+
+04:40.980 --> 04:46.290
+it has the same title and the same price just to make sure that the update was truly not processed.
+
+04:46.440 --> 04:48.180
+If you want to do that, feel free to do so.
+
+04:48.210 --> 04:50.100
+Otherwise, this is pretty much good for me.
+
+04:51.360 --> 04:52.280
+So I'm going to save this.
+
+04:52.290 --> 04:55.680
+Let's go back over to update and we'll put together our implementation.
+
+04:56.880 --> 04:57.840
+So back over here.
+
+04:58.080 --> 05:03.420
+We're going to assume that if we are trying to update the ticket, we hopefully have found one successfully.
+
+05:03.420 --> 05:04.860
+So we'll get past that if statement.
+
+05:05.670 --> 05:10.950
+So after that, we're going to check and make sure that whoever's making this request, it has the same
+
+05:10.950 --> 05:13.680
+ID as the user ID saved on the ticket.
+
+05:14.780 --> 05:15.770
+We'll say if.
+
+05:17.120 --> 05:22.370
+Ticket user ID is not equal to rec dot.
+
+05:23.100 --> 05:25.440
+Current user ID.
+
+05:26.850 --> 05:31.230
+Then let's throw a new, not authorized air.
+
+05:32.260 --> 05:36.490
+Once again, we're running into that same issue we've seen several times before where we definitely
+
+05:36.490 --> 05:41.740
+are setting the current user property because we've gotten past that require check what TypeScript doesn't
+
+05:41.740 --> 05:44.020
+really believe it, so we'll tell TypeScript.
+
+05:44.020 --> 05:44.530
+Don't sweat it.
+
+05:44.560 --> 05:47.560
+We already made sure current user was defined inside that middleware.
+
+05:47.590 --> 05:49.840
+We're going to do that by putting on that exclamation.
+
+05:51.490 --> 05:51.610
+Okay.
+
+05:51.790 --> 05:52.660
+So this looks good.
+
+05:52.660 --> 05:54.880
+Let's save this and see how our tests are doing.
+
+05:57.990 --> 05:58.860
+So back over here.
+
+05:59.190 --> 06:00.220
+Everything's passing.
+
+06:00.240 --> 06:03.570
+Now, at this point, we kind of never really saw that test fail.
+
+06:03.570 --> 06:09.030
+So for all we know, writing in this implementation might not have actually made the test pass.
+
+06:09.030 --> 06:10.950
+Our test might be in itself faulty.
+
+06:10.950 --> 06:14.910
+So one thing I kind of like to do that we've really been neglecting in all the tests we've written out
+
+06:14.910 --> 06:20.940
+so far is comment this thing out and make sure that our test actually does fail at least one time.
+
+06:21.540 --> 06:22.650
+So I'm going to comment that out.
+
+06:22.650 --> 06:23.670
+I'm going to save this.
+
+06:23.670 --> 06:25.650
+I'm going to make sure that test fails.
+
+06:27.370 --> 06:27.670
+Yup.
+
+06:27.670 --> 06:28.640
+Definitely does.
+
+06:28.660 --> 06:32.830
+So we got a 200 instead of the expected 4001 unauthorized.
+
+06:32.860 --> 06:35.200
+That means that the test is working as expected.
+
+06:35.830 --> 06:37.300
+I'm going to uncomment that again.
+
+06:37.480 --> 06:38.350
+And there we go.
+
+06:39.740 --> 06:39.970
+Okay.
+
+06:39.980 --> 06:44.540
+So just a little bit more, we're going to handle the case in which we have an invalid title or price
+
+06:44.540 --> 06:46.620
+and the actual success path as well.
+
+06:46.640 --> 06:49.340
+We're going to take care of those of both those in the next video.

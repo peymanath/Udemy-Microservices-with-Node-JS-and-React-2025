@@ -1,0 +1,358 @@
+WEBVTT
+
+00:00.870 --> 00:02.250
+The publisher is all put together.
+
+00:02.250 --> 00:04.860
+So let's now work on an implementation for our listener.
+
+00:04.960 --> 00:06.270
+It's the goal of our listener.
+
+00:06.810 --> 00:10.680
+We're going to come up with a subject name or the channel that we want to listen to.
+
+00:10.710 --> 00:15.060
+We're going to pass that into the Stan client to create a subscription, and then we're going to watch
+
+00:15.060 --> 00:16.800
+the subscription for any time.
+
+00:16.800 --> 00:17.970
+It receives some data.
+
+00:19.540 --> 00:25.810
+So back inside my listener file at the very top, we're going to import Nat's once again from Node Nat
+
+00:25.810 --> 00:26.470
+streaming.
+
+00:27.820 --> 00:32.830
+I'll then create my clients, which remember we referred to Munich Convention as simply Stan.
+
+00:33.730 --> 00:37.990
+So Nat Stock Connect, I'm going to once again put in some kind of mysterious looking arguments right
+
+00:37.990 --> 00:38.280
+here.
+
+00:38.290 --> 00:39.370
+Just bear with me for a moment.
+
+00:39.370 --> 00:41.110
+We will come back to the connect function.
+
+00:41.560 --> 00:42.910
+So I'm going to put in ticketing.
+
+00:43.450 --> 00:45.220
+I'm going to put in one, two, three.
+
+00:46.720 --> 00:48.460
+And then an object inside.
+
+00:48.460 --> 00:49.540
+There will be a URL.
+
+00:50.470 --> 00:52.080
+And very similar to what we had last time.
+
+00:52.090 --> 00:56.620
+We'll put an http localhost port for 2 to 2.
+
+00:59.500 --> 01:02.800
+I'll then watch for a connect event.
+
+01:05.510 --> 01:09.950
+So after we have successfully connected once again, let's just do a quick console.log and say, hey,
+
+01:09.950 --> 01:11.660
+our listener connected to nets.
+
+01:11.660 --> 01:15.710
+So I'll do a console log of listener connected.
+
+01:16.840 --> 01:17.980
+Two nets.
+
+01:19.560 --> 01:24.210
+Let's now go over to our terminal and just try to run this program and make sure that the listener can
+
+01:24.210 --> 01:25.200
+connect as well.
+
+01:26.110 --> 01:29.890
+So back at my terminal, I'm going to find the window where I was running the publisher.
+
+01:30.280 --> 01:35.230
+If you are running a terminal where you can do a split screen, I highly recommend you try to pull up
+
+01:35.230 --> 01:36.470
+a split screen right now.
+
+01:36.490 --> 01:39.730
+So for me, I'm making use of item two on Mac OS.
+
+01:39.760 --> 01:45.630
+The hot key to do that is command DX so I can hit command and now I get the split screen right here.
+
+01:45.640 --> 01:49.510
+So this will allow us to watch events being published and listened for.
+
+01:49.510 --> 01:54.490
+At the same time, if you do not have a terminal where you can do the split screen, no problem.
+
+01:54.490 --> 01:58.450
+Just open up a second terminal window and maybe drag them next to each other.
+
+01:58.450 --> 02:02.350
+Just like this, you can see the events being published and listened to at the same time.
+
+02:04.170 --> 02:08.880
+Then inside this second window, I'm still inside of my Nat's test directory.
+
+02:08.880 --> 02:12.570
+And inside there I will run an RPM run listener.
+
+02:13.760 --> 02:14.030
+To me.
+
+02:14.120 --> 02:14.900
+RPM run.
+
+02:14.900 --> 02:19.610
+Listen, we gave it a slightly different script name, so ampm, run, listen.
+
+02:19.610 --> 02:20.540
+And it looks like.
+
+02:20.540 --> 02:23.480
+All right, we were able to connect to nets at this point.
+
+02:23.480 --> 02:25.970
+We've got a lot of extra information inside of here.
+
+02:26.330 --> 02:30.260
+So this restart stuff, type script, logging information and so on.
+
+02:30.260 --> 02:35.270
+So really quickly, I'm going to go back to both these scripts and right after the import statements,
+
+02:35.270 --> 02:36.650
+I'm going to add in a console.
+
+02:36.980 --> 02:37.610
+Clear.
+
+02:38.510 --> 02:43.190
+So I'm going to put that inside of listener and I'm going to put it inside of the publisher as well.
+
+02:45.420 --> 02:47.010
+Right after the import statement.
+
+02:48.090 --> 02:53.420
+Now whenever this stuff runs or whenever our code gets reran because we changed a file, now we'll just
+
+02:53.420 --> 02:58.070
+see the console logs at the very top and just remove a lot of the garbage that was in here previously.
+
+02:58.910 --> 03:02.960
+One other thing I want to mention very quickly, and this is going to become very relevant as we're
+
+03:02.960 --> 03:05.780
+going to want to start to publish a lot of events here in just a moment.
+
+03:05.780 --> 03:11.900
+If we ever want to restart our program while we are using Node dev, we can select the terminal window
+
+03:11.900 --> 03:14.660
+that's running our program, type in the letters R.
+
+03:14.690 --> 03:19.310
+S and then hit enter and that will automatically restart our program.
+
+03:19.760 --> 03:25.370
+So right now, every single time I type in RS and then hit Enter, I am restarting my program, which
+
+03:25.370 --> 03:30.410
+means I create a new connection to the net server and then I publish a brand new event.
+
+03:30.650 --> 03:32.450
+So if I do this a couple more times.
+
+03:34.070 --> 03:39.650
+I've now probably published like five, six or seven different events on that particular channel, the
+
+03:39.650 --> 03:43.220
+channel with the subject of ticket colen created.
+
+03:44.150 --> 03:44.450
+Okay.
+
+03:44.450 --> 03:47.420
+So let's now go back over and work on our listener implementation.
+
+03:48.200 --> 03:49.700
+Inside of listener tips.
+
+03:49.700 --> 03:53.990
+After we successfully connect, we're going to come up with the name of the subject that we want to
+
+03:53.990 --> 03:56.570
+listen to and use it to create a subscription.
+
+03:57.360 --> 04:03.570
+So I'm going to write right after the console log on subscription is Stan subscribe.
+
+04:04.690 --> 04:08.080
+And we're going to put in our subject right here, which is Ticket Colon.
+
+04:08.880 --> 04:09.570
+Created.
+
+04:11.730 --> 04:16.440
+Then after creating the subscription, remember, this is the object that we're going to listen to and
+
+04:16.440 --> 04:19.230
+we're going to receive some data through the subscription.
+
+04:19.990 --> 04:25.090
+Contrary to how many other libraries work where you might be used to adding in a callback function like
+
+04:25.090 --> 04:30.590
+that, that would be invoked with whatever data we receive, not how it works with node streaming.
+
+04:30.640 --> 04:36.220
+Instead, we create the subscription first and then listen to a very particular type of event off the
+
+04:36.220 --> 04:37.360
+subscription itself.
+
+04:38.160 --> 04:39.750
+So we're going to call it subscription.
+
+04:40.860 --> 04:43.230
+Scott on message.
+
+04:45.300 --> 04:49.470
+So as I mentioned at the end of the last video in the world of Nats, they don't really refer to these
+
+04:49.470 --> 04:51.720
+events being exchanged as events.
+
+04:51.750 --> 04:53.970
+Instead, they're referred to as messages.
+
+04:54.000 --> 04:57.000
+So you'll see this message terminology floating around a little bit.
+
+04:57.960 --> 05:03.660
+Then the argument to this is going to be the actual message which we frequently abbreviate as simply
+
+05:03.660 --> 05:04.440
+MSG.
+
+05:05.590 --> 05:07.850
+MSG right here is not just the raw data.
+
+05:07.870 --> 05:10.490
+Instead, it's got a couple of different properties inside of it.
+
+05:10.510 --> 05:11.860
+We'll take a look at it over time.
+
+05:12.630 --> 05:17.790
+So if right now let's just do a console.log of message received.
+
+05:19.040 --> 05:20.720
+So we're not actually looking at that message.
+
+05:20.720 --> 05:23.370
+We're not actually trying to inspect any of the data inside of it just yet.
+
+05:23.390 --> 05:26.780
+I just want to make sure that we can actually receive a message, that's all.
+
+05:27.700 --> 05:27.990
+Okay.
+
+05:28.000 --> 05:29.050
+I'm going to save this.
+
+05:29.440 --> 05:32.860
+I'm going to make sure both files are saved, and then I'll go back over to my terminal.
+
+05:34.460 --> 05:40.310
+So now in theory, our listener is creating a subscription and listening to that very specific channel.
+
+05:40.340 --> 05:42.390
+So let's now go back over to our publisher.
+
+05:42.410 --> 05:47.810
+We're going to restart the publisher and attempt to publish another event the instant we do so.
+
+05:47.810 --> 05:49.790
+And I really do mean the very instant we do.
+
+05:49.790 --> 05:54.620
+So we should see a console log from the listener saying that it received a message.
+
+05:54.770 --> 05:57.320
+So let's try this out on the publisher.
+
+05:57.320 --> 05:59.270
+I'm going to put in RS hit enter.
+
+06:00.070 --> 06:00.990
+And there we go.
+
+06:01.000 --> 06:02.680
+We have received that message.
+
+06:03.550 --> 06:09.520
+So that's a very basic chain of publishing some data and receiving some data as well.
+
+06:10.180 --> 06:14.320
+Now, everything at this point really seems pretty simple and straightforward, right?
+
+06:14.530 --> 06:16.930
+It's pretty much a basic eventing setup.
+
+06:16.930 --> 06:18.340
+Nothing too crazy.
+
+06:18.520 --> 06:21.970
+You might think at this point that I'm going really slowly and you might be screaming at the screen
+
+06:21.970 --> 06:24.010
+saying, Stephen, can you hurry it up and get to the point?
+
+06:24.010 --> 06:25.810
+Well, believe you me.
+
+06:25.840 --> 06:27.700
+We were going slow for a reason.
+
+06:27.700 --> 06:31.900
+It's really important for you to understand these very basic concepts, because in the coming videos
+
+06:31.900 --> 06:35.580
+we are going to absolutely blow the lid on complexity here.
+
+06:35.590 --> 06:40.660
+We are really going to start to plumb the depths of gnats and really understand what is going on behind
+
+06:40.660 --> 06:41.380
+the scenes.
+
+06:41.380 --> 06:48.340
+Because as you will see very, very quickly, some very small settings inside of here is going to dramatically
+
+06:48.340 --> 06:50.530
+change how our application works.
+
+06:50.740 --> 06:52.510
+So I'm really excited for the coming videos.
+
+06:52.510 --> 06:55.090
+So quick pause right here and we'll continue in just a moment.

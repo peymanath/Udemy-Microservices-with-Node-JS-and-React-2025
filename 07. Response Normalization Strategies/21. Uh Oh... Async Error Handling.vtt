@@ -1,0 +1,340 @@
+WEBVTT
+
+00:01.170 --> 00:03.030
+We spent all this time on air handling.
+
+00:03.030 --> 00:09.210
+So now surely there is no way that we could break everything by just adding in one keyword, right?
+
+00:09.390 --> 00:11.400
+There's no way that could possibly happen.
+
+00:11.430 --> 00:11.760
+Oh.
+
+00:11.790 --> 00:12.200
+Oops.
+
+00:12.210 --> 00:12.630
+Yeah.
+
+00:12.670 --> 00:17.160
+Turns out we can break all the error handling stuff we just did by adding in one very small keyword.
+
+00:17.250 --> 00:19.750
+So in this video, we're going to take a look at what that keyword is.
+
+00:19.770 --> 00:23.280
+We're going to understand what it does to us and how we're going to solve it and make it work with our
+
+00:23.280 --> 00:24.510
+area handling approach.
+
+00:24.840 --> 00:29.460
+So I'm going to find that little Apple statement we just added in a moment ago, and I'm going to put
+
+00:29.460 --> 00:31.710
+it on the async keyword like so.
+
+00:32.070 --> 00:34.500
+Now, surely that's not going to do anything to us, right?
+
+00:34.530 --> 00:37.590
+We don't actually have any await syntax inside of here.
+
+00:37.620 --> 00:39.210
+All we're doing is throwing in an error.
+
+00:39.600 --> 00:41.220
+Well, let's save this.
+
+00:41.700 --> 00:45.450
+Go back over to Postman and make that same request once again.
+
+00:47.080 --> 00:48.190
+Hey, wait a minute.
+
+00:48.370 --> 00:50.030
+It's stuck in sending request.
+
+00:50.050 --> 00:51.330
+What's going on here?
+
+00:51.340 --> 00:52.930
+How did we just break this?
+
+00:52.930 --> 00:55.120
+By adding on that one little keyword.
+
+00:56.370 --> 00:59.050
+Well, you got to understand what async does behind the scenes.
+
+00:59.070 --> 01:04.330
+Whenever you mark a function as async, that function is no longer going to immediately return any value.
+
+01:04.350 --> 01:09.180
+Instead, it's going to return a promise that's going to resolve with some value in the future, even
+
+01:09.180 --> 01:10.800
+if we throw an error inside there.
+
+01:11.130 --> 01:12.960
+How does this relate to Express?
+
+01:12.990 --> 01:16.320
+Well, let's go back to the express air handling documentation once again.
+
+01:16.800 --> 01:22.560
+You might recall that I had mentioned very briefly that if we had a synchronous root handler and we,
+
+01:22.560 --> 01:27.690
+through an error express, will automatically capture that thing and throw it off to any error handling
+
+01:27.690 --> 01:29.850
+middleware we have to find inside of our application.
+
+01:30.270 --> 01:37.110
+However, if we have an asynchronous middleware or an asynchronous root handler, and when we say asynchronous,
+
+01:37.140 --> 01:43.020
+we are talking about any root handler that's going to have a async period applied to it, a callback
+
+01:43.020 --> 01:44.150
+or a promise.
+
+01:44.160 --> 01:47.730
+Then we have to rely upon this next function instead.
+
+01:49.160 --> 01:50.170
+And that's what we just did.
+
+01:50.180 --> 01:52.310
+We now have an asynchronous route handler.
+
+01:52.430 --> 01:55.790
+So if we want this thing to work correctly, we have to receive.
+
+01:57.150 --> 01:58.410
+That next function.
+
+01:58.740 --> 02:03.210
+And when we decide to throw in air, we don't actually throw it instead.
+
+02:04.340 --> 02:07.460
+We will call next with our air.
+
+02:08.510 --> 02:09.800
+So let's now save this.
+
+02:10.810 --> 02:13.660
+Flip back over to Postman and try this again.
+
+02:14.600 --> 02:16.220
+Looks like it's working once again.
+
+02:16.820 --> 02:22.670
+Well, obviously, rather than doing a throw new error versus next, I would rather not have to worry
+
+02:22.670 --> 02:24.020
+about this next thing at all.
+
+02:24.050 --> 02:28.160
+It's something that's very particular to express, and it really requires engineers to understand what
+
+02:28.190 --> 02:29.780
+next is doing behind the scenes.
+
+02:30.020 --> 02:34.250
+I think it would be a lot better if we could somehow figure out a way to stick with the throw keyword
+
+02:34.250 --> 02:36.350
+instead and just make this work.
+
+02:37.620 --> 02:42.060
+Well to do so, we're going to install a little package, a little package that's going to change the
+
+02:42.060 --> 02:47.100
+default behavior of how Express handles route handlers like the one we just put together right here.
+
+02:47.400 --> 02:52.770
+This little package is going to make sure that express weights or essentially does an a weight statement
+
+02:52.950 --> 02:54.300
+on this function.
+
+02:54.750 --> 02:59.430
+And so if we have some async code inside of here, for example, using async await express will start
+
+02:59.430 --> 03:03.450
+to watch for any errors that we throw at any point in time inside this function.
+
+03:04.160 --> 03:08.730
+So essentially it's just augmenting the default behavior of express and kind of bringing it into the
+
+03:08.730 --> 03:11.040
+present age of using async await.
+
+03:11.430 --> 03:14.130
+This package is extremely easy to use.
+
+03:14.160 --> 03:16.980
+Let's just go take a look at the documentation for it very quickly.
+
+03:18.200 --> 03:19.760
+I'm going to open up PM.
+
+03:19.940 --> 03:21.020
+So KPMG's.
+
+03:23.650 --> 03:27.010
+And at the top, I'm going to do a search we're going to look for.
+
+03:27.840 --> 03:29.940
+I do not recall the name of it off the top of my head.
+
+03:29.940 --> 03:31.350
+I got to check my notes really quickly.
+
+03:31.500 --> 03:32.010
+There we go.
+
+03:32.040 --> 03:36.930
+Turns out there's a dozen packages with very similar name, which is why I didn't really just want to
+
+03:36.930 --> 03:37.980
+randomly search for it.
+
+03:37.980 --> 03:40.830
+So express async errors.
+
+03:40.830 --> 03:41.970
+That's what we're looking for.
+
+03:43.360 --> 03:45.220
+So here's express async errors.
+
+03:46.140 --> 03:48.510
+You can read the documentation here if you want to.
+
+03:48.540 --> 03:50.670
+It pretty much just does what I mentioned.
+
+03:50.820 --> 03:56.220
+It's going to make sure that if we ever throw in air at some point in time inside of an async function,
+
+03:56.640 --> 03:59.520
+this whole package is going to make sure that Express listens for it.
+
+04:00.030 --> 04:02.220
+To use this thing, all we have to do is install it.
+
+04:02.970 --> 04:07.650
+And then require it in or in our case, imported in right after express.
+
+04:07.680 --> 04:08.190
+That's it.
+
+04:08.190 --> 04:09.120
+That's all we have to do.
+
+04:10.340 --> 04:13.250
+So let's go over to our terminal and install it into our project.
+
+04:15.570 --> 04:17.420
+I'm inside of our ticketing directory.
+
+04:17.430 --> 04:20.550
+I'll change into off and then do an NPM install.
+
+04:20.580 --> 04:23.010
+Express async errors.
+
+04:25.520 --> 04:28.490
+This is a very small module, so it should install rather quickly.
+
+04:29.190 --> 04:32.490
+After installing it, I'll then go back over to my index file.
+
+04:33.030 --> 04:33.930
+I'll go up to the top.
+
+04:33.930 --> 04:35.610
+I'll find where we import express.
+
+04:35.610 --> 04:40.190
+And then right after that, I'll add an import express async errors.
+
+04:40.990 --> 04:42.070
+And that should be it.
+
+04:44.510 --> 04:45.560
+So I'll save this.
+
+04:45.920 --> 04:49.550
+You'll notice that I still have code that was causing us trouble a moment ago.
+
+04:50.090 --> 04:54.080
+But if I go back over to Postman and send a request once again.
+
+04:54.950 --> 04:55.750
+Now it's working.
+
+04:55.750 --> 04:58.100
+And even though we've got that async keyword in there.
+
+04:59.060 --> 04:59.600
+Awesome.
+
+05:00.310 --> 05:04.720
+So this is going to fix up not only the root handlers we define inside this file, but inside of other
+
+05:04.720 --> 05:05.720
+files as well.
+
+05:05.740 --> 05:07.870
+So, for example, if we go back over to sign up.
+
+05:08.790 --> 05:09.990
+Here's the signup file.
+
+05:11.620 --> 05:15.760
+Find the actual root handling function and put the async keyword on there as well.
+
+05:16.620 --> 05:18.420
+Now we can go back over to Postman.
+
+05:18.930 --> 05:22.080
+I'll fix up my URL so I'm going to delete all that gibberish at the end.
+
+05:22.960 --> 05:24.820
+I'll make sure I'm still making a post request.
+
+05:25.360 --> 05:26.640
+Now, if I send this off.
+
+05:26.650 --> 05:26.980
+Yep.
+
+05:26.980 --> 05:28.180
+This works as well.
+
+05:29.470 --> 05:29.890
+Cool.
+
+05:30.670 --> 05:31.870
+Well, I'd say this looks pretty good.
+
+05:31.870 --> 05:36.610
+Now we can handle errors across the board, and I'm pretty sure that really actually is the last air
+
+05:36.610 --> 05:39.640
+related topic we need to worry about for a long time.
+
+05:39.880 --> 05:42.850
+So with that in mind, quick buzz right here.
+
+05:42.880 --> 05:47.320
+I'm going to start taking a look at actual authentication, which is what we actually originally set
+
+05:47.320 --> 05:49.300
+out to do in just a moment.

@@ -1,0 +1,370 @@
+WEBVTT
+
+00:01.010 --> 00:03.410
+Let's get started on this ticket show component.
+
+00:03.530 --> 00:08.360
+So we should be able to navigate to a URL of something like tickets slash and then the ID of a ticket
+
+00:08.360 --> 00:09.740
+and see this thing appear.
+
+00:10.070 --> 00:13.780
+You might recall that we discussed how we implement wild card routes just a moment ago.
+
+00:13.790 --> 00:18.770
+So we had said that if we want to have a URL of something like tickets slash wild card, we would have
+
+00:18.770 --> 00:23.780
+to create a file inside of our pages, directory of tickets slash and then inside of square brackets
+
+00:23.780 --> 00:24.800
+ticket ID.
+
+00:25.470 --> 00:30.690
+Whatever word we put inside of those square brackets that will be provided to us as a parameter inside
+
+00:30.690 --> 00:34.550
+of that context, our object that gets passed to our get initial function.
+
+00:34.560 --> 00:35.940
+We'll take a look at that in just a little bit.
+
+00:35.940 --> 00:40.890
+But right now, let's just create this file and make sure that we can navigate to a root of something
+
+00:40.890 --> 00:42.510
+essentially like that.
+
+00:43.670 --> 00:47.960
+So back inside of my editor, I'm going to find the tickets directory inside the pages folder.
+
+00:49.790 --> 00:53.960
+And in there, I'm going to make a new file of square brackets ticket.
+
+00:55.100 --> 00:59.510
+I'd dogs and make sure you've got the closing square bracket on there as well.
+
+01:01.650 --> 01:05.200
+Then inside this file, let's just create a very simple component.
+
+01:05.220 --> 01:08.100
+Export it right away and then try to test this out inside the browser.
+
+01:08.640 --> 01:10.470
+So I'll make a component up ticket show.
+
+01:14.420 --> 01:17.300
+I'll have it return a simple div that says ticket show.
+
+01:19.520 --> 01:21.230
+And then I will export that.
+
+01:24.500 --> 01:24.600
+Okay.
+
+01:24.720 --> 01:27.240
+So let's now manually test this out inside of our browser.
+
+01:27.690 --> 01:33.450
+The back at this tab I'm going to find ticketing dot dev and I'll change it to manually inside that
+
+01:33.450 --> 01:37.470
+URL tickets slash and then pretty much whatever you want to put in there.
+
+01:37.470 --> 01:42.600
+So any kind of token whatsoever, any kind of random string of characters that should be matched against
+
+01:42.600 --> 01:44.340
+the wild card route that we just put together.
+
+01:44.770 --> 01:47.360
+So if I go there, I'll then see a ticket show appear.
+
+01:47.850 --> 01:49.170
+Well, okay, simple enough.
+
+01:49.170 --> 01:50.340
+Not the worst thing in the world.
+
+01:50.820 --> 01:53.580
+Now, creating this route is pretty easy and straightforward.
+
+01:53.580 --> 01:56.850
+All we have to do is create the file with the brackets around the name.
+
+01:56.850 --> 01:57.600
+That's it.
+
+01:57.870 --> 02:03.480
+But I do want you to understand that handling navigation to this route, so specifically with a link
+
+02:03.480 --> 02:08.910
+element or that router thing that we just saw is just a little bit more complicated when we start making
+
+02:08.910 --> 02:11.610
+use of these kind of query or wildcard routes.
+
+02:11.850 --> 02:14.910
+I'll show you examples of that right away as quickly as possible.
+
+02:15.720 --> 02:16.500
+But that might.
+
+02:17.650 --> 02:18.730
+Let's make sure.
+
+02:19.450 --> 02:20.290
+Back over here.
+
+02:20.320 --> 02:24.520
+I want to make sure that a user can get to this root without having to memorize this URL or having to
+
+02:24.520 --> 02:26.020
+put in some distinct ID.
+
+02:26.350 --> 02:30.700
+So I think that to handle navigation over to that root, we should go back over to our ticket list or
+
+02:30.700 --> 02:32.790
+essentially the landing page component.
+
+02:32.800 --> 02:37.300
+And we should add on a third column, they'll display a link to go to that particular ticket.
+
+02:37.970 --> 02:39.080
+Let's do that right now.
+
+02:40.920 --> 02:42.960
+Back inside of our landing page.
+
+02:43.760 --> 02:45.260
+I'm going to go down to our table.
+
+02:45.740 --> 02:48.260
+Inside of the header, I'm going to add in a third column.
+
+02:50.500 --> 02:52.330
+And I'll give it some text like link.
+
+02:54.360 --> 02:56.550
+And then back on our ticket list right here.
+
+02:56.550 --> 02:58.320
+I'm going to add in a third TD.
+
+03:00.270 --> 03:03.480
+The right here is where we're going to want to display some kind of anchor element.
+
+03:03.810 --> 03:09.480
+You might recall from way earlier inside this course how we handle link tags or essentially anchor elements
+
+03:09.480 --> 03:10.680
+with next DJ's.
+
+03:10.830 --> 03:14.290
+We do not just place a single a anchor element like so.
+
+03:14.310 --> 03:18.060
+Instead, we have to use that link component that is provided by next.
+
+03:18.390 --> 03:20.220
+We can get a quick reminder on how that works.
+
+03:20.220 --> 03:23.940
+If we go back to our components directory and take a look at the header JS file.
+
+03:24.420 --> 03:28.050
+So inside of here, we add imported link from next slash link.
+
+03:29.810 --> 03:32.530
+And then to place an actual link that a user can click on.
+
+03:32.540 --> 03:34.880
+We're going to show an instance of the link component.
+
+03:35.150 --> 03:37.340
+That thing is going to be given an h f property.
+
+03:37.340 --> 03:39.350
+So that is where we want to actually navigate to.
+
+03:39.890 --> 03:43.520
+And then we're also going to have it inside there in actual anchor element.
+
+03:43.730 --> 03:48.430
+The anchor itself is not going to have an H ref whenever next renders this thing.
+
+03:48.440 --> 03:52.730
+It's going to automatically take whatever h ref u provides the link and assign it to the underlying
+
+03:52.730 --> 03:53.660
+anchor element.
+
+03:54.230 --> 03:58.550
+So we have to do the same thing here as well back inside of our landing page component.
+
+03:59.670 --> 04:01.680
+So inside this TDI that we just added in.
+
+04:02.510 --> 04:03.170
+At the very top.
+
+04:03.170 --> 04:07.340
+We will import link from next link.
+
+04:08.670 --> 04:10.050
+Well, then put the link in.
+
+04:11.840 --> 04:12.290
+Inside there.
+
+04:12.290 --> 04:13.640
+I'll put my anchor element.
+
+04:14.640 --> 04:16.020
+I'll give it some text like view.
+
+04:16.050 --> 04:16.860
+Simple enough.
+
+04:18.500 --> 04:18.770
+Okay.
+
+04:18.770 --> 04:23.120
+So now here's where using these wild card routes gets just a little bit nasty.
+
+04:23.300 --> 04:28.730
+So if we are navigating to just a very single distinct route, such as sign in, sign out, sign up.
+
+04:28.820 --> 04:33.320
+Yeah, we would put in a single ref, put in whatever out right there and we would be happy.
+
+04:33.320 --> 04:34.400
+Everything's good to go.
+
+04:34.940 --> 04:39.590
+But because we are putting in a query route or a wild card route here, it's just a little bit more
+
+04:39.590 --> 04:40.450
+complicated.
+
+04:40.550 --> 04:43.340
+Here's what we have to do in the ref property.
+
+04:43.370 --> 04:48.860
+We're going to put in essentially the path to the file that we want to show inside of our pages directory.
+
+04:49.160 --> 04:54.920
+So in this case, if we click on the link, we want to show the component at tickets slash bracket,
+
+04:54.920 --> 04:57.230
+ticket ID or square brackets ticket ID.
+
+04:57.590 --> 05:02.750
+So we are going to write in here, slash tickets, slash square bracket, ticket ID.
+
+05:03.230 --> 05:06.830
+We do not have to put on the file extension so there will not be any JS.
+
+05:06.890 --> 05:09.080
+It's just a ticket slash ticket ID.
+
+05:10.970 --> 05:15.050
+We're then going to provide a second prop called as.
+
+05:16.540 --> 05:18.820
+We're going to put in a template string to this thing.
+
+05:18.820 --> 05:23.830
+And inside this template string, we're going to actually build up the true real URL that we want to
+
+05:23.830 --> 05:24.730
+navigate to.
+
+05:24.970 --> 05:29.470
+So this would be our actual tickets slash and then the real ID of the ticket.
+
+05:29.980 --> 05:35.350
+So for you and I, it would be tickets slash and we'll do some string templating here.
+
+05:37.660 --> 05:39.220
+To get ID.
+
+05:41.090 --> 05:45.300
+That's how we do a link element whenever we are navigating to a kind of wild card route.
+
+05:45.320 --> 05:51.410
+We first put in the ref that really just describes the generic kind of general route without any customized
+
+05:51.410 --> 05:52.820
+IDs or anything like that.
+
+05:52.850 --> 05:57.620
+Then we separately provide as and that is the real URL that we are trying to navigate to.
+
+05:58.490 --> 06:01.310
+Okay, so let's save this and then go do a quick test.
+
+06:02.700 --> 06:04.110
+So it looks like we've got the view.
+
+06:04.140 --> 06:09.000
+If I hover over this at the very bottom left hand of the screen, you'll see a little pop up right there.
+
+06:09.000 --> 06:12.630
+And it says that I'm trying to go to ticket slash and the idea of the ticket.
+
+06:12.900 --> 06:16.320
+So I should now be able to click this and go directly to ticket show.
+
+06:16.950 --> 06:17.250
+Cool.
+
+06:17.250 --> 06:19.140
+So it looks like that is working as expected.
+
+06:19.380 --> 06:24.300
+I can, of course, also do a command click to open up a separate tab and it loads up ticket show as
+
+06:24.300 --> 06:24.750
+well.
+
+06:26.160 --> 06:26.430
+All right.
+
+06:26.430 --> 06:31.050
+So again, the trick here is whenever you're placing a link for a wild card route, we have to provide
+
+06:31.050 --> 06:37.380
+a ref into as this idea right here is going to be true or we're going to do something very similar whenever
+
+06:37.380 --> 06:39.810
+we are doing programmatic navigation as well.
+
+06:39.930 --> 06:44.430
+So for example, back inside of our ticket form or the new ticket component that we had just created.
+
+06:45.150 --> 06:46.860
+We called it router push right here.
+
+06:46.890 --> 06:50.580
+We're going to have to do something very similar to this ref.
+
+06:50.580 --> 06:55.620
+And as a prop, when we make use of router push to go to a wild card route as well.
+
+06:55.620 --> 06:56.850
+So just something to keep in mind.
+
+06:56.850 --> 06:59.220
+We're going to see this topic come up in just a moment as well.
+
+07:00.390 --> 07:01.100
+So it looks good.
+
+07:01.110 --> 07:02.970
+We've got a starting point for ticket show.
+
+07:03.000 --> 07:06.960
+Let's take a pause here and start to put together the implementation for that in just a moment.

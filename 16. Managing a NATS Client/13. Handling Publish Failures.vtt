@@ -1,0 +1,292 @@
+WEBVTT
+
+00:00.930 --> 00:05.610
+In the last video we saw that we can get into some really big trouble if we ever successfully save a
+
+00:05.610 --> 00:10.500
+record to the database and then fail to emit an event describing that record we just saved.
+
+00:11.130 --> 00:16.050
+So we would not update this other database or this other service over here, and a user would see some
+
+00:16.050 --> 00:18.000
+really strange data inside of our app.
+
+00:18.390 --> 00:19.800
+So how can we solve this?
+
+00:19.830 --> 00:23.760
+Well, luckily, there's a somewhat straightforward approach to this, pretty straightforward.
+
+00:23.760 --> 00:27.870
+And it's going to work vast majority of the time to make sure that we don't run into any really big
+
+00:27.870 --> 00:28.560
+issues.
+
+00:28.770 --> 00:29.850
+So here's the idea.
+
+00:31.030 --> 00:36.160
+So as in the diagram we were just looking at in the code that we currently have, we have seen that
+
+00:36.160 --> 00:40.690
+whenever we save record to the database, we're then going to immediately emit an event or publish it
+
+00:40.690 --> 00:43.630
+over to our event bus to solve this whole issue.
+
+00:43.630 --> 00:49.450
+Rather than emitting an event over to the event bus, we're going to instead save that event into our
+
+00:49.450 --> 00:50.260
+database.
+
+00:51.000 --> 00:56.100
+So we're going to still take some record in this case, a transaction or whatever, a ticket, whatever
+
+00:56.100 --> 01:03.030
+it is, save it into our database and we're going to simultaneously take the event that we want to emit.
+
+01:03.030 --> 01:07.260
+And rather than emitting it, we're going to save it into some kind of events collection inside of our
+
+01:07.260 --> 01:08.400
+database as well.
+
+01:09.940 --> 01:13.960
+Then along with that event, we're going to record some kind of flag on whether the event has actually
+
+01:13.960 --> 01:14.800
+been published.
+
+01:15.250 --> 01:18.940
+When we first saved this thing into the database, no, the event has not yet been published.
+
+01:18.940 --> 01:21.940
+So we would say no, it has not been sent.
+
+01:23.130 --> 01:28.480
+Then inside of some separate process or some separate piece of code, something outside of our root
+
+01:28.500 --> 01:35.550
+handler, we can then have some code that is watching this events collection and it can take note of
+
+01:35.550 --> 01:37.740
+any time we save a new event into it.
+
+01:38.160 --> 01:42.900
+Any time we save a new event into this events collection, this separate piece of code can then extract
+
+01:42.900 --> 01:47.940
+that event, essentially pull it out of that collection and publish it off to nets.
+
+01:48.270 --> 01:52.410
+Once it successfully gets published, we can then update this sent flag over to.
+
+01:52.440 --> 01:54.570
+Yes, this event has been published.
+
+01:55.670 --> 02:01.100
+So this kind of two stage approach is going to go a long way to solving this entire issue.
+
+02:01.430 --> 02:06.710
+If there's ever some issue connecting to our database, well then we will fail to save this transaction
+
+02:06.710 --> 02:07.790
+and the event.
+
+02:07.790 --> 02:10.130
+And so we will not have any data integrity issues.
+
+02:10.910 --> 02:16.730
+If Nats is down or if our connection to Nats is down for some crazy reason, we can still save the ticket
+
+02:16.730 --> 02:21.530
+to the database or save the transaction to the database, save the event, and then hopefully at some
+
+02:21.530 --> 02:25.820
+future point in time when our Nats connection comes back up, this separate piece of code or process
+
+02:25.820 --> 02:29.570
+or whatever else can still pull this event out and publish it off to Nats.
+
+02:30.390 --> 02:34.230
+This approach really makes sure that we're not going to run into this issue where we save a record and
+
+02:34.230 --> 02:35.970
+fail to publish some data around it.
+
+02:37.380 --> 02:39.180
+There is one other thing to imagine.
+
+02:39.180 --> 02:44.910
+However, there might be some kind of crazy possibility where we successfully save this transaction
+
+02:44.910 --> 02:48.150
+in and then maybe fail to save the event.
+
+02:48.180 --> 02:52.560
+Maybe we fail to save the event because there is some kind of database constraint or something like
+
+02:52.560 --> 02:53.070
+that.
+
+02:53.550 --> 02:59.040
+So we really need to make sure that whenever we save a transaction, if that gets saved, we have to
+
+02:59.040 --> 03:01.650
+make sure that the event gets successfully saved as well.
+
+03:02.010 --> 03:07.230
+And of saving either things, things fail, then we need to make sure that we undo all the changes that
+
+03:07.230 --> 03:08.540
+we have made to the database.
+
+03:08.550 --> 03:13.360
+So in other words, if we successfully save the transaction but not the event, we need to make sure,
+
+03:13.410 --> 03:15.480
+sure we roll back saving the transaction.
+
+03:15.840 --> 03:21.720
+And if we save the transaction or save the event but not the transaction, we need to make sure we roll
+
+03:21.720 --> 03:23.550
+back saving the event as well.
+
+03:24.340 --> 03:28.420
+So to do something like this, a lot of databases have something like this already built in.
+
+03:28.690 --> 03:30.340
+Even MongoDB does.
+
+03:30.970 --> 03:33.760
+This is the idea of something called a database transaction.
+
+03:33.790 --> 03:37.840
+Now, let me pause right here and say that we have the word transaction on this diagram twice.
+
+03:37.840 --> 03:40.360
+And these are two very different transactions.
+
+03:40.780 --> 03:45.580
+So inside of this database, this transactions collection, is talking about a user depositing some
+
+03:45.580 --> 03:46.900
+money or something like that.
+
+03:47.410 --> 03:49.840
+That is some very application specific behavior.
+
+03:50.440 --> 03:52.360
+A lot of databases, on the other hand.
+
+03:52.360 --> 03:54.550
+So this is the other use of the word transaction.
+
+03:54.580 --> 04:00.370
+A lot of databases implement a feature called a transaction, and a database transaction is something
+
+04:00.370 --> 04:05.620
+that allows us to say there is a set of changes that we want to make to our database and if any of these
+
+04:05.620 --> 04:08.320
+changes fail, do not make any of the changes.
+
+04:09.140 --> 04:15.110
+So we can wrap up saving this record and saving the event inside of a database transaction and of saving
+
+04:15.110 --> 04:16.370
+either of these things fails.
+
+04:16.370 --> 04:19.310
+The database will automatically roll back all these changes.
+
+04:20.170 --> 04:25.750
+So a database transaction will ensure that we always save the record and the event along with it successfully
+
+04:25.750 --> 04:27.130
+or both them will fail.
+
+04:29.250 --> 04:31.080
+So again, that's how we're going to solve this issue.
+
+04:31.110 --> 04:35.340
+Now, you might recall earlier on inside this course, I said that I wanted to build this application
+
+04:35.340 --> 04:41.000
+as realistically and production grade as possible, but that we were going to cut one or two corners.
+
+04:41.010 --> 04:46.500
+So this entire system right here of saving an event into the database and publishing it later on and
+
+04:46.500 --> 04:50.880
+this entire idea of a database transaction, this is where I'm kind of drawing the line for the course.
+
+04:50.880 --> 04:55.590
+We are not going to implement this inside of our application just because it adds in a pretty good amount
+
+04:55.590 --> 04:56.460
+of complexity.
+
+04:56.460 --> 05:02.040
+And to be honest with you, I don't really anticipate us to ever really have to deal with an issue around
+
+05:02.040 --> 05:08.550
+saving a record to the database and then possibly not successfully saving some or publishing some information
+
+05:08.550 --> 05:09.510
+over to nets.
+
+05:09.600 --> 05:15.150
+So I just don't really think we are going to experience this issue inside of our application.
+
+05:15.150 --> 05:20.880
+And I don't really expect that we will ever even be able to effectively test that or test this realistically
+
+05:20.880 --> 05:21.350
+as well.
+
+05:21.360 --> 05:26.250
+We could definitely write some kind of automated test to make sure that this thing works as expected,
+
+05:26.250 --> 05:30.570
+but I just don't really expect us to be able to test it in any realistic scenario.
+
+05:30.900 --> 05:33.750
+So we are not going to implement this inside this application.
+
+05:33.750 --> 05:37.980
+But I just wanted you to know that this is a concern and it's something that you might want to write
+
+05:37.980 --> 05:39.000
+some code to handle.
+
+05:39.630 --> 05:45.930
+Again, we could save it or deal with this issue by saving the record and the event at the same time
+
+05:45.930 --> 05:50.670
+have the separate process to pull events out of that events collection, publish them off to nets.
+
+05:50.670 --> 05:55.050
+And we would probably want to also make sure that we wrap up saving the record and the event inside
+
+05:55.050 --> 05:56.550
+of some transaction as well.
+
+05:57.680 --> 05:57.890
+Ooh.
+
+05:57.980 --> 05:58.370
+Okay.
+
+05:58.370 --> 06:00.350
+So that's that, as usual.
+
+06:00.350 --> 06:01.250
+Quick pause right here.
+
+06:01.250 --> 06:02.510
+Continue in just a minute.

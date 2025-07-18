@@ -1,0 +1,157 @@
+WEBVTT
+
+00:01.280 --> 00:05.600
+We've now taken a look at fundamental option, number one, and number two for handling the question
+
+00:05.600 --> 00:08.980
+of whether or not a user is authenticated inside of our application.
+
+00:08.990 --> 00:13.910
+So just to summarize these two things with fundamental option number one, we said that every individual
+
+00:13.910 --> 00:19.460
+service was going to rely upon some central OTT service, either as some outside service or as a central
+
+00:19.460 --> 00:20.120
+gateway.
+
+00:20.780 --> 00:26.450
+The benefit to this approach reflected here in green is that any time that we made changes to our authentication
+
+00:26.450 --> 00:31.970
+state or the access of a user, it would be immediately reflected throughout the rest of our cluster
+
+00:31.970 --> 00:33.560
+or throughout the rest of our services.
+
+00:33.890 --> 00:38.900
+So if we set a user was banned as soon as the next service came and asked about the status of a user
+
+00:38.900 --> 00:43.280
+or whether or not they were actually signed in, we could absolutely say this person is banned, do
+
+00:43.280 --> 00:44.450
+not allow them access.
+
+00:45.050 --> 00:49.730
+The really big downside to this approach was that if the service ever went down, our entire app would
+
+00:49.730 --> 00:50.510
+be broken.
+
+00:51.620 --> 00:56.720
+Now fundamental number two really is the exact opposite in nature with the fundamental option.
+
+00:56.720 --> 01:00.280
+Number two, we were going to teach each service how to authenticate a user.
+
+01:00.290 --> 01:03.860
+So in this case, if the service ever went down, who cares?
+
+01:03.860 --> 01:04.940
+Doesn't matter.
+
+01:05.210 --> 01:10.580
+Our other services don't even have to understand that the authentication service exists.
+
+01:10.940 --> 01:12.770
+That was the big upside to this approach.
+
+01:13.220 --> 01:18.230
+However, the downside was that if some user ever got banned, there is going to be a window or a period
+
+01:18.230 --> 01:22.640
+of time where we were going to continue to trust that that user was actually signed in.
+
+01:22.640 --> 01:26.870
+So we can imagine that someone might come to us and say, Hey, that person was just banned, and we
+
+01:26.870 --> 01:32.120
+would respond, Oh, man, I just gave them keys to my bank account or something like that 5 minutes
+
+01:32.120 --> 01:36.020
+ago because we are being told too late that this user is now banned.
+
+01:37.420 --> 01:42.490
+So the real question here, as it really comes to us, as it applies to us, which option are we going
+
+01:42.490 --> 01:43.210
+to go with?
+
+01:43.240 --> 01:46.060
+Well, the answer is we are going to go with option number two.
+
+01:46.880 --> 01:51.890
+So we're going to go with option number two specifically because I want to promote this idea of making
+
+01:51.890 --> 01:53.570
+independent services.
+
+01:53.660 --> 01:57.300
+Remember, in all things micro services, there really is a spectrum.
+
+01:57.320 --> 02:02.150
+Throughout this course, we've been following this idea of async communication, which really leads
+
+02:02.150 --> 02:05.360
+to a huge amount of independence between our different services.
+
+02:05.570 --> 02:07.850
+But we absolutely can have a hybrid of sorts.
+
+02:07.850 --> 02:14.150
+We can have a setup where we've got a ton of async communication going on, but we can also have some
+
+02:14.180 --> 02:16.940
+little instances of sync communication as well.
+
+02:17.270 --> 02:21.980
+So regardless of that, I do want to promote this idea of independent services.
+
+02:21.980 --> 02:23.960
+So we're going to go with option number two.
+
+02:25.220 --> 02:27.520
+Now, you still might say, Stephen, wait a minute.
+
+02:27.530 --> 02:30.200
+There's like a fundamental security issue here.
+
+02:30.200 --> 02:31.520
+How would we solve that?
+
+02:31.550 --> 02:32.600
+Well, don't sweat it.
+
+02:32.600 --> 02:33.290
+I got your back.
+
+02:33.290 --> 02:34.420
+I got an answer for you.
+
+02:34.430 --> 02:39.650
+There is a way that we can solve this entire problem of banning users or updating their authentication
+
+02:39.650 --> 02:40.610
+state in some way.
+
+02:41.030 --> 02:43.700
+However, it is kind of a little bit longer explanation.
+
+02:43.700 --> 02:45.290
+So we're going to take a pause right here.
+
+02:45.290 --> 02:49.130
+And in the next video I'm going to give you an optional lecture so you do not have to listen to it if
+
+02:49.130 --> 02:50.030
+you do not want to.
+
+02:50.030 --> 02:54.710
+But I'm going to tell you about one strategy we could use to get over this really big issue with option
+
+02:54.710 --> 02:55.400
+number two.
+
+02:55.520 --> 02:58.190
+So quick pause and we'll take a look at that in just a moment.

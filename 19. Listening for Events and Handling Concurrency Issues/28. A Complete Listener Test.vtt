@@ -1,0 +1,511 @@
+WEBVTT
+
+00:00.860 --> 00:03.010
+Let's get started with our test implementation.
+
+00:03.020 --> 00:05.980
+So step one, put together these set up function.
+
+00:05.990 --> 00:08.480
+We're going to have to create an instance of the listener at the very top.
+
+00:08.480 --> 00:12.890
+So let's import our ticket created listener.
+
+00:13.630 --> 00:16.420
+From up one directory to get created a listener.
+
+00:17.590 --> 00:20.200
+Then right after that comment, we'll say listener.
+
+00:21.040 --> 00:23.170
+Is a new ticket created?
+
+00:23.200 --> 00:28.480
+Listener Whenever we create an instance of a listener, we are required to pass in a Nats client.
+
+00:28.510 --> 00:33.860
+Now you might recall a little bit ago we had set up the Mocs folder inside the CRC directory.
+
+00:33.880 --> 00:36.820
+So we've got a mock around Nats wrapper right here.
+
+00:37.480 --> 00:38.890
+So this right here is our mock.
+
+00:38.920 --> 00:43.190
+It is only used inside the test environment and this is essentially our fake client.
+
+00:43.210 --> 00:47.590
+So we're going to provide this to our instance of ticket created listener.
+
+00:48.920 --> 00:55.070
+We're going to add in another import statement up here for Nat's wrapper from up to directories or maybe
+
+00:55.070 --> 00:56.280
+three directories.
+
+00:56.300 --> 00:57.860
+Yep, three directories.
+
+00:58.670 --> 00:59.370
+And then we'll pass.
+
+00:59.390 --> 01:01.490
+And that's rapper client.
+
+01:03.310 --> 01:04.030
+That looks good.
+
+01:04.300 --> 01:08.680
+Next up, we're going to create a fake data event or really data object.
+
+01:09.160 --> 01:12.300
+So this needs to be something that satisfies this data argument.
+
+01:12.310 --> 01:15.790
+That's the first argument to the on message function inside of the ticket created listener.
+
+01:16.360 --> 01:22.450
+So in other words, the fake data object needs to satisfy the interface ticket created events, or more
+
+01:22.450 --> 01:25.300
+specifically, the data piece of that interface.
+
+01:26.180 --> 01:30.890
+So we could either look up that interface definition by doing a command click, or there's a little
+
+01:30.890 --> 01:33.140
+trick we could use to help ourselves out.
+
+01:33.620 --> 01:39.200
+Back inside my test file at the very top, I'm going to import that ticket created event.
+
+01:40.630 --> 01:42.010
+From my common module.
+
+01:43.080 --> 01:47.100
+And then where we're going to create the fake data event, I'll say Colin's data, and then I'm going
+
+01:47.100 --> 01:53.820
+to annotate this variable right away as ticket related event, specifically the data property.
+
+01:54.840 --> 01:58.320
+If I then set that equal to an empty object, I can then hover over data.
+
+01:58.320 --> 02:02.130
+And TypeScript is going to give us some hints on how we could satisfy that interface.
+
+02:02.430 --> 02:08.100
+So we need to specifically provide an ID as a string, a version as a number, title price, user ID
+
+02:08.100 --> 02:08.820
+and so on.
+
+02:11.250 --> 02:13.340
+So we'll fill in some of those properties right here.
+
+02:13.350 --> 02:15.930
+We're just going to make up some properties on the fly, more or less.
+
+02:17.240 --> 02:18.950
+First, I'll give it a version of zero.
+
+02:19.580 --> 02:20.780
+I'll give it an ID.
+
+02:20.780 --> 02:25.790
+And the ID we provide here does have to be a real ID because we're going to eventually take this ID
+
+02:25.790 --> 02:28.880
+and use it to save a new ticket to our local database.
+
+02:28.880 --> 02:31.880
+So it has to be a legitimate MongoDB ID.
+
+02:32.360 --> 02:34.730
+That means we're going to have to generate an ID.
+
+02:34.760 --> 02:38.060
+So at the very top I am going to import Mongoose.
+
+02:38.800 --> 02:44.920
+From Mongoose and then I'll generate the ID by putting in new mongoose types.
+
+02:45.280 --> 02:49.360
+Object ID to hex string like so.
+
+02:52.800 --> 02:57.360
+Then our title I'll put in concert for Price ten.
+
+02:58.080 --> 03:01.230
+And then a user ID and we're not really using the user ID anywhere.
+
+03:01.440 --> 03:04.410
+Nonetheless, let's provide a real user ID as well.
+
+03:04.410 --> 03:05.970
+So a real mongo ID.
+
+03:06.180 --> 03:07.620
+So I'm going to copy that.
+
+03:08.620 --> 03:10.750
+Object ID and throw it down.
+
+03:10.750 --> 03:12.070
+Assign it to user ID.
+
+03:12.790 --> 03:17.350
+Now we'll notice that TypeScript is happy we have created a valid looking data object.
+
+03:17.860 --> 03:18.280
+Cool.
+
+03:18.970 --> 03:21.490
+Next up, we need to create a fake message object.
+
+03:21.730 --> 03:25.090
+To create this fake message object, we're going to use a similar trick where we're going to create
+
+03:25.090 --> 03:30.160
+a variable called message and we'll annotate its type and then TypeScript will jump in and help us create
+
+03:30.160 --> 03:31.690
+the proper looking object.
+
+03:32.020 --> 03:35.890
+So I'll say const MSG is of type message.
+
+03:36.860 --> 03:41.030
+And I'm going to import the message type at the top of the file as well from the node net streaming
+
+03:41.030 --> 03:41.750
+library.
+
+03:42.230 --> 03:43.160
+So at the very top.
+
+03:44.730 --> 03:47.850
+Message from node nats streaming.
+
+03:50.670 --> 03:54.540
+Once again, TypeScript is going to give us an edge right here and tell us that there's a bunch of different
+
+03:54.540 --> 04:00.450
+properties we need to define now in the context of our listener, or specifically the on message function.
+
+04:00.450 --> 04:05.670
+We do not care about the vast majority of these different functions, and I don't really want to have
+
+04:05.670 --> 04:10.320
+to provide a fake implementation for each of them just to get TypeScript to be happy with the code we're
+
+04:10.320 --> 04:11.070
+writing here.
+
+04:11.610 --> 04:14.010
+So we're going to just do a little cheat once again.
+
+04:14.010 --> 04:15.270
+We're going to use that.
+
+04:16.520 --> 04:17.200
+Yes.
+
+04:17.900 --> 04:20.990
+Ignore helper or the little comment to tell TypeScript.
+
+04:20.990 --> 04:21.890
+Hey, don't sweat it.
+
+04:21.890 --> 04:26.360
+Just pretend that this thing is a message even if we do not implement the message correctly.
+
+04:26.630 --> 04:31.130
+So now that error goes away, and if I hover over message, TypeScript says, okay, I give up your
+
+04:31.130 --> 04:31.460
+right.
+
+04:31.460 --> 04:32.000
+Whatever.
+
+04:32.000 --> 04:32.900
+It's a message.
+
+04:34.120 --> 04:37.330
+In total, there's really only one function on this message object that we care about.
+
+04:37.330 --> 04:40.680
+And if we go back over to the listener, we can see that it is the act function.
+
+04:40.690 --> 04:44.350
+That's the only thing we really care about existing on the message at all.
+
+04:45.400 --> 04:48.030
+So we're going to implement a fake function.
+
+04:48.040 --> 04:49.810
+We're going to make it a just mock.
+
+04:49.810 --> 04:53.920
+So remember, a mock function is essentially a function that's going to keep track of how many times
+
+04:53.920 --> 04:56.260
+it gets called and what arguments it is provided.
+
+04:56.440 --> 05:00.070
+And it's really useful for whenever we are testing something just to make sure that a function actually
+
+05:00.070 --> 05:00.940
+gets invoked.
+
+05:01.630 --> 05:07.330
+So inside the message object we will assign EQ as gest fn.
+
+05:08.520 --> 05:12.100
+Now, as far as TypeScript is concerned, this is a real message object.
+
+05:12.100 --> 05:14.290
+It has the one function that we really care about.
+
+05:14.290 --> 05:19.420
+And when we pass this into our on message function inside of our listener, whenever we call ACX, we're
+
+05:19.420 --> 05:22.420
+going to actually invoke that mock function.
+
+05:22.480 --> 05:26.020
+And since it is a mock function, it's going to be really easy for us to test it and make sure that
+
+05:26.020 --> 05:27.610
+it got called at least once.
+
+05:28.930 --> 05:29.200
+Okay.
+
+05:29.200 --> 05:31.090
+So that's pretty much it for our set up function.
+
+05:31.090 --> 05:36.010
+Now last thing we're going to do is take the listener, take data and take message.
+
+05:36.860 --> 05:38.930
+And we will return all them at the bottom.
+
+05:39.350 --> 05:45.590
+So inside of an object, I'm going to return all the center data and MSG.
+
+05:47.300 --> 05:47.720
+Cool.
+
+05:48.630 --> 05:50.370
+Now we can move down to our actual tests.
+
+05:50.610 --> 05:57.210
+We will first call the setup function at the very top and get the listener that we have already created
+
+05:57.540 --> 06:01.680
+data and MSG and that will all come from a weight set setup.
+
+06:01.890 --> 06:06.990
+Now again, we are not actually doing anything async in nature inside of setup, but we will eventually
+
+06:07.200 --> 06:08.610
+not actually inside this test file.
+
+06:08.610 --> 06:09.810
+But in another one we will.
+
+06:09.840 --> 06:13.800
+So I'm just going to throw on this the async keyword right away, even though again, not really anything
+
+06:13.800 --> 06:14.680
+async inside of here.
+
+06:14.700 --> 06:15.420
+No big deal.
+
+06:17.230 --> 06:17.350
+Okay.
+
+06:17.380 --> 06:19.320
+So now we can just follow these comments very easily.
+
+06:19.330 --> 06:23.140
+All we have to do is call the on message, function on the listener, and when we do so, we're going
+
+06:23.140 --> 06:25.000
+to pass in data and message.
+
+06:25.240 --> 06:28.480
+We'll then write out an assertion to make sure that a ticket was actually created.
+
+06:29.550 --> 06:35.520
+So I will do and await listener on message and I'll pass in data and message like so.
+
+06:36.810 --> 06:40.920
+Now, in theory, if we go back to our listener, we can really imagine what's going to go on behind
+
+06:40.920 --> 06:41.610
+the scenes.
+
+06:41.760 --> 06:47.430
+This on message function is going to take the ID of that data object the title in the price.
+
+06:47.460 --> 06:51.960
+Use that all to build up a new ticket, save it to the database and then act the message.
+
+06:52.260 --> 06:57.270
+So if you want to now write out an assertion, we should be able to write out a query that's going to
+
+06:57.270 --> 07:01.170
+find some ticket inside the database with the ID that we had provided.
+
+07:01.380 --> 07:05.610
+And then we could simply write out some assertion and say, Hey, let's make sure this ticket actually
+
+07:05.610 --> 07:06.240
+exists.
+
+07:07.100 --> 07:08.660
+So back inside of our test file.
+
+07:08.690 --> 07:12.980
+In order to run a query against the ticket collection, we need to import our model file.
+
+07:13.340 --> 07:15.050
+So at the very top, we will import.
+
+07:16.420 --> 07:21.370
+Take it from up three directories models ticket.
+
+07:24.460 --> 07:26.350
+And then at the bottom of our test.
+
+07:28.090 --> 07:30.280
+I'll say ticket is a wait ticket.
+
+07:30.610 --> 07:32.080
+Find buy ID.
+
+07:32.380 --> 07:37.000
+We're going to try to find a ticket with the same ID that we had randomly generated and stuck into that
+
+07:37.000 --> 07:38.200
+data object right there.
+
+07:38.320 --> 07:40.150
+So we'll put in data ID.
+
+07:40.880 --> 07:44.780
+And then finally we can expect ticket to be defined.
+
+07:46.080 --> 07:49.320
+Maybe I will also expect the ticket's title.
+
+07:50.150 --> 07:56.300
+To equal the data object's title just to make sure this thing actually uses the appropriate properties.
+
+07:56.600 --> 07:59.060
+And let's make sure the price gets carried over as well.
+
+08:00.680 --> 08:07.100
+Data price as usual, TypeScript is not sure if we actually found a record here as usual.
+
+08:07.100 --> 08:08.680
+Exclamation, exclamation.
+
+08:08.690 --> 08:10.880
+If that fails right there, that is fantastic.
+
+08:10.880 --> 08:11.900
+We kind of want that to fail.
+
+08:11.900 --> 08:15.620
+We want to see something say, hey, ticket isn't defined, it's actually equal to null.
+
+08:16.720 --> 08:20.050
+So let's save this and try running these tests back at my terminal.
+
+08:20.140 --> 08:22.330
+I'm going to change into the orders directory.
+
+08:22.360 --> 08:26.350
+Now, just so you know, we do actually have some other broken tests inside the orders project right
+
+08:26.350 --> 08:26.800
+now.
+
+08:26.860 --> 08:32.290
+Turns out that a while ago we had added in something to allow us to pass in an ID and we never actually
+
+08:32.290 --> 08:34.690
+updated any of our tests to accommodate for that.
+
+08:34.690 --> 08:37.300
+So we're probably going to end up seeing some kind of error here.
+
+08:37.330 --> 08:38.110
+Totally fine.
+
+08:38.110 --> 08:43.180
+But nonetheless, let's just run our tests and at least make sure that the tests for these listener
+
+08:43.180 --> 08:45.310
+are passing, even if some other ones are failing.
+
+08:47.010 --> 08:47.400
+All right.
+
+08:47.400 --> 08:49.080
+So let's see what happens here.
+
+08:50.480 --> 08:51.920
+It looks like we definitely have some failing.
+
+08:51.920 --> 08:53.360
+We will fix those very shortly.
+
+08:53.360 --> 08:57.080
+But most importantly, it looks like the listener test is working as expected.
+
+08:57.910 --> 08:58.990
+Just to make sure.
+
+08:59.750 --> 09:05.150
+I'll come back over and I'll try replacing about the data title here with some gibberish just to make
+
+09:05.150 --> 09:06.560
+sure that this test will fail.
+
+09:08.590 --> 09:09.850
+And if I rerun that.
+
+09:10.180 --> 09:10.600
+Yep.
+
+09:10.600 --> 09:12.190
+Looks like that one will definitely fail.
+
+09:12.820 --> 09:13.030
+Cool.
+
+09:13.030 --> 09:13.710
+So that looks good.
+
+09:13.720 --> 09:15.250
+So that's our first working test.
+
+09:15.280 --> 09:16.390
+Let's take a quick pause right here.
+
+09:16.390 --> 09:17.440
+We'll come back the next video.
+
+09:17.440 --> 09:21.370
+We're going to fix up this test down here or put it implementation together.
+
+09:21.370 --> 09:24.460
+And then we will also take care of some of these failing tests as well.

@@ -1,0 +1,193 @@
+WEBVTT
+
+00:00.970 --> 00:04.630
+We've now seen how to throw a pot onto our Kubernetes cluster.
+
+00:04.660 --> 00:08.140
+Now, it turns out that we usually do not create pods in this style.
+
+00:08.170 --> 00:09.490
+I know that's kind of annoying to hear.
+
+00:09.520 --> 00:13.540
+Given that I just spent a couple of videos telling you about pods and how to work with them.
+
+00:13.750 --> 00:17.020
+Don't worry, we do work with pods in all the ways that I just showed you.
+
+00:17.020 --> 00:17.620
+So we ran.
+
+00:17.950 --> 00:20.680
+We very frequently run all the commands I showed you just a moment ago.
+
+00:20.710 --> 00:24.430
+We just don't usually create pods with this style of config file.
+
+00:24.460 --> 00:25.840
+Let me give you a little more clarity.
+
+00:25.840 --> 00:27.340
+Help you understand what's going on here.
+
+00:27.960 --> 00:33.120
+So in the world of Kubernetes, we have pods, and those are intended to run some image or some container
+
+00:33.120 --> 00:34.080
+really inside them.
+
+00:35.020 --> 00:38.920
+Rather than creating these pods directly, however, we're usually going to create something called
+
+00:38.920 --> 00:39.940
+a deployment.
+
+00:40.360 --> 00:46.420
+A deployment is a Kubernetes object that is intended to manage a set of pods, so it might be just one
+
+00:46.420 --> 00:50.200
+single pod, or it might be ten different pods or even 100 different pods.
+
+00:50.470 --> 00:53.320
+Each of these pods are going to be identical in nature.
+
+00:53.330 --> 00:57.070
+They will all be running the same configuration, same container inside them.
+
+00:57.840 --> 01:00.420
+The deployment has two big jobs assigned to it.
+
+01:00.450 --> 01:05.520
+The deployment, first off, is going to make sure that if any pod mysteriously just disappears for
+
+01:05.520 --> 01:06.170
+any reason.
+
+01:06.180 --> 01:11.220
+In other words, if the pod crashes for any reason whatsoever, then the deployment will automatically
+
+01:11.220 --> 01:12.260
+create that pod for us.
+
+01:12.270 --> 01:16.990
+Again, the deployment is going to make sure that if we tell it, make sure there are three pods available
+
+01:17.010 --> 01:17.910
+running this image.
+
+01:17.910 --> 01:20.310
+The deployment is going to say, absolutely, I got it.
+
+01:20.310 --> 01:24.310
+I'm going to make sure there are always exactly three pods running that image.
+
+01:24.330 --> 01:26.190
+That's the primary job of the deployment.
+
+01:27.420 --> 01:30.660
+The deployment is also very useful for another reason as well.
+
+01:31.020 --> 01:36.270
+The second reason is that, well, at some point in time you and I are going to decide to update the
+
+01:36.270 --> 01:38.110
+code inside of our different containers.
+
+01:38.130 --> 01:43.230
+In other words, we might start off with all of our pods running a V, one of some applications we put
+
+01:43.230 --> 01:43.860
+together.
+
+01:44.100 --> 01:48.210
+But then at some time we might tell the deployment that we want to roll out a new version, maybe v
+
+01:48.210 --> 01:48.810
+two.
+
+01:49.320 --> 01:52.530
+The deployment is going to take care of this update for us automatically.
+
+01:52.830 --> 01:55.560
+Behind the scenes, the deployment is going to create.
+
+01:56.370 --> 02:00.840
+Some number of new pods running this new version of our application.
+
+02:01.320 --> 02:06.690
+After these pods are up and running successfully, the deployment is then going to start to manage that
+
+02:06.690 --> 02:07.650
+set of pods.
+
+02:09.070 --> 02:13.600
+So it's going to say, okay, I'm now going to manage these three over here and I'll zoom out just so
+
+02:13.600 --> 02:15.160
+you can see this whole diagram in a second.
+
+02:16.030 --> 02:20.830
+And the deployment will start to sunset or essentially delete the old pods for us automatically.
+
+02:21.480 --> 02:24.990
+So all these are then going to fade away once the new ones are up and running.
+
+02:25.770 --> 02:28.740
+And then the diplomat is going to say, okay, fantastic, I've got it.
+
+02:28.740 --> 02:30.330
+I've done all this record work.
+
+02:30.330 --> 02:33.990
+I've got these three new pods running these updated versions for you.
+
+02:34.500 --> 02:37.350
+So we can really think of the deployment as just being a manager.
+
+02:37.350 --> 02:39.090
+It manages a set of pods.
+
+02:39.090 --> 02:40.590
+That is what it is all about.
+
+02:41.790 --> 02:44.620
+Now understanding how to work with a deployment is pretty straightforward.
+
+02:44.640 --> 02:47.700
+Again, it really just comes down to writing a config file.
+
+02:47.730 --> 02:51.130
+There are very few commands we need to understand around a deployment.
+
+02:51.150 --> 02:55.290
+At most, the only thing that we're ever going to do with them is to list out the deployments we have
+
+02:55.290 --> 02:57.300
+and then try to inspect their status.
+
+02:57.510 --> 03:01.560
+Deployments don't actually run any of our code or anything like that, so we're not really going to
+
+03:01.560 --> 03:07.020
+ever have to try to run some command in the context of the deployment or really try to fetch some logs
+
+03:07.020 --> 03:08.380
+from it or something like that.
+
+03:08.400 --> 03:11.400
+Instead, we really just want to list them out, take a look at their status.
+
+03:11.400 --> 03:12.420
+That's pretty much it.
+
+03:13.280 --> 03:16.970
+So it really just comes down to understanding how we write a config file for these.
+
+03:16.970 --> 03:20.420
+So that in mind, we're going to take a quick pause right here when come back the next video, we're
+
+03:20.420 --> 03:25.820
+going to create a deployment by writing a config file and tell it to run our post application inside
+
+03:25.820 --> 03:26.960
+of a set of pots.

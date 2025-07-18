@@ -1,0 +1,247 @@
+WEBVTT
+
+00:01.730 --> 00:06.350
+We've got our publisher put together and now it just needs an instance of a Nats client in order to
+
+00:06.350 --> 00:07.760
+successfully publish stuff.
+
+00:07.880 --> 00:11.900
+So we now need to decide where are we going to somehow create our client?
+
+00:12.410 --> 00:16.630
+Well, I think that the best location to create this next client is going to be inside of our indexed
+
+00:16.970 --> 00:17.570
+file.
+
+00:17.840 --> 00:22.910
+If we open up our indexed file inside of our ticket's CRC directory, you'll recall that inside of here
+
+00:22.910 --> 00:25.000
+we've already got some startup logic.
+
+00:25.010 --> 00:31.130
+So we make sure that we say connect to our MongoDB instance successfully through Mongoose before we
+
+00:31.130 --> 00:35.630
+ever even start up our express application or technically start listening to traffic.
+
+00:36.590 --> 00:42.170
+Just as our application really needs to have a connection to MongoDB to work successfully, our app
+
+00:42.170 --> 00:47.030
+also needs to have a connection to Nat streaming server in order for it to work successfully.
+
+00:47.300 --> 00:51.890
+So we should probably make sure that we somehow create our Nat's client or connect to Nat's inside of
+
+00:51.890 --> 00:54.650
+here before we ever start listening to traffic.
+
+00:55.470 --> 00:58.320
+Now that starts to cause a little bit of an issue.
+
+00:58.350 --> 00:59.430
+Let me show you why.
+
+01:01.370 --> 01:01.660
+Okay.
+
+01:01.670 --> 01:04.900
+So this is a diagram of some different files we have inside of our project.
+
+01:04.910 --> 01:10.010
+So we're saying that inside of our index file, we want to initialize a Nats client.
+
+01:10.130 --> 01:14.930
+Now, when we think about creating this Nats client, there's a very important distinction to make between
+
+01:14.930 --> 01:19.850
+the Nats client that we are using and Mongoose, which we just said, well, we need to connect to.
+
+01:20.030 --> 01:22.460
+So here's our connection statement for Mongoose.
+
+01:22.460 --> 01:27.980
+When we connect with Mongoose, Mongoose internally keeps a record of all the different connections
+
+01:27.980 --> 01:28.850
+that exist.
+
+01:29.060 --> 01:31.220
+So we can now after call and connect on this.
+
+01:31.220 --> 01:36.230
+We can open up any other file inside of our project and say, Hey, import mongoose.
+
+01:36.230 --> 01:40.520
+And today here is a copy of Mongoose that is already connected to some server.
+
+01:40.790 --> 01:45.440
+And so we could freely make use of mongoose or through our different models we create to reach out to
+
+01:45.440 --> 01:47.810
+MongoDB, make queries and whatnot.
+
+01:48.780 --> 01:55.140
+However, the node gnat streaming library that we are using to connect to nets works in a very different
+
+01:55.140 --> 01:55.860
+fashion.
+
+01:56.130 --> 01:59.910
+I'm going to go back to my Nats test directory and take a look at the publisher.
+
+02:00.360 --> 02:05.640
+So inside of the publisher file, you'll recall that when we connect with Nats, there is not some internal
+
+02:05.640 --> 02:11.860
+connection or internal object keeping track of this connection inside of this Nats library.
+
+02:11.880 --> 02:16.980
+Instead, when we call Nats connect, it directly returns to us, the client.
+
+02:18.150 --> 02:23.220
+So this client right here is what we need to somehow manually share among all the different files inside
+
+02:23.220 --> 02:24.050
+of our project.
+
+02:24.060 --> 02:27.890
+Whereas with Mongoose we don't get any distinct client back.
+
+02:27.900 --> 02:32.220
+Instead, Mongoose internally keeps track of this connection and everything related to it.
+
+02:32.920 --> 02:39.100
+So in other words, inside of our index file, we're going to have a Nats client object and we want
+
+02:39.100 --> 02:43.030
+to somehow share that with a bunch of other files inside of our project.
+
+02:43.330 --> 02:45.850
+But that starts to raise a really big issue.
+
+02:46.240 --> 02:52.570
+Our ticket created root handler is being imported into the app file, which in turn is getting imported
+
+02:52.570 --> 02:54.100
+into indexes.
+
+02:54.370 --> 02:57.720
+So we've already got kind of a one way dependency right here.
+
+02:57.730 --> 03:01.030
+We are importing this file into that file, into that file.
+
+03:01.270 --> 03:05.440
+And we're now starting to say that we want to have some kind of Nats client being created.
+
+03:05.440 --> 03:11.080
+And presumably we're going to want to export that from indexed and then possibly import it into the
+
+03:11.080 --> 03:12.820
+ticket created route handler.
+
+03:13.620 --> 03:16.520
+So notice the circle we're kind of making here of imports.
+
+03:16.530 --> 03:21.090
+We are importing this thing this way and then we are importing this thing this way.
+
+03:21.900 --> 03:28.380
+We're essentially creating a cyclical import or a cyclical dependency here where this file requires
+
+03:28.380 --> 03:30.570
+this one and this file requires this one.
+
+03:30.930 --> 03:32.760
+That's something we can technically do.
+
+03:32.760 --> 03:38.520
+But it would be really fantastic if we could figure out some way to avoid creating this cyclical dependency.
+
+03:39.820 --> 03:46.210
+So we want to still somehow initialize this Nat's client inside of our indexed file, but we do not
+
+03:46.210 --> 03:46.990
+want to have it.
+
+03:46.990 --> 03:52.840
+Well, need to be imported over to the ticket handler or ticket created root handler from indexed.
+
+03:53.500 --> 03:55.030
+So how are we going to solve this?
+
+03:55.790 --> 03:57.170
+Well, here's what we're going to do.
+
+03:57.380 --> 04:00.140
+We're going to make a new file called Nat's clients.
+
+04:00.380 --> 04:06.200
+And the goal of this file is going to be to somehow create a Nats client and behave as a singleton of
+
+04:06.200 --> 04:06.930
+sorts.
+
+04:06.950 --> 04:10.940
+So we're going to try to build something very similar to Mongoose, where we're going to have some kind
+
+04:10.940 --> 04:15.500
+of object that internally keeps track of some client and makes it available to everything else inside
+
+04:15.500 --> 04:16.040
+of our app.
+
+04:17.930 --> 04:22.760
+The index file is then going to import that and make sure that we have some code inside there to actually
+
+04:22.760 --> 04:25.760
+initialize that Nat's client and connect to NAT streaming server.
+
+04:25.910 --> 04:30.650
+We will also have some code inside there to make sure that if we ever lose our connection to Nats or
+
+04:30.650 --> 04:35.330
+if we are about to shutdown our application, we go through some graceful shutdown process.
+
+04:35.810 --> 04:40.610
+Just as a reminder that entire graceful shutdown stuff was really important to do.
+
+04:40.610 --> 04:46.100
+If we take a look back at, say, our listener, we really had to do that really graceful shutdown stuff
+
+04:46.100 --> 04:50.060
+because otherwise, for some period of time, the Nat streaming server might think that our client is
+
+04:50.060 --> 04:52.280
+still active, which we really did not want.
+
+04:53.700 --> 04:57.990
+So we're going to do the initialization of that thing inside of index notes, and then we'll also be
+
+04:57.990 --> 05:03.440
+able to import that initialized client or kind of pre initialized client into our ticket created route
+
+05:03.480 --> 05:06.270
+handler and make use of it inside the root handler itself.
+
+05:06.870 --> 05:09.330
+So long story short, we need to create this extra file.
+
+05:09.420 --> 05:14.640
+We need to have something inside there that's going to behave as a singleton of sorts and allow us to
+
+05:14.640 --> 05:18.090
+get access to this client inside of a bunch of different files.
+
+05:19.400 --> 05:19.630
+Yes.
+
+05:19.640 --> 05:21.140
+Now we've got a better idea of what's going on.
+
+05:21.140 --> 05:23.150
+Let's start to implement this in just a moment.

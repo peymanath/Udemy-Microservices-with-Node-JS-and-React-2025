@@ -1,0 +1,148 @@
+WEBVTT
+
+00:01.110 --> 00:03.670
+Our ticket service is now mostly complete.
+
+00:03.690 --> 00:07.740
+We put together the implementation, we got some tests and we've also done some manual testing with
+
+00:07.740 --> 00:08.430
+Postman.
+
+00:08.430 --> 00:10.080
+So what are we going to work on next?
+
+00:10.110 --> 00:13.530
+Well, I think there's a couple of different options available to us.
+
+00:13.890 --> 00:17.310
+In total, we're going to go over three possible options on what we could work on right now and then
+
+00:17.310 --> 00:18.600
+eventually make a decision.
+
+00:19.080 --> 00:24.150
+So option number one, I think we could definitely go over to our next client application and start
+
+00:24.150 --> 00:28.920
+to add in some ticket related stuff, such as the ability to view tickets, create them, edit them
+
+00:28.920 --> 00:29.640
+and so on.
+
+00:30.520 --> 00:31.660
+That could definitely be done.
+
+00:32.170 --> 00:35.860
+Another option would be to start to create our orders service.
+
+00:36.010 --> 00:40.420
+As a quick reminder, one of the services inside of our project is the order service.
+
+00:40.420 --> 00:45.760
+And this thing is going to hold all the information related to a user attempting to purchase a very
+
+00:45.760 --> 00:46.780
+particular ticket.
+
+00:48.450 --> 00:50.190
+Well, that's definitely another option as well.
+
+00:50.220 --> 00:55.140
+The order service is going to add a very base level, going to be somewhat similar in nature to the
+
+00:55.140 --> 01:00.660
+ticket service where we're going to be creating updating records, viewing records, stuff like that.
+
+01:00.660 --> 01:02.340
+So fairly similar in nature.
+
+01:02.670 --> 01:07.770
+And then finally, our last option, we could start to add in some code for handling events.
+
+01:07.770 --> 01:12.360
+So in other words, implement the event bus and we could wire it up to the ticket service and get a
+
+01:12.360 --> 01:14.340
+better idea of how that thing works.
+
+01:14.940 --> 01:16.340
+So which one are we going to go with?
+
+01:16.350 --> 01:18.660
+Well, you could probably guess by the title of this section.
+
+01:18.660 --> 01:20.310
+We're going to go with option number three.
+
+01:20.730 --> 01:22.860
+We're going to start to add in this event bus.
+
+01:22.860 --> 01:25.590
+We're going to get a better understanding of how it works and so on.
+
+01:25.800 --> 01:31.650
+The reason for this is that understanding some limitations or some properties of our event bus is going
+
+01:31.650 --> 01:38.010
+to be absolutely tremendous in understanding how the order service and our ticket service are going
+
+01:38.010 --> 01:38.940
+to work together.
+
+01:39.420 --> 01:43.620
+So if we take care of this stuff right now, even though we are not going to be really emitting any
+
+01:43.620 --> 01:48.600
+events to any other services inside of our app from the ticket service just yet, because we don't have
+
+01:48.600 --> 01:53.250
+any other services that care about these events, it's still going to be really important to understand
+
+01:53.250 --> 01:58.590
+how the event bus behaves because it's going to really have a big impact on how we build that order
+
+01:58.590 --> 01:59.250
+service.
+
+02:00.050 --> 02:05.300
+So the event bus in general, just a quick reminder, we're going to implement it with something called
+
+02:05.300 --> 02:06.920
+the Nats streaming server.
+
+02:07.220 --> 02:11.680
+We had previously on our last application that way smaller application than we started the course with
+
+02:11.690 --> 02:17.180
+we had built out our event bus from scratch and that was that very simple express application.
+
+02:17.750 --> 02:20.630
+So in the coming videos, we're going to forget.
+
+02:21.720 --> 02:23.050
+The service tickets.
+
+02:23.070 --> 02:24.360
+All that stuff 100%.
+
+02:24.360 --> 02:25.370
+Just ignore it.
+
+02:25.380 --> 02:30.390
+And we're going to have a 100% focus on the Nats streaming server, our event bus, and we're going
+
+02:30.390 --> 02:32.940
+to get a much better understanding of how it works.
+
+02:32.970 --> 02:38.280
+In particular, we're going to draw some parallels and differences compared to the custom very simple
+
+02:38.280 --> 02:42.540
+event bus we put together earlier, just to help you understand how this thing really behaves.
+
+02:43.230 --> 02:44.730
+So with that in mind, a quick pause right here.
+
+02:44.730 --> 02:49.770
+Let's start to work with this Nat streaming server event bus thing in the next video.

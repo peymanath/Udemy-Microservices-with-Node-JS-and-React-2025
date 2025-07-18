@@ -1,0 +1,253 @@
+WEBVTT
+
+00:00.840 --> 00:02.680
+All right, let's wrap up these two tests.
+
+00:02.700 --> 00:05.870
+So in both these tests, we're going to need to call our setup function.
+
+00:05.880 --> 00:10.560
+Remember, the set of function is a sync and actually is required to be async this time because we are
+
+00:10.560 --> 00:12.660
+creating that ticket and saving it to the database.
+
+00:13.870 --> 00:15.370
+So inside of our first test.
+
+00:16.540 --> 00:22.840
+I'm going to call the setup function and I'm going to pull out the message data object ticket and listener
+
+00:23.470 --> 00:24.610
+from await.
+
+00:28.410 --> 00:29.770
+So now we can take the listener.
+
+00:29.790 --> 00:34.050
+We're going to call the auto message function with a data object and message, and we can write out
+
+00:34.050 --> 00:37.080
+some expectations to make sure that this thing worked as expected.
+
+00:37.560 --> 00:43.410
+They'll do an await listener on message and pass in data and message.
+
+00:46.140 --> 00:48.750
+So now how are we going to actually write out some expectation?
+
+00:48.750 --> 00:52.920
+Well, let's try to re fetch our ticket out of the tickets collection.
+
+00:53.220 --> 00:57.360
+Well, then make sure that we have processed the new or that data object right there.
+
+00:57.360 --> 01:02.190
+And we should make sure that this new ticket that we just re fetch has the updated title and the updated
+
+01:02.190 --> 01:02.820
+price.
+
+01:03.120 --> 01:05.910
+We also might want to make sure that it has some updated version as well.
+
+01:05.910 --> 01:07.680
+That would probably be pretty handy as well.
+
+01:08.530 --> 01:11.740
+They'll say updated ticket is going to be a weight.
+
+01:12.660 --> 01:17.670
+Ticket, find buy ID and we want to find a ticket with the same ID as the one we had created during
+
+01:17.670 --> 01:18.890
+the setup phase.
+
+01:18.900 --> 01:20.850
+So we'll put in ticket ID.
+
+01:22.910 --> 01:25.040
+So we can write out some different expectations.
+
+01:25.400 --> 01:25.780
+We'll do.
+
+01:25.820 --> 01:29.720
+How about expect updated ticket, exclamation?
+
+01:29.870 --> 01:33.350
+We've been over that exclamation enough so I'm not going to cover it again.
+
+01:34.140 --> 01:36.510
+And we'll say maybe this thing has the updated title.
+
+01:36.510 --> 01:40.140
+So to equal data title.
+
+01:41.000 --> 01:45.860
+So the updated tickets title should be equal to whatever the data object's title is.
+
+01:46.370 --> 01:48.980
+And then we could essentially repeat that twice over.
+
+01:50.930 --> 01:52.190
+With the price.
+
+01:54.370 --> 01:55.780
+Equal to data price.
+
+01:59.620 --> 02:01.030
+And the version as well.
+
+02:05.750 --> 02:06.090
+Okay.
+
+02:06.920 --> 02:07.910
+Let's say it looks pretty good.
+
+02:07.910 --> 02:11.330
+So let's save this and do a quick test back at my terminal.
+
+02:12.070 --> 02:12.940
+I got my test suite.
+
+02:12.940 --> 02:15.850
+It looks like the filter I had set is capturing the ticket.
+
+02:15.850 --> 02:17.200
+Updated listener file.
+
+02:17.500 --> 02:24.190
+If you are only still running the ticket created, then press W and then P and we can output in a more
+
+02:24.190 --> 02:28.480
+generous pattern right here to make sure we capture both those test files we are running right now,
+
+02:28.480 --> 02:31.690
+so both the ticket created listener and the ticket updated listener.
+
+02:31.690 --> 02:34.450
+So a pattern we can use for that is just simply listener.
+
+02:35.630 --> 02:39.680
+That's going to capture both those two listener test files and run both them.
+
+02:40.450 --> 02:45.250
+It looks like the test we just put together is running successfully, but as usual, we always, always,
+
+02:45.250 --> 02:49.300
+always have to put in something just to make sure that this test is really working as expected.
+
+02:49.300 --> 02:53.770
+So I'm going to try to comment out the on message call right there, which means that we're not going
+
+02:53.770 --> 02:58.870
+to actually process the message, which means that our ticket should never get the updated title price
+
+02:58.870 --> 02:59.680
+or version.
+
+02:59.680 --> 03:03.220
+So I'd expect to see some failure around the assertion around the title.
+
+03:04.840 --> 03:05.230
+And.
+
+03:05.230 --> 03:05.940
+Yep, there we go.
+
+03:05.950 --> 03:06.760
+Perfect.
+
+03:07.170 --> 03:10.270
+So that means that that test is working as expected.
+
+03:11.400 --> 03:13.540
+So let's now take care of the second test right here.
+
+03:13.560 --> 03:17.400
+This is going to be just about identical to the test we had written back inside of the ticket created
+
+03:17.400 --> 03:18.010
+listener.
+
+03:18.030 --> 03:23.490
+So we're going to once again get message data ticket listener.
+
+03:24.400 --> 03:25.480
+From calling setup.
+
+03:27.490 --> 03:29.050
+Well, then call the listener.
+
+03:30.240 --> 03:31.800
+And await that thing.
+
+03:33.430 --> 03:34.960
+With data and message.
+
+03:36.440 --> 03:41.090
+And then finally we'll take a look at the ACC function on message and just make sure that it was invoked.
+
+03:41.390 --> 03:46.610
+So I will expect message ack to have been called.
+
+03:49.170 --> 03:50.010
+Let's save that.
+
+03:52.580 --> 03:53.580
+Looks like we're good to go.
+
+03:53.600 --> 03:56.540
+As usual, I'm going to comment out on message.
+
+03:56.540 --> 03:57.350
+Save it again.
+
+03:57.350 --> 03:58.640
+Make sure the thing fails.
+
+04:01.620 --> 04:01.920
+Yup.
+
+04:01.920 --> 04:02.640
+Very good.
+
+04:03.180 --> 04:06.060
+Okay, well, I'd say that this looks pretty good.
+
+04:06.270 --> 04:07.560
+Maybe last quick thing here.
+
+04:07.560 --> 04:11.400
+I'm going to clean up tickets since we're technically not using it in this second little test right
+
+04:11.400 --> 04:11.910
+here.
+
+04:12.360 --> 04:17.070
+Well, I'd say that we've captured this kind of success case of our listener pretty darn well.
+
+04:17.100 --> 04:21.750
+But maybe there are one or two other things that we're going to want to test around this listener.
+
+04:21.900 --> 04:26.940
+For example, we might want to test this behavior around that fine by event thing right there and make
+
+04:26.940 --> 04:32.670
+sure that if we pass in some kind of out of order event so some event with a version number that is
+
+04:32.670 --> 04:37.920
+too far into the future, we might want to make sure that we do not call the act function or possibly
+
+04:37.920 --> 04:39.120
+that we just throw an error.
+
+04:39.450 --> 04:45.270
+So let's add in one or two more tests to make sure that this thing works correctly when everything is
+
+04:45.270 --> 04:47.310
+not quite going as expected.
+
+04:47.640 --> 04:49.260
+Let's take care of that in the next video.

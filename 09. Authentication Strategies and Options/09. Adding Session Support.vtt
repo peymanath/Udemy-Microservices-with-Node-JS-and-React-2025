@@ -1,0 +1,169 @@
+WEBVTT
+
+00:01.000 --> 00:04.120
+Let's install a cookie session into our service.
+
+00:04.120 --> 00:08.770
+So back at my terminal I'm going to make sure I'm inside of my auth project directory.
+
+00:09.400 --> 00:13.060
+I'll then do an NPM install cookie session.
+
+00:13.830 --> 00:16.740
+We're not going to only install the cookie session library.
+
+00:16.770 --> 00:20.460
+Cookie session by default does not have native typescript support.
+
+00:20.460 --> 00:25.230
+So we have to install a type definition file to help TypeScript understand what is going on inside of
+
+00:25.230 --> 00:26.010
+this library.
+
+00:26.010 --> 00:32.250
+But to do so, we're going to also install at types slash cookie dash session.
+
+00:33.450 --> 00:35.160
+Now make sure you got two S's right there.
+
+00:35.160 --> 00:37.170
+I just made a typo right before this video.
+
+00:37.170 --> 00:41.850
+I only put in one s and I got an error during the NPM install saying that that package did not does
+
+00:41.850 --> 00:42.690
+not exist.
+
+00:42.690 --> 00:44.370
+So just double check your spelling.
+
+00:45.210 --> 00:45.570
+All right.
+
+00:45.570 --> 00:46.590
+So all installed.
+
+00:47.250 --> 00:50.310
+Now let's go back over to our code editor.
+
+00:50.400 --> 00:56.250
+Inside my auth directory, I'll find the SRC folder and then the index file inside there.
+
+00:57.440 --> 01:01.850
+So we're going to import cookie session at the top and then wire it up to our express application as
+
+01:01.850 --> 01:02.600
+a middleware.
+
+01:03.230 --> 01:09.350
+So right after Mongoose, I'll do an import cookie session from cookie session.
+
+01:11.600 --> 01:16.670
+And then right after the app use JSON, we will add in app use.
+
+01:18.280 --> 01:19.870
+Cookie session.
+
+01:21.410 --> 01:25.670
+We are going to pass in a configuration object and we are going to add in two different properties to
+
+01:25.670 --> 01:26.270
+this thing.
+
+01:26.570 --> 01:30.720
+So first, remember, we're going to disable encryption on this cookie.
+
+01:30.740 --> 01:34.940
+We're not going to worry about someone peeking into this thing or anything like that because the JSON
+
+01:34.940 --> 01:37.430
+web token itself is already encrypted.
+
+01:38.000 --> 01:40.760
+So I'm going to put signed on here of false.
+
+01:41.570 --> 01:46.340
+I'm also going to require that cookies will only be used if a user is visiting our application over
+
+01:46.340 --> 01:48.230
+an HTTPS connection.
+
+01:48.650 --> 01:50.780
+That's just a very small security improvement.
+
+01:50.960 --> 01:54.320
+So to add that in, I'm also going to add secure.
+
+01:54.620 --> 01:55.240
+True.
+
+01:55.280 --> 01:55.940
+Like so.
+
+01:57.870 --> 01:59.790
+For a related reason to that.
+
+01:59.790 --> 02:04.020
+So with this secure true right here requiring that you must be on an HTTPS connection.
+
+02:04.380 --> 02:08.250
+We're also going to change a very small setting on express itself the right.
+
+02:08.250 --> 02:14.580
+After we create the Express app, we're going to add app set trust proxy is true.
+
+02:15.390 --> 02:18.270
+The recent awesomely not apt settings but apt set.
+
+02:18.270 --> 02:18.960
+That's better.
+
+02:19.650 --> 02:25.400
+The reason for this is that traffic is being proximate to our application through ingress and x.
+
+02:26.900 --> 02:31.220
+Express is going to see the fact that stuff is being proxy and by default, Express is going to say,
+
+02:31.220 --> 02:32.360
+Hey, wait, there's a proxy here.
+
+02:32.360 --> 02:34.730
+I don't really trust this HTTPS connection.
+
+02:34.970 --> 02:39.740
+Long story short, we are just adding in this little step right here to make sure that Express is aware
+
+02:39.740 --> 02:45.500
+that it's behind a proxy of Ingress Engine X, and to make sure that it should still trust traffic as
+
+02:45.500 --> 02:47.960
+being secure, even though it's coming from that proxy.
+
+02:49.450 --> 02:50.340
+So that's it for setup.
+
+02:50.350 --> 02:51.490
+We're going to save this file.
+
+02:52.910 --> 02:54.260
+So we have now.
+
+02:55.800 --> 03:00.750
+Made sure back in this flow right here that we have the ability to eventually set a cookie on the response
+
+03:00.750 --> 03:01.980
+that goes back to a user.
+
+03:02.010 --> 03:05.970
+The last thing we actually have to do is make sure that we generate that JSON web token and store it
+
+03:05.970 --> 03:06.900
+inside the cookie.
+
+03:07.140 --> 03:10.830
+Let's take a quick pause right here and then discuss how we're going to generate that token in just
+
+03:10.830 --> 03:11.400
+a moment.

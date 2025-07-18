@@ -1,0 +1,280 @@
+WEBVTT
+
+00:01.090 --> 00:02.650
+We're inside of our order created listener.
+
+00:02.650 --> 00:07.480
+So any time this thing gets called, presumably we need to find the associated ticket and somehow lock
+
+00:07.480 --> 00:08.040
+it down.
+
+00:08.050 --> 00:11.950
+So in this video we're going to figure out, well, how are we going to somehow lock down a ticket?
+
+00:11.980 --> 00:15.400
+And this might seem like a really obvious problem with some obvious solution.
+
+00:15.550 --> 00:19.480
+You might say, all right, for all the different tickets inside of our ticket service, let's add on
+
+00:19.480 --> 00:22.930
+some kind of locked property or something similar to that.
+
+00:23.380 --> 00:24.550
+We'll make that a boolean.
+
+00:24.550 --> 00:28.900
+And if locked is set to true, that means the ticket is locked and we should not allow anyone to make
+
+00:28.900 --> 00:30.010
+any changes to it.
+
+00:30.340 --> 00:35.410
+And then whenever we see the order canceled event, we can flip locked back over to false, which means
+
+00:35.410 --> 00:37.450
+now people can edit this ticket once again.
+
+00:38.050 --> 00:40.870
+This seems like a pretty obvious straightforward solution.
+
+00:40.870 --> 00:41.530
+That a doubt.
+
+00:41.530 --> 00:46.420
+But I'm going to suggest maybe if we start to think forward a little bit about some other capabilities
+
+00:46.420 --> 00:51.070
+that we're going to maybe eventually want to have inside of our application, we will realize that just
+
+00:51.070 --> 00:54.340
+having a simple Boolean, maybe not the best thing in the world.
+
+00:55.300 --> 00:57.610
+So I want you to imagine the following scenario.
+
+00:57.730 --> 01:02.020
+If we made use of some simple boolean to track whether or not a ticket is locked.
+
+01:02.470 --> 01:07.120
+Let's imagine that some user who actually owns this ticket, so this is the person who is trying to
+
+01:07.120 --> 01:11.140
+sell this ticket, wants to figure out what the status of their ticket is.
+
+01:11.440 --> 01:16.210
+So they might make some kind of request to our ticket service asking, Is someone buying my ticket?
+
+01:16.210 --> 01:17.460
+Is this thing getting sold?
+
+01:17.470 --> 01:19.270
+What is the state of the ticket?
+
+01:20.210 --> 01:26.000
+If we were only recording this locked flag right here as true or false, then we can really only say
+
+01:26.000 --> 01:27.500
+something like this as a response.
+
+01:27.500 --> 01:32.150
+We can probably say, yes, the ticket's locked, which means it's being purchased, but we have no
+
+01:32.150 --> 01:33.950
+idea who is purchasing it.
+
+01:33.950 --> 01:35.810
+No clue what so whatsoever.
+
+01:37.540 --> 01:42.010
+And that probably would not be a great response to come back to someone who is ordering the ticket.
+
+01:42.100 --> 01:46.300
+Imagine if you were selling something and you were selling it through some website and you want to find
+
+01:46.300 --> 01:48.820
+out what the status of your thing that you're selling is.
+
+01:48.820 --> 01:53.260
+And the website just told you, Yeah, we think someone's buying it, but we've got no idea what's going
+
+01:53.260 --> 01:54.860
+on with that transaction whatsoever.
+
+01:54.880 --> 01:56.290
+Not a great response.
+
+01:56.800 --> 02:01.960
+So rather than just recording this very simple flag right here of Lochte, true or false, we're going
+
+02:01.960 --> 02:06.450
+to instead record the order ID that is tied to the ticket.
+
+02:06.460 --> 02:12.010
+So this is going to be the order, just the ID of it, that is somehow reserving this ticket.
+
+02:12.310 --> 02:16.120
+And once we have that information, getting some information about the status of the ticket, it's going
+
+02:16.120 --> 02:17.950
+to be a lot more straightforward.
+
+02:18.310 --> 02:22.720
+Now, someone who owns the ticket can make a request and say, it's someone buying my ticket and we'll
+
+02:22.720 --> 02:26.140
+send back some response that says, yeah, someone is buying it.
+
+02:26.140 --> 02:32.140
+And the order ID that represents the person who is trying to buy this thing is maybe ads.
+
+02:32.740 --> 02:36.730
+Then this person who owns the ticket could make a follow up request over to our order service and very
+
+02:36.730 --> 02:39.040
+easily say what is the status of order ads?
+
+02:39.040 --> 02:40.840
+And maybe it is currently awaiting payment.
+
+02:40.840 --> 02:44.440
+So we could send that back to the user and say, Yeah, we're just waiting for someone to pay for this
+
+02:44.440 --> 02:47.020
+thing and then you'll get your money from the ticket being sold.
+
+02:48.200 --> 02:52.390
+So this is a little bit more kind of forward thinking approach, even though it is a little bit greater
+
+02:52.390 --> 02:53.200
+complexity.
+
+02:53.770 --> 02:55.400
+Now, a little bit of specifics here.
+
+02:55.420 --> 03:00.880
+We're going to use the presence of an order ID to decide whether or not a ticket is currently reserved
+
+03:00.880 --> 03:03.430
+and so whether or not we should prevent edits to it.
+
+03:03.640 --> 03:08.050
+By default, all tickets will be created with a null value for order ID.
+
+03:08.230 --> 03:12.970
+So if there is no order ID, that means that the ticket is not reserved and we should allow edits.
+
+03:12.970 --> 03:17.800
+But as soon as there is an order ID now that things should be locked, prevent edits.
+
+03:18.430 --> 03:23.140
+The other thing I want to mention very quickly in passing here is technically the order ID is not strictly
+
+03:23.140 --> 03:26.680
+necessary to look up the status of some order that is tied to a ticket.
+
+03:26.710 --> 03:32.650
+Technically, we could just take this ticket ID right here and maybe create a new endpoint inside of
+
+03:32.650 --> 03:37.870
+our order service to take a ticket ID and return some information about the order that is associated
+
+03:37.870 --> 03:38.350
+with that ticket.
+
+03:38.350 --> 03:43.060
+Because the order service does know all these different ticket IDs, that would definitely be a possibility,
+
+03:43.060 --> 03:45.370
+but we don't actually have a route handler for that right now.
+
+03:45.370 --> 03:50.080
+We would have to build out some separate functionality to say, Hey, give us the ticket ID, we'll
+
+03:50.080 --> 03:55.840
+find the appropriate order associated with that thing if it actually exists, if we instead just make
+
+03:55.840 --> 04:00.190
+use of this order ID system, keep track of the order ID inside the ticket service, then we could actually
+
+04:00.190 --> 04:03.070
+reuse some existing code that we already have inside the order service.
+
+04:03.070 --> 04:08.770
+We already have a route handler that is set up to return a order given an ID that's already been put
+
+04:08.770 --> 04:09.340
+together.
+
+04:09.670 --> 04:14.740
+And so it would be really easy to reuse that code as opposed to have to write an entirely new endpoint
+
+04:14.740 --> 04:17.530
+to retrieve an order based upon a ticket ID alone.
+
+04:19.160 --> 04:19.430
+Okay.
+
+04:19.430 --> 04:19.880
+So that's it.
+
+04:19.880 --> 04:21.560
+That's how we're going to lock down a ticket.
+
+04:21.560 --> 04:23.750
+So what does that really mean in practice?
+
+04:23.750 --> 04:29.900
+Well, it means that inside of on message right here, whenever we are told that an order has been created,
+
+04:29.990 --> 04:32.030
+we're going to take out of this event right here.
+
+04:32.030 --> 04:35.090
+And if we forget what is actually defined in it, we can always do that command click.
+
+04:36.110 --> 04:38.720
+So the ID right here is the idea of the order that was created.
+
+04:38.720 --> 04:43.430
+And more importantly, we've also got the information about the ticket that was created as well, specifically
+
+04:43.430 --> 04:44.300
+the ID.
+
+04:44.780 --> 04:47.240
+So inside of on message, we're going to take that ID.
+
+04:49.470 --> 04:54.060
+Instead of on message, we're then going to use that to fetch some ticket out of our tickets collection.
+
+04:54.570 --> 04:59.580
+And then on the ticket model or ticket document, we're going to store the order ID from also inside
+
+04:59.580 --> 05:01.050
+this order created event.
+
+05:02.410 --> 05:07.060
+So if we're going to store that order ID inside of the ticket in our ticket service, well, we're also
+
+05:07.060 --> 05:12.850
+going to have to open up our model's ticket file and just make sure that we add in the idea of a ticket
+
+05:12.850 --> 05:14.530
+having an order ID property.
+
+05:14.830 --> 05:19.630
+So in total, we're going to make it quick, change the ticket model file and then write out some logic
+
+05:19.630 --> 05:20.290
+inside the order.
+
+05:20.290 --> 05:22.000
+Create a listener, and that's pretty much it.
+
+05:23.340 --> 05:27.370
+So now that we've got a overview on what's going on here, let's start the implementation in the next
+
+05:27.370 --> 05:27.880
+video.

@@ -1,0 +1,163 @@
+WEBVTT
+
+00:00.810 --> 00:05.310
+In the last section, we learned how to start up a shell inside of a container the instant that it was
+
+00:05.310 --> 00:05.970
+started.
+
+00:06.630 --> 00:11.700
+By the way, if you have a little bit of trouble exiting from this by hitting control C, which is usually
+
+00:11.700 --> 00:13.110
+how we exit out of a container.
+
+00:13.140 --> 00:18.510
+Remember, you can either press control D on your keyboard or you can just type in exit like so and
+
+00:18.510 --> 00:19.650
+it will kick you back out.
+
+00:20.250 --> 00:25.740
+Now, in this section, there's one very small gotcha, maybe not even a gotcha, but just a very particular
+
+00:25.740 --> 00:30.810
+thing that I want to go over to make sure that it's really crystal clear on how containers behave.
+
+00:31.230 --> 00:35.730
+I want you to recall back to a little bit ago when we were initially talking about what a container
+
+00:35.730 --> 00:36.240
+is.
+
+00:36.900 --> 00:42.690
+Remember that we gave this example of where Chrome had needed a particular version of Python and Node.js
+
+00:42.690 --> 00:44.580
+needed its own version of Python.
+
+00:44.640 --> 00:49.950
+And we had said that through that name spacing feature, we can kind of imagine that our hard disk had
+
+00:49.950 --> 00:56.220
+two little segments carved out of it, and any time Chrome tried to access that hard drive, it would
+
+00:56.220 --> 00:57.270
+get its own segment.
+
+00:57.270 --> 00:57.990
+Any time no.
+
+00:58.320 --> 01:01.770
+Tried to access the hard drive, it would get its own different segment.
+
+01:02.040 --> 01:07.410
+And so the thing that I want to make sure is really crystal clear is that between two containers, they
+
+01:07.410 --> 01:10.410
+do not automatically share their file system.
+
+01:11.250 --> 01:15.540
+We're going to do a quick demo inside of our terminal just to really confirm that that is the case.
+
+01:15.660 --> 01:22.110
+So I'm going to open up my terminal and I'm going to start up a new instance of that busy box image,
+
+01:22.110 --> 01:24.660
+and I'm going to start up a shell inside there.
+
+01:24.660 --> 01:28.130
+So I'll do Docker, run, dash it.
+
+01:28.260 --> 01:30.060
+Busy box shell.
+
+01:31.920 --> 01:37.230
+So now I can list my files and folders inside of here and I see just these default folders.
+
+01:37.530 --> 01:43.110
+I'm now going to open up a second terminal window and I'm going to start a second container with the
+
+01:43.110 --> 01:44.310
+same parameters.
+
+01:44.490 --> 01:50.190
+So second terminal window and I'll do Docker run dash t.
+
+01:50.400 --> 01:52.340
+Busy box s h.
+
+01:53.940 --> 01:56.370
+Now I'm going to open up one more terminal window.
+
+01:56.400 --> 01:57.870
+So this is going to be a third one.
+
+01:58.710 --> 02:04.980
+And inside of here, I'll do Docker and I can verify that I have two separate containers, both running
+
+02:04.980 --> 02:05.640
+a shell.
+
+02:06.420 --> 02:08.640
+Now I'm going to go to the first terminal window.
+
+02:08.790 --> 02:12.620
+And inside of here, I'm going to create a new file with touch.
+
+02:12.630 --> 02:13.520
+Hi there.
+
+02:13.530 --> 02:17.010
+Like, so that's going to create a new file called.
+
+02:17.010 --> 02:17.610
+Hi there.
+
+02:17.610 --> 02:18.360
+There it is right there.
+
+02:18.360 --> 02:21.600
+I can run LZ, and I'll see the file up here right away.
+
+02:22.530 --> 02:23.590
+Now, here's the fun part.
+
+02:23.610 --> 02:26.310
+We're going to go over to the second terminal window.
+
+02:28.110 --> 02:30.390
+And I'll do an LZ over here as well.
+
+02:30.450 --> 02:35.610
+And of course, I am not going to see that file of hi there, because these two running containers have
+
+02:35.610 --> 02:40.860
+absolutely, completely separate file systems and there's no sharing of data between the two.
+
+02:41.190 --> 02:45.300
+Again, this is kind of a small thing, but I just wanted to make sure that it was very crystal clear.
+
+02:45.510 --> 02:51.390
+So in general, unless you and I specifically form up a connection between two containers, we really
+
+02:51.390 --> 02:56.280
+consider them to be more or less completely isolated from each other and totally separate.
+
+02:57.090 --> 02:57.570
+All right.
+
+02:57.570 --> 03:00.510
+So that's pretty much it on the basics of Docker.
+
+03:00.510 --> 03:02.370
+So we're going to take a quick pause right here.
+
+03:02.370 --> 03:06.360
+We're going to come back the next section and we're going to start moving on to the next big topic that
+
+03:06.360 --> 03:07.070
+we're going to cover.
+
+03:07.080 --> 03:08.520
+So I'll see you in just a minute.

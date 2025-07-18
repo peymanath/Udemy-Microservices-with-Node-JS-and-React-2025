@@ -1,0 +1,343 @@
+WEBVTT
+
+00:00.860 --> 00:03.160
+We've now got a fully functional user model.
+
+00:03.170 --> 00:07.820
+I know riding out these interfaces and understanding that generic syntax is really nasty stuff, but
+
+00:07.820 --> 00:10.760
+the good news is we really only had to do this the one time.
+
+00:10.760 --> 00:14.270
+Now any time we start to create a model in the future, it's really just going to be kind of a copy
+
+00:14.270 --> 00:16.280
+paste of what we already did inside of here.
+
+00:17.100 --> 00:21.030
+So now that we've got our user model, we can get back on track with our sign up process.
+
+00:21.480 --> 00:26.430
+As a reminder, any time someone makes a request to our sign up route handler, we're going to first
+
+00:26.430 --> 00:29.090
+check and see if someone's already using that email address.
+
+00:29.100 --> 00:31.320
+And if they are, we will respond with an error.
+
+00:32.120 --> 00:38.120
+After that, if the email is not in use, we will make sure that we store the password with a hash password
+
+00:38.120 --> 00:42.590
+or the user with the hash password, and eventually we will save that user to the database.
+
+00:44.020 --> 00:47.380
+Let's go over to our sign up route handler and start to implement some of this stuff.
+
+00:48.460 --> 00:49.570
+Inside my roots directory.
+
+00:49.570 --> 00:52.570
+I'll find the signup file at the very top.
+
+00:52.570 --> 00:55.390
+I'm going to immediately import the user model.
+
+00:56.580 --> 01:02.880
+From up one directory models user or not user model, but just user by itself.
+
+01:05.240 --> 01:06.980
+I'll then go down to my route handler.
+
+01:07.010 --> 01:07.940
+Here it is right here.
+
+01:08.690 --> 01:12.590
+Now, we've got some logic inside of here already around handling request validation.
+
+01:12.590 --> 01:14.680
+That stuff is all good and we want to keep it.
+
+01:14.690 --> 01:17.600
+But everything after it was really just some testing code.
+
+01:17.600 --> 01:21.260
+So I'm going to delete the console, log the throw and the red send.
+
+01:22.090 --> 01:26.290
+That entire database connection error thing was really just kind of a test anyways.
+
+01:26.470 --> 01:30.550
+We're not going to use that inside this root handler anymore anyways, so I'm going to delete the import
+
+01:30.550 --> 01:32.380
+statement for it at the very top of the file.
+
+01:34.220 --> 01:34.340
+Okay.
+
+01:34.430 --> 01:35.630
+So then back down here.
+
+01:36.690 --> 01:42.360
+If we get past that initial request validation step, well then go through this workflow.
+
+01:43.410 --> 01:47.940
+So the first thing we need to do is see if a user inside of our database already exists with that same
+
+01:47.940 --> 01:48.840
+exact email.
+
+01:49.290 --> 01:53.760
+So to check for that, we're really just going to do a query of our user collection and see if someone
+
+01:53.940 --> 01:55.950
+has that matching email address.
+
+01:56.400 --> 01:58.320
+I'm going to first pull the email.
+
+01:59.420 --> 02:01.640
+Off of the wrecked body property.
+
+02:02.890 --> 02:05.770
+All then define a new variable called existing user.
+
+02:06.880 --> 02:10.390
+And I'm going to run a query over my user collection by using the user model.
+
+02:10.390 --> 02:16.390
+So I'll say a weight user, find one with that same exact email address.
+
+02:17.020 --> 02:21.550
+If we find another user with this email, then that user that we found inside of our database will be
+
+02:21.550 --> 02:22.660
+assigned to this variable.
+
+02:22.990 --> 02:28.150
+Otherwise, if we do not find someone at that email, existing user will instead be null.
+
+02:28.540 --> 02:32.620
+So all we really have to do is check and see if this valid, assuming this variable is null.
+
+02:32.620 --> 02:34.720
+If it is, that means we can create the user.
+
+02:34.720 --> 02:39.070
+Otherwise, if it is not null, then we need to return early and send back an error to the user.
+
+02:41.080 --> 02:45.580
+So inside of here, I'm going to say if existing user is defined.
+
+02:46.480 --> 02:47.020
+Then.
+
+02:48.110 --> 02:49.880
+I'll do a console.log that says.
+
+02:50.690 --> 02:52.280
+Email in use.
+
+02:53.480 --> 02:54.740
+I'm going to return early.
+
+02:55.130 --> 02:57.890
+And for right now, I'm just going to send back an empty response.
+
+02:58.950 --> 03:02.460
+We don't really have any way to test this just yet because we are not creating any users.
+
+03:02.460 --> 03:04.880
+So I'm going to leave this as is for just a moment.
+
+03:04.890 --> 03:08.970
+We're going to add in the ability to actually create a user and then we'll come back and add in some
+
+03:08.970 --> 03:10.650
+better error handling code inside there.
+
+03:12.380 --> 03:12.650
+Okay.
+
+03:12.650 --> 03:16.850
+So if we get past that step in theory, we need to start to hash the password.
+
+03:16.890 --> 03:21.290
+Now, hashing the password is a complicated little process and we've been doing a lot of really in-depth
+
+03:21.290 --> 03:21.860
+stuff.
+
+03:21.860 --> 03:26.570
+So for right now, we're going to very temporarily skip the step and go directly on to creating a new
+
+03:26.570 --> 03:28.430
+user and saving them to our database.
+
+03:28.790 --> 03:32.300
+So we are going to implement password hashing because you absolutely have to have that.
+
+03:32.300 --> 03:35.690
+But very briefly, we're just going to skip down to actually creating the user.
+
+03:37.450 --> 03:42.730
+So if we get past that step right there, we then need to create our user and save them to the database.
+
+03:43.270 --> 03:51.760
+So for that, we're going to do a balanced user and remember how we create a new user document we call
+
+03:51.760 --> 03:53.950
+user dot build.
+
+03:54.130 --> 03:57.970
+And we're going to pass in the attributes for this user that we're trying to create.
+
+03:58.420 --> 04:01.870
+So we'll pass in the email and the password.
+
+04:02.790 --> 04:04.820
+We have not defined password inside of here.
+
+04:04.830 --> 04:07.950
+Remember, password is on the body of the request.
+
+04:08.340 --> 04:11.760
+We already did validation on that password during this earlier validation.
+
+04:11.760 --> 04:12.660
+Step up here.
+
+04:13.810 --> 04:17.440
+So in addition to pulling off email, I will also pull off password.
+
+04:19.140 --> 04:23.520
+So we are building the user, just building them does not actually save them to the database.
+
+04:23.520 --> 04:28.050
+To save them to the database, we have to do an A weight user save.
+
+04:29.220 --> 04:31.230
+That will persist them to MongoDB.
+
+04:33.110 --> 04:38.810
+After saving them to the database, we should send back to whoever made this request a cookie or a JSON
+
+04:38.810 --> 04:40.100
+web token or something.
+
+04:40.100 --> 04:42.230
+That's another step that we'll figure out in just a moment.
+
+04:42.320 --> 04:47.420
+If right now, let's just respond to this request, say that the user was created and send back the
+
+04:47.420 --> 04:49.580
+user model or the user document.
+
+04:50.350 --> 04:57.010
+They'll do a rescue status of 201, which indicates that a record was created as opposed to a 200.
+
+04:57.550 --> 04:59.620
+And I'll send back the entire user.
+
+05:01.190 --> 05:01.360
+Yes.
+
+05:01.430 --> 05:03.950
+This looks at least somewhat reasonable if right now.
+
+05:04.100 --> 05:06.200
+Let's go ahead and try to do a little test.
+
+05:07.230 --> 05:08.700
+I'm going to open up, postman.
+
+05:09.680 --> 05:12.500
+I still have Postman Open from when we were working with it earlier.
+
+05:12.500 --> 05:18.140
+So I'm making a post request to ticketing dev API users sign up.
+
+05:19.140 --> 05:21.930
+I've got a header of content type application JSON.
+
+05:23.240 --> 05:25.010
+My body is set to roar.
+
+05:25.400 --> 05:26.810
+That sounds really awkward.
+
+05:27.110 --> 05:32.600
+I've got a valid email, a valid password, and I've selected Jason over here as well.
+
+05:33.080 --> 05:35.090
+So I'm going to go ahead and send in this request.
+
+05:36.220 --> 05:36.430
+All right.
+
+05:36.430 --> 05:37.120
+There we go.
+
+05:37.600 --> 05:42.730
+So it looks like I have successfully created a user and sent them back to whoever made this request
+
+05:42.730 --> 05:44.500
+in this case, our postman client.
+
+05:44.920 --> 05:48.280
+So now, in theory, this user has been saved to our Mongo database.
+
+05:49.040 --> 05:54.620
+We can now start to test out the workflow where we try to sign up with a duplicated email address.
+
+05:54.950 --> 05:57.200
+Let's try to send this exact request once again.
+
+05:57.440 --> 06:01.940
+Hopefully we will get back some kind of empty response that's going to tell us that sorry the user was
+
+06:01.940 --> 06:02.780
+not created.
+
+06:03.410 --> 06:07.400
+So if I try to send the exact same request, I get back an empty object.
+
+06:08.900 --> 06:10.220
+And if I go to my terminal.
+
+06:11.580 --> 06:14.370
+I'll see a console.log right there of email in use.
+
+06:15.920 --> 06:16.310
+All right.
+
+06:16.310 --> 06:20.090
+Well, let's say that this initial flow that we put together looks pretty good, but there's definitely
+
+06:20.090 --> 06:21.590
+a couple of things we need to fix up.
+
+06:21.920 --> 06:24.080
+We need to make sure that we hash that password.
+
+06:24.680 --> 06:28.550
+You'll notice that when we sent a response back when a user was created.
+
+06:28.550 --> 06:31.100
+So I'm going to put in a unique email right here and then send it.
+
+06:31.100 --> 06:36.350
+When we sent the user back, the password was included, which we definitely do not want to do.
+
+06:37.580 --> 06:42.440
+And if the email was already in use, we are sending back just an empty object which is not appropriate
+
+06:42.440 --> 06:45.150
+as well though still a little bit of stuff to work on.
+
+06:45.170 --> 06:47.210
+Let's start working on this in the next video.

@@ -1,0 +1,55 @@
+WEBVTT
+
+00:00.830 --> 00:06.620
+Now that we've seen some basic examples of classes inside of TypeScript, let's have a very quick discussion
+
+00:06.620 --> 00:08.900
+on why we care about them and where we use them.
+
+00:09.110 --> 00:12.950
+Well, essentially why we care about classes and where we're going to use them comes back to the same
+
+00:12.950 --> 00:15.020
+reason we care about interfaces.
+
+00:15.500 --> 00:20.630
+Remember interfaces which we just spoke about and classes together are going to be the primary tool
+
+00:20.630 --> 00:22.280
+that we use inside of TypeScript.
+
+00:22.580 --> 00:27.320
+Just about everything that you and I are going to do inside this course is going to revolve around classes.
+
+00:27.560 --> 00:33.800
+So inside of a typical class or a typical TypeScript application, we're going to use classes very heavily,
+
+00:33.800 --> 00:36.500
+and in general we're going to have a collection of different files.
+
+00:36.500 --> 00:41.180
+Every different file is going to have one single class defined inside of it, and we're going to get
+
+00:41.180 --> 00:44.750
+these different classes to work together through the use of interfaces.
+
+00:45.320 --> 00:49.760
+Now, of course, I can tell you all this, but it's not super useful unless we see a good example of
+
+00:49.760 --> 00:50.150
+it.
+
+00:50.270 --> 00:51.890
+So we're going to take a pause right here.
+
+00:51.890 --> 00:55.660
+When we come back, the next section, we're going to start working on our first application.
+
+00:55.670 --> 01:01.280
+We're going to do a really big focus on helping you understand how we use classes inside of a basic
+
+01:01.280 --> 01:06.290
+application and how we get some code reuse with them through the use of interfaces.
+
+01:06.470 --> 01:09.470
+So quick pause and we'll start on this application in the next video.

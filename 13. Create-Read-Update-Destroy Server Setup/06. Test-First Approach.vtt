@@ -1,0 +1,217 @@
+WEBVTT
+
+00:00.300 --> 00:04.800
+We are all done with some initial setup on tickets, so now it's time to actually go ahead and put some
+
+00:04.800 --> 00:06.060
+implementation together.
+
+00:06.090 --> 00:10.230
+Now, just as a quick reminder, these are the different route handlers we're going to build up inside
+
+00:10.230 --> 00:11.370
+of this ticket service.
+
+00:11.700 --> 00:15.180
+The first route handler we're going to work on is going to give us the ability to create a ticket.
+
+00:15.180 --> 00:19.410
+So this is going to be the first one that we focus on, and we definitely could just go ahead and run
+
+00:19.410 --> 00:20.840
+off and start to build out this route.
+
+00:20.850 --> 00:26.100
+HANDLER But maybe a better way to approach the development of the service would be to kind of take a
+
+00:26.100 --> 00:28.230
+test driven development sort of approach.
+
+00:28.230 --> 00:33.090
+So I would like to first write out some tests around this, create a ticket rabbit handler and then
+
+00:33.090 --> 00:34.820
+try to make those tests pass.
+
+00:34.830 --> 00:36.240
+So let's give that a shot.
+
+00:36.920 --> 00:38.120
+Back inside my editor.
+
+00:38.420 --> 00:40.810
+I'm going to find the C directory inside there.
+
+00:40.820 --> 00:45.920
+I'll make a new folder called Roots Inside that I'll make another new folder called Underscore.
+
+00:45.920 --> 00:48.320
+Underscore, test, underscore, underscore.
+
+00:49.280 --> 00:52.600
+And then inside there, I'll create a file called New Test.
+
+00:53.870 --> 00:58.160
+I'm calling this file new because we're going to eventually have a new root handler.
+
+00:58.190 --> 01:00.770
+The new root handler is for creating a new ticket.
+
+01:02.100 --> 01:06.150
+Then inside of here, we'll put together some boilerplate, very similar to what we did on our last
+
+01:06.150 --> 01:08.490
+application for testing a route handler.
+
+01:08.640 --> 01:12.900
+At the very top, I'm going to import request from super test.
+
+01:13.780 --> 01:15.100
+Well then import app.
+
+01:15.790 --> 01:20.320
+And that is the express application from up to directories at.
+
+01:22.120 --> 01:23.740
+Then we can start to write out some tests.
+
+01:23.890 --> 01:26.060
+So here comes the big question.
+
+01:26.080 --> 01:27.670
+What do we want to test?
+
+01:28.030 --> 01:31.210
+Well, I think you could probably take a good guess at what we need to do.
+
+01:31.540 --> 01:37.000
+We need to make sure that there is some route handler present at API tickets that will respond to a
+
+01:37.000 --> 01:37.900
+post request.
+
+01:38.050 --> 01:42.580
+We probably need to make sure that we write out a test that's going to make sure that we validate the
+
+01:42.580 --> 01:44.100
+incoming request body.
+
+01:44.110 --> 01:48.580
+So, for example, make sure there is a title and a price and that they are of the correct type.
+
+01:49.120 --> 01:53.470
+We probably may need to make sure that request to this handler are always authenticated.
+
+01:53.500 --> 01:59.200
+So in other words, a user must be signed into our application in order to access this handler, and
+
+01:59.200 --> 02:03.400
+then maybe eventually some tests to make sure that say we actually create a ticket or something like
+
+02:03.400 --> 02:03.880
+that.
+
+02:04.330 --> 02:09.070
+So let's just write out some it blocks or it statements for some of the tests that we're probably going
+
+02:09.070 --> 02:09.820
+to have to write.
+
+02:10.210 --> 02:10.600
+I'm going to say it.
+
+02:10.600 --> 02:13.120
+The first one is going to be something like it.
+
+02:14.260 --> 02:18.490
+As a route handler listening to.
+
+02:19.640 --> 02:22.490
+Slash API slash tickets.
+
+02:23.330 --> 02:24.800
+Or post requests.
+
+02:27.750 --> 02:31.470
+And I'll zoom out here in just a second so you can see this entire statement.
+
+02:32.570 --> 02:34.520
+And there we go.
+
+02:37.420 --> 02:42.160
+I'm going to copy paste this down a couple of times and then I'll just update the description on each
+
+02:42.160 --> 02:45.370
+one and we'll eventually go in and write out some implementation for each test.
+
+02:45.910 --> 02:52.030
+So how about on the second one, let's change the description to something like it can only be accessed
+
+02:52.270 --> 02:57.850
+if the user is signed in, so that will be a check to make sure we've got some authentication related
+
+02:57.850 --> 02:58.360
+stuff.
+
+02:59.100 --> 03:04.140
+About for the next one, we'll say it returns and air.
+
+03:05.120 --> 03:07.850
+If an invalid title is provided.
+
+03:10.180 --> 03:17.560
+For the next one we could do it returns and error if an invalid price is provided.
+
+03:19.380 --> 03:23.070
+And then maybe for the last one down here, we'll test and make sure that everything kind of works as
+
+03:23.070 --> 03:23.760
+expected.
+
+03:24.120 --> 03:29.460
+So how about something like it creates a ticket with valid.
+
+03:30.230 --> 03:33.290
+Parameters or how about valid inputs?
+
+03:34.930 --> 03:37.360
+So these are going to be the different tests we're going to write out.
+
+03:37.360 --> 03:40.810
+And after we write out each test, we'll try to actually make each one pass.
+
+03:41.200 --> 03:45.640
+Right now, let's just save the file, go back over to our terminal and remember how we actually run
+
+03:45.640 --> 03:46.600
+our test suite.
+
+03:46.960 --> 03:48.130
+So back at my terminal.
+
+03:49.350 --> 03:53.880
+I'm going to make sure I'm inside of my tickets project directory so I'm no longer inside of ticketing.
+
+03:53.880 --> 03:58.550
+I'm inside of tickets, and once I'm inside there, I'm going to start my test suite by running NPM
+
+03:58.560 --> 03:59.610
+run test.
+
+04:01.150 --> 04:01.310
+Okay.
+
+04:01.450 --> 04:04.660
+It found my test file is now going to run all the tests inside there.
+
+04:04.660 --> 04:10.360
+And right now they are all passing because we don't actually have any test code inside of any of them.
+
+04:12.840 --> 04:12.980
+Okay.
+
+04:13.140 --> 04:16.470
+So let's flip back over and let's start to focus on this first one.
+
+04:16.470 --> 04:19.170
+First, a brief pause and we'll tackle it in the next video.

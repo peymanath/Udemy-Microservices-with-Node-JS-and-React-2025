@@ -1,0 +1,331 @@
+WEBVTT
+
+00:00.780 --> 00:02.210
+Let's finish off this form.
+
+00:02.220 --> 00:07.170
+The first thing we have to do is add in some state to keep track of the title and the price that the
+
+00:07.170 --> 00:09.480
+user enters to keep track of the state.
+
+00:09.480 --> 00:12.090
+We will use the use state hook from React.
+
+00:12.300 --> 00:13.800
+So I will import you state.
+
+00:14.760 --> 00:16.020
+From React at the top.
+
+00:16.900 --> 00:19.240
+Then going to create two different pieces of state.
+
+00:20.670 --> 00:22.620
+So first one will be called title.
+
+00:25.690 --> 00:27.550
+And the second will be our price.
+
+00:30.010 --> 00:35.080
+And I'm going to initialize price as an empty string, even though we really intend for it to be a number.
+
+00:35.320 --> 00:38.920
+The reason I'm initializing it as an empty string is just so when the input first shows up, there will
+
+00:38.920 --> 00:42.910
+be absolutely nothing inside there, and so that the value will always at least be a string.
+
+00:43.730 --> 00:45.380
+Then I'll find the first input.
+
+00:45.650 --> 00:46.720
+That's for our title.
+
+00:46.730 --> 00:50.180
+So I'm going to wire up an event handler and also set the value on this thing as well.
+
+00:50.570 --> 00:52.580
+So its value is going to come from title.
+
+00:53.320 --> 00:58.570
+And any time someone makes a change to this, so put in on change, I want to call.
+
+01:00.630 --> 01:01.980
+A little callback function.
+
+01:01.980 --> 01:09.270
+I'm going to receive the event as abbreviated E and then I'll call set title with E target value.
+
+01:10.870 --> 01:13.660
+Well, then save this just to get that thing to wrap around.
+
+01:13.690 --> 01:14.080
+Yep.
+
+01:14.080 --> 01:14.740
+There we go.
+
+01:16.700 --> 01:19.370
+I'm going to repeat the same process for price as well.
+
+01:20.860 --> 01:22.690
+Value is going to be price.
+
+01:23.570 --> 01:25.460
+And any time someone changes this.
+
+01:26.490 --> 01:33.690
+I want to receive that event call set price with e target dot value.
+
+01:37.900 --> 01:39.190
+Let's do a quick test.
+
+01:39.220 --> 01:40.870
+I don't really expect anything to happen here.
+
+01:40.870 --> 01:44.890
+I just want to make sure that if I have my console open, I don't have any errors or anything like that.
+
+01:45.370 --> 01:46.810
+So I'll put in some title.
+
+01:47.550 --> 01:48.900
+And I'll put in some price.
+
+01:49.380 --> 01:49.680
+All right.
+
+01:49.680 --> 01:50.610
+Definitely works.
+
+01:51.090 --> 01:56.130
+Now, as a quick reminder here, our price, at least for my application, I'm imagining that this is
+
+01:56.130 --> 01:58.620
+a price that makes use of US dollars.
+
+01:59.070 --> 02:03.690
+So if a user enters a price that looks like this, that doesn't really make a lot of sense.
+
+02:03.690 --> 02:09.180
+There is no unit inside of US dollars smaller than the hundredths place.
+
+02:09.480 --> 02:14.130
+So really whenever a user enters in a really long decimal, I would really like to just kind of round
+
+02:14.130 --> 02:15.420
+it to the nearest cent.
+
+02:15.510 --> 02:21.210
+So 0001 should really end up as just 12.00.
+
+02:22.580 --> 02:27.530
+Now I would really like to do that formatting right after the user types in a number so that they understand
+
+02:27.530 --> 02:29.540
+that I am formatting this thing for them.
+
+02:29.570 --> 02:33.650
+They understand that well, they're not going to pay some fraction of a cent or anything like that.
+
+02:34.250 --> 02:36.290
+So to put in some automatic formatting.
+
+02:37.310 --> 02:41.300
+I'm going to add in an additional event handler to our price input.
+
+02:41.810 --> 02:46.160
+I'm going to add in an event handler to watch for the ONLR event.
+
+02:46.730 --> 02:50.690
+And any time the blur event occurs, I'm going to call a helper function that I'm going to define at
+
+02:50.690 --> 02:53.150
+the top of my component called On Blur.
+
+02:53.750 --> 02:58.100
+Now, if you're not familiar with the Blur event, just a very quick aside here, the Blur event is
+
+02:58.100 --> 03:03.200
+triggered on an input any time a user clicks into an input and then clicks out.
+
+03:03.440 --> 03:08.870
+So specifically when they click out or kind of deselect the input that triggers an event called the
+
+03:08.870 --> 03:09.830
+Blur event.
+
+03:10.190 --> 03:14.120
+So whenever the user clicks out, I'm then going to do some automatic formatting on that number.
+
+03:16.080 --> 03:17.460
+I'm going to define this on blur.
+
+03:17.490 --> 03:19.050
+Helper function right above all.
+
+03:19.050 --> 03:20.070
+My ex.
+
+03:27.670 --> 03:31.510
+So inside of on Blur, I'm going to take a look at the price piece of state.
+
+03:32.490 --> 03:36.870
+And I'm going to try to parse the value, make sure that it's some kind of a valid value, like an actual
+
+03:36.870 --> 03:41.160
+number, and then do that rounding step to make sure that it doesn't have any decimal places or anything
+
+03:41.160 --> 03:41.790
+like that.
+
+03:42.330 --> 03:49.560
+So I'm going to take the price that the user entered and assign it to a new variable called value after
+
+03:49.560 --> 03:52.230
+passing it through the pass float function.
+
+03:52.860 --> 03:57.630
+So this is going to make sure that a user is entering an actual number as opposed to some string of
+
+03:57.630 --> 03:59.190
+characters or something like that.
+
+04:00.390 --> 04:05.370
+If we call pars, float on a string of characters and we get back some well not number.
+
+04:05.370 --> 04:08.820
+It's going to be the value, not a number in JavaScript.
+
+04:08.820 --> 04:12.420
+So let me just give you a very quick example of that, because it's kind of confusing if I just say
+
+04:12.420 --> 04:13.320
+it with words.
+
+04:13.320 --> 04:20.040
+So inside my console really quickly, if I do a parse float on a string of characters, I get back not
+
+04:20.040 --> 04:20.760
+a number.
+
+04:21.920 --> 04:25.700
+So we should probably check for that and make sure that a user did not enter in, I don't know, just
+
+04:25.700 --> 04:28.130
+a bunch of characters here by mistake or something like that.
+
+04:28.670 --> 04:29.870
+So let's say if.
+
+04:30.900 --> 04:32.790
+Is not a number.
+
+04:33.060 --> 04:37.470
+This is a function that is built into JavaScript and it checks for a value being, not a number.
+
+04:37.500 --> 04:40.580
+Notice that the capitalization here is capital n.
+
+04:40.590 --> 04:41.370
+Lowercase a.
+
+04:41.400 --> 04:42.420
+Capital n.
+
+04:43.050 --> 04:44.700
+I'll pass in value.
+
+04:46.110 --> 04:47.700
+So if we got out, not a number.
+
+04:47.700 --> 04:51.630
+Well, I don't want to try to do any of this rounding stuff or anything like that, so I'm just going
+
+04:51.630 --> 04:52.710
+to return.
+
+04:54.510 --> 04:58.800
+Otherwise, if we get past that check, if a user actually entered a real number here, then I'm going
+
+04:58.800 --> 05:00.450
+to go through that rounding step.
+
+05:00.540 --> 05:03.660
+So I'm going to call set price to update our price piece of state.
+
+05:04.260 --> 05:11.250
+And into set price, I'm going to provide value dot to fixed to that is what it's going to do the actual
+
+05:11.250 --> 05:12.390
+rounding step.
+
+05:13.610 --> 05:17.360
+So I'm going to save this, look back over and then do a quick test.
+
+05:17.900 --> 05:24.170
+If I now enter in 12 00001 and then click out, it rounds it off to just 12 for me.
+
+05:24.650 --> 05:26.780
+If I put in 12 dot.
+
+05:27.810 --> 05:29.940
+About 019.
+
+05:29.940 --> 05:32.610
+I would expect that to get rounded to 12.02.
+
+05:33.030 --> 05:33.290
+Yep.
+
+05:33.300 --> 05:34.530
+Looks like that works as well.
+
+05:34.830 --> 05:38.550
+And then if I just put in a big string like so nothing really bad happens.
+
+05:38.970 --> 05:42.870
+Now you might be saying, Stephen, wait, shouldn't we do some validation and tell the user the that
+
+05:42.870 --> 05:44.850
+they just put in some invalid input here.
+
+05:44.940 --> 05:50.850
+Well remember our back end API is actually going to do some validation for us, so we'll just rely upon
+
+05:50.850 --> 05:52.950
+the back end to do that validation step.
+
+05:52.980 --> 05:57.690
+I'm just doing the rounding step right here just because well, I want to tell the user as soon as possible
+
+05:57.690 --> 05:59.580
+that I'm going to change their price for them.
+
+05:59.760 --> 06:03.170
+What if the user entered in some input that is going to just plain fail?
+
+06:03.180 --> 06:05.760
+Then I'm going to let the server handle that failure.
+
+06:07.560 --> 06:10.260
+So it looks good now that we've got all this state.
+
+06:11.160 --> 06:14.460
+Keeping track of all this different states doing that little sanitization step.
+
+06:14.460 --> 06:15.210
+This all looks good.
+
+06:15.210 --> 06:15.440
+It's not.
+
+06:15.450 --> 06:20.010
+The last thing we have to do is make a request to our tickets service to create the new ticket.
+
+06:20.340 --> 06:23.970
+It has been a while since we have made a request with next JJ's.
+
+06:24.000 --> 06:28.440
+So let's take a look at how we have been handling requests in the past in the next video.

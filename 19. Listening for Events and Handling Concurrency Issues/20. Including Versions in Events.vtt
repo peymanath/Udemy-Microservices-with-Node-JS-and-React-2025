@@ -1,0 +1,169 @@
+WEBVTT
+
+00:01.500 --> 00:01.800
+All right.
+
+00:01.800 --> 00:06.180
+We're now going to go around our common module, find all of our different events, four in total and
+
+00:06.180 --> 00:09.450
+inside of the data property of each of those events, we're going to say that we're going to include
+
+00:09.450 --> 00:12.150
+the version number and it's going to be type number.
+
+00:12.780 --> 00:14.910
+So we'll start off first with order cancelled.
+
+00:15.150 --> 00:17.640
+I'll find the data property right after the ID.
+
+00:17.640 --> 00:20.700
+We will include version as a number.
+
+00:21.450 --> 00:23.820
+That's going to be the version number of the order itself.
+
+00:24.690 --> 00:25.290
+That's it.
+
+00:26.090 --> 00:27.530
+Next up, order created.
+
+00:28.470 --> 00:29.550
+It's out of order created.
+
+00:29.580 --> 00:32.340
+We'll say that this thing is going to include version as a number.
+
+00:33.090 --> 00:33.720
+That's it.
+
+00:35.050 --> 00:36.550
+We'll go to ticket created.
+
+00:38.150 --> 00:41.120
+Add in version number.
+
+00:42.590 --> 00:46.970
+And then finally ticket updated add in version number.
+
+00:47.730 --> 00:48.540
+And that's it.
+
+00:50.710 --> 00:52.080
+So let's now go back over to our terminal.
+
+00:52.090 --> 00:54.230
+We're going to go into the common module directory.
+
+00:54.250 --> 00:58.780
+We're going to republish this thing and then we will update the version of the common module used inside
+
+00:58.780 --> 01:00.460
+of tickets and orders.
+
+01:02.860 --> 01:06.460
+Back at my terminal, I'm inside of ticketing, which is our overall project directory.
+
+01:06.490 --> 01:10.060
+So I'll change into the common folder and do an NPM run pub.
+
+01:12.300 --> 01:14.060
+It looks like I'm on version 20.
+
+01:14.090 --> 01:17.460
+You probably are a little bit less, as I mentioned many times.
+
+01:17.480 --> 01:22.580
+I've definitely published a couple of extra versions here and there as I've rerecorded videos and whatnot.
+
+01:23.450 --> 01:26.390
+So version 20, you're probably going to be on a much lesser version.
+
+01:26.390 --> 01:27.650
+Just remember that number.
+
+01:27.980 --> 01:33.020
+We're now going to go over to our order service and the ticket service update the common module version
+
+01:33.020 --> 01:33.350
+in there.
+
+01:33.350 --> 01:37.040
+And we're going to want to just double check, make sure that all these version numbers line up with
+
+01:37.160 --> 01:39.230
+whatever version you just saw in your terminal.
+
+01:40.100 --> 01:41.720
+So I'll begin first inside of orders.
+
+01:42.570 --> 01:43.260
+Inside of orders.
+
+01:43.260 --> 01:46.800
+I'll do an NPM update by common module.
+
+01:51.510 --> 01:54.840
+So I'm going to expect to see one zero 20 in my case.
+
+01:56.570 --> 01:57.890
+And yep, looks good.
+
+01:59.050 --> 02:03.820
+Next up, I'll go over to the ticket service and do an NPM update.
+
+02:06.070 --> 02:06.640
+Common.
+
+02:12.760 --> 02:13.290
+Okay.
+
+02:13.300 --> 02:14.260
+So that should be it.
+
+02:14.530 --> 02:15.130
+All set?
+
+02:15.880 --> 02:19.840
+Well, now that we've got these new event definitions, we're going to go around.
+
+02:19.840 --> 02:24.730
+And unfortunately, we're going to make sure that every single time we publish an event, we include
+
+02:24.730 --> 02:25.960
+that version number.
+
+02:25.960 --> 02:29.830
+So there's going to be a little bit of hunting of code here to make sure that we always pass off the
+
+02:29.830 --> 02:31.270
+version number appropriately.
+
+02:31.300 --> 02:34.140
+So this is going to include a little bit of hunt and find.
+
+02:34.150 --> 02:37.330
+Luckily, we do also have our tests.
+
+02:37.360 --> 02:40.240
+Now the tests are not going to necessarily make sure that we include the version number.
+
+02:40.240 --> 02:43.410
+It's actually TypeScript that's going to make sure that we include the version number on there.
+
+02:43.420 --> 02:47.440
+So if we run the test, chances are we might see some typescript errors, something saying, hey, you
+
+02:47.440 --> 02:50.080
+were supposed to include a version property here, but you didn't.
+
+02:50.500 --> 02:53.890
+So let's hunt through our ticket service and the order service in the next video.
+
+02:53.890 --> 02:58.180
+And every single time we publish an event, we'll just make sure that we always include a version as
+
+02:58.180 --> 02:58.630
+well.

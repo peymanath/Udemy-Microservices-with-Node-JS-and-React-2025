@@ -1,0 +1,205 @@
+WEBVTT
+
+00:00.770 --> 00:05.150
+Well, it's been just about a minute for me and I see this console.log right here that says I want to
+
+00:05.150 --> 00:07.220
+publish the expiration complete event.
+
+00:07.550 --> 00:08.000
+Awesome.
+
+00:08.000 --> 00:09.170
+So definitely looks good.
+
+00:09.470 --> 00:15.470
+We've now got the entire mechanism of receiving an event, publishing a job, receiving the job, processing
+
+00:15.470 --> 00:20.510
+it, and then potentially we don't quite have it yet, but we now need to make sure that we publish
+
+00:20.510 --> 00:22.940
+an event of type expiration complete.
+
+00:23.320 --> 00:25.220
+That's we're going to start to work on in this video.
+
+00:25.430 --> 00:30.590
+We first need to make sure that our common module has the definition for an expiration complete type
+
+00:30.590 --> 00:31.220
+event.
+
+00:32.370 --> 00:33.360
+So to get started.
+
+00:33.360 --> 00:35.280
+Oh, wrong screen to get started.
+
+00:35.280 --> 00:37.140
+I'm going to go back over to my common module.
+
+00:38.440 --> 00:41.090
+And remember what we do to create a new event.
+
+00:41.110 --> 00:45.520
+We'll find the events directory and then inside of here we're going to create a new one of these event
+
+00:45.520 --> 00:46.300
+files.
+
+00:46.780 --> 00:51.850
+Every event file is going to export a single interface named after the event that we're trying to create.
+
+00:52.240 --> 00:56.860
+We also need to make sure we have a new subject that describes this event, and we'll also enter in
+
+00:56.860 --> 00:59.740
+some data that is going to be contained inside the event as well.
+
+01:00.370 --> 01:04.630
+So in our case, we are trying to create an event of type expiration complete.
+
+01:04.990 --> 01:08.200
+That means we'll first open up our subjects in them file.
+
+01:09.340 --> 01:15.910
+I'll add in a new subject of exploration complete and give it a value of exploration colon.
+
+01:16.630 --> 01:17.260
+Complete.
+
+01:20.610 --> 01:25.350
+After that, inside the events directory, I'll make a new file of expiration.
+
+01:25.980 --> 01:28.020
+Complete event.
+
+01:28.680 --> 01:29.610
+That's.
+
+01:31.550 --> 01:33.950
+At the very top, we will import that subjects in them.
+
+01:36.680 --> 01:42.470
+And then I will export an interface called expiration complete event.
+
+01:43.800 --> 01:47.670
+This will have a subject of subject's exploration complete.
+
+01:48.900 --> 01:51.360
+And they'll list out the data contained inside this thing as well.
+
+01:51.570 --> 01:55.680
+And as we previously discussed, the only thing we really need to communicate inside this event is the
+
+01:55.680 --> 01:56.430
+order ID.
+
+01:56.460 --> 02:01.170
+There's not really anything else we need to communicate to say, Hey, something has expired.
+
+02:01.530 --> 02:03.470
+That's all we're going to be communicating inside of here.
+
+02:03.480 --> 02:04.740
+Just the order ID.
+
+02:05.660 --> 02:10.370
+So for data we'll say order ID and this will be of type string.
+
+02:11.070 --> 02:12.180
+And that's pretty much it.
+
+02:14.800 --> 02:17.240
+Just creating this event file is not quite enough.
+
+02:17.260 --> 02:22.720
+However, remember, we do have to make sure we export it from our index file inside of the common module.
+
+02:23.630 --> 02:25.600
+So this is where we have all of our different experts.
+
+02:25.610 --> 02:29.810
+I'll go down to the bottom and I'll add on yet another from events.
+
+02:31.540 --> 02:33.160
+Exploration complete event.
+
+02:35.000 --> 02:35.100
+Yeah.
+
+02:35.180 --> 02:35.930
+That looks good.
+
+02:37.240 --> 02:41.890
+It will now republish our common module and then update the common module version used inside of our
+
+02:41.890 --> 02:46.330
+exploration service will then be able to create a publisher for exploration complete.
+
+02:47.540 --> 02:48.590
+Back at my terminal.
+
+02:50.370 --> 02:52.830
+I will change into my exploration directory.
+
+02:54.490 --> 02:55.150
+Or excuse me.
+
+02:55.170 --> 02:56.130
+Common module first.
+
+02:56.130 --> 02:57.360
+Got to update the thing.
+
+02:57.810 --> 03:00.930
+So in the common module, we'll do an AMPM run pub.
+
+03:01.230 --> 03:01.890
+Here we go.
+
+03:03.760 --> 03:07.840
+And then we can go back over to the expiration service and update the version used inside there.
+
+03:10.160 --> 03:12.810
+All right, so now back over to expiration.
+
+03:12.830 --> 03:13.730
+That's better.
+
+03:14.600 --> 03:17.780
+And we'll do an RPM update or our common module.
+
+03:21.180 --> 03:23.790
+It looks like I am on version 1023.
+
+03:25.180 --> 03:27.840
+I'll just make sure that after the update runs, I see the same version.
+
+03:29.820 --> 03:30.150
+Yep.
+
+03:30.150 --> 03:30.840
+Looks good.
+
+03:31.440 --> 03:34.290
+I remember since we made a change to our package based on file.
+
+03:34.320 --> 03:39.330
+Scaffold is going to want to rebuild or technically docker here is going to rebuild our expiration service
+
+03:39.330 --> 03:39.970
+image.
+
+03:39.990 --> 03:41.180
+That's going to take a minute or two.
+
+03:41.190 --> 03:42.210
+So we'll take a pause right here.
+
+03:42.210 --> 03:46.710
+And when we come back, the next video, we'll make sure that we've got a publisher inside of our expiration
+
+03:46.710 --> 03:49.830
+service that is going to publish that event that we just created.

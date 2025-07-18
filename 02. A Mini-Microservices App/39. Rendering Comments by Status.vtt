@@ -1,0 +1,193 @@
+WEBVTT
+
+00:00.870 --> 00:05.280
+Let's open up our React application and make a little change to this list of comments right here.
+
+00:05.850 --> 00:11.490
+So I'm going to find my code editor up on the client directory inside there then CRC and remember all
+
+00:11.490 --> 00:13.920
+the comments are being rendered inside of comment list.
+
+00:14.180 --> 00:15.270
+Here's comment list.
+
+00:15.750 --> 00:16.680
+Inside of comment list.
+
+00:16.680 --> 00:20.040
+We iterate over all the different comments and produce an ly for each one.
+
+00:20.610 --> 00:26.670
+So we probably want to take a look at the status of every comment and if it is equal to rejected or
+
+00:26.670 --> 00:28.640
+pending, we don't really want to show this lie.
+
+00:28.650 --> 00:32.070
+We probably want to show something else or at least change out the content inside of it.
+
+00:32.880 --> 00:36.540
+So let's try putting together just a simple series of if statements.
+
+00:37.050 --> 00:39.540
+I'm going to declare a new variable up here called content.
+
+00:40.050 --> 00:41.550
+Let's then say if.
+
+00:42.990 --> 00:45.870
+DOT status is equal to approved.
+
+00:47.030 --> 00:50.540
+Then content can be the actual comments content.
+
+00:53.570 --> 00:57.200
+If comment status is equal to.
+
+00:58.480 --> 00:59.170
+Ending.
+
+01:00.560 --> 01:01.960
+Lovely the content be.
+
+01:01.970 --> 01:05.480
+This comment is awaiting moderation.
+
+01:07.020 --> 01:10.890
+And then if comment status is rejected.
+
+01:12.310 --> 01:13.780
+Content can instead be.
+
+01:14.600 --> 01:17.540
+This comment has been rejected.
+
+01:18.920 --> 01:22.880
+And of course, we could refactor these three statements into a switch statement instead, if you would
+
+01:22.880 --> 01:23.330
+like.
+
+01:23.360 --> 01:24.440
+I'll leave that up to you.
+
+01:25.410 --> 01:30.420
+Then finally, rather than showing Comic-Con inside of here, I'll display whatever the value of content
+
+01:30.420 --> 01:33.150
+is I'll put in content like so.
+
+01:34.590 --> 01:34.770
+Okay.
+
+01:34.770 --> 01:35.770
+Let's save this.
+
+01:35.790 --> 01:36.930
+I'm going to flip back over.
+
+01:36.930 --> 01:41.070
+And now you'll notice that the comment that had the word orange inside of it has now been replaced with
+
+01:41.070 --> 01:42.780
+this comment has been rejected.
+
+01:43.080 --> 01:43.770
+Very good.
+
+01:45.340 --> 01:50.110
+I would like to also test out the case in which we do not undergo moderation immediately.
+
+01:50.110 --> 01:53.830
+So this would be the case in which maybe it takes a human intervention.
+
+01:53.860 --> 01:58.900
+Say something like 5 minutes, 10 minutes, 20 minutes to actually come in and moderate any given comment.
+
+01:59.050 --> 02:05.050
+So if we do not get that status updated from pending over to rejected or approved, then we should instead
+
+02:05.080 --> 02:08.320
+see this comment is awaiting moderation.
+
+02:08.650 --> 02:13.390
+To simulate that case, we can go back over to our terminal and just shut down the moderation service
+
+02:13.390 --> 02:14.140
+entirely.
+
+02:14.850 --> 02:16.110
+So I'll go back over to my terminal.
+
+02:16.140 --> 02:19.380
+I'm going to find the window that is running my moderation service.
+
+02:19.680 --> 02:21.690
+I'm going to stop that operation.
+
+02:22.650 --> 02:24.480
+And now we'll go and create a new comment.
+
+02:28.530 --> 02:29.430
+I'll submit it.
+
+02:29.940 --> 02:32.460
+So now that comment is going to be stuck in the pending state.
+
+02:32.460 --> 02:35.400
+There's nothing to actually approve it and move it forward.
+
+02:35.670 --> 02:39.270
+So we can now refresh and we should see this comment is awaiting moderation.
+
+02:39.570 --> 02:40.170
+Awesome.
+
+02:41.250 --> 02:41.520
+Okay.
+
+02:41.520 --> 02:42.690
+So this looks pretty good.
+
+02:42.690 --> 02:46.410
+But I want to point out that there is a downside to our application right now.
+
+02:46.770 --> 02:49.080
+We just turned off the moderation service.
+
+02:49.320 --> 02:51.690
+If we start up the moderation service again.
+
+02:51.690 --> 02:54.000
+So I'll flip back over to my terminal and start it back up.
+
+02:54.390 --> 03:00.210
+Well, now the moderation service is running, but the broker or our event bus tried to send an event
+
+03:00.210 --> 03:02.670
+over while the moderation service was down.
+
+03:02.820 --> 03:07.890
+So we're now in a scenario where we had a temporary interruption to our moderation service, but we
+
+03:07.890 --> 03:09.480
+lost events in that window.
+
+03:09.480 --> 03:12.840
+And so now our entire application is kind of out of sync, so to speak.
+
+03:12.840 --> 03:17.670
+We don't have any way to kind of fast forward and get those missing events back over to our moderation
+
+03:17.670 --> 03:18.330
+service.
+
+03:18.750 --> 03:22.110
+So maybe that's something we should try to at least think about and figure out some way to fix.
+
+03:22.440 --> 03:25.530
+Let's take a pause right here and see if we can't figure out some way of dealing with that in just a
+
+03:25.530 --> 03:26.040
+moment.

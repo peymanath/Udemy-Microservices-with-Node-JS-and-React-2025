@@ -1,0 +1,172 @@
+WEBVTT
+
+00:01.280 --> 00:01.570
+All right.
+
+00:01.580 --> 00:03.440
+Time to do some manual testing here.
+
+00:03.650 --> 00:07.760
+What we're going to do is use Postman to manually create a ticket and then manually update it.
+
+00:08.060 --> 00:09.890
+So I've still got Postman Open right here.
+
+00:10.670 --> 00:11.450
+Inside a post, man.
+
+00:11.450 --> 00:14.270
+The first thing we're going to do is make sure that we are still signed in.
+
+00:14.270 --> 00:16.100
+To make sure that you are still authenticated.
+
+00:16.100 --> 00:19.760
+You can make a get request to API users current user.
+
+00:20.490 --> 00:24.420
+So when I send this off, I see that I am logged in because there is an object right there.
+
+00:24.420 --> 00:26.910
+If you are not logged in, it will say current user know.
+
+00:26.910 --> 00:31.860
+Instead to log back in, you can open up another tab inside a postman.
+
+00:32.430 --> 00:35.670
+You'll want to make a post request to API users sign up.
+
+00:37.500 --> 00:42.240
+Make sure you've got body raw JSON selected and then just enter in an email and password.
+
+00:43.180 --> 00:46.630
+As soon as you sign up with an account, you will then be considered to be authenticated.
+
+00:46.630 --> 00:49.960
+So come back over to this tab where you're checking your current user status.
+
+00:49.960 --> 00:52.600
+Send that request off and just make sure that you are signed in.
+
+00:54.420 --> 00:56.610
+Then finally we'll open up a third tab.
+
+00:56.850 --> 01:01.170
+And inside of this third tab, we're going to make a post request to API tickets.
+
+01:01.990 --> 01:04.390
+We'll make sure we've got RAW and JSON selected.
+
+01:05.390 --> 01:08.060
+And we'll enter in some attributes for a ticket.
+
+01:08.060 --> 01:10.070
+So a title and a price.
+
+01:11.810 --> 01:16.190
+Once I've got that in, I'll then send the request off and I should see something that says status to
+
+01:16.190 --> 01:20.300
+oh one create a down here and I should see some attributes around the ticket as well.
+
+01:20.300 --> 01:25.730
+And now hopefully most critically, we should be go back, be able to go back over to our terminal and
+
+01:25.730 --> 01:32.720
+see some logging information around not only publishing an event, but also receiving an event as well.
+
+01:33.290 --> 01:36.650
+So you'll notice that I get event published to ticket created.
+
+01:36.860 --> 01:38.330
+That's from my ticket service.
+
+01:38.780 --> 01:44.690
+And then from my order service I see message received on the subject of ticket created and it was received
+
+01:44.690 --> 01:46.400
+by the orders service.
+
+01:47.800 --> 01:48.400
+Awesome.
+
+01:49.400 --> 01:51.330
+So that's our ticket created event.
+
+01:51.350 --> 01:53.720
+Let's make sure that ticket updated works as well.
+
+01:54.760 --> 01:59.980
+So to do a update, we're going to once again on this tab where we just created the ticket.
+
+01:59.980 --> 02:03.130
+We're going to grab the ID right there, the ticket we just created.
+
+02:04.080 --> 02:11.160
+And we'll make a request to API tickets and then the ID of the ticket you just created.
+
+02:12.100 --> 02:14.350
+Well, then adjust the price in some way.
+
+02:14.740 --> 02:17.980
+So I'll adjust my price to say how about ten instead?
+
+02:18.900 --> 02:20.280
+Well, then send the request off.
+
+02:20.460 --> 02:24.920
+We should once again get a status of 200 OC and then see the updated record right here.
+
+02:24.930 --> 02:26.350
+And I've got a price of ten.
+
+02:26.370 --> 02:27.000
+Very good.
+
+02:27.820 --> 02:33.460
+Now again as the real test back over to our terminal and we should see something that says event publish
+
+02:33.460 --> 02:37.540
+to ticket updated and message received on ticket updated.
+
+02:37.780 --> 02:40.380
+You will notice that the console logs here are out of order.
+
+02:40.390 --> 02:43.660
+That is totally okay just because the way scaffold works.
+
+02:43.660 --> 02:47.020
+Sometimes these console logs get reflected in a slightly different order.
+
+02:47.050 --> 02:48.510
+No problem whatsoever.
+
+02:48.520 --> 02:52.990
+At the end of the day, the order service is not somehow magically predicting that this event is going
+
+02:52.990 --> 02:54.340
+to come over before it does.
+
+02:55.120 --> 02:55.390
+All right.
+
+02:55.390 --> 02:58.090
+Well, I'd say that this is a good manual test.
+
+02:58.210 --> 03:03.670
+However, as I mentioned, this is where all those concurrency issues are going to start to become absolute
+
+03:03.670 --> 03:05.890
+first class citizens problems.
+
+03:05.890 --> 03:09.670
+So we're going to have to solve now that we've got this entire publisher and listener infrastructure
+
+03:09.670 --> 03:10.180
+set up.
+
+03:10.510 --> 03:11.630
+It's a quick pause right here.
+
+03:11.650 --> 03:15.730
+We're going to start to see some really weird behavior in the next video.

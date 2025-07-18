@@ -1,0 +1,202 @@
+WEBVTT
+
+00:01.360 --> 00:05.860
+We now put together some configuration for Ingress Engine X, we're now going to open up the host file
+
+00:05.860 --> 00:10.660
+on our local machine and make sure that anytime we try to navigate to ticketing div rather than going
+
+00:10.660 --> 00:15.580
+to the real ticketing dev that might be somewhere online or on the internet, we'll instead redirect
+
+00:15.580 --> 00:19.450
+back to our local machine and access our ingress engine X server.
+
+00:19.990 --> 00:22.240
+So to do so, we're going to open up our host file.
+
+00:22.450 --> 00:28.030
+As a quick reminder, if you're on macOS or Linux, your host file is at Etsy slash host and that is
+
+00:28.030 --> 00:28.690
+the actual file.
+
+00:28.690 --> 00:30.160
+That is not a domain right there.
+
+00:30.460 --> 00:34.000
+And if you're on windows, it's going to be at that path right there.
+
+00:34.480 --> 00:39.850
+As a quick reminder, you need to open up this file with a editor in administrator mode, especially
+
+00:39.850 --> 00:40.810
+if you're on Windows.
+
+00:41.380 --> 00:46.810
+So I'm on Mac OS, so I'm going to open up inside my code editor the Etsy slash host file.
+
+00:47.880 --> 00:50.430
+So you'll see the change we made for our last application.
+
+00:50.430 --> 00:52.770
+We're going to add in another entry just like it.
+
+00:52.860 --> 00:59.730
+So I'll put in 127001 and I'll make sure I put in the domain name right there equal to whatever I put
+
+00:59.730 --> 01:03.240
+back inside of my ingress config file, which is ticketing dev.
+
+01:05.630 --> 01:10.160
+So now any time we try to go to ticketing def, we're going to instead connect back to our local machine.
+
+01:10.850 --> 01:11.930
+I'll then save this file.
+
+01:11.960 --> 01:13.280
+I get a little permissions there.
+
+01:13.310 --> 01:14.060
+No problem.
+
+01:15.970 --> 01:16.870
+And there we go.
+
+01:18.140 --> 01:23.090
+So now to test this out, we should be able to navigate to ticketing dev inside of our browser.
+
+01:23.830 --> 01:28.890
+When we go to ticketing, however, that's just going to reach out to our Ingress Engine X server.
+
+01:28.900 --> 01:31.120
+We don't really want to reach to the server directly.
+
+01:31.120 --> 01:36.040
+We want to go to the route handler we had put together just a moment ago inside of our auth project.
+
+01:36.040 --> 01:43.000
+So we specifically want to go to a root of ticketing dot dev slash API users, current user.
+
+01:43.000 --> 01:46.150
+And that's how we're going to access this root handler right here.
+
+01:46.630 --> 01:49.180
+So let's go over to our browser and try that out right away.
+
+01:50.030 --> 01:50.990
+Inside of a new tab.
+
+01:50.990 --> 01:56.330
+I'll go to ticketing dot dev slash API users.
+
+01:56.420 --> 01:57.530
+Current user.
+
+01:58.890 --> 02:03.720
+Now when you come to this URL, you might see an error message like this right here, something that
+
+02:03.720 --> 02:05.970
+says your connection is not private.
+
+02:06.000 --> 02:11.160
+I know this looks like a very scary ear, but this is just because of some of the default behavior inside
+
+02:11.160 --> 02:12.590
+of ingress and Gen X.
+
+02:12.600 --> 02:18.540
+You see by default ingress engine x is a web server that's going to try to use an HTTPS connection.
+
+02:18.900 --> 02:22.950
+Unfortunately, by default it uses what is called a self sign certificate.
+
+02:23.250 --> 02:28.350
+Long story short, Chrome does not trust servers that use self signed certificates.
+
+02:28.470 --> 02:33.630
+As a matter of fact, if we come up to not secure right here and click on it and then click on certificate,
+
+02:34.110 --> 02:38.310
+it's going to say Kubernetes, ingress controller, fake certificate.
+
+02:38.310 --> 02:40.920
+And as you can guess, yeah, Chrome doesn't really like that.
+
+02:41.430 --> 02:45.840
+Usually we could get around this message by clicking on Advanced and then there would be a little link
+
+02:45.840 --> 02:46.560
+down here.
+
+02:46.560 --> 02:50.490
+But unfortunately, kind of a double unfortunate thing.
+
+02:51.030 --> 02:56.430
+The Ingress server uses some configuration options that are going to prevent you from trying to circumvent
+
+02:56.430 --> 02:57.560
+this warning screen.
+
+02:57.570 --> 03:01.260
+And so right now, it seems like we just cannot reach out to that root handler at all.
+
+03:01.650 --> 03:07.770
+Well, again, remember, this is an error that's really only affecting us in this development environment,
+
+03:07.770 --> 03:12.000
+and it's something that our users are never going to see once we properly configure all this stuff.
+
+03:12.000 --> 03:17.160
+So for right now, we're just going to get this error message to go away because Chrome is just doing
+
+03:17.160 --> 03:19.140
+something that we don't want it to do.
+
+03:19.680 --> 03:26.670
+So to get that message to go away, we are going to type this text right here into that tab.
+
+03:26.670 --> 03:28.440
+We're going to type literally on your keyboard.
+
+03:28.440 --> 03:29.730
+This is unsafe.
+
+03:29.730 --> 03:31.950
+You don't have to select any inputs or anything like that.
+
+03:31.950 --> 03:37.620
+You're just going to go over to this tab, click anywhere inside of it, and then type out this is on
+
+03:37.620 --> 03:38.460
+safe.
+
+03:39.250 --> 03:42.610
+And then that's going to get that air message to be dismissed.
+
+03:42.610 --> 03:45.190
+And we should then see how they're actually up here.
+
+03:46.080 --> 03:46.560
+Here we go.
+
+03:47.720 --> 03:48.040
+Okay.
+
+03:48.050 --> 03:50.690
+So now we are able to see some content on the screen.
+
+03:50.750 --> 03:56.120
+That means we can reach out to our off server directly, which is fantastic because now we can start
+
+03:56.120 --> 04:00.740
+to put together some of this authentication stuff, test it manually for right now and eventually write
+
+04:00.740 --> 04:02.000
+some automated tests.
+
+04:02.800 --> 04:03.100
+Well.
+
+04:03.100 --> 04:05.740
+So let's take a pause right here, and we'll continue in just a minute.

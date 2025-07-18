@@ -1,0 +1,391 @@
+WEBVTT
+
+00:00.880 --> 00:01.330
+All right.
+
+00:01.330 --> 00:02.470
+Very last component.
+
+00:02.470 --> 00:05.770
+As soon as we're done with this thing, as I mentioned several times, this is where we're going to
+
+00:05.770 --> 00:08.170
+start to see some weird things start to appear.
+
+00:08.170 --> 00:11.080
+And this is where we're going to get back into the world of microservices.
+
+00:11.200 --> 00:13.030
+Just a little bit more of this React stuff.
+
+00:13.060 --> 00:14.320
+Let's finish this off.
+
+00:14.470 --> 00:15.820
+We're going to flip back over to our editor.
+
+00:15.820 --> 00:18.220
+We're going to start working on this comment list component.
+
+00:18.820 --> 00:24.910
+So back inside my editor, inside the React Project, I'm going to find my CRC directory and inside
+
+00:24.910 --> 00:29.290
+there I'll make a new file called Comment List As.
+
+00:30.250 --> 00:36.280
+At the top we will import React and the use state hook from React.
+
+00:37.340 --> 00:39.260
+We'll get Axios from Axios.
+
+00:39.290 --> 00:43.120
+And once again, I forgot we also need use effect as well.
+
+00:43.130 --> 00:44.900
+So we'll get used to it and use effect.
+
+00:46.660 --> 00:48.910
+Then inside of here, we'll do an export default.
+
+00:51.050 --> 00:54.350
+And once again, right now I'm going to return an empty div.
+
+00:55.290 --> 00:57.270
+So what do we really have to do inside of here?
+
+00:57.300 --> 00:59.670
+Well, very similar to our comment.
+
+00:59.670 --> 01:05.120
+Create component or comment list is going to be responsible for managing its own data requirements.
+
+01:05.130 --> 01:10.530
+So we want comment list to make sure that it can reach out to our comments microservice and fetch all
+
+01:10.530 --> 01:12.720
+the comments associated with some post.
+
+01:13.290 --> 01:17.310
+If we take a look back at the API design for our common service, here it is right here.
+
+01:17.790 --> 01:23.670
+Remember that we said that we can make a get request to post slash post id slash comments.
+
+01:24.150 --> 01:29.550
+So we once again just like inside of our post create component, we need to know the ID of the post
+
+01:29.550 --> 01:31.410
+that we are trying to show comments for.
+
+01:32.120 --> 01:37.220
+So all that really means is that we need to make sure that we communicate a post ID from post list down
+
+01:37.220 --> 01:38.540
+into comment list.
+
+01:40.810 --> 01:45.910
+So back inside of our comment list component, I'm going to once again assume that this component will
+
+01:45.910 --> 01:48.130
+receive a post ID as a property.
+
+01:50.060 --> 01:55.550
+Then inside of here, we can write out some logic to fetch some data, set it on state, map over that
+
+01:55.550 --> 01:59.120
+state, produce a list of comments and display them to the user.
+
+01:59.720 --> 02:04.040
+In practice, this is going to end up being a very, very similar, just about identical in structure
+
+02:04.040 --> 02:06.470
+to what we did back inside a post list a moment ago.
+
+02:06.740 --> 02:08.150
+So we're going to have some piece of state.
+
+02:08.150 --> 02:09.850
+We're going to have a function to fetch some data.
+
+02:09.860 --> 02:14.000
+We're going to call that from a user effect, and then we will map over the data that we fetch.
+
+02:14.150 --> 02:16.850
+So now that we know what we're going to do, let's write out that code.
+
+02:17.710 --> 02:23.140
+So first off, we'll get some comments and set comments coming from you state.
+
+02:25.570 --> 02:28.630
+We're going to initialize this to be an empty array.
+
+02:28.900 --> 02:33.130
+You might recall that on our post list we initialize that piece of state to be an object.
+
+02:33.340 --> 02:37.510
+But whenever we get a list of comments, remember what our API sends back to us.
+
+02:37.540 --> 02:42.790
+The API that we put together is going to give us an array of comments associated with the given post.
+
+02:42.790 --> 02:45.490
+So in this case, we know that we're going to be working with an array.
+
+02:46.640 --> 02:48.740
+I'll then define a function called fetch data.
+
+02:49.160 --> 02:50.750
+This will be an async function.
+
+02:52.580 --> 02:53.420
+Inside of here.
+
+02:53.420 --> 02:57.890
+We'll get some response from calling a wait Axios target.
+
+02:58.490 --> 03:00.620
+I'm going to once again pass in a template string.
+
+03:01.790 --> 03:05.840
+We're going to make a request to HTTP, colon, slash, slash local host.
+
+03:05.840 --> 03:11.150
+And again, we're going to our comments, microservice, which is hosted at Port 4001.
+
+03:14.000 --> 03:20.330
+Then the path that we need to make the request to is post slash, then the post ID slash comments.
+
+03:23.940 --> 03:28.710
+So then take the data out of that response and update our comments piece of state using that.
+
+03:28.710 --> 03:29.550
+Set comments.
+
+03:29.550 --> 03:32.070
+Function set comments.
+
+03:32.070 --> 03:33.600
+Rez data.
+
+03:35.420 --> 03:39.560
+Next up, we need to make sure that fetch data is called just one time when this component is first
+
+03:39.560 --> 03:40.640
+displayed on the screen.
+
+03:40.670 --> 03:43.250
+So that's what we got that user effect took for.
+
+03:43.960 --> 03:46.840
+So put together a use effect call.
+
+03:48.980 --> 03:52.250
+We only want this effect to be called exactly one time.
+
+03:52.250 --> 03:54.770
+So as the second argument, we'll put in that empty array.
+
+03:56.640 --> 03:57.900
+And then inside of here.
+
+03:59.270 --> 04:00.890
+We will call fetch data.
+
+04:02.680 --> 04:03.760
+And that's pretty much it.
+
+04:05.310 --> 04:10.680
+Now last thing we need to do is map over our list of comments and return some jokes out of that entire
+
+04:10.680 --> 04:11.250
+list.
+
+04:13.090 --> 04:14.800
+So to build out that thing.
+
+04:15.920 --> 04:19.370
+I think inside of our mockup we displayed it as a unordered list right here.
+
+04:19.370 --> 04:21.110
+So a UL with some allies.
+
+04:21.110 --> 04:24.830
+So let's map over that array of comments.
+
+04:24.950 --> 04:29.210
+It will say const rendered comments is common spot map.
+
+04:30.130 --> 04:32.110
+And for every comment that we get back.
+
+04:32.900 --> 04:34.670
+We'll return and lie.
+
+04:36.490 --> 04:40.960
+Inside the lie will display the content of the comments because remember, every comment that we've
+
+04:40.960 --> 04:42.520
+created has a content property.
+
+04:42.610 --> 04:46.810
+We'll say comment content because we are building a list right here.
+
+04:46.810 --> 04:50.530
+React is going to expect this lie to have a key property assigned to it.
+
+04:51.360 --> 04:55.770
+So we will assign a key property and inside they will use the comments ID.
+
+04:58.170 --> 05:01.680
+So then, finally, at the very bottom, I will return a UL.
+
+05:03.530 --> 05:06.590
+And inside there I will display my rendered.
+
+05:08.140 --> 05:08.860
+Comments.
+
+05:09.890 --> 05:11.030
+And that should be it.
+
+05:11.600 --> 05:13.280
+So once again, let's save this file.
+
+05:14.920 --> 05:17.530
+Well, then go back over to our post list component.
+
+05:17.530 --> 05:19.480
+That's where we said we were going to show this thing from.
+
+05:19.750 --> 05:23.260
+So inside a post list, we want to show many copies of comment list.
+
+05:24.950 --> 05:26.660
+So here's my post list component.
+
+05:27.480 --> 05:28.110
+At the very top.
+
+05:28.110 --> 05:31.230
+I will import comment list.
+
+05:32.210 --> 05:33.740
+Brown comment list.
+
+05:37.080 --> 05:39.960
+Well, then go down to our Rendered Post's map function.
+
+05:39.960 --> 05:41.970
+So this is where we iterate over every post.
+
+05:42.710 --> 05:46.370
+And then right after comment creates we can show.
+
+05:47.400 --> 05:48.960
+Permits are simply not right after.
+
+05:48.960 --> 05:52.440
+We want right before because we want to show the list of comments and then give the user a forum to
+
+05:52.440 --> 05:53.310
+create a new one.
+
+05:53.400 --> 05:59.760
+The right here is we will put in comment list and once again, remember, we need to tell comment list
+
+05:59.760 --> 06:03.220
+which posts or which ID to post which post ID.
+
+06:03.240 --> 06:03.840
+There we go.
+
+06:03.870 --> 06:05.790
+This thing needs to retrieve comments for.
+
+06:05.820 --> 06:07.060
+So just like comment create.
+
+06:07.080 --> 06:09.030
+We need to pass down that post ID prop.
+
+06:09.570 --> 06:12.360
+We'll say post id is post dot ID.
+
+06:14.010 --> 06:14.330
+Okay.
+
+06:14.340 --> 06:16.440
+Let's save this and we'll do a test.
+
+06:18.120 --> 06:19.370
+Yeah, I see it.
+
+06:19.380 --> 06:21.000
+My comment that I created just a moment ago.
+
+06:21.000 --> 06:21.270
+Up here.
+
+06:21.270 --> 06:21.870
+Right there.
+
+06:22.350 --> 06:24.150
+Now, I should be able to create yet another comment.
+
+06:24.150 --> 06:25.980
+So I'll say second comment.
+
+06:26.550 --> 06:27.420
+I'll submit it.
+
+06:28.430 --> 06:32.930
+I'm going to refresh the page because remember, we don't have any kind of reload logic inside of here
+
+06:32.930 --> 06:33.590
+right now.
+
+06:33.800 --> 06:37.820
+And I'll see second comment up here and I should be able to associate some comments with these other
+
+06:37.820 --> 06:38.780
+posts I created.
+
+06:38.990 --> 06:42.080
+So I'll say neat post.
+
+06:43.420 --> 06:47.680
+And then on the third one I'll put in something like This is a great post.
+
+06:48.800 --> 06:51.320
+I'll refresh the page and I see those comments appear.
+
+06:52.150 --> 06:53.530
+Well, this definitely works.
+
+06:53.530 --> 06:57.250
+But like I said, there is some big downsides here.
+
+06:57.670 --> 07:03.160
+So if we take a look at our network request log, I'm at network, I'm filtered by X Air requests.
+
+07:03.160 --> 07:08.260
+And if I refresh the page, I just want you to notice something very simple might seem very benign and
+
+07:08.270 --> 07:08.800
+small.
+
+07:09.100 --> 07:14.770
+We are making one request for every post we have fetched, and that's kind of the route issue that we
+
+07:14.770 --> 07:15.700
+are in right now.
+
+07:16.180 --> 07:18.640
+That might not seem like a big deal, but let's take a pause right here.
+
+07:18.670 --> 07:19.540
+Come back the next video.
+
+07:19.540 --> 07:22.450
+And I want to highlight why this is kind of a big deal right now.

@@ -1,0 +1,154 @@
+WEBVTT
+
+00:00.860 --> 00:05.270
+Let's go back over to our order service and build our two publishers for the events that we just created.
+
+00:05.480 --> 00:09.020
+So inside the SRC directory, I'll make a new folder of events.
+
+00:09.650 --> 00:12.440
+Then inside there I'll make a new folder of publishers.
+
+00:12.830 --> 00:15.050
+And inside that I'm going to make two files.
+
+00:16.340 --> 00:20.330
+One I would call order created publisher.
+
+00:22.420 --> 00:24.520
+An order cancelled.
+
+00:24.640 --> 00:25.390
+Publisher.
+
+00:27.200 --> 00:29.520
+Let's start off first with our order created publisher.
+
+00:29.540 --> 00:32.090
+So remember what we need to import at the top of the file.
+
+00:32.120 --> 00:35.170
+We need to make sure we get our publisher base class.
+
+00:35.180 --> 00:38.540
+We also need to get our order created event.
+
+00:40.340 --> 00:41.540
+So we'll get our.
+
+00:42.750 --> 00:43.500
+Publisher.
+
+00:44.660 --> 00:49.940
+Order created event and we also need that subjects in them as well so we can specify the subject we
+
+00:49.940 --> 00:51.620
+should use when we publish this event.
+
+00:52.040 --> 00:56.690
+So subjects and I'll get all that from my common module.
+
+00:59.380 --> 01:04.690
+Then inside of here we will export a new class called Order Created Publisher.
+
+01:05.760 --> 01:07.830
+That's going to be extending our publisher base class.
+
+01:07.830 --> 01:12.000
+And remember, this is a generic class where we stick in at the event that we're going to eventually
+
+01:12.000 --> 01:12.630
+emit.
+
+01:13.690 --> 01:15.730
+So order created event.
+
+01:18.310 --> 01:22.150
+We're then told right away by TypeScript that we need to define that abstract property.
+
+01:22.630 --> 01:25.750
+So we could say that we're going to have a subject property.
+
+01:26.650 --> 01:31.600
+We're going to annotate this properties type as subjects dot order.
+
+01:32.510 --> 01:33.260
+Created.
+
+01:33.470 --> 01:37.280
+And the value for it will be subjects, not order created.
+
+01:38.420 --> 01:39.500
+And that's pretty much it.
+
+01:40.270 --> 01:44.140
+So now any time that we want to publish an event saying that in order has been created, we would write
+
+01:44.140 --> 01:48.100
+out something like New Order Created Publisher.
+
+01:50.020 --> 01:54.400
+Remember, we will throw in our Nats client and then we would call publish.
+
+01:56.140 --> 01:59.650
+And inside this object right here, we pass all of our different data properties.
+
+01:59.650 --> 02:04.870
+So in our case, that would be the ID of the order, the user ID, the status expires at and then some
+
+02:04.870 --> 02:06.430
+information about the ticket itself.
+
+02:06.700 --> 02:07.720
+And that's pretty much it.
+
+02:08.890 --> 02:12.910
+So let's now repeat the same process for the order canceled publisher as well.
+
+02:13.030 --> 02:14.890
+So here's Order Canceled Publisher.
+
+02:16.440 --> 02:22.470
+At the top, we will once again do a import for subjects publisher.
+
+02:23.810 --> 02:25.400
+An order canceled.
+
+02:26.450 --> 02:26.990
+Event.
+
+02:29.360 --> 02:30.440
+From the common module.
+
+02:31.270 --> 02:34.510
+We'll export a class of order cancelled publisher.
+
+02:35.890 --> 02:38.980
+And that's going to be extending our publisher base class.
+
+02:39.880 --> 02:42.700
+Throw in our order cancelled event.
+
+02:44.030 --> 02:50.060
+And once again we need to define the subject property on here so our subject will be uptight subjects
+
+02:50.510 --> 02:55.460
+order cancelled and its value will be subjects, not order cancelled.
+
+02:55.970 --> 02:56.720
+And that's it.
+
+02:59.100 --> 03:01.740
+Well, that's all we have to do to define a publisher inside of here.
+
+03:02.370 --> 03:03.530
+So this is looking pretty good.
+
+03:03.540 --> 03:04.710
+Let's take a pause right here.
+
+03:04.710 --> 03:09.900
+We're going to go back over to our two route handlers in the next video and make use of these two publishers
+
+03:09.900 --> 03:12.600
+to make sure that we publish some events at the appropriate time.

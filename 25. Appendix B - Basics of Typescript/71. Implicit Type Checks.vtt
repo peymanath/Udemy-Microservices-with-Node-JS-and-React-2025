@@ -1,0 +1,175 @@
+WEBVTT
+
+00:00.890 --> 00:04.640
+In the last video, we got a good solution to our ad marker issue.
+
+00:04.790 --> 00:07.520
+Now I repeated the same thing and they're like five or six times.
+
+00:07.520 --> 00:11.960
+Remember, the whole idea here is that we defined instructions on how you can be tappable.
+
+00:11.960 --> 00:17.420
+So as long as another class has a location with a latitude longitude that are numbers, it can be an
+
+00:17.420 --> 00:18.830
+argument to add marker.
+
+00:19.340 --> 00:21.620
+So take a look at the impact on custom map.
+
+00:21.620 --> 00:26.870
+Now, inside a custom map, we no longer have any direct references to user or company.
+
+00:27.230 --> 00:31.250
+So that means that these two import statements at the top of the file can be deleted.
+
+00:31.820 --> 00:38.720
+So we now have a standalone custom map class that we could very easily reuse on future projects as well.
+
+00:39.350 --> 00:43.910
+In fact, if you ever want to show a Google map in the future, save this file.
+
+00:43.910 --> 00:50.090
+Like really save this file because as long as you have any other object on any other project you work
+
+00:50.090 --> 00:55.280
+on that satisfies this interface, this class is going to work for you.
+
+00:55.490 --> 01:00.770
+You can use this exact class right here to show a Google map and then show different markers on it.
+
+01:02.050 --> 01:02.470
+All right.
+
+01:02.470 --> 01:06.280
+So last thing I want to do inside this file, I'm going to delete that add company marker method down
+
+01:06.280 --> 01:06.640
+here.
+
+01:06.640 --> 01:07.960
+We don't need this anymore.
+
+01:08.950 --> 01:09.700
+Looks good.
+
+01:10.570 --> 01:15.970
+Now last thing I'm going to do is flip back over to indexes, and we need to fix up the references to
+
+01:15.970 --> 01:17.230
+the methods that we deleted.
+
+01:17.230 --> 01:19.360
+So add user marker no longer exists.
+
+01:19.360 --> 01:23.680
+It's now going to be add marker and same thing for ADD company marker as well.
+
+01:23.680 --> 01:25.270
+That's also going to be add marker.
+
+01:26.170 --> 01:30.100
+So notice how TypeScript has no complaints about these two lines of code.
+
+01:30.730 --> 01:35.950
+Remember, here's what's going on behind the scenes when we tried to pass in user to add marker.
+
+01:37.060 --> 01:39.310
+TypeScript is going to take a look at ad marker.
+
+01:39.340 --> 01:43.330
+It's going to see that the argument must be of type TAPPABLE.
+
+01:43.980 --> 01:46.980
+To be malleable, you have to have a location with the latitude and longitude.
+
+01:47.130 --> 01:53.820
+So behind the scenes, TypeScript is automatically inspecting what type user is, and it's checking
+
+01:53.820 --> 01:58.320
+to see if user satisfies the Tappable interface.
+
+01:58.860 --> 02:02.190
+So TypeScript is going to look at our definition of what a user is.
+
+02:02.220 --> 02:07.140
+It's going to see that user has a location, a latitude and longitude that are numbers.
+
+02:07.140 --> 02:11.310
+And because it has those, it satisfies the Tappable interface.
+
+02:11.520 --> 02:17.910
+So TypeScript has no issue with us whatsoever passing a user into this method because user correctly
+
+02:17.910 --> 02:19.800
+implements that interface.
+
+02:20.490 --> 02:25.440
+Remember that that comparison of looking at user and making sure it has all the correct properties is
+
+02:25.440 --> 02:28.080
+invisible and it occurs behind the scenes.
+
+02:28.290 --> 02:33.780
+So we did not have to add in any code whatsoever to say, Hey, TypeScript, make sure that user is
+
+02:33.790 --> 02:34.290
+malleable.
+
+02:34.290 --> 02:36.000
+We didn't do anything like that.
+
+02:36.000 --> 02:41.250
+We never said anything inside of our user class to say specifically, Hey, this thing is supposed to
+
+02:41.250 --> 02:43.080
+be Tappable never did it.
+
+02:43.380 --> 02:46.740
+TypeScript is doing that comparison for us automatically.
+
+02:47.500 --> 02:50.220
+We refer to this as an implicit check.
+
+02:50.230 --> 02:56.920
+TypeScript is implicitly or kind of behind the scenes automatically making sure that user has the correct
+
+02:56.920 --> 03:00.880
+properties with the correct types inside of it to be an argument to add marker.
+
+03:01.800 --> 03:02.070
+All right.
+
+03:02.070 --> 03:02.760
+So last thing here.
+
+03:02.760 --> 03:04.500
+I'm going to save indexes.
+
+03:05.540 --> 03:07.100
+I'm going to flip back over to my browser.
+
+03:07.100 --> 03:10.430
+Refresh and everything still works as expected.
+
+03:10.700 --> 03:11.450
+Perfect.
+
+03:12.370 --> 03:12.550
+Okay.
+
+03:12.610 --> 03:13.840
+So this looks pretty good.
+
+03:13.840 --> 03:18.870
+So we've now seen something really awesome around interfaces, but we're not done yet.
+
+03:18.880 --> 03:19.850
+Let's take a quick pause.
+
+03:19.870 --> 03:23.500
+When we come back, the next video, we're going to add in one more feature to this application.
+
+03:23.500 --> 03:25.720
+So quick break and I'll see you in just a minute.

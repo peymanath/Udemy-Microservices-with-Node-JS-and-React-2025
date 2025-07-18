@@ -1,0 +1,322 @@
+WEBVTT
+
+00:01.070 --> 00:06.020
+I think this little test with Nats streaming server and putting together this little test project has
+
+00:06.020 --> 00:07.490
+had some pretty good results.
+
+00:07.490 --> 00:09.920
+So we've now got this space listener, base publisher.
+
+00:09.920 --> 00:12.280
+We got the listing of all of our different subjects.
+
+00:12.290 --> 00:16.850
+We've seen how to create a event that describes some message we're going to send out and how to create
+
+00:16.850 --> 00:19.910
+the custom publisher and listener as well.
+
+00:20.300 --> 00:22.820
+So at this point, we're going to start to wrap things up and move forward.
+
+00:22.820 --> 00:26.600
+But I do want to do a very quick summary and really touch on two items really quick.
+
+00:26.600 --> 00:30.530
+So first off, thinking about how to test these things.
+
+00:30.530 --> 00:34.730
+When we think about testing the publishers, the publishers themselves are actually rather similar to
+
+00:34.730 --> 00:36.740
+making a plain network request.
+
+00:36.740 --> 00:40.040
+In other words, it's rather similar to using something like Axios.
+
+00:40.070 --> 00:44.900
+We're essentially using this class to make a request or publish some information.
+
+00:44.930 --> 00:48.740
+There's not really going to be a lot of business logic inside these, and so we're not really going
+
+00:48.740 --> 00:50.600
+to focus a whole bunch on how to test them.
+
+00:51.140 --> 00:54.680
+Listeners, on the other hand, are a totally different story.
+
+00:55.250 --> 00:59.390
+The listeners we put together are going to receive events, and the assumption here is that we're going
+
+00:59.390 --> 01:03.320
+to do a lot of business logic or processing on these incoming events.
+
+01:04.010 --> 01:09.770
+In that regard, these listeners are actually similar in nature to request handlers, and we're definitely
+
+01:09.770 --> 01:14.360
+going to want to do a lot of testing around the listeners we put together and make sure that we handle
+
+01:14.360 --> 01:16.070
+everything inside them correctly.
+
+01:16.640 --> 01:21.230
+So we will be spending a lot of time to figure out how to write some tests effectively for a listener.
+
+01:22.300 --> 01:22.750
+Okay.
+
+01:23.200 --> 01:24.400
+One other quick item.
+
+01:25.270 --> 01:30.070
+So at this point, I just want to highlight that we have centralized a ton of information into our common
+
+01:30.070 --> 01:30.700
+module.
+
+01:31.180 --> 01:36.400
+The common module is now going to be the primary source for where we define all of our different event
+
+01:36.400 --> 01:39.190
+names or remember what they are called in the world of networks.
+
+01:39.190 --> 01:40.270
+They are subjects.
+
+01:41.680 --> 01:42.280
+Inside of here.
+
+01:42.280 --> 01:46.930
+We also had the exact definition of what all of our different events are going to consist of.
+
+01:46.960 --> 01:51.010
+So the subject for each of them and the data that these events are going to contain.
+
+01:51.660 --> 01:55.770
+We are not going to define any events whatsoever inside of our different services.
+
+01:55.800 --> 01:59.100
+Instead, we are going to import them from this common module.
+
+01:59.460 --> 02:05.400
+And this is going to absolutely, positively ensure that all of our services are using the same event
+
+02:05.400 --> 02:09.390
+names, and the data inside of them will always be consistent.
+
+02:10.550 --> 02:13.630
+Now a quick side note, kind of like a higher level note here.
+
+02:13.640 --> 02:18.200
+When I was first putting this course together, I've worked on this course for a extremely long time
+
+02:18.200 --> 02:18.860
+at this point.
+
+02:18.860 --> 02:19.970
+A very long time.
+
+02:19.970 --> 02:24.500
+And the vast majority of that time was actually evaluating different options on how to put this common
+
+02:24.500 --> 02:25.580
+module together.
+
+02:25.580 --> 02:29.870
+And when I was really thinking about building this course and going through all that work, I thought
+
+02:29.870 --> 02:33.710
+this section where we were talking about building out this custom event, handling stuff in the common
+
+02:33.710 --> 02:38.960
+module, was going to be like a huge deal and it ended up being just about 14 videos or so.
+
+02:39.140 --> 02:41.780
+I'm kind of shocked at how things actually turned out.
+
+02:41.780 --> 02:43.790
+Anyways, back on topic here.
+
+02:43.790 --> 02:49.820
+The reason that's really relevant is that I really cannot understate how important it is to put the
+
+02:49.820 --> 02:54.980
+definition of all these events and these event names into some common location.
+
+02:55.640 --> 03:01.580
+It is simply not feasible to only define these events inside of your services because as I've said several
+
+03:01.580 --> 03:07.520
+times, you are going to make typos on event names and you are going to make typos on property names
+
+03:07.520 --> 03:08.240
+as well.
+
+03:08.240 --> 03:14.630
+It is guaranteed I 100% guarantee it if you try to define these things directly inside of your services.
+
+03:14.630 --> 03:19.040
+And that's why putting it all inside of some common module is so, so helpful.
+
+03:20.340 --> 03:24.420
+I almost wish that we hadn't put the common module together from the get go so that we could have experienced
+
+03:24.420 --> 03:30.180
+the pain of having to guess these property names and have to go look them up back and forth.
+
+03:30.180 --> 03:34.590
+And all that pain, I think, would have given us a lot more appreciation for defining the events inside
+
+03:34.590 --> 03:35.070
+of here.
+
+03:36.320 --> 03:38.720
+Now, I do want to say there is a downside to this approach.
+
+03:38.840 --> 03:43.700
+We are writing TypeScript code, putting these event definitions inside of a TypeScript module.
+
+03:44.000 --> 03:48.620
+So naturally, this whole approach right now is only going to work if all of our different services
+
+03:48.620 --> 03:50.280
+are written with TypeScript.
+
+03:50.300 --> 03:55.520
+If we have some other service using Java or something like that, well, this shared definition of what
+
+03:55.550 --> 04:03.110
+an event is is not going to be quite so useful if you do expect to have services with other languages
+
+04:03.110 --> 04:07.070
+being used inside them and you don't expect to be able to use some kind of common module.
+
+04:07.460 --> 04:08.600
+All written TypeScript.
+
+04:08.630 --> 04:10.520
+There are a couple of options.
+
+04:10.790 --> 04:15.890
+So if you want to have a common definition of all the events, the information inside them, and share
+
+04:15.890 --> 04:21.620
+it inside of some kind of polyglot architecture, you can take a look at some other alternatives, such
+
+04:21.620 --> 04:23.060
+as JSON schema.
+
+04:23.090 --> 04:28.790
+JSON schema allows you to define JSON structures, the different properties they'll have, the different
+
+04:28.790 --> 04:31.580
+values they'll have, and some validation around those properties.
+
+04:31.580 --> 04:34.610
+And this can be done in a cross language way.
+
+04:34.640 --> 04:37.490
+In other words, a lot of languages have support for JSON schema.
+
+04:37.820 --> 04:41.810
+So you can write your JSON schema inside of some kind of common repository.
+
+04:41.810 --> 04:43.760
+So maybe a GitHub repo or something like that.
+
+04:43.760 --> 04:46.370
+So you can easily work with it between different languages.
+
+04:46.940 --> 04:51.620
+And then each year different services can pull in those JSON schema files and use them to validate events
+
+04:51.620 --> 04:52.790
+that they're trying to publish.
+
+04:53.530 --> 04:55.570
+Another alternative is proto buff.
+
+04:55.690 --> 05:01.240
+Proto buff is a way of serializing information, not unlike JSON, but it compacts information into
+
+05:01.240 --> 05:03.160
+a much more compact format.
+
+05:03.910 --> 05:06.130
+Heard above can be used to define the structures.
+
+05:06.310 --> 05:08.770
+It also has cross language support.
+
+05:09.340 --> 05:11.680
+Finally, there's also something else called Apache Avro.
+
+05:11.710 --> 05:16.630
+This is really themed around Java in particular, but there is support for a variety of different languages
+
+05:16.630 --> 05:17.200
+as well.
+
+05:17.200 --> 05:20.470
+It's just not as strong as the Java focused side.
+
+05:21.010 --> 05:27.190
+So again, if you do expect to have some multi language services inside of your application rather than
+
+05:27.190 --> 05:31.420
+doing a common module with TypeScript and putting the event definitions in there, you might take a
+
+05:31.420 --> 05:32.770
+look at these approaches.
+
+05:34.180 --> 05:39.640
+Just so you know, I did originally kind of tried to design this application using JSON schema.
+
+05:39.670 --> 05:41.950
+I also did a version of it with Proto Buff as well.
+
+05:41.980 --> 05:47.640
+Neither of them were anywhere near as usable as the TypeScript implementation we ended up with.
+
+05:47.650 --> 05:52.930
+So I showed you the TypeScript solution because I really did believe it was a very good way of handling
+
+05:52.930 --> 05:57.730
+this and avoided a lot of headaches that we would have ran into if we tried to make use of JSON schema
+
+05:57.730 --> 05:58.580
+or proto buff.
+
+05:58.660 --> 06:00.070
+So just throwing that out there.
+
+06:00.840 --> 06:03.390
+All right, so enough of this pause right here.
+
+06:03.660 --> 06:07.800
+Last thing we're going to do, we're going to take a lot of logic out of this little test project.
+
+06:07.800 --> 06:09.840
+We're going to relocate it to our common module.
+
+06:09.840 --> 06:14.760
+We're then going to rebuild it, republish it, and then update the common module inside of our ticket
+
+06:14.760 --> 06:15.480
+service.
+
+06:15.480 --> 06:17.580
+We're then going to go backward to the tickets world.
+
+06:17.580 --> 06:22.500
+We're going to make sure that we start to publish events whenever a ticket is updated or created.
+
+06:22.830 --> 06:24.480
+So still a little bit of work to do.
+
+06:24.510 --> 06:26.250
+Let's get started in the next video.

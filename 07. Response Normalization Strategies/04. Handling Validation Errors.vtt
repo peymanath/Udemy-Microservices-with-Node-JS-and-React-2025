@@ -1,0 +1,286 @@
+WEBVTT
+
+00:01.110 --> 00:05.220
+As I mentioned at the end of the last video, we now apparently are doing some actual validation attempt
+
+00:05.220 --> 00:09.610
+right now, but we are not actually communicating the results of that validation back to the user.
+
+00:09.630 --> 00:11.820
+So let me show you how we're going to do that.
+
+00:12.750 --> 00:15.120
+At the very top of this file, I'm going to find where we import it.
+
+00:15.120 --> 00:16.320
+Express Validator.
+
+00:16.350 --> 00:22.380
+In addition to importing body, we're going to import a second function called validation results.
+
+00:22.860 --> 00:27.960
+This C function that we're going to run on the incoming request inside of our request handler.
+
+00:28.500 --> 00:34.200
+Whenever we run validation result, it's going to inspect the request and pull out any information that
+
+00:34.200 --> 00:36.960
+was appended to the request during this validation step.
+
+00:37.200 --> 00:41.490
+So in other words, when these two steps right here do validation on the income request, if there's
+
+00:41.490 --> 00:46.350
+anything wrong with the email or the password, these functions are going to append some properties
+
+00:46.350 --> 00:48.030
+onto that request object.
+
+00:48.120 --> 00:52.410
+So we use the validation result function to pull that validation information off.
+
+00:53.650 --> 00:59.170
+So here's how we actually use it down inside of our route handler right above where we pull off email
+
+00:59.170 --> 01:06.430
+and password, we're going to add in bounced errors is validation results on request.
+
+01:08.100 --> 01:11.790
+Well then check to see if any heirs are actually present at this point in time.
+
+01:11.790 --> 01:16.530
+We just pulled off an object that might contain some errors, so we need to take a look at that object
+
+01:16.530 --> 01:20.310
+and decide whether or not something actually went wrong with the validation attempt.
+
+01:20.520 --> 01:24.210
+I'll say if not, airport is empty.
+
+01:26.150 --> 01:32.750
+So if there is an error or in other words, if the errors object is not empty, then we're going to
+
+01:32.750 --> 01:36.830
+enter this if statement and we need to handle the error that just occurred in some way.
+
+01:37.630 --> 01:42.370
+So inside of here, this would probably be a good location to somehow take the errors that were produced
+
+01:42.580 --> 01:47.170
+and then send them back to the user early before executing anything else inside this function.
+
+01:47.440 --> 01:52.840
+So we can run something inside of here, like return rez status.
+
+01:54.950 --> 01:56.120
+Of 400.
+
+01:57.140 --> 02:03.160
+Send it, we'll just send back the air's array object or the arrows object.
+
+02:03.170 --> 02:06.590
+We're going to call a little method on it really quickly called array.
+
+02:06.620 --> 02:10.910
+That's going to take the errors object, which currently is an object and has some methods attached
+
+02:10.910 --> 02:17.150
+to it and turn it into an array of errors that can be safely send down be sent down as JSON data.
+
+02:20.010 --> 02:24.150
+So in total, we've now said, take a look at that request object, pull off any errors that might have
+
+02:24.150 --> 02:30.300
+occurred, see if any errors actually exist, and if they do return early and send back a response to
+
+02:30.300 --> 02:32.880
+the person who gave us or sent us this request.
+
+02:34.680 --> 02:39.120
+So if we make it past that if statement and we get down here now, we don't have to do this kind of
+
+02:39.120 --> 02:40.740
+silly check right there anymore.
+
+02:41.800 --> 02:46.630
+We could do a add in some logic right here that tries to create a user.
+
+02:46.630 --> 02:50.320
+So I'll put in a console.log right now that says something like reading a user.
+
+02:51.310 --> 02:56.590
+And then again, for right now, very temporarily, I'll do a resend of an empty object.
+
+02:56.590 --> 02:58.330
+Just we can actually test this thing out.
+
+02:59.910 --> 03:01.420
+Okay, so let's save this.
+
+03:01.440 --> 03:02.940
+We're going to open up post man.
+
+03:02.940 --> 03:08.220
+Remember that API client and we're going to attempt to send a post request to this signup route handler.
+
+03:08.250 --> 03:11.280
+We're just going to make sure that this validation stuff is actually working.
+
+03:12.510 --> 03:16.410
+I'm going to save the file and go back over to my terminal and just make sure that I got the updates
+
+03:16.410 --> 03:17.400
+over on scaffold.
+
+03:17.430 --> 03:17.760
+Yep.
+
+03:17.760 --> 03:18.450
+Looks good.
+
+03:20.250 --> 03:21.630
+Well, then open up, postman.
+
+03:24.120 --> 03:28.590
+And then once Postman is open, we'll make a post request to that endpoint that we just put together.
+
+03:30.420 --> 03:32.670
+So I'm going to make sure I'm making a post request.
+
+03:33.120 --> 03:35.190
+I want to make that request to.
+
+03:37.000 --> 03:42.850
+Ticketing dot dev slash API users sign up.
+
+03:44.120 --> 03:45.520
+Well then go over to headers.
+
+03:45.530 --> 03:48.860
+I'll make sure I still have a content type of application JSON.
+
+03:49.220 --> 03:50.390
+I'll then go to body.
+
+03:50.690 --> 03:52.400
+I'll make sure I've got raw selected.
+
+03:52.820 --> 03:58.190
+And remember we are expecting to receive an email and a password for this first test.
+
+03:58.190 --> 04:01.970
+I'm going to put in something that is definitely not a valid email, just a plain string like.
+
+04:01.970 --> 04:06.470
+So I'm going to also enter an a password that is just one character.
+
+04:07.670 --> 04:12.230
+I'll then make sure I've got JSON selected and then I'm going to attempt to send this off.
+
+04:12.860 --> 04:18.530
+Now when we send this, I'll take a look at the response and just, you know, if you get an error or
+
+04:18.530 --> 04:23.840
+if it says down here something like HTTPS error or something like that, which is entirely possible,
+
+04:23.840 --> 04:27.920
+then pause video right now and check out a text lecture right after this one.
+
+04:27.920 --> 04:32.930
+So again, if you get a distinct error down here around HTTPS or something like that, go check the
+
+04:32.930 --> 04:34.280
+text in the next lecture.
+
+04:35.850 --> 04:36.330
+More relevant.
+
+04:36.330 --> 04:41.160
+However, if I take a look at the response we got back, you'll notice I got 400 bad requests and it
+
+04:41.160 --> 04:44.550
+has some information about exactly what just went wrong with the request.
+
+04:44.850 --> 04:48.060
+So I've got some error message around the email.
+
+04:48.360 --> 04:51.870
+I've also got an error message around the password as well.
+
+04:52.750 --> 04:54.670
+If I actually enter in a valid email.
+
+04:54.670 --> 05:02.740
+So I'll put in about my favorite, which is test at test and a password of password and set that off.
+
+05:03.310 --> 05:06.820
+Now I got back an empty object, which means I got past that validation step.
+
+05:07.210 --> 05:09.610
+And so if I go back with my terminal, I will see that console.log.
+
+05:09.610 --> 05:10.930
+That says creating a user.
+
+05:12.070 --> 05:12.990
+So it's definitely looks good.
+
+05:13.000 --> 05:14.980
+We've definitely got some validation inside of here.
+
+05:15.550 --> 05:19.930
+Now, at this point, you might be thinking to yourself, Hey, Steven, this is of course, about microservices,
+
+05:19.930 --> 05:21.060
+not validation.
+
+05:21.070 --> 05:22.120
+I know, I know.
+
+05:22.390 --> 05:26.200
+Unfortunately, we're going to go through a lot of steps like this where I just tell you and give you
+
+05:26.200 --> 05:28.510
+a reminder of how some stuff in Express works.
+
+05:28.510 --> 05:33.490
+The reason for that is that all the code you see right here, we are going to abstract out and write
+
+05:33.490 --> 05:35.920
+in a not all of this but a decent amount of it.
+
+05:35.920 --> 05:41.050
+We are going to extract a lot of this out and rewrite it in a very reusable fashion and then reuse it
+
+05:41.050 --> 05:43.510
+between multiple different services we create.
+
+05:43.750 --> 05:48.040
+I don't want to just jump directly to that reuse step because if we do so, a lot of the stuff is going
+
+05:48.040 --> 05:49.630
+to get really confusing really quickly.
+
+05:50.080 --> 05:56.230
+So I want you to very directly and right now immediately understand how this validation stuff really,
+
+05:56.230 --> 05:57.040
+truly works.
+
+05:57.040 --> 06:02.860
+Because again, we're going to start to rewrite this stuff very quickly and in a much more reusable
+
+06:02.860 --> 06:05.950
+and a little bit more challenging to understand fashion.
+
+06:06.900 --> 06:11.760
+So again, I apologize if a lot of this stuff is kind of repetitive for you, but I do feel like we've
+
+06:11.760 --> 06:14.880
+got to get a quick review before we just jump to that reusable version.
+
+06:15.500 --> 06:15.660
+Okay.
+
+06:15.660 --> 06:18.330
+So quick pause right here and continue in just a minute.

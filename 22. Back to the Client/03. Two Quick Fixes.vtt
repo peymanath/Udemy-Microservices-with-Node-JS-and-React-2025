@@ -1,0 +1,268 @@
+WEBVTT
+
+00:01.740 --> 00:06.090
+As we just saw, we are double fetching the current user between the landing page and the app component.
+
+00:06.090 --> 00:08.490
+So we're going to fix that up really quickly inside this video.
+
+00:08.820 --> 00:11.670
+To get started, I'm going to go back over to my index file.
+
+00:12.150 --> 00:14.760
+We're going to find the get initial function.
+
+00:14.810 --> 00:17.760
+I'm going to delete everything that we have inside there for right now.
+
+00:17.970 --> 00:20.820
+And instead, I'm going to return an empty object.
+
+00:22.730 --> 00:27.590
+I'm also going to delete the Bild client statement at the very top because we are not importing that
+
+00:27.590 --> 00:31.040
+or we're not making any use of with that build client function right now.
+
+00:32.560 --> 00:37.870
+Now, if I go back over to my application after saving that file and refresh the page, you might see
+
+00:37.870 --> 00:42.040
+it that you are now no longer signed in, even if you actually are signed in.
+
+00:42.670 --> 00:47.820
+So if I click on the logo right there again, that's going to reissue the current user request.
+
+00:47.830 --> 00:52.300
+And if I look at the response, I can see very plainly that I am in fact signed into the application.
+
+00:52.300 --> 00:56.320
+But the app, or assuming the landing page component definitely thinks that I am not.
+
+00:56.710 --> 01:01.600
+The reason for that is that the landing page is not receiving the current user as a prop.
+
+01:01.990 --> 01:06.520
+So we need to go back over to our app component, which is still fetching the current user.
+
+01:07.680 --> 01:12.360
+So when the app component renders itself with the current user, we need to make sure that we take that
+
+01:12.360 --> 01:16.860
+current user and pass it down as a property down into the child component.
+
+01:17.280 --> 01:22.380
+This is going to make sure that every single child component inside of our application, so essentially
+
+01:22.380 --> 01:27.960
+every component inside the pages directory will always receive the current user as a prop, which is
+
+01:27.960 --> 01:29.220
+probably a very good thing.
+
+01:29.340 --> 01:33.510
+There's probably going to be many scenarios, many different pages that we're going to create that need
+
+01:33.510 --> 01:35.610
+to understand who the current user is.
+
+01:35.700 --> 01:39.840
+So this is going to be a nice little thing that's going to help us easily understand who the current
+
+01:39.840 --> 01:42.000
+user is in all of our different pages in the future.
+
+01:42.650 --> 01:46.430
+So on our component right there, we'll add in a prop of current user.
+
+01:47.680 --> 01:48.910
+And assigned to it.
+
+01:49.680 --> 01:50.460
+Current user.
+
+01:52.180 --> 01:53.380
+Now I can flip back over.
+
+01:53.380 --> 01:57.310
+If I refresh the page, I will once again see that I am signed in.
+
+01:58.320 --> 02:03.030
+And if I click on the Get text logo yet again, I'll see that I'm now only making one request to fetch
+
+02:03.030 --> 02:03.840
+the current user.
+
+02:04.290 --> 02:04.560
+Okay.
+
+02:04.560 --> 02:05.220
+Very good.
+
+02:06.120 --> 02:07.240
+That's one little fix.
+
+02:07.240 --> 02:10.150
+But there's one other fix that I would like to make as well.
+
+02:10.900 --> 02:14.950
+Inside of our app component, we are importing that build client helper.
+
+02:15.100 --> 02:20.140
+Now as a reminder on what that build client thing is, we can go to our API directory inside the client
+
+02:20.140 --> 02:22.390
+folder and find the build client file.
+
+02:22.960 --> 02:28.810
+So remember, depending upon whether we are running our application or really rendering our app on the
+
+02:28.810 --> 02:33.790
+Kubernetes cluster, so during the server side rendering phase or whether we are running our app inside
+
+02:33.790 --> 02:37.180
+the browser, we are creating a slightly different copy of Axios.
+
+02:37.450 --> 02:42.880
+So every single time we fetch data, we need to first run this build client function.
+
+02:43.180 --> 02:47.740
+In other words, for every get initial props, we need to somehow get the current client.
+
+02:48.860 --> 02:54.670
+Directly connected either to Ingress and Gen X or to well, just use the base URL.
+
+02:54.680 --> 02:59.660
+In other words, just use the current domain, make a request back off to our endpoint, our back end
+
+02:59.660 --> 03:00.350
+servers.
+
+03:02.250 --> 03:07.200
+Now, as we just saw inside the index file, we had the build client imports team at the very top and
+
+03:07.200 --> 03:11.130
+then we were just a moment ago creating a client inside of get initial props.
+
+03:11.490 --> 03:15.990
+That would be really tedious to repeat for every single page component inside of our app.
+
+03:16.290 --> 03:22.110
+In other words, it'd be just a little bit of a pain every single time to have to import, build client
+
+03:22.200 --> 03:24.930
+and then build up client inside a get initial props.
+
+03:25.350 --> 03:26.640
+So we're going to fix that up here.
+
+03:26.640 --> 03:30.690
+We're going to make it a little bit easier to fetch some data very easily without having to first import
+
+03:30.690 --> 03:32.160
+that build client helper.
+
+03:33.320 --> 03:34.850
+Back inside of our app component.
+
+03:35.150 --> 03:38.510
+You might recall that we are building a client up inside of here.
+
+03:39.600 --> 03:45.030
+And you might also recall, as we discussed in the last video, that we are invoking the child components
+
+03:45.030 --> 03:47.160
+get initial props function right here.
+
+03:47.730 --> 03:55.200
+So how about we say that whenever we are about to call the child's get initial props function, let's
+
+03:55.200 --> 04:01.740
+just take the client that we have already built and provide it as a second argument to get initial props.
+
+04:02.570 --> 04:04.820
+So for the child components get initial props function.
+
+04:04.820 --> 04:09.680
+I'm going to add in the client, which we already built up right there as a second argument.
+
+04:11.750 --> 04:16.880
+I'm also going to take the current user that we fetch from right here, and I'm going to provide that
+
+04:16.880 --> 04:19.280
+as a third argument to get initial props.
+
+04:19.370 --> 04:24.500
+This is just in case we ever decide that to fetch some data tied to a user, we have to understand maybe
+
+04:24.500 --> 04:28.160
+who the user's ID is or what the user's ID is or something like that.
+
+04:28.400 --> 04:34.220
+So as the third argument to get initial props, I will provide data dot current user.
+
+04:36.530 --> 04:37.880
+Now the reason that we are.
+
+04:38.770 --> 04:43.120
+Referring to data current user right here is remember whenever we fetch the current user using this
+
+04:43.120 --> 04:47.890
+endpoint, that gives us back an object that has the current user property in it and then that refers
+
+04:47.890 --> 04:48.820
+to the current user.
+
+04:49.330 --> 04:52.180
+That's why we are referring to just current user right here.
+
+04:53.540 --> 04:53.650
+Okay.
+
+04:53.690 --> 04:54.590
+So let's save that.
+
+04:54.740 --> 04:57.040
+And now back inside of our index file.
+
+04:57.050 --> 05:01.340
+If we need to get access to our client, we can receive it as the second argument.
+
+05:01.580 --> 05:06.380
+And if we need to get access to the current user just so we can use their ID to fetch some data or something
+
+05:06.380 --> 05:09.170
+like that, we can receive it as the third argument.
+
+05:09.980 --> 05:10.720
+All right, so that's it.
+
+05:10.730 --> 05:13.670
+We're not going to do anything with this just right now inside this video.
+
+05:13.670 --> 05:18.050
+But I hope that you can understand that now it's going to be really easy for us to fetch some data using
+
+05:18.050 --> 05:23.330
+this client argument right here or current user without having to make a follow up request to fetch
+
+05:23.330 --> 05:28.460
+the current user and without having to import that build client function to build up a client, which
+
+05:28.460 --> 05:29.990
+we've already done once before.
+
+05:30.660 --> 05:30.950
+Okay.
+
+05:30.960 --> 05:32.060
+So that is it.
+
+05:32.070 --> 05:35.820
+Those are two improvements that I really just wanted to make on this next application.
+
+05:35.850 --> 05:40.620
+Now that those two improvements are all done, we're going to take one more pause and then start working
+
+05:40.620 --> 05:42.690
+on our new routes in the next video.

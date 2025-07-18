@@ -1,0 +1,358 @@
+WEBVTT
+
+00:01.040 --> 00:01.550
+In this video.
+
+00:01.550 --> 00:03.020
+We're going to move on to our next request.
+
+00:03.050 --> 00:06.440
+HANDLER We're going to work on this kind of show route right here.
+
+00:06.770 --> 00:12.530
+So this route, we're going to make a request to API tickets and then the ID of a very particular ticket
+
+00:12.530 --> 00:14.330
+that has already been saved to our database.
+
+00:14.600 --> 00:17.840
+We should then attempt to find that ticket inside the database and return it.
+
+00:17.870 --> 00:21.890
+Naturally, if we cannot find that ticket, we'll respond with a 404 error.
+
+00:22.250 --> 00:25.450
+We're going to once again do a kind of test driven development approach.
+
+00:25.460 --> 00:29.450
+We're not really following test driven development here, like in the strictest sense, we should really
+
+00:29.450 --> 00:32.900
+call it a test first approach just to be a little bit more precise.
+
+00:33.410 --> 00:34.940
+So I'm going to find my routes directory.
+
+00:34.940 --> 00:37.040
+I'll find the test folder inside there.
+
+00:37.070 --> 00:40.710
+And inside that I'll make a new file called Show Test TS.
+
+00:42.020 --> 00:48.500
+Well then import everything needed to actually test out this new route handler so I will import request
+
+00:48.500 --> 00:50.570
+from super test.
+
+00:51.850 --> 00:56.080
+And my express app from up one directory up another app.
+
+00:58.370 --> 00:58.700
+All right.
+
+00:58.700 --> 01:02.660
+I'm then going to write out two different test cases because this thing is going to be pretty straightforward
+
+01:02.660 --> 01:03.590
+and functionality.
+
+01:03.800 --> 01:07.580
+I'm going to first check and make sure that if we do not find the ticket that we're looking for, we
+
+01:07.580 --> 01:09.440
+return a status of 404.
+
+01:09.590 --> 01:12.030
+So let's say it returns a four of four.
+
+01:12.080 --> 01:14.150
+If the ticket is not found.
+
+01:16.950 --> 01:18.210
+That's case number one.
+
+01:18.330 --> 01:19.560
+Then case number two.
+
+01:19.590 --> 01:23.640
+It returns the ticket if the ticket is found.
+
+01:27.380 --> 01:31.910
+So we can now start to write out the implementation for both these and the first one I'll do and await
+
+01:31.910 --> 01:34.250
+request to the app.
+
+01:35.540 --> 01:41.600
+We want to do a get request to API tickets and then remember, whatever we put right here is the idea
+
+01:41.600 --> 01:43.090
+of the ticket that we're trying to look up.
+
+01:43.100 --> 01:47.210
+So in this case, I want to make sure that I'm making a request to a ticket that definitely does not
+
+01:47.210 --> 01:47.900
+exist.
+
+01:47.900 --> 01:51.020
+So I'm going to put in some really fake looking ID like so.
+
+01:54.970 --> 01:55.750
+After that.
+
+01:56.200 --> 01:58.420
+Let's go ahead and send the request off.
+
+01:59.140 --> 02:05.230
+And then I will expect to get a four of four status code in response.
+
+02:05.770 --> 02:10.060
+Now, as a quick reminder, if we run this test right now, it is going to pass, but it's going to
+
+02:10.060 --> 02:14.470
+pass because we do not even have a route handler defined for this route just yet.
+
+02:14.980 --> 02:16.780
+So right now, it's erroneous pass.
+
+02:16.810 --> 02:20.800
+We're going to want to make sure that after we actually define the request handler, it does truly give
+
+02:20.800 --> 02:22.090
+us back a 404.
+
+02:23.470 --> 02:25.810
+Let's also take care of the second test just right now.
+
+02:25.810 --> 02:26.920
+Just get it all done with.
+
+02:27.190 --> 02:29.890
+There's two ways that we can really write this test out.
+
+02:30.070 --> 02:34.720
+In order to test this thing, we need to make sure that there is some ticket inside the database before
+
+02:34.720 --> 02:35.770
+we attempt to fetch it.
+
+02:35.980 --> 02:39.610
+And really, there's two ways to make sure there is a ticket inside the database.
+
+02:39.610 --> 02:45.280
+We can either attempt to access the ticket model directly from inside this test and do something like
+
+02:45.280 --> 02:49.690
+ticket build with blah, blah, blah, some data and then tickets save.
+
+02:49.930 --> 02:51.200
+That's method number one.
+
+02:51.220 --> 02:57.490
+The other thing we could possibly do is make a request to build the ticket on the fly so we can make
+
+02:57.490 --> 03:01.360
+a request to create the ticket and then attempt to fetch it right after.
+
+03:01.540 --> 03:06.820
+I personally like option number two because it really simulates us using our API directly.
+
+03:07.420 --> 03:10.690
+We can use option number one right here with that a doubt, totally valid.
+
+03:10.690 --> 03:14.980
+And some people will tell you that this is the better way to do it because in option number two, we
+
+03:14.980 --> 03:20.560
+are technically kind of we kind of have a test here that is testing some other code that we're not really
+
+03:20.560 --> 03:22.360
+directly trying to test.
+
+03:22.360 --> 03:24.970
+So some people will tell you option number two is not great.
+
+03:25.210 --> 03:28.390
+However, I think it's just kind of represents reality a little bit more.
+
+03:28.390 --> 03:30.220
+So I'm going to go with option number two.
+
+03:30.890 --> 03:35.030
+So in other words, we're going to make a request over to that same route handler we just put together
+
+03:35.030 --> 03:35.830
+a moment ago.
+
+03:35.840 --> 03:39.320
+So I will do a wait request to EP.
+
+03:40.430 --> 03:43.310
+I'm going to do a post to API tickets.
+
+03:43.790 --> 03:48.470
+I'm going to make sure I set the cookie on there because we have to be authenticated to make the request.
+
+03:53.280 --> 03:56.640
+I'll then send along some valid title.
+
+03:57.060 --> 04:02.010
+And once again, let's define the title and price ahead of time just to make sure we can do an actual
+
+04:02.010 --> 04:05.040
+assertion and make sure that the ticket we find has the correct data on it.
+
+04:05.040 --> 04:08.580
+So up here I'll do a title of concert.
+
+04:08.910 --> 04:11.340
+And how about a price of 20?
+
+04:12.000 --> 04:15.240
+And I'll send along that title and that price.
+
+04:16.080 --> 04:19.670
+So after creating that, I will still expect to get back at 201 again.
+
+04:19.680 --> 04:25.500
+We kind of don't really want to be testing this other root handler inside of the different show test
+
+04:25.500 --> 04:25.950
+file.
+
+04:25.950 --> 04:29.910
+But nonetheless, I'm just going to make sure that the creation is working as expected.
+
+04:31.280 --> 04:33.350
+Now that should give us back a response.
+
+04:33.350 --> 04:35.060
+So I'm going to capture that response.
+
+04:35.060 --> 04:39.470
+And remember, in the response, we are sending back the entire ticket after it is created.
+
+04:39.560 --> 04:43.940
+So inside that response is the ID of the ticket that we just made.
+
+04:43.940 --> 04:49.040
+So we can use that ID to now do a follow up request and make sure that we can actually catch the ticket
+
+04:49.040 --> 04:50.540
+that we were just asking for.
+
+04:51.780 --> 04:53.730
+So I'm going to make a second request here.
+
+04:53.760 --> 04:55.830
+I'm going to call the response ticket response.
+
+04:57.780 --> 04:59.010
+I'm going to make the request.
+
+04:59.040 --> 05:00.150
+It's going to be a gift.
+
+05:00.150 --> 05:04.920
+And I'm going to make this request with some tactics because I want to be able to take the IDD out of
+
+05:04.920 --> 05:07.050
+that response and put it into this URL.
+
+05:09.270 --> 05:15.540
+So there's my interpolation right there and I'm going to take a look at response dot body ID.
+
+05:15.570 --> 05:19.530
+So that should be the ID of the ticket that was just made during the first request.
+
+05:21.060 --> 05:22.260
+I'll then send this off.
+
+05:22.830 --> 05:24.360
+I'm going to expect.
+
+05:25.460 --> 05:26.780
+To get a 200.
+
+05:26.780 --> 05:31.040
+And I'm specifically putting that in there to make sure that we do not get a 404.
+
+05:32.310 --> 05:34.230
+So now we can inspect the response.
+
+05:35.380 --> 05:39.760
+Take the data out of there once again and make sure that it has the correct title and the correct price
+
+05:40.360 --> 05:43.510
+so we can put in and expect to get response.
+
+05:43.840 --> 05:46.210
+Dot Body Dot Title.
+
+05:47.770 --> 05:50.240
+And I can expect that to equal title.
+
+05:52.380 --> 05:54.900
+And ticket response body price.
+
+05:56.600 --> 05:58.220
+To equal rights.
+
+05:59.110 --> 05:59.740
+Here we go.
+
+06:01.780 --> 06:06.040
+So now once again, I know writing the test out ahead of time is just a little bit annoying, but look
+
+06:06.040 --> 06:06.310
+at this.
+
+06:06.310 --> 06:11.380
+We've got something to make sure that our route handler works without having even done any work on the
+
+06:11.380 --> 06:12.610
+route handler itself.
+
+06:12.610 --> 06:16.600
+So once again, I don't have to worry about postman, I don't have to worry about opening my browser
+
+06:16.600 --> 06:17.560
+or anything like that.
+
+06:17.560 --> 06:20.380
+I can just develop my API in isolation.
+
+06:21.480 --> 06:22.750
+Let's go back over to our terminal.
+
+06:22.770 --> 06:24.600
+Let's make sure that these tests are running.
+
+06:25.050 --> 06:27.730
+It looks like returns the ticket if the ticket is found.
+
+06:27.750 --> 06:30.480
+We expected a 200, but we got a 404.
+
+06:30.510 --> 06:32.700
+Totally makes sense because we've not even defined that route.
+
+06:32.700 --> 06:38.820
+HANDLER And again, the other test is passing erroneously because we have not defined that route handler
+
+06:38.820 --> 06:39.420
+at all.
+
+06:39.840 --> 06:41.430
+And it's being captured right now.
+
+06:42.190 --> 06:46.840
+Buy that not found middleware that we wired up back inside the app file.
+
+06:47.620 --> 06:48.760
+So there's our test file.
+
+06:48.790 --> 06:52.090
+Quick pause right here and we'll build out our implementation in just a moment.

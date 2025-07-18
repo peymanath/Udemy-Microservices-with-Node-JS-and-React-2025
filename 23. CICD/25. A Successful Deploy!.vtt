@@ -1,0 +1,334 @@
+WEBVTT
+
+00:01.860 --> 00:02.160
+All right.
+
+00:02.160 --> 00:04.360
+Time to test out the final test here.
+
+00:04.380 --> 00:09.180
+We're going to make sure that we can make a change to all five of the services besides off.
+
+00:09.420 --> 00:14.820
+And if we commit those changes, make a PR merge in the PR, we should see all five of these additional
+
+00:14.820 --> 00:17.010
+services be updated inside of our cluster.
+
+00:17.400 --> 00:22.770
+So we're going to essentially go through client expiration orders, payments and tickets, and we're
+
+00:22.770 --> 00:25.470
+going to make one small, arbitrary change to each of them.
+
+00:25.900 --> 00:27.510
+Let's start off first with client.
+
+00:27.870 --> 00:29.110
+How about inside of client?
+
+00:29.130 --> 00:32.610
+Let's change all about on pages.
+
+00:32.760 --> 00:33.990
+Index JS.
+
+00:36.890 --> 00:38.720
+How about on the h one right here?
+
+00:39.140 --> 00:41.000
+Let's just change that to an h two.
+
+00:42.220 --> 00:43.990
+So just a small, arbitrary change.
+
+00:45.640 --> 00:45.880
+Yes.
+
+00:45.880 --> 00:47.210
+That's one change down.
+
+00:47.230 --> 00:49.120
+Next, I'm going to go to expiration.
+
+00:49.390 --> 00:53.770
+Instead of expiration, I'm going to open up the index file very similar to the others.
+
+00:53.770 --> 00:55.660
+Let's add in a little console.log.
+
+00:57.430 --> 00:59.320
+At the very top of the start function.
+
+01:02.830 --> 01:04.900
+There's a change to our expiration service.
+
+01:05.850 --> 01:12.390
+Then inside of orders inside the index file allowed in another couple of dots to the starting message
+
+01:12.390 --> 01:13.740
+that we had already added in.
+
+01:17.840 --> 01:19.010
+Inside of payments.
+
+01:19.970 --> 01:23.390
+Let's open the indexed file very similar to the others.
+
+01:23.420 --> 01:25.040
+Let in a little starting.
+
+01:25.910 --> 01:27.170
+Console.log at the top.
+
+01:31.050 --> 01:35.410
+And then finally inside of tickets, open up our indexed file.
+
+01:35.430 --> 01:35.790
+Yep.
+
+01:35.790 --> 01:36.300
+You guessed it.
+
+01:36.300 --> 01:37.080
+Same thing.
+
+01:37.770 --> 01:39.120
+A little starting.
+
+01:40.020 --> 01:40.860
+Console.log.
+
+01:42.690 --> 01:42.990
+Okay.
+
+01:42.990 --> 01:46.420
+So we now have changes made to five different services.
+
+01:46.440 --> 01:50.040
+So if we now commit these, create the pull request, merge the pull request gets.
+
+01:50.070 --> 01:54.450
+GitHub should detect that something inside of each of these folders has changed and it should run the
+
+01:54.450 --> 01:56.100
+respective deployment files.
+
+01:56.910 --> 01:58.350
+So let's go back over to our terminal.
+
+01:58.860 --> 02:01.110
+We're going to change over to our def branch.
+
+02:03.190 --> 02:04.720
+We'll see all five those changes.
+
+02:04.720 --> 02:06.640
+Make sure you've got five changes right here.
+
+02:08.550 --> 02:11.400
+We will add all those, commit them.
+
+02:14.730 --> 02:16.680
+And then push to our debt branch once again.
+
+02:24.410 --> 02:25.820
+Then back over on GitHub.
+
+02:27.580 --> 02:28.780
+Almost the last time we have to do this.
+
+02:28.780 --> 02:29.320
+Don't worry.
+
+02:29.320 --> 02:32.320
+I know creating these pull requests gets kind of tiresome really quickly.
+
+02:32.410 --> 02:35.470
+We're going to create a new pull request for the Def branch once again.
+
+02:38.420 --> 02:43.250
+They'll select Dev and I'm going to try to merge Dev into master and I should see the commits that I
+
+02:43.250 --> 02:45.590
+just made or really the one commit.
+
+02:46.190 --> 02:51.020
+So I should have changes to client expiration orders, payments and tickets.
+
+02:52.490 --> 02:53.960
+We're going to create this polar request.
+
+02:57.700 --> 02:58.600
+I'll create it.
+
+03:01.500 --> 03:04.230
+Now I can allow all these tests to run.
+
+03:04.500 --> 03:05.850
+So I'm just going to hold for a second.
+
+03:05.850 --> 03:07.560
+Let these tests run and finish up.
+
+03:10.830 --> 03:14.040
+My tests are now complete, so I'm going to merge the polar request.
+
+03:18.230 --> 03:18.620
+All right.
+
+03:18.620 --> 03:22.040
+So now, once again, we can go back up to the top, take a look at actions.
+
+03:23.240 --> 03:28.460
+Now we should be able to take a look at our workflows for deploy orders, payments, tickets, expiration
+
+03:28.460 --> 03:31.430
+and client and see that all them have a running job.
+
+03:31.460 --> 03:33.830
+Or we can just look at this main display right here as well.
+
+03:34.190 --> 03:39.440
+So it looks like I'm running a job from client exploration tickets, payments and orders.
+
+03:40.010 --> 03:42.290
+Now we can wait for 30 seconds or so.
+
+03:42.290 --> 03:45.190
+Once again, we should see all these jobs go green.
+
+03:45.200 --> 03:49.490
+If any of them fail, that means that there is definitely some configuration issue and you'll want to
+
+03:49.490 --> 03:50.960
+take a look at the message.
+
+03:51.200 --> 03:52.250
+You can click on the job.
+
+03:52.250 --> 03:57.200
+It will give you some information on why the job failed, and you'll use that as the source to try to
+
+03:57.200 --> 03:59.240
+debug this thing and figure out what is going on.
+
+03:59.870 --> 04:04.670
+Now, if you tried to debug a failing job and you just don't have any idea what's going on and you need
+
+04:04.670 --> 04:09.020
+help, I'd be happy to help you, but you got to link me to your repository.
+
+04:09.020 --> 04:10.280
+I've got to see your code.
+
+04:10.640 --> 04:14.600
+Make sure that your repository is public and provide me a link.
+
+04:14.600 --> 04:18.770
+You can email it to me or post something in the queue and I'll take a look at these failing jobs and
+
+04:18.770 --> 04:20.960
+hopefully be able to help you figure out what is going on.
+
+04:24.830 --> 04:28.730
+Eventually all these jobs should go green, which means that hopefully we have successfully built the
+
+04:28.730 --> 04:31.640
+images and deployed them off to our Kubernetes cluster.
+
+04:32.000 --> 04:33.660
+So I'm then going to go back over to my terminal.
+
+04:33.680 --> 04:37.970
+We're going to do another git pods and just make sure that we've got some latest versions of all these
+
+04:37.970 --> 04:38.750
+images running.
+
+04:41.470 --> 04:42.040
+All right.
+
+04:42.310 --> 04:44.650
+It looks like I have an air or two right here.
+
+04:44.680 --> 04:47.650
+Chances are that pod is still in the process of being deployed.
+
+04:47.680 --> 04:49.870
+It looks like everything else is successfully running.
+
+04:50.440 --> 04:55.630
+Now, if you have any pods that are persistently airing out, so do give it a minute or two to kind
+
+04:55.630 --> 04:57.580
+of resolve and launch all these new pods.
+
+04:57.580 --> 05:01.750
+But if after a couple of minutes it looks like everything is still crashing, I would encourage you
+
+05:01.750 --> 05:03.250
+to take the name of the pod.
+
+05:03.310 --> 05:09.760
+Let's say the expiration service one is crashing and do a little describe pod and then put in the name
+
+05:09.760 --> 05:12.080
+of the pod when you run that command.
+
+05:12.100 --> 05:15.370
+It'll then give you hopefully some reasons on why it is crashing.
+
+05:15.490 --> 05:17.440
+Specifically in the event section down here.
+
+05:17.890 --> 05:24.250
+The other thing you can do is pull logs off of a crashing pod so you can do a little logs and then put
+
+05:24.250 --> 05:25.810
+the name of the pod in.
+
+05:27.540 --> 05:28.740
+So something like.
+
+05:30.860 --> 05:31.790
+Take the name.
+
+05:34.040 --> 05:34.850
+But in the name.
+
+05:34.850 --> 05:39.170
+And then you will hopefully see some information right here to help you understand exactly what is crashing.
+
+05:40.060 --> 05:40.360
+All right.
+
+05:40.360 --> 05:44.290
+So at this point, hopefully, again, after a couple of minutes, you eventually see all these different
+
+05:44.290 --> 05:45.730
+prods running successfully.
+
+05:45.790 --> 05:48.450
+That means that our application is up and running.
+
+05:48.460 --> 05:49.180
+Yay!
+
+05:49.210 --> 05:50.530
+That's exactly what we want.
+
+05:51.250 --> 05:53.170
+Now, we cannot test this out just yet.
+
+05:53.170 --> 06:00.130
+As a reminder, we still do need to get a domain name and register it or assign it to our Ingress Engine
+
+06:00.130 --> 06:00.940
+X service.
+
+06:00.940 --> 06:05.200
+So we still have a little bit of setup to go through here, but it looks like our cluster is more or
+
+06:05.200 --> 06:06.130
+less ready to go.

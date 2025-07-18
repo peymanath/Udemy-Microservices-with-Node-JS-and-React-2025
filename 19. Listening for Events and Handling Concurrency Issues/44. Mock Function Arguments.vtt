@@ -1,0 +1,481 @@
+WEBVTT
+
+00:01.090 --> 00:04.720
+We are now publishing an event from inside of our listener.
+
+00:04.810 --> 00:08.860
+And so I think it might be really nice to add in some kind of test just to make sure that this thing
+
+00:08.860 --> 00:10.300
+is working as expected.
+
+00:10.840 --> 00:12.730
+So I'm going to go and find my listener test file.
+
+00:12.760 --> 00:13.690
+Here it is right here.
+
+00:14.470 --> 00:15.250
+At the very bottom.
+
+00:15.250 --> 00:22.120
+I'm going to add in another test and I'll give it a description of something like it publishes a ticket
+
+00:22.120 --> 00:23.340
+updated event.
+
+00:26.460 --> 00:29.910
+So then inside of here, as you'd guessed, once again, we probably want to make sure we go through
+
+00:29.910 --> 00:34.740
+all that setup stuff, probably called the message or the on message function once again.
+
+00:34.740 --> 00:39.240
+And then we'll figure out how to actually test and make sure that we publish an event from that point
+
+00:39.240 --> 00:39.660
+on.
+
+00:40.230 --> 00:45.960
+So first, we'll get our listener ticket data message from a weight set up.
+
+00:47.350 --> 00:50.170
+Well then call our listener on message function.
+
+00:52.390 --> 00:54.840
+And now we need to write out some kind of expectation right here.
+
+00:54.850 --> 00:57.190
+So what kind of expectation are we going to write?
+
+00:58.210 --> 01:00.790
+Well, this is where life gets just a little bit complicated.
+
+01:00.790 --> 01:06.130
+And we really need to think about how all the different client properties, all this stuff is kind of
+
+01:06.130 --> 01:08.050
+floating around inside of our application right now.
+
+01:08.620 --> 01:10.090
+So inside of our setup function.
+
+01:12.060 --> 01:17.670
+We had created an instance of our order, created listener, and we passed in Nat's wrapper client.
+
+01:17.880 --> 01:20.760
+Nat's wrapper client is a mock member.
+
+01:20.850 --> 01:25.410
+So inside of our root project directory for tickets or I should say inside the SRC folder, we've got
+
+01:25.410 --> 01:26.580
+the box folder.
+
+01:26.940 --> 01:32.280
+So this Nat's wrapper that we were referring to right here and specifically the client property is equal
+
+01:32.280 --> 01:35.400
+to this Nat's wrapper thing right here.
+
+01:36.290 --> 01:41.660
+So it's actually an object that has a single property of client and that has a single property of publish.
+
+01:42.550 --> 01:44.620
+That is a just mock function.
+
+01:46.320 --> 01:52.860
+So because this is a just mock function and we are passing this client through to our publisher, we
+
+01:52.860 --> 01:57.540
+should be able to take a look at this mock function or specifically the published function on client
+
+01:57.540 --> 02:00.390
+right there and make sure that it gets invoked.
+
+02:00.750 --> 02:06.570
+That's the real goal because remember, when we pass off the client to the publisher internally, when
+
+02:06.570 --> 02:11.010
+you and I call publish that publish method right there, that internally that is a method you and I
+
+02:11.010 --> 02:15.900
+defined and internally inside of publish that thing is going to call the client's publish function.
+
+02:16.780 --> 02:21.520
+So to make sure that we eventually publish an event, we can make sure that that's not wrapper.
+
+02:21.700 --> 02:25.570
+Client mean that's wrapper, client publish gets invoked.
+
+02:25.570 --> 02:28.840
+And we can also try to take a look at the different arguments that are provided to it and make sure
+
+02:28.840 --> 02:31.630
+that it gets called with some appropriate looking event.
+
+02:32.170 --> 02:36.040
+Let's just write out the expectation and I think you'll understand where this is going really quickly.
+
+02:37.030 --> 02:41.320
+So back down at our test we're going to put in expect and that's repr.
+
+02:41.560 --> 02:45.460
+That client publish to have been called.
+
+02:47.250 --> 02:49.830
+Well, then save this and go back over to my running test suite.
+
+02:50.280 --> 02:53.820
+And when you flip back over, you might see a couple of type errors inside of here.
+
+02:54.090 --> 02:57.570
+There's typically something that says property client is private, blah, blah, blah.
+
+02:57.720 --> 03:03.030
+So it turns out that just also does not always detect changes that are made to our NPM modules or our
+
+03:03.030 --> 03:03.900
+dependencies.
+
+03:04.020 --> 03:07.380
+So to get this stuff to go away, all we have to do is restart our test suite.
+
+03:07.920 --> 03:09.240
+So we'll do a control c.
+
+03:10.890 --> 03:11.640
+Start it back up.
+
+03:14.370 --> 03:18.510
+And then after this runs one time, I am going to filter down to only running that listener test file
+
+03:18.510 --> 03:19.230
+once again.
+
+03:20.110 --> 03:24.520
+So to set up the filter, I'll type in a p then listener.
+
+03:26.660 --> 03:27.530
+And there we go.
+
+03:27.530 --> 03:29.000
+Just the listener test file.
+
+03:30.150 --> 03:31.710
+And it looks like everything worked.
+
+03:35.230 --> 03:35.710
+Okay.
+
+03:35.950 --> 03:40.940
+To make sure this really is working as usual, I'm going to comment out the call to on message.
+
+03:40.960 --> 03:42.820
+I'll save that back over.
+
+03:42.820 --> 03:46.330
+And now we'll see that the published function was called at least one time.
+
+03:47.400 --> 03:52.410
+Even though we had we expect it to be called one time, but it was not called at all.
+
+03:52.470 --> 03:55.050
+So that means that our test is, in fact, working as expected.
+
+03:56.010 --> 03:56.610
+Now if we want to.
+
+03:56.610 --> 04:00.330
+We could also try to take a look at the arguments that are provided to the public function and make
+
+04:00.330 --> 04:05.250
+sure that they actually make sense, make sure that we provide some kind of correct order ID and whatnot.
+
+04:05.610 --> 04:07.200
+So let me show you how we would do that in this part.
+
+04:07.230 --> 04:10.920
+Totally optional, but I just thought you might be kind of curious about how to go deeper into these
+
+04:10.920 --> 04:12.360
+mock functions from just.
+
+04:13.020 --> 04:19.890
+So I can do a console log of Nat's wrapper client dot publish dot mark.
+
+04:19.890 --> 04:24.750
+I think it's dot calls and we are going to get a error from TypeScript right here because TypeScript
+
+04:24.750 --> 04:27.180
+thinks that publish is just a normal function.
+
+04:27.540 --> 04:31.080
+But you and I know very well that this is actually a just mock function.
+
+04:31.080 --> 04:35.340
+So this is another location where we're going to tell TypeScript, hey, don't sweat it.
+
+04:35.340 --> 04:38.490
+We have overwritten the definition of this Polish function.
+
+04:38.490 --> 04:40.140
+It's actually a mock function.
+
+04:40.140 --> 04:43.020
+So TypeScript, just go away for a little bit.
+
+04:45.140 --> 04:45.890
+I'll save that.
+
+04:46.820 --> 04:50.480
+And now we'll see the arguments that were provided to that Polish function.
+
+04:50.870 --> 04:52.190
+We have an array.
+
+04:52.310 --> 04:57.020
+This outer array represents all the different calls that have been passed to that Polish function or
+
+04:57.020 --> 04:58.520
+all the invocations of it.
+
+04:58.520 --> 05:01.880
+And then the inner array is a list of arguments that were actually provided.
+
+05:02.270 --> 05:04.670
+So inside of here you'll see that we get the name of the event.
+
+05:04.670 --> 05:05.390
+So that's you and I.
+
+05:05.420 --> 05:08.090
+We are passing that name through as the second argument.
+
+05:08.090 --> 05:10.880
+We've then got our JSON version of the event.
+
+05:11.270 --> 05:12.980
+So notice that it's a really big string.
+
+05:12.980 --> 05:14.330
+So it's JSON again.
+
+05:14.780 --> 05:17.420
+And then the last argument is our callback function.
+
+05:18.660 --> 05:20.550
+So to see why we're seeing all that stuff.
+
+05:20.550 --> 05:25.560
+Just as a very quick reminder, if we go back over to our common module and take a look at our base
+
+05:25.560 --> 05:26.310
+publisher.
+
+05:27.150 --> 05:32.520
+So internally inside a publisher when we call publish recall that you and I are calling the client's
+
+05:32.520 --> 05:33.240
+published function.
+
+05:33.240 --> 05:37.530
+And for you and I in the test environment, this is a mock function we provide in the subject, the
+
+05:37.530 --> 05:40.410
+JSON version of all of our data and then the callback function.
+
+05:40.740 --> 05:43.290
+That is what we are seeing inside that console log right now.
+
+05:44.990 --> 05:48.920
+So if you really wanted to make sure that this event that we are publishing was being published with
+
+05:48.920 --> 05:54.470
+the correct data, like I said, we could take a look at this, our inner array, maybe make sure it
+
+05:54.470 --> 05:55.970
+has the correct type of event.
+
+05:56.330 --> 05:57.500
+Probably not super relevant.
+
+05:57.530 --> 06:02.720
+What I would probably do personally is parse this string from JSON and just make sure that it's got
+
+06:02.720 --> 06:04.450
+the correct ticket ID right there.
+
+06:04.460 --> 06:07.310
+Maybe make sure that it has the correct order ID as well.
+
+06:09.020 --> 06:15.230
+So to access that JSON string, we would come back to Nat's wrapper client publish box calls, and then
+
+06:15.230 --> 06:18.000
+we would select the first element out of that big outer array.
+
+06:18.020 --> 06:23.150
+So this is the first invocation of the mock function, and we'll take the second argument out of there.
+
+06:23.990 --> 06:28.250
+Let's just console.log this run the test once again and make sure that we get that JSON string out.
+
+06:28.910 --> 06:30.040
+I'll flip back over to my terminal.
+
+06:30.050 --> 06:31.640
+Sure enough, there's the JSON string.
+
+06:31.910 --> 06:35.060
+I know this looks like a normal object, but again it is JSON.
+
+06:35.060 --> 06:38.210
+So if you want to access the properties inside of here, we have to parse this.
+
+06:38.210 --> 06:41.000
+Then we can take a look at the order ID property or whatever else.
+
+06:42.860 --> 06:46.920
+So now we understand how to actually access something inside of this mock object.
+
+06:46.940 --> 06:51.860
+I want to show you some way that we can get rid of this ignore comment, some way that we can actually
+
+06:51.860 --> 06:55.220
+tell TypeScript to understand that this really is a mock function.
+
+06:55.250 --> 06:58.970
+The only reason I didn't mention how to do this earlier was just because understanding this mock calls
+
+06:58.970 --> 07:01.340
+property can be a little bit challenging in its own right.
+
+07:02.000 --> 07:07.160
+So to help TypeScript understand that this is a mocked function, I'm going to delete the comment.
+
+07:08.040 --> 07:09.930
+I'm going to delete the outer console log.
+
+07:11.880 --> 07:15.120
+I'll then put an opening parentheses at the start of the line.
+
+07:15.800 --> 07:19.880
+And then a closing parentheses right after the word publish.
+
+07:21.140 --> 07:26.690
+And then right after publish inside of the parentheses, I'm going to write out as just mock.
+
+07:27.440 --> 07:32.870
+That's going to tell TypeScript that this is a mock function and let's give it going to then give us
+
+07:32.870 --> 07:39.530
+access to all the different properties that a mock function has, such as well mock and the calls property
+
+07:39.530 --> 07:44.000
+on there and a lot of other properties related to mock functions.
+
+07:44.450 --> 07:48.440
+So again, this is how we can get TypeScript to play around nicely with mock functions.
+
+07:49.440 --> 07:49.740
+Okay.
+
+07:49.740 --> 07:51.660
+So this is going to give us our JSON string.
+
+07:51.660 --> 07:56.430
+So we now want to parse that string and then presumably pull off the order ID property and make sure
+
+07:56.430 --> 07:58.950
+that we emitted some event with the correct order ID.
+
+07:59.850 --> 08:03.810
+So I'm going to do a JSON parse and wrap that entire line.
+
+08:05.980 --> 08:10.630
+I'll then assign that to a variable that I will call ticket updated data.
+
+08:12.770 --> 08:17.010
+So now we're going to write out an expectation that's going to take a look at the order ID property
+
+08:17.010 --> 08:20.550
+on there and make sure that we gave the correct order ID.
+
+08:20.580 --> 08:23.730
+So now the real question is how do we get the real order ID?
+
+08:24.210 --> 08:29.640
+Remember inside of our setup function, we created that data object and the data object was meant to
+
+08:29.640 --> 08:32.490
+simulate an order created event.
+
+08:32.970 --> 08:37.110
+So the data objects ID property is the order ID.
+
+08:38.230 --> 08:40.570
+So we're going to compare the data objects ID.
+
+08:41.420 --> 08:42.320
+Against.
+
+08:43.500 --> 08:46.950
+The ticket updated data's order ID property.
+
+08:47.310 --> 08:54.930
+Let's just write out the expectation that we're going to do a expect data ID to equal ticket updated
+
+08:54.930 --> 08:55.620
+data.
+
+08:56.440 --> 08:57.760
+That order, I'd.
+
+08:58.510 --> 08:59.230
+And that's it.
+
+09:00.560 --> 09:01.640
+Let's now save this.
+
+09:02.870 --> 09:06.290
+Run our tests again and it looks like it's working as usual.
+
+09:06.290 --> 09:07.900
+I'll make it fail just once.
+
+09:07.910 --> 09:09.020
+So I'll save this.
+
+09:09.710 --> 09:10.040
+Yep.
+
+09:10.040 --> 09:13.220
+It fails, which means the test is probably working as we expect.
+
+09:14.980 --> 09:15.670
+So that's it.
+
+09:15.690 --> 09:22.710
+We are now reasonably assured that whenever we receive an order created event events, we then somehow
+
+09:22.710 --> 09:27.330
+update the relevant ticket and then publish an event describing the fact that the ticket was updated.
+
+09:27.900 --> 09:32.890
+And as I mentioned a little bit ago, what you see inside this file is a perfect example of how we cannot
+
+09:32.910 --> 09:38.580
+receive an event, listen for an event, receive it, process it, and then in the same turn or essentially
+
+09:38.580 --> 09:42.450
+that same kind of line of processing, also publish a event as well.
+
+09:43.390 --> 09:45.190
+So this is a pretty good example right here.
+
+09:45.900 --> 09:45.980
+Okay.
+
+09:46.010 --> 09:48.730
+Let's take a pause here and continue in just a minute.

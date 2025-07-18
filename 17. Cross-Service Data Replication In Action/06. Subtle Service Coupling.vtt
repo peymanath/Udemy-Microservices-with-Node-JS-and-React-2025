@@ -1,0 +1,349 @@
+WEBVTT
+
+00:01.970 --> 00:04.970
+We're going to start working on our different route handlers inside this video.
+
+00:05.000 --> 00:08.810
+The first route handler we're going to work on is the Create Order route.
+
+00:08.840 --> 00:12.530
+So we're going to make sure that a user can make a post request to create an order.
+
+00:13.260 --> 00:17.370
+Whenever a user makes this post request, they're going to include a ticket ID inside the body of the
+
+00:17.370 --> 00:20.810
+request, and that's going to be the ticket that the user is trying to purchase.
+
+00:22.000 --> 00:26.890
+Now we definitely are going to want to make sure that all the users who are authenticated are able to
+
+00:26.890 --> 00:27.580
+access this route.
+
+00:27.580 --> 00:32.740
+Handler So if you are not authenticated, if you are not signed in, you do not get to create an order.
+
+00:33.370 --> 00:37.270
+So with all that in mind, let's go back over to our new route handler file.
+
+00:37.300 --> 00:40.270
+We're going to start to put together some implementation for this route handler.
+
+00:42.290 --> 00:43.820
+Inside my order service.
+
+00:43.850 --> 00:47.240
+I'll find the roots directory and new dots inside their.
+
+00:48.190 --> 00:51.850
+Then at the very top, I'm going to import a couple of things that we are probably going to need inside
+
+00:51.850 --> 00:52.330
+of here.
+
+00:53.020 --> 00:58.150
+So I'm going to get the require auth middleware and the validate request.
+
+00:59.470 --> 01:02.020
+Middleware from our custom module.
+
+01:02.260 --> 01:03.820
+So for me, that is SG ticket.
+
+01:04.230 --> 01:07.810
+Coleman Remember, you have a different organization name right there.
+
+01:10.000 --> 01:15.400
+I'm also going to get the body function from Express Validator.
+
+01:16.060 --> 01:20.170
+So if right now we're going to make sure that a user is authenticated and we're going to make sure that
+
+01:20.170 --> 01:23.680
+they are passing in some ticket ID in the body of the request.
+
+01:25.160 --> 01:29.630
+So right after our route name right there, I'm going to put in require us to make sure that a user
+
+01:29.630 --> 01:30.590
+is authenticated.
+
+01:31.100 --> 01:35.540
+And then right after that, I'm going to put in an array and list out my different validators inside
+
+01:35.540 --> 01:36.050
+of here.
+
+01:37.570 --> 01:41.910
+So the only thing we really need to truly validate is that ticket ID property.
+
+01:42.800 --> 01:44.240
+So we might write in something.
+
+01:44.970 --> 01:46.320
+Like body.
+
+01:46.590 --> 01:51.360
+Take a look at the ticket ID property and let's just make sure that that thing is defined.
+
+01:51.360 --> 01:53.160
+So we might say not.
+
+01:54.890 --> 01:56.000
+Is empty.
+
+01:56.570 --> 02:00.560
+And then we could put a custom ear message on there of with message and say.
+
+02:01.460 --> 02:03.950
+Ticket ID must be provided.
+
+02:06.820 --> 02:11.500
+Now this right here definitely works and it definitely is a good validation step.
+
+02:11.500 --> 02:16.330
+But there's potentially one other step of validation we could potentially do inside of here.
+
+02:16.690 --> 02:22.390
+When a user passes in a ticket ID property, that is a reference to another ticket or some ticket inside
+
+02:22.390 --> 02:23.230
+of our system.
+
+02:23.650 --> 02:28.690
+And you and I know because the ticket IDs are stored or these tickets are stored inside of MongoDB,
+
+02:28.720 --> 02:34.090
+that this ticket ID property right here should have the structure of an mongo ID.
+
+02:34.090 --> 02:36.130
+So in other words, it should be a string of characters.
+
+02:36.130 --> 02:39.250
+That's what is it like 24 characters, 12 or 24?
+
+02:39.250 --> 02:40.390
+I forget off the top of my head.
+
+02:40.390 --> 02:46.810
+Essentially it should look like a MongoDB ID, so an ID of something like 1 to 3.
+
+02:46.810 --> 02:52.720
+Well, that would pass this validation step, but that is not a valid ID, so we might want to add in
+
+02:52.720 --> 02:58.330
+a little check right here and make sure that whatever the user provided has the structure of a real
+
+02:58.330 --> 02:59.500
+mongo ID.
+
+03:00.210 --> 03:04.770
+Now, that would definitely be a valuable check here, but it's also just a little bit dangerous.
+
+03:04.770 --> 03:07.950
+And the reason for that is that we would now have one service.
+
+03:08.840 --> 03:14.990
+Our order service that is making a assumption or an assumption about the database that is used by the
+
+03:14.990 --> 03:16.700
+tickets service over here.
+
+03:17.060 --> 03:20.660
+So there is a little bit of coupling that we're doing between these two services.
+
+03:20.660 --> 03:26.840
+If we start to say, Oh yeah, you must be providing me specifically a MongoDB ID at some point in time,
+
+03:26.870 --> 03:31.130
+the future we might decide to change out the database used by the ticket service to some other kind
+
+03:31.130 --> 03:31.990
+of database.
+
+03:32.000 --> 03:35.210
+And when we do that well, we might not be using MongoDB anymore.
+
+03:35.210 --> 03:37.550
+We might have a totally different structure of ID.
+
+03:38.000 --> 03:39.170
+This is a very small thing.
+
+03:39.170 --> 03:43.400
+It's just something I want to throw out there that by just assuming that this ticket ID is going to
+
+03:43.400 --> 03:48.290
+have a particular structure, we are kind of coupling our application in a very subtle way with the
+
+03:48.290 --> 03:51.660
+ticket service, you might say, Stephen, what does that matter?
+
+03:51.680 --> 03:53.930
+We're using information from the ticket service.
+
+03:53.930 --> 03:58.100
+You're telling us that we're going to replicate tickets directly from the ticket service?
+
+03:58.310 --> 04:04.730
+Well, yes, we are replicating data over from that service, but well, what would happen if we just
+
+04:04.730 --> 04:09.140
+deleted the service entirely, but still issued these events right here?
+
+04:09.140 --> 04:12.500
+So maybe there is some other service not called ticket service.
+
+04:13.160 --> 04:15.680
+Our order service doesn't really care about who emits these events.
+
+04:15.680 --> 04:18.020
+It just cares that someone emits these events.
+
+04:18.230 --> 04:21.620
+So the ticket service really, truly can just totally disappear.
+
+04:21.620 --> 04:24.740
+It can change structure, it can do something dramatically different.
+
+04:24.740 --> 04:28.280
+And as long as these events are still being emitted, we are happy campers.
+
+04:29.600 --> 04:35.840
+But that is not quite true if we start to directly make assumptions about what the service looks like
+
+04:35.840 --> 04:40.940
+and that's what we are doing, if we add in a check to make sure that the incoming ID is actually a
+
+04:40.940 --> 04:41.840
+mongo ID.
+
+04:42.410 --> 04:44.060
+So I just want throw it out there once again.
+
+04:44.060 --> 04:45.210
+Just something to be aware of.
+
+04:45.230 --> 04:46.490
+Just something to think about.
+
+04:47.060 --> 04:51.620
+So we are going to add in the check to make sure that this does look like a real mongo ID, just so
+
+04:51.620 --> 04:52.930
+you know how this would be done.
+
+04:52.940 --> 04:57.440
+And if you don't like this idea of making assumption about how that service is put together, you can
+
+04:57.440 --> 04:58.100
+always remove it.
+
+04:58.100 --> 04:59.210
+So here's how we would do that.
+
+04:59.210 --> 05:03.680
+Check at the very top, we will import Mongoose from Mongoose.
+
+05:04.850 --> 05:10.100
+Then right after making sure that the ticket ID property is not empty, we will put on a custom validation
+
+05:10.100 --> 05:10.610
+step.
+
+05:11.470 --> 05:15.580
+We're going to say that we're going to expect to get some input to this little custom validation function
+
+05:15.580 --> 05:16.660
+that is going to be a string.
+
+05:17.080 --> 05:21.550
+And inside of here, we're going to return a boolean to decide whether or not whatever string the user
+
+05:21.550 --> 05:24.670
+just provided is actually a valid mongo ID.
+
+05:25.670 --> 05:32.420
+So we'll write out inside of your mongoose types with a capital T object ID with a lowercase d on their.
+
+05:33.720 --> 05:36.930
+Is valid and the we'll pass in that input.
+
+05:38.300 --> 05:42.500
+So this is just going to make sure that the user is providing a valid mongo ID.
+
+05:42.980 --> 05:45.020
+And again, if you don't want to do that, hey, just delete it.
+
+05:45.020 --> 05:46.040
+No problem whatsoever.
+
+05:47.550 --> 05:48.190
+That looks good.
+
+05:48.210 --> 05:50.440
+Now, after doing the validation step right there.
+
+05:50.460 --> 05:54.480
+We do need to make sure that if anything went wrong with the validation step, we reject the request
+
+05:54.480 --> 05:56.340
+right away and send back an error message.
+
+05:56.340 --> 05:57.660
+And that was the purpose of that.
+
+05:57.660 --> 05:59.160
+Validate request middleware.
+
+05:59.280 --> 06:01.830
+We will put in validate request.
+
+06:02.960 --> 06:03.680
+Right there.
+
+06:05.110 --> 06:05.890
+Looks good.
+
+06:06.190 --> 06:07.060
+Let's save that.
+
+06:08.310 --> 06:13.860
+At present, we do not have any way of testing this code unless we pull out postmen and start making
+
+06:13.860 --> 06:14.910
+requests directly.
+
+06:15.150 --> 06:19.170
+So we are going to write tests around these route handlers, very similar to how we did back on our
+
+06:19.170 --> 06:20.610
+test or ticketing service.
+
+06:20.850 --> 06:24.040
+But we're going to write out all the tests after we create each individual route.
+
+06:24.060 --> 06:29.010
+HANDLER So if you don't like the entire testing process, if you just don't care about tests, no problem.
+
+06:29.010 --> 06:32.940
+I'll give you the completed test code and you can always copy paste it over if you want to be able to
+
+06:32.940 --> 06:34.020
+run the test yourself.
+
+06:34.660 --> 06:36.790
+So let's keep working on this in the next video.
+
+06:37.210 --> 06:40.300
+Then once we are done with this fruit handler, we'll start to write out a couple of different tests
+
+06:40.300 --> 06:40.800
+around it.
+
+06:40.810 --> 06:41.960
+So I'll see you in just a minute.
+
+06:41.980 --> 06:43.180
+Let's finish this thing up.

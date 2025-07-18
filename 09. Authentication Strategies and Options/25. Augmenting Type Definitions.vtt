@@ -1,0 +1,403 @@
+WEBVTT
+
+00:01.210 --> 00:05.290
+In the last video, we tried to assign this current user property to the request object, and TypeScript
+
+00:05.290 --> 00:11.290
+is unhappy about that because TypeScript has a type definition file for express that defines exactly
+
+00:11.290 --> 00:12.490
+what a request is.
+
+00:12.490 --> 00:17.470
+And that type definition file says that a request does not have a property of current user.
+
+00:17.590 --> 00:21.640
+So we need to somehow augment the definition of what a request is.
+
+00:21.820 --> 00:23.170
+That's exactly what we're going to do.
+
+00:23.200 --> 00:28.720
+We're going to add in an additional property to the type definition of what a request is.
+
+00:29.080 --> 00:31.240
+So let me show you how we're going to do that.
+
+00:31.690 --> 00:34.590
+To get started, we're not going to worry about the current user stuff just yet.
+
+00:34.600 --> 00:37.150
+Instead, I want to go back up to the line right above it.
+
+00:37.720 --> 00:40.810
+Whenever we call verify, we are going to get back.
+
+00:40.810 --> 00:47.260
+If we mouse over payload either a string or an object, that's going to be whatever information is stored
+
+00:47.260 --> 00:48.790
+inside the JSON Web token.
+
+00:49.060 --> 00:53.920
+The first thing we're going to do is apply a more precise definition of exactly what we are getting
+
+00:53.920 --> 00:55.870
+back from this verify call.
+
+00:56.470 --> 01:00.490
+So remember, we are going to get back the payload we had stored inside of our JSON web token.
+
+01:00.490 --> 01:06.670
+And as we recall, inside that payload, we have an ID property that is a string and an email that is
+
+01:06.670 --> 01:07.330
+a string.
+
+01:07.810 --> 01:13.060
+So we're going to first create an interface that precisely describes exactly what payload is.
+
+01:13.060 --> 01:14.710
+So let's do that back up here.
+
+01:15.470 --> 01:19.730
+At the very top of the file, I'm going to add in a new interface of user payload.
+
+01:21.200 --> 01:25.580
+And I'm going to say that this has an ID that is a string and an email that is a string.
+
+01:27.570 --> 01:32.580
+And then going to use this interface and teletype script that what we get back out of this verify call
+
+01:32.580 --> 01:37.110
+is going to be equal to this interface or it's going to have the same structure as that interface.
+
+01:37.530 --> 01:44.280
+So to do so at the very end of the JWT Verify line, I'm going to write out as user payload.
+
+01:47.360 --> 01:48.860
+So now if I mouse over payload.
+
+01:48.890 --> 01:49.970
+TypeScript understands.
+
+01:49.970 --> 01:50.710
+Oh, och.
+
+01:50.750 --> 01:55.910
+Coming out of that verify call, we get back an object that will have an ID that is a string and an
+
+01:55.910 --> 01:57.140
+email that is a string.
+
+01:58.660 --> 02:03.820
+So now if we go down to where we have a current user, we still have that same error that says property
+
+02:03.820 --> 02:05.290
+current user doesn't exist on there.
+
+02:05.290 --> 02:09.700
+But now we have clarified or at least added in a little bit more information about what we are trying
+
+02:09.700 --> 02:11.020
+to assign to that property.
+
+02:11.020 --> 02:15.730
+If we mouse over payload, we have added in enough information for TypeScript to understand that we
+
+02:15.730 --> 02:20.290
+are trying to assign something of type user payload to recurrent user.
+
+02:21.340 --> 02:26.090
+So now we're going to add in or augment the definition of what a request to object is.
+
+02:26.110 --> 02:31.860
+We're going to tell TypeScript that it should have a current user property that can optionally be defined,
+
+02:31.870 --> 02:37.780
+and if we define it, it will be of type user payload because that's what we are trying to assign to
+
+02:37.780 --> 02:38.200
+it.
+
+02:38.770 --> 02:40.540
+Let me show you how we are going to do that.
+
+02:41.020 --> 02:42.520
+Once again, back up at the top.
+
+02:42.550 --> 02:45.490
+We're going to write out a little bit of mystery code up here.
+
+02:45.580 --> 02:48.100
+I say mystery because it's going to be a little bit strange.
+
+02:48.640 --> 02:51.280
+We will say declare global.
+
+02:52.050 --> 02:53.140
+Namespace.
+
+02:53.160 --> 02:54.150
+Express.
+
+02:55.000 --> 02:56.950
+Interface request.
+
+02:57.890 --> 03:00.690
+And then we will say current user with a question mark.
+
+03:00.710 --> 03:03.710
+Is of type user payload like so.
+
+03:05.080 --> 03:10.060
+So this is how we can reach into an existing type definition and make a modification to it.
+
+03:10.240 --> 03:12.670
+Notice that we did not have to extend.
+
+03:13.880 --> 03:15.800
+An existing interface or anything like that.
+
+03:15.800 --> 03:17.130
+We did not have to do that.
+
+03:17.150 --> 03:21.830
+If we ever want to modify an existing interface or add in some new properties to it, we just write
+
+03:21.830 --> 03:27.800
+out the same interface, same exact name, and then we add in whatever properties we want to augment
+
+03:27.800 --> 03:29.150
+the existing interface with.
+
+03:29.420 --> 03:34.790
+So in this case, we are telling TypeScript that inside of the Express project find the interface of
+
+03:34.790 --> 03:39.170
+request that was already defined inside there, but take that interface that was already created and
+
+03:39.170 --> 03:41.810
+we want to add in this additional property to it.
+
+03:42.170 --> 03:46.700
+So we want to have a property called current user that might be defined.
+
+03:46.700 --> 03:48.530
+So it may or may not be defined.
+
+03:48.530 --> 03:51.650
+And the reason it may or may not is because the user might not be logged in.
+
+03:51.680 --> 03:52.400
+Of course.
+
+03:52.670 --> 03:57.260
+But if we do define the current user property on the request object, we are going to set it to type
+
+03:57.260 --> 03:58.430
+user payload.
+
+03:59.170 --> 04:02.590
+So now if we go back down to the bottom, we'll see that the error has gone away.
+
+04:02.620 --> 04:08.230
+If I mouse over recurrent user, we see whenever we try to access current user, we're going to get
+
+04:08.230 --> 04:12.550
+back either user payload or undefined and that's it.
+
+04:14.970 --> 04:15.210
+Okay.
+
+04:15.210 --> 04:17.160
+So we've now got this middleware put together.
+
+04:17.190 --> 04:23.280
+Any time a user comes into a route with this current user middleware being applied to it, this thing
+
+04:23.280 --> 04:26.370
+is going to attempt to find whether or not the user is logged in.
+
+04:26.400 --> 04:30.120
+If they are not, we're just going to continue on, in which case current user will be undefined.
+
+04:30.420 --> 04:35.910
+But if they have a JSON web token, we will try to extract the payload and then set it on current user
+
+04:35.910 --> 04:39.840
+so it can be used by our other middleware or the actual request handler.
+
+04:40.660 --> 04:44.920
+So now to actually test this out, I'm going to save the file and go back over to our current user route
+
+04:44.920 --> 04:45.540
+handler.
+
+04:45.880 --> 04:48.280
+So remember, we have two different files called current user.
+
+04:48.280 --> 04:50.950
+I'm now inside of the root handler called current user.
+
+04:51.990 --> 04:56.580
+So we've essentially moved a lot of the logic that was inside of here over to that middleware.
+
+04:56.820 --> 04:58.200
+Let's import the middleware.
+
+04:58.200 --> 05:03.180
+We're going to wire it up to this root handler, and then we should be able to remove a lot of the logic
+
+05:03.180 --> 05:06.150
+inside of here and just rely upon the middleware instead.
+
+05:06.920 --> 05:08.810
+So at the very top, I'm going to import.
+
+05:10.320 --> 05:11.160
+Current user.
+
+05:11.840 --> 05:12.440
+From.
+
+05:13.830 --> 05:16.500
+Up one directory middleware current user.
+
+05:18.070 --> 05:22.120
+Then inside of my root handler right after that URL, I'll put in current user.
+
+05:22.120 --> 05:23.110
+So that's my middleware.
+
+05:25.300 --> 05:30.250
+So now inside the request handler itself, well, we are doing the check to see whether or not the user
+
+05:30.250 --> 05:32.560
+is logged in inside the middleware.
+
+05:32.560 --> 05:33.640
+So we don't really need that.
+
+05:33.910 --> 05:37.330
+We are doing the job to decode inside the middleware.
+
+05:37.330 --> 05:38.470
+So we don't really need that.
+
+05:38.680 --> 05:41.160
+We don't need pretty much any of that stuff that's inside there.
+
+05:41.170 --> 05:46.480
+All we really need is to take the information off that current user property on a request object.
+
+05:46.780 --> 05:51.700
+So we will just do a red dot sent of rec dot current user.
+
+05:52.700 --> 05:56.450
+Now remember, current user is going to be the actual JSON payload.
+
+05:56.840 --> 06:01.730
+In our previous implementation that we had just a moment ago, we actually, in the response had a nested
+
+06:01.730 --> 06:02.150
+object.
+
+06:02.150 --> 06:06.500
+So we sent back an object that said current user and it had a value of whatever the payload was.
+
+06:06.500 --> 06:10.400
+So we should probably just make sure that we keep that same kind of structure right there.
+
+06:10.850 --> 06:17.510
+So in other words, we're going to end up with an object in here of current user.
+
+06:18.360 --> 06:20.910
+And we'll say recurrent user.
+
+06:21.270 --> 06:23.370
+The other thing that we might want to be concerned about.
+
+06:24.100 --> 06:26.020
+In the version we had just a moment ago.
+
+06:26.020 --> 06:29.230
+If the user was not logged in, we sent back a current user of null.
+
+06:29.410 --> 06:32.860
+Whereas right now if the user is not logged in, this is going to be undefined.
+
+06:32.860 --> 06:37.360
+So we might want to put in recurrent user or null so we don't send back undefined.
+
+06:37.360 --> 06:39.010
+Instead we will send back null.
+
+06:40.100 --> 06:40.430
+Okay.
+
+06:40.430 --> 06:42.580
+So long story short, let's save that as is.
+
+06:42.590 --> 06:44.810
+We'll go back over to Postman and do a quick test.
+
+06:45.730 --> 06:46.600
+So back over here.
+
+06:46.600 --> 06:48.940
+I don't recall whether or not I'm logged in right now.
+
+06:48.940 --> 06:50.140
+I think I'm not logged in.
+
+06:50.140 --> 06:54.040
+So let's go ahead and send this off my get request to current user.
+
+06:55.770 --> 06:57.540
+Looks like I am not logged in.
+
+06:58.050 --> 07:03.270
+I'm going to go back over to my tab that allows me to sign in to the application, so I'll send that
+
+07:03.270 --> 07:03.780
+off.
+
+07:03.810 --> 07:09.000
+Now, in theory I am logged in, so if I go back over to their Get request tab, I'll send that again.
+
+07:09.000 --> 07:09.870
+And there we go.
+
+07:09.870 --> 07:11.700
+Exact same thing we had previously.
+
+07:12.150 --> 07:12.750
+Awesome.
+
+07:13.110 --> 07:17.880
+So now the benefit to this middleware is, of course, any time that we have a route handler that needs
+
+07:17.880 --> 07:21.330
+to know who the current user is, well, we'll just make use of this middleware.
+
+07:21.870 --> 07:27.210
+Now, of course, we did define this as a middleware inside of our AUTH project, but I had said previously
+
+07:27.210 --> 07:30.930
+that we are probably going to want to use this for other services inside of our project.
+
+07:30.930 --> 07:35.100
+So we probably are going to want to extract this middleware at some point in time or at least somehow
+
+07:35.100 --> 07:38.640
+figure out how to re-use it among other services that we create.
+
+07:38.640 --> 07:40.500
+But we will handle that in just a little bit.
+
+07:40.920 --> 07:42.660
+So for right now, let's take a quick break.
+
+07:42.660 --> 07:45.780
+We're going to come back to the next video and put together our other middleware.

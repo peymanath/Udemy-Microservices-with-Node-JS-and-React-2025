@@ -1,0 +1,160 @@
+WEBVTT
+
+00:01.100 --> 00:03.290
+All right, my friends, let's do this refactor.
+
+00:03.290 --> 00:07.700
+So we're going to create a new file called JS that is going to be responsible for creating the express
+
+00:07.700 --> 00:11.180
+app, wiring together all the middleware, root handlers and so on.
+
+00:11.360 --> 00:15.050
+We're then going to make sure we import that into indexed JS, which is where we're going to actually
+
+00:15.050 --> 00:20.180
+start up the app, along with all the other associated things that need a connection such as Mongoose
+
+00:20.180 --> 00:21.050
+and so on.
+
+00:21.560 --> 00:22.970
+So back inside, my editor.
+
+00:23.930 --> 00:25.820
+I'm going to find my CRC directory.
+
+00:26.600 --> 00:29.450
+And inside there, I'm going to make a new file.
+
+00:30.600 --> 00:33.870
+Called App JS or excuse me, not avg's app.
+
+00:34.220 --> 00:34.500
+Yes.
+
+00:34.710 --> 00:36.180
+We are writing TypeScript.
+
+00:36.210 --> 00:36.930
+That's right.
+
+00:38.400 --> 00:40.290
+So here is what's right here.
+
+00:40.710 --> 00:45.930
+And then going to go back over to index us and we're going to do a big copy paste.
+
+00:46.410 --> 00:49.380
+So I'm going to take everything from the very top.
+
+00:51.240 --> 00:52.260
+All the way down.
+
+00:53.500 --> 00:54.790
+See that start function.
+
+00:55.660 --> 00:57.160
+So right above the start function.
+
+00:57.280 --> 01:00.130
+So where we currently have app use, we're going to take everything.
+
+01:00.130 --> 01:04.030
+I'm going to cut all of it, move it over to apts and paste.
+
+01:07.690 --> 01:11.610
+Now, if we go back over to index notes, we will immediately see an air around Mongoose.
+
+01:11.620 --> 01:14.920
+So I did pull over one import statement that we should have not pulled.
+
+01:14.920 --> 01:16.510
+That is the import for mongoose.
+
+01:16.660 --> 01:17.840
+So back inside of APT.
+
+01:17.840 --> 01:19.090
+Yes, the new file would just create it.
+
+01:19.090 --> 01:20.790
+I'm going to find that import from Mongoose.
+
+01:20.800 --> 01:21.760
+I'm going to cut it.
+
+01:22.660 --> 01:24.820
+Go back over to index and paste.
+
+01:27.110 --> 01:27.860
+That looks good.
+
+01:28.930 --> 01:35.020
+So now we need to make sure that we export the app from the app to file and import it into index.
+
+01:36.220 --> 01:38.630
+So we'll go back over to app TS.
+
+01:39.910 --> 01:41.230
+I'll go down to the very bottom.
+
+01:41.960 --> 01:45.140
+And I'll add in an export for our app.
+
+01:45.260 --> 01:48.500
+So we'll say export app like so.
+
+01:51.210 --> 01:54.750
+Just you know, these curly braces are required because we are doing a named export right here.
+
+01:54.750 --> 01:58.260
+We cannot just do just export app by itself.
+
+01:58.770 --> 02:00.600
+We have to add in those curly braces.
+
+02:01.850 --> 02:06.500
+Now we can go back over to index and at the very top we will import the app.
+
+02:11.820 --> 02:12.840
+And that should be it.
+
+02:14.840 --> 02:19.670
+I don't see any other errors inside this file and I do not see any errors inside of app either.
+
+02:20.060 --> 02:24.320
+So I'm going to save both these files and then I'll go back over to Scaffold running on my terminal
+
+02:24.320 --> 02:26.360
+and just make sure that everything's started up correctly.
+
+02:26.990 --> 02:27.470
+Yep.
+
+02:27.470 --> 02:28.250
+Looks good.
+
+02:30.220 --> 02:30.760
+Cool.
+
+02:31.530 --> 02:33.600
+So we've now got these two separate files.
+
+02:34.020 --> 02:37.580
+We've got our app file that does not start up the express application.
+
+02:37.590 --> 02:39.150
+It just configures it.
+
+02:39.870 --> 02:43.740
+So now that we've got this initial refactor put together quick files right here, we're going to start
+
+02:43.740 --> 02:44.790
+to install.
+
+02:46.870 --> 02:52.930
+Super test this MongoDB in-memory copy thing we're gonna install just wire up all this stuff starting
+
+02:52.930 --> 02:53.860
+in the next video.

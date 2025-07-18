@@ -1,0 +1,493 @@
+WEBVTT
+
+00:01.360 --> 00:03.850
+All right, let's go ahead and build out our two events.
+
+00:03.850 --> 00:07.630
+So again, we care about order created and order canceled.
+
+00:08.530 --> 00:11.980
+To get started inside of my events directory in the common module, I'm going to find that subjects
+
+00:11.980 --> 00:14.110
+to file inside subjects.
+
+00:14.110 --> 00:18.880
+We've got that enum that is listing out all the different possible subject names or essentially event
+
+00:18.880 --> 00:19.420
+names.
+
+00:19.840 --> 00:24.790
+So we're going to add in an event name or a subject of order created and order cancelled.
+
+00:25.180 --> 00:26.650
+Well put inside of your order.
+
+00:27.410 --> 00:29.960
+Read it is order colon created.
+
+00:32.630 --> 00:34.940
+And order canceled.
+
+00:35.660 --> 00:36.320
+His order.
+
+00:36.320 --> 00:38.390
+Colon canceled.
+
+00:39.570 --> 00:39.710
+Okay.
+
+00:39.870 --> 00:40.560
+Good start.
+
+00:41.450 --> 00:44.460
+After that, I'm going to create two files inside this event's directory.
+
+00:44.480 --> 00:48.470
+One will be order created events.
+
+00:49.960 --> 00:51.670
+I accidentally put a s on the very end.
+
+00:51.700 --> 00:53.110
+They're going to make sure I just fix that.
+
+00:53.940 --> 00:58.650
+We will also create order cancelled events.
+
+00:59.680 --> 01:01.540
+Now, just so you know, the word cancelled.
+
+01:01.540 --> 01:03.310
+Very easy to misspell.
+
+01:03.520 --> 01:09.190
+So we've now written out the word canceled three times right here, right here and inside of that file
+
+01:09.190 --> 01:10.390
+that we just created as well.
+
+01:10.690 --> 01:15.910
+I beg you, please triple check the spelling of the word canceled in all three locations.
+
+01:16.120 --> 01:19.390
+If you misspell canceled anywhere, it's going to cause problems down the line.
+
+01:19.390 --> 01:20.140
+Without a doubt.
+
+01:21.380 --> 01:21.710
+All right.
+
+01:21.710 --> 01:23.900
+So now we'll go back over to order created events.
+
+01:23.900 --> 01:27.260
+We're going to start to put together this event definition at the very top.
+
+01:27.260 --> 01:34.190
+We will import these subjects in them from subjects will then export a new interface.
+
+01:35.130 --> 01:37.110
+Called Order created event.
+
+01:38.890 --> 01:41.470
+Then inside of here, we're going to list out the subject.
+
+01:42.400 --> 01:48.190
+Which is subject Scott order created and then some data that is going to describe the order that was
+
+01:48.190 --> 01:48.850
+just made.
+
+01:49.360 --> 01:52.030
+And we could certainly throw all the data from the order inside of here.
+
+01:52.030 --> 01:56.020
+But let's go back and take a look at that PDF that describes the purpose of this event so that we can
+
+01:56.020 --> 01:59.110
+really understand what information we should include inside.
+
+02:00.130 --> 02:00.850
+All right.
+
+02:01.630 --> 02:05.300
+So remember, what he created is going to go off two tickets, payments and expiration.
+
+02:05.320 --> 02:09.070
+Each of these different services need to know some very particular information about the order that
+
+02:09.070 --> 02:09.910
+was just made.
+
+02:10.300 --> 02:15.160
+So the ticket service, for example, needs to know the ID of the ticket that was just reserved so that
+
+02:15.160 --> 02:18.550
+the ticket service can lock down that ticket and prevent any further editing.
+
+02:19.450 --> 02:25.030
+The payment service, on the other hand, needs to know the user ID of whoever just created this order
+
+02:25.030 --> 02:28.540
+so that it can understand who it should expect to receive a payment from.
+
+02:28.900 --> 02:31.870
+It also needs to know the cost or the price of the ticket.
+
+02:32.170 --> 02:37.630
+And then finally, the expiration service needs to know the expires at time of the order.
+
+02:37.930 --> 02:40.780
+So in total, we really care about the ticket ID.
+
+02:41.430 --> 02:45.060
+We care about the user ID and the ticket price.
+
+02:46.010 --> 02:48.710
+And then we care about the expires that time.
+
+02:48.710 --> 02:52.040
+And technically this thing also cares about the order ID as well.
+
+02:52.040 --> 02:57.770
+So that when that 15 minutes expires or passes the expiration can service can emit an event and say,
+
+02:57.770 --> 03:01.370
+hey, the order with ID so-and-so should now be marked as expired.
+
+03:02.150 --> 03:06.530
+The only thing that all these services don't really care about when it comes to the order is the status
+
+03:06.530 --> 03:07.250
+of the order.
+
+03:07.670 --> 03:10.910
+None of those different services care about the status whatsoever.
+
+03:10.910 --> 03:18.050
+And in fact, even the name of this event implies that its status should be order or the created status.
+
+03:19.210 --> 03:22.510
+Now, having said that, even though none of our services really care about this status, I'm still
+
+03:22.510 --> 03:26.710
+going to include it anyways with the event because who knows, maybe at some point in time in the future,
+
+03:26.710 --> 03:31.270
+some other service is going to come online and it's going to care about the default status of this order
+
+03:31.270 --> 03:32.350
+or something like that.
+
+03:32.570 --> 03:32.830
+Okay.
+
+03:32.830 --> 03:37.600
+So anyways, for data right here, we're going to say that we're going to include the ID as a string,
+
+03:38.260 --> 03:42.010
+the status, which is going to be one of the order status enum options.
+
+03:42.010 --> 03:45.910
+So I will have to import our order status enum.
+
+03:47.140 --> 03:47.860
+At the top.
+
+03:48.720 --> 03:51.030
+As a quick reminder, we've got that typed directory inside.
+
+03:51.030 --> 03:54.810
+There's the order status enum and that describes all the different valve statuses that an order can
+
+03:54.810 --> 03:55.320
+have.
+
+03:57.040 --> 03:58.290
+Then the user ID.
+
+03:58.300 --> 04:00.370
+So this is the person who created the order.
+
+04:02.570 --> 04:04.040
+We care about expires.
+
+04:04.730 --> 04:12.030
+At and remember saved on the order or the order model it is a date that is how we are storing expires
+
+04:12.030 --> 04:16.670
+that inside of our database it is a date object but we are describing something right here that's going
+
+04:16.670 --> 04:18.470
+to be converted into JSON.
+
+04:18.830 --> 04:24.020
+So rather than saying that this order created event is going to have an expires at property, that is
+
+04:24.020 --> 04:25.190
+going to be a date object.
+
+04:25.190 --> 04:29.420
+Instead, I'm going to say that it is a string because we're definitely going to want to convert that
+
+04:29.420 --> 04:35.300
+date object into JSON or into a string of manually so we can control how the time zone on it gets set.
+
+04:35.330 --> 04:37.970
+Long story short, right now, we're going to say that expires.
+
+04:37.970 --> 04:39.140
+That is going to be a string.
+
+04:39.140 --> 04:41.990
+And when we actually go and make use of this, you'll see why.
+
+04:43.340 --> 04:47.000
+Then finally, we're going to also include information about the ticket on here as well.
+
+04:47.240 --> 04:49.080
+I'm going to embed it inside of an object.
+
+04:49.100 --> 04:53.840
+So I'll say that this thing is going to have an ID that is a string and a price.
+
+04:54.320 --> 04:55.250
+That is a number.
+
+04:55.910 --> 04:57.140
+And that should be it for now.
+
+05:00.040 --> 05:03.010
+All right, let's now go over and take care of order.
+
+05:03.010 --> 05:03.820
+Canceled.
+
+05:04.800 --> 05:07.260
+So here's order cancelled event at the very top.
+
+05:08.730 --> 05:10.230
+I will get my status.
+
+05:12.090 --> 05:14.890
+Is not status, but subjects.
+
+05:16.200 --> 05:17.910
+From Subject's File.
+
+05:18.730 --> 05:22.720
+Well then export in interface of order canceled event.
+
+05:23.470 --> 05:27.220
+We'll say that this thing is going to have a subject of subject order cancelled.
+
+05:27.400 --> 05:29.980
+And then in this case, what data do we care about?
+
+05:30.250 --> 05:34.480
+Well, let's go take a look once again at that diagram and see what actually cares about order cancelled.
+
+05:36.100 --> 05:37.380
+So the order cancelled.
+
+05:37.390 --> 05:39.880
+We want that to go over to the ticket service.
+
+05:39.880 --> 05:45.850
+And that means that the ticket service is going to need to be told exactly what ticket ID we just need
+
+05:45.850 --> 05:47.560
+or we need to actually on reserve.
+
+05:49.340 --> 05:53.450
+In addition, this thing is going to go over to the payment service and tell it that it should stop
+
+05:53.450 --> 05:57.020
+to or should not expect to receive any payment or anything like that.
+
+05:57.880 --> 06:02.710
+The payment service for this particular event doesn't really need to know about the price or the cost
+
+06:02.710 --> 06:03.380
+of the ticket.
+
+06:03.400 --> 06:09.010
+It really just needs to be told, hey, do not expect any payments for order ID so-and-so.
+
+06:10.590 --> 06:16.530
+So in total, I think that the only data that we need to include here is the ID of the order itself
+
+06:16.830 --> 06:20.970
+and the ID of the ticket that we are trying to unreserved with the ticket service.
+
+06:21.480 --> 06:26.400
+So we could say ticket ticket ID is going to be a string.
+
+06:28.120 --> 06:32.150
+Now once again, we could definitely throw in a ton more information describing the order.
+
+06:32.170 --> 06:37.630
+Without a doubt we can include the user ID, we can include the ticket price when this thing expires
+
+06:37.630 --> 06:38.350
+and so on.
+
+06:38.920 --> 06:43.570
+But we don't really have any need to share that information with any other service inside of our app
+
+06:43.570 --> 06:44.170
+right now.
+
+06:44.590 --> 06:48.370
+But this is kind of the point at which you need to make a decision on your own for your own personal
+
+06:48.370 --> 06:48.820
+app.
+
+06:48.820 --> 06:53.890
+When you create an event, do you want to, just by default, assume you're going to share the maximum
+
+06:53.890 --> 06:55.450
+amount of information possible?
+
+06:55.600 --> 06:57.250
+Or do you just want to share the minimum?
+
+06:57.250 --> 07:01.810
+In this case, we are sharing the minimum amount of information to describe the order that was just
+
+07:01.810 --> 07:06.250
+canceled because we know exactly what services are going to try to use this event.
+
+07:06.610 --> 07:11.650
+Now, the bad side about this approach or the downside is that we are not really future proofing ourselves.
+
+07:11.650 --> 07:16.960
+There might be some point in time in the future where maybe the payment service does need to know the
+
+07:16.960 --> 07:19.210
+price of the ticket that was embedded with this order.
+
+07:20.690 --> 07:25.400
+If that happens, if it turns out that the payment service does need to know that price well, we would
+
+07:25.400 --> 07:28.070
+have to come back to this order created event interface.
+
+07:28.070 --> 07:30.830
+Just add on that tiny little price property.
+
+07:32.020 --> 07:34.300
+And then republish this entire library.
+
+07:35.070 --> 07:36.150
+So it's really up to you.
+
+07:36.180 --> 07:40.320
+Do you want to futureproof your stuff and include as much info as possible, or do you want to trim
+
+07:40.320 --> 07:42.420
+every event down to just the bare minimum?
+
+07:42.780 --> 07:45.180
+So again, we're going to go with bare minimum in this case.
+
+07:46.200 --> 07:46.350
+Yeah.
+
+07:46.580 --> 07:47.510
+So let's save this.
+
+07:47.540 --> 07:50.300
+Now, the last thing we're going to do, go back to our index file.
+
+07:50.300 --> 07:54.140
+Instead of our CRC directory, we're going to make sure that we export both the events that we just
+
+07:54.140 --> 07:54.740
+created.
+
+07:55.160 --> 07:59.630
+So here's index TS at the bottom, we'll add on export star from events.
+
+08:00.390 --> 08:02.160
+And then order canceled event.
+
+08:03.140 --> 08:04.730
+Then another one for events.
+
+08:04.730 --> 08:05.540
+Order.
+
+08:06.470 --> 08:07.790
+Read it even.
+
+08:09.590 --> 08:10.630
+I'll then save this.
+
+08:10.640 --> 08:15.650
+And then finally we're going to update this module or republish the module and then update the module
+
+08:15.650 --> 08:17.090
+inside of our order service.
+
+08:17.540 --> 08:19.010
+So back at our terminal.
+
+08:20.740 --> 08:22.600
+I will change into my common module.
+
+08:23.470 --> 08:26.230
+I'll do an MPM run pub to republish this.
+
+08:27.380 --> 08:29.690
+It looks like I'm on version 16 right now.
+
+08:30.580 --> 08:33.190
+You are probably on a way less version at this point.
+
+08:33.310 --> 08:36.190
+As I said, I sometimes rerecord videos.
+
+08:36.190 --> 08:40.360
+I can't really use version numbers, and that's why I'm a little bit higher than you are most likely.
+
+08:40.720 --> 08:46.960
+So now that I've published this thing as version 16, I'm going to go back over to my orders service.
+
+08:47.900 --> 08:52.160
+And inside of orders, we'll do an NPM update.
+
+08:53.060 --> 08:58.430
+And then whatever your common module name is, so mine is SG tickets common.
+
+08:58.430 --> 09:00.650
+And again, yours is probably something very different.
+
+09:04.070 --> 09:07.990
+And after that runs, I'm just going to make sure that I see the one sixth right there.
+
+09:08.000 --> 09:08.270
+Yep.
+
+09:08.270 --> 09:08.900
+Looks good.
+
+09:10.080 --> 09:10.320
+All right.
+
+09:10.320 --> 09:11.030
+So that's it.
+
+09:11.040 --> 09:12.360
+Let's take a quick pause right here.
+
+09:12.390 --> 09:17.070
+When we come back, the next video, we're going to make sure that we eventually emit these events or
+
+09:17.070 --> 09:22.620
+publish them from within our code whenever someone cancels an order or creates an order.

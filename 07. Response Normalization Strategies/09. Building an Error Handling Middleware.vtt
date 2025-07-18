@@ -1,0 +1,367 @@
+WEBVTT
+
+00:01.650 --> 00:02.040
+All right.
+
+00:02.040 --> 00:02.660
+Let's go ahead.
+
+00:02.670 --> 00:06.690
+We're going to get started by first writing out our error handling middleware inside of our project.
+
+00:07.050 --> 00:08.730
+So I'm going to go back over to my editor.
+
+00:09.300 --> 00:14.400
+I'm going to find my CRC directory and inside there I'm going to make a new folder called middleware
+
+00:14.400 --> 00:21.750
+as well, then create a new file inside of that directory called Air Dash Handler TS.
+
+00:22.900 --> 00:25.480
+So instead of here, we're going to write out our error handling middleware.
+
+00:25.510 --> 00:29.560
+Remember, the only requirement is that it has to be a function that receives four arguments.
+
+00:29.560 --> 00:33.730
+And the order of those arguments are the error, request, response and the next function.
+
+00:34.510 --> 00:40.810
+So I'm going to write out and export a single function called Air Handler.
+
+00:43.700 --> 00:50.600
+This is going to receive arguments of air, rec, rez and next we need to make sure that we apply some
+
+00:50.600 --> 00:54.650
+type annotations because right now TypeScript has no idea what these arguments are supposed to be.
+
+00:55.100 --> 00:59.600
+The first argument of air is always going to be some kind of actual air object.
+
+00:59.750 --> 01:03.170
+So this will be like an air that gets thrown by some code that we write.
+
+01:04.680 --> 01:09.090
+Then the next are going to be the request, object, response, and the next function.
+
+01:09.840 --> 01:11.640
+To apply some annotations to those.
+
+01:11.640 --> 01:17.250
+We will import the request type response type in next function type from express at the top of the file.
+
+01:17.830 --> 01:26.320
+So I will import request, response and next function from Express and then I will apply those types
+
+01:26.320 --> 01:27.490
+to those arguments.
+
+01:27.910 --> 01:30.040
+The request response.
+
+01:30.920 --> 01:32.870
+And next function and I'll save it.
+
+01:32.870 --> 01:34.160
+So it wraps that code down.
+
+01:36.560 --> 01:40.220
+Then inside of here, our job is to take a look at the air that just occurred.
+
+01:40.550 --> 01:45.560
+We're then going to somehow format all the information inside there and respond back to whoever made
+
+01:45.560 --> 01:47.360
+the request through this object.
+
+01:47.660 --> 01:53.120
+The number one goal inside this air handler is to make sure that we always send back a very consistently
+
+01:53.120 --> 01:58.790
+structured message because again, we do not want our React application to have to be trying to figure
+
+01:58.790 --> 02:03.160
+out exactly how to handle all these 30 different kinds of errors.
+
+02:03.170 --> 02:08.330
+We don't want to react to application to have to handle an array of objects or just a single string
+
+02:08.330 --> 02:09.620
+or just an object.
+
+02:09.620 --> 02:14.900
+We just want to have one single identical structure for all possible errors across all of our different
+
+02:14.900 --> 02:15.590
+servers.
+
+02:16.560 --> 02:20.130
+So right now let's just do a console log of the year itself.
+
+02:20.370 --> 02:24.000
+We'll say a console log of something like something went wrong.
+
+02:24.960 --> 02:26.640
+And then we'll log the air out.
+
+02:27.650 --> 02:29.570
+Well, then send back a response.
+
+02:30.420 --> 02:31.620
+I'll give it a status.
+
+02:33.380 --> 02:40.550
+Of 400 and I'll send a message that says something like something went wrong.
+
+02:41.060 --> 02:44.360
+So ideally, at some point in time in the future, we're going to inspect this air.
+
+02:44.390 --> 02:49.100
+We're going to pull some information out of it and then put it in this object or something like that.
+
+02:49.100 --> 02:50.110
+This object right here.
+
+02:50.120 --> 02:54.410
+That is what we want to have or make sure that we have a very consistent structure on.
+
+02:54.440 --> 02:56.930
+And again, it doesn't have to necessarily be an object.
+
+02:56.930 --> 02:58.870
+It could be an array of objects, whatever.
+
+02:58.880 --> 03:00.680
+We'll figure that out at some point in time.
+
+03:03.120 --> 03:06.990
+So now that we've put together our error handling middleware, we need to wire it up to our express
+
+03:06.990 --> 03:07.770
+application.
+
+03:08.070 --> 03:10.620
+To do so, we'll go back over to our indexed file.
+
+03:11.560 --> 03:11.830
+Right.
+
+03:11.830 --> 03:14.560
+After all of our different roots, I will import.
+
+03:15.590 --> 03:16.940
+That air handler.
+
+03:17.770 --> 03:24.100
+From Middle wears air handler and then we will wire this up after all of our different route handlers.
+
+03:24.490 --> 03:30.640
+So after app use we'll put down one more app use with air handler like so.
+
+03:32.990 --> 03:33.260
+Okay.
+
+03:33.260 --> 03:34.220
+So this looks good.
+
+03:35.270 --> 03:36.740
+Let's now close this file.
+
+03:36.770 --> 03:39.380
+I'm going to close air handler and go back over to sign up.
+
+03:39.570 --> 03:40.280
+Let's.
+
+03:41.040 --> 03:45.720
+Now at this point in time, we are not actually throwing any errors inside of our code whatsoever.
+
+03:46.730 --> 03:52.550
+Instead if something goes wrong or if we find an error with this validation result right here, we are
+
+03:52.550 --> 03:56.990
+automatically sending back a status code of 400 along with that list of errors.
+
+03:57.590 --> 04:02.690
+So in order to make sure that we have a very consistently structured response no matter what, rather
+
+04:02.690 --> 04:07.370
+than manually writing in some error handling code like this right here, any time something goes wrong,
+
+04:07.370 --> 04:09.770
+we're going to instead just throw an error.
+
+04:10.190 --> 04:13.490
+So I'm going to throw a new error.
+
+04:14.780 --> 04:19.880
+And as the reason for it, I'll put in something like invalid email or password.
+
+04:21.430 --> 04:24.970
+We'll eventually actually consume that list of errors and get some more detailed information about what
+
+04:24.970 --> 04:25.550
+is going on.
+
+04:25.570 --> 04:29.260
+But for right now, I just want to give you a general demonstration of what we're going to be doing
+
+04:29.260 --> 04:32.840
+anytime something goes wrong inside of our code or in processing a request.
+
+04:32.860 --> 04:37.840
+We are going to throw an air and it's going to be automatically picked up by that error handler middleware
+
+04:37.840 --> 04:38.920
+that we just put together.
+
+04:39.810 --> 04:40.900
+So now we can imagine.
+
+04:40.900 --> 04:42.940
+Let's just use our imagination for a moment.
+
+04:43.420 --> 04:47.650
+Down here, we've got a console.log that says creating a user, and maybe we attempt to save a user
+
+04:47.650 --> 04:48.640
+to our database.
+
+04:49.090 --> 04:53.690
+Let's imagine for a second that our database is always down 100% of the time.
+
+04:53.710 --> 04:56.140
+Maybe we just have a really bad database connection.
+
+04:56.940 --> 05:02.610
+So rather than actually successfully rating a user, let's imagine that we throw an air right here and
+
+05:02.610 --> 05:07.050
+the air says something like air connecting to a database.
+
+05:10.000 --> 05:11.910
+Obviously we're not always going to have something like this.
+
+05:11.920 --> 05:15.700
+We're just going to assume right now that for some reason our database is always down.
+
+05:16.420 --> 05:21.130
+Now we're kind of in that scenario that we looked at just a moment ago in this diagram right here,
+
+05:21.580 --> 05:27.220
+we might get past the point of checking to see if a email is valid, but we are not able to access our
+
+05:27.220 --> 05:31.720
+database and see if the email is already in use or maybe even or in this scenario where we did check
+
+05:31.720 --> 05:33.070
+to see if the email is already in use.
+
+05:33.100 --> 05:35.500
+We try to create the user, but the database is down.
+
+05:36.010 --> 05:41.350
+So we now have multiple places where our code can fail, multiple places where we can throw errors.
+
+05:41.350 --> 05:46.270
+And no matter what, we are always capturing those errors, thanks to the fact that Express is going
+
+05:46.270 --> 05:51.280
+to automatically capture any error that we throw inside of a root handler and throw it off to our error
+
+05:51.280 --> 05:53.980
+handling middleware where we can do some processing on it.
+
+05:54.820 --> 05:55.990
+So let's now save this.
+
+05:55.990 --> 05:58.450
+Test it out inside a postman and see how we're doing.
+
+06:00.120 --> 06:01.590
+I'm going to go back over to post, man.
+
+06:02.540 --> 06:03.290
+Inside a postman.
+
+06:03.290 --> 06:06.230
+You'll notice that I have a invalid email loaded in here.
+
+06:06.440 --> 06:11.300
+I'm going to send this request out and you'll see that I get back a response with the status of 400
+
+06:11.300 --> 06:13.310
+and a message of something went wrong.
+
+06:14.150 --> 06:16.430
+Now, even if I enter in a valid email.
+
+06:18.440 --> 06:19.760
+I still get the same thing.
+
+06:20.240 --> 06:24.530
+So in the first case, I got an error because I put in an invalid input.
+
+06:24.740 --> 06:28.200
+So the data that I provided into the request was not valid.
+
+06:28.220 --> 06:31.670
+And so I got back an error message that said something went wrong.
+
+06:32.390 --> 06:35.570
+When I entered in a valid email, I got past.
+
+06:36.920 --> 06:40.430
+The step where we were checking with Express Validator.
+
+06:40.610 --> 06:46.100
+So for the first request, we were in scenario one when I put in a valid email, we are now in scenario
+
+06:46.100 --> 06:51.590
+number two where we can imagine that we got past this step where we go through Express Validator and
+
+06:51.590 --> 06:56.240
+we are on to checking to see if that email is already in use or maybe we try to create the user whatever
+
+06:56.240 --> 06:56.750
+else.
+
+06:56.780 --> 07:02.570
+The point is we got past Express Validator and we were throwing an air now from some other cause or
+
+07:02.570 --> 07:04.400
+some other reason inside of our application.
+
+07:04.850 --> 07:09.560
+And in both scenarios, in scenario one and number two, where we had a valid or invalid email, we
+
+07:09.560 --> 07:13.270
+always got back a very consistent looking response right here.
+
+07:13.280 --> 07:14.210
+And that's the key.
+
+07:14.210 --> 07:15.400
+That's what we are after.
+
+07:15.410 --> 07:18.800
+We want to make sure we always have a very consistent response.
+
+07:19.500 --> 07:25.520
+At this point, it might seem like I'm still making a real big deal over stuff that is not challenging
+
+07:25.520 --> 07:26.750
+or not important.
+
+07:26.900 --> 07:31.220
+So as I mentioned, there are a couple of quarter cases in here and kind of strange things and some
+
+07:31.220 --> 07:33.380
+really big optimizations that we can throw in.
+
+07:33.650 --> 07:34.990
+So we're not quite done yet.
+
+07:35.000 --> 07:37.820
+Let's take a pause right here and continue in just a moment.

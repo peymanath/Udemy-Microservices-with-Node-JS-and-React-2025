@@ -1,0 +1,319 @@
+WEBVTT
+
+00:01.010 --> 00:02.750
+Our header is coming along nicely.
+
+00:02.750 --> 00:09.080
+So now all we need to do is replace that little kind of not so great expression right there with a variety
+
+00:09.080 --> 00:10.660
+of different elements.
+
+00:10.670 --> 00:13.550
+Each of these lies is going to try to display a different link.
+
+00:13.550 --> 00:16.910
+So in total, we're going to eventually have kind of three lies right there.
+
+00:16.910 --> 00:20.420
+One will be to sign out and then one for sign in and one for sign up.
+
+00:20.840 --> 00:25.550
+And we can definitely write out these lies right here and try to figure out how to kind of continually
+
+00:25.550 --> 00:28.940
+toggle the visibility of each of them based on current user.
+
+00:29.030 --> 00:33.380
+But rather than writing that all out right here and ending up with a lot of really messy gsx, I want
+
+00:33.380 --> 00:38.150
+to show you a little trick that I have for whenever we want to render a collection or kind of a list
+
+00:38.150 --> 00:41.150
+of elements and then conditionally show or hide some of them.
+
+00:41.150 --> 00:43.310
+So here's my little trick up.
+
+00:43.310 --> 00:47.720
+At the very top of this function, I'm going to define a new variable called links.
+
+00:48.320 --> 00:49.820
+This is going to be an array.
+
+00:50.150 --> 00:56.690
+And in each of these, so each index inside of here, I'm going to define an object that has a label.
+
+00:57.780 --> 01:00.770
+The first one I'll give sign up and then an F.
+
+01:00.780 --> 01:05.340
+So this is going to be a location that I want to navigate to or sign up.
+
+01:05.340 --> 01:08.190
+Are RF would be off slash sign up.
+
+01:08.900 --> 01:13.760
+I'm going to do find two more objects very similar to this for sign in and sign out.
+
+01:13.910 --> 01:15.320
+So I'll do one for.
+
+01:16.340 --> 01:17.720
+Sign in.
+
+01:20.100 --> 01:20.850
+Sign in.
+
+01:21.600 --> 01:23.190
+And then finally at one four.
+
+01:25.780 --> 01:27.010
+Sign out.
+
+01:28.660 --> 01:31.320
+So slash, slash, sign out.
+
+01:31.330 --> 01:36.370
+We have not put together a sign out page just yet, so this link will probably not work just yet, but
+
+01:36.370 --> 01:38.200
+definitely the first you really should.
+
+01:38.800 --> 01:43.540
+So now that we've got this array of links, here's the real trick I want to conditionally toggle whether
+
+01:43.540 --> 01:44.890
+or not these things are visible.
+
+01:45.130 --> 01:50.830
+So to do so, I'm going to put the expression to decide whether to show each of these right before each
+
+01:50.830 --> 01:51.700
+of these objects.
+
+01:51.700 --> 01:52.780
+Let me show you what I mean.
+
+01:53.110 --> 01:56.920
+I only want to show sign up if the current user is equal to null.
+
+01:56.950 --> 02:00.250
+Because remember, if the user does not signed in, current user will be equal to null.
+
+02:00.370 --> 02:04.450
+So I'm going to say if not current user.
+
+02:06.270 --> 02:07.190
+And.
+
+02:07.200 --> 02:08.400
+And then the object.
+
+02:09.060 --> 02:12.330
+So if current user is equal to null, we're going to take the opposite of that.
+
+02:12.330 --> 02:13.410
+That gives us true.
+
+02:13.410 --> 02:17.130
+And so this first array entry is going to end up with that object right there.
+
+02:17.550 --> 02:19.140
+I'll then do the same thing for the next one.
+
+02:21.430 --> 02:26.710
+And then finally, for the last one right here, I only want to show this link or show something related
+
+02:26.710 --> 02:29.170
+to sign out if the current user is signed in.
+
+02:29.170 --> 02:35.500
+So if the current user is truthful, so say current user and and then put that object.
+
+02:35.920 --> 02:38.200
+Now, the result of this is going to be either.
+
+02:40.110 --> 02:40.620
+False.
+
+02:40.620 --> 02:41.460
+False.
+
+02:41.550 --> 02:43.860
+And that object right there.
+
+02:44.160 --> 02:47.250
+That would be the case in which I am signed in.
+
+02:49.710 --> 02:54.870
+And then the only other scenario that we could have would be these first two objects for the first indices
+
+02:54.870 --> 02:56.730
+and then false as the last one.
+
+02:56.730 --> 02:59.490
+So it would look something like that right there.
+
+03:00.580 --> 03:02.070
+So now we've got that array put together.
+
+03:02.080 --> 03:05.800
+We're going to map over it or we're going to first filter.
+
+03:06.800 --> 03:11.720
+So for each of these indices, we're only going to keep these indices that are not falsely.
+
+03:11.810 --> 03:12.950
+So I'm going to say.
+
+03:13.890 --> 03:21.030
+Link config and I'll just return link config that's going to figure out or filter out any entries in
+
+03:21.030 --> 03:22.260
+there that are false.
+
+03:22.770 --> 03:25.770
+And then for all the remaining entries, I'm going to map over each one.
+
+03:28.690 --> 03:32.770
+So for this mapping function, the argument to it is going to be these objects.
+
+03:33.370 --> 03:40.750
+So I'll structure out, label and ref, and then inside of here I will build up in return my lie.
+
+03:42.610 --> 03:44.770
+I'm going to assign a key for the key property.
+
+03:44.770 --> 03:49.510
+I'll use the ref of each link and then for right now, rather than worrying about getting any actual
+
+03:49.510 --> 03:53.200
+links inside of here or something like that, let's just print out the label so that you can see how
+
+03:53.200 --> 03:54.940
+this links thing actually works.
+
+03:55.210 --> 03:59.620
+So inside of here, I'm going to put in link or not link, but label.
+
+04:01.150 --> 04:05.020
+And then finally, I'm going to show links inside the UL down here.
+
+04:05.720 --> 04:06.970
+So there's the UL.
+
+04:07.150 --> 04:08.500
+I'll show links right there.
+
+04:09.410 --> 04:09.700
+Okay.
+
+04:09.710 --> 04:10.520
+Let's save this.
+
+04:10.520 --> 04:12.110
+Flip back over and see how we're doing.
+
+04:13.220 --> 04:18.620
+So in refresh and I'll see that I've got sign up and sign in visible when I am not signed in.
+
+04:19.690 --> 04:24.250
+If I attempt to go to all sign up and sign up for new account.
+
+04:26.000 --> 04:28.460
+Now that will change to just be sign out.
+
+04:28.940 --> 04:35.660
+So again, just a little trick to conditionally show content based upon a kind of single filtering criteria
+
+04:35.660 --> 04:36.410
+of sorts.
+
+04:36.980 --> 04:37.280
+All right.
+
+04:37.280 --> 04:38.480
+Let's continue working on this thing.
+
+04:38.480 --> 04:40.880
+So we're going to put a little bit more detail into this lie.
+
+04:41.360 --> 04:45.080
+On the lie itself, I'm going to put in a class name of nav item.
+
+04:47.430 --> 04:49.770
+I'm going to give myself a little bit of space inside.
+
+04:51.020 --> 04:52.850
+I want to have an actual link inside of here.
+
+04:52.850 --> 04:54.910
+So remember how we create links with next DJs.
+
+04:54.950 --> 04:57.950
+We have to use that link thing and then anchor element inside.
+
+04:58.250 --> 05:02.840
+So around the label I'm going to place a link with an H ref of a ref.
+
+05:05.440 --> 05:11.470
+And then around the label itself, I will place an anchor tag with the class name of NAV Link.
+
+05:12.520 --> 05:14.140
+Annika is off the anchor tag.
+
+05:15.350 --> 05:15.640
+Okay.
+
+05:15.650 --> 05:16.550
+Let's save this.
+
+05:16.910 --> 05:17.780
+Look back over.
+
+05:18.710 --> 05:20.060
+All right, so there's our link.
+
+05:20.060 --> 05:23.270
+When I hover over it, you can see the correct link at the bottom left of your browser.
+
+05:24.560 --> 05:30.050
+And if I manually sign out once again by clearing my cookie and refresh, I'll now see sign up and sign
+
+05:30.050 --> 05:32.240
+in so I can click to go to sign up.
+
+05:32.240 --> 05:33.860
+I can click to go to sign in.
+
+05:34.490 --> 05:34.850
+All right.
+
+05:34.850 --> 05:36.170
+As that's working pretty well.
+
+05:37.120 --> 05:37.420
+Okay.
+
+05:37.420 --> 05:40.270
+Well, our header is looking good with the exception of.
+
+05:40.270 --> 05:42.850
+We can't really sign out just yet.
+
+05:43.450 --> 05:45.070
+I can sign up.
+
+05:48.120 --> 05:52.050
+But now I should be able to click on, sign out and have that actually do something.
+
+05:52.050 --> 05:53.580
+Right now I just get a 404.
+
+05:54.000 --> 05:54.780
+So we're almost there.
+
+05:54.780 --> 05:58.110
+But just a little bit more quick pause right here and continue in just a moment.

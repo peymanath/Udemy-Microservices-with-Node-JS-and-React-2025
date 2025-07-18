@@ -1,0 +1,331 @@
+WEBVTT
+
+00:00.580 --> 00:05.530
+In the last video, we saw that defining a get initial prop function on the app component somehow disabled
+
+00:05.530 --> 00:07.990
+the one we had put together inside of our landing page.
+
+00:07.990 --> 00:11.530
+So in this video, we're going to figure out how to solve this so quick diagram.
+
+00:12.250 --> 00:14.070
+So this is what is going on behind the scenes.
+
+00:14.080 --> 00:15.540
+We've got our app component.
+
+00:15.550 --> 00:19.240
+It is trying to fetch some data and get that as props down into the app.
+
+00:19.630 --> 00:24.250
+We've also got the landing page rather than calling index dogs, I'll call it landing page right here.
+
+00:24.250 --> 00:27.340
+And that it's got has its own get initial props function.
+
+00:27.340 --> 00:29.590
+And right now that thing is not being invoked.
+
+00:29.770 --> 00:31.180
+But here's how we're going to fix this.
+
+00:31.180 --> 00:37.420
+We are going to get that components get initial prop function and we are going to manually invoke it
+
+00:37.420 --> 00:40.390
+inside of the custom app components, get initial props.
+
+00:40.690 --> 00:45.670
+So we're going to be fetching two sets of data, one set of data for the app component and one set of
+
+00:45.670 --> 00:47.260
+data for the landing page.
+
+00:47.470 --> 00:51.430
+So we'll take all that information and pass it down into the app component as props.
+
+00:51.790 --> 00:57.310
+And we're going to somehow chop up that information and make sure some of it goes down eventually into
+
+00:57.310 --> 00:58.510
+the landing page as well.
+
+00:59.850 --> 00:59.960
+Okay.
+
+01:00.060 --> 01:01.410
+Let me show you how we're going to do this.
+
+01:01.680 --> 01:04.860
+Back inside, my editor, I'll find the app components, get initial props.
+
+01:05.340 --> 01:08.670
+Remember that app context argument right there?
+
+01:08.700 --> 01:10.920
+Let's do a full console log of it.
+
+01:11.040 --> 01:13.740
+Previously we had just done a console log of the keys.
+
+01:13.740 --> 01:16.680
+This time around, let's do a console log of the entire thing.
+
+01:18.590 --> 01:18.730
+Okay.
+
+01:18.830 --> 01:24.140
+I'm going to save that and then going to go and refresh my application just to execute that stuff.
+
+01:24.650 --> 01:28.630
+I'll then go back over to my terminal and I'll see a big console.log right here.
+
+01:28.640 --> 01:31.520
+So this big console log is that app context.
+
+01:31.760 --> 01:35.150
+I'm going to scroll up a little bit or maybe a lot, I suppose.
+
+01:36.690 --> 01:39.120
+And then up here is the top of that console log.
+
+01:39.300 --> 01:43.500
+You'll notice that it has a property on it of Capital C component.
+
+01:43.920 --> 01:48.600
+So that component property right there is a reference to the component or the page that we are currently
+
+01:48.600 --> 01:49.590
+trying to render.
+
+01:50.370 --> 01:55.290
+Since we have a reference to the component, we can access that components or that pages get initial
+
+01:55.290 --> 01:56.790
+props function directly.
+
+01:57.360 --> 02:03.600
+So we are going to get the component dot, get initial props and we will just invoke it on our own.
+
+02:03.990 --> 02:09.090
+When we invoke it, we'll make sure that we pass down some arguments related to say context so that
+
+02:09.090 --> 02:10.440
+that thing can work correctly.
+
+02:11.010 --> 02:15.090
+We will let it fetch some data and we're going to take the data that comes back and we will return it
+
+02:15.090 --> 02:17.130
+manually from get initial props.
+
+02:17.490 --> 02:19.440
+So let's take a look at how we're going to do this.
+
+02:19.860 --> 02:21.300
+I'm going to delete that console log.
+
+02:22.020 --> 02:25.740
+Then right after we make our own call to a current user right here.
+
+02:27.020 --> 02:31.130
+I'm going to say opponent props or how about page props?
+
+02:32.260 --> 02:34.670
+A little bit easier to parse or understand.
+
+02:35.480 --> 02:37.520
+And then for that, we're going to do an await.
+
+02:40.720 --> 02:41.530
+Context.
+
+02:42.740 --> 02:43.520
+Dot.
+
+02:44.260 --> 02:45.850
+Component with the Capital C.
+
+02:47.080 --> 02:49.270
+Dot get initial props.
+
+02:49.840 --> 02:54.280
+And again, whenever we call get initial props, that thing is going to expect some arguments for us.
+
+02:54.280 --> 03:00.250
+In particular, we expected to receive that context argument so we can take a look at the context off
+
+03:00.250 --> 03:01.300
+of the app context.
+
+03:01.300 --> 03:03.790
+Remember two kinds of different contexts here.
+
+03:03.820 --> 03:07.750
+The property is intended to go into a individual page.
+
+03:07.780 --> 03:11.320
+The app component context is intended to go into the app component.
+
+03:11.590 --> 03:16.190
+So we will call get initial props with app context, KCTCS.
+
+03:19.780 --> 03:22.570
+So then we're eventually going to get back the set of page props.
+
+03:22.570 --> 03:27.910
+That's going to be the set of data that we had tried to fetch or are trying to fetch from the components
+
+03:27.910 --> 03:29.130
+or the individual pages.
+
+03:29.140 --> 03:30.310
+Get initial props.
+
+03:30.700 --> 03:32.710
+Right now, let's just do a console log of that.
+
+03:32.860 --> 03:35.920
+I'm going to do a console log of page props like so.
+
+03:36.990 --> 03:40.860
+At present, the data we're trying to fetch out of that thing is the same information we were trying
+
+03:40.860 --> 03:42.640
+to fetch a moment ago the current user.
+
+03:42.660 --> 03:46.770
+So if everything worked, I should get a console log once again of the current user.
+
+03:47.310 --> 03:48.330
+Okay, let's try this out.
+
+03:49.300 --> 03:51.250
+I'm going to go and refresh the page again.
+
+03:51.880 --> 03:53.320
+I'll then go back over my journal.
+
+03:53.350 --> 03:58.180
+I'm going to scroll down to the bottom and I'll see console.log of current user right there.
+
+03:58.540 --> 03:59.260
+Perfect.
+
+03:59.650 --> 04:05.920
+So that means we are now executing the get initial functions for both the app component and for the
+
+04:05.920 --> 04:07.300
+individual page as well.
+
+04:09.380 --> 04:11.240
+Now there is something that we need to be aware of.
+
+04:11.600 --> 04:16.940
+Right now we have a get initial props defined for our landing page.
+
+04:16.940 --> 04:18.980
+So that's inside of our indexed file.
+
+04:19.160 --> 04:24.890
+But we also have pages such as the sign in and the sign up that do not have a get initial prompts function.
+
+04:25.190 --> 04:27.830
+So we need to make sure that we handle the case where.
+
+04:28.600 --> 04:29.830
+Back inside of our app.
+
+04:30.100 --> 04:32.500
+This get initial props is undefined.
+
+04:32.500 --> 04:35.590
+So if that thing is undefined, we don't want to try and fetch any data.
+
+04:36.710 --> 04:39.290
+So to handle this, we could just do a quick little check.
+
+04:39.960 --> 04:42.420
+I'm going to say let page props out here.
+
+04:42.660 --> 04:48.390
+I'll then say if app context component get initial props.
+
+04:48.390 --> 04:52.860
+So if that is defined, let's go ahead and try to fetch some data and assign it to this page.
+
+04:52.860 --> 04:53.790
+Props variable.
+
+04:54.650 --> 04:56.970
+So cut that cost page props.
+
+04:56.990 --> 04:58.040
+I'll paste it in there.
+
+04:58.160 --> 05:00.770
+And now I do not want to redefine page props.
+
+05:00.800 --> 05:04.610
+Instead, I'm going to assign to the one we had defined right above.
+
+05:06.260 --> 05:11.930
+I'm also going to default this thing to be an empty object so that if we fail this if statement, I
+
+05:11.930 --> 05:14.630
+will still have some kind of empty object to share around.
+
+05:16.500 --> 05:16.660
+Okay.
+
+05:16.710 --> 05:17.850
+So let's save this now.
+
+05:18.150 --> 05:22.140
+Now, we should be able to visit, say, the sign up page without having anything crash or anything
+
+05:22.140 --> 05:22.800
+like that.
+
+05:23.540 --> 05:29.780
+So if I go back over to my browser, I should be able to go to sign up, which does not have a get initial
+
+05:30.050 --> 05:32.720
+function but looks like everything still works.
+
+05:32.750 --> 05:34.910
+Same thing for sign in as well.
+
+05:35.890 --> 05:36.340
+Cool.
+
+05:37.300 --> 05:37.470
+Yeah.
+
+05:37.480 --> 05:38.530
+Let's flip back over.
+
+05:38.650 --> 05:43.100
+So now we are getting some information that is common for every page inside of app.
+
+05:43.120 --> 05:44.350
+Get initial props.
+
+05:44.500 --> 05:49.450
+And we've also have some logic inside of here to get some information for a very particular page.
+
+05:49.810 --> 05:53.370
+It's not the last thing we have to do is make sure that we take the page props.
+
+05:53.380 --> 05:56.290
+We take any data that we're fetching for the app component.
+
+05:56.320 --> 06:01.720
+We need to return all this stuff and then make sure that it somehow gets divvied up between the header
+
+06:01.900 --> 06:04.720
+and the component or the page that we're actually trying to show.
+
+06:05.080 --> 06:07.690
+It's a quick pause, and we'll finish this up in just a moment.

@@ -1,0 +1,259 @@
+WEBVTT
+
+00:01.250 --> 00:03.380
+We are all complete with our config file.
+
+00:03.380 --> 00:05.690
+So now we are going to apply this to our cluster.
+
+00:05.750 --> 00:09.920
+To do so, I'm going to go back over to my terminal and inside my AIDS directory.
+
+00:10.520 --> 00:12.920
+I will do a cube CTL apply.
+
+00:14.040 --> 00:17.040
+F are going to apply post dash crv.
+
+00:18.170 --> 00:18.980
+Dot HTML.
+
+00:20.060 --> 00:22.920
+Once I run that I should see that the service was created.
+
+00:22.940 --> 00:27.800
+I can then attempt to list out all the different services lists running inside my cluster with.
+
+00:28.130 --> 00:33.510
+It'll get services, and that's going to print out a default service of Kubernetes right there.
+
+00:33.530 --> 00:36.940
+We can ignore that for right now and post dash CRV.
+
+00:36.980 --> 00:38.840
+So that is the service that we just created.
+
+00:39.440 --> 00:41.600
+You'll notice that it's type is node port.
+
+00:41.780 --> 00:45.020
+And at the very end over here, you'll notice that there is a port column.
+
+00:45.410 --> 00:49.880
+One port says 4000 and the other are just on the other side of that colon.
+
+00:49.910 --> 00:52.340
+There's going to be something like a 30,000 port.
+
+00:52.340 --> 00:57.920
+So you might have anything from a 30000 to 31000 or 32,000.
+
+00:58.220 --> 01:00.500
+This is going to be a randomly assigned port.
+
+01:00.500 --> 01:04.190
+And that port is how are you going to actually access your service?
+
+01:04.730 --> 01:06.200
+Let me show you a quick diagram.
+
+01:07.740 --> 01:08.010
+Okay.
+
+01:08.010 --> 01:09.900
+So we're looking at this just a moment ago.
+
+01:10.230 --> 01:15.180
+So we had said that there is a target port that we use to access our container run inside the pod.
+
+01:15.600 --> 01:19.380
+There is a port that gets assigned to the node port service itself.
+
+01:19.530 --> 01:23.250
+And finally, there is a third thing here called a node port.
+
+01:23.880 --> 01:30.300
+Now, the word node port is meant to designate a kind of port as opposed to the node port service,
+
+01:30.300 --> 01:30.990
+whatever.
+
+01:30.990 --> 01:32.640
+We basically just call it node port.
+
+01:32.670 --> 01:38.520
+This is a randomly assigned port that we use to actually get access to that service from outside of
+
+01:38.520 --> 01:39.300
+our cluster.
+
+01:39.920 --> 01:46.010
+So it's almost always going to start with 30,000 or 31 or 32, but it is going to be randomly assigned.
+
+01:46.720 --> 01:52.570
+We can get that port by doing that, it'll get services and you're going to see it listed right there.
+
+01:53.170 --> 01:57.890
+We can also run a described command on the post service, very similar to the cube.
+
+01:58.540 --> 02:01.150
+Describe deployments and pods.
+
+02:01.150 --> 02:03.900
+So we had seen previously so I could do a tell.
+
+02:04.180 --> 02:08.020
+Describe service post dash crv.
+
+02:10.100 --> 02:13.310
+If I run that, I will see no port right there.
+
+02:13.580 --> 02:15.620
+And that is the node port that was assigned.
+
+02:15.620 --> 02:20.090
+And again, that is how I'm going to actually access this service inside my browser.
+
+02:20.570 --> 02:24.020
+So let me show you one more diagram that's going to kind of summarize all this stuff, because there's
+
+02:24.020 --> 02:25.640
+really just so much stuff going on here.
+
+02:25.640 --> 02:27.350
+I know this is some nasty stuff.
+
+02:27.560 --> 02:34.760
+So to actually access our post board really comes down to whether you are using Docker for Mac or Windows
+
+02:34.760 --> 02:36.350
+or you're using Mini Cube.
+
+02:38.130 --> 02:43.560
+If you're using mini cube to access the service we just created, you are going to run mini cube IP
+
+02:43.560 --> 02:46.710
+at your terminal that is going to print out an IP address.
+
+02:46.740 --> 02:48.480
+You're then going to take that IP.
+
+02:48.510 --> 02:50.970
+You're going to write it out essentially right here.
+
+02:50.970 --> 02:53.100
+So maybe it's something like 192.
+
+02:54.600 --> 02:55.770
+Whatever, whatever.
+
+02:55.770 --> 03:02.550
+And then a colon and then the full port that you just saw back at the terminal, this node port listed
+
+03:02.550 --> 03:03.360
+right there.
+
+03:03.360 --> 03:05.580
+So it's probably not going to be 3402 for you.
+
+03:05.580 --> 03:07.440
+It's going to be probably something else.
+
+03:07.710 --> 03:13.470
+So you would do something like 3402 and then slash posts and that should get all the different posts
+
+03:13.470 --> 03:15.990
+that are stored inside of our post application.
+
+03:16.770 --> 03:22.320
+If you're on Docker for Mac or Windows a little bit easier, it'll be just local host, then a colon
+
+03:22.320 --> 03:23.480
+and then that node port.
+
+03:23.490 --> 03:26.880
+So for me it will be 3402 slash posts.
+
+03:27.770 --> 03:32.510
+Now a quick reminder, this entire node port thing is all about development or just for development
+
+03:32.510 --> 03:33.200
+purposes.
+
+03:33.200 --> 03:38.830
+So this does not mean that your users are going to actually access your application at Port 3402.
+
+03:38.840 --> 03:41.210
+Again, this is just for development purposes.
+
+03:42.190 --> 03:42.550
+All right.
+
+03:42.550 --> 03:49.150
+So I'm going to open up a new browser tab because I am running Docker for Mac and I just saw right there
+
+03:49.150 --> 03:51.430
+a node port of 3402.
+
+03:51.460 --> 04:00.340
+I'm going to enter in localhost 3402 slash posts and then I will see an empty object right there.
+
+04:00.730 --> 04:02.110
+You'll see something very similar.
+
+04:02.230 --> 04:08.080
+Remember, anytime we make a git request or a post endpoint, our actual post application is going to
+
+04:08.080 --> 04:10.060
+send back all the posts that have been created.
+
+04:10.390 --> 04:14.470
+So because this is an empty object that is just saying no posts have been created yet.
+
+04:15.320 --> 04:19.700
+Well, I'd say creating the service was a little bit of a nightmare, and actually getting this URL
+
+04:19.730 --> 04:20.840
+put together was a nightmare.
+
+04:20.840 --> 04:27.050
+But at least we now know how to run something or a container inside of our cluster and how to in some
+
+04:27.050 --> 04:30.860
+way access it by visiting some address inside of our browser.
+
+04:31.010 --> 04:34.400
+So this is a good step forward, but we still have to figure out.
+
+04:35.320 --> 04:36.790
+How to create that.
+
+04:37.150 --> 04:37.690
+Where is it?
+
+04:37.720 --> 04:38.740
+Where's my diagram?
+
+04:39.250 --> 04:39.790
+Right here.
+
+04:39.790 --> 04:44.350
+How to create a load balancer, which is a little bit better way of accessing stuff than node port.
+
+04:44.560 --> 04:49.450
+And we also need to ultimately start to create some of these other pods for our other services.
+
+04:49.720 --> 04:54.160
+And when I use the term services, I'm talking about the Common Service and our event bus and so on.
+
+04:54.460 --> 04:59.660
+And then get connections between all these different things using cluster IP services as well.
+
+04:59.680 --> 05:04.810
+So still a little bit of work to do, but this is almost at the very end of the tunnel or end of this
+
+05:04.810 --> 05:07.000
+phase of learning about this Kubernetes stuff.
+
+05:07.090 --> 05:09.720
+So let's take a quick pause right here and continue in just a minute.

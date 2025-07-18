@@ -1,0 +1,268 @@
+WEBVTT
+
+00:00.730 --> 00:04.300
+Now that we've got a basic understanding of what a tuple is, let's start writing out a little bit of
+
+00:04.300 --> 00:06.730
+code to understand how we work with them in TypeScript.
+
+00:07.030 --> 00:12.250
+So back inside my editor, I'm going to make another new file inside my project directory called Tuples.
+
+00:12.540 --> 00:13.330
+It's.
+
+00:14.410 --> 00:18.520
+Then inside of here to get started, I'm going to write out an object that looks like that drink object
+
+00:18.520 --> 00:21.070
+that we just put together or was inside that diagram.
+
+00:21.460 --> 00:26.530
+So I'll say console drink is going to be an object with a color of brown.
+
+00:27.220 --> 00:30.730
+Carbonated is true and sugar.
+
+00:31.560 --> 00:33.480
+Is oh 40.
+
+00:33.480 --> 00:34.170
+Like so.
+
+00:34.740 --> 00:37.080
+So a object works perfectly here, right?
+
+00:37.080 --> 00:39.870
+You and I can read this and very easily understand what's going on.
+
+00:40.260 --> 00:45.330
+However, we have access to tuples as well, so we could alternatively try to represent this with a
+
+00:45.330 --> 00:45.870
+tuple.
+
+00:46.320 --> 00:50.520
+To do so, we could write out, let's say, some new drink here, like maybe Pepsi.
+
+00:50.940 --> 00:53.040
+And I'm going to write out what looks like an array.
+
+00:53.040 --> 00:58.200
+And I'm basically just going to take the different values of this object and put them into this array
+
+00:58.200 --> 00:59.820
+in a very specific order.
+
+01:00.120 --> 01:03.720
+So I'll put in Brown to represent the color then.
+
+01:03.720 --> 01:09.600
+True to say that it's carbonated and then 42 represent these sugar content in this case, like 40 grams,
+
+01:09.600 --> 01:10.080
+say.
+
+01:10.650 --> 01:11.730
+Now here's the only issue.
+
+01:11.880 --> 01:14.850
+What we just defined right here is an array.
+
+01:14.880 --> 01:18.930
+So if you hover over Pepsi right here, take a look at that type annotation.
+
+01:19.230 --> 01:24.840
+This is saying that Pepsi is going to be a string or a number or a Boolean array.
+
+01:25.380 --> 01:29.700
+So the issue right now is that we could freely swap the order of elements inside of here.
+
+01:29.970 --> 01:34.890
+And in general, we don't want to do that because remember, the order inside of a tuple has a very
+
+01:34.890 --> 01:36.270
+specific meaning to us.
+
+01:36.300 --> 01:38.700
+You and I, as developers have to memorize that.
+
+01:38.700 --> 01:43.830
+The first element inside of here represents a color, and then the second element represents carbonation,
+
+01:43.830 --> 01:46.020
+and the third represents sugar content.
+
+01:46.470 --> 01:51.960
+So if you and I start to write out some code that's going to swap the order, like let's say Pepsi at
+
+01:51.960 --> 01:57.180
+zero is now going to be 40 and Pepsi at two is now going to be Brown.
+
+01:57.180 --> 01:59.040
+We have lost information.
+
+01:59.040 --> 02:03.930
+So you and I, as developers have an assumption about the order of elements inside of here.
+
+02:03.930 --> 02:08.040
+And if we start to break that order, our data model completely breaks down.
+
+02:08.750 --> 02:13.040
+So we're not going to define this thing as a simple looking array in TypeScript.
+
+02:13.070 --> 02:16.160
+Instead, we're going to add on an annotation to this thing.
+
+02:16.520 --> 02:21.410
+This annotation is what's going to turn this line or this array right here into a tuple.
+
+02:21.800 --> 02:24.440
+So right after Pepsi, I'm going to put in a colon.
+
+02:24.440 --> 02:29.240
+And then rather than putting out a type right here and then square brackets, I'm going to instead put
+
+02:29.240 --> 02:30.890
+in a pair of square brackets.
+
+02:31.100 --> 02:36.470
+And then inside of here, we're going to write out the specific order of types of elements inside of
+
+02:36.470 --> 02:37.220
+this tuple.
+
+02:37.580 --> 02:42.680
+So I'm going to write string, then boolean, then number like so.
+
+02:44.600 --> 02:48.410
+So this is what makes this thing into a tuple as opposed to an array.
+
+02:48.440 --> 02:53.570
+We are saying that this array is going to always have a very consistent ordering of elements inside
+
+02:53.570 --> 02:53.870
+of it.
+
+02:53.870 --> 02:56.210
+Always a string, then a boolean, then a number.
+
+02:56.570 --> 03:01.370
+So you and I, as developers, can read this thing right here and understand that there is some meaning
+
+03:01.400 --> 03:05.630
+to the order of elements inside of this array looking thing, or I should say, tuple.
+
+03:06.200 --> 03:11.600
+If we now try to change the order of elements inside of here and say say Pepsi at zero is now going
+
+03:11.600 --> 03:14.330
+to be 40, will very quickly get an error message.
+
+03:14.510 --> 03:19.160
+The error message is going to tell us that we're trying to assign a number to an index inside that tuple
+
+03:19.160 --> 03:20.630
+that is supposed to be a string.
+
+03:21.140 --> 03:25.910
+So again, by putting on this different looking type annotation right here we are turning this array
+
+03:25.910 --> 03:27.350
+into a tuple.
+
+03:28.260 --> 03:33.120
+An alternate way of writing this thing out right here, rather than putting the type directly in line
+
+03:33.120 --> 03:37.110
+as an annotation would be to create something called a type alias.
+
+03:37.500 --> 03:42.330
+We're going to discuss type aliases at great length later on inside this course, but this is a very
+
+03:42.330 --> 03:45.750
+good place to use a type alias, so we're just going to cover them very quickly.
+
+03:45.750 --> 03:47.100
+Right now as a quick aside.
+
+03:47.490 --> 03:52.500
+So rather than having to repeat out this definition right here, every time we want to create a drink,
+
+03:52.830 --> 04:00.120
+we can instead right above write out type and then maybe drink with a capital D and then we'll list
+
+04:00.120 --> 04:01.740
+out the tuple structure.
+
+04:01.740 --> 04:05.550
+So it's going to be a string boolean and then number.
+
+04:06.350 --> 04:09.940
+This does not create an array right here, so no array is being created.
+
+04:09.950 --> 04:13.820
+Instead, it's creating the idea of a tuple inside of our application.
+
+04:13.820 --> 04:19.400
+It's a brand new type that we can freely use in any place that we would normally put a type, for example,
+
+04:19.400 --> 04:20.690
+in a type annotation.
+
+04:21.410 --> 04:26.090
+So now, rather than manually writing out all the different types right here, I could instead say drink
+
+04:26.090 --> 04:26.870
+like so.
+
+04:27.200 --> 04:30.830
+And this is a 100% equivalent to what we just had a moment before.
+
+04:31.430 --> 04:36.320
+So now I can very easily reuse this tuple structure and say, maybe Sprite.
+
+04:37.450 --> 04:44.710
+Is also a type of drink and it will be clear it is carbonated and maybe also has a lot of sugar and
+
+04:44.710 --> 04:46.150
+maybe we also have tea.
+
+04:46.570 --> 04:52.600
+That is a drink and maybe it's also brown, not carbonated and zero sugar like so.
+
+04:53.750 --> 04:58.130
+So we've now abstracted out the idea of what a drink is into a type alias.
+
+04:58.160 --> 05:02.570
+Now we can freely reuse it throughout our application to indicate that each of these different things
+
+05:02.570 --> 05:03.880
+are not plain arrays.
+
+05:03.890 --> 05:08.780
+Instead, they are a tuple that represents a very specific record inside of our application.
+
+05:09.840 --> 05:10.160
+All right.
+
+05:10.170 --> 05:11.400
+Now, I'm going to be honest with you.
+
+05:11.430 --> 05:14.060
+We are not going to use tuples very often.
+
+05:14.070 --> 05:15.630
+So let's take a quick pause right here.
+
+05:15.630 --> 05:16.890
+We're going to come back to the next video.
+
+05:16.890 --> 05:20.820
+We're going to discuss why we care about these things and where we're going to use them.
+
+05:20.820 --> 05:25.110
+And we're going to find out that maybe tuples are not super useful in TypeScript.
+
+05:25.110 --> 05:27.390
+So quick pause and I'll see you in just a minute.

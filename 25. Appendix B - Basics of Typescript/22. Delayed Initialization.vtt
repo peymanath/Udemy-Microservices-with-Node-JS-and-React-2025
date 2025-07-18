@@ -1,0 +1,163 @@
+WEBVTT
+
+00:01.070 --> 00:05.270
+In this video, we're going to take a look at another example of when we're going to add in a type annotation
+
+00:05.270 --> 00:06.010
+manually.
+
+00:06.020 --> 00:11.090
+So this is going to be whenever we declare a variable on one line and then initialize it later as a
+
+00:11.090 --> 00:12.080
+quick reminder type.
+
+00:12.080 --> 00:16.580
+Inference only works when we do variable declaration and initialization on the same line.
+
+00:16.580 --> 00:21.380
+And so obviously if we split this into two separate steps or two different lines of code, then type
+
+00:21.380 --> 00:22.850
+inference doesn't work anymore.
+
+00:23.670 --> 00:23.880
+All right.
+
+00:23.880 --> 00:25.390
+So I'm going to flip back over to my editor.
+
+00:25.410 --> 00:27.880
+I'm again at the very bottom of my variables file.
+
+00:27.930 --> 00:29.480
+I'm going to set up a second example here.
+
+00:29.490 --> 00:36.840
+I'm going to say when we declare a variable on one line and initialize it later.
+
+00:37.830 --> 00:38.070
+Okay.
+
+00:38.070 --> 00:43.500
+So for this example, I'm going to make an array of strings called words like so, and I'm going to
+
+00:43.500 --> 00:45.360
+give this the words red.
+
+00:46.790 --> 00:48.890
+Green and blue.
+
+00:49.590 --> 00:54.300
+Then right after that, I'm going to declare a variable called found word like so.
+
+00:54.980 --> 00:56.150
+So here's what I want to do.
+
+00:56.180 --> 01:00.080
+I want to write a for loop that's going to iterate through this array right here.
+
+01:00.680 --> 01:07.220
+And if I ever find a word or a string equal to green, then I want to set found word to true.
+
+01:08.180 --> 01:12.890
+So if we find green inside of words just set found word to true that's pretty much it.
+
+01:12.920 --> 01:17.510
+I know this is a silly example, but I just want to give you a very practical example of when we're
+
+01:17.510 --> 01:19.670
+going to run into this type annotation stuff.
+
+01:20.180 --> 01:21.610
+So I'm going to write out my for loop.
+
+01:21.620 --> 01:28.580
+I'm going to say let I equal zero I less than words dot length I plus plus.
+
+01:29.220 --> 01:35.940
+And then for every word we'll say, if words at eye is equal to green, then we'll set found.
+
+01:35.940 --> 01:38.700
+Word equal to true.
+
+01:38.730 --> 01:39.510
+Like so.
+
+01:41.000 --> 01:46.130
+So now in this case, I have an instance where I'm declaring the variable up here, and then I only
+
+01:46.130 --> 01:50.750
+assign it a value or initialize it down here inside of my for loop.
+
+01:51.470 --> 01:55.700
+If I know mouse over found word it will very clearly tell me that this is of type any and in fact I
+
+01:55.700 --> 02:01.010
+even have a little underline here that is a warning that tells me that found word has an implicit any
+
+02:01.010 --> 02:06.590
+type and then the tip here says that I might get a better type if I actually use the variable.
+
+02:07.650 --> 02:12.990
+Now when it says inferred from usage, that actually means that like I have to add in the annotation
+
+02:12.990 --> 02:15.690
+right here or optionally initialize it on the same line.
+
+02:16.080 --> 02:20.310
+So in this case, to make this warning go away, we have to add in a type annotation.
+
+02:20.640 --> 02:22.040
+So I can tell TypeScript.
+
+02:22.050 --> 02:22.470
+All right.
+
+02:22.500 --> 02:23.550
+This is going to be a Boolean.
+
+02:24.300 --> 02:26.310
+And now we get around that issue.
+
+02:26.820 --> 02:31.620
+So whenever type inference doesn't work because we are doing declaration and initialization on separate
+
+02:31.620 --> 02:33.950
+lines, we're going to add in the type annotation.
+
+02:33.960 --> 02:34.920
+That's pretty much it.
+
+02:35.550 --> 02:39.960
+Now, as a quick aside here, obviously the best way to write out this code would have been to do something
+
+02:39.960 --> 02:42.120
+like this to initialize found word as false.
+
+02:42.120 --> 02:44.670
+And now TypeScript understands what's going on here.
+
+02:44.700 --> 02:47.240
+This is way better code than what we had before.
+
+02:47.250 --> 02:51.870
+But again, I just wanted to give you a quick example of where we might have a declaration on one line
+
+02:51.870 --> 02:54.270
+and then initialization at some future point.
+
+02:55.200 --> 02:55.470
+All right.
+
+02:55.470 --> 02:56.700
+So let's take a quick pause right here.
+
+02:56.700 --> 03:00.420
+When we come back in the next video, we're going to take a look at our final example of when we are
+
+03:00.420 --> 03:02.700
+going to prefer to use a type annotation.
+
+03:02.700 --> 03:04.800
+So a quick pause and I'll see you in just a minute.

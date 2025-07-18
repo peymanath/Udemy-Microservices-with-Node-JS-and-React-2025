@@ -1,0 +1,343 @@
+WEBVTT
+
+00:00.950 --> 00:02.780
+Our sign up component is looking pretty good.
+
+00:02.780 --> 00:06.890
+But as I mentioned at the end of the last video, we've got some logic inside of here that we're probably
+
+00:06.890 --> 00:09.610
+going to end up duplicating across many other components.
+
+00:09.620 --> 00:12.920
+So, for example, we've got some logic inside of here to make request.
+
+00:13.430 --> 00:15.530
+We then handle that request in some way.
+
+00:16.220 --> 00:21.530
+If something goes wrong with the request, we set some errors and if we get any errors, we then render
+
+00:21.530 --> 00:25.070
+them out in this kind of nicely formatted list right here.
+
+00:25.770 --> 00:29.640
+So all this stuff is probably going to be duplicated across many different components.
+
+00:29.640 --> 00:34.320
+And naturally, rather than duplicating this everywhere, I think would be kind of handy if we try to
+
+00:34.350 --> 00:36.330
+make it a little bit more reusable in nature.
+
+00:36.420 --> 00:38.280
+So here's what I would like to do.
+
+00:38.610 --> 00:42.840
+I want to try to create a new custom hook that we will call use request.
+
+00:43.690 --> 00:47.460
+The inputs to this user request hook are going to be where we want to make a request to.
+
+00:47.470 --> 00:49.900
+So the URL, the method of the request.
+
+00:49.900 --> 00:56.440
+So is it a get request, put post patch, whatever else, and then the body of the request or the information
+
+00:56.440 --> 00:58.920
+is send along if the request supports that.
+
+00:58.930 --> 01:06.160
+So for example, a put patch or post would all include a body, but a get request would not include
+
+01:06.160 --> 01:06.850
+a body.
+
+01:07.610 --> 01:11.990
+So we're going to provide those as inputs to this user request hook that we're going to put together.
+
+01:12.920 --> 01:16.670
+Then the output from this user request hook will be two things.
+
+01:16.700 --> 01:20.120
+First off, it will be some function to actually execute the request.
+
+01:21.170 --> 01:23.810
+And we'll also have some heirs thing coming out as well.
+
+01:23.810 --> 01:29.540
+And this air is variable is going to be some pre rendered block of x that contains all the errors that
+
+01:29.540 --> 01:33.830
+might have occurred while we actually executed that request.
+
+01:34.310 --> 01:37.910
+Now, something that's going to be kind of challenging about this user request hook, we're going to
+
+01:37.910 --> 01:43.100
+be getting a function to run the request and some errors variable out at the exact same time.
+
+01:43.520 --> 01:49.010
+Errors by default is going to be null or have a value of null until we actually execute the request
+
+01:49.010 --> 01:50.510
+and something goes wrong with it.
+
+01:51.140 --> 01:55.160
+Now that might not make any sense right now, so let's just start to write this thing out and I think
+
+01:55.160 --> 01:57.560
+you'll get a good sense of what's going on rather quickly.
+
+01:58.400 --> 01:58.850
+Okay.
+
+01:58.850 --> 02:00.440
+So I'm going to flip back over.
+
+02:01.010 --> 02:05.240
+Inside my client directory, I'm going to make a new folder called Hooks.
+
+02:05.720 --> 02:10.550
+And then inside there I'll make a new file of use request JS.
+
+02:12.390 --> 02:19.320
+Then inside of here at the very top, I'm going to import Axios from Axios and I'm going to import the
+
+02:19.320 --> 02:21.240
+used state hook.
+
+02:22.230 --> 02:23.610
+From React.
+
+02:24.660 --> 02:26.700
+Then after that, I'm going to create the hook.
+
+02:29.430 --> 02:30.500
+So I want the inputs.
+
+02:30.520 --> 02:35.250
+This thing, like I just said, to be the URL that we want to make the request to the method and the
+
+02:35.250 --> 02:35.790
+body.
+
+02:37.350 --> 02:42.360
+So I'm going to put in a ul a method and the body.
+
+02:44.560 --> 02:49.720
+Then inside of here, we're going to create some errors, piece of state.
+
+02:49.720 --> 02:53.410
+So this will be some piece of state that's going to store some JSX inside of it.
+
+02:53.410 --> 02:57.070
+By default, it will have a value of null until something goes wrong with the request.
+
+02:57.280 --> 03:00.070
+Then eventually we're going to make sure that we return that error thing.
+
+03:00.280 --> 03:04.390
+We're also going to create a function called due request that's going to actually execute the request
+
+03:04.390 --> 03:05.050
+itself.
+
+03:06.240 --> 03:06.500
+Okay.
+
+03:06.510 --> 03:11.160
+So I'm going to create some piece of state that I will call Ayres.
+
+03:17.040 --> 03:18.420
+I'm also going to.
+
+03:19.280 --> 03:23.150
+Create that function of do request.
+
+03:26.790 --> 03:30.510
+And then finally down here, without worrying about putting any implementation in for due request just
+
+03:30.510 --> 03:35.430
+yet, I'm going to make sure that I return return both due request and errors.
+
+03:35.850 --> 03:43.080
+I can follow the usual convention of React hooks by returning an array with due request and errors inside
+
+03:43.080 --> 03:43.620
+of it.
+
+03:43.620 --> 03:48.540
+But I think in this case it might make a little bit more sense to just use an object rather than kind
+
+03:48.540 --> 03:51.780
+of rely upon these values being ordered in some particular way.
+
+03:53.140 --> 03:53.410
+Okay.
+
+03:53.410 --> 03:58.510
+So now we're going to put together some implementation side of do requests to actually run the request
+
+03:58.510 --> 03:59.200
+itself.
+
+03:59.230 --> 04:03.340
+In other words, we're going to write out pretty much exactly what you see right here in this tricky
+
+04:03.520 --> 04:04.090
+block.
+
+04:05.600 --> 04:07.550
+So inside of here, I'm going to put together a try.
+
+04:07.580 --> 04:08.240
+Catch.
+
+04:11.560 --> 04:14.290
+I'm going to write out the actual request making logic.
+
+04:15.680 --> 04:19.490
+So I'm going to take the response from await Axios.
+
+04:19.520 --> 04:24.080
+And remember, we don't necessarily know ahead of time exactly what method or whether we want to make
+
+04:24.080 --> 04:26.030
+a git, a post or a patch or whatever else.
+
+04:26.030 --> 04:29.750
+So we can't really write get here or dot post or whatever else.
+
+04:29.780 --> 04:34.340
+Instead, we're going to do a lookup on this Axios object using method right here.
+
+04:34.610 --> 04:37.100
+So method has to be equal to.
+
+04:37.100 --> 04:39.080
+I'm going to just a quick comment here of sorts.
+
+04:39.110 --> 04:44.440
+Method must be equal to a string of say, post or get or patch and so on.
+
+04:44.450 --> 04:45.860
+That's what we're going to assume.
+
+04:47.820 --> 04:49.410
+So look up the appropriate method.
+
+04:50.820 --> 04:52.590
+And I will send off the request.
+
+04:53.050 --> 04:55.590
+I will put in the URL and the body.
+
+05:01.140 --> 05:07.520
+So now if the request occurs successfully, let's take the data out of this response and return it.
+
+05:07.530 --> 05:10.590
+So I will return response data.
+
+05:11.190 --> 05:13.500
+Otherwise, if something goes wrong with the request.
+
+05:13.500 --> 05:17.420
+So if we end up in this catch block right here, let's take the error that occurred.
+
+05:17.430 --> 05:22.860
+We're going to turn it into some X block that essentially looks very similar to what we did back down
+
+05:22.860 --> 05:23.340
+here.
+
+05:24.140 --> 05:27.470
+And we're going to set our ears piece of state with that.
+
+05:27.980 --> 05:30.350
+So I'm going to call inside of your set ears.
+
+05:31.610 --> 05:35.600
+And then inside there, we're going to write out the same exact style of jokes that we just put together
+
+05:35.600 --> 05:38.420
+back inside of our sign up component.
+
+05:38.750 --> 05:40.190
+As a matter of fact, it's going to be so similar.
+
+05:40.190 --> 05:44.330
+I'm just going to copy that div right there or cut it.
+
+05:45.640 --> 05:48.850
+Go back over to use request and paste it inside of set errors.
+
+05:50.450 --> 05:55.070
+I'll then make sure that I update this Aires variable right here so we don't have any errors variable
+
+05:55.070 --> 05:55.550
+anymore.
+
+05:55.550 --> 05:57.920
+Instead, we call the error in this case simply error.
+
+05:58.280 --> 06:02.420
+And if you recall that error, if we go back up a little bit.
+
+06:03.800 --> 06:06.380
+There's early responders.
+
+06:06.380 --> 06:08.360
+So that's what we want to map over.
+
+06:09.850 --> 06:10.750
+It will do.
+
+06:12.100 --> 06:14.290
+A map right here over Iraq.
+
+06:14.530 --> 06:18.160
+Response data airs like so.
+
+06:21.710 --> 06:22.040
+Okay.
+
+06:22.040 --> 06:24.500
+So I think this is enough to start to test out.
+
+06:24.980 --> 06:28.300
+Now, if the code that we have inside of you right now is confusing, don't sweat it.
+
+06:28.310 --> 06:32.030
+As soon as we start to make use of it, I think you'll get a good idea of how this thing is working.
+
+06:32.630 --> 06:33.770
+I'm going to save this file.
+
+06:33.830 --> 06:35.990
+I'm going to go back over to sign up as.
+
+06:36.700 --> 06:37.990
+I'm going to import.
+
+06:39.820 --> 06:41.980
+That use request.
+
+06:44.670 --> 06:47.760
+From up one directory actually up to directories.
+
+06:48.630 --> 06:50.400
+Books use request.
+
+06:51.870 --> 06:52.450
+All right.
+
+06:52.500 --> 06:54.120
+This video is running just a little bit long.
+
+06:54.120 --> 06:56.470
+So how about we just take a quick pause right here.
+
+06:56.490 --> 06:59.460
+Come back the next video and see how we actually make use of this hook.

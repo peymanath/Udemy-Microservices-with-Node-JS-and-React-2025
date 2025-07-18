@@ -1,0 +1,136 @@
+WEBVTT
+
+00:01.210 --> 00:04.810
+We've got the tests around the listener passing, but we do have some other failures.
+
+00:04.810 --> 00:06.370
+We are going to fix up all those failures.
+
+00:06.370 --> 00:09.430
+They're related to a change we made to our ticket model just a little bit ago.
+
+00:09.430 --> 00:12.820
+But first, I want to wrap up the tests around the ticket created listener.
+
+00:12.820 --> 00:19.810
+So for right now, I'm going to filter the test that we run by pressing W and then P and I'll enter
+
+00:19.810 --> 00:22.780
+in the name of the ticket created listener files.
+
+00:22.780 --> 00:26.250
+So just ticket created listener should be enough.
+
+00:26.770 --> 00:27.310
+Now I'm going to run.
+
+00:27.310 --> 00:30.940
+Just test out that file again just to hide those other kind of annoying failures.
+
+00:31.240 --> 00:31.780
+Very good.
+
+00:32.630 --> 00:33.290
+Kate back inside.
+
+00:33.290 --> 00:35.930
+My editor now going to wrap up the second test right here.
+
+00:36.140 --> 00:40.850
+So the only goal of this test is to make sure that we actually call the function after we have somehow
+
+00:40.850 --> 00:42.110
+processed the event.
+
+00:42.410 --> 00:46.910
+We're going to go through a very similar series of steps where we first call setup, then call on message,
+
+00:46.910 --> 00:48.500
+and then write out some assertion.
+
+00:48.530 --> 00:51.320
+So let's get to it at the very top of the test.
+
+00:51.830 --> 00:53.000
+We will get.
+
+00:54.900 --> 00:59.730
+Data listener and message from a wait setup.
+
+01:02.430 --> 01:06.900
+Well then call the on message function and we'll pass in the data object and the message objects so
+
+01:06.900 --> 01:09.600
+await listener on message.
+
+01:10.940 --> 01:13.730
+And pass in data and message.
+
+01:14.930 --> 01:19.100
+And then finally we need to write an assertion to make sure that the act function on that message object
+
+01:19.100 --> 01:20.120
+was actually called.
+
+01:20.240 --> 01:23.780
+It's a pretty straightforward to do that will do expect.
+
+01:24.820 --> 01:28.360
+MSG to have been felt.
+
+01:29.650 --> 01:30.400
+So let's say that.
+
+01:30.400 --> 01:31.420
+Check our tests.
+
+01:31.870 --> 01:33.460
+Looks good as usual.
+
+01:33.460 --> 01:34.320
+Make it fail.
+
+01:34.330 --> 01:37.270
+We'll say not to have been called very quickly.
+
+01:38.350 --> 01:38.620
+Yep.
+
+01:38.620 --> 01:39.400
+Definitely fails.
+
+01:39.400 --> 01:40.870
+Definitely gets called one time.
+
+01:41.580 --> 01:44.620
+I will remove that dot and we are good to go.
+
+01:45.610 --> 01:45.960
+Well.
+
+01:46.090 --> 01:48.070
+Well, I would say that looks pretty reasonable.
+
+01:48.340 --> 01:49.540
+So let's take a quick pause right here.
+
+01:49.540 --> 01:52.870
+We're going to come back the next video and we're going to fix up some of those other tests we have
+
+01:52.870 --> 01:54.310
+inside of our order service.
+
+01:54.310 --> 01:58.660
+I know it's very off topic from all this listener stuff, but is something that we broke just a little
+
+01:58.660 --> 02:01.690
+bit ago when we were working on these listeners and we just never quite saw it.
+
+02:01.690 --> 02:03.340
+Those tests were failing until right now.
+
+02:03.580 --> 02:08.650
+The little divergence in the next video and then come back to testing our ticket updated listener as
+
+02:08.650 --> 02:09.070
+well.

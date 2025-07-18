@@ -1,0 +1,439 @@
+WEBVTT
+
+00:00.900 --> 00:01.230
+All right.
+
+00:01.230 --> 00:03.690
+Let's go ahead and start to implement our route handler.
+
+00:03.720 --> 00:06.930
+So again, we're going to follow the same series of steps we saw back over here.
+
+00:08.010 --> 00:12.510
+Inside this current user file at the very top, I'm going to import one or two things that we're probably
+
+00:12.510 --> 00:13.710
+going to end up needing.
+
+00:14.280 --> 00:20.280
+So up at the top, I'm going to add in an import for JWT from JSON Web token.
+
+00:20.640 --> 00:26.550
+Remember, this is the JWT library that we're using to not only create but also validate the token and
+
+00:26.550 --> 00:28.170
+extract information from it.
+
+00:29.040 --> 00:33.630
+Then inside of the request handler itself, I'm going to delete the resin that's already inside there.
+
+00:34.290 --> 00:39.030
+We're going to first begin by taking a look at the rect session JWT property.
+
+00:39.540 --> 00:43.020
+So if not REQ session JWT.
+
+00:43.050 --> 00:46.320
+If that thing is not set, then let's return early.
+
+00:47.010 --> 00:49.080
+And we will do a rest.
+
+00:49.080 --> 00:53.370
+Send and say the current user is null.
+
+00:54.200 --> 00:57.290
+Right away, you'll notice that we get an air around record session.
+
+00:57.470 --> 01:00.350
+We saw this error tied to TypeScript just a little bit ago.
+
+01:00.350 --> 01:03.440
+Back inside of you was sign up or sign in one or the other.
+
+01:04.070 --> 01:10.780
+If we hover over it, you'll see that TypeScript is being told by the cookie session libraries type
+
+01:10.790 --> 01:12.200
+definition file.
+
+01:12.290 --> 01:21.170
+A lot of terminology there that the record session property might be either null, undefined or in actual
+
+01:21.170 --> 01:22.790
+cookie session object.
+
+01:23.360 --> 01:26.960
+Now, just, you know, the only case or the only scenario where we're going to have this object really
+
+01:26.960 --> 01:33.560
+be it null or undefined, is if we somehow get to this root handler without first executing this cookie
+
+01:33.560 --> 01:34.730
+session middleware.
+
+01:34.760 --> 01:39.350
+So if the request does not flow through that cookie session middleware, then the session property will
+
+01:39.350 --> 01:40.430
+not be set.
+
+01:41.570 --> 01:46.040
+And so that's why TypeScript is being a little bit upset here, so we can fix this up by adding in a
+
+01:46.040 --> 01:46.790
+very simple check.
+
+01:46.790 --> 01:49.730
+We can say, if not rect session.
+
+01:49.730 --> 01:55.700
+So if that thing doesn't exist for some reason, or if the JWT property is not set, then we're just
+
+01:55.700 --> 01:57.590
+going to say the user is not logged in.
+
+01:58.690 --> 02:04.270
+The code that you see right here, we can condense down using a special little typescript operator.
+
+02:04.300 --> 02:07.630
+So notice how we are first checking to see if rect session exists.
+
+02:08.140 --> 02:10.900
+We can add it in right after rect session.
+
+02:11.110 --> 02:13.090
+Instead, a little question mark.
+
+02:13.210 --> 02:17.200
+So this right here is 100% equivalent to what we just had a moment ago.
+
+02:17.590 --> 02:24.220
+If rect session is not defined, then this entire if statement or this entire expression right here
+
+02:24.400 --> 02:25.270
+will evaluate.
+
+02:25.270 --> 02:29.030
+Or I should say with the question mark, really that's going to all evaluate to be true.
+
+02:29.050 --> 02:31.990
+So it's 100% equivalent to what we had just a moment ago.
+
+02:32.500 --> 02:36.910
+Well, a question mark is just checking to see if some internal property actually exists or not.
+
+02:38.230 --> 02:38.500
+Okay.
+
+02:38.500 --> 02:41.680
+So that's going to handle this first case right here.
+
+02:42.100 --> 02:45.670
+So now after that, we're going to try to decode the JSON Web token.
+
+02:45.670 --> 02:48.730
+We're going to check out and see whether or not it is actually valid.
+
+02:48.760 --> 02:52.420
+If it's not valid, we're going to once again send back current user of NULL.
+
+02:52.450 --> 02:56.830
+Otherwise, if it is valid, we're going to send back this object that has the payload inside there.
+
+02:58.300 --> 03:05.110
+So after the if statement, we'll say const payload is JWT verify.
+
+03:05.170 --> 03:10.210
+Remember very quickly, we had seen back in the documentation when we're looking at the library, this
+
+03:10.210 --> 03:14.620
+is how we decode or essentially extract information out of a JSON web token.
+
+03:15.430 --> 03:20.260
+The first argument is going to be the token itself that will be req session JWT.
+
+03:20.960 --> 03:27.980
+And then the second argument is going to be the JWT quay, which we had set up previously as our environment
+
+03:27.980 --> 03:28.610
+variable.
+
+03:29.210 --> 03:32.300
+So quick reminder, back inside of sign in.
+
+03:32.750 --> 03:33.320
+Yes.
+
+03:34.620 --> 03:40.770
+When we had generated that JSON web token, we use that process env JWT key right there.
+
+03:41.280 --> 03:45.090
+That is our signing key and we need it in order to validate the token.
+
+03:46.280 --> 03:52.190
+We're going to provide that as the second argument right here process and V underscore key.
+
+03:52.550 --> 03:58.370
+And now once again TypeScript is not really or doesn't really want us to assume that that property is
+
+03:58.370 --> 04:02.960
+defined as it is entirely possible that we're going to start up our app for getting to set that environment
+
+04:02.960 --> 04:03.410
+variable.
+
+04:03.440 --> 04:04.760
+So that's why we get that error there.
+
+04:05.060 --> 04:09.500
+But as we saw just a little bit ago, back inside of sign in and sign up, we are very sure that we
+
+04:09.500 --> 04:11.450
+already checked to see if that thing is defined.
+
+04:11.450 --> 04:14.720
+So we put the question mark at the very or thing, the exclamation at the very end.
+
+04:14.720 --> 04:17.060
+It tells TypeScript to just not worry about it.
+
+04:17.360 --> 04:22.610
+As their further reminder, we had check to make sure that the property actually was defined back inside
+
+04:22.610 --> 04:26.750
+of our root index file, specifically inside the start function.
+
+04:28.090 --> 04:32.260
+So if our app starts up without that environment variable being set, we throw an error back there.
+
+04:32.290 --> 04:34.330
+That's essentially where we just took care of that.
+
+04:35.070 --> 04:38.910
+So once again, inside of current user, I'm going to put a little question mark right afterwards.
+
+04:41.490 --> 04:43.380
+Now something really interesting here.
+
+04:43.410 --> 04:48.240
+Remember, a user can technically try to fiddle around or mess around with the properties inside this
+
+04:48.240 --> 04:55.350
+JSON web token, when we call verify if the token has been messed with in any way, then verify is going
+
+04:55.350 --> 04:56.700
+to throw an error.
+
+04:57.060 --> 04:59.640
+So we need to make sure that we try to capture that error.
+
+04:59.670 --> 05:03.810
+We're going to wrap this with a try patch statement.
+
+05:05.150 --> 05:05.480
+Again.
+
+05:05.480 --> 05:09.050
+If something goes wrong with verifying the token, we're going to throw an error and we're going to
+
+05:09.050 --> 05:10.320
+end up inside of a catch.
+
+05:10.340 --> 05:16.310
+And in that scenario, as we saw back in this diagram, if the JSON web token is invalid, we're just
+
+05:16.310 --> 05:17.870
+going to say, hey, you're not logged in.
+
+05:17.870 --> 05:19.280
+So current user of null.
+
+05:20.970 --> 05:27.300
+So inside the catch statement I'll do a resent current user of null.
+
+05:30.150 --> 05:33.000
+Well, then finally, we can handle this very last case here.
+
+05:33.000 --> 05:37.770
+So if the token is valid, if we have a token, we have successfully decoded it, we have the payload,
+
+05:37.800 --> 05:39.990
+we're going to send that back inside the response.
+
+05:40.590 --> 05:44.850
+So after payload right there will do a rest send.
+
+05:45.930 --> 05:49.470
+Current user and will stick the payload in like so.
+
+05:50.810 --> 05:51.380
+All right.
+
+05:51.380 --> 05:52.320
+That should be it.
+
+05:52.340 --> 05:53.330
+Let's save this.
+
+05:53.540 --> 05:57.230
+Let's go back over to postmen, and we're going to do a quick test.
+
+05:58.510 --> 06:00.070
+So over inside a post man.
+
+06:01.660 --> 06:05.020
+I'm going to first make sure that I am successfully logged into the application.
+
+06:05.020 --> 06:08.310
+So I'm just going to make sure I am making a post request to sign in.
+
+06:08.320 --> 06:11.630
+I've got some valid credentials right here, so I'm going to send that request off.
+
+06:11.650 --> 06:16.900
+I get back a good response, and if I go to the cookies tab, I can see very plainly that I do in fact
+
+06:16.900 --> 06:17.950
+have a cookie set.
+
+06:17.950 --> 06:21.250
+So presumably there is a JSON web token inside there.
+
+06:22.040 --> 06:23.030
+Yes, that's good.
+
+06:23.060 --> 06:25.790
+I'm now going to open up a second tab inside a postman.
+
+06:27.510 --> 06:33.630
+I'm going to set the request type to get and I'll make that request to HTTPS ticketing.
+
+06:36.440 --> 06:37.160
+Dot dev.
+
+06:37.190 --> 06:39.350
+API users.
+
+06:39.350 --> 06:40.730
+Current user.
+
+06:41.710 --> 06:46.000
+I'll make sure that I set headers with a content.
+
+06:47.060 --> 06:48.320
+Type of.
+
+06:49.030 --> 06:50.950
+Application JSON.
+
+06:51.740 --> 06:54.680
+And we're not going to have a body because we are making a get request.
+
+06:54.710 --> 07:00.530
+Now, just, you know, whenever we get a cookie set inside of Postman Postmen is going to automatically
+
+07:00.530 --> 07:03.620
+send that cookie to any follow up request to the same domain.
+
+07:03.950 --> 07:09.020
+As a matter of fact, we can actually see that if we go up to the right hand side over here and click
+
+07:09.020 --> 07:10.130
+on that cookies button.
+
+07:10.730 --> 07:15.080
+So this is listing out all the active cookies we have inside a postman and a president.
+
+07:15.080 --> 07:16.960
+We've got the ticketing dev cookie.
+
+07:16.970 --> 07:19.460
+So again, our JWT is inside there.
+
+07:20.000 --> 07:24.290
+So when we make this request, we should be including our JSON web token.
+
+07:24.770 --> 07:25.100
+All right.
+
+07:25.100 --> 07:27.440
+I'm going to send this off and there we go.
+
+07:27.440 --> 07:32.720
+So I've got my current user and I got the body or the payload of the JSON web token.
+
+07:32.720 --> 07:37.130
+So I'm being told my email, my ID and the issued at time of the token.
+
+07:37.490 --> 07:41.810
+So in the context of our React application, if we got back a response like this in our React app,
+
+07:41.810 --> 07:44.030
+we would assume that the user was logged in.
+
+07:45.570 --> 07:50.760
+So let's now repeat this process, but we are going to go ahead and delete our cookie.
+
+07:50.770 --> 07:52.660
+So I'm going to go back over to this cookies tab.
+
+07:53.140 --> 07:55.900
+I'm going to delete the cookie associated with ticketing dev.
+
+07:57.010 --> 08:00.640
+And then I will make the request to get the current user once again.
+
+08:01.930 --> 08:05.830
+So now we did not include a cookie and so we get a current user of null.
+
+08:06.600 --> 08:07.200
+Awesome.
+
+08:08.060 --> 08:08.330
+Okay.
+
+08:08.330 --> 08:09.440
+Well, this looks pretty good.
+
+08:09.770 --> 08:14.540
+So we now have a route to figure out whether or not the user is signed in to the application.
+
+08:14.900 --> 08:19.460
+We are going to very quickly have to come back over here and start to refactor some of this stuff.
+
+08:19.880 --> 08:21.150
+I know it's kind of unfortunate.
+
+08:21.170 --> 08:25.400
+We do want to eventually have a middleware that's going to automatically try to figure out whether or
+
+08:25.400 --> 08:31.430
+not the user is logged in for us to limit access to some routes and also to just take some information
+
+08:31.430 --> 08:34.190
+about the user and throw it onto the request object.
+
+08:34.310 --> 08:35.460
+But those are two middleware.
+
+08:35.460 --> 08:39.410
+So we're going to put together a little bit later and then kind of use to spruce up this file a little
+
+08:39.410 --> 08:39.900
+bit.
+
+08:39.920 --> 08:42.680
+But we did have to go through this process just to understand that.
+
+08:42.680 --> 08:45.030
+Yeah, we've got to check to see if there's the JSON Web token.
+
+08:45.050 --> 08:48.320
+We got to decode the JWT and so on.
+
+08:48.920 --> 08:49.910
+So quick pause right here.
+
+08:49.910 --> 08:54.650
+We're going to take care of handling the sign out process in the next video.

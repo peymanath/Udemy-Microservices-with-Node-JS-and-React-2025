@@ -1,0 +1,274 @@
+WEBVTT
+
+00:00.640 --> 00:01.210
+In this video.
+
+00:01.210 --> 00:03.270
+We're going to work on our first test right here.
+
+00:03.280 --> 00:08.200
+So we need to somehow make a request or a post request specifically to API tickets.
+
+00:08.200 --> 00:11.980
+And we're just going to make sure that we get back a status code that is not a 404.
+
+00:12.190 --> 00:14.200
+Why would we not want a 404?
+
+00:14.380 --> 00:19.420
+Well, if we open up our Apt's file, you might recall that inside of here, when we copy pasted all
+
+00:19.420 --> 00:24.040
+that code over from our service, we had previously put together this root handler right here, this
+
+00:24.040 --> 00:25.600
+catch all root handler.
+
+00:25.780 --> 00:31.990
+So if we ever got a request coming into our application on any method to any root that we did not somehow
+
+00:31.990 --> 00:37.840
+recognize, we were going to immediately throw a not found error and that results in a404 status code
+
+00:37.840 --> 00:40.060
+being sent back to whoever made the request.
+
+00:40.600 --> 00:46.600
+So if we could somehow make a request or a post request to API tickets and then inspect the response
+
+00:46.600 --> 00:51.100
+code or the status code and make sure it's not a 404, that would be a pretty good way of implementing
+
+00:51.100 --> 00:52.000
+this test right here.
+
+00:52.120 --> 00:53.350
+So let's give that a shot.
+
+00:54.470 --> 00:55.550
+I'm going to write out.
+
+00:56.300 --> 00:58.470
+Response is a wait.
+
+00:58.490 --> 01:00.170
+We'll make a request to our app.
+
+01:01.200 --> 01:05.280
+I want to make specifically a post request to API slash tickets.
+
+01:06.320 --> 01:08.620
+I'm going to send along an empty object.
+
+01:08.630 --> 01:13.340
+So eventually we're going to require that we send along a title and a price and so on.
+
+01:13.340 --> 01:18.230
+But right now we can just send some empty request because all we really care about is that we don't
+
+01:18.230 --> 01:23.690
+get a 400 for if we get back a status code of, say, 400, which is an invalid request.
+
+01:23.690 --> 01:24.590
+That's fine.
+
+01:24.590 --> 01:28.430
+I just want to make sure that, well, we get something besides a 404.
+
+01:29.090 --> 01:33.710
+So now to somehow get the status code back and make an assertion about it, we can take a look at this
+
+01:33.710 --> 01:34.700
+response right here.
+
+01:35.300 --> 01:39.530
+So the response is going to have a status code property assigned to it, and that's going to be the
+
+01:39.530 --> 01:44.900
+status code of the response we got sent back so we can write out an expectation and look at that status
+
+01:44.900 --> 01:47.630
+I'll put in response dot status.
+
+01:48.700 --> 01:48.820
+Now.
+
+01:48.820 --> 01:50.680
+I'm going to expect that to not.
+
+01:51.750 --> 01:53.790
+Two equal 404.
+
+01:55.720 --> 01:56.000
+Okay.
+
+01:56.020 --> 01:56.980
+I'll save this.
+
+01:57.580 --> 01:59.980
+I'm going to go back over to my terminal and let's see how we're doing.
+
+02:00.310 --> 02:02.230
+So it looks like that test is failing.
+
+02:02.260 --> 02:02.980
+That's good.
+
+02:02.980 --> 02:05.290
+That means that right now we are getting a 404.
+
+02:05.320 --> 02:07.810
+So now we can start to create that root handler.
+
+02:07.810 --> 02:13.180
+And as soon as we define it and send back some other kind of response, like maybe a 400 or 200, whatever
+
+02:13.180 --> 02:15.220
+else, then that test should pass.
+
+02:15.640 --> 02:16.780
+So let's give that a shot.
+
+02:18.490 --> 02:20.410
+I'm going to find my roots directory.
+
+02:21.190 --> 02:22.000
+Inside of roots.
+
+02:22.000 --> 02:24.700
+I'm going to make a new file called New Dots.
+
+02:25.460 --> 02:30.710
+So this new file is going to be responsible for creating a handler to create a new ticket.
+
+02:31.910 --> 02:33.830
+To create this fruit handler at the very top.
+
+02:33.830 --> 02:36.200
+We're going to add in a couple of imports.
+
+02:36.800 --> 02:38.090
+So I'm going to import.
+
+02:39.530 --> 02:40.430
+Express.
+
+02:40.820 --> 02:44.870
+I'm going to import the request and response types from Express.
+
+02:47.800 --> 02:51.880
+I'll then create a router using express dot router.
+
+02:53.980 --> 02:54.640
+On the router.
+
+02:54.640 --> 03:01.690
+I'll tell it to expect a post request to API tickets and then I'll put in my actual route handling function.
+
+03:03.170 --> 03:09.050
+I'll put in my arguments of rec and I will annotate that as type request and rez and annotate that as
+
+03:09.050 --> 03:10.010
+type response.
+
+03:11.180 --> 03:16.010
+Then inside of here we can put together for right now just some implementation that will make this test
+
+03:16.010 --> 03:16.640
+pass.
+
+03:16.910 --> 03:21.470
+So all we really care about right now is sending back something that is not a status code of 404.
+
+03:21.500 --> 03:27.710
+So I'll simply do a RESEND status, which is how we send back just a status code by itself of how about
+
+03:27.710 --> 03:28.430
+200.
+
+03:31.300 --> 03:33.760
+Then at the very bottom, I'm going to export the router.
+
+03:33.760 --> 03:38.320
+And remember, in all those other root files we had done back inside our service, we had renamed this
+
+03:38.320 --> 03:43.060
+router variable because we were going to eventually have many different routers created and in use inside
+
+03:43.060 --> 03:44.390
+of our APTs file.
+
+03:44.410 --> 03:50.830
+So I'm going to rename this thing on the fly and call it as rate ticket router.
+
+03:51.220 --> 03:56.650
+The only reason I'm not calling it new ticket router is that someone might kind of misread this and
+
+03:56.650 --> 04:02.020
+think that it's new ticket router as in trying to create an object out of ticket router.
+
+04:02.350 --> 04:04.210
+So I'm going to simply call it create instead.
+
+04:06.820 --> 04:07.040
+Okay.
+
+04:07.150 --> 04:08.260
+I'm going to save the file.
+
+04:08.290 --> 04:10.510
+I'm going to go back over to my app file.
+
+04:11.140 --> 04:15.640
+Remember, after creating the router, we have to import it into this file and then wire it up to our
+
+04:15.640 --> 04:16.870
+express application.
+
+04:16.870 --> 04:19.000
+So at the very top, I'm going to import.
+
+04:21.600 --> 04:24.150
+Create ticket router from.
+
+04:25.600 --> 04:27.100
+Roots new.
+
+04:30.150 --> 04:35.580
+Then right after our cookie session middleware I will wired this thing up so app use and we're going
+
+04:35.580 --> 04:37.620
+to tell it to use free ticket router.
+
+04:41.270 --> 04:41.440
+Okay.
+
+04:41.480 --> 04:42.510
+Let's save this.
+
+04:42.530 --> 04:43.700
+I'm going to go back over my terminal.
+
+04:43.700 --> 04:45.560
+And now, in theory, our test should be passing.
+
+04:45.560 --> 04:45.970
+Yep.
+
+04:45.980 --> 04:47.030
+It looks like it is.
+
+04:47.700 --> 04:49.160
+Well, it's definitely a good step forward.
+
+04:49.830 --> 04:49.960
+Okay.
+
+04:50.030 --> 04:51.190
+So let's take a pause right here.
+
+04:51.200 --> 04:52.230
+When we come back, the next video.
+
+04:52.250 --> 04:55.400
+We'll move on to our second, third, fourth and so on tests.

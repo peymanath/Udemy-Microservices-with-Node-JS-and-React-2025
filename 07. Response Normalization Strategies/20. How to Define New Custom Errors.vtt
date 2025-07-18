@@ -1,0 +1,256 @@
+WEBVTT
+
+00:01.190 --> 00:05.840
+Now that we've wrapped up all this air stuff, I figure why not do some more air handling stuff?
+
+00:06.260 --> 00:06.920
+Yeah, sorry.
+
+00:06.920 --> 00:07.960
+I am serious.
+
+00:07.970 --> 00:12.050
+I want to go very quickly through the process of creating a new type of air in our application.
+
+00:12.050 --> 00:15.380
+It's going to be really simple and straightforward, and you're going to see how easy it is to add in
+
+00:15.380 --> 00:16.820
+some new air handling stuff.
+
+00:17.060 --> 00:22.010
+So I want to try to add in a new air to handle the case in which a user goes to a route that does not
+
+00:22.010 --> 00:22.760
+exist.
+
+00:23.240 --> 00:24.740
+So here's what we're going to do.
+
+00:25.070 --> 00:27.320
+We're going to first begin by finding our air's directory.
+
+00:27.320 --> 00:32.830
+Inside there, I'll make a new file called Not Found Air Ducts.
+
+00:33.810 --> 00:38.070
+So this will be an error that we want to be able to throw at some point in time, any time the user
+
+00:38.070 --> 00:40.500
+tries to navigate to some route that doesn't exist.
+
+00:40.950 --> 00:46.710
+Any time we want to make a new error at the very top, we will import base error or semi customer.
+
+00:49.520 --> 00:51.440
+From Custom Air.
+
+00:52.170 --> 00:56.010
+Well then export a new class named after the error we're trying to make.
+
+00:56.010 --> 00:58.110
+So not bound air.
+
+00:59.170 --> 01:01.660
+This is going to extend custom air.
+
+01:02.890 --> 01:03.490
+Inside of here.
+
+01:03.490 --> 01:07.150
+We need to define a status code to send back to the user in the response.
+
+01:07.690 --> 01:09.490
+So we'll say status code of 404.
+
+01:09.490 --> 01:12.970
+And by the way, if we didn't add that in, TypeScript will tell us we need to do it.
+
+01:13.330 --> 01:17.680
+So you'll notice that we're getting an error right now saying, hey, you need to implement serialize
+
+01:17.680 --> 01:19.300
+errors and status code.
+
+01:20.370 --> 01:21.780
+We could define that status code.
+
+01:23.420 --> 01:25.820
+We do need to still define our constructor.
+
+01:26.760 --> 01:32.610
+Because we need to not only provide some default message, your message, something like let's say route
+
+01:33.060 --> 01:34.140
+not found.
+
+01:34.650 --> 01:38.010
+And we do also have to run that little object set prototype of things.
+
+01:38.010 --> 01:42.690
+So object, set, prototype of this.
+
+01:43.440 --> 01:47.550
+And not found air dot prototype.
+
+01:50.040 --> 01:50.940
+And then finally.
+
+01:53.090 --> 01:59.180
+We'll implement serialize errors and the only requirement for this function we have to return an array
+
+01:59.180 --> 02:02.810
+of objects where each object has a message that's a string and possibly a field.
+
+02:03.520 --> 02:09.670
+So in this case, let's just return an array with one hardcoded object and we'll give it a message of.
+
+02:10.320 --> 02:11.670
+Not bound.
+
+02:13.430 --> 02:14.450
+And that should be it.
+
+02:14.720 --> 02:20.210
+So now any time that we throw this air, in other words, if we're in some route handler and we throw
+
+02:20.240 --> 02:22.010
+not found or new.
+
+02:22.750 --> 02:23.860
+Not found air.
+
+02:24.070 --> 02:25.000
+And we put in.
+
+02:26.660 --> 02:27.650
+I like that.
+
+02:28.160 --> 02:33.470
+Then our middleware is going to automatically capture the share and return the appropriate response
+
+02:33.470 --> 02:34.220
+to the user.
+
+02:35.230 --> 02:39.310
+So let's actually implement a route handler that's going to capture a request to any arbitrary route
+
+02:39.310 --> 02:40.810
+that we have not actually defined.
+
+02:41.110 --> 02:43.060
+Back inside my index file.
+
+02:44.010 --> 02:48.660
+At the very top after importing our air handler, I will import.
+
+02:49.740 --> 02:51.450
+Not found air.
+
+02:53.210 --> 02:56.480
+From heirs not found heir.
+
+02:58.840 --> 03:04.180
+And then after all of our different middleware, so we wire up, but before the air handler we'll put
+
+03:04.180 --> 03:08.530
+in an AppKit to star like so.
+
+03:11.340 --> 03:15.660
+We don't even have to worry about a request or response in here because we're not going to access those
+
+03:15.660 --> 03:16.380
+variables.
+
+03:16.650 --> 03:21.450
+All we have to do is throw a new, not found error.
+
+03:22.390 --> 03:22.660
+Like.
+
+03:22.660 --> 03:23.680
+So that's it.
+
+03:24.100 --> 03:29.140
+As soon as we throw this thing, Express is going to capture the air and send it off to our middleware.
+
+03:29.350 --> 03:32.210
+And that middleware is going to take the status code.
+
+03:32.230 --> 03:36.610
+It's going to call that serialized function, and it's going to generate a response and automatically
+
+03:36.610 --> 03:39.640
+send a response back to whoever was trying to access this route.
+
+03:40.180 --> 03:42.160
+So let's save this and do a quick test.
+
+03:43.030 --> 03:44.200
+Back at post, man.
+
+03:44.200 --> 03:46.900
+I'm going to try to go to a root that doesn't actually exist.
+
+03:47.500 --> 03:54.820
+So I will try to go to API users, sign up, slash whatever and we've only set this thing up for a get
+
+03:54.820 --> 03:55.540
+request.
+
+03:55.540 --> 03:59.170
+So I'm going to change this to get I'll then send it.
+
+03:59.820 --> 04:01.890
+And lo and behold, it worked.
+
+04:02.340 --> 04:07.680
+So we've got a status of 404 not found, and we've got that same kind of exact air structure that we
+
+04:07.680 --> 04:08.580
+were looking for.
+
+04:09.470 --> 04:10.190
+Awesome.
+
+04:11.560 --> 04:14.590
+Now, as I mentioned, this is only going to work with gift requests right now.
+
+04:14.590 --> 04:21.140
+We can make it work with any other arbitrary method if we just change, get right there to all apt on
+
+04:21.190 --> 04:25.600
+all is going to watch for requests with any kind of method and without any kind of route.
+
+04:25.930 --> 04:30.850
+So now we should be able to save that, make a post request to this silly route.
+
+04:31.730 --> 04:32.990
+And we'll see the same thing.
+
+04:34.260 --> 04:36.570
+Well, I would say that this is not too bad.
+
+04:37.050 --> 04:40.140
+So again, that is how we add in some new custom air to our application.
+
+04:40.230 --> 04:44.160
+Create a file, create a class, export it, extend customer.
+
+04:44.550 --> 04:47.430
+TypeScript is going to guide you on what you have to define in here.
+
+04:47.430 --> 04:50.190
+So you have to define status code and serialize errors.
+
+04:50.870 --> 04:53.450
+And then throughout the year at some point in time.
+
+04:53.690 --> 04:55.340
+And Express is going to take it from there.
+
+04:56.070 --> 04:57.600
+So this looks fantastic.
+
+04:57.630 --> 05:00.630
+Quick pause right here, and I'll see you in just a minute.

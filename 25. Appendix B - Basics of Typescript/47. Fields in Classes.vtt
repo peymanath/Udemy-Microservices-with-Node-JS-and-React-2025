@@ -1,0 +1,325 @@
+WEBVTT
+
+00:00.760 --> 00:04.570
+Now that we've seen how methods work inside of classes, we're going to take a look at how we handle
+
+00:04.570 --> 00:06.010
+data inside them as well.
+
+00:06.340 --> 00:11.080
+To get started, I'm going to clean up this air right here around vehicle, honk by deleting that line
+
+00:11.470 --> 00:13.720
+and I'll do the same thing at the bottom of this file as well.
+
+00:15.990 --> 00:16.680
+All right.
+
+00:16.690 --> 00:18.780
+So now back up at the top on vehicle.
+
+00:18.780 --> 00:21.120
+I want to add in two fields.
+
+00:21.330 --> 00:25.020
+These are essentially going to be properties that are going to reference actual values.
+
+00:25.990 --> 00:30.400
+Whenever we want to specify a property inside of a class, we'll just write out the name of the property.
+
+00:30.400 --> 00:35.070
+So maybe color and then a type annotation for that property.
+
+00:35.080 --> 00:38.320
+So in our case, maybe color should be a string like so.
+
+00:39.300 --> 00:44.310
+And right now, as soon as you type out this line of code, you might see an error around this line,
+
+00:44.310 --> 00:45.780
+specifically around color.
+
+00:46.050 --> 00:49.200
+If you don't see an error in your screen looks like mine, that's totally fine.
+
+00:49.560 --> 00:54.870
+If you do see an error, it is because traditionally we want to initialize a variable any time we declare
+
+00:54.870 --> 00:56.160
+it inside of a class.
+
+00:56.580 --> 01:02.100
+So right now we have declared the existence of a property or a field attached to class vehicle, but
+
+01:02.100 --> 01:06.360
+we have not give it an given it an initial value to do so.
+
+01:06.360 --> 01:11.980
+Right after the class or the property definition, we can write in an equal sign and then some value.
+
+01:12.000 --> 01:14.010
+In my case, I'll say red like so.
+
+01:14.720 --> 01:20.390
+So this means that every time we create an instance of class vehicle, the instance will have a color
+
+01:20.390 --> 01:24.710
+property that is a string and its starting value will be equal to red.
+
+01:25.280 --> 01:28.730
+So for example, down here, right underneath the vehicle is new vehicle.
+
+01:28.730 --> 01:33.200
+We could do a console log of vehicle color like so.
+
+01:33.920 --> 01:39.560
+If we now save this, flip back over to our terminal one more time and run that file.
+
+01:41.720 --> 01:43.730
+We'll see a console.log of red appear.
+
+01:44.460 --> 01:48.180
+Now this is just one way to initialize a variable inside of a class.
+
+01:48.450 --> 01:53.610
+It's also very common to want to initialize a variable using some configuration options so we pass to
+
+01:53.610 --> 01:55.650
+the class when we create an instance out of it.
+
+01:56.070 --> 02:00.930
+So, for example, it would be a lot nicer to specify the color, right when we create a vehicle, because
+
+02:00.930 --> 02:03.120
+sometimes a vehicle might have a color of red.
+
+02:03.150 --> 02:07.080
+Other times it might be silver or black or orange or whatever it might be.
+
+02:07.590 --> 02:12.180
+So to do so, we could pass in the color as an argument to vehicle right here.
+
+02:12.330 --> 02:14.430
+So maybe I'll do something like orange.
+
+02:15.740 --> 02:20.960
+If we're going to pass in any arguments to this, we have to define a special function inside of the
+
+02:20.960 --> 02:23.540
+class definition called the constructor.
+
+02:25.260 --> 02:26.670
+So I'm going to write out constructor like.
+
+02:26.670 --> 02:31.230
+So the constructor function is a very special function to find inside of a class.
+
+02:31.620 --> 02:37.770
+Any time that we define a constructor, it will be instantly executed, right when we create a new instance
+
+02:37.770 --> 02:38.460
+of the class.
+
+02:38.460 --> 02:43.350
+So like as soon as we call new vehicle right here, the constructor function is going to run and the
+
+02:43.350 --> 02:47.880
+arguments that function are going to be whatever we pass in when we create the instance.
+
+02:47.880 --> 02:50.190
+So in this case, it'd be a string of orange.
+
+02:51.430 --> 02:56.380
+So we would probably want to receive that as an argument into the constructor of something like maybe
+
+02:56.380 --> 02:58.570
+color with an annotation of string like so.
+
+02:59.430 --> 03:04.110
+And then we'll take that value and do some initial assignment with it inside the constructor.
+
+03:04.500 --> 03:07.410
+So we would say this color is equal to color.
+
+03:08.460 --> 03:13.650
+If we use this method of initializing color by defining the constructor, we do not have to initialize
+
+03:13.650 --> 03:14.430
+it up here.
+
+03:14.730 --> 03:16.920
+So it's usually an either or decision.
+
+03:17.070 --> 03:22.500
+Either you are going to initialize a property on the same line that you define it, or you're going
+
+03:22.500 --> 03:25.560
+to initialize it inside the constructor, one or the other.
+
+03:26.130 --> 03:28.440
+In this case, we'll stick with the constructor method.
+
+03:28.440 --> 03:30.870
+So I'm going to delete the equals red up here.
+
+03:32.450 --> 03:37.310
+So now if I save this file again, I can run it in my terminal and I should now see.
+
+03:37.400 --> 03:37.640
+Oop.
+
+03:37.670 --> 03:38.660
+Got a little error here.
+
+03:38.870 --> 03:39.640
+Let's see.
+
+03:39.650 --> 03:41.080
+Our argument for color was not provided.
+
+03:41.090 --> 03:41.990
+My mistake.
+
+03:42.320 --> 03:42.950
+Let's see.
+
+03:42.950 --> 03:44.180
+Oh, I know what it is.
+
+03:44.360 --> 03:46.280
+We created a card down here as well.
+
+03:46.280 --> 03:48.890
+Let's just comment out all this stuff down here really quickly.
+
+03:49.740 --> 03:51.630
+While we were working on that first class.
+
+03:51.630 --> 03:56.280
+This actually is a very valuable subject that we have to discuss, like what we do with constructors
+
+03:56.280 --> 03:57.660
+in extended classes.
+
+03:57.660 --> 03:59.490
+But let's just hold off on that for right now.
+
+03:59.820 --> 04:02.500
+So I just commented out everything in the second half of the file.
+
+04:02.520 --> 04:04.740
+I'm going to save the file and then try to run it again.
+
+04:05.220 --> 04:05.940
+And there we go.
+
+04:05.940 --> 04:06.780
+Now I see orange.
+
+04:06.780 --> 04:07.470
+Perfect.
+
+04:08.400 --> 04:13.110
+Now just you know, there's also a little shortcut to automate this entire process right here.
+
+04:13.590 --> 04:17.610
+So notice how we kind of have to refer to these repetitive properties multiple times.
+
+04:17.610 --> 04:20.760
+I see color, color, color all over the place.
+
+04:21.450 --> 04:26.610
+A equivalent way to write all this out by using a little shortcut would be to delete the implementation
+
+04:26.610 --> 04:27.840
+inside the constructor.
+
+04:28.570 --> 04:30.940
+Delete the property definition at the top.
+
+04:32.410 --> 04:37.360
+And then right in front of the color argument, we could add on the word public like so.
+
+04:38.210 --> 04:40.670
+Public is one of those modifiers we spoke about.
+
+04:40.670 --> 04:46.190
+These modifiers can be used not only on methods in a class, but on properties or fields as well.
+
+04:46.840 --> 04:51.490
+So the syntax you see right here is going to mean that we're going to take whatever comes in as the
+
+04:51.490 --> 04:57.280
+first argument to that constructor, which in this case is Orange, and it will be assigned as an instance
+
+04:57.280 --> 05:00.310
+variable of color to our vehicle that we are creating.
+
+05:00.880 --> 05:05.950
+So the code that you see right here is 100% equivalent to this right here.
+
+05:06.280 --> 05:07.720
+It's just slightly shortened up.
+
+05:07.720 --> 05:11.560
+So we don't have to refer to this same color, color, color all over the place.
+
+05:12.490 --> 05:15.610
+So we're going to use this shortcut many times in the code that we write.
+
+05:16.180 --> 05:20.460
+If we do something like this, we can then shorten up that body of the constructor function as well.
+
+05:20.470 --> 05:22.690
+Even though it's empty, we still have to put it in.
+
+05:23.500 --> 05:24.610
+So let's try saving this.
+
+05:24.610 --> 05:25.720
+Flip back over.
+
+05:25.930 --> 05:28.510
+Run the file again and we will see Orange again.
+
+05:31.290 --> 05:31.590
+All right.
+
+05:31.590 --> 05:36.990
+Now, those modifiers we spoke about applied to variables just the same way as they do to methods.
+
+05:37.260 --> 05:42.870
+So we could alternatively use the private keyword or the private modifier on color.
+
+05:43.230 --> 05:47.760
+If we do so, we will no longer be able to read that variable outside of our class anymore.
+
+05:48.420 --> 05:51.300
+Likewise, we could also mark this thing as being protected.
+
+05:51.660 --> 05:57.480
+We still cannot access it outside the class, but we would be able to access that field from a class
+
+05:57.480 --> 06:00.930
+that extends vehicle such as car down here.
+
+06:02.410 --> 06:02.680
+All right.
+
+06:02.680 --> 06:06.950
+I'm going to leave that variable as public like so and I'll save the file.
+
+06:06.970 --> 06:08.140
+We're going to leave it like this.
+
+06:08.140 --> 06:09.460
+Let's take a quick pause right here.
+
+06:09.460 --> 06:14.950
+We're going to come back the next video and talk about how these fields work when we are using extensions
+
+06:14.950 --> 06:16.000
+like we are down here.
+
+06:16.000 --> 06:18.250
+So quick pause and I'll see you in just a minute.

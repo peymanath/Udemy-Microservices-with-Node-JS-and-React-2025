@@ -1,0 +1,355 @@
+WEBVTT
+
+00:01.730 --> 00:04.370
+Let's write out some tests around this listener we just made.
+
+00:05.000 --> 00:07.820
+So inside of my events directory, I'll find the listeners folder.
+
+00:07.850 --> 00:10.520
+I'll make a new directory inside there of underscore.
+
+00:10.520 --> 00:10.970
+Underscore.
+
+00:10.970 --> 00:11.330
+Test.
+
+00:11.330 --> 00:12.590
+Underscore, underscore.
+
+00:13.530 --> 00:20.730
+Then inside that folder, I'll make a new file of order, created listener tests and you can see the
+
+00:20.730 --> 00:23.220
+entire file name right there at the top of my screen.
+
+00:24.730 --> 00:29.050
+So inside this test file, we're going to go through just about the identical series of steps to how
+
+00:29.050 --> 00:32.020
+we tested our other two listeners back inside the Order Service.
+
+00:32.200 --> 00:35.200
+So we're going to once again read a setup function inside there.
+
+00:35.200 --> 00:40.600
+We're going to create an instance of our listener will do a fake data object, a fake message object,
+
+00:40.600 --> 00:42.040
+and then return all that stuff.
+
+00:42.190 --> 00:46.090
+In this case, we are also operating on presumably some existing ticket.
+
+00:46.090 --> 00:50.080
+So we might also need to create a ticket and save it to our collection inside the setup function as
+
+00:50.080 --> 00:50.530
+well.
+
+00:51.870 --> 00:53.820
+So let's first define the set of function.
+
+00:55.100 --> 00:57.380
+And it will add in imports along the way.
+
+00:58.660 --> 01:02.950
+So inside of here, the first thing we have to do is create an instance of the listener.
+
+01:04.120 --> 01:08.620
+That means we need to import the listener at the top along with the Nats wrapper class or the Nats wrapper
+
+01:08.620 --> 01:09.310
+singleton.
+
+01:09.910 --> 01:13.110
+So at the very top, let's get our order created.
+
+01:13.120 --> 01:13.930
+Listener.
+
+01:14.590 --> 01:16.750
+From up one directory order create a listener.
+
+01:17.140 --> 01:21.730
+I will also get my Nats wrapper from up three directories.
+
+01:21.730 --> 01:24.250
+That's where in the last video I said three directories.
+
+01:24.700 --> 01:25.600
+Nats wrapper.
+
+01:27.630 --> 01:28.860
+Well, then make my listener.
+
+01:30.520 --> 01:31.990
+As a new order.
+
+01:33.410 --> 01:34.790
+Created listener.
+
+01:35.500 --> 01:38.050
+And Parson, that's rapper client.
+
+01:39.750 --> 01:43.530
+After that, we're going to create and save a ticket.
+
+01:43.530 --> 01:48.630
+So this is going to be the ticket that we are trying to reserve in order to create and save a ticket,
+
+01:48.630 --> 01:50.670
+we need the ticket model once again.
+
+01:51.210 --> 01:55.680
+So at the top we will import ticket rum up three directories.
+
+01:56.590 --> 01:58.060
+Models ticket.
+
+01:59.870 --> 02:02.150
+Well, then make a ticket using tickets built.
+
+02:03.660 --> 02:08.610
+Whenever we create a ticket, we have to to provide a title, a price and a user ID.
+
+02:09.790 --> 02:12.350
+As usual, I'll just throw in a title of concert.
+
+02:12.350 --> 02:16.460
+A price of 99 and a user ID of.
+
+02:17.280 --> 02:21.600
+Whatever doesn't really matter because again, we're not going to really use this user ID so we could
+
+02:21.600 --> 02:25.160
+randomly generate one using the Mongoose library or that object ID constructor.
+
+02:25.170 --> 02:28.140
+Or alternatively, we could just throw in some arbitrary value.
+
+02:29.210 --> 02:31.130
+Well, then save this with and await ticket.
+
+02:31.400 --> 02:32.000
+Save.
+
+02:34.060 --> 02:39.400
+After that, we need to create the fake data event or the fake data object.
+
+02:39.700 --> 02:44.980
+So this is going to be a data object that's going to satisfy the data property of our order created
+
+02:44.980 --> 02:50.710
+interface or the order created event interface to help us put this data object together.
+
+02:50.710 --> 02:54.730
+We're going to import that interface at the top of the file once again from our common module.
+
+02:56.300 --> 02:57.260
+So at the very top.
+
+02:58.050 --> 03:01.770
+We will get our order created events.
+
+03:02.860 --> 03:04.420
+From our common module.
+
+03:05.950 --> 03:08.890
+And then we can use that thing to help us build out this fake data object.
+
+03:09.310 --> 03:14.680
+So we'll say data is going to be of type order created event at data.
+
+03:15.860 --> 03:20.150
+And again, since this is going to be a really big object, a lot of different properties here, we
+
+03:20.150 --> 03:24.260
+can use TypeScript to just help us along the way and remember what properties this thing requires.
+
+03:25.320 --> 03:28.440
+So in total we've got, well, everything you see listed here.
+
+03:28.620 --> 03:33.990
+Just to help myself out, I'm going to copy as much as I can out of this little note right here.
+
+03:37.140 --> 03:38.370
+And then paste it in.
+
+03:38.370 --> 03:40.860
+I am going to have to change a lot of stuff inside of here.
+
+03:40.860 --> 03:45.150
+I'm really just copying it so I can easily reference all these different properties we have to define.
+
+03:45.150 --> 03:47.790
+And finally on the ticket as well, I missed one line in there.
+
+03:47.820 --> 03:51.300
+In addition to the ticket ID, we also have to reflect the ticket price.
+
+03:53.600 --> 03:55.350
+So these are all the properties we have to define.
+
+03:55.350 --> 03:59.580
+So we're now going to go through replace all the types and the semicolons with an actual value in a
+
+03:59.580 --> 04:00.090
+comma.
+
+04:01.790 --> 04:08.330
+So first off, for ID right here, we can once again either generate a random ID using mongoose or put
+
+04:08.330 --> 04:09.290
+in a fake ID.
+
+04:09.320 --> 04:13.910
+In this case, let's actually generate a ID with mongoose because this ID actually does have a pretty
+
+04:13.910 --> 04:15.290
+good amount of meaning to us.
+
+04:15.290 --> 04:20.030
+And it'd be nice to use some realistic looking data though, to generate a fake ID at the top.
+
+04:20.030 --> 04:21.650
+Let's import Mongoose.
+
+04:22.990 --> 04:23.860
+From Mongoose.
+
+04:25.610 --> 04:33.110
+And then to generate the ID mongoose types object id to hex string.
+
+04:35.810 --> 04:36.960
+Next up, our version.
+
+04:36.980 --> 04:39.410
+So this thing presumably was just created.
+
+04:39.710 --> 04:44.360
+The order, I mean, so we should probably say that this starts off with a version number of zero.
+
+04:45.570 --> 04:46.650
+Next up, our status.
+
+04:46.650 --> 04:51.780
+Whenever an order first gets created, it's going to have an order status equal to I believe it was
+
+04:51.780 --> 04:52.260
+created.
+
+04:52.260 --> 04:54.230
+I want to say that was our order status.
+
+04:54.240 --> 04:58.860
+Either way, remember, we define all of our possible order statuses inside of an enum, inside of our
+
+04:58.860 --> 04:59.760
+common module.
+
+05:00.000 --> 05:04.140
+So let's import that enum at the very top and we can use that to assign actual value to this thing.
+
+05:05.120 --> 05:08.210
+So from our common module, I'll get my order status.
+
+05:12.280 --> 05:16.030
+And then for status right here we will replace that with order status dot.
+
+05:16.210 --> 05:17.590
+And it was created.
+
+05:17.590 --> 05:18.550
+That was the name of it.
+
+05:20.300 --> 05:22.360
+Then our user ID again doesn't really matter.
+
+05:22.370 --> 05:27.410
+I'll just put in a fake string here expires that this is our timestamp of when the thing expires not
+
+05:27.410 --> 05:30.470
+using the time stamp whatsoever here put in a fake value.
+
+05:31.540 --> 05:35.050
+And now on to something actually matters, the ticket itself.
+
+05:35.260 --> 05:39.550
+Well, the idea the ticket that we're trying to reserve is going to be the ticket or the idea the ticket
+
+05:39.550 --> 05:41.980
+that we just built and saved on the step before.
+
+05:42.490 --> 05:47.950
+So for the idea of this ticket, we will say ticket ID and then its price will be equal to this things
+
+05:47.950 --> 05:48.760
+price as well.
+
+05:49.270 --> 05:50.680
+So ticket price.
+
+05:53.120 --> 05:55.340
+All right, well, there's our fake data object.
+
+05:56.110 --> 05:58.870
+Next up, our fake message object.
+
+05:58.900 --> 06:02.080
+We've gone through this several times so we can put it together rather easily.
+
+06:02.500 --> 06:05.920
+We're going to say that we're going to have a message object that is of type message.
+
+06:06.770 --> 06:10.280
+It's going to have an act function, which is actually going to be a just mock function.
+
+06:11.140 --> 06:15.160
+Now we've got an error here because we have not imported the message type from the node streaming library.
+
+06:15.160 --> 06:16.660
+Let's do that at the top right away.
+
+06:19.490 --> 06:20.810
+Node Nat streaming.
+
+06:22.410 --> 06:26.430
+Once you've got that input, TypeScript will say, Fantastic, this thing is defined.
+
+06:26.430 --> 06:28.880
+But you did not define the message object correctly.
+
+06:28.890 --> 06:30.960
+So again, we'll say touch script.
+
+06:30.960 --> 06:31.650
+Just don't sweat it.
+
+06:31.650 --> 06:32.790
+We're kind of cheating here.
+
+06:34.870 --> 06:35.110
+All right.
+
+06:35.110 --> 06:36.010
+That is it for the setup.
+
+06:36.010 --> 06:39.820
+So now we're going to take all the stuff we just created and return it so we can actually use all this
+
+06:39.820 --> 06:41.290
+stuff inside of our different tests.
+
+06:41.470 --> 06:45.850
+So we're going to return in total listener ticket data and message.
+
+06:46.690 --> 06:51.880
+It's a return listener ticket data message, and that's it.
+
+06:54.310 --> 06:55.930
+So now we can start to write out our test.
+
+06:56.050 --> 06:59.830
+But first, this is a long video, so let's take a pause right here and continue in just a moment.

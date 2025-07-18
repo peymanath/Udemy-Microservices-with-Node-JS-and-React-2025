@@ -1,0 +1,202 @@
+WEBVTT
+
+00:01.250 --> 00:04.940
+We've been playing around with pods and deployments for quite a while, and at this point in time,
+
+00:04.940 --> 00:10.070
+if we do a little get pods, we'll see that we still have one pod running from our deployment.
+
+00:10.220 --> 00:15.050
+So in theory, this thing right here, this pod inside of it is running a container.
+
+00:15.410 --> 00:18.320
+And inside that container is our post application.
+
+00:18.680 --> 00:20.540
+So at this point, a quick question for you.
+
+00:20.540 --> 00:27.380
+How do we actually make a request to that application somewhere hidden in all these crazy layers is
+
+00:27.380 --> 00:28.670
+our original node server.
+
+00:28.670 --> 00:30.440
+How do we actually make use of that thing?
+
+00:30.620 --> 00:32.570
+Well, that's what we're going to figure out in this video.
+
+00:32.900 --> 00:35.150
+So we're going to be discussing services.
+
+00:35.480 --> 00:39.050
+Remember, a service is another kind of object in Kubernetes.
+
+00:39.050 --> 00:43.940
+It's an object very similar to how a pod is an object or a deployment is an object.
+
+00:44.120 --> 00:49.130
+We create services using config files just as we do pods and deployments.
+
+00:50.230 --> 00:55.030
+We are going to make use of services to set up some communication between all of our different pods
+
+00:55.030 --> 00:58.750
+or to get access to a pod from the outside of our cluster.
+
+00:59.260 --> 01:05.140
+So any time we need to have some communication or networking between our pods, which is the case with
+
+01:05.140 --> 01:12.100
+our event bus, trying to send events over to our post images or the post pods, or any time that we
+
+01:12.100 --> 01:17.200
+need to somehow access a pod from outside of the cluster, we are always going to be making use of a
+
+01:17.200 --> 01:17.920
+service.
+
+01:18.040 --> 01:24.460
+So any time we think of networking or communication in any way, shape or form, we are always thinking
+
+01:24.460 --> 01:25.630
+about services.
+
+01:26.740 --> 01:31.210
+Just about every single pod that we ever create we're going to want to communicate with in some fashion.
+
+01:31.210 --> 01:35.230
+So just about every pod or every deployment we create is always going to have some kind of matching
+
+01:35.230 --> 01:36.520
+service along with it.
+
+01:37.520 --> 01:40.670
+Behind the scenes, there are actually several different kinds of services.
+
+01:40.670 --> 01:43.130
+So let's go over these different types really quickly.
+
+01:44.400 --> 01:48.780
+There are four different types of services that we need to be aware of, but effectively there's only
+
+01:48.780 --> 01:49.290
+two.
+
+01:49.320 --> 01:54.270
+Cluster IP and load balancer that we're going to be using on a very daily basis.
+
+01:55.170 --> 02:01.050
+Cluster IP services are used any time that we want to set up communication between different pods inside
+
+02:01.050 --> 02:01.830
+of our cluster.
+
+02:03.650 --> 02:09.680
+No ports are used anytime you want to access a pod from outside of our cluster, but we only usually
+
+02:09.680 --> 02:12.470
+only use a node port for development purposes.
+
+02:13.480 --> 02:17.830
+Load balancers are the right way to access a pod from outside the cluster.
+
+02:17.860 --> 02:21.850
+So you can think of a node port and load balancer as being very similar, but the way that they actually
+
+02:21.850 --> 02:23.170
+work are very different.
+
+02:23.170 --> 02:25.810
+And I'll be sure to tell you exactly how they're different over time.
+
+02:26.530 --> 02:32.320
+So Node port and load balancer are both going to expose a port to the outside world or to expose a pod
+
+02:32.350 --> 02:33.370
+to the outside world.
+
+02:33.910 --> 02:35.700
+And then finally, external name services.
+
+02:35.710 --> 02:40.180
+I only put it in this diagram so that you are aware that this exists and it is another type of service,
+
+02:40.180 --> 02:42.280
+but it's not something that we are going to use.
+
+02:42.310 --> 02:46.300
+It's a very advanced, very kind of corner case thing that we're not really going to worry about.
+
+02:47.060 --> 02:48.440
+So a quick question for you.
+
+02:48.470 --> 02:51.080
+Out of these three different types of services.
+
+02:51.790 --> 02:56.770
+What would be the most appropriate type of service to use if we want to set up some kind of communication
+
+02:56.770 --> 02:58.270
+between these different pods?
+
+02:58.720 --> 03:03.010
+Well, in this case, we are trying to set up communication between pods inside of a cluster.
+
+03:03.130 --> 03:09.490
+So that would be most appropriate for a cluster IP type service because it only exposes pods to other
+
+03:09.490 --> 03:10.990
+pods inside the cluster.
+
+03:11.500 --> 03:15.220
+So we would want this right here to be a cluster IP service.
+
+03:16.140 --> 03:17.370
+How about the other scenario?
+
+03:17.370 --> 03:22.350
+Scenario in which we want to access a pod from the outside world, like maybe a browser running on our
+
+03:22.350 --> 03:25.080
+computer or a browser running on some user's machine.
+
+03:26.320 --> 03:31.810
+In this scenario, we are trying to access a pod from the outside world so we could use either a node
+
+03:31.810 --> 03:33.610
+port or a load balancer.
+
+03:34.340 --> 03:39.080
+If we are in a development environment and we just want to do one little quick one off test or something
+
+03:39.080 --> 03:43.760
+like that, we would use a node port, but in just about every other scenario we are going to use a
+
+03:43.760 --> 03:45.320
+load balancer type service.
+
+03:45.980 --> 03:49.520
+So in this case, we would make this either a load balancer.
+
+03:52.070 --> 03:53.720
+And I'll say sorry about that.
+
+03:54.050 --> 03:59.030
+I'll say on here at the very end, or possibly a node port.
+
+04:01.000 --> 04:04.170
+So those are some of the different types of services that we're going to make use of.
+
+04:04.180 --> 04:09.310
+Again, we're going to be mostly focused on cluster IP and load balancer, but we will sometimes make
+
+04:09.310 --> 04:10.600
+use of node port.
+
+04:10.810 --> 04:12.430
+So let's take a quick pause right here.
+
+04:12.430 --> 04:15.580
+We're going to come back to the next video and we're going to start to create our first service.

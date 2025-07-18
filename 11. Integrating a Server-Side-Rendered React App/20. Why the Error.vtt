@@ -1,0 +1,463 @@
+WEBVTT
+
+00:01.020 --> 00:05.670
+In the last video, we tried to fetch data from two locations inside of our component inside of get
+
+00:05.670 --> 00:06.660
+initial props.
+
+00:07.020 --> 00:12.520
+Now inside the component right here, this call is executed on the browser for sure, without a doubt.
+
+00:12.540 --> 00:16.500
+It is technically also executed on the server, but we're just going to forget that for just a moment.
+
+00:16.920 --> 00:19.230
+When we executed this call on the browser.
+
+00:19.930 --> 00:23.230
+We saw without a doubt that we got a good response back.
+
+00:23.320 --> 00:24.610
+There's my current user request.
+
+00:24.610 --> 00:25.690
+I got back some data.
+
+00:25.690 --> 00:30.520
+Everything worked as expected, but as soon as we tried to make that request, instead of get initial
+
+00:30.520 --> 00:35.020
+props and remember this is executed on the server, we saw a big, nasty error.
+
+00:35.140 --> 00:42.250
+Let's uncomment that really quick, save the file, look back over, refresh the page and there we go.
+
+00:42.250 --> 00:43.600
+There's the big nasty error.
+
+00:43.630 --> 00:45.970
+This barely even makes sense.
+
+00:45.970 --> 00:48.940
+We don't even really see any actionable error message here.
+
+00:49.120 --> 00:50.080
+What does that even mean?
+
+00:50.080 --> 00:51.460
+What does this error message mean?
+
+00:52.160 --> 00:54.800
+So in this video, we're going to figure out exactly what is going on.
+
+00:54.830 --> 00:59.510
+Now, just so you know, this whole issue we're currently running into is pretty much why I wanted to
+
+00:59.510 --> 01:03.130
+use server side rendering in the first place for this particular application.
+
+01:03.140 --> 01:06.260
+I didn't really care quite so much about SEO benefits or anything like that.
+
+01:06.260 --> 01:10.970
+I really just wanted you to see this air just to give you some more insight into what is going on in
+
+01:10.970 --> 01:12.110
+the world of Kubernetes.
+
+01:12.410 --> 01:12.860
+Okay.
+
+01:12.860 --> 01:18.170
+So let's first take a look at a diagram that's going to investigate exactly what happened when we made
+
+01:18.170 --> 01:20.150
+that request from the browser successfully.
+
+01:20.150 --> 01:25.730
+So that was when we had that request right there only, and we had come to that get initial props.
+
+01:25.730 --> 01:29.270
+So why was this working and exactly what is going on behind the scenes?
+
+01:29.270 --> 01:31.040
+Well, let's zoom in and take a look.
+
+01:32.460 --> 01:32.760
+All right.
+
+01:32.760 --> 01:35.330
+So we're going to start off first up on this top flow.
+
+01:35.340 --> 01:41.520
+So we typed in ticketing dev into our browser that made a request off to some networking level or layer
+
+01:41.520 --> 01:42.600
+on your computer.
+
+01:43.210 --> 01:49.570
+Now remember, we have set up our host file to translate ticketing dev into local host.
+
+01:49.900 --> 01:54.520
+So when we made this request from our browser, something on your machine, some networking layer,
+
+01:54.520 --> 01:58.480
+translated that into a get request to 127001.
+
+01:58.480 --> 02:02.950
+And by default, because we did not specify a port, the port was set to 80.
+
+02:02.950 --> 02:05.680
+So that is where we are making our request to ultimately.
+
+02:06.390 --> 02:11.400
+Now that port on localhost has been bound to by ingress engine x.
+
+02:11.400 --> 02:16.950
+Any time you make a request to that port, that IP ingress Engine X is going to receive that request
+
+02:16.950 --> 02:18.600
+and root it off appropriately.
+
+02:19.540 --> 02:24.550
+So in this case, because we were making a request to ticketing dev without any path on their ingress,
+
+02:24.550 --> 02:28.120
+engine x decided to send that request on to our client application.
+
+02:28.120 --> 02:32.590
+So next JJ's built up some HTML document and sent it back down to us.
+
+02:32.590 --> 02:37.510
+So it responded and that eventually came back to us as some fully rendered HTML file.
+
+02:37.540 --> 02:42.340
+Of course, we were not actually fetching any data or anything like that inside of this initial approach,
+
+02:42.340 --> 02:45.700
+but nonetheless, there might have been some initial HTML inside there.
+
+02:45.730 --> 02:46.180
+Who knows?
+
+02:46.180 --> 02:48.160
+The point is, we got to respond successfully.
+
+02:49.650 --> 02:53.700
+So then inside the browser, our browser took that HTML file, it rendered it.
+
+02:53.700 --> 02:56.100
+It might have also fetch some additional JavaScript files.
+
+02:56.100 --> 03:01.710
+And then eventually we had some code inside of our React application that made use of Axios to make
+
+03:01.710 --> 03:03.000
+a follow up request.
+
+03:03.210 --> 03:06.150
+So that request is this request right here.
+
+03:07.680 --> 03:15.210
+So we made a request and we specifically designated a path only we said make a request to just API users
+
+03:15.210 --> 03:16.020
+current user.
+
+03:16.660 --> 03:18.580
+So as you see right here, just a path.
+
+03:18.580 --> 03:21.460
+We have not specified a domain or anything like that.
+
+03:21.910 --> 03:27.220
+Whenever we try to make a request and we do not specify the domain by default, your browser is going
+
+03:27.220 --> 03:30.700
+to assume that you're trying to make a request to the current domain.
+
+03:31.000 --> 03:36.130
+So as a matter of fact, if I flip back over after fixing up my code, I'm going to save this file really
+
+03:36.130 --> 03:37.030
+quickly with that stuff.
+
+03:37.030 --> 03:37.840
+Commented it out.
+
+03:38.780 --> 03:43.730
+So now if I take a look at the successful current user request right here and look at the headers tab,
+
+03:43.760 --> 03:50.630
+I'll see that the final request URL that the browser decided to use was in fact ticketing dev API users.
+
+03:50.630 --> 03:51.470
+Current user.
+
+03:52.460 --> 03:57.860
+So even though we typed into our code just API users current user, the browser expanded that into ticketing
+
+03:58.010 --> 04:00.020
+dev API users, current user.
+
+04:00.530 --> 04:03.920
+So again, that went through some kind of networking layer on your computer.
+
+04:03.920 --> 04:09.260
+And because of the config that we put into that host file, your computer decided to ultimately translate
+
+04:09.260 --> 04:14.270
+that into 12700 180 and then the actual root.
+
+04:15.180 --> 04:20.970
+So again, that got forwarded into ingress engine X, ingress engine x took a look at the path on there
+
+04:20.970 --> 04:26.850
+so API users current user and decided to for that on to the off service and we got a response from the
+
+04:27.000 --> 04:29.760
+service and everything worked as expected.
+
+04:30.060 --> 04:34.470
+So again, this entire flow is when everything up here to work.
+
+04:35.570 --> 04:37.970
+So let's now take a look at a very similar diagram.
+
+04:38.300 --> 04:43.340
+But we're going to imagine or kind of picture the case in which we were making this request from the
+
+04:43.340 --> 04:45.830
+server instead, not from the browser.
+
+04:46.550 --> 04:50.750
+So we're going to look at a diagram that's going to handle this case right here without really making
+
+04:50.750 --> 04:52.220
+the request from inside the components.
+
+04:52.220 --> 04:54.650
+Why did this fail so catastrophically?
+
+04:54.650 --> 04:57.410
+Why did we see that really nasty error message?
+
+04:58.360 --> 04:59.440
+This one right here.
+
+04:59.770 --> 05:01.330
+Well, let's take a look at the diagram.
+
+05:02.160 --> 05:02.510
+Okay.
+
+05:02.520 --> 05:03.600
+So I'm going to zoom in.
+
+05:05.030 --> 05:10.580
+So in this case we entered into contact dev into our address bar and hit enter or we just refresh the
+
+05:10.580 --> 05:11.840
+page like so.
+
+05:12.800 --> 05:14.910
+That made a request off to ticketing Dev.
+
+05:14.960 --> 05:21.020
+Now once again, that got translated by your computer because that host file setting to a request for
+
+05:21.020 --> 05:23.270
+1 to 7 001 80.
+
+05:24.320 --> 05:26.720
+So that went off to ingress engine x.
+
+05:27.990 --> 05:30.550
+Ingress Engine X took a look at the path on that request.
+
+05:30.570 --> 05:34.980
+It didn't see anything, so it decided to send it off to our default handler, which is essentially
+
+05:34.980 --> 05:36.240
+our client service.
+
+05:37.070 --> 05:40.010
+So that request was then handled inside of next JJ's.
+
+05:40.040 --> 05:41.480
+I'm going to zoom in on this thing.
+
+05:42.590 --> 05:44.990
+So next, Jess took a look at that incoming request.
+
+05:46.090 --> 05:49.090
+It took a look, tried to see if there was any path on there or anything like that.
+
+05:49.090 --> 05:50.140
+It did not see one.
+
+05:50.140 --> 05:55.870
+So I has decided to show the route, route or essentially our index DOJ's file.
+
+05:56.850 --> 05:59.580
+Inside of indexes is our landing page.
+
+05:59.910 --> 06:01.100
+And remember what I told you.
+
+06:01.110 --> 06:06.330
+Whenever snags is rendering our stuff on the server, it's going to call that component's associated
+
+06:06.330 --> 06:07.890
+get initial props function.
+
+06:08.190 --> 06:10.710
+So that's when this thing right here was invoked.
+
+06:12.350 --> 06:19.010
+Then inside there we wrote out some code that said, make a request to just API users current user.
+
+06:19.010 --> 06:21.860
+And again, we did not specify a domain.
+
+06:23.690 --> 06:28.370
+So next JZ or really Axios in this case attempted to issue that request.
+
+06:29.130 --> 06:33.620
+That request with just the route right there, went through some networking layer once again.
+
+06:33.630 --> 06:35.520
+Now I just have networking right here.
+
+06:35.520 --> 06:39.990
+This is actually some HTTP stuff implemented by node nodes.
+
+06:40.000 --> 06:42.720
+HTTP layer works similar to the browser.
+
+06:42.720 --> 06:49.770
+If you do not specify a domain right there, the nodes HTTP layer is going to just assume that you are
+
+06:49.770 --> 06:52.590
+trying to make a request on your local machine.
+
+06:53.130 --> 07:00.750
+So nodes HTTP layer is going to automatically stick a domain on there of possibly a local host or really
+
+07:00.750 --> 07:02.880
+it's 12701.
+
+07:03.180 --> 07:07.470
+So again, nodes, HTTP layer says, well, I need a domain to make the request to so I'm just going
+
+07:07.470 --> 07:09.660
+to throw in local machine good enough.
+
+07:10.080 --> 07:14.610
+So we ultimately tried to make a request to 1 to 7 001 80.
+
+07:15.150 --> 07:18.330
+Now, here's the really super critical thing to remember.
+
+07:19.160 --> 07:22.820
+We are running our next application inside of a container.
+
+07:22.970 --> 07:25.790
+That container is essentially its own little world.
+
+07:26.030 --> 07:34.370
+So when we try to make a request to 127001 480, that request one to port 80 inside of the container.
+
+07:34.370 --> 07:39.590
+It did not somehow get redirected back out to ingress engine x.
+
+07:39.620 --> 07:42.180
+It didn't magically get sent back out there.
+
+07:42.200 --> 07:45.980
+Instead, it went to local host inside of this container.
+
+07:46.070 --> 07:49.470
+There's nothing running on Port 80 inside that container right now.
+
+07:49.490 --> 07:50.120
+Nothing.
+
+07:50.600 --> 07:54.170
+So that is why we end up seeing a message right here of connection.
+
+07:54.170 --> 07:56.560
+Refused 12700 180.
+
+07:56.570 --> 07:59.110
+This IP address 127001.
+
+07:59.120 --> 08:03.920
+That's not talking about local host on your personal machine or essentially like your entire overall
+
+08:03.920 --> 08:04.250
+machine.
+
+08:04.250 --> 08:06.950
+Instead that is local host inside the container.
+
+08:06.950 --> 08:11.270
+And again, nothing is listing on local host port 80 inside the container.
+
+08:11.270 --> 08:14.000
+So that's why we are seeing this nasty error message here.
+
+08:14.920 --> 08:20.230
+So the request that we had intended to probably go off to ingress in Gen X and we had probably been
+
+08:20.230 --> 08:22.510
+hoping for that to be read it off to the service.
+
+08:22.510 --> 08:27.220
+Or alternatively, we would have hoped for that request to just go to the service directly like any
+
+08:27.220 --> 08:28.630
+of those would have been appropriate.
+
+08:28.870 --> 08:30.130
+That never happened.
+
+08:30.130 --> 08:33.220
+The request never went to ingress in Gen X and got routed.
+
+08:33.460 --> 08:35.980
+And the other alternative just going directly to the service.
+
+08:35.980 --> 08:37.630
+That also did not happen.
+
+08:38.050 --> 08:40.600
+And so we ended up with that really nasty error message.
+
+08:41.440 --> 08:41.740
+All right.
+
+08:41.740 --> 08:44.860
+So again, that's pretty much the reason we use jazz.
+
+08:44.920 --> 08:48.340
+I really just wanted you to see this kind of big problem in action.
+
+08:49.260 --> 08:51.290
+So how are we going to deal with this?
+
+08:51.300 --> 08:52.720
+That's the real question.
+
+08:52.740 --> 08:53.430
+What are we going to do?
+
+08:53.460 --> 08:55.140
+How are we going to somehow fix this error?
+
+08:55.380 --> 08:56.610
+Well, let's take a pause right here.
+
+08:56.640 --> 08:59.850
+Come back to the next video and figure out exactly how we're going to solve this.

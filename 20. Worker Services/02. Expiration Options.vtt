@@ -1,0 +1,388 @@
+WEBVTT
+
+00:00.860 --> 00:04.460
+In this video, we're going to take a look at a couple of different ways of making sure the expiration
+
+00:04.460 --> 00:08.810
+service waits about the 15 minutes or so before emitting that expiration complete event.
+
+00:09.290 --> 00:13.130
+The first thing we want to do is really just kind of picture that service in isolation.
+
+00:13.400 --> 00:19.280
+The idea here is order created comes in and then we're going to have some mechanism inside of here to
+
+00:19.400 --> 00:24.830
+wait that 15 minutes or so and then eventually emit some event of expiration complete.
+
+00:25.160 --> 00:30.350
+Now I keep talking about waiting 15 minutes and all that stuff, just as a very quick reminder if we
+
+00:30.350 --> 00:31.250
+think back.
+
+00:31.930 --> 00:36.790
+So when we actually create an order and where we assign that timer, if we go back to our order service,
+
+00:36.790 --> 00:39.460
+take a look at routes and then new TS.
+
+00:40.810 --> 00:41.380
+Inside of here.
+
+00:41.380 --> 00:46.840
+You'll recall that our mechanism for actually tracking when order expires is a timestamp.
+
+00:46.870 --> 00:51.230
+So that is the time at some point in time in the future when this order is going to expire.
+
+00:51.250 --> 00:55.570
+So when I talk about waiting 15 minutes or something like that, it's really not so much waiting for
+
+00:55.570 --> 01:02.080
+15 minutes, so much as it is waiting for this timestamp to go from being in the future into the past.
+
+01:02.320 --> 01:07.150
+In other words, when it is this time indicated by this timestamp right here, that's when we want to
+
+01:07.150 --> 01:09.730
+emit this expiration complete event.
+
+01:10.640 --> 01:14.540
+Having said that, as we're discussing this service, I'm really just going to keep saying, oh, yeah,
+
+01:14.540 --> 01:16.220
+we want to wait 15 minutes or so.
+
+01:16.220 --> 01:19.220
+Let's not technically we are waiting 15 minutes inside the service.
+
+01:19.220 --> 01:23.990
+It is really technically at some future point in time that is indicated inside of this event.
+
+01:23.990 --> 01:26.810
+We want to emit that event of expiration complete.
+
+01:27.890 --> 01:31.910
+So with that little disclaimer out of the way, what are the ways that we can actually implement this?
+
+01:31.940 --> 01:36.200
+Well, the first one that we're going to take a look at, really simple, super basic, we could say
+
+01:36.200 --> 01:39.080
+this is totally an option, but there is a big downside to it.
+
+01:39.800 --> 01:45.050
+We could say that whenever we see this event come in, we could just use something like set time out
+
+01:45.260 --> 01:47.330
+so we can have some set time out function.
+
+01:47.540 --> 01:49.350
+We tell it to wait 15 minutes.
+
+01:49.370 --> 01:50.870
+Now, that's not actually valid right there.
+
+01:50.870 --> 01:54.260
+We cannot give a set time out a string of 15 minutes, but you get the idea.
+
+01:54.260 --> 01:58.510
+We could provide some number of milliseconds to wait, and after that number of milliseconds, we can
+
+01:58.520 --> 02:01.730
+have some code inside of here to publish the expiration complete event.
+
+02:02.150 --> 02:05.720
+And this definitely is an option, but it's not super viable.
+
+02:06.200 --> 02:10.640
+The reason that it's not a great option is that set time out stores a timer in memory.
+
+02:10.820 --> 02:17.210
+So if our expiration service were to ever restart for any reason whatsoever, then all the timers that
+
+02:17.210 --> 02:22.160
+we have running at that point in time are going to be lost and we're going to completely forget about
+
+02:22.160 --> 02:27.200
+the fact that, well, we have to publish the expiration complete event in some remaining amount of
+
+02:27.200 --> 02:27.680
+time.
+
+02:28.390 --> 02:31.800
+So this would be super simple in nature, but a very clear downside to it.
+
+02:32.810 --> 02:34.100
+So what's another option?
+
+02:34.260 --> 02:36.170
+Well, the second option we have available to us.
+
+02:36.950 --> 02:39.690
+Would be to just set up a listener for order created.
+
+02:39.810 --> 02:45.330
+And every single time we see this event come in, we could check to see if the expires at time inside
+
+02:45.330 --> 02:47.040
+that event is in the past.
+
+02:47.310 --> 02:51.750
+If it is in the past, then we could emit the expiration complete event.
+
+02:52.320 --> 02:56.040
+And if it's not in the past, if that expiration time is still at some point in time in the future,
+
+02:56.040 --> 02:58.770
+we can just not ask the incoming message.
+
+02:58.920 --> 03:02.130
+If we do not act this incoming event, remember acknowledge it.
+
+03:02.130 --> 03:06.840
+That means that Nats is going to automatically re deliver this thing 5 seconds in the future.
+
+03:07.110 --> 03:12.030
+And so we could just rely upon that constant re delivery and every single time we could just check the
+
+03:12.030 --> 03:13.140
+expires at time.
+
+03:13.140 --> 03:18.990
+And whenever it's in the past we can say okay time to actually act this event finally and publish our
+
+03:18.990 --> 03:19.350
+own.
+
+03:20.560 --> 03:23.200
+And this is also, without a doubt, a viable option.
+
+03:23.200 --> 03:28.030
+We could definitely put something like this together, but there is a pretty big downside to this.
+
+03:28.830 --> 03:34.110
+One way of tracking events that fail constantly inside of our application is to track the number of
+
+03:34.110 --> 03:35.780
+times that they get re delivered.
+
+03:35.790 --> 03:40.620
+So in other words, we might have other events that we are having trouble processing inside of our app.
+
+03:40.740 --> 03:45.090
+And for logging purposes, we might want to track how many times they get re delivered.
+
+03:45.090 --> 03:49.470
+And then maybe after we have tried to process them say five, six, seven, eight, nine, ten times,
+
+03:49.470 --> 03:54.150
+we might then throw some kind of critical alert to our engineers and say, Hey, there's some event
+
+03:54.150 --> 03:56.250
+that we just plain can't process.
+
+03:56.610 --> 04:02.190
+And so if we are relying upon this kind of a re delivery mechanism for both logging purposes and for
+
+04:02.190 --> 04:05.850
+some core business logic, life is going to get really confusing really quickly.
+
+04:06.420 --> 04:08.970
+So all of this could be a viable option.
+
+04:08.970 --> 04:13.650
+I'd say that it just doesn't quite feel right and it's going to make some things complicated down the
+
+04:13.650 --> 04:14.100
+line.
+
+04:15.880 --> 04:16.740
+That's option number two.
+
+04:16.750 --> 04:18.010
+Let's go on to option number three.
+
+04:18.860 --> 04:21.730
+Now, option number three, this would be a fantastic option.
+
+04:21.740 --> 04:25.910
+Unfortunately, it is not supported by Nat streaming server.
+
+04:25.970 --> 04:28.580
+So down here I've got in this diagram message broker.
+
+04:28.580 --> 04:32.360
+So this is to say some other implementation of a event.
+
+04:32.360 --> 04:35.420
+Plus, let's really be really precise here with our naming.
+
+04:36.430 --> 04:38.980
+This would be not nats.
+
+04:39.870 --> 04:43.770
+There are other event bus implementations that are going to support this kind of feature.
+
+04:43.840 --> 04:45.510
+Let's first talk about what the feature is.
+
+04:45.510 --> 04:50.370
+So in this approach, approach number three, we could say that whenever we receive order created will
+
+04:50.370 --> 04:54.360
+then receive that in sight of expiration service and without any delay whatsoever.
+
+04:54.360 --> 04:59.640
+Like the instant we receive this event, we could publish our own event of expiration complete, but
+
+04:59.640 --> 05:01.380
+we could attach to that event.
+
+05:01.380 --> 05:06.660
+When we publish it, we could tell our event bus to not publish this thing for another 15 minutes.
+
+05:08.230 --> 05:13.480
+So in this case, we'd be relying upon our event bus to wait 15 minutes before actually sending out
+
+05:13.480 --> 05:14.980
+this event to the rest of the world.
+
+05:16.080 --> 05:19.080
+Now, unfortunately, Napster server just doesn't support this.
+
+05:19.320 --> 05:24.630
+This idea here of some kind of delayed message is referred to as a scheduled message or a scheduled
+
+05:24.630 --> 05:25.290
+event.
+
+05:25.530 --> 05:30.010
+So you will see other event implementations that support this, but again, not supported by that streaming
+
+05:30.030 --> 05:30.540
+server.
+
+05:31.020 --> 05:35.970
+And this would be a pretty great little feature if we had ability to do this, because if we had the
+
+05:35.970 --> 05:39.240
+ability to do this, we wouldn't even need the expiration service.
+
+05:39.420 --> 05:40.920
+We could actually just have.
+
+05:42.110 --> 05:43.640
+Our order service.
+
+05:44.930 --> 05:51.140
+Itself published an event that says, Oh, hey, remind me in 15 minutes that I need to expire this
+
+05:51.140 --> 05:51.650
+order.
+
+05:51.950 --> 05:56.450
+So in this scenario, if we had access to this kind of feature, well, the order service could just
+
+05:56.450 --> 06:00.050
+say, hey, remind me in 15 minutes to do this thing and we would be all set.
+
+06:00.080 --> 06:00.800
+Good to go.
+
+06:01.520 --> 06:04.310
+But for the fifth time now, not supported by Napster server.
+
+06:04.310 --> 06:05.240
+So not an option.
+
+06:06.350 --> 06:06.680
+All right.
+
+06:06.680 --> 06:08.860
+So that's up to number three, on to option number four.
+
+06:08.870 --> 06:12.950
+And as usual, as you can guess, this is what we're going to do inside of our application.
+
+06:15.220 --> 06:20.890
+So inside of our exploration service, we're going to make use of a little library called Bull JS.
+
+06:21.070 --> 06:27.160
+This is a JavaScript library that allows us to essentially set up long live timers of sorts or essentially
+
+06:27.160 --> 06:28.810
+give ourselves notifications.
+
+06:29.200 --> 06:34.360
+It's really a very general purpose framework for allowing us to store some amount of data, do some
+
+06:34.360 --> 06:38.410
+processing, and possibly have some scheduled aspect to it as well.
+
+06:39.110 --> 06:43.850
+So instead of our expiration service, we're going to use bull and we're going to tell it, remind us
+
+06:43.850 --> 06:46.490
+in 15 minutes to do some amount of work.
+
+06:47.180 --> 06:49.520
+We're going to pass that command into bulges.
+
+06:49.520 --> 06:54.530
+And bulges is going to store this little reminder inside of a reddest instance.
+
+06:54.740 --> 06:58.820
+If you're not familiar with reddest, reddest is essentially an in-memory database.
+
+06:59.710 --> 07:02.890
+It is very commonly used for tasks exactly like this right here.
+
+07:03.050 --> 07:08.110
+So inside of Red Bull is going to store a list of jobs or things that are scheduled to be done at some
+
+07:08.110 --> 07:11.390
+point in time after those 15 minutes elapse.
+
+07:11.420 --> 07:16.390
+Bulges is then going to get a little reminder from Redis that it needs to do something.
+
+07:16.390 --> 07:20.380
+And Bull, in turn is going to turn back around to us and say, hey, 15 minutes have elapsed.
+
+07:20.380 --> 07:23.490
+It's time for you to do whatever it is you want it to do.
+
+07:23.500 --> 07:27.490
+And so for us, we're going to just publish an event of expiration complete.
+
+07:28.630 --> 07:29.260
+So that's it.
+
+07:29.260 --> 07:30.970
+That's what we're going to be using inside of our app.
+
+07:31.420 --> 07:36.430
+So for our exploration service, really what we're going to be doing is focusing ourselves on learning
+
+07:36.430 --> 07:42.040
+a little bit more about this library and about how to set up a copy of Redis inside of our Kubernetes
+
+07:42.040 --> 07:45.850
+cluster as well, which will be, trust me, super easy and straightforward.
+
+07:46.870 --> 07:47.470
+It's that's it.
+
+07:47.470 --> 07:47.710
+That's it.
+
+07:47.710 --> 07:48.480
+We're going to go with.
+
+07:48.490 --> 07:52.330
+And I hope that the explanation of those other three options were handy as well.
+
+07:52.900 --> 07:55.660
+Let's get started on this expiration service in the next video.

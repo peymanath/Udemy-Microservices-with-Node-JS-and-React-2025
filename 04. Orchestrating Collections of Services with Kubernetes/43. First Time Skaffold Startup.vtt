@@ -1,0 +1,67 @@
+WEBVTT
+
+00:00.650 --> 00:04.970
+We have a fully assembled scaffold HTML file, so now all we have to do is start scaffold up.
+
+00:05.270 --> 00:09.020
+Fortunately to start up scaffold, you're really just have to remember exactly one command.
+
+00:09.260 --> 00:14.000
+Back at my terminal, I'm inside of my root project directory of blog and so I should see the scaffold
+
+00:14.240 --> 00:16.580
+HTML file right there to start up scaffold.
+
+00:16.580 --> 00:18.110
+We will run scaffold.
+
+00:18.910 --> 00:19.600
+Dev.
+
+00:19.750 --> 00:20.440
+That's it.
+
+00:21.310 --> 00:24.910
+So I'm going to run that command and we're going to see a tremendous amount of output start to scroll
+
+00:24.910 --> 00:25.390
+by.
+
+00:26.270 --> 00:28.190
+You might start to see warnings or something like that.
+
+00:28.190 --> 00:29.750
+You might see stuff that says not found.
+
+00:29.780 --> 00:32.730
+You might see stuff that says, Hey, you've got uncommitted changes.
+
+00:32.750 --> 00:34.670
+You see anything like that, do not sweat it.
+
+00:34.880 --> 00:39.770
+The first time you try to run scaffold, it's going to probably try to just rebuild all of your images,
+
+00:39.770 --> 00:41.830
+even though we've already built them once already.
+
+00:41.840 --> 00:43.850
+If it's trying to rebuild images, don't sweat it.
+
+00:43.850 --> 00:45.050
+Just let it do its thing.
+
+00:45.440 --> 00:50.480
+This entire initial setup process is probably going to take a good couple of minutes because we're essentially
+
+00:50.480 --> 00:52.610
+talking about building six different images here.
+
+00:53.000 --> 00:55.070
+So I'm going to go ahead and just pause this video right now.
+
+00:55.070 --> 00:59.390
+When we come back to the next video, we'll take a look at what happens when scaffold finishes the startup
+
+00:59.390 --> 01:00.140
+process.

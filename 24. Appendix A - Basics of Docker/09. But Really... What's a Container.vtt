@@ -1,0 +1,358 @@
+WEBVTT
+
+00:00.640 --> 00:01.450
+In the last section.
+
+00:01.450 --> 00:06.400
+We continue to talk a little bit about images, but we're still surprisingly light on some of the details
+
+00:06.400 --> 00:08.130
+around exactly what a container is.
+
+00:08.140 --> 00:13.060
+So in this section, I'm going to give you a behind the scenes look at what a container is and how it
+
+00:13.060 --> 00:14.620
+is created on your machine.
+
+00:14.920 --> 00:20.050
+Now, to understand a container, you first need to have a little bit of background on exactly how your
+
+00:20.050 --> 00:22.150
+operating system runs on your computer.
+
+00:22.150 --> 00:25.600
+So I'm going to first give you a quick overview of your operating system.
+
+00:26.780 --> 00:27.070
+Okay.
+
+00:27.140 --> 00:30.980
+So this is a quick overview of the operating system on your computer.
+
+00:31.100 --> 00:34.070
+Most operating systems have something called a kernel.
+
+00:34.220 --> 00:40.640
+This kernel is a running software process that governs access between all the programs that are running
+
+00:40.640 --> 00:45.410
+on your computer and all the physical hardware that is connected to your computer as well.
+
+00:45.710 --> 00:49.580
+So if you're at the top of this diagram, we have different programs that your computer is running,
+
+00:49.580 --> 00:52.910
+such as Chrome or Terminal Spotify or Node.js.
+
+00:53.480 --> 00:59.390
+If you've ever made use of Node.js before and you've written a file to the hard drive, it's technically
+
+00:59.390 --> 01:03.530
+not Node.js that is speaking directly to the physical device.
+
+01:03.560 --> 01:08.660
+Instead, Node.js says to your kernel, Hey, I want to write a file to the hard drive.
+
+01:08.690 --> 01:12.660
+The kernel then takes that information and eventually persists it to the hard disk.
+
+01:12.680 --> 01:17.600
+So the kernel is always kind of this intermediate layer that governs access between these programs and
+
+01:17.600 --> 01:18.800
+your actual hard drive.
+
+01:19.280 --> 01:24.560
+The other important thing to understand here is that these running programs interact with the kernel
+
+01:24.590 --> 01:27.020
+through things called system calls.
+
+01:27.050 --> 01:29.990
+These are essentially like function invocations.
+
+01:30.440 --> 01:35.210
+The kernel exposes different endpoints to say, Hey, if you want to write a file to the hard drive,
+
+01:35.210 --> 01:37.890
+call this endpoint or this function right here.
+
+01:37.910 --> 01:41.660
+It takes some amount of information and then that information will be eventually written to the hard
+
+01:41.660 --> 01:44.240
+disk or memory or whatever else is required.
+
+01:45.550 --> 01:50.500
+Now thinking about this entire system right here, I want to pose a kind of hypothetical situation to
+
+01:50.500 --> 01:50.950
+you.
+
+01:50.980 --> 01:57.040
+I want you to imagine for just a second that you and I have two programs running on our computer.
+
+01:57.220 --> 02:02.410
+Maybe one of them is Chrome, like Chrome, the web browser, and the other is Node.js, the JavaScript
+
+02:02.410 --> 02:03.580
+server side runtime.
+
+02:04.000 --> 02:09.550
+I want you to imagine that we're in a crazy world where Chrome, in order to work properly, has to
+
+02:09.550 --> 02:15.040
+have Python version two installed and Node.js has to have version three installed.
+
+02:15.280 --> 02:20.030
+However, on our hard disk, we only have access to Python version two.
+
+02:20.050 --> 02:26.020
+And for whatever crazy reason, we are not allowed to have two identical installations of Python at
+
+02:26.020 --> 02:26.890
+the same time.
+
+02:27.700 --> 02:33.130
+So as it stands right now, Chrome would work properly because it has access to version two, but Node.js
+
+02:33.130 --> 02:37.660
+would not because we do not have a version or a copy of Python version three.
+
+02:37.960 --> 02:40.860
+Again, this is a completely make believe situation.
+
+02:40.870 --> 02:45.220
+I just want you to kind of consider this for a second, because this is kind of leading into what a
+
+02:45.220 --> 02:46.360
+container is.
+
+02:47.170 --> 02:48.850
+So how could we solve this issue?
+
+02:48.880 --> 02:55.810
+Well, one way to do it would be used to make use of a operating system feature known as name spacing.
+
+02:56.020 --> 03:00.880
+With name spacing, we can look at all of the different hardware resources connected to our computer,
+
+03:00.880 --> 03:04.820
+and we can essentially segment out portions of those resources.
+
+03:04.840 --> 03:10.900
+So we could create a segment of our hard disk specifically dedicated to housing Python version two.
+
+03:11.020 --> 03:16.330
+And we could make a second segment specifically dedicated to housing Python version three.
+
+03:16.870 --> 03:22.120
+Then to make sure that Chrome has access to this segment over here and Node.js has access to this segment
+
+03:22.120 --> 03:28.990
+over here, any time that either them issues a system call to read information off the hard drive the
+
+03:28.990 --> 03:33.970
+kernel will look at that incoming system call and try to figure out which process it is coming from.
+
+03:34.300 --> 03:40.210
+So the kernel could say, okay, if Chrome is trying to read some information off the harddrive, I'm
+
+03:40.210 --> 03:45.520
+going to direct that call over to this little segment of the hard disk over here, the segment that
+
+03:45.520 --> 03:49.180
+has Python version two and Node.js.
+
+03:49.210 --> 03:54.130
+Any time that makes a system call to read the hard drive, the kernel can redirect that over to this
+
+03:54.130 --> 03:56.050
+segment for Python version three.
+
+03:56.200 --> 04:01.330
+And so by making use of this kind of name spacing or segmenting feature, we can have the ability to
+
+04:01.330 --> 04:05.230
+make sure that Chrome and Node.js are able to work on the same machine.
+
+04:05.470 --> 04:09.190
+Now, again, in reality, neither of these actually needed installation of Python.
+
+04:09.190 --> 04:10.870
+This is just a quick example.
+
+04:11.840 --> 04:18.410
+So this entire process of kind of segmenting a hard or a hardware resource based on the process that
+
+04:18.410 --> 04:21.350
+is asking for it is known as name spacing.
+
+04:21.680 --> 04:27.560
+With name spacing, we are allowed to isolate resources per a process or a group of processes.
+
+04:27.590 --> 04:32.300
+And we're essentially saying that any time a this particular process asks for a resource, we're going
+
+04:32.300 --> 04:36.590
+to direct it to this one little specific area of the given piece of hardware.
+
+04:36.740 --> 04:42.190
+Now, name spacing is not only used for hardware, it can be also used for software elements as well.
+
+04:42.200 --> 04:48.470
+So for example, we can namespace a process to restrict the area of a hard drive that is available or
+
+04:48.470 --> 04:54.170
+the network devices that are available, or the ability to talk to other processes or the ability to
+
+04:54.170 --> 04:55.660
+see other processes.
+
+04:55.670 --> 05:00.560
+These are all things that we can use name spacing for to essentially limit the resources or kind of
+
+05:00.560 --> 05:03.890
+redirect requests for resources from a particular process.
+
+05:04.490 --> 05:09.890
+Very closely related to this idea of name spacing is another feature called control groups.
+
+05:10.010 --> 05:15.760
+A control group can be used to limit the amount of resources that a particular process can use.
+
+05:15.770 --> 05:20.270
+So name spacing is for saying, Hey, this area of the hard drive is for this process.
+
+05:20.270 --> 05:26.240
+A control group can be used to limit the amount of memory that a process can use, the amount of CPU,
+
+05:26.270 --> 05:32.450
+the amount of hard drive, input input or input output, and the amount of network bandwidth as well.
+
+05:33.080 --> 05:38.390
+So these two features put together can be used to really kind of isolate a single process and limit
+
+05:38.390 --> 05:44.690
+the amount of resources it can talk to and the amount of bandwidth essentially that it can make use
+
+05:44.690 --> 05:45.200
+of.
+
+05:46.640 --> 05:52.130
+As you might imagine, this entire kind of little section right here, this entire vertical of a running
+
+05:52.130 --> 05:58.520
+process, plus this little segment of a resource that it can talk to is what we refer to as a container.
+
+05:58.700 --> 06:03.530
+And so when people say, Oh yeah, I have a Docker container, you really should not think of these
+
+06:03.530 --> 06:07.580
+as being like a physical construct that exists inside of your computer.
+
+06:07.580 --> 06:14.450
+Instead, a container is really a process or a set of processes that have a grouping of resources specifically
+
+06:14.450 --> 06:15.500
+assigned to it.
+
+06:16.610 --> 06:19.100
+And so this is a diagram that we're going to be looking at quite a bit.
+
+06:19.100 --> 06:24.590
+Any time that we think about a container, we've got some running process that sends a system call to
+
+06:24.590 --> 06:25.310
+a kernel.
+
+06:25.340 --> 06:32.000
+The kernel is going to look at that incoming system call and direct it to a very specific portion of
+
+06:32.000 --> 06:36.080
+the hard drive, the RAM, CPU or whatever else it might need.
+
+06:36.930 --> 06:42.150
+And a portion of each of these resources is made available to that singular process.
+
+06:42.540 --> 06:47.820
+Now, the last question you might have here is, och, well, I get what a container is, but with that
+
+06:47.820 --> 06:53.550
+in mind, what is the real relation between one of those containers or that kind of singular, singular
+
+06:53.550 --> 06:56.360
+process and grouping of resources to an image?
+
+06:56.370 --> 06:59.400
+How is that single file eventually create this container?
+
+06:59.520 --> 07:00.210
+That's a good question.
+
+07:00.210 --> 07:01.350
+One more quick diagram.
+
+07:02.670 --> 07:07.650
+Any time that we talk about an image, we're really talking about a file system snapshot.
+
+07:07.650 --> 07:13.590
+So this is essentially kind of like a copy paste of a very specific set of directories or files.
+
+07:13.710 --> 07:18.090
+And so we might have an image that contains just Chrome and Python.
+
+07:18.390 --> 07:21.990
+An image will also contain a specific startup command.
+
+07:21.990 --> 07:26.310
+So here's what happens behind the scenes when we take an image and turn it into a container.
+
+07:26.610 --> 07:31.440
+First off, the kernel is going to isolate a little section of the harddrive and make it available to
+
+07:31.440 --> 07:33.120
+just this container.
+
+07:33.270 --> 07:39.660
+And so we can kind of imagine that after that little subset is created, the file snapshot inside the
+
+07:39.660 --> 07:44.200
+image is taken and placed into that little segment of the hard drive.
+
+07:44.220 --> 07:50.400
+And so now inside of this very specific grouping of resources, we've got a little section of the hard
+
+07:50.400 --> 07:55.350
+drive that has just chrome and python installed and essentially nothing else.
+
+07:56.510 --> 08:01.310
+The start up command is then executed, which we can kind of imagine in this case is like start up chrome,
+
+08:01.310 --> 08:02.810
+just run chrome for me.
+
+08:03.020 --> 08:05.450
+And so chrome is invoked.
+
+08:05.450 --> 08:12.110
+We create a new instance of that process and that created process is then isolated to this set of resources
+
+08:12.110 --> 08:13.250
+inside the container.
+
+08:13.730 --> 08:14.990
+So that's pretty much it.
+
+08:14.990 --> 08:20.510
+That is the relationship between a container and an image, and it's how an image is eventually taken
+
+08:20.510 --> 08:22.760
+and turn into a running container.
+
+08:22.910 --> 08:26.600
+Now there's still a tremendous amount more to learn about containers and images.
+
+08:26.600 --> 08:29.510
+So let's take a quick break and continue in the next section.

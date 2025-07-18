@@ -1,0 +1,463 @@
+WEBVTT
+
+00:01.080 --> 00:05.220
+In this video, we're going to take a look at how we can add in a test to make sure that the new handler
+
+00:05.220 --> 00:08.730
+in the update handler are both actually publishing events.
+
+00:09.150 --> 00:13.320
+So to get started, I'm going to go back to my underscore underscore MOX, Nat's wrapper file.
+
+00:13.950 --> 00:17.520
+Inside there, we've got that fake implementation of the publish function.
+
+00:17.850 --> 00:23.430
+So if we really want to make sure that we are somehow publishing an event off two units, we really
+
+00:23.430 --> 00:27.450
+are going to want to make sure that this function right here truly gets executed.
+
+00:27.630 --> 00:33.090
+If this thing gets called, that means that we are 100% trying to actually publish an event.
+
+00:33.720 --> 00:38.400
+So rather than providing this fake implementation, this function, we're going to instead provide a
+
+00:38.400 --> 00:39.630
+mock function.
+
+00:39.840 --> 00:45.990
+A mock function is essentially a fake function, but it allows us to make tests around it or make expectations
+
+00:45.990 --> 00:46.590
+around it.
+
+00:46.590 --> 00:52.260
+So we can expect that a mock function gets executed or that it gets executed with some particular argument.
+
+00:53.010 --> 00:59.030
+So I'm going to delete our little fake implementation and I will replace that with just FME.
+
+00:59.460 --> 01:01.140
+That is how we create a mock.
+
+01:01.350 --> 01:03.540
+This is going to return a new function.
+
+01:04.450 --> 01:06.640
+And assign it to the property of publish.
+
+01:07.000 --> 01:10.560
+That is a function that can be called from anything inside of our application.
+
+01:10.570 --> 01:15.340
+And that function internally is going to keep track of whether or not it has been called, what arguments
+
+01:15.340 --> 01:18.910
+it's been provided and so on, so we can make some expectations around it.
+
+01:19.510 --> 01:24.130
+Now, if we try to run our code like this right now, none of our tasks or a lot of our tests are not
+
+01:24.130 --> 01:25.520
+going to actually pass.
+
+01:25.540 --> 01:30.070
+And the reason for that is that, remember, eventually our publisher, the base publisher, is going
+
+01:30.070 --> 01:34.090
+to try to call this function and it's going to provide a callback function.
+
+01:34.540 --> 01:39.910
+That callback callback function must be invoked for the publisher to think that everything went A-OK.
+
+01:40.480 --> 01:44.680
+So it's not quite enough to just provide this fake function because even though it will be invoked,
+
+01:44.680 --> 01:48.660
+it needs to take the callback function that it will be provided and call it.
+
+01:48.670 --> 01:53.830
+In other words, we need to still do this right here, so we need to still do this.
+
+01:53.830 --> 01:56.500
+But we also want to have a mock function.
+
+01:56.800 --> 02:02.320
+So to kind of do both them together, to have a mock function and have a custom implementation, here's
+
+02:02.320 --> 02:03.340
+what we're going to write out.
+
+02:03.550 --> 02:08.860
+We're going to put in Gest FN and then we'll chain on mock implementation.
+
+02:10.530 --> 02:13.170
+And then to this, we're going to provide a function.
+
+02:13.800 --> 02:18.150
+So this is the actual function that will be invoked when someone tries to run, publish.
+
+02:18.570 --> 02:22.650
+When someone tries to run, publish, it's still going to keep track of the fact that this thing was
+
+02:22.650 --> 02:26.940
+invoked, the number of times it was invoked, what arguments it was provided, and that will allow
+
+02:26.940 --> 02:28.320
+us to run some tests and whatnot.
+
+02:28.320 --> 02:34.380
+But we will also be able to execute this function right here, taken that callback and invoke it to
+
+02:34.380 --> 02:36.690
+make sure that the base publisher is still happy.
+
+02:37.890 --> 02:40.290
+Now we do still have to provide the same kind of function right here.
+
+02:40.290 --> 02:46.260
+So this thing is going to be invoked by the base publisher, which means it's going to receive a subject
+
+02:46.260 --> 02:51.390
+that is a string data, that is a string and a callback function as well.
+
+02:51.780 --> 02:54.870
+That is of type function that doesn't return anything.
+
+02:56.680 --> 03:01.060
+Then inside the function body, once again, all we're going to do is execute callback.
+
+03:05.070 --> 03:06.720
+Now, if we save this right now.
+
+03:07.690 --> 03:09.910
+All of our tests should still run the same.
+
+03:10.060 --> 03:11.530
+I'm going to go back over to my test suite.
+
+03:11.560 --> 03:11.900
+Yep.
+
+03:11.920 --> 03:14.380
+Looks like everything is still running as expected.
+
+03:14.830 --> 03:19.060
+But now we can also start to write out some assertions and make sure that that published function is
+
+03:19.060 --> 03:20.620
+actually being invoked.
+
+03:21.650 --> 03:22.550
+Let me show you how.
+
+03:23.820 --> 03:30.350
+Back inside of my new test file, I'm going to find Root's underscore, underscore, test, new tests.
+
+03:30.630 --> 03:32.970
+I'm going to go down to the very bottom of this thing.
+
+03:34.370 --> 03:37.130
+And I'm going to write out a new expectation or a new test.
+
+03:37.130 --> 03:41.180
+I'll say it publishes an event.
+
+03:44.020 --> 03:46.060
+I'm going to mark that function as async.
+
+03:46.450 --> 03:50.200
+And then inside of here I want to try to successfully create a new ticket.
+
+03:50.200 --> 03:55.000
+And then after creating the ticket, we're going to try to take a look at that fake function, the one
+
+03:55.000 --> 03:56.680
+we just put together, the mock one.
+
+03:56.890 --> 04:00.130
+And we're going to make sure that thing that that thing was actually invoked.
+
+04:00.550 --> 04:05.350
+But to actually create a ticket, I'm going to go up to the test that we wrote out just before.
+
+04:05.740 --> 04:10.570
+I'm going to copy where we created a title and then made a request to create a ticket with the title
+
+04:10.570 --> 04:14.010
+and a given price and expected to get back a response of 201.
+
+04:14.030 --> 04:17.020
+I'm going to copy all that and paste it down inside my test.
+
+04:18.360 --> 04:23.820
+So then right after we successfully make this request, right after that, we should be able to say
+
+04:23.820 --> 04:26.100
+that the published function was called.
+
+04:26.760 --> 04:33.060
+So to do so, we're going to go to the very top of the file and we're going to import the fake net's
+
+04:33.060 --> 04:33.750
+wrapper.
+
+04:33.780 --> 04:37.530
+Now, when I say fake, we're actually going to import the real Nats wrapper.
+
+04:37.680 --> 04:43.200
+But once again, just even inside of our test file is going to redirect that import for us and it's
+
+04:43.200 --> 04:44.920
+going to instead give us the mock.
+
+04:44.940 --> 04:48.570
+We're going to try to get the real Nats wrapper, but it's going to give us the mock one instead.
+
+04:49.120 --> 04:50.280
+I'm going to import.
+
+04:51.620 --> 04:55.940
+That's rapper Rum up one directory up another.
+
+04:57.190 --> 04:58.960
+Nats Dash rapper.
+
+05:02.450 --> 05:07.580
+Then down inside the test we just wrote, right now let's just do a console log of Nat's wrapper, and
+
+05:07.580 --> 05:09.560
+I want you to see something really interesting.
+
+05:10.010 --> 05:10.110
+Okay?
+
+05:10.310 --> 05:11.300
+So let's save this.
+
+05:11.840 --> 05:13.010
+I'm going to flip back over.
+
+05:13.750 --> 05:15.460
+Now we're going to see a lot of console logs right here.
+
+05:15.460 --> 05:20.920
+But one of them we should see with a really big console log and here it is right here.
+
+05:21.250 --> 05:24.160
+So it's right underneath the pass statement for new tests.
+
+05:24.190 --> 05:25.810
+Here's the console log we just did.
+
+05:26.140 --> 05:29.770
+Do you notice that this is the fake implementation we just put together?
+
+05:29.770 --> 05:34.390
+This is the contents of the fake or the mock net's wrapper file, though.
+
+05:34.390 --> 05:39.130
+It's some plain object that has a client property, that has an object that is a published function,
+
+05:39.460 --> 05:42.460
+and the publish thing is a mock function.
+
+05:42.670 --> 05:44.500
+That's what all this stuff is right here.
+
+05:44.830 --> 05:49.090
+So these are a bunch of helpers that are going to allow us to make sure that this thing was actually
+
+05:49.090 --> 05:52.120
+called, it was invoked with some certain arguments and so on.
+
+05:53.800 --> 05:56.740
+So now we can actually write out an expectation down here at the very bottom.
+
+05:57.980 --> 06:02.240
+I'm going to put down here expect that's rapper.
+
+06:03.680 --> 06:08.450
+Dot client dot publish to have been called.
+
+06:08.780 --> 06:11.060
+That's how we're going to test this thing and make sure.
+
+06:12.640 --> 06:16.630
+That the published function actually successfully gets invoked right after creating a ticket.
+
+06:16.960 --> 06:18.550
+Before testing this out at our terminal.
+
+06:18.580 --> 06:20.020
+One other very quick thing to do.
+
+06:20.020 --> 06:22.760
+Go inside of our net's wrapper file.
+
+06:22.780 --> 06:25.820
+We created this mock implementation exactly one time.
+
+06:25.840 --> 06:29.220
+The same mock function gets reused for every single one of our tests.
+
+06:29.230 --> 06:34.080
+So usually between each of our tests we want to reset this mock function.
+
+06:34.090 --> 06:38.110
+Remember, the mock function internally is going to record how many times it gets called the different
+
+06:38.110 --> 06:40.000
+arguments it is provided and so on.
+
+06:40.210 --> 06:43.900
+And we're going to eventually write out some different expectations about those number of calls, the
+
+06:43.900 --> 06:45.100
+arguments and so on.
+
+06:45.220 --> 06:50.350
+We want to make sure that between every single test, we reset that data so we're not somehow running
+
+06:50.350 --> 06:53.530
+a test and polluting one test with data from another test.
+
+06:54.260 --> 06:57.590
+Long story short back inside of our test set up to file.
+
+06:58.470 --> 06:59.160
+That's what we're doing.
+
+06:59.160 --> 07:00.750
+All of our initial test config.
+
+07:01.020 --> 07:07.440
+We're going to find RB for each statement and inside there we will write out just clear all box.
+
+07:08.010 --> 07:09.210
+Just have to do that one time.
+
+07:09.250 --> 07:10.140
+That's pretty much it.
+
+07:11.170 --> 07:12.520
+All right, so let's save this.
+
+07:12.790 --> 07:18.100
+Go back over to our terminal and we're going to make sure that all of our tests are passing in specific.
+
+07:18.100 --> 07:20.560
+The new test suite right there.
+
+07:20.560 --> 07:20.760
+Yep.
+
+07:20.770 --> 07:21.940
+Looks like it's good.
+
+07:21.940 --> 07:24.730
+That means we are successfully calling that publish function.
+
+07:25.900 --> 07:29.220
+Cool well before continuing on because that's pretty much it.
+
+07:29.230 --> 07:34.600
+I just want to put a very similar test inside of our update file as well and make sure that the publish
+
+07:34.600 --> 07:35.650
+function gets called.
+
+07:36.190 --> 07:39.970
+So I'm going to go to my update test file at the very top.
+
+07:41.760 --> 07:45.330
+I will import Nat's wrapper.
+
+07:46.520 --> 07:48.740
+From up one directory up another.
+
+07:48.770 --> 07:49.670
+That's repr.
+
+07:51.430 --> 07:53.380
+I'm then going to go down to the bottom of the file.
+
+07:55.050 --> 07:56.040
+I'll add in.
+
+07:56.040 --> 07:58.680
+It publishes an event.
+
+08:01.440 --> 08:07.010
+Then inside of here, we want to try to successfully edit or update a ticket and then we will make sure
+
+08:07.010 --> 08:08.990
+that the published function got invoked.
+
+08:10.020 --> 08:13.350
+So we can very easily come back up to the previous test.
+
+08:13.380 --> 08:15.210
+We'll just take some code right here.
+
+08:15.300 --> 08:19.830
+It looks like this one right here was around testing to make sure a ticket was actually updated, but
+
+08:19.830 --> 08:27.570
+can take everything from cookie on down to right after we do the update with the put, we got cookie
+
+08:28.200 --> 08:30.270
+one request, second request.
+
+08:30.270 --> 08:31.470
+I'm going to copy all that.
+
+08:32.740 --> 08:33.450
+Go down to the bottom.
+
+08:33.470 --> 08:34.170
+The file.
+
+08:34.210 --> 08:35.200
+Hey, settle in.
+
+08:38.910 --> 08:42.690
+And then right after we'll do an expect that's rapper.
+
+08:43.950 --> 08:47.970
+Quite a loss to have been dealt.
+
+08:50.360 --> 08:51.290
+All right, let's save that.
+
+08:51.290 --> 08:55.190
+Run these tests as well, and make sure that the update is passing.
+
+08:56.270 --> 08:57.130
+And where is it?
+
+08:57.140 --> 08:58.250
+Yeah, there it is right there.
+
+08:58.250 --> 08:59.180
+Update is passing.
+
+08:59.220 --> 09:00.410
+Let's say we are good to go.
+
+09:01.050 --> 09:02.240
+Okay, so that's pretty much it.
+
+09:02.960 --> 09:04.700
+Well, we've got a working test suite now.
+
+09:04.700 --> 09:08.870
+We also have the ability to add in tests around publishing events, which is just fantastic.
+
+09:09.170 --> 09:10.370
+So let's take a pause right here.
+
+09:10.370 --> 09:12.680
+And as usual, continue in just a minute.

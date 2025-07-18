@@ -1,0 +1,622 @@
+WEBVTT
+
+00:00.800 --> 00:06.830
+In the last couple of videos, we've discussed the mode, we've discussed Q groups and this kind of
+
+00:06.830 --> 00:07.760
+graceful shutdown.
+
+00:07.760 --> 00:12.140
+Any time a client is about to close down and throughout these videos, he might have been saying, Steven,
+
+00:12.140 --> 00:13.250
+this is way too in depth.
+
+00:13.250 --> 00:17.830
+There's no way I need to know how to correctly close down a connection and stuff like that.
+
+00:17.840 --> 00:22.850
+Well, it turns out all this stuff is extraordinarily important for some reason.
+
+00:22.850 --> 00:26.840
+So we're going to lay out inside this video, to be honest with you, this video is probably the most
+
+00:26.840 --> 00:29.200
+important one inside the entire course.
+
+00:29.210 --> 00:34.070
+It's going to help you understand how this entire asynchronous style of communication between microservices
+
+00:34.070 --> 00:39.110
+and even microservices in general is really, really hard to manage on the data side.
+
+00:39.260 --> 00:42.140
+So we're going to take a look at a couple of diagrams and.
+
+00:42.850 --> 00:44.680
+It's going to be kind of crazy, but whatever.
+
+00:44.680 --> 00:45.820
+Let's just get through it.
+
+00:46.330 --> 00:50.410
+So we're going to imagine that we're working on a totally different application for just a moment.
+
+00:50.710 --> 00:56.260
+The example I'm going to give you is kind of a classic example of how concurrency or handling events
+
+00:56.260 --> 00:59.890
+and whatnot can kind of go really wrong really quickly.
+
+01:00.220 --> 01:04.150
+So we're going to imagine that we are handling some kind of banking application.
+
+01:04.540 --> 01:07.660
+In our banking application, we're going to have a publisher.
+
+01:08.580 --> 01:12.360
+That can emit events of account deposit and account withdraw.
+
+01:12.390 --> 01:17.400
+And as you can imagine, well, we're going to keep track of how much money a particular user has inside
+
+01:17.400 --> 01:18.150
+their account.
+
+01:18.810 --> 01:20.910
+So we're going to emit these two kinds of events.
+
+01:21.210 --> 01:24.600
+They're going to go over to these two different channels that have been created inside of our net's
+
+01:24.600 --> 01:25.500
+streaming server.
+
+01:26.160 --> 01:31.470
+We're going to have two services, two copies of the same service called Account Service.
+
+01:31.830 --> 01:36.720
+These two services are going to be members of the same Q group inside of each of these channels.
+
+01:36.930 --> 01:41.850
+So whenever an event flows into that streaming service, it's the event is only going to go to exactly
+
+01:41.970 --> 01:43.680
+one of these two instances.
+
+01:44.280 --> 01:48.300
+These two instances of the account service are going to watch for these incoming events.
+
+01:48.600 --> 01:53.550
+And then, depending upon whether it is a deposit or a withdrawal, it is going to open up a file.
+
+01:53.550 --> 01:57.740
+So a plain file on our hard drive and update the amount of money that a user has.
+
+01:57.750 --> 02:03.750
+So by default, this user will have $0 and we're going to increment or decrement that amount over time.
+
+02:04.290 --> 02:07.980
+Now, for a real bank, a real bank usually doesn't care that much.
+
+02:07.980 --> 02:14.460
+If you go under $0 on your account balance, they're just going to give you a overdraft fee and charge
+
+02:14.460 --> 02:17.310
+you some money for essentially borrowing money for some period of time.
+
+02:17.760 --> 02:19.910
+But we're going to imagine that our bank is a little bit different.
+
+02:19.920 --> 02:25.070
+We're going to say that a user can never, ever have less than $0 if they go below zero.
+
+02:25.080 --> 02:29.970
+That is a critical error and it represents something going extremely wrong inside of our application.
+
+02:29.970 --> 02:31.830
+So that is a hard requirement.
+
+02:32.190 --> 02:36.540
+So let's imagine how our app would work, ideally in an ideal situation.
+
+02:37.080 --> 02:42.150
+So maybe our publisher comes online and publishes an event of account deposit $70.
+
+02:42.450 --> 02:44.070
+So that would go over to this channel.
+
+02:44.990 --> 02:48.890
+That streaming server would take a look at the members of the skew group and then send this event off
+
+02:48.890 --> 02:50.450
+to just one of those members.
+
+02:50.450 --> 02:53.690
+So in this case, maybe it sends it off to this account service right here.
+
+02:53.780 --> 02:58.580
+Account service would then open up that file increment to $70 and that's it.
+
+02:58.580 --> 02:59.360
+We're good to go.
+
+02:59.720 --> 03:00.700
+Next up is 40.
+
+03:00.740 --> 03:02.420
+Maybe that could handle by this one.
+
+03:02.570 --> 03:03.830
+We go to 110.
+
+03:04.580 --> 03:05.240
+And that's it.
+
+03:05.240 --> 03:05.870
+All done.
+
+03:06.170 --> 03:08.750
+And then finally, maybe the user tries to withdraw some money.
+
+03:09.020 --> 03:14.360
+So that will come down to this Q group, this channel down here, maybe go off to this account service,
+
+03:14.360 --> 03:18.500
+we withdraw $100, we still have ten, which means still good to go.
+
+03:19.300 --> 03:21.330
+So that is the ideal situation.
+
+03:21.340 --> 03:28.990
+But it turns out that there is an almost infinite number of ways that this process can fail extremely
+
+03:28.990 --> 03:29.730
+easily.
+
+03:29.740 --> 03:30.610
+Incredibly easy.
+
+03:30.610 --> 03:32.290
+Just unbelievably easy.
+
+03:32.500 --> 03:37.420
+So let's walk through a couple of different ways that this entire system can fail catastrophically.
+
+03:38.990 --> 03:44.270
+So the first issue we're going to consider is if a listener fails to process the incoming event.
+
+03:44.690 --> 03:50.240
+So we're going to imagine once again, maybe this account deposit goes out, gets assigned to this account
+
+03:50.240 --> 03:54.640
+service right here, and then this account service tries to process this incoming event.
+
+03:54.650 --> 04:00.170
+So ideally, this thing would open up some file on the hard drive and add in 70 and then save the file.
+
+04:00.290 --> 04:02.430
+But what can go wrong with that process?
+
+04:02.450 --> 04:06.260
+Well, there's really an unbelievable number of things that can go wrong.
+
+04:06.710 --> 04:08.450
+This file could be already locked.
+
+04:08.450 --> 04:12.290
+In other words, some other program can already have this file open on the hard drive, which would
+
+04:12.290 --> 04:14.870
+prevent us from opening it and making any changes to it.
+
+04:15.770 --> 04:20.090
+We could also have some faulty logic inside of here, maybe before depositing some money.
+
+04:20.090 --> 04:24.250
+Maybe we check to make sure that the user has the ability to deposit some additional money.
+
+04:24.260 --> 04:29.420
+Maybe there's, for example, a weekly deposit limit where we don't want any user to deposit too much
+
+04:29.420 --> 04:29.930
+money.
+
+04:30.110 --> 04:34.610
+So in that scenario, well, we might reject that event if the file was locked, like I just mentioned
+
+04:34.610 --> 04:36.770
+a moment ago, that would be rejected.
+
+04:37.280 --> 04:40.550
+Maybe we've got some typo inside the file or something like that.
+
+04:40.550 --> 04:45.500
+Maybe there's some totally unpredictable issue where this event just fails to be processed.
+
+04:45.710 --> 04:52.190
+So whatever the issue is with our current setup, remember if anything goes wrong inside of our listener.
+
+04:53.060 --> 04:58.910
+Ideally we would not acknowledge the event, and so eventually this event will be reprocessed.
+
+04:58.910 --> 05:04.910
+But it takes 30 seconds before an streaming server decides to actually reprocess this event and send
+
+05:04.910 --> 05:07.730
+it off to some other service, like maybe this one over here.
+
+05:08.180 --> 05:13.910
+So while we are waiting those 30 seconds for this thing to be processed again, the publisher might
+
+05:13.910 --> 05:16.940
+go ahead and publish the remaining two events.
+
+05:16.940 --> 05:19.730
+So it might say, okay, let's do a deposit of 40.
+
+05:19.760 --> 05:23.240
+Maybe that gets handled down here and maybe it gets handled successfully.
+
+05:23.870 --> 05:28.640
+And then after that, a couple of seconds later, we try to do withdrawal gets handled down here and
+
+05:28.640 --> 05:29.270
+uh oh.
+
+05:29.300 --> 05:33.320
+If we try to withdraw $100 off of 40, we're not going to go into the negatives.
+
+05:33.320 --> 05:35.690
+And we have a critical business air.
+
+05:36.920 --> 05:43.760
+So if for whatever reason, any event fails to be processed, it can cause a catastrophic error in our
+
+05:43.760 --> 05:45.350
+business logic of our program.
+
+05:45.350 --> 05:49.250
+And as you saw in the last couple of videos, it is super easy for that to happen.
+
+05:50.430 --> 05:53.700
+So what's the next case in which something can fail catastrophically?
+
+05:54.030 --> 05:57.330
+Well, if one listener runs more quickly than another.
+
+05:57.660 --> 06:00.370
+So let's imagine once again, we send off 70.
+
+06:00.390 --> 06:01.680
+It gets handled by this service.
+
+06:01.680 --> 06:05.340
+And maybe this service for some reason has a backlog of events.
+
+06:05.340 --> 06:11.070
+Maybe there's like 100 events that it's waiting to process because this virtual machine that the service
+
+06:11.070 --> 06:14.460
+is running on is right now overloaded or who knows what?
+
+06:15.210 --> 06:19.470
+So maybe this event gets sent over and we're waiting for this thing to be acknowledged.
+
+06:19.710 --> 06:24.120
+And in the meantime, we send over another event to the same service, and we're now waiting for both
+
+06:24.120 --> 06:26.370
+these things to be processed and acknowledged.
+
+06:26.820 --> 06:31.110
+Now, these things have 30 seconds to be processed, and it is entirely reasonable that the account
+
+06:31.110 --> 06:33.990
+service might process them within that 32nd window.
+
+06:34.380 --> 06:39.570
+But in the meantime, as we are waiting for them to be processed, we might also dispatch a withdrawal.
+
+06:39.960 --> 06:44.440
+And then maybe that gets sent to this other account service down here that is really, really fast.
+
+06:44.460 --> 06:49.710
+Maybe we just launched this thing and it has an open or no events to be processed in its backlog.
+
+06:50.540 --> 06:55.520
+So in that case, this instance, the account service is going to immediately take a look at that incoming
+
+06:55.520 --> 07:00.060
+event, tried to withdraw $100 and once again, oops, we're in the negatives.
+
+07:00.080 --> 07:01.640
+Critical business air.
+
+07:02.930 --> 07:06.440
+So this is an entirely possible and likely situation.
+
+07:06.440 --> 07:09.200
+We might successfully eventually process these events.
+
+07:09.200 --> 07:14.060
+But just because one event, one to this service and the others went to this service, well, we're
+
+07:14.060 --> 07:14.960
+totally out of luck.
+
+07:15.410 --> 07:17.240
+So here's yet another scenario.
+
+07:17.950 --> 07:23.230
+As we just saw in the last couple of videos, Nats might have a client shutdown, but it won't actually
+
+07:23.230 --> 07:28.330
+consider that client to be dead for 1020 seconds or so depending upon those heartbeat settings.
+
+07:28.690 --> 07:34.650
+So let's imagine that this service right here gets shut down without it being a graceful shutdown.
+
+07:34.660 --> 07:37.720
+Maybe for whatever reason, it just suddenly dies 100%.
+
+07:37.960 --> 07:42.150
+But for some window of time, ten, 20 seconds or so, and that streaming server is going to think that
+
+07:42.160 --> 07:43.330
+thing is still alive.
+
+07:43.630 --> 07:48.730
+So in that scenario, once again, maybe we take the 70, maybe Nats tries to allocate it to this dead
+
+07:48.730 --> 07:50.650
+service because it thinks it's still running.
+
+07:51.100 --> 07:56.410
+Maybe the same with this event right here and then the $100 get sent over to this service right here.
+
+07:56.740 --> 07:59.230
+So once again, these things are not going to be processed.
+
+07:59.260 --> 08:01.480
+They will eventually after 30 seconds.
+
+08:01.480 --> 08:05.950
+And that's doesn't get that acknowledgement and decides to reallocate them or assign them to some other
+
+08:05.950 --> 08:06.570
+service.
+
+08:06.580 --> 08:10.840
+But in that 32nd window, well, we're still going to be waiting.
+
+08:10.840 --> 08:14.000
+We're still going to go ahead and process with this $100 withdrawal.
+
+08:14.020 --> 08:17.510
+And so, once again, we're going to try to withdraw $100 off a zero.
+
+08:17.530 --> 08:17.980
+Boom.
+
+08:17.980 --> 08:19.390
+Everything fails yet again.
+
+08:20.740 --> 08:20.980
+All right.
+
+08:20.980 --> 08:22.720
+Just one more little example here.
+
+08:22.720 --> 08:26.530
+So in all the slides I've shown you so far, we really made the assumption that we were going to do
+
+08:26.530 --> 08:30.250
+the deposits and the withdrawal within absolute seconds of each other.
+
+08:30.250 --> 08:34.300
+So in other words, these events were all going to be sent into streaming server at pretty much the
+
+08:34.300 --> 08:34.990
+same time.
+
+08:35.350 --> 08:40.360
+So let's now imagine for a second that, well, maybe a user is kind of following what a user actually
+
+08:40.360 --> 08:40.630
+does.
+
+08:40.630 --> 08:43.960
+They don't make two deposits in a row and then withdraw within seconds.
+
+08:44.140 --> 08:49.480
+Maybe in this scenario, we say that the first deposit happens on a Tuesday, then another deposit on
+
+08:49.480 --> 08:51.850
+a Wednesday and then withdrawal on Thursday.
+
+08:51.850 --> 08:56.290
+So maybe in this scenario there is a ton of time between each of these events being processed.
+
+08:56.590 --> 09:02.050
+So let's now imagine that a user does the deposit goes over to this service, maybe the deposit initially
+
+09:02.050 --> 09:06.310
+fails, maybe that server sends it or resigns it somewhere else.
+
+09:06.490 --> 09:07.270
+Totally fine.
+
+09:07.270 --> 09:10.840
+If that happens, we've got a ton of time to actually process this event.
+
+09:10.840 --> 09:15.850
+And so eventually, even if this thing initially fails, eventually we deposit $70.
+
+09:15.850 --> 09:16.510
+We're good.
+
+09:17.080 --> 09:19.690
+So then on Wednesday, maybe we do the same thing.
+
+09:19.690 --> 09:23.170
+It might get juggled a couple of times back and forth because it's failing to be processed.
+
+09:23.170 --> 09:25.750
+But eventually we get our money in there.
+
+09:26.920 --> 09:29.440
+And now here comes Thursday and let's do the withdrawal.
+
+09:29.950 --> 09:35.590
+So now with this withdrawal, let's imagine for a second that the hard drive that we're storing this
+
+09:35.590 --> 09:38.310
+file on is really laggy for some reason.
+
+09:38.320 --> 09:47.140
+Maybe it takes 29.9 9 seconds to open this file, read the value out, and then like another second
+
+09:47.140 --> 09:50.110
+to actually write the value in or update that value.
+
+09:51.090 --> 09:57.640
+So let's imagine what would happen if it took us 29.99 9 seconds to open up that file off the hard drive.
+
+09:57.910 --> 10:03.070
+So at 29.99, we open up this value and we get the 110 inside of our application.
+
+10:03.250 --> 10:10.390
+And then a millisecond later, like a fraction of a second boom, we just hit 30 seconds and at 30 seconds.
+
+10:10.420 --> 10:14.680
+And that's assumes that this service failed to process that event.
+
+10:15.040 --> 10:18.680
+And so Nass decides, okay, well, I better go ahead and try to reprocess this thing.
+
+10:18.700 --> 10:20.480
+I'll send it to the other service.
+
+10:20.500 --> 10:24.940
+But keep in mind, this thing is still successfully processing the event, and there's no actual time
+
+10:24.940 --> 10:28.010
+out on the service to say, stop processing after 30 seconds.
+
+10:28.030 --> 10:32.710
+Our assumption is at 30 seconds, this thing has totally failed and we don't really need to do any cleanup.
+
+10:32.710 --> 10:34.420
+That's what we are kind of assuming right now.
+
+10:34.960 --> 10:41.290
+So then like two milliseconds later, maybe at that point this service goes ahead and finally is able
+
+10:41.290 --> 10:42.280
+to update that value.
+
+10:42.280 --> 10:46.570
+They say, okay, we're going to withdraw $100, we're down to just ten and then we're going to save
+
+10:46.570 --> 10:48.100
+that back into that file.
+
+10:48.770 --> 10:53.600
+But at that point, Nats has already redistributed that event over to this other service.
+
+10:53.750 --> 10:58.120
+And so this service is going to see the incoming event and say, oh, with $100, he had no problem.
+
+10:58.130 --> 10:59.330
+Okay, I'm going to open the file.
+
+10:59.330 --> 11:01.320
+Maybe now the hard drive is no longer laggy.
+
+11:01.340 --> 11:02.810
+So it occurs instantaneously.
+
+11:04.210 --> 11:06.460
+And we're going to try to subtract $100 from it.
+
+11:06.460 --> 11:10.960
+And uh oh, once again, it would take us below zero critical air.
+
+11:11.590 --> 11:20.350
+So at this point, we've now gone through several scenarios that absolutely, positively no two ways
+
+11:20.350 --> 11:24.940
+about it can and probably will happen inside of our application.
+
+11:25.300 --> 11:30.880
+So we can have some issue with processing these things and try to go out of order.
+
+11:31.360 --> 11:36.820
+We might fail because, well, there's going out of order because one is one instance of our services
+
+11:36.820 --> 11:38.530
+running slowly or quickly.
+
+11:39.190 --> 11:44.830
+We can have the very core issue of one of these services crashing that tries to throw the event to some
+
+11:44.830 --> 11:46.300
+service that isn't actually running.
+
+11:46.300 --> 11:50.380
+And then, as we just saw, well, even if we don't run into these kind of issues where everything is
+
+11:50.380 --> 11:55.000
+occurring, at the same time, we might run into these kind of strange corner cases where we try to
+
+11:55.000 --> 11:57.100
+process these same event twice in a row.
+
+11:58.400 --> 12:02.160
+So at this point, hopefully you understand the gravity of these problems.
+
+12:02.180 --> 12:07.510
+These are core issues that we kind of have a really tough time to address.
+
+12:07.520 --> 12:13.010
+And what's more, they are almost guaranteed to happen at some point in time, almost guaranteed even
+
+12:13.010 --> 12:17.360
+in the scenario where we imagined that these events were occurring within days of each other as opposed
+
+12:17.360 --> 12:23.210
+to milliseconds, we still might run into issues if we try to receive and process the same event twice
+
+12:23.210 --> 12:24.680
+or even three times in a row.
+
+12:25.410 --> 12:30.220
+So again, these are unbelievable issues that are really challenging to solve.
+
+12:30.240 --> 12:35.200
+And what's more, these are issues that we can't just somehow solve by using a different event bus.
+
+12:35.220 --> 12:39.090
+Everything we just saw is kind of typical of all event bus implementations.
+
+12:39.130 --> 12:43.920
+There's not really anything particular about that streaming server that makes it harder or more challenging
+
+12:43.950 --> 12:45.330
+to deal with these problems.
+
+12:45.720 --> 12:47.890
+Nonetheless, we have to deal with them somehow.
+
+12:47.910 --> 12:48.990
+So how are we going to do that?
+
+12:49.020 --> 12:50.200
+Well, let's take a pause right here.
+
+12:50.220 --> 12:53.910
+We'll come back the next video and take a look at some different ways that we're going to solve all
+
+12:53.910 --> 12:55.440
+the issues we just discussed.

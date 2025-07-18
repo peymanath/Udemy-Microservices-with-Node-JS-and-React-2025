@@ -1,0 +1,418 @@
+WEBVTT
+
+00:01.040 --> 00:03.590
+We just created our MongoDB instance, which is great.
+
+00:03.590 --> 00:07.250
+So now we need to make sure that our auth service actually connects to it before we do so.
+
+00:07.280 --> 00:10.850
+However, I want to give you a very quick little note right now.
+
+00:10.850 --> 00:16.140
+We have created a deployment that creates a pod that is going to run our MongoDB instance.
+
+00:16.160 --> 00:21.800
+We haven't really spoken about the lifecycle of pods in Kubernetes yet, but suffice it to say, if
+
+00:21.800 --> 00:27.440
+we ever delete or restart the pod that is running MongoDB, then we're going to lose all the data that
+
+00:27.440 --> 00:29.150
+is loaded into our database.
+
+00:29.720 --> 00:32.750
+We're going to come back and fix this up at a later section.
+
+00:32.960 --> 00:36.920
+We're going to would discuss why we're losing this data and we're going to figure out some way to solve
+
+00:36.920 --> 00:40.310
+it and give MongoDB some persistent storage.
+
+00:40.340 --> 00:43.970
+But right now, I really just want to focus on the authentication side of things.
+
+00:44.970 --> 00:45.360
+All right.
+
+00:45.360 --> 00:46.890
+So let's go back over to our editor.
+
+00:47.520 --> 00:49.710
+We're going to find our service.
+
+00:49.980 --> 00:54.930
+Inside there, we'll find our index file, not jazz us.
+
+00:55.350 --> 01:00.180
+And we're just going to add in a little bit of code to reach out to MongoDB and connect to it using
+
+01:00.180 --> 01:00.930
+Mongoose.
+
+01:01.320 --> 01:03.420
+Now I kind of threw in Mongoose in the last video.
+
+01:03.420 --> 01:06.260
+I mentioned it without really saying anything about what Mongoose is.
+
+01:06.270 --> 01:10.920
+If you're here in this course, I'm going to kind of assume that you've got a reasonable idea of what
+
+01:10.950 --> 01:11.730
+Mongoose is.
+
+01:11.760 --> 01:16.090
+It is a library that we use to get access to MongoDB and work with data inside of it.
+
+01:16.110 --> 01:21.270
+If you are not at all familiar with Mongoose, then we're going to kind of just say, All right, that's
+
+01:21.270 --> 01:21.600
+life.
+
+01:21.600 --> 01:25.320
+Just go ahead and copy the code that we write and hopefully you learn something along the way.
+
+01:25.350 --> 01:29.670
+We're not going to go too deep into the world of mongoose because it is kind of far removed from this
+
+01:29.670 --> 01:31.440
+whole idea of microservices.
+
+01:32.620 --> 01:38.110
+All right, so inside of index at the top, let's import Mongoose.
+
+01:39.570 --> 01:40.500
+From Mongoose.
+
+01:41.780 --> 01:43.920
+You'll notice right away that we've got an air tied to Mongoose.
+
+01:43.940 --> 01:48.530
+If we hover over that air, it tells us, Hey, TypeScript doesn't know anything about this mongoose
+
+01:48.530 --> 01:49.190
+library.
+
+01:49.280 --> 01:54.470
+So to solve that, it wants us to install a type definition file so that TypeScript understands what
+
+01:54.470 --> 01:56.060
+is going on inside this library.
+
+01:56.270 --> 01:58.700
+To do so, we'll run the command that you see right there.
+
+01:59.330 --> 02:04.340
+So back at my terminal, inside of my off sub project once again.
+
+02:05.030 --> 02:06.140
+I'll run that command.
+
+02:08.260 --> 02:10.420
+Now, if I flip back over, air goes away.
+
+02:10.960 --> 02:12.010
+All right, well, that's good.
+
+02:12.730 --> 02:17.560
+Now that we've got Mongoose inside of this file, we're going to use Mongoose to connect to that MongoDB
+
+02:17.560 --> 02:18.280
+instance.
+
+02:18.580 --> 02:22.720
+There are many different ways that we can connect to a Mongo instance using Mongoose.
+
+02:23.020 --> 02:26.440
+We're going to do so by using the async await syntax.
+
+02:26.470 --> 02:27.730
+Let me show you how.
+
+02:28.540 --> 02:29.860
+At the very bottom of the file.
+
+02:31.010 --> 02:34.520
+I'm going to find where we have got that A-plus in line.
+
+02:35.410 --> 02:39.640
+Right above that line, I'm going to create a new function called START.
+
+02:40.580 --> 02:41.420
+Or start up.
+
+02:42.180 --> 02:43.060
+I want to start.
+
+02:43.080 --> 02:43.950
+Keep it simple.
+
+02:44.870 --> 02:47.480
+I'm going to mark this function as being async.
+
+02:49.070 --> 02:51.430
+And then inside of here I will write out a weight.
+
+02:51.440 --> 02:53.390
+Magus Connect.
+
+02:53.960 --> 02:57.260
+The first argument to connect is going to be a connection URL.
+
+02:57.290 --> 03:01.670
+So this is going to be the actual URL of the MongoDB instance that we need to connect to.
+
+03:02.300 --> 03:05.660
+So right now we're just going to write out the URL directly inside of here.
+
+03:06.230 --> 03:10.760
+Usually if we are running or connecting to a mongo instance that is on our local machine, it would
+
+03:10.760 --> 03:15.800
+be something very simple like MongoDB all in slash slash local host.
+
+03:16.070 --> 03:20.540
+But in our case, we are not really connecting to a MongoDB instance that is available on local host
+
+03:20.540 --> 03:26.000
+and instead it is available inside of this other pod over here.
+
+03:26.210 --> 03:28.000
+And remember, it's you connect to that other pod.
+
+03:28.010 --> 03:30.890
+We have to go through that cluster IP service we had created.
+
+03:31.430 --> 03:36.260
+Any time we are trying to connect to a cluster IP service, we're going to write in the name of that
+
+03:36.260 --> 03:39.530
+cluster IP service where we would normally put a domain.
+
+03:40.250 --> 03:45.620
+So if we need a reminder, we could always go back to the infra red directory and then open up the auth
+
+03:45.620 --> 03:47.180
+mongo deployment file.
+
+03:48.770 --> 03:50.390
+And then go down to our service.
+
+03:50.960 --> 03:55.440
+Our service for the MongoDB instance has a name of auth Mongo Savi.
+
+03:55.610 --> 04:00.740
+So that is the domain name that we are going to attempt to connect to to get to our MongoDB database.
+
+04:01.190 --> 04:06.950
+So in other words, we will write out Mongoose Connect, then still have that MongoDB colon slash slash
+
+04:06.950 --> 04:11.330
+and then right there instead of local host, we will put auth mongo crv.
+
+04:14.650 --> 04:16.960
+After that, we will then add in the port.
+
+04:17.730 --> 04:20.460
+To the very end, which is 2701 seven.
+
+04:20.460 --> 04:21.900
+We are using the default port.
+
+04:24.000 --> 04:28.590
+And then we could put on the name of the actual database inside of there that we want to connect to.
+
+04:29.410 --> 04:34.330
+If we make up a name right here, MongoDB or Mongoose will create the database for us automatically.
+
+04:34.690 --> 04:37.630
+We're going to create a new database inside of here called off.
+
+04:39.280 --> 04:43.600
+After that, we're going to put in an options object and we're going to throw a couple of options inside
+
+04:43.600 --> 04:44.170
+of here.
+
+04:44.650 --> 04:47.260
+We'll say use new URL parser.
+
+04:47.590 --> 04:48.250
+True.
+
+04:49.000 --> 04:50.680
+Use Unified.
+
+04:51.490 --> 04:52.540
+Topology.
+
+04:52.780 --> 04:53.500
+True.
+
+04:54.570 --> 04:57.180
+And use create index of true.
+
+04:57.600 --> 04:59.370
+These options are not super relevant.
+
+04:59.370 --> 05:02.040
+They are just configuration options for mongoose.
+
+05:02.070 --> 05:05.790
+Really, the only reason we are putting them inside of here is that if we don't, Mongoose is going
+
+05:05.790 --> 05:08.670
+to start to throw a couple of warnings and errors at us.
+
+05:10.400 --> 05:10.700
+All right.
+
+05:10.700 --> 05:12.680
+So that's it for our Connect statement.
+
+05:13.250 --> 05:17.480
+Now, this is going to hold up or it's going to wait for the connection.
+
+05:17.480 --> 05:21.380
+If we fail to connect for any reason, then this line is going to throw an air.
+
+05:21.590 --> 05:26.030
+Let's try to capture that error that might be thrown and console.log it or do something like that.
+
+05:26.030 --> 05:30.140
+Just so you and I are aware, if our service fails to connect to MongoDB.
+
+05:30.650 --> 05:32.990
+So I'm going to wrap that with a try.
+
+05:39.300 --> 05:43.950
+And so if something goes wrong and we end up with that error right there, we'll do a console dot error.
+
+05:45.270 --> 05:46.980
+And log out that air.
+
+05:50.460 --> 05:50.760
+All right.
+
+05:50.760 --> 05:54.900
+So if we get past this tri catch statement successfully, then it is probably time for us to actually
+
+05:54.900 --> 05:56.170
+start listening for traffic.
+
+05:56.190 --> 05:59.340
+So I'm going to take the list in line right here, take that whole thing.
+
+05:59.340 --> 06:02.760
+I'm going to cut it and put it right in after the trai catch.
+
+06:03.580 --> 06:07.270
+So you'll notice that we've now got a single function called START that is going to first try to connect
+
+06:07.270 --> 06:08.170
+to our database.
+
+06:08.290 --> 06:10.120
+If it's successfully connects, fantastic.
+
+06:10.120 --> 06:10.880
+That's great.
+
+06:10.900 --> 06:14.230
+If it fails to, then we're going to log the error that just occurred.
+
+06:14.230 --> 06:17.230
+And then after all that, we'll start to listen for incoming traffic.
+
+06:17.620 --> 06:22.270
+The reason that we define this separate function of START is that depending upon the version of Node
+
+06:22.270 --> 06:28.870
+that you are running, you have to wrap all of your async await code inside of a function.
+
+06:28.960 --> 06:34.690
+The latest version of Node can make use of the awake keyword at the top level.
+
+06:34.690 --> 06:36.880
+So in other words, outside of a function.
+
+06:37.480 --> 06:40.510
+But you might be using a version of node that does not support this.
+
+06:40.540 --> 06:45.820
+Or to be more precise, the node image that you are downloading to use inside of your cluster might
+
+06:45.820 --> 06:47.010
+not be the latest version.
+
+06:47.020 --> 06:50.710
+So that's why we're just defining that extra function, just so we can use async await.
+
+06:52.730 --> 06:56.780
+After we define that function, well, then call it right there.
+
+06:56.960 --> 07:00.650
+So when our application first starts up, just go ahead and run that start function.
+
+07:00.650 --> 07:01.580
+Do the connection.
+
+07:01.580 --> 07:02.990
+Start listening to traffic.
+
+07:03.910 --> 07:08.920
+All right, so let's save this flight back over to our terminal where we are running scaffold and see
+
+07:08.920 --> 07:10.000
+how we are doing.
+
+07:10.970 --> 07:11.210
+All right.
+
+07:11.210 --> 07:16.550
+Well, it looks like everything is going as expected, so I still have a listing on Port 3000 right
+
+07:16.550 --> 07:16.980
+here.
+
+07:17.010 --> 07:19.490
+I don't have any errors around connecting to Mongo.
+
+07:20.180 --> 07:23.230
+But just to make sure that we are actually running the correct code here.
+
+07:23.240 --> 07:25.370
+How about right after we do this connect statement?
+
+07:25.370 --> 07:32.360
+We just do a quick console log right here that says something like Connected to MongoDB.
+
+07:34.050 --> 07:35.370
+So we'll save that as well.
+
+07:35.400 --> 07:36.300
+Flip back over.
+
+07:36.980 --> 07:37.310
+Yep.
+
+07:37.310 --> 07:38.000
+Looks good.
+
+07:40.540 --> 07:40.870
+All right.
+
+07:40.870 --> 07:45.460
+So we've now got our MongoDB instance up and running and our authentication application has connected
+
+07:45.460 --> 07:46.030
+to it.
+
+07:46.270 --> 07:50.470
+So now that we've got this ability to store some information, let's talk about how we're going to create
+
+07:50.470 --> 07:53.350
+users and store them inside this database in the next video.

@@ -1,0 +1,394 @@
+WEBVTT
+
+00:01.000 --> 00:05.470
+We've now set up an initial implementation of our user and our company, and we've tested both them
+
+00:05.470 --> 00:07.360
+out inside of our indexed file.
+
+00:07.630 --> 00:13.000
+Remember, the original goal of our application was to show the location of that user and that company
+
+00:13.000 --> 00:14.470
+as markers on our map.
+
+00:14.710 --> 00:19.180
+So in this video, we're going to start putting in support for showing a Google map inside of our application.
+
+00:19.750 --> 00:24.460
+This is going to be a little bit of, you know, kind of tedious setup, but we'll go through it step
+
+00:24.460 --> 00:26.560
+by step and we'll get through it quickly enough.
+
+00:26.830 --> 00:28.060
+So here's what we need to do.
+
+00:28.390 --> 00:34.390
+We're going to first go to the Google developers console and generate a new Google developer project.
+
+00:34.780 --> 00:39.550
+This project is what's going to allow us to get access to the Google Maps API, which is how we're going
+
+00:39.550 --> 00:41.470
+to actually show a map on the screen.
+
+00:42.070 --> 00:43.930
+So we're going to first generate that project.
+
+00:44.230 --> 00:46.690
+We're then going to enable support for Google Maps.
+
+00:46.690 --> 00:50.410
+Inside that project will then create an API key.
+
+00:51.020 --> 00:57.230
+And then use that API key to add in the Google Maps SDK to our HTML file.
+
+00:57.620 --> 01:01.220
+We're not going to install Google Maps as an NPM module or anything like that.
+
+01:01.250 --> 01:05.780
+Honestly, it is by far the easiest to include it in a script tag and just use it that way.
+
+01:06.630 --> 01:11.130
+In addition, doing it that way is going to teach us a little bit more about using global scripts included
+
+01:11.130 --> 01:14.220
+inside of a TypeScript project, which is just a nice little bonus.
+
+01:14.890 --> 01:15.780
+Okay, so let's get to it.
+
+01:15.780 --> 01:19.530
+Step number one is going to be to go to this Google developers console.
+
+01:20.040 --> 01:23.700
+As you might guess, you're going to need a Google account to get through this step.
+
+01:24.060 --> 01:25.470
+I can actually get this link.
+
+01:26.580 --> 01:31.320
+If you don't have a Google account, you can generate a throw away account just for this project.
+
+01:31.980 --> 01:36.390
+There's not going to be any billing or any money or anything like that tied with what we're doing here.
+
+01:36.980 --> 01:40.970
+Once you go to that address, you're going to either see a welcome screen that's going to ask you to
+
+01:40.970 --> 01:45.950
+generate a project, or if you've ever created a Google project before, you're going to see a screen
+
+01:45.950 --> 01:47.570
+a little bit like this one right here.
+
+01:48.110 --> 01:52.790
+So for what we are doing, I highly recommend you create a new project separate from any one you've
+
+01:52.790 --> 01:53.430
+done before.
+
+01:53.450 --> 01:56.440
+You don't have to, so you can reuse an existing project if you want to.
+
+01:56.450 --> 01:58.640
+But in general, I would recommend you use a new one.
+
+01:59.380 --> 02:04.150
+To do so we're going to find the dropdown up here on the top left hand side, click on it and then find
+
+02:04.150 --> 02:05.980
+new project on the top right.
+
+02:07.710 --> 02:10.080
+Once here, we can create a new project.
+
+02:10.110 --> 02:12.210
+You can give it a customized name if you wish.
+
+02:12.240 --> 02:13.810
+I'm not going to do any customization.
+
+02:13.830 --> 02:15.300
+I'm just going to use the default name.
+
+02:15.600 --> 02:16.830
+So click on Create.
+
+02:17.280 --> 02:21.190
+And now once we do that, you'll notice that there's this little spinner on the top right hand side.
+
+02:21.210 --> 02:24.630
+When we click on Create, the project is not generated instantly.
+
+02:24.630 --> 02:27.930
+So I actually got dumped back into the project I was looking at before.
+
+02:28.140 --> 02:32.550
+We have to wait for that spinner to go away before we can actually access the project we just created.
+
+02:32.980 --> 02:38.100
+Okay, so it looks like my spinner just finished up so I can now click on notifications and then click
+
+02:38.100 --> 02:39.570
+on the project I just made.
+
+02:40.520 --> 02:42.560
+So we're now looking at that new project.
+
+02:43.740 --> 02:47.820
+Now that we've got that, we're going to enable Google Maps support inside of it.
+
+02:48.270 --> 02:54.150
+So by default, Google has a ton of different services that they make available, like tons and tons.
+
+02:54.390 --> 02:56.250
+And Google Maps is just one of them.
+
+02:56.250 --> 03:00.270
+So we have to specifically enable Google Maps support inside this project.
+
+03:00.810 --> 03:03.750
+To do so, I'm going to find the navigation menu on the top left hand side.
+
+03:04.080 --> 03:08.010
+I'm going to find APIs and services and then click on library.
+
+03:09.880 --> 03:14.080
+Then once here, we're going to be looking for a very specific API library.
+
+03:14.110 --> 03:19.570
+There are many different maps projects or many different maps libraries right now, 15 in total.
+
+03:19.840 --> 03:23.180
+So you're going to see a lot of very similarly named libraries inside of here.
+
+03:23.200 --> 03:28.870
+We are looking for a very specific one called the Maps API.
+
+03:29.380 --> 03:35.050
+Two words Maps API, and we're looking for Maps JavaScript API right here.
+
+03:35.470 --> 03:40.480
+Notice how there are several other similarly named one like yours maps, embed, maps, static and so
+
+03:40.480 --> 03:40.770
+on.
+
+03:40.780 --> 03:43.750
+We are looking for maps, javascript API.
+
+03:44.690 --> 03:45.620
+So I'm going to find that.
+
+03:45.620 --> 03:49.340
+I'm going to click on it and then I'll hit enable like so.
+
+03:50.330 --> 03:54.020
+So that's going to add support for the JavaScript Maps API to our project.
+
+03:54.890 --> 03:55.130
+Okay.
+
+03:55.130 --> 04:00.470
+Once that's all done, the last thing we're going to do here inside that console is generate an API
+
+04:00.470 --> 04:02.150
+key, which is really easy to do.
+
+04:02.570 --> 04:06.860
+So to generate an API key, I'll again go to the navigation menu on the top left hand side.
+
+04:07.550 --> 04:11.780
+I'm going to go again to API and services and then click on credentials.
+
+04:13.040 --> 04:17.030
+Once I'm here, I'll then find the Create Credentials button on the very center of the screen.
+
+04:17.090 --> 04:18.020
+I'll click on that.
+
+04:18.700 --> 04:20.280
+We get a couple of different options here.
+
+04:20.290 --> 04:22.390
+We want to generate an API key.
+
+04:24.750 --> 04:25.410
+And there it is.
+
+04:25.410 --> 04:26.640
+There's our API key.
+
+04:27.150 --> 04:28.730
+So I'm not going to copy this just yet.
+
+04:28.740 --> 04:30.700
+I'm going to leave it here for just a moment.
+
+04:30.720 --> 04:33.240
+We're going to use this API key and just a second.
+
+04:33.240 --> 04:34.740
+So we'll leave it here on the screen.
+
+04:36.100 --> 04:36.460
+All right.
+
+04:36.460 --> 04:39.270
+So here's what we have to do first before we can actually use that API key.
+
+04:39.280 --> 04:43.930
+We need to add a script tag for the Google Maps SDK to our HTML file.
+
+04:44.800 --> 04:47.140
+So I'm going to flip on over to my code editor.
+
+04:48.640 --> 04:54.400
+I'm going to find my index HTML file and then right above the existing script tag, please make sure
+
+04:54.400 --> 04:55.500
+you put this right above.
+
+04:55.510 --> 04:57.700
+We're going to add in a new script tag.
+
+04:59.390 --> 05:01.550
+I'm going to give it an Z property.
+
+05:01.820 --> 05:06.260
+I'm going to put in a set of double quotes in there, and then I'm going to close off the script tag.
+
+05:07.270 --> 05:07.370
+Okay.
+
+05:07.420 --> 05:11.860
+So notice how I've got a new script tag with an empty Z right above the existing one.
+
+05:12.340 --> 05:17.430
+So inside of those double quotes right there, we're going to manually type out the address of the SDK
+
+05:17.440 --> 05:18.490
+that we're looking for.
+
+05:19.310 --> 05:23.480
+Honestly, it's easiest to just type this out to actually find the link to it.
+
+05:23.510 --> 05:28.130
+We would have to do like a whole lot of searching and whatnot, so easiest to basically just type this
+
+05:28.130 --> 05:29.030
+out manually.
+
+05:29.300 --> 05:33.500
+So inside those double quotes, you're going to type exactly this string as you see it.
+
+05:34.170 --> 05:40.800
+As you type this out, please make sure that you get https the colon and then the two slashes.
+
+05:40.890 --> 05:44.700
+You would not believe the number of people who I hear from who have trouble on projects.
+
+05:44.700 --> 05:48.390
+And it's all because they make a typo on this first little part right here.
+
+05:48.390 --> 05:51.840
+So please make sure you get the colon and the two forward slashes.
+
+05:53.310 --> 05:53.520
+Okay.
+
+05:53.520 --> 05:58.290
+So once you've got this over, so I'm going to copy this myself and I'm going to put it into those double
+
+05:58.290 --> 05:59.610
+quotes right there.
+
+06:00.150 --> 06:01.590
+So I'm going to paste it like so.
+
+06:04.600 --> 06:04.870
+All right.
+
+06:04.870 --> 06:09.040
+So now last thing we need to do, you'll notice at the very end of that link is key equals.
+
+06:09.430 --> 06:11.080
+And we got the double quote right after it.
+
+06:11.260 --> 06:16.870
+We're going to put the API key that we just generated between the equal sign and the double quote sign.
+
+06:17.170 --> 06:20.350
+So I'm going to go find the API key that I just generated right here.
+
+06:20.350 --> 06:21.370
+I'm going to copy it.
+
+06:22.030 --> 06:27.010
+I'm going to flip back over, find key equals right there and paste the key.
+
+06:28.110 --> 06:28.950
+And that's it.
+
+06:30.910 --> 06:33.310
+All right, so we should now be able to save this file.
+
+06:34.620 --> 06:36.130
+Flip back over to our browser.
+
+06:36.150 --> 06:37.590
+Open up our application.
+
+06:38.260 --> 06:40.510
+We should be able to refresh this page.
+
+06:41.610 --> 06:44.340
+And then just let it sit on the console for just a moment.
+
+06:44.640 --> 06:50.520
+If you see anything inside the console that says like API key support, not added or invalid API key
+
+06:50.520 --> 06:54.000
+or anything like that appear as a warning or an error inside your console.
+
+06:54.000 --> 06:57.240
+That means that something went wrong during the initialization.
+
+06:57.900 --> 07:03.570
+If you see an error that says like 404 not found around that script file, then that means that you
+
+07:03.570 --> 07:08.040
+probably made a typo on this URL right here and you'll want to do a double check on it.
+
+07:09.460 --> 07:11.170
+To make sure that everything works.
+
+07:11.530 --> 07:15.040
+We can open up the network tab inside of Chrome Console.
+
+07:15.460 --> 07:21.280
+We can click on JS right here and then you should see one of the requests inside of here that says.
+
+07:21.280 --> 07:23.140
+JS Question Mark Key.
+
+07:23.910 --> 07:28.350
+And then all we're really looking for is trying to see a status of 200 on their.
+
+07:29.170 --> 07:30.010
+And that's it.
+
+07:30.940 --> 07:31.180
+Okay.
+
+07:31.180 --> 07:33.280
+So now we've got Google Map support added in.
+
+07:33.280 --> 07:37.060
+Let's take a quick pause right here and we're going to figure out how to generate a map in the next
+
+07:37.060 --> 07:37.690
+section.

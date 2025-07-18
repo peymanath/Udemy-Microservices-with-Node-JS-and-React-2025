@@ -1,0 +1,247 @@
+WEBVTT
+
+00:00.510 --> 00:03.780
+In the last section we spoke about how we make our own custom image.
+
+00:03.780 --> 00:08.370
+We create a Docker file, we feed it into the Docker server, and that's going to eventually build a
+
+00:08.370 --> 00:11.940
+useful image that we can use to start up our own custom containers.
+
+00:11.940 --> 00:17.040
+And inside that Docker file, we're going to specify a base image, run some commands, and then eventually
+
+00:17.040 --> 00:20.820
+specify a command to run when a container is created out of the image.
+
+00:20.820 --> 00:24.870
+So in this section we're going to start working on our own custom Docker file.
+
+00:24.990 --> 00:28.230
+Let me first tell you about what we're going to be trying to build.
+
+00:28.380 --> 00:34.620
+So we are going to make a Docker file that is going to create an image that's going to run Redis server
+
+00:34.620 --> 00:35.880
+whenever it starts up.
+
+00:36.060 --> 00:40.530
+Now, throughout this course, we've already been making use of that Redis image to start up right on
+
+00:40.530 --> 00:41.790
+our local computer.
+
+00:41.790 --> 00:47.940
+But I want to show you how to build that thing from scratch or somewhat from scratch, just to be precise.
+
+00:47.940 --> 00:52.980
+So this is going to be going to be the purpose of our Docker file and the image that we're going to
+
+00:52.980 --> 00:53.940
+create out of it.
+
+00:54.120 --> 00:56.010
+So let's get started right now.
+
+00:56.370 --> 01:02.430
+I'm going to first begin by flipping over to my terminal and I'm going to create a new working directory
+
+01:02.430 --> 01:04.770
+or kind of a project directory of sorts.
+
+01:05.580 --> 01:09.270
+And I'm going to call it Redis image like.
+
+01:09.270 --> 01:13.560
+So now you can put this folder anywhere you want on your machine.
+
+01:13.560 --> 01:14.340
+Doesn't matter.
+
+01:14.340 --> 01:15.540
+Anywhere is good.
+
+01:16.050 --> 01:21.930
+I'll then change into that directory and then I'm going to start up my code editor inside that folder.
+
+01:22.320 --> 01:23.310
+Now a quick note.
+
+01:23.310 --> 01:27.690
+I am making use of Visual Studio code and I have configured it so that I could run it from the command
+
+01:27.690 --> 01:28.020
+line.
+
+01:28.020 --> 01:31.080
+So that is why I am able to run a code right here.
+
+01:31.140 --> 01:35.730
+If you have not gone through those same steps, you will not be able to run that command and start up
+
+01:35.730 --> 01:36.600
+your editor.
+
+01:36.780 --> 01:41.610
+Essentially, all you need to do right now is start up whatever code editor you like to use and open
+
+01:41.610 --> 01:44.670
+up that Redis image directory that we just created.
+
+01:46.050 --> 01:52.500
+Then inside of here, I'm going to make a new file called Docker File and notice how it has a capital
+
+01:52.500 --> 01:54.690
+D and it has no extension.
+
+01:54.810 --> 01:58.770
+So there's no JSON here, there's no shell, there's nothing like that.
+
+01:58.770 --> 02:00.990
+It is simply called Docker file.
+
+02:01.710 --> 02:06.450
+So then inside of here, we're going to write out a couple of comments to guide us through the process
+
+02:06.450 --> 02:08.700
+of creating our custom image.
+
+02:08.700 --> 02:12.000
+And it's going to essentially follow this template of steps right here.
+
+02:12.360 --> 02:16.410
+So the first comment I'm going to put down and notice how we create a comment by putting down the pound
+
+02:16.410 --> 02:22.170
+symbol, I'm going to say that I'm going to use an existing Docker image as a base.
+
+02:23.690 --> 02:30.740
+I'm then going to download and install a dependency and then finally I'm going to tell the image what
+
+02:30.740 --> 02:34.880
+to do when it starts as a container.
+
+02:37.440 --> 02:38.040
+All right.
+
+02:38.610 --> 02:42.000
+Now, I'll be honest with you, the way we're going to approach this Docker file, we're just going
+
+02:42.000 --> 02:45.030
+to write out all the code inside of here, all the configuration.
+
+02:45.030 --> 02:46.770
+We're going to use it to build our image.
+
+02:46.770 --> 02:50.910
+And then we're going to come back and talk about all the configuration that we've written inside of
+
+02:50.910 --> 02:51.330
+here.
+
+02:51.450 --> 02:55.980
+To be honest, it's a lot easier to understand the configuration that we're going to write after you've
+
+02:55.980 --> 02:58.860
+actually seen the process of creating an image.
+
+02:58.860 --> 03:02.040
+So a little bit of just blind copy pasting here.
+
+03:02.250 --> 03:07.200
+So just follow along and we'll very quickly come back and talk about the exact lines of code that we're
+
+03:07.200 --> 03:07.890
+adding in.
+
+03:08.160 --> 03:10.950
+So the first thing I'm going to write down is from.
+
+03:11.650 --> 03:12.550
+Alpine.
+
+03:14.020 --> 03:20.020
+Then in the next section I'm going to add run APK add dash dash.
+
+03:20.020 --> 03:21.910
+Update Redis.
+
+03:23.090 --> 03:30.980
+And then finally on the very bottom line here, I'm going to add CMD, a set of square brackets, a
+
+03:30.980 --> 03:36.500
+set of double quotes, and then inside there I'll put redis dash server like so.
+
+03:37.660 --> 03:37.990
+Now.
+
+03:37.990 --> 03:39.310
+I'm going to save this file.
+
+03:40.000 --> 03:42.400
+I'm going to flip back over to my terminal.
+
+03:42.670 --> 03:46.420
+I'm going to make sure that I'm inside of that red dash image directory.
+
+03:46.420 --> 03:48.280
+And I'm going to run the line.
+
+03:48.280 --> 03:49.330
+Run the command.
+
+03:49.330 --> 03:52.630
+Excuse me, Docker, build dot.
+
+03:53.170 --> 03:54.910
+Don't forget the little dot on there.
+
+03:54.940 --> 03:56.380
+Notice how there's a little period.
+
+03:56.560 --> 04:01.660
+So I'm going to run that and then we're going to very quickly see a whole bunch of outputs start to
+
+04:01.660 --> 04:02.560
+stream along here.
+
+04:02.560 --> 04:07.240
+And then eventually I see a message that says Successfully built and then blah, blah, blah.
+
+04:08.110 --> 04:14.860
+Now we're going to copy this ID right here and then run, Docker run, and then I'll paste that ID in
+
+04:15.700 --> 04:17.200
+and execute this.
+
+04:18.690 --> 04:23.160
+And then we're going to very quickly see all the kind of output here that we saw previously when we
+
+04:23.160 --> 04:25.320
+ran that Docker, seeing the reddest image.
+
+04:25.320 --> 04:28.920
+And the last message I should see is ready to accept connections.
+
+04:29.880 --> 04:33.840
+So we just went through the process of creating the Docker file, using it to build an image, and then
+
+04:33.840 --> 04:35.100
+we started that image up.
+
+04:35.100 --> 04:38.520
+But we haven't really said anything about what really happened there.
+
+04:38.550 --> 04:40.850
+I'm going to stop the running container by pressing control.
+
+04:40.860 --> 04:45.480
+See, we're going to take a quick break, come back the next section and talk about exactly what we
+
+04:45.480 --> 04:48.290
+just did inside this file and at the terminal.
+
+04:48.300 --> 04:50.490
+So a quick break and I'll see you in just a minute.

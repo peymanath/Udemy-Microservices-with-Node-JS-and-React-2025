@@ -1,0 +1,346 @@
+WEBVTT
+
+00:01.360 --> 00:04.840
+Our query service has a little bit of scaffolding put together, so now we need to make sure that it
+
+00:04.840 --> 00:08.050
+can receive events of type post created in combat created.
+
+00:08.350 --> 00:10.690
+Whenever we get post created, we're going to save the post.
+
+00:10.690 --> 00:14.590
+Whenever we get comment created, we're going to save the comment with the associated post.
+
+00:15.010 --> 00:19.360
+The first thing we have to do back over here is decide on a data structure to use to save all these
+
+00:19.360 --> 00:20.380
+posts and comments.
+
+00:20.650 --> 00:22.810
+We're going to once again use a.
+
+00:23.980 --> 00:26.890
+Simple object to store all to posts and comments.
+
+00:27.100 --> 00:31.510
+Let me very quickly give you an example of what this object is going to look like eventually so you
+
+00:31.510 --> 00:32.500
+don't have to write this code out.
+
+00:32.500 --> 00:36.490
+This is a quick example of what post is going to look like.
+
+00:36.850 --> 00:41.830
+So post will be equal eventually to having an object full of some keys.
+
+00:42.870 --> 00:46.710
+And for every one of these keys, we're going to have the ID of the post.
+
+00:46.710 --> 00:49.500
+So that would be identical to the ID right there.
+
+00:50.390 --> 00:52.040
+It will have the title, The Post.
+
+00:53.880 --> 00:56.820
+And it will have an array of comments associated with this.
+
+00:56.820 --> 01:00.180
+And of course, every comment will have its own ID.
+
+01:01.600 --> 01:02.920
+And some content.
+
+01:03.680 --> 01:04.340
+Like so.
+
+01:05.230 --> 01:10.960
+So over time, as users add in more post to our application, we would have say a second post and then
+
+01:10.960 --> 01:12.400
+a third post and so on.
+
+01:13.000 --> 01:15.320
+So again, that's what this post object is going to look like.
+
+01:15.340 --> 01:19.660
+So we just need to make sure that as we receive all these different events, we insert data into this
+
+01:19.660 --> 01:21.820
+post object with the appropriate structure.
+
+01:23.170 --> 01:28.570
+So inside of our post two events right here, we're going to take a look at that rec object.
+
+01:28.990 --> 01:33.370
+Remember, the rec body property is going to be the event itself that we actually care about.
+
+01:33.700 --> 01:35.560
+So let's take a look at that event.
+
+01:36.040 --> 01:38.920
+Remember that every event that we create has a type.
+
+01:39.790 --> 01:43.270
+And a data property will pull that out of record body.
+
+01:44.140 --> 01:48.910
+We will then set up a very simple series of if statements to take a look at that type.
+
+01:49.330 --> 01:52.390
+So we'll say if type is equal to.
+
+01:53.780 --> 01:54.980
+Host created.
+
+01:55.770 --> 01:57.270
+Now let's go ahead and run some code.
+
+01:57.900 --> 02:00.600
+Or if type is equal to.
+
+02:01.440 --> 02:02.880
+Comment related.
+
+02:03.390 --> 02:05.160
+We'll do something entirely different.
+
+02:07.460 --> 02:09.410
+So let's handle post created first.
+
+02:09.620 --> 02:12.920
+If it's equal to post created that we want to take the ID.
+
+02:15.960 --> 02:22.110
+And the title out of data because remember with post created that event is always going to have an ID
+
+02:22.110 --> 02:26.610
+and a title and we're going to insert that information into our post object.
+
+02:27.270 --> 02:34.050
+We'll say posts at ID is going to be equal to an object of ID and title.
+
+02:35.860 --> 02:36.850
+And that should be it.
+
+02:38.060 --> 02:42.830
+We'll probably also want to default the value of comments to be an empty arrays as well, so that later
+
+02:42.830 --> 02:46.970
+on, whenever someone emits an event of comment created and we receive that, we don't have to worry
+
+02:46.970 --> 02:48.950
+about creating that array or anything like that.
+
+02:50.430 --> 02:53.130
+Now let's handle a event of type comet created.
+
+02:54.180 --> 02:59.190
+Remember, an event of type common created is going to have slightly different structure to it.
+
+02:59.640 --> 03:03.690
+It's going to have an ID, a content and a post ID.
+
+03:04.480 --> 03:10.030
+So let's pull that information out, say ID content and post ID.
+
+03:13.800 --> 03:17.220
+So we will find the appropriate posts inside of our post object.
+
+03:18.230 --> 03:21.950
+Aussie accounts post is posts at post ID.
+
+03:25.210 --> 03:30.340
+Well then take a look at post dot comments and we'll push in this new comment.
+
+03:31.860 --> 03:35.940
+So our new comment is going to have a given ID and some content.
+
+03:37.770 --> 03:38.670
+And that should be it.
+
+03:40.620 --> 03:44.610
+And of course, at the very bottom here, after we have processed the events, there still is a route
+
+03:44.610 --> 03:45.030
+handler.
+
+03:45.030 --> 03:47.490
+So we need to make sure that we send back some kind of response.
+
+03:47.490 --> 03:52.620
+So we'll do a scent of just an empty object to say, Hey, we received the event and processed it.
+
+03:55.090 --> 03:58.540
+And finally, let's go back up to our post End Point.
+
+04:01.570 --> 04:06.040
+And any time someone tries to get the collection of all the posts that we have, we'll just send back
+
+04:06.040 --> 04:07.570
+the entire post object.
+
+04:08.050 --> 04:10.570
+We'll do a resent of posts.
+
+04:12.310 --> 04:13.270
+And that should be it.
+
+04:14.630 --> 04:15.650
+So let's save this.
+
+04:17.290 --> 04:19.150
+I'm going to go back over to my terminal.
+
+04:19.510 --> 04:23.370
+You'll notice I've changed the layout here just to make sure everything is a bit more legible.
+
+04:23.380 --> 04:25.780
+So the order now is the React app.
+
+04:26.380 --> 04:32.320
+Those comments query empty and the event bus right here.
+
+04:33.020 --> 04:35.300
+So we're going to try to create a new post and a comment.
+
+04:35.300 --> 04:39.380
+And we're right now just going to make sure that we don't see any errors coming out of this window right
+
+04:39.380 --> 04:41.720
+here, because that's where our query service is running.
+
+04:42.020 --> 04:45.380
+We're not actually using the query service inside the React application just yet.
+
+04:45.380 --> 04:47.570
+Again, I just want to make sure we don't have any errors.
+
+04:48.830 --> 04:49.000
+Okay.
+
+04:49.100 --> 04:51.200
+So I'm going to flip back over to the React application.
+
+04:53.030 --> 04:55.700
+I'm going to enter in a title new post.
+
+04:56.760 --> 05:01.800
+I'll refresh and I'll add in some comment to that post and refresh.
+
+05:02.250 --> 05:06.600
+Well, everything over here still works totally expected because we haven't made any change to really
+
+05:06.600 --> 05:07.950
+any existing code just yet.
+
+05:08.790 --> 05:12.930
+And if I go back to my terminal window, it looks like the query service is running successfully as
+
+05:12.930 --> 05:13.440
+well.
+
+05:14.070 --> 05:15.890
+Of course, we can't really see any data.
+
+05:15.900 --> 05:20.160
+We can't really verify that it's receiving these events or processing them correctly.
+
+05:20.280 --> 05:21.090
+I'll tell you what.
+
+05:21.240 --> 05:26.310
+How about after we process an event inside of our query service?
+
+05:27.120 --> 05:32.120
+After we run these two if statements, let's just print out the current data structure or the current
+
+05:32.490 --> 05:33.660
+collection that we have.
+
+05:36.040 --> 05:36.250
+Yes.
+
+05:36.250 --> 05:37.180
+I'll save this.
+
+05:39.050 --> 05:40.550
+I'm going to go back over again.
+
+05:42.100 --> 05:44.740
+I'll enter in a second post.
+
+05:45.970 --> 05:46.900
+And refresh.
+
+05:47.260 --> 05:50.620
+And then a second comment and submit.
+
+05:52.220 --> 05:56.900
+And now if I go back over to my terminal, I should see the appropriate data being reflected inside
+
+05:56.900 --> 05:58.070
+of my query service.
+
+05:58.760 --> 05:59.360
+Take a look at that.
+
+05:59.360 --> 06:01.070
+We've got two separate console logs.
+
+06:01.280 --> 06:07.250
+The first one was from receiving the event of post created and it looks like we receive that post and
+
+06:07.250 --> 06:08.690
+add it to our post collection.
+
+06:09.290 --> 06:12.080
+And the second console log right here is from creating the comment.
+
+06:12.410 --> 06:14.120
+So there's the exact same post.
+
+06:14.300 --> 06:18.740
+There is our list of comments and you can see that there is a object inside that array.
+
+06:18.770 --> 06:20.090
+It's being abbreviated right now.
+
+06:20.090 --> 06:25.040
+Just because Node, when it prints out a nested data structure or nested object, doesn't want to recursively
+
+06:25.040 --> 06:28.160
+print out everything inside there at a insane depth.
+
+06:28.160 --> 06:30.620
+So chances are the correct comment is inside there.
+
+06:30.620 --> 06:33.530
+We just can't really see it effectively using this tool just yet.
+
+06:34.550 --> 06:34.880
+All right.
+
+06:34.880 --> 06:36.530
+Well, I'd say that this looks pretty good.
+
+06:36.530 --> 06:43.250
+So in theory, our query service now has all the data that is required to get the entire list of posts
+
+06:43.250 --> 06:45.110
+and all the associated comments.
+
+06:45.180 --> 06:49.670
+So now the last thing we have to do is update our React application and make sure that the React application
+
+06:49.670 --> 06:54.290
+will make a request to this endpoint to get this data structure right here, pass it, and then use
+
+06:54.290 --> 06:57.830
+that structure to list out all the posts and comments.
+
+06:58.800 --> 07:02.250
+So let's take a quick pause right here and then start to work on the React app in just a moment.

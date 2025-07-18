@@ -1,0 +1,253 @@
+WEBVTT
+
+00:01.530 --> 00:05.340
+We now need to open up our moderation service and make sure that we've got some code inside there to
+
+00:05.340 --> 00:07.470
+handle this comment created event.
+
+00:07.710 --> 00:13.680
+So as soon as we receive that comment, we'll then do some checking on the content of the comment and
+
+00:13.680 --> 00:16.290
+then we're going to attempt to emit comment moderated.
+
+00:16.740 --> 00:18.180
+So let's go ahead and give it a shot.
+
+00:19.280 --> 00:22.250
+Back inside my editor, I will find the moderation service.
+
+00:22.250 --> 00:24.500
+Inside there, I'll find the index dogs file.
+
+00:25.140 --> 00:31.100
+So we've got this post request handler right here to watch for any request going to our events endpoint.
+
+00:31.110 --> 00:34.350
+So this is where we are going to receive an event from our broker.
+
+00:34.800 --> 00:39.870
+Remember that the event itself is going to be contained on the rec body property because we are receiving
+
+00:39.870 --> 00:42.480
+all these events as simple post requests for right now.
+
+00:43.410 --> 00:49.050
+So off of that wrecked body property, we will pull off the events type and the data associated with
+
+00:49.050 --> 00:49.500
+it.
+
+00:50.970 --> 00:56.490
+Well, then take a look at the type and we'll say if the type is equal to comment created, then we
+
+00:56.490 --> 00:59.310
+want to go through this entire content moderation thing.
+
+01:00.850 --> 01:05.290
+The first thing we have to do inside of here is decide whether or not to approve or reject the comment.
+
+01:05.830 --> 01:08.740
+To do so, we're going to set up a ternary expression.
+
+01:09.130 --> 01:13.270
+So let's say con status is going to be data content.
+
+01:13.300 --> 01:16.360
+Remember, that is the actual content of the comment itself.
+
+01:16.930 --> 01:20.920
+We're going to check to see if that includes a string of orange.
+
+01:22.230 --> 01:28.170
+If it does that we want to assign rejected to status.
+
+01:28.200 --> 01:32.490
+Otherwise we will assign approved like so.
+
+01:35.760 --> 01:38.520
+So now that we've moderated the comment, we've got the status right here.
+
+01:38.880 --> 01:42.960
+So now we need to make sure that we emit this common moderated event.
+
+01:43.200 --> 01:47.550
+So we're going to make a post request over to our event bus just as we've done several times.
+
+01:48.850 --> 01:53.020
+We will make sure that we include the comment along with the new updated status.
+
+01:55.640 --> 01:57.230
+So I will make a.
+
+01:58.920 --> 02:07.770
+Post requests to HTTP colon local host and remember our event bus is at 4005 events.
+
+02:09.870 --> 02:13.290
+Then we will give this thing a type of comment moderated.
+
+02:14.520 --> 02:18.630
+And for the data we will include the comments.
+
+02:19.410 --> 02:21.450
+ID is post ID.
+
+02:21.540 --> 02:24.150
+The content itself and the updated status.
+
+02:24.510 --> 02:28.020
+So we will say the ID of this comment is data ID.
+
+02:29.830 --> 02:32.650
+The post ID is data post ID.
+
+02:34.930 --> 02:38.350
+The status is going to be the status that we just calculated right here.
+
+02:39.060 --> 02:42.630
+And then finally the content will be data content.
+
+02:44.310 --> 02:49.170
+Now, one thing I want to point out right here is that I just kind of pulled these properties of ID,
+
+02:49.170 --> 02:52.320
+post ID and content off the top of my head.
+
+02:52.350 --> 02:57.600
+I just kind of remembered them, but I could have very easily forgotten the different properties that
+
+02:57.600 --> 03:00.900
+were contained inside of an event of type content created.
+
+03:01.200 --> 03:05.850
+You and I know what is inside of the Common Create event because we were just looking at the definition
+
+03:05.850 --> 03:09.330
+of that event a moment ago when it was emitted from our comment service.
+
+03:09.870 --> 03:11.090
+So here's the comment service.
+
+03:11.100 --> 03:15.390
+Here's where we create that event so we can look back at this thing right here and very easily see the
+
+03:15.390 --> 03:18.000
+different properties that comment created has.
+
+03:18.390 --> 03:22.680
+Well, I think you can kind of imagine that if we were working on a large system, understanding the
+
+03:22.680 --> 03:27.100
+different properties that were contained inside of any given event can be really challenging.
+
+03:27.120 --> 03:27.510
+Definitely.
+
+03:27.510 --> 03:27.990
+Without a doubt.
+
+03:27.990 --> 03:32.760
+It'd be hard to remember off the top of your head, so chances are we would want some kind of documentation
+
+03:32.760 --> 03:38.730
+or something like that to reflect or kind of document what different properties exist inside of every
+
+03:38.730 --> 03:41.430
+event that exists inside of our application.
+
+03:41.460 --> 03:44.640
+There's just something I want you to keep in your mind for right now, because it's going to be very
+
+03:44.640 --> 03:45.780
+relevant later on.
+
+03:47.960 --> 03:48.270
+Okay.
+
+03:48.290 --> 03:51.380
+So now next up, we made use of the a keyword inside of here.
+
+03:51.410 --> 03:53.720
+Let's make sure that we mark this function as async.
+
+03:54.110 --> 03:58.430
+And then finally, right after the closing curly brace of the if statement, we do need to make sure
+
+03:58.430 --> 04:00.350
+that we eventually send off a response.
+
+04:00.380 --> 04:02.930
+Otherwise, this request handler is just going to hang.
+
+04:04.420 --> 04:04.680
+Okay.
+
+04:04.690 --> 04:05.530
+So this looks good.
+
+04:05.530 --> 04:11.290
+So this gets us caught up to creating this comment moderated event and sending it off to our event bus.
+
+04:11.770 --> 04:14.710
+There is one little thing that we need to make sure we do very quickly.
+
+04:14.710 --> 04:20.110
+Right now, our event bus is not sending any events to the moderation service just because we created
+
+04:20.110 --> 04:22.600
+the Moderation Service after we made the event bus.
+
+04:22.870 --> 04:28.450
+Let's make sure that whenever the event bus creates or receives a comment, it sends it out to the moderation
+
+04:28.450 --> 04:29.530
+service as well.
+
+04:30.500 --> 04:35.780
+So back inside of my event bus directory, I'll find the indexed JS file.
+
+04:36.770 --> 04:40.640
+So right here is where we receive all the different events and then we just turn right back around and
+
+04:40.640 --> 04:42.980
+send them off to all these different running services.
+
+04:43.310 --> 04:49.910
+So again, 4000 is Post's comments query and we just have not added in the moderation one just yet.
+
+04:49.910 --> 04:55.100
+So let's paste one of those lines down and then just make sure we update the port to 4003, which is
+
+04:55.100 --> 04:57.170
+where our moderation service is running at.
+
+04:58.070 --> 04:58.230
+Okay.
+
+04:58.410 --> 05:00.570
+I'll say this file and close it.
+
+05:03.030 --> 05:04.590
+So let's take another pause right here.
+
+05:04.590 --> 05:10.060
+When we come back in the next video, we're going to make sure that when the event bus receives comment
+
+05:10.230 --> 05:15.360
+moderated and sends it over to comments service, we're going to make sure that we receive that event
+
+05:15.360 --> 05:16.890
+inside of comments service.
+
+05:17.550 --> 05:23.730
+Take a look at the status property, update the status of the appropriate comment and then emit this
+
+05:23.730 --> 05:26.820
+comment updated event as well.
+
+05:27.210 --> 05:28.250
+So still a little bit to do.
+
+05:28.260 --> 05:29.880
+Let's take care of that in just a moment.

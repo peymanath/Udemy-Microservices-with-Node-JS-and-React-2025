@@ -1,0 +1,190 @@
+WEBVTT
+
+00:00.990 --> 00:05.160
+In this video, we're going to get a better idea of the Bugs library and how it works with Reddit server
+
+00:05.160 --> 00:08.520
+and then eventually understand how we're going to use it inside of our project.
+
+00:09.110 --> 00:09.570
+Okay.
+
+00:09.570 --> 00:12.310
+So in this diagram, this is not what we are doing with Bull.
+
+00:12.330 --> 00:15.750
+This is a diagram of what people traditionally use bull for.
+
+00:15.780 --> 00:18.720
+So I just want you to understand a little bit of background about this library.
+
+00:19.350 --> 00:24.630
+So in this imaginary scenario right here, we might have an application where a user can make a request
+
+00:25.200 --> 00:31.140
+with the intent to convert some video file from one format, such as an MP four to another format such
+
+00:31.140 --> 00:32.180
+as MKV.
+
+00:32.460 --> 00:37.230
+If you are not familiar with these file format for video, no problem whatsoever is just an example.
+
+00:37.260 --> 00:42.270
+All I mean to say is that this request, in order to fulfill it, we need a lot of processing power.
+
+00:43.020 --> 00:48.270
+Now, rather than doing a conversion task like this on some immediate web server, we will very frequently
+
+00:48.270 --> 00:53.550
+instead have some kind of worker server, some separate machine, some separate container or something
+
+00:53.550 --> 00:57.990
+else inside of our app that is completely standalone and separate from the web server.
+
+00:58.320 --> 01:03.690
+The goal of this worker server is to have some actual video conversion process go on.
+
+01:04.350 --> 01:08.850
+In this diagram, I'm showing just one worker server, but we might very easily have multiple copies
+
+01:08.850 --> 01:10.890
+of this worker server like so.
+
+01:12.400 --> 01:17.050
+Whenever someone makes this incoming request right here to our web server, it's going to queue something
+
+01:17.050 --> 01:18.400
+called a job.
+
+01:18.670 --> 01:22.400
+A job is really nothing more than a plain JavaScript object.
+
+01:22.420 --> 01:26.980
+It describes some amount of processing that needs to be done on some particular thing.
+
+01:27.840 --> 01:33.630
+Well, it's going to send this job object over to this Reddit server where Reddit is going to store
+
+01:33.660 --> 01:34.830
+this list of jobs.
+
+01:35.920 --> 01:40.300
+Then each of these different worker servers are going to consistently pull this right of server and
+
+01:40.300 --> 01:41.800
+wait for some job to appear.
+
+01:42.190 --> 01:47.140
+As soon as some job shows up, this worker is going to pull that job off, do some processing on it,
+
+01:47.140 --> 01:50.860
+and then send a message back over to Reddit's to say that the processing is complete.
+
+01:52.250 --> 01:52.700
+That's it.
+
+01:52.700 --> 01:54.200
+That's what bull is really used for.
+
+01:54.230 --> 01:55.410
+Now, just be really clear.
+
+01:55.430 --> 02:01.340
+Bull gets used both on this web server over here and inside of each of these worker servers as well.
+
+02:02.210 --> 02:07.430
+SAPOL is really handling the entire process, everything from setting up the initial job to processing
+
+02:07.430 --> 02:10.610
+it to sending back some notification to say that the job is complete.
+
+02:11.550 --> 02:12.480
+In this respect.
+
+02:12.480 --> 02:17.370
+This entire read server and bull thing might actually seem kind of similar to our entire event processing
+
+02:17.370 --> 02:21.460
+setup with Nat streaming server and the node NAT streaming client that we are using.
+
+02:21.480 --> 02:23.400
+They are somewhat similar in nature.
+
+02:23.400 --> 02:28.200
+However, we would not really want to use bul or doing the kind of event processing that you and I are
+
+02:28.200 --> 02:32.070
+doing or the kind of async messaging between our different services.
+
+02:32.110 --> 02:35.340
+The reason for that is that bull is simply not designed for it.
+
+02:35.520 --> 02:38.100
+Well, it's designed for kind of one off little jobs.
+
+02:38.990 --> 02:44.480
+It's not really intended to be handling a vast or huge number of messages as that streaming server is.
+
+02:45.500 --> 02:45.770
+Okay.
+
+02:45.770 --> 02:49.390
+So now just a little couple more pieces of terminology around bull.
+
+02:49.400 --> 02:53.600
+So when we start to make use of bull, just one additional piece of terminology I want to add inside
+
+02:53.600 --> 02:56.480
+of here, we're going to create something called a queue.
+
+02:56.510 --> 03:00.020
+A queue is essentially the main abstraction inside a bull.
+
+03:00.230 --> 03:03.470
+A Q represents some series of messages that we want to queue up.
+
+03:04.420 --> 03:06.280
+And eventually process over time.
+
+03:06.310 --> 03:09.430
+So we're going to use pull to specifically create a queue.
+
+03:09.520 --> 03:13.480
+When we create the key, we're also going to specify exactly what we want to do with messages that are
+
+03:13.480 --> 03:14.380
+flowing through it.
+
+03:15.400 --> 03:18.730
+And finally, here's essentially what's going to be going on inside of our app.
+
+03:19.120 --> 03:22.250
+So in our case, we do not have any separate worker server.
+
+03:22.270 --> 03:25.600
+Everything is contained entirely inside the expiration service.
+
+03:25.840 --> 03:31.270
+So for us, this web server right here and the worker server over here are really just one single server
+
+03:31.660 --> 03:37.030
+and we're really just making use of bull for this kind of delayed messaging aspect and to make sure
+
+03:37.030 --> 03:41.770
+that if the expiration service ever goes down, chances are the server will not also go down.
+
+03:41.770 --> 03:43.120
+Hopefully it won't anyways.
+
+03:43.800 --> 03:47.120
+So that's where you really using Bull and red is for inside this project.
+
+03:47.170 --> 03:51.270
+So now that we have some vague idea of what's going on here, let's start to write out some code around
+
+03:51.270 --> 03:52.320
+bullet in the next video.
+
+03:52.320 --> 03:55.830
+And I think you'll see pretty soon that it's pretty easy and straightforward to make use of.

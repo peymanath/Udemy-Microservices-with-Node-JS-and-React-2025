@@ -1,0 +1,244 @@
+WEBVTT
+
+00:01.040 --> 00:04.670
+We've now got some code put together to publish an event to our net streaming server.
+
+00:04.670 --> 00:10.520
+But if we go back over to our terminal inside of our Nats test directory and run NP and run, publish.
+
+00:11.530 --> 00:14.980
+We'll see a nasty error saying that we cannot connect to the net streaming server.
+
+00:15.130 --> 00:16.570
+So how are we going to fix this?
+
+00:16.600 --> 00:21.790
+Well, the whole issue here is that we are trying to run our program right now and access some program
+
+00:21.790 --> 00:26.230
+that's running inside of a pod inside of our cluster to access something inside the cluster.
+
+00:26.260 --> 00:29.440
+There are a couple of different options available to us.
+
+00:29.620 --> 00:33.520
+So we can use a very classic option that we are now very much familiar with.
+
+00:34.150 --> 00:35.140
+Option number one.
+
+00:35.230 --> 00:36.410
+Here's our Nats pod.
+
+00:36.430 --> 00:42.370
+We created a cluster IP service to govern access to that pod so we can very easily go into our ingress
+
+00:42.370 --> 00:43.390
+engine exe file.
+
+00:44.220 --> 00:49.140
+And add in some routes inside there that's going to expose the cholesterol service to the outside world.
+
+00:49.590 --> 00:54.260
+So then we could tell our publisher program to just communicate directly with ingress engine X.
+
+00:54.720 --> 00:57.780
+So this is option number one and we could definitely make this work.
+
+00:57.900 --> 01:02.580
+However, there's something kind of interesting about this test program that I want to put together.
+
+01:02.730 --> 01:07.800
+One of the very key things I want to show you is what happens if our publisher program or the listener
+
+01:07.800 --> 01:12.750
+program suddenly loses its connection with that Nat's streaming server pod.
+
+01:12.900 --> 01:18.240
+So I want to very easily be able to essentially break that link and then very quickly toggle it back
+
+01:18.240 --> 01:21.910
+on without a lot of complicated commands or anything like that.
+
+01:21.930 --> 01:25.830
+So even though option number one would definitely work, it's a little bit too heavy weight for what
+
+01:25.830 --> 01:26.970
+we're trying to do right now.
+
+01:28.470 --> 01:34.770
+So option number two, we could create a node port service to expose the Nets pod directly to the outside
+
+01:34.770 --> 01:37.860
+world or whatever is running outside of our Kubernetes cluster.
+
+01:38.280 --> 01:39.810
+So this would definitely work as well.
+
+01:39.810 --> 01:43.860
+And we could definitely probably figure out how to easily write a command to very quickly delete that
+
+01:43.860 --> 01:48.240
+service so that we could simulate breaking that connection and then repairing it very quickly.
+
+01:48.810 --> 01:51.780
+However, this would still require us to write out a config file.
+
+01:52.140 --> 01:52.800
+That's okay.
+
+01:52.800 --> 01:58.440
+But right now we're just making a very small little test program and again, creating a config file
+
+01:58.440 --> 01:59.670
+just a little bit heavyweight.
+
+01:59.820 --> 02:04.860
+So there actually is option number three to get access to running or something running inside of a pod
+
+02:04.860 --> 02:09.870
+inside of our cluster very easily inside of a strictly development setting.
+
+02:10.020 --> 02:11.370
+So here's what we can do.
+
+02:12.200 --> 02:18.020
+We can run a command at our terminal that tells our Kubernetes cluster to port forward a port off of
+
+02:18.020 --> 02:20.300
+a very specific pod inside of our cluster.
+
+02:20.990 --> 02:26.660
+When we use this port forwarding thing, it's going to cause our cluster to essentially behave as though
+
+02:26.660 --> 02:28.950
+it has a node port service running inside of it.
+
+02:28.970 --> 02:33.950
+It's going to expose this pod or a very specific port on it to the outside world and allow us to connect
+
+02:33.950 --> 02:36.020
+to it directly from our local machine.
+
+02:36.500 --> 02:40.490
+So this is what we're going to do to get access to that NAT streaming server pod.
+
+02:41.960 --> 02:44.690
+So let me show you how to set up this port forwarding thing.
+
+02:44.960 --> 02:46.760
+We're going to first go back to our terminal.
+
+02:47.950 --> 02:51.160
+I'm going to close the app and run publish by hitting control.
+
+02:51.160 --> 02:51.640
+See?
+
+02:52.350 --> 02:55.420
+I'm then going to get a list of all my different running pods with Cube.
+
+02:55.530 --> 02:56.820
+It'll get pods.
+
+02:57.670 --> 03:01.090
+I'll find the name of the pod that is running by Nats streaming server.
+
+03:01.120 --> 03:06.970
+I'm going to copy the name and then I will run Cube, CTL or Forward.
+
+03:07.480 --> 03:08.680
+Then the name of the pod.
+
+03:09.620 --> 03:12.740
+And then the ports that I want to set up port forwarding to.
+
+03:13.100 --> 03:18.500
+The first number right here is the port on my local machine that I want to be able to access to get
+
+03:18.500 --> 03:19.400
+at this pod.
+
+03:19.670 --> 03:23.720
+The second number is going to be the port on the pod that I'm trying to actually access.
+
+03:24.380 --> 03:29.090
+In this case, we're going to just say connect directly through four to 2 to 4, two, two.
+
+03:30.020 --> 03:31.010
+So I'm going to run that.
+
+03:31.810 --> 03:36.790
+And we'll see a little kind of prompt right here saying, okay, we are forwarding all traffic from
+
+03:36.790 --> 03:42.850
+localhost port four, two, two, two, two, four, two, two to on that actual pod.
+
+03:43.420 --> 03:44.980
+So now we should be able to go back over.
+
+03:45.740 --> 03:47.090
+To another terminal.
+
+03:47.330 --> 03:48.280
+I said, back over.
+
+03:48.290 --> 03:48.650
+Really?
+
+03:48.650 --> 03:50.290
+We want to open another terminal window.
+
+03:50.300 --> 03:53.240
+We want to leave this thing running so I can open another terminal window.
+
+03:55.370 --> 03:56.890
+And we will run npm.
+
+03:56.900 --> 03:58.490
+Run, publish in here.
+
+03:59.170 --> 04:02.260
+And now we should see publisher connected to Nets.
+
+04:03.710 --> 04:04.010
+Okay.
+
+04:04.010 --> 04:08.990
+So this port forwarding command is not just restricted to using gnats or something like that.
+
+04:08.990 --> 04:12.740
+We can use this for any different port, any kind of thing we create that we want to connect directly
+
+04:12.740 --> 04:13.100
+to.
+
+04:13.130 --> 04:15.860
+If it is a very temporary little connection.
+
+04:16.280 --> 04:20.600
+The nice thing about using port forward is that, as I mentioned, we want to be able to break the connection
+
+04:20.600 --> 04:21.490
+here very easily.
+
+04:21.500 --> 04:26.270
+To do so, all we have to do is stop that process running the Port Forward Command.
+
+04:26.930 --> 04:28.100
+We're not going to do that just yet.
+
+04:28.100 --> 04:29.140
+I'll show you what happens.
+
+04:29.180 --> 04:30.440
+We do it a little bit later on.
+
+04:31.290 --> 04:35.100
+So we are now connected between our publisher program and the pod.
+
+04:35.130 --> 04:39.480
+So another quick pause right here and we'll continue adding in some code to our publisher in the next
+
+04:39.480 --> 04:40.050
+video.

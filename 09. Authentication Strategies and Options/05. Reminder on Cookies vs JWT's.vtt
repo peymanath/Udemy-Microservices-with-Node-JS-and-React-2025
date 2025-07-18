@@ -1,0 +1,304 @@
+WEBVTT
+
+00:01.870 --> 00:06.100
+Well, we've had a couple of different videos on authentication, and we've now established that we
+
+00:06.100 --> 00:11.080
+want to go with fundamental option number two, where we're going to make sure that each service understands
+
+00:11.080 --> 00:15.040
+what authentication is and how to determine whether or not someone is logged in.
+
+00:15.520 --> 00:19.630
+Now, in all these different videos over here on the left hand side, we've been saying that we are
+
+00:19.630 --> 00:22.390
+going to have some request to do something.
+
+00:22.390 --> 00:27.520
+And the authentication mechanism was going to be a JSON web token, a cookie or something very similar.
+
+00:27.850 --> 00:32.740
+So now in this video, in the next couple, we're going to establish exactly how we are going to prove
+
+00:32.740 --> 00:34.340
+that a user is authenticated.
+
+00:34.360 --> 00:36.610
+In other words, are we using JSON Web tokens?
+
+00:36.610 --> 00:38.380
+Are we using cookies or what?
+
+00:38.830 --> 00:43.900
+Well, first thing I want to do is establish the difference between JSON Web tokens and cookies.
+
+00:43.990 --> 00:46.870
+I'm going to kind of assume that you're vaguely familiar with both these.
+
+00:46.870 --> 00:48.950
+So I'm really just going to give you a quick reminder.
+
+00:48.970 --> 00:53.500
+Most importantly, biggest thing I want you to understand here and the biggest thing I want you to recall
+
+00:53.500 --> 00:57.020
+is that JSON Web tokens and cookies are not the same thing.
+
+00:57.040 --> 01:00.070
+They are not equivalent by any stretch of the imagination.
+
+01:00.670 --> 01:04.990
+Let's take a look at a series of diagrams and just get a quick reminder on what a cookie is and what
+
+01:04.990 --> 01:08.830
+a JSON web token is and how they are similar and how they are different.
+
+01:10.080 --> 01:11.610
+Well, first begin with cookies.
+
+01:11.880 --> 01:13.950
+So we're going to imagine that we've got some browser.
+
+01:13.980 --> 01:16.350
+Making a request over to some server.
+
+01:17.190 --> 01:22.680
+When the server sends a response back over to the browser, it can optionally include a header of set
+
+01:22.680 --> 01:27.420
+cookie and then for that set cookie header, it can provide some kind of value.
+
+01:27.900 --> 01:32.100
+This value right here can be a string that contains any information that we want.
+
+01:32.930 --> 01:37.370
+That little piece of information is then going to be automatically stored inside of the browser.
+
+01:37.850 --> 01:44.420
+Then whenever this browser makes a follow up request to the same domain with the same port, the browser
+
+01:44.420 --> 01:48.830
+is going to make sure that it takes that little piece of information right there and appends it onto
+
+01:48.830 --> 01:51.260
+the request as a cookie header.
+
+01:51.560 --> 01:53.870
+So there's that little piece of information right there.
+
+01:54.170 --> 01:56.330
+It will be automatically sent over to the server.
+
+01:57.090 --> 02:02.910
+The key things to understand here around this cookie approach or this idea of saving some cookie is
+
+02:02.910 --> 02:05.040
+that it's some arbitrary piece of information.
+
+02:05.040 --> 02:07.310
+Doesn't really matter what this information is.
+
+02:07.320 --> 02:10.200
+It can be anything we possibly can think of.
+
+02:10.560 --> 02:15.030
+That piece of information will be automatically stored by the browser and automatically sent to the
+
+02:15.030 --> 02:17.340
+server any time we make a follow up request.
+
+02:17.340 --> 02:20.370
+Those are the key things to remember about cookies in general.
+
+02:21.330 --> 02:23.220
+It's now off to JSON Web tokens.
+
+02:24.140 --> 02:29.150
+So remember, with a JSON web token, we are going to take some arbitrary piece of information that
+
+02:29.150 --> 02:30.710
+we refer to as the payload.
+
+02:31.160 --> 02:37.100
+So this can be some kind of object that has maybe a user ID, a favorite color, just about any information
+
+02:37.100 --> 02:38.540
+that we can possibly think of.
+
+02:39.110 --> 02:44.180
+We're then going to take that payload and throw it into a JSON web token creation algorithm.
+
+02:44.360 --> 02:49.370
+It's then going to spit out our JSON Web token that looks like an encoded string like this right here
+
+02:49.370 --> 02:50.570
+or some kind of token.
+
+02:52.240 --> 02:55.060
+Stored inside this thing is that original payload.
+
+02:55.480 --> 03:01.300
+We can very easily take that string right there, throw it into some kind of decoding algorithm and
+
+03:01.300 --> 03:03.190
+extract the original object.
+
+03:03.190 --> 03:07.600
+So at any point in time, we can always access the information that is stored inside the token.
+
+03:08.520 --> 03:13.710
+Once we have this token, we eventually do need to communicate it between the browser and the server.
+
+03:14.040 --> 03:18.240
+There were a couple of different methods that we can do or use to actually do this communication.
+
+03:18.720 --> 03:23.490
+So whenever the browser makes requests to the server, it's going to want to include that JSON web token
+
+03:23.490 --> 03:28.800
+in one way or another so that the browser can prove that it is authenticated or it is logged in with
+
+03:28.800 --> 03:29.970
+this particular server.
+
+03:30.700 --> 03:36.550
+To communicate that token over some very common approaches are to include an authorization header that
+
+03:36.550 --> 03:38.590
+has the JSON web token inside of it.
+
+03:39.130 --> 03:44.710
+We can just throw the entire token inside the body of a request, assuming that it is a post request
+
+03:44.710 --> 03:46.480
+or a put or a delete and so on.
+
+03:47.660 --> 03:53.450
+Or alternatively, we can also kind of mix and match here and take that JSON web token and store it
+
+03:53.450 --> 03:55.520
+inside of a cookie as well.
+
+03:55.970 --> 04:01.580
+So the JSON web token will be managed automatically by the browser and included on all follow up requests.
+
+04:02.690 --> 04:02.960
+All right.
+
+04:02.960 --> 04:09.230
+So just to recap what we kind of recovered or recalled inside this video, differences between cookies
+
+04:09.230 --> 04:10.460
+and JSON Web tokens.
+
+04:10.460 --> 04:13.070
+Cookies are a transport mechanism.
+
+04:13.070 --> 04:18.200
+They're a way of communicating information between the server and the browser, and they do not necessarily
+
+04:18.200 --> 04:21.380
+do anything closely coupled to authorization.
+
+04:21.680 --> 04:26.960
+We use them for authorization, but that's not necessarily the primary purpose of the primary goal of
+
+04:26.960 --> 04:27.170
+them.
+
+04:27.170 --> 04:28.850
+It's not the only thing they can do.
+
+04:29.750 --> 04:33.860
+We can use cookies to move any kind of data between the browser and the server, so it doesn't have
+
+04:33.860 --> 04:35.550
+to be authentication related stuff.
+
+04:35.570 --> 04:37.280
+It can be tracking information.
+
+04:37.310 --> 04:43.790
+It can be some kind of visit counter just about any kind of data we can easily store inside that cookie.
+
+04:45.150 --> 04:48.220
+And then finally, cookies are automatically managed by the browser.
+
+04:48.240 --> 04:53.070
+You and I, as developers specifically on the browser side of things, don't really have to worry about
+
+04:53.070 --> 04:55.890
+managing managing them in any way, shape or form.
+
+04:55.920 --> 05:00.690
+All you and I have to do on the server is set a cookie, and then we can be pretty much guaranteed that
+
+05:00.690 --> 05:03.120
+we'll always come back in all follow up requests.
+
+05:04.400 --> 05:09.050
+Jason Webb tokens, on the other hand, are all about authentication and authorization.
+
+05:09.050 --> 05:11.180
+That is what they are intended to serve.
+
+05:11.630 --> 05:16.100
+Inside of a JSON web token, we can store any form or structure of data that we want.
+
+05:16.100 --> 05:19.970
+So it's traditionally going to be an object with some number of key value pairs.
+
+05:20.910 --> 05:25.710
+And then Jason Webb tokens have to be managed manually by you and I as developers on the front end,
+
+05:25.740 --> 05:29.070
+unless we are storing that JSON web token inside of a cookie.
+
+05:30.180 --> 05:30.450
+All right.
+
+05:30.450 --> 05:34.740
+So now that we've established the difference between these, again, I just want you to recall that
+
+05:34.740 --> 05:39.450
+back inside this diagram where we said, oh, yeah, our authentication thing is a JSON web token or
+
+05:39.450 --> 05:40.140
+a cookie.
+
+05:40.170 --> 05:45.090
+It's kind of misleading to make these things sound equivalent because they are two very different things.
+
+05:45.360 --> 05:47.730
+The cookie is just a transport mechanism.
+
+05:47.730 --> 05:50.130
+It's something that's going to hold information.
+
+05:50.580 --> 05:52.020
+It can be any kind of information.
+
+05:52.020 --> 05:55.560
+It's not necessarily tied to authentication, JSON Web tokens.
+
+05:55.560 --> 06:00.300
+On the other hand, traditionally all we use always used for authentication and authorization.
+
+06:01.290 --> 06:01.560
+All right.
+
+06:01.560 --> 06:03.480
+So now we've established the difference here.
+
+06:03.660 --> 06:09.690
+We need to take a deeper look at both these things and decide, based on some pros and cons, which
+
+06:09.690 --> 06:16.110
+one is more appropriate or which approach or combination of the two is most appropriate for handling
+
+06:16.110 --> 06:19.230
+authentication inside of a microservices architecture.
+
+06:19.470 --> 06:21.180
+Let's take care of that in just a moment.

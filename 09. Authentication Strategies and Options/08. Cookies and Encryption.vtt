@@ -1,0 +1,241 @@
+WEBVTT
+
+00:01.210 --> 00:04.330
+We've now established how we're going to handle all things authentication.
+
+00:04.330 --> 00:09.250
+So we're going to have a JSON web token as the actual authentication mechanism, and we're going to
+
+00:09.250 --> 00:13.120
+store or manage this JSON Web token through the use of cookies.
+
+00:13.570 --> 00:13.870
+All right.
+
+00:13.870 --> 00:18.160
+So with all that in mind, quick kind of summary diagram right here of what is going on during the sign
+
+00:18.160 --> 00:23.530
+up process, because that is still the thing that we are working on around our OTT service right now.
+
+00:23.860 --> 00:25.660
+So we've gone through everything inside of here.
+
+00:27.420 --> 00:31.970
+Or hashing, creating the user and storing them and considering the user to now be logged in.
+
+00:31.980 --> 00:36.930
+We're going to handle that by sending back a JSON web token in a cookie.
+
+00:37.560 --> 00:41.490
+So in other words, we need to send back a response that has a header of set cookie and that should
+
+00:41.490 --> 00:44.160
+have the JSON web token more or less inside there.
+
+00:44.460 --> 00:47.070
+So how are we going to actually handle cookies?
+
+00:47.100 --> 00:48.450
+We're not going to handle the manually.
+
+00:48.450 --> 00:52.440
+Instead, we're going to use a little helper library that we're going to use across all of our different
+
+00:52.440 --> 00:55.530
+services to read data out of this cookie.
+
+00:55.740 --> 01:01.170
+So let's take a look at the documentation for the cookie managing library we are going to use inside
+
+01:01.170 --> 01:02.010
+of a new browser tab.
+
+01:02.010 --> 01:07.200
+I'm going to go to KPMG's and then once there I will search for cookie session.
+
+01:09.740 --> 01:10.040
+All right.
+
+01:10.040 --> 01:11.570
+So here's the documentation for it.
+
+01:11.780 --> 01:13.530
+If you've never used cookie session before.
+
+01:13.550 --> 01:15.860
+Feel free to read through this thing really quickly.
+
+01:15.890 --> 01:20.930
+The nice thing about Cookie Session in particular is that it allows us to store a bunch of information
+
+01:20.930 --> 01:22.450
+inside the cookie itself.
+
+01:22.460 --> 01:24.470
+And that's one of the big things that's mentioned right here.
+
+01:24.710 --> 01:30.440
+Remember, that is a really big deal for us because as we had previously discussed back in our list
+
+01:30.440 --> 01:35.330
+of requirements, we had said that we did not want to have to have a requirement of a backing data store
+
+01:35.330 --> 01:38.420
+or something like that on our individual services.
+
+01:38.690 --> 01:43.820
+Cookie session is specifically designed to not have to rely upon a back end data store.
+
+01:44.180 --> 01:48.140
+And again, you can read the documentation right here that kind of expands on that just a little bit.
+
+01:49.010 --> 01:52.760
+Now, you might recall that one of the other issues we discussed or one of the other requirements we
+
+01:52.760 --> 01:57.440
+had said that we kind of didn't really want to use cookies because we want to have a solution that was
+
+01:57.440 --> 01:59.750
+easily understood between different languages.
+
+02:00.320 --> 02:04.790
+Cookies sometimes are a little bit challenging to handle across different languages, and the reason
+
+02:04.790 --> 02:10.700
+for that is that oftentimes you will see that the contents of a cookie will be encrypted in some way.
+
+02:11.120 --> 02:14.750
+So cookie session does handle or support encryption.
+
+02:14.750 --> 02:18.350
+We can use cookie session to encrypt the contents of a cookie.
+
+02:18.650 --> 02:23.480
+That can really get us into trouble because cookie session is going to use some very particular encryption
+
+02:23.480 --> 02:25.550
+algorithm to encrypt the cookie.
+
+02:25.760 --> 02:30.320
+If we go off to Ruby on Rails and we need to read the contents of that cookie now, we're going to need
+
+02:30.320 --> 02:35.180
+to make sure that Ruby on Rails can also support this encryption method as well.
+
+02:35.990 --> 02:37.670
+So is that going to be an issue here?
+
+02:37.700 --> 02:42.800
+Well, we're going to kind of circumvent this whole issue of having to worry about being easily understood
+
+02:42.800 --> 02:44.130
+between different languages.
+
+02:44.150 --> 02:47.540
+And really, this entire idea of encrypting the contents of a cookie.
+
+02:47.570 --> 02:48.920
+So let me show you a diagram.
+
+02:50.130 --> 02:50.610
+Okay.
+
+02:51.090 --> 02:56.400
+So we need to make sure that the contents of the cookie is easily understood between different languages.
+
+02:56.880 --> 03:02.120
+The reason that is a big problem most frequently is because we encrypt the data in the cookie.
+
+03:02.130 --> 03:06.510
+So again, as I just mentioned, cookie session might use some particular encryption algorithm that
+
+03:06.510 --> 03:09.330
+might not be easily supported by another language.
+
+03:09.510 --> 03:14.790
+So to get around that, you and I are simply going to not encrypt the cookie contents.
+
+03:14.940 --> 03:17.920
+Now, that might sound like a huge security issue.
+
+03:17.940 --> 03:23.130
+This essentially means that whatever information we store inside the cookie is going to be easily read
+
+03:23.130 --> 03:26.010
+by users and, in theory, malicious users.
+
+03:26.340 --> 03:29.190
+But that is really not a big deal for us.
+
+03:29.220 --> 03:33.100
+Remember, JSON web tokens are naturally tamper resistant.
+
+03:33.120 --> 03:38.700
+If a malicious user start to try to modify the information inside of a JSON web token, we are going
+
+03:38.700 --> 03:44.310
+to know right away, we're going to see that the JSON web token is invalid because a user tried to tamper
+
+03:44.310 --> 03:45.510
+with the data inside their.
+
+03:46.200 --> 03:47.310
+And that's really what we care about.
+
+03:47.310 --> 03:52.650
+We want to make sure that users are not able to modify the information stored inside this cookie.
+
+03:52.680 --> 03:56.070
+And Jason, what tokens are going to naturally prevent that from occurring?
+
+03:56.850 --> 04:02.120
+Now, if this entire idea of having information that is unencrypted is really scary to you in any way,
+
+04:02.130 --> 04:07.410
+I'm telling you right now that this is generally not a big cause for concern unless you are trying to
+
+04:07.410 --> 04:12.120
+store protected information inside of a JSON web token, which you should not be doing anyways, or
+
+04:12.120 --> 04:14.520
+inside of a cookie which you should not be doing anyways.
+
+04:14.520 --> 04:19.110
+If that's still a big deal to you, you can always just go ahead and encrypt the cookie contents.
+
+04:19.150 --> 04:20.370
+Feel free to do so.
+
+04:21.030 --> 04:26.670
+Not a big deal, but you just keep in mind, you kind of run the risk of going in trying to create another
+
+04:26.670 --> 04:30.900
+service in a different language and running into issues and trying to decrypt the information inside
+
+04:30.900 --> 04:31.160
+there.
+
+04:31.170 --> 04:33.360
+So again, just a little bit of a disclaimer.
+
+04:33.810 --> 04:34.110
+Okay.
+
+04:34.110 --> 04:38.870
+So cookie session is what we're going to use because I've been doing so much lecturing inside this video.
+
+04:38.880 --> 04:43.290
+I don't want to install this right away because sometimes people like to skip around inside of a video
+
+04:43.290 --> 04:46.790
+and I don't want you to skip the or skip over the installation guide.
+
+04:46.800 --> 04:48.270
+So another quick pause right here.
+
+04:48.270 --> 04:49.050
+Come back the next video.
+
+04:49.050 --> 04:51.210
+We're going to wire this thing up to our art service.

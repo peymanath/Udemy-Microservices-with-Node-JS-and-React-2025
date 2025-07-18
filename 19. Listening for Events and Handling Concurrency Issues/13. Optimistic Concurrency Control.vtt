@@ -1,0 +1,307 @@
+WEBVTT
+
+00:00.700 --> 00:05.320
+In this video, we're going to get a better idea of how Mongoose and MongoDB collaborate to set up and
+
+00:05.320 --> 00:07.090
+use this version field stuff.
+
+00:07.510 --> 00:08.010
+All right.
+
+00:08.020 --> 00:13.330
+First thing I'm going to do is take a look at how Mongoose and MongoDB normally collaborate to handle
+
+00:13.330 --> 00:14.460
+record updates.
+
+00:14.470 --> 00:17.260
+So this is without this version flag or anything like that.
+
+00:17.710 --> 00:21.800
+So inside of our ticket service, we might have some code that's going to fetch record CC.
+
+00:21.820 --> 00:25.150
+Q We might then run some update on the document.
+
+00:25.150 --> 00:28.510
+So, for example, set its price to ten or 15 or whatever else.
+
+00:29.110 --> 00:32.530
+Well, then tell Mongoose to save the document.
+
+00:32.530 --> 00:37.000
+And very critically, when that occurs, Mongoose is going to reach out to MongoDB and it's going to
+
+00:37.000 --> 00:41.410
+tell MongoDB, Hey, I want you to do an update on record CPQ.
+
+00:42.010 --> 00:44.320
+So it's going to send off some kind of request to MongoDB.
+
+00:44.320 --> 00:50.290
+And the very critical part here is that inside this request there's something that says find the record
+
+00:50.290 --> 00:53.740
+with ID queue and set its price to ten.
+
+00:54.530 --> 00:57.950
+So MongoDB internally is going to look at its collection of tickets.
+
+00:57.950 --> 01:02.240
+It's going to find a record with IDC's queue and then update its price to ten.
+
+01:02.240 --> 01:02.980
+And that's it.
+
+01:02.990 --> 01:04.370
+That's the entire process.
+
+01:05.370 --> 01:09.750
+Another thing I really want to emphasize here is that in the request to update this record, there's
+
+01:09.750 --> 01:13.170
+something that says Find specifically the record with ID.
+
+01:13.560 --> 01:17.430
+Q So with all that in mind, let's now take a look at the same flow.
+
+01:17.460 --> 01:23.010
+But with all this version tracking stuff enabled, we're going to see how Mongoose and MongoDB collaborate
+
+01:23.010 --> 01:26.370
+to make sure that we only update records with the appropriate version number.
+
+01:28.050 --> 01:28.350
+Okay.
+
+01:28.350 --> 01:29.670
+So same kind of flow here.
+
+01:29.670 --> 01:33.960
+But now we're imagining that this version of field thing is being incorporated or included.
+
+01:34.290 --> 01:38.550
+Now, just, you know, this entire process that we're going through is referred to as optimistic concurrency
+
+01:38.550 --> 01:39.150
+control.
+
+01:39.150 --> 01:42.900
+And if you want to, you could do a quick Google search, take a look at a blog post or two and read
+
+01:42.900 --> 01:43.980
+a little bit more about it.
+
+01:44.130 --> 01:49.530
+The entire strategy that we're talking about here for optimistic concurrency control at MongoDB is 100%
+
+01:49.530 --> 01:52.020
+applicable to other types of databases as well.
+
+01:52.410 --> 01:55.650
+So what we're discussing here is not isolated to MongoDB.
+
+01:55.680 --> 01:58.260
+This is not a MongoDB specific strategy.
+
+01:58.260 --> 02:02.490
+You can use the strategy with many other types of databases very easily.
+
+02:03.660 --> 02:03.900
+Okay.
+
+02:03.900 --> 02:08.400
+So in this flow, we're going to once again fetch a record from Q, run a update on the document, save
+
+02:08.400 --> 02:13.440
+the document, and then internally we're going to turn a setting on inside a mongoose that's going to
+
+02:13.440 --> 02:18.210
+cause mongoose to automatically update the version field of the document automatically.
+
+02:18.330 --> 02:22.980
+So that would be where we increment the version field from, say, 1 to 2, 2 to 3, 3 to 4 or whatever
+
+02:22.980 --> 02:24.690
+else Mongoose is.
+
+02:24.690 --> 02:28.350
+Then once again going to send an update request off to MongoDB.
+
+02:28.560 --> 02:35.040
+And now, now that we are implementing this versioning stuff, here is the critical, critical difference
+
+02:35.040 --> 02:36.390
+inside this request.
+
+02:36.420 --> 02:43.650
+Mongoose is going to tell MongoDB to find the record with IDC's Q and a version of one and set its price
+
+02:43.650 --> 02:44.340
+to ten.
+
+02:44.790 --> 02:46.710
+That is the critical little step.
+
+02:47.040 --> 02:52.980
+So whenever MongoDB tries to update a record, it's not actually going to try to compare these version
+
+02:52.980 --> 02:58.020
+numbers and say, Hey, is this less than one or is this less than the current version number or whatever
+
+02:58.020 --> 02:59.550
+else that doesn't actually occur?
+
+02:59.550 --> 03:05.550
+What really happens is Mongoose is going to say, find the record with this particular ID and this particular
+
+03:05.550 --> 03:06.180
+version.
+
+03:06.600 --> 03:11.010
+So it's in how we find this record that's going to make sure that we select some record with the correct
+
+03:11.010 --> 03:11.610
+version.
+
+03:12.500 --> 03:17.300
+Now let's imagine the scenario in which we do have a record inside of our database with an idea and
+
+03:17.300 --> 03:18.200
+a version of one.
+
+03:18.440 --> 03:20.180
+We would find this record right here.
+
+03:20.210 --> 03:25.160
+It has the correct ID and the correct version, and we would set its price to ten and that's it.
+
+03:25.160 --> 03:26.900
+Everyone is happy now.
+
+03:26.900 --> 03:30.140
+What would happen if something goes not quite right?
+
+03:30.320 --> 03:35.600
+Well, I'm going to roll this back and let's imagine that we accidentally process the $15 price update
+
+03:35.600 --> 03:36.260
+first.
+
+03:36.530 --> 03:39.800
+So that would have been the event that we discussed just a moment ago.
+
+03:39.800 --> 03:45.290
+This one right here where we're trying to set the price to 15 and we would be looking for a record inside
+
+03:45.290 --> 03:49.670
+of our database with a version of two because this thing has a version of three.
+
+03:51.330 --> 03:56.940
+So in that scenario, this query right here would instead say, find the record with IDC's Q and A version
+
+03:56.940 --> 04:00.150
+of two and set its price to 15.
+
+04:00.690 --> 04:04.720
+Now, as you can guess, MongoDB is going to run a query over the tickets collection.
+
+04:04.740 --> 04:11.010
+It's going to look for a record with a ID of Q and a version of two so we can look through all these
+
+04:11.010 --> 04:11.730
+records.
+
+04:12.030 --> 04:13.860
+And there's no record that matches that query.
+
+04:13.860 --> 04:15.250
+There's no record with an idea.
+
+04:15.280 --> 04:16.800
+CC Q And a version of two.
+
+04:16.830 --> 04:20.430
+There is one with an ID Q and a version of one, but that's not what we're asking for.
+
+04:20.430 --> 04:24.120
+We're asking for one with a version specifically of two.
+
+04:24.790 --> 04:29.890
+And so this request right here, this update would fail and this error would be returned to our application
+
+04:29.890 --> 04:32.350
+where we would be forced to deal with it in some fashion.
+
+04:33.100 --> 04:33.550
+But that's it.
+
+04:33.550 --> 04:35.170
+That is what is going on behind the scenes.
+
+04:35.170 --> 04:39.820
+It's really all hinging upon the fact that when we send over these requests to update a record, we're
+
+04:39.820 --> 04:44.620
+including not only the idea of the record we're trying to update, but also the version of the record
+
+04:44.620 --> 04:45.670
+we're trying to update as well.
+
+04:45.670 --> 04:49.960
+And that is what is used for the criteria to find the record that we're trying to make a change to.
+
+04:50.730 --> 04:53.690
+Now, one thing you'll notice here is that this is all about updating records.
+
+04:53.700 --> 04:55.790
+It's not about inserting records.
+
+04:55.800 --> 04:59.610
+So the assumption is that when we first insert a record, it's always going to default to a version
+
+04:59.610 --> 05:01.530
+of zero or one.
+
+05:01.980 --> 05:05.040
+So we don't really run into big issues with inserting records.
+
+05:05.040 --> 05:06.540
+Not really a big concurrency issue there.
+
+05:06.540 --> 05:09.840
+It's a bigger issue when we're trying to update existing records.
+
+05:09.840 --> 05:13.560
+That's when we start to get into big trouble, and that's where this version flag is going to start
+
+05:13.560 --> 05:15.090
+to become really, really handy.
+
+05:16.780 --> 05:17.020
+Okay.
+
+05:17.050 --> 05:17.470
+So that's it.
+
+05:17.470 --> 05:18.120
+That's the idea.
+
+05:18.130 --> 05:22.210
+So as you guess, well, we have to make a little change or two to Mongoose.
+
+05:22.210 --> 05:23.860
+We'll take a quick pause right here in the next video.
+
+05:23.860 --> 05:26.920
+We're going to see how to actually implement this stuff in the world of Mongoose.
+
+05:26.920 --> 05:31.480
+And we're also going to write out a test or two inside our application so you can actually write some
+
+05:31.480 --> 05:35.560
+code and immediately start to work with this version stuff and get a better idea of what is going on
+
+05:35.560 --> 05:36.130
+with it.

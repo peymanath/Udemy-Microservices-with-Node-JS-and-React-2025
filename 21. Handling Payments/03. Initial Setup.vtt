@@ -1,0 +1,442 @@
+WEBVTT
+
+00:00.930 --> 00:03.420
+All right, my friends, let's get started on our payment service.
+
+00:03.420 --> 00:07.500
+So once again, we are going to make essentially a duplicate of a lot of stuff inside of our ticket
+
+00:07.500 --> 00:08.130
+service.
+
+00:08.370 --> 00:12.240
+I'll first begin by creating a new directory and I'll call it payments.
+
+00:12.330 --> 00:14.820
+I'm also going to zoom in just you can see this a little bit more easily.
+
+00:15.930 --> 00:18.690
+Then inside of tickets, I'm going to take Docker.
+
+00:18.690 --> 00:23.130
+Ignore Docker file package json nts config.
+
+00:24.920 --> 00:28.370
+I'm going to copy all those and paste them into payments.
+
+00:30.630 --> 00:33.990
+Then inside of payments, I'm going to create a folder of CRC.
+
+00:35.140 --> 00:38.890
+And from tickets we're going to copy paste a decent amount of stuff over.
+
+00:39.220 --> 00:41.050
+So we're going to take MOX.
+
+00:43.790 --> 00:47.190
+We will take test app index.
+
+00:47.190 --> 00:48.300
+And that's rapper.
+
+00:49.410 --> 00:52.800
+So the only thing that we are not taking are events, models and routes.
+
+00:53.310 --> 00:57.720
+I'm going to copy all that over and paste it into the Payments CRC directory.
+
+01:00.100 --> 01:00.790
+And that is it.
+
+01:00.790 --> 01:02.710
+That is everything we need to get started.
+
+01:03.100 --> 01:07.810
+As usual, we're now going to go through a couple of these files and make a few updates here and there.
+
+01:07.900 --> 01:13.060
+Well, then install some dependencies, build a Docker image, and then add in some config on the Kubernetes
+
+01:13.090 --> 01:13.660
+side.
+
+01:14.520 --> 01:16.070
+Let's go through this file by file.
+
+01:16.610 --> 01:19.790
+So first off, in the box directory, definitely no changes required there.
+
+01:20.000 --> 01:21.440
+How about the test setup file?
+
+01:21.620 --> 01:23.240
+Probably no changes required.
+
+01:24.100 --> 01:25.360
+About us?
+
+01:25.690 --> 01:30.010
+Well, definitely inside of here, we've got a lot of routing stuff related to our ticket service.
+
+01:30.490 --> 01:34.990
+So inside of here, I'm going to delete the four imports for the routers.
+
+01:39.030 --> 01:40.620
+And then going to scroll down a little bit.
+
+01:41.760 --> 01:44.220
+And find where we wired up all those different routers.
+
+01:46.390 --> 01:50.650
+Now there are some other areas inside of here, but they will go away once we start to install some
+
+01:50.650 --> 01:51.550
+dependencies.
+
+01:52.600 --> 01:56.560
+So if right now I'm going to save this and we'll move on to our next file index.
+
+01:58.300 --> 01:59.400
+Inside of indexes.
+
+01:59.440 --> 02:01.630
+We definitely do not need those two listeners at the top.
+
+02:02.810 --> 02:07.370
+I'm also going to delete the two listeners after we initialize the Nats wrapper.
+
+02:11.330 --> 02:12.760
+I think that's pretty good for this file.
+
+02:12.770 --> 02:14.660
+So I'll save this one and close it.
+
+02:15.370 --> 02:17.710
+Nasser upper definitely no changes required.
+
+02:19.300 --> 02:21.940
+And finally, let's move on to our package Jason File.
+
+02:22.150 --> 02:25.930
+So inside of package Jason, we'll update the name on this package.
+
+02:25.960 --> 02:29.320
+Again, not really required, but while we're here, let's do it anyways.
+
+02:31.840 --> 02:36.580
+And then on our list of dependencies, we're actually going to want all the same dependencies.
+
+02:36.610 --> 02:40.300
+Our payment service is going to be very similar nature to tickets and orders and that it's going to
+
+02:40.300 --> 02:45.160
+be processing events, publishing events, and it's also going to implement the express side of our
+
+02:45.160 --> 02:45.970
+application as well.
+
+02:45.970 --> 02:50.830
+So it's going to have a handler or two that is very different from, say, the expiration service,
+
+02:50.830 --> 02:52.120
+which we set up a bit ago.
+
+02:52.120 --> 02:56.920
+In the expiration service, we deleted a ton of dependencies because it did not need to handle any incoming
+
+02:56.920 --> 02:57.910
+network requests.
+
+02:59.720 --> 03:02.060
+All right, so let's save this package, JSON file.
+
+03:04.160 --> 03:05.450
+I'll then go back over to my terminal.
+
+03:05.450 --> 03:09.470
+We're going to build an initial Docker image out of this thing and then do our Kubernetes setup.
+
+03:11.580 --> 03:12.690
+So back at my terminal.
+
+03:14.430 --> 03:16.200
+I'll change into payments.
+
+03:18.220 --> 03:18.820
+Inside of there.
+
+03:18.820 --> 03:23.410
+We'll do a Docker build to your Docker ID.
+
+03:24.450 --> 03:26.760
+And then naturally we will call this thing payments.
+
+03:27.000 --> 03:28.980
+And don't forget the dot on the very end.
+
+03:30.900 --> 03:32.140
+So I'm going to let that do its thing.
+
+03:32.160 --> 03:35.400
+Don't forget, we do want to push this off to Docker Hub.
+
+03:35.760 --> 03:39.500
+So we are going to come back to this terminal window in just a moment and do that Docker push.
+
+03:39.510 --> 03:44.790
+But while this initial install is running, let's go install or do a little bit of Kubernetes setup
+
+03:44.790 --> 03:45.390
+first.
+
+03:47.260 --> 03:50.350
+Now because we kind of forgot it on the expiration service.
+
+03:50.350 --> 03:56.290
+Let's first begin by setting up that scaffold YAML file and adding in yet another block to handle code
+
+03:56.290 --> 03:58.000
+sync for this new payment service.
+
+03:58.360 --> 03:59.890
+So inside of scaffolding html.
+
+04:00.830 --> 04:02.870
+We will copy that last block right there.
+
+04:03.690 --> 04:04.590
+Paste it down.
+
+04:05.660 --> 04:06.980
+Make some indentation.
+
+04:09.660 --> 04:12.230
+And then I'll change expiration once and twice.
+
+04:12.240 --> 04:15.330
+So two locations right there, two payments instead.
+
+04:17.970 --> 04:18.780
+That looks good.
+
+04:19.170 --> 04:20.820
+So I'll say this file and close it.
+
+04:21.700 --> 04:26.590
+And then finally we will go over to our infra directory and create a deployment and we are going to
+
+04:26.590 --> 04:29.170
+have a MongoDB database for this service as well.
+
+04:29.200 --> 04:33.310
+We haven't really discussed what data is really going to be living inside the payment service beyond
+
+04:33.310 --> 04:36.730
+this diagram right here and saying that we're going to have something called charges in orders.
+
+04:36.730 --> 04:41.740
+But suffice it to say, we will need a MongoDB database and we will expand on the nature of these two
+
+04:41.740 --> 04:42.940
+records over time.
+
+04:43.180 --> 04:47.470
+Right now, let's just set up a copy of MongoDB in addition to the payments deployment.
+
+04:48.430 --> 04:54.040
+So inside of k eights I'll make a new file of payments dash devel html.
+
+04:56.540 --> 04:58.640
+I'm going to open up the tickets deployment file.
+
+04:59.240 --> 05:00.980
+Once again, I'm going to copy everything.
+
+05:01.880 --> 05:04.280
+And then paste it into this new payments deployment.
+
+05:06.880 --> 05:10.950
+Then we'll go through and once again update tickets to payments.
+
+05:11.220 --> 05:17.910
+So going to change once, twice, three or five.
+
+05:18.330 --> 05:19.770
+All those over to payments.
+
+05:24.360 --> 05:25.950
+On the environment variable section.
+
+05:25.950 --> 05:31.260
+We definitely want to have the same Nats client ID setup, same Nats URL, same cluster ID, but we
+
+05:31.260 --> 05:33.150
+will change the Mongo URI.
+
+05:33.300 --> 05:38.250
+So we're going to set the Mughal URI to be a copy of Mongo specifically made for the payments deployment.
+
+05:39.000 --> 05:42.720
+So I'll change tickets right there to payments.
+
+05:43.860 --> 05:48.240
+And I'll change the name of the internal database inside this Mongo instance that we're going to connect
+
+05:48.240 --> 05:50.280
+to to payments as well.
+
+05:51.430 --> 05:56.560
+So we just need to make sure that when we create the MongoDB database or the payments deployment or
+
+05:56.560 --> 06:00.820
+the payment service, we just need to make sure it has a cluster IP service with the name of payments,
+
+06:00.820 --> 06:01.990
+mongo CRV.
+
+06:04.310 --> 06:04.640
+All right.
+
+06:04.640 --> 06:05.540
+On to the bottom.
+
+06:05.960 --> 06:08.760
+Here's our service for the payments deployment.
+
+06:08.780 --> 06:14.090
+Once again, we'll find once, twice, three time and change them all two payments.
+
+06:14.800 --> 06:20.350
+I should now be able to do a find in this file, look for the word tickets and get no results.
+
+06:22.400 --> 06:26.600
+The Nats cluster ID right there of ticketing is OC that is different from the ticket service.
+
+06:27.680 --> 06:27.920
+All right.
+
+06:27.920 --> 06:30.080
+So that is it for our payments deployment file.
+
+06:31.040 --> 06:33.260
+So I'm going to close this thing out.
+
+06:34.360 --> 06:37.550
+Then I will also create another new file inside of our case directory.
+
+06:37.560 --> 06:41.550
+This one will be payments mongo devel html.
+
+06:43.530 --> 06:48.210
+And once again this is going to be identical in nature to our tickets mongo deployment file.
+
+06:48.210 --> 06:49.110
+So we'll open that one up.
+
+06:49.110 --> 06:55.950
+Just do another copy, paste it in, and once again we'll go through and update tickets once, twice,
+
+06:55.950 --> 06:59.100
+three or four times over to payments.
+
+07:01.270 --> 07:04.480
+And then on the cluster IP service, we'll change the name on this thing as well.
+
+07:04.480 --> 07:05.500
+Once and twice.
+
+07:05.500 --> 07:06.730
+Two payments.
+
+07:07.920 --> 07:09.090
+And that should be it.
+
+07:11.930 --> 07:14.840
+All right, let's go see how our Docker image is.
+
+07:15.090 --> 07:16.130
+It looks like it's all built.
+
+07:16.160 --> 07:18.950
+Well, go ahead and do a push over to Docker Hub.
+
+07:19.200 --> 07:21.050
+That will be a Docker push.
+
+07:21.050 --> 07:23.360
+My Docker ID slash payments.
+
+07:25.650 --> 07:28.140
+That is going to take a moment or two to get pushed over.
+
+07:28.380 --> 07:32.940
+So just as a quick reminder, when we come back, we really want to make sure that scaffold is up and
+
+07:32.940 --> 07:33.420
+running.
+
+07:34.260 --> 07:39.090
+You might already see the payment service up and running right here, or you might see something from
+
+07:39.090 --> 07:42.980
+scaffold that says, Hey, can't find this digest or some ID like that.
+
+07:42.990 --> 07:47.340
+Remember, you can always just start up stop scaffold and then restart it.
+
+07:47.370 --> 07:52.440
+Just keep in mind that when you restart scaffold you might get a pod or two saying that it cannot connect
+
+07:52.440 --> 07:53.550
+to not nets.
+
+07:53.550 --> 07:57.600
+So if you see any messages saying, Hey, I can't connect nets or anything like that, you will want
+
+07:57.600 --> 08:00.450
+to right now just manually restart those pods.
+
+08:00.450 --> 08:05.130
+And as a reminder, to do a manual restart, we can open up a new terminal window.
+
+08:06.980 --> 08:08.870
+Do a little, get pods.
+
+08:09.080 --> 08:12.830
+Find the pod that is failing to connect and you'll have to look up the name.
+
+08:13.070 --> 08:15.320
+Based upon the logs you see inside a scaffold.
+
+08:15.320 --> 08:16.820
+And then you'll do a cube.
+
+08:16.930 --> 08:17.660
+It'll.
+
+08:19.530 --> 08:23.310
+Delete pod and whatever the name of the pod is that you want to reset.
+
+08:23.850 --> 08:27.360
+And again, you only have to do all this stuff if you decide that you have to restart scaffold.
+
+08:28.170 --> 08:28.440
+Okay.
+
+08:28.440 --> 08:29.540
+So let's take a pause right here.
+
+08:29.550 --> 08:33.120
+The next video, you're going to have the expectation that everything is up and running.
+
+08:33.120 --> 08:37.500
+So at this point, I think that you've probably seen a lot of scenarios where stuff is not quite working
+
+08:37.500 --> 08:38.220
+as expected.
+
+08:38.220 --> 08:42.540
+So I'm going to kind of leave it up to you to do a little bit of troubleshooting on your own and hopefully
+
+08:42.540 --> 08:44.700
+come out in the next video with everything up and running.

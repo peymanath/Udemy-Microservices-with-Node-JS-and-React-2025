@@ -1,0 +1,217 @@
+WEBVTT
+
+00:01.790 --> 00:05.940
+Or test around optimistic and currency control is working as expected, as I mentioned.
+
+00:05.960 --> 00:10.250
+I would like to write out just one other very small test right now where you don't actually have anything
+
+00:10.250 --> 00:14.820
+to prove that whenever we save or update a record, the version number actually gets incremented.
+
+00:14.840 --> 00:19.860
+So I want to write out just a very quick second test to say that whenever we save a record, if we re
+
+00:19.910 --> 00:23.600
+fetch it, that we see that version number get incremented by one.
+
+00:24.590 --> 00:26.330
+So I'm going to go down to the bottom of the file.
+
+00:26.630 --> 00:32.720
+I'm going to write out another statement and we'll say it increments the version number on multiple
+
+00:32.720 --> 00:33.470
+saves.
+
+00:36.380 --> 00:39.240
+So then inside of here, we're going to once again create a new ticket.
+
+00:39.260 --> 00:40.200
+We're going to save it.
+
+00:40.220 --> 00:44.120
+We're going to expect that the save ticket has a version number of zero.
+
+00:44.150 --> 00:47.360
+We'll then go into save the thing a second time and a third time.
+
+00:47.360 --> 00:51.500
+And we're going to expect that every single time we save this ticket, the version number automatically
+
+00:51.500 --> 00:52.490
+gets incremented.
+
+00:53.180 --> 00:54.740
+So I'm going to do a ticket.
+
+00:54.740 --> 00:56.150
+Is ticket built?
+
+00:57.110 --> 01:00.410
+I'll put in a title of concert price whatever.
+
+01:00.410 --> 01:00.710
+20.
+
+01:00.740 --> 01:01.930
+User ID one, two, three.
+
+01:01.940 --> 01:02.870
+Doesn't really matter.
+
+01:04.240 --> 01:05.770
+So then do you end a wait?
+
+01:05.810 --> 01:06.970
+Tickets save.
+
+01:07.450 --> 01:11.770
+Right after we save this thing for the very first time, we should, by default, have a version number
+
+01:11.770 --> 01:12.710
+equal to zero.
+
+01:12.730 --> 01:14.860
+So I'm going to write out an expectation for that.
+
+01:14.860 --> 01:19.030
+So expect ticketed version to equal zero.
+
+01:20.030 --> 01:24.890
+And now if I try to save the same record another time, we don't even have to really make an update
+
+01:24.890 --> 01:25.300
+here.
+
+01:25.310 --> 01:26.150
+We don't have to make an update.
+
+01:26.150 --> 01:31.100
+It's just any time we save the record, we expect that that version number gets incremented by one.
+
+01:31.100 --> 01:34.220
+So if I do another, a weight ticket dot save.
+
+01:34.980 --> 01:40.200
+I should now be able to expect that the ticket version has been incremented to one.
+
+01:41.350 --> 01:43.330
+And I should be able to do that yet again.
+
+01:45.300 --> 01:50.040
+And expect that the ticket version will have gone up to two like so.
+
+01:51.790 --> 01:51.900
+Okay.
+
+01:52.070 --> 01:53.060
+So let's save this.
+
+01:53.660 --> 01:54.920
+Take a look at our tests.
+
+01:55.120 --> 01:56.750
+Looks like that is passing as well.
+
+01:58.160 --> 02:00.460
+Once again just to make sure that it's working as expected.
+
+02:00.470 --> 02:04.490
+I'm going to change the version number on the very last one on the two equal to one.
+
+02:04.520 --> 02:05.450
+I'll save that.
+
+02:06.480 --> 02:08.600
+And yeah, it looks like it's working as expected.
+
+02:08.610 --> 02:09.870
+So I'm going to undo that change.
+
+02:09.870 --> 02:12.900
+Save it one more time and just make sure these tests are passing.
+
+02:13.230 --> 02:13.830
+Awesome.
+
+02:14.400 --> 02:14.640
+Okay.
+
+02:14.670 --> 02:17.700
+So that is the basics of optimistic concurrency control.
+
+02:17.700 --> 02:21.780
+Now, the one thing I do want to mention here, we have a test that's essentially making sure that if
+
+02:21.780 --> 02:27.180
+we start to make changes to a record or the same instance of a record in memory, and then we try to
+
+02:27.180 --> 02:31.140
+save these things all at the same time, we're going to make sure that we only process one of those
+
+02:31.140 --> 02:31.800
+updates.
+
+02:31.800 --> 02:37.560
+So this is not necessarily a test identical to what we want to use this stuff for, which is to make
+
+02:37.560 --> 02:39.780
+sure that we are processing events in the correct order.
+
+02:39.780 --> 02:45.420
+It's very similar, but it's not quite exactly what we're intending to using to use the optimistic concurrency
+
+02:45.420 --> 02:46.110
+control stuff for.
+
+02:46.110 --> 02:49.860
+So at this point in time, the only reason I mentioned that if you were looking at this test and saying
+
+02:49.860 --> 02:54.450
+to yourself, Hey, Stephen, how does this simulate us processing events out of order or something
+
+02:54.450 --> 02:54.900
+like that?
+
+02:54.900 --> 03:00.660
+I'm aware it's not exactly the same, but all the ideas, this idea of making sure that we find the
+
+03:00.660 --> 03:05.490
+previous version in the database and process it or save it accordingly, it's all the same.
+
+03:06.810 --> 03:11.250
+So now that we've got this test put together, we're now going to go over to our common module.
+
+03:11.550 --> 03:15.030
+We're going to make sure inside of a lot of our different events, we're going to make sure that these
+
+03:15.030 --> 03:20.460
+events communicate the version number of the record that we're trying to communicate out to the outside
+
+03:20.460 --> 03:22.560
+world or the rest of all of our services.
+
+03:22.680 --> 03:24.780
+So we're going to make that update to our common module.
+
+03:24.960 --> 03:30.330
+We'll then go over to our orders service and we're going to implement the same kind of idea of optimistic
+
+03:30.330 --> 03:33.570
+concurrency control when we are attempting to process these events.
+
+03:33.570 --> 03:37.620
+And that's where stuff is going to actually get really useful and even more interesting.
+
+03:37.800 --> 03:38.580
+I don't know about you.
+
+03:38.580 --> 03:41.760
+I find this stuff kind of interesting as it is, but even more interesting.
+
+03:41.760 --> 03:42.840
+So a quick pause.
+
+03:43.200 --> 03:45.270
+Update that common module in just a moment.

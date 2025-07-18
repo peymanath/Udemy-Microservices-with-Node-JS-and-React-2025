@@ -1,0 +1,346 @@
+WEBVTT
+
+00:00.520 --> 00:03.970
+In this video, I want to start to add in one last feature to our application.
+
+00:04.180 --> 00:06.210
+I'm at the Google Maps documentation right here.
+
+00:06.220 --> 00:08.290
+Don't worry about pulling this up on your own screen.
+
+00:08.290 --> 00:10.090
+I just want to show you something really quickly.
+
+00:10.480 --> 00:13.370
+Notice how there's a marker right here, just like the marker we have placed.
+
+00:13.390 --> 00:18.610
+If I click on that marker, I get a little pop up right here that has some information that's relevant
+
+00:18.610 --> 00:19.510
+to that marker.
+
+00:19.840 --> 00:22.360
+So that's exactly what I want to make inside of our application.
+
+00:22.360 --> 00:26.980
+I want to make sure that any time that we click on one of our markers, we show some information relevant
+
+00:26.980 --> 00:30.460
+to the company or the user that this marker represents.
+
+00:30.940 --> 00:34.480
+So let's figure out first how to just open up a window like this.
+
+00:35.080 --> 00:39.760
+To do so, we could either read our type definition file again, or in this case we could just read
+
+00:39.760 --> 00:41.140
+the official documentation.
+
+00:41.140 --> 00:45.310
+In this case, we're going to take a look at the official documentation because showing this info window
+
+00:45.310 --> 00:49.150
+is a little bit more complicated than adding the marker or showing the map.
+
+00:49.780 --> 00:52.060
+So really quickly, let's take a look at the documentation.
+
+00:52.810 --> 00:55.750
+So there's a code snippet right here for the map we were just looking at.
+
+00:56.200 --> 01:01.750
+So the first thing they do is create a string that contains some amount of HTML that will be shown inside
+
+01:01.750 --> 01:03.010
+of that pop up window.
+
+01:03.740 --> 01:07.760
+Then immediately after that, they create an instance of something called an info window.
+
+01:07.940 --> 01:10.040
+The info window is the pop up.
+
+01:10.040 --> 01:15.380
+So this is going to be an instance of a class or an object that represents the pop up window.
+
+01:15.950 --> 01:22.070
+When they create the info window, they pass in the content that the window will display as an option.
+
+01:23.550 --> 01:25.080
+They then go on to create a marker.
+
+01:25.230 --> 01:28.950
+And then finally they add an event listener to the marker itself.
+
+01:29.160 --> 01:33.030
+So any time the marker gets clicked, they find the info window.
+
+01:33.060 --> 01:39.300
+They call the open method on it, and they pass in the map that they want to show the window on and
+
+01:39.300 --> 01:41.760
+the marker that they want to show the window above.
+
+01:42.240 --> 01:43.440
+And that's pretty much it.
+
+01:44.460 --> 01:48.660
+So we could look at our type definition file again to understand how to do all this stuff.
+
+01:48.660 --> 01:52.830
+But like I said, in this case, creating an info window is a little bit more complicated.
+
+01:52.830 --> 01:55.800
+So I just want to take a look at the official documentation really quickly.
+
+01:56.070 --> 02:00.690
+Now, having said that, let's take a look at the type definition of file anyways and just try to find
+
+02:00.690 --> 02:06.330
+where the info window is defined inside the type definition and where we can find like all the possible
+
+02:06.330 --> 02:09.360
+options we can pass in to customize the info window as well.
+
+02:10.800 --> 02:13.620
+So back inside my editor, I'm at custom map.
+
+02:13.650 --> 02:19.050
+I'm going to do another command click on Google Maps map that's going to pull open the type definition
+
+02:19.050 --> 02:20.550
+of file for Google Maps.
+
+02:20.550 --> 02:27.570
+And inside of here, I'm going to do a search for info window and we're looking for class info window.
+
+02:27.600 --> 02:28.590
+There it is right there.
+
+02:29.640 --> 02:34.770
+So to get a good idea of how to use this info window, we could either read that official documentation
+
+02:34.770 --> 02:37.010
+or read the type definition file.
+
+02:37.020 --> 02:40.410
+You'll notice that there's actually comments inside of here to help you understand how to use it.
+
+02:41.050 --> 02:42.300
+So here's the constructor.
+
+02:42.310 --> 02:45.850
+Remember, this thing gets called any time we create an instance of a class.
+
+02:46.180 --> 02:51.700
+So in other words, any time we have like this right here, new info window, that is us calling the
+
+02:51.700 --> 02:52.510
+constructor.
+
+02:53.020 --> 02:57.610
+So this object right here that gets passed in is going to be an argument to the constructor.
+
+02:58.180 --> 03:04.150
+So that means that options object is going to be this argument right here, and that object has to satisfy
+
+03:04.150 --> 03:05.020
+this type.
+
+03:05.440 --> 03:10.450
+So we can look at the definition of this type and understand what different options we can pass into
+
+03:10.450 --> 03:11.350
+the info window.
+
+03:11.680 --> 03:15.310
+So I'm going to again command click on info window options right here.
+
+03:15.910 --> 03:20.050
+And like I said, this will tell us about all the different properties we can pass into the info window
+
+03:20.050 --> 03:21.280
+when we create it.
+
+03:22.340 --> 03:25.230
+So you'll notice one of the first options right here is content.
+
+03:25.250 --> 03:31.670
+So like we just saw, content is going to be the HTML or the plain string that will be displayed inside
+
+03:31.670 --> 03:32.750
+the info window.
+
+03:33.860 --> 03:37.640
+So we could also take a look at some of the other properties we can pass in to the info window when
+
+03:37.640 --> 03:38.450
+we create it.
+
+03:38.480 --> 03:42.980
+None of these other ones are super relevant for us, but just wanted to to remind you that we can take
+
+03:42.980 --> 03:48.170
+a look at the different options by referencing the type index file as opposed to trying to find the
+
+03:48.170 --> 03:50.570
+different options inside the official documentation.
+
+03:51.780 --> 03:52.290
+All right.
+
+03:52.290 --> 03:54.410
+So I think that's enough of the type definition file.
+
+03:54.420 --> 03:58.680
+Again, I just wanted to remind you that we can figure out how to use an info window by looking at this
+
+03:58.680 --> 03:59.580
+stuff instead.
+
+04:01.180 --> 04:01.450
+All right.
+
+04:01.450 --> 04:04.740
+So I'm going to go back over to my custom map class now to get started.
+
+04:04.750 --> 04:09.370
+We're just going to try to show a plain info window with some generic content inside of it.
+
+04:09.400 --> 04:13.490
+I'm not going to worry about showing some information about a specific user or company.
+
+04:13.510 --> 04:15.040
+Let's just get like some.
+
+04:15.040 --> 04:15.730
+Hi there.
+
+04:15.730 --> 04:18.430
+Or like hello world text inside of an info window.
+
+04:18.880 --> 04:21.640
+So to do so, I'm going to go down to my add marker method.
+
+04:22.400 --> 04:29.660
+So any time we create a marker, I'm going to assign that marker to a temporary variable like so.
+
+04:30.870 --> 04:33.990
+Then I'm going to add an event listener to the marker.
+
+04:33.990 --> 04:38.820
+So anytime we click on this marker, we're going to run a function, and inside that function is where
+
+04:38.820 --> 04:40.530
+we are going to create our info window.
+
+04:40.860 --> 04:44.700
+So I'll say marker dot, add listener.
+
+04:45.730 --> 04:49.150
+Any time that thing gets clicked, let's run this function right here.
+
+04:49.840 --> 04:52.180
+So then inside of here we can create our info window.
+
+04:52.450 --> 04:59.710
+So I'll say const info window is new google maps dot info window.
+
+05:00.790 --> 05:03.210
+We're going to pass in the options object.
+
+05:03.220 --> 05:06.820
+Remember that options object can have a content property.
+
+05:07.210 --> 05:11.260
+So I'm going to say that anytime we show this info window just shows some content inside of it that
+
+05:11.260 --> 05:12.940
+says hi there like so.
+
+05:14.410 --> 05:20.710
+And then finally we'll do an info window open and I'm going to pass in a reference to the map that I
+
+05:20.710 --> 05:25.960
+want to show this window on and a reference to the marker that we're going to show this above.
+
+05:27.380 --> 05:32.150
+So the map we're going to show this on is going to be this dot Google map, because remember, we stored
+
+05:32.150 --> 05:36.230
+a reference to our Google map as a property of our custom map class.
+
+05:38.190 --> 05:42.900
+And then the second argument will be the marker that we want to show this above, which is the marker
+
+05:42.900 --> 05:44.610
+we just created 2 seconds ago.
+
+05:45.400 --> 05:48.850
+Now, one thing I want to mention really quickly, I know back over here in the code snippet, they
+
+05:48.850 --> 05:55.390
+first create the info window and then later on once the marker gets clicked, they only call info window
+
+05:55.600 --> 05:56.140
+open.
+
+05:56.350 --> 05:58.060
+So we're doing things just a little bit differently.
+
+05:58.060 --> 06:02.200
+We are saying we're not going to create the info window until the marker gets clicked.
+
+06:02.410 --> 06:03.740
+Honestly, there's no difference.
+
+06:03.760 --> 06:08.940
+You could just as easily move the creation of the info window outside of the event handler.
+
+06:08.950 --> 06:09.760
+It's totally up to you.
+
+06:09.760 --> 06:11.110
+No difference whatsoever.
+
+06:11.870 --> 06:15.650
+But I'm just going to put it inside because I think the code makes just a little bit more sense this
+
+06:15.650 --> 06:16.070
+way.
+
+06:18.140 --> 06:21.500
+All right, so let's save this and we'll do a quick test back inside of our browser.
+
+06:21.830 --> 06:23.900
+So back inside my browser, here we go.
+
+06:23.900 --> 06:25.220
+I'll do a quick refresh.
+
+06:25.340 --> 06:29.390
+And now if I click on a marker, I should see a pop up appear that says Hi there.
+
+06:29.630 --> 06:30.320
+Perfect.
+
+06:31.180 --> 06:31.420
+All right.
+
+06:31.420 --> 06:32.560
+So this looks pretty good.
+
+06:32.590 --> 06:38.230
+Obviously, the only downside here is that we don't have any customization of these pop ups for a company
+
+06:38.230 --> 06:39.210
+or a user.
+
+06:39.220 --> 06:42.430
+So I don't even know if this marker represents a user or a company.
+
+06:42.850 --> 06:46.720
+So let's take another quick pause right here and we'll figure out how to fix that up in the next video.

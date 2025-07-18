@@ -1,0 +1,307 @@
+WEBVTT
+
+00:00.790 --> 00:04.930
+Now that we've got a better understanding of what a type is, let's dive a little bit deeper into the
+
+00:04.930 --> 00:08.080
+subject and then discuss why we care about types at all.
+
+00:08.590 --> 00:08.860
+All right.
+
+00:08.860 --> 00:12.130
+So first off, a couple of examples of some very basic types.
+
+00:12.670 --> 00:17.950
+So any time that we are working with a value that has a type of string, we would expect to see a value
+
+00:17.950 --> 00:19.360
+that look like these right here.
+
+00:19.600 --> 00:23.380
+So if I have a value that looks like, hi there, that is a string.
+
+00:23.740 --> 00:28.360
+If I see a value that looks like a string with no characters, that is also a string and something that
+
+00:28.360 --> 00:29.400
+says today is Monday.
+
+00:29.410 --> 00:30.730
+Yup, that's a string as well.
+
+00:31.860 --> 00:35.400
+Likewise, if I've got some really small decimal number, that's a number.
+
+00:35.610 --> 00:39.690
+A negative number is a number and a really large number is a number as well.
+
+00:40.810 --> 00:45.640
+And the reason I break out number right here is that in some other languages there are actually subtypes
+
+00:45.640 --> 00:46.210
+of numbers.
+
+00:46.210 --> 00:51.520
+So for example, in other languages, you might have a type two represent numbers that have a decimal,
+
+00:51.700 --> 00:56.470
+or you might have another type to represent a number that is only an integer and therefore doesn't have
+
+00:56.470 --> 00:57.160
+a decimal.
+
+00:57.990 --> 01:00.870
+In JavaScript or excuse me, in TypeScript we have nothing like that.
+
+01:00.870 --> 01:05.400
+A number is a number regardless of whether it is positive or negative.
+
+01:05.430 --> 01:06.450
+Has a decimal.
+
+01:06.450 --> 01:07.590
+Doesn't have a decimal.
+
+01:07.620 --> 01:08.820
+They're all numbers.
+
+01:10.040 --> 01:13.700
+If we have a value of true or false, we would say that its type is boolean.
+
+01:14.120 --> 01:19.640
+And then remember we are not only restricted to these basic types right here, every value in TypeScript
+
+01:19.640 --> 01:20.900
+has a type.
+
+01:21.260 --> 01:27.200
+So for example, if we made a new date object, the resulting object from that would have a type of
+
+01:27.200 --> 01:27.950
+date.
+
+01:28.520 --> 01:35.270
+And then if we had an object that had an ID, a completed flag, a title flag, we would say that that
+
+01:35.270 --> 01:37.670
+is an object that has type to do.
+
+01:37.940 --> 01:42.680
+And this one only applies if we were working in a code base that had to find this interface right here.
+
+01:42.680 --> 01:44.930
+Remember, this interface defined a new type.
+
+01:46.160 --> 01:46.380
+Okay.
+
+01:46.400 --> 01:49.140
+So now we've seen some examples of different types.
+
+01:49.160 --> 01:52.250
+Let's talk about how all these types kind of relate to each other.
+
+01:53.270 --> 01:56.920
+So in the world of TypeScript, we have two different categories of types.
+
+01:56.930 --> 01:59.900
+We have primitive types and object types.
+
+02:00.500 --> 02:03.890
+Primitive types are all the very basic types that you might guess.
+
+02:03.890 --> 02:09.650
+So like numbers, strings, boolean, null, undefined, and then symbol and void are two others we'll
+
+02:09.650 --> 02:10.730
+talk about later on.
+
+02:12.330 --> 02:17.640
+The other category we have access to are something called object types, and these are essentially any
+
+02:17.640 --> 02:22.190
+types that you and I create or any other types that are built into language itself.
+
+02:22.200 --> 02:26.700
+So for example, all the different functions that you and I create are going to have their own type,
+
+02:26.850 --> 02:28.980
+and those are a object type.
+
+02:29.370 --> 02:31.990
+Any class you and I create or is going to have its own type.
+
+02:32.010 --> 02:34.530
+Same thing with arrays and objects as well.
+
+02:36.210 --> 02:38.250
+Now, why is there the divide here?
+
+02:38.250 --> 02:42.150
+Like, why are there two categories, one called primitive types and one called object types?
+
+02:42.480 --> 02:45.510
+Well, the true answer to this we won't quite see until later on.
+
+02:45.510 --> 02:50.730
+But just as a quick preview, we say that there is a separate category called object types right here,
+
+02:50.730 --> 02:56.760
+essentially because you and I can write some code that will essentially trick TypeScript into believing
+
+02:56.760 --> 02:59.490
+that one value is a different type.
+
+02:59.520 --> 03:04.470
+I know that sounds really confusing right now, but essentially we can kind of sometimes trick the TypeScript
+
+03:04.470 --> 03:06.480
+compiler in a very good way.
+
+03:07.080 --> 03:09.090
+We can do that with object types only.
+
+03:09.090 --> 03:11.070
+We cannot do that with primitive types.
+
+03:11.070 --> 03:13.530
+So that's why we have these two separate categories.
+
+03:13.920 --> 03:16.010
+Again, I know that's confusing to hear right now.
+
+03:16.020 --> 03:20.790
+I just want you to understand why you will sometimes see these broken out into the two separate categories.
+
+03:21.820 --> 03:22.080
+Okay.
+
+03:22.090 --> 03:24.430
+So now that we understand a little bit more about types.
+
+03:24.460 --> 03:26.200
+Onto the last big question here.
+
+03:26.200 --> 03:29.230
+Why do we care about types at all?
+
+03:29.770 --> 03:32.690
+If I had to answer that, I would say that there are two big reasons.
+
+03:32.710 --> 03:37.750
+The first one is that types are used by the TypeScript compiler to analyze our code for errors.
+
+03:38.140 --> 03:40.360
+So think about the definition that we just gave for types.
+
+03:40.360 --> 03:45.280
+We just said that types are an easy way to refer to the different properties and functions that a value
+
+03:45.310 --> 03:46.000
+has.
+
+03:46.360 --> 03:47.830
+Just keep that in mind for a second.
+
+03:48.130 --> 03:51.550
+While you keep that in mind, I'm going to flip back over to my code editor and take a look at the code
+
+03:51.550 --> 03:53.110
+that we just wrote a little bit ago.
+
+03:53.710 --> 03:56.580
+So inside of here, we defined a new type.
+
+03:56.590 --> 04:00.130
+We said that we had a new type inside of our application called To-Do.
+
+04:00.460 --> 04:06.040
+And a To-Do is only ever going to have the properties ID title and completed.
+
+04:06.970 --> 04:14.050
+Then down here on line 12, we said that the variable to do was going to refer to an object of type
+
+04:14.050 --> 04:14.710
+to do.
+
+04:15.040 --> 04:20.350
+So that means that the object that this variable refers to is only ever going to have these properties.
+
+04:20.830 --> 04:23.650
+The TypeScript compiler can use that information.
+
+04:23.830 --> 04:29.770
+So if we start to refer to some property on that to do variable that doesn't exist, TypeScript is going
+
+04:29.770 --> 04:30.940
+to throw an error at us.
+
+04:31.180 --> 04:37.120
+TypeScript knows that this variable refers to an object that has these properties and nothing else.
+
+04:37.330 --> 04:41.770
+So if we try to reference some other property, there must be something wrong with our code.
+
+04:41.770 --> 04:45.640
+And TypeScript can discover that and tell us that in the form of an error.
+
+04:46.460 --> 04:48.830
+So that's why we generally care about types.
+
+04:49.830 --> 04:51.840
+The other big reason that we care about types.
+
+04:52.820 --> 04:53.780
+Back over here.
+
+04:54.020 --> 04:59.510
+One more is that allows it allows other engineers to understand what values are flowing around in our
+
+04:59.510 --> 05:00.290
+code base.
+
+05:00.650 --> 05:05.300
+If you've ever worked on a large JavaScript project before, you might have ran into the scenario where
+
+05:05.300 --> 05:10.910
+you open up some file and you see some function in there with some really unclear argument name, like
+
+05:10.910 --> 05:14.960
+maybe a function with an argument name of like the letter A and nothing else.
+
+05:15.380 --> 05:20.330
+In that case, on a large project, it might be really hard for you to understand what that function
+
+05:20.330 --> 05:21.080
+is doing.
+
+05:21.890 --> 05:28.850
+If we instead try to annotate the type of arguments being passed into a function by labeling the types,
+
+05:28.850 --> 05:34.250
+then that at least gives other engineers some idea of what type of data is flowing around inside of
+
+05:34.250 --> 05:35.120
+our application.
+
+05:35.420 --> 05:39.230
+And ultimately, it will make it slightly easier for other engineers to understand what our code is
+
+05:39.230 --> 05:39.770
+doing.
+
+05:40.660 --> 05:42.550
+So that's why we care about types.
+
+05:42.970 --> 05:44.500
+Let's now take a quick pause right here.
+
+05:44.500 --> 05:48.640
+When we come back, the next video, we're going to start to take a look at some more code snippets
+
+05:48.640 --> 05:50.370
+to understand what's really going on.
+
+05:50.380 --> 05:52.570
+So quick pause and I'll see you in just a minute.

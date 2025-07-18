@@ -1,0 +1,169 @@
+WEBVTT
+
+00:00.630 --> 00:05.100
+There's one more thing we're going to do inside of our custom listener right now, inside of On Message,
+
+00:05.100 --> 00:09.450
+we are referencing properties on this data argument that we know do not exist.
+
+00:09.540 --> 00:14.490
+So we want to somehow get TypeScript to complain to us and say name doesn't exist and cost does not
+
+00:14.490 --> 00:15.180
+exist.
+
+00:15.660 --> 00:19.170
+To do so, we're going to change the type of data right here away from any.
+
+00:19.530 --> 00:25.410
+We're going to say that the type of data coming into on message is going to be equal to the type of
+
+00:25.410 --> 00:27.720
+ticket created events, data, property.
+
+00:27.750 --> 00:30.600
+So remember inside of ticket, create a event as an interface.
+
+00:30.600 --> 00:35.700
+We said that this thing was going to have some data that was going to be an ID, a title and a price.
+
+00:36.150 --> 00:39.120
+What's more, inside of base listener.
+
+00:39.120 --> 00:40.440
+So here's base listener.
+
+00:41.150 --> 00:45.470
+We said that whenever we made use of listener, we were going to provide some type argument to it.
+
+00:46.010 --> 00:51.890
+And we said that the first argument to on message was going to be equal to that type arguments data.
+
+00:52.400 --> 00:57.250
+So in our case, the type argument to listener is ticket created event.
+
+00:57.260 --> 01:02.660
+So we are essentially saying that the first argument to data right here.
+
+01:03.600 --> 01:08.460
+Is that it is an object that's going to have an ID, a title and a price.
+
+01:11.140 --> 01:17.140
+So we need to update this type annotation right here from any to instead reference that data off of
+
+01:17.140 --> 01:19.150
+the ticket created event interface.
+
+01:19.720 --> 01:25.390
+Long story short, we're going to replace any with ticket created event at data like so.
+
+01:26.130 --> 01:30.780
+This is now going to enforce TypeScript or get TypeScript to enforce some type checking on the properties.
+
+01:30.780 --> 01:35.820
+We try to access on this data argument so we can no longer access these properties that don't actually
+
+01:35.820 --> 01:42.660
+exist like name and cost, but we can access properties that do exist such as ID and you'll even notice
+
+01:42.660 --> 01:46.080
+I'm getting that nice autocomplete now title.
+
+01:47.520 --> 01:48.870
+And price.
+
+01:50.420 --> 01:54.380
+So now TypeScript is going to yell at us any time we try to access properties that don't exist, which
+
+01:54.380 --> 01:55.940
+is exactly what we wanted.
+
+01:56.240 --> 01:59.580
+Now you might look at this and say, Stephen, is this actually doing any type checking?
+
+01:59.600 --> 02:03.200
+How are we able to replace any with this and get everything working?
+
+02:03.410 --> 02:04.660
+Well, take a look at this.
+
+02:04.670 --> 02:06.890
+Let me show you what our greatest fear is.
+
+02:06.920 --> 02:12.890
+Our greatest fear is that we might accidentally define some interface, such as fake data.
+
+02:14.200 --> 02:17.920
+And say this is something that has a name that's a string and a cost, that is a number.
+
+02:17.920 --> 02:22.240
+And we might accidentally think that this data argument is of type fake data.
+
+02:22.330 --> 02:25.150
+So this would be an example where we make a typo or something like that.
+
+02:25.150 --> 02:29.740
+We do too much copy pasting and we apply an incorrect annotation to data.
+
+02:30.530 --> 02:35.780
+If we try to put that on, we're then going to get a big air specifically around on message.
+
+02:36.260 --> 02:39.230
+So remember, we are extending this listener base class.
+
+02:39.320 --> 02:45.050
+TypeScript is going to look at the data portion of this ticket created event interface.
+
+02:46.000 --> 02:51.790
+And it's going to make sure that we receive the first argument to on message as that data or the data
+
+02:51.790 --> 02:53.530
+portion of that interface.
+
+02:53.800 --> 02:58.210
+And so if we try to apply any other type to that argument, we're going to end up with an error.
+
+02:58.690 --> 03:00.610
+So I'd say that this is working as expected.
+
+03:00.640 --> 03:05.950
+TypeScript is making sure that we always put in the correct type for the data argument, so we must
+
+03:05.950 --> 03:09.910
+put in ticket created event data like so.
+
+03:11.660 --> 03:11.950
+Okay.
+
+03:11.960 --> 03:13.430
+So that is pretty much it.
+
+03:13.550 --> 03:17.200
+Now I know the changes we made are all they seem really confusing.
+
+03:17.210 --> 03:22.280
+They might seem pointless, but the whole point here is that now we have reduced the number of times
+
+03:22.280 --> 03:27.290
+that we referred to plain strings inside of our listener, and we also have something to make sure that
+
+03:27.290 --> 03:32.240
+we can only refer to the correct properties inside of this incoming piece of data from NAT streaming
+
+03:32.240 --> 03:32.780
+server.
+
+03:32.930 --> 03:37.880
+So this is going to dramatically reduce the possibility of us making typos, misspelling property names
+
+03:37.880 --> 03:39.320
+or anything like that.
+
+03:39.890 --> 03:45.380
+The other thing you might be kind of confused about is what portions of our code inside of here are
+
+03:45.380 --> 03:49.670
+going to be written inside of our individual services versus, say, the common module.
+
+03:50.030 --> 03:53.720
+Let's take a quick pause right here and start to address that question in the next video.

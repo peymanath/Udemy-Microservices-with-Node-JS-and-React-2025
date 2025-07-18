@@ -1,0 +1,310 @@
+WEBVTT
+
+00:00.700 --> 00:05.380
+In the last video, I told you that we needed a load balancer service to somehow get traffic into all
+
+00:05.380 --> 00:06.490
+of our different pods.
+
+00:06.520 --> 00:11.710
+Now, it turns out that this entire idea of a load balancer service is a little bit more intricate than
+
+00:11.710 --> 00:12.920
+at first glance.
+
+00:12.940 --> 00:16.660
+So in this video, I want to clarify some terminology that you're going to see online.
+
+00:16.660 --> 00:20.980
+And as a matter of fact, we're going to see very quickly around this load balancer service thing.
+
+00:21.400 --> 00:25.630
+So when we talk about a load balancer service or as I've been mentioning it in the previous videos,
+
+00:25.630 --> 00:28.900
+I'm really talking about two distinct things in the world of Kubernetes.
+
+00:29.260 --> 00:33.400
+So first off, there is something in Kubernetes called a load balancer service.
+
+00:33.790 --> 00:40.300
+There is something that is also very closely related that is referred to as ingress or an ingress controller.
+
+00:40.570 --> 00:45.100
+Now, technically, an ingress and egress controller are two different things, but for the purposes
+
+00:45.100 --> 00:48.640
+of this course, we're going to kind of refer to them with interchangeable terms.
+
+00:48.940 --> 00:53.350
+A lot of the stuff I'm about to show you is kind of a very high level overview, and so I'm simplifying
+
+00:53.350 --> 00:58.300
+some very specific parts of it to just make some parts a lot easier to understand, because having a
+
+00:58.300 --> 01:02.010
+deep understanding of the behind the scenes stuff is super not critical right now.
+
+01:02.020 --> 01:04.520
+You really just need a taste of what is going on.
+
+01:04.540 --> 01:09.070
+It doesn't make a lot of sense to dive into the deep end at the very start because it's just way too
+
+01:09.070 --> 01:09.790
+confusing.
+
+01:10.750 --> 01:12.040
+All right, so what is this stuff?
+
+01:12.070 --> 01:17.920
+A load balancer service is going to be something that tells Kubernetes or specifically our cluster to
+
+01:17.920 --> 01:19.990
+reach out to its provider.
+
+01:19.990 --> 01:21.550
+We'll talk about what that is in just a moment.
+
+01:21.550 --> 01:24.040
+And provision a load balancer.
+
+01:24.460 --> 01:29.140
+The goal of a load balancer service is to get traffic into a single pod.
+
+01:30.370 --> 01:34.780
+On the other hand, an ingress or ingress controller, again, technically different things, but we're
+
+01:34.780 --> 01:39.970
+going to use these terms interchangeably is a pod that has a set of routing rules in it that are going
+
+01:39.970 --> 01:43.540
+to distribute traffic to other services inside of our cluster.
+
+01:44.490 --> 01:46.980
+Now just looking at these definitions, not super useful.
+
+01:46.980 --> 01:48.750
+So let's take a look at a diagram or two.
+
+01:48.780 --> 01:52.140
+We're going to first focus on what a load balancer service really is.
+
+01:53.090 --> 01:53.390
+All right.
+
+01:53.390 --> 01:54.380
+So in this diagram.
+
+01:55.000 --> 01:57.380
+We've got our cluster here in the blue box.
+
+01:57.400 --> 02:01.420
+We're going to imagine that we are running one singular pod right here called some pod.
+
+02:02.050 --> 02:06.370
+Our cluster at some point in time, not right now on our local machine, but at some point in time,
+
+02:06.370 --> 02:09.490
+the future is going to be running on some cloud provider.
+
+02:09.490 --> 02:13.060
+So maybe a Google Cloud Azure or something similar.
+
+02:13.630 --> 02:19.240
+We are going to want to somehow get traffic or network requests from the outside world to some pod inside
+
+02:19.240 --> 02:20.220
+of our cluster.
+
+02:20.230 --> 02:23.020
+So how do we do that using a load balancer?
+
+02:23.590 --> 02:27.610
+Well, we would create a config file for a load balancer service.
+
+02:27.820 --> 02:33.130
+We would then feed that thing into our cluster using that same ETL apply command.
+
+02:33.700 --> 02:37.030
+Now a load balancer service is a very special little thing.
+
+02:37.030 --> 02:42.670
+Just about all the objects we've been discussing throughout this last section on Kubernetes so far has
+
+02:42.670 --> 02:46.000
+been all about stuff that gets created directly inside of our cluster.
+
+02:46.000 --> 02:51.730
+So we have created services inside the cluster, pods inside the cluster, deployments inside the cluster.
+
+02:51.970 --> 02:54.580
+A load balancer service is a little bit different.
+
+02:55.030 --> 03:00.550
+A load balancer service is going to tell our cluster to reach out to its cloud provider.
+
+03:00.550 --> 03:07.120
+So reach out directly to AWS, Google Cloud or Azure and provision something called a load balancer.
+
+03:08.480 --> 03:11.970
+This load balancer exists completely outside of our cluster.
+
+03:11.990 --> 03:15.440
+It is a part of Google Cloud or AWS or Azure.
+
+03:16.010 --> 03:22.310
+This load balancer is going to be used to take traffic from the outside world and direct it in to some
+
+03:22.310 --> 03:24.140
+pod inside of our cluster.
+
+03:24.940 --> 03:30.820
+So the goal of a load balancer or really I should say the goal of a load balancer service is to tell
+
+03:30.850 --> 03:35.860
+our cluster to reach out to its provider provision, a load balancer with the goal of getting some traffic
+
+03:35.860 --> 03:38.020
+into a pod on our cluster.
+
+03:39.200 --> 03:42.950
+A load balancer by itself is not super useful for you and I right now.
+
+03:43.280 --> 03:47.380
+Instead, what you and I really want to do is what we saw back in this diagram over here.
+
+03:47.390 --> 03:53.120
+We want to get traffic distributed to a set of different pods and we want to have some routing rules
+
+03:53.120 --> 03:56.570
+inside of something to decide where to send this traffic to.
+
+03:57.770 --> 04:01.790
+One thing I want to mention really quickly is that our React application doesn't really want to have
+
+04:01.790 --> 04:06.920
+to understand the difference between, say, the query pod and the comments pod in the post pod.
+
+04:06.950 --> 04:10.130
+We don't want to have to encode that information inside the React app.
+
+04:10.370 --> 04:15.920
+Instead, what would be great is if we can just say, make a request to this route and if there is something
+
+04:15.920 --> 04:20.870
+over here around our cluster to figure out what pod that request should be forwarded to.
+
+04:21.350 --> 04:25.420
+So the load balancer just by itself is not really doing the full thing for us.
+
+04:25.430 --> 04:26.990
+It's not doing everything we need.
+
+04:27.110 --> 04:31.460
+And that is where this idea of an ingress or ingress controller is going to come into play.
+
+04:32.180 --> 04:37.010
+So the ingress or ingress controller is a pod that has a set of routing rules inside of it.
+
+04:37.190 --> 04:40.580
+It's going to work alongside this load balancer service thing.
+
+04:41.030 --> 04:44.300
+Let's take a look at a diagram to understand what this ingress is really doing.
+
+04:45.600 --> 04:46.170
+Okay.
+
+04:46.200 --> 04:50.240
+So in this diagram, very similar, we've got our cluster right here in the blue box.
+
+04:50.250 --> 04:52.380
+It's being hosted with some cloud provider.
+
+04:53.050 --> 04:57.280
+And we want to get some outside traffic into these set of different pods.
+
+04:57.490 --> 04:58.690
+And these are different pods.
+
+04:58.690 --> 05:02.440
+So it might be, say, the posts, comments, query, whatever else.
+
+05:03.040 --> 05:08.380
+So we are going to have a request coming in still to a load balancer that has been provisioned with
+
+05:08.380 --> 05:09.490
+our cloud provider.
+
+05:09.820 --> 05:15.040
+But now this load balancer is going to send that request on to this ingress controller thing.
+
+05:15.340 --> 05:19.420
+And this ingress controller is going to have a set of routing rules inside of it.
+
+05:19.840 --> 05:24.160
+This route, when I use the term routing rules, by the way, I'm really just saying this ingress controller
+
+05:24.160 --> 05:30.160
+is going to look at the path of the incoming request and then decide based upon that path whether to
+
+05:30.160 --> 05:34.990
+send the request on to that pod or that pod or that pod or whatever else.
+
+05:35.410 --> 05:40.840
+And actually, when I say send the request on to some pod, I'm really meaning to say send it to some
+
+05:40.840 --> 05:44.380
+cluster IP service that is sending request on to the pod.
+
+05:44.380 --> 05:46.500
+So I'm not showing the cluster IP services in here.
+
+05:46.510 --> 05:47.710
+They technically do exist.
+
+05:47.710 --> 05:51.580
+But for the purposes of this diagram, I'm just saying we're going to send traffic on to the pod.
+
+05:52.490 --> 05:57.050
+So that is the relationship between this load balancer thing and this ingress controller thing.
+
+05:57.080 --> 06:00.770
+The load balancer is just about getting traffic into our cluster.
+
+06:00.950 --> 06:06.320
+This ingress thing is about routing rules or having some routing configuration that's going to send
+
+06:06.320 --> 06:08.300
+requests off to the appropriate pod.
+
+06:08.630 --> 06:13.460
+Now I want to repeat once again that I am simplifying some aspects of this just to make this a little
+
+06:13.460 --> 06:14.630
+bit easier to understand.
+
+06:14.630 --> 06:19.730
+In the first go round, if we went in full depth, tried to really understand all the behind the scenes
+
+06:19.730 --> 06:23.300
+stuff, it would take a lot of time and just not be a very efficient use of time.
+
+06:23.300 --> 06:26.060
+So effectively, this is good enough for what we need to do.
+
+06:26.720 --> 06:27.020
+All right.
+
+06:27.020 --> 06:28.390
+So we're going to take a quick pause right here.
+
+06:28.400 --> 06:32.630
+When we come back, the next video, we're going to take a look at a very specific implementation of
+
+06:32.630 --> 06:37.040
+an ingress controller that we're going to use inside of our app and we'll start to implement this thing
+
+06:37.040 --> 06:38.150
+inside of our cluster.

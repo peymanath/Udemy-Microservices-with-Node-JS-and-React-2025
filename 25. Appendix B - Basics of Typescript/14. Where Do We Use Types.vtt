@@ -1,0 +1,58 @@
+WEBVTT
+
+00:00.740 --> 00:02.940
+We've now gotten a definition of types.
+
+00:02.960 --> 00:04.610
+We've spoken about why we care about them.
+
+00:04.610 --> 00:06.670
+And we just looked at a couple of quick examples.
+
+00:06.680 --> 00:09.470
+It's now the last thing we're going to cover is when to use them.
+
+00:10.100 --> 00:10.400
+All right.
+
+00:10.400 --> 00:14.420
+So this one's kind of an easy one in this case and some of the other topics we're going to look at,
+
+00:14.420 --> 00:17.570
+well, there's going to be a lot better answer of where we use them.
+
+00:17.570 --> 00:20.150
+But in the case of types, well, we use them everywhere.
+
+00:20.270 --> 00:22.610
+And that's just a side effect of using TypeScript.
+
+00:22.610 --> 00:28.070
+So whether you want to or not, every value you define inside your application is going to have a type
+
+00:28.070 --> 00:33.050
+associated with it, and TypeScript is going to do its best to check the quality of your code or check
+
+00:33.050 --> 00:35.360
+for any errors by using those types.
+
+00:35.690 --> 00:40.700
+So like I said, for this particular feature, well, types are used everywhere and there's really not
+
+00:40.700 --> 00:42.110
+that much else to say about it.
+
+00:42.800 --> 00:43.040
+All right.
+
+00:43.040 --> 00:44.270
+So let's take a quick pause right here.
+
+00:44.270 --> 00:45.380
+This is kind of a gimme.
+
+00:45.380 --> 00:46.580
+Let's take a pause right here.
+
+00:46.580 --> 00:49.070
+And we're going to move on to our next feature in the next video.

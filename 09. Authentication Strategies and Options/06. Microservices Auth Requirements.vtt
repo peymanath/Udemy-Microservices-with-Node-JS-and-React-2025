@@ -1,0 +1,526 @@
+WEBVTT
+
+00:01.070 --> 00:05.660
+In this video, we're going to decide whether we should be making use of JSON Web tokens or cookies.
+
+00:05.690 --> 00:08.530
+Now, remember, this is not an either or decision.
+
+00:08.540 --> 00:11.990
+Cookies and JSON web tokens are two very different things.
+
+00:12.020 --> 00:17.270
+The implication here, usually when we say that we're using cookie based authentication, the implication
+
+00:17.270 --> 00:22.190
+is that we have a cookie that is going to store some kind of encoded token inside of it, and that's
+
+00:22.190 --> 00:26.220
+going to be encrypted in some way that the user cannot access the information inside there.
+
+00:26.240 --> 00:31.220
+So again, these are two different things, but usually when we refer to cookie based authentication,
+
+00:31.220 --> 00:36.470
+we're talking about using a very particular style of oath and storing some information inside that cookie.
+
+00:37.010 --> 00:41.210
+At any rate, let's just take a look at a couple of diagrams and get a better idea of the requirements
+
+00:41.210 --> 00:46.550
+of our application and which of these two approaches is going to satisfy those requirements.
+
+00:47.090 --> 00:47.660
+Okay.
+
+00:47.690 --> 00:52.310
+I've taken a series of diagrams that we've looked at in the past, and I've added it in a couple of
+
+00:52.310 --> 00:53.300
+notes to each of them.
+
+00:53.870 --> 00:59.660
+The notes I've added in are pointing out some particular aspect of our application and what that particular
+
+00:59.660 --> 01:04.160
+aspect is kind of implying or requiring of our authentication mechanism.
+
+01:04.840 --> 01:08.710
+So in this diagram right here, remember, we imagine that we had our order service and we were making
+
+01:08.710 --> 01:10.840
+a request to say, purchase a ticket.
+
+01:10.960 --> 01:15.910
+And so inside of our ticket purchase logic, logic, we probably needed to figure out whether or not
+
+01:15.910 --> 01:21.790
+that user is logged in and we can use a JSON web token or some cookie based approach for that, no problem.
+
+01:22.270 --> 01:27.010
+And then after that, we probably needed to decide whether or not this user can purchase a ticket.
+
+01:27.100 --> 01:31.540
+So maybe whether or not they have billing set up in their account, whether or not they have a credit
+
+01:31.540 --> 01:33.490
+card or something similar to that.
+
+01:34.320 --> 01:35.520
+So that's step right there.
+
+01:35.520 --> 01:41.520
+That implication that we need to somehow figure out whether or not this user or details about this user
+
+01:41.520 --> 01:47.520
+really implies that our authentication mechanism needs to tell us information about the person who was
+
+01:47.520 --> 01:48.660
+just authenticated.
+
+01:48.840 --> 01:53.760
+In other words, we can't just have some mechanism that says, yes, this user is authenticated or No,
+
+01:53.760 --> 01:54.540
+they are not.
+
+01:54.570 --> 02:00.420
+Instead, this authentication mechanism has to tell us, Yes, this person is authenticated and here
+
+02:00.420 --> 02:01.890
+is some information about them.
+
+02:02.040 --> 02:07.080
+Here's their user ID, here's their email, here's whether or not they have a credit card tied to their
+
+02:07.080 --> 02:07.710
+account.
+
+02:07.890 --> 02:13.740
+So we need to have some option or ability to store information inside of our off mechanism.
+
+02:14.390 --> 02:15.830
+That is requirement number one.
+
+02:16.540 --> 02:17.980
+Here's requirement number two.
+
+02:19.240 --> 02:23.740
+So this is similar to the diagram we were just looking at, but I customized a couple of things inside
+
+02:23.740 --> 02:26.110
+of it to just imagine a new scenario.
+
+02:26.500 --> 02:30.970
+Let's imagine that our application has the ability to create free coupons.
+
+02:30.970 --> 02:35.020
+So these are coupon codes that allow people to get free tickets.
+
+02:35.260 --> 02:41.020
+Of course, we probably do not want any arbitrary user to be able to access this root handler and start
+
+02:41.020 --> 02:42.010
+creating free tickets.
+
+02:42.010 --> 02:44.350
+That would be catastrophic, really bad.
+
+02:44.350 --> 02:48.540
+So that would probably be something that we would want to limit to maybe administration users.
+
+02:48.550 --> 02:53.110
+So only admins can make a request that will create a free coupon code.
+
+02:53.740 --> 02:57.700
+So we can imagine that an admin user would make a request to create this coupon code.
+
+02:57.730 --> 02:59.740
+It would go to who knows what service.
+
+02:59.740 --> 03:01.570
+Maybe the order service doesn't really matter.
+
+03:02.080 --> 03:07.930
+Inside there we would access some free coupon creation logic and the first thing we would do is check
+
+03:07.930 --> 03:09.460
+to see if that person is logged in.
+
+03:09.670 --> 03:14.770
+If they are immediately after that, we would definitely need to check whether or not this person is
+
+03:14.770 --> 03:17.410
+authorized to create free coupons.
+
+03:17.410 --> 03:20.860
+So we need to decide whether or not this is an admin user.
+
+03:22.040 --> 03:25.880
+So this little step right here, even though our application is not going to do this, we could very
+
+03:25.880 --> 03:29.360
+easily imagine scenarios where we would need to have something similar to this.
+
+03:29.360 --> 03:35.750
+That step right there is really implying that our auth mechanism has to include some amount of authorization
+
+03:35.750 --> 03:36.650
+information.
+
+03:36.740 --> 03:39.530
+We need to know more information about this user.
+
+03:39.530 --> 03:41.240
+Are they user, are they an admin?
+
+03:41.450 --> 03:42.590
+What's their role?
+
+03:43.010 --> 03:44.030
+Stuff like that.
+
+03:45.090 --> 03:46.650
+All right, onto the next diagram.
+
+03:47.720 --> 03:50.760
+Now, this diagram right here was in an optional video.
+
+03:50.780 --> 03:55.880
+This was tied to the video where we discussed possible ways of solving that issue, where we could ban
+
+03:55.880 --> 04:00.710
+a user, but they would still have access to our application in this option number two approach that
+
+04:00.710 --> 04:02.360
+we're using inside of our app.
+
+04:02.980 --> 04:08.920
+So one way that we discussed to solve this issue was to have a auth mechanism that would expire after
+
+04:08.920 --> 04:10.270
+some set of time.
+
+04:11.620 --> 04:17.290
+So this is really implying that whatever mechanism we are going to use, it has to have a built in way
+
+04:17.290 --> 04:18.710
+and a super secure way.
+
+04:18.730 --> 04:23.620
+In other words, we would not want a user to be able to tamper with this in some way of expiring our
+
+04:23.620 --> 04:27.820
+auth mechanism after a set period of time, a very precise period of time.
+
+04:27.820 --> 04:32.020
+So maybe 15 minutes, 20 minutes, ten days, whatever else.
+
+04:32.380 --> 04:34.840
+So that's an extra requirement of our mechanism.
+
+04:35.710 --> 04:35.980
+All right.
+
+04:35.980 --> 04:37.240
+Just one last one right here.
+
+04:37.870 --> 04:42.790
+So last thing I want you to recall is that we are going to have a browser application, maybe a mobile
+
+04:42.790 --> 04:44.140
+app, whatever else it is.
+
+04:44.140 --> 04:47.800
+And this is going to eventually be sending requests to our different services.
+
+04:48.480 --> 04:54.090
+One of the big benefits of using a microservices approach is that each of our different services can
+
+04:54.090 --> 04:57.090
+be built using a different back end language.
+
+04:57.480 --> 05:02.340
+So we might have the service written with Node and Express orders, might be with Ruby on Rails and
+
+05:02.340 --> 05:04.110
+payments might be with Java Spring.
+
+05:04.680 --> 05:11.130
+So this is really implying that whatever auth mechanism we decide to use, it has to be easily understood
+
+05:11.130 --> 05:16.530
+by many different languages because with this option number two fundamental, fundamental approach that
+
+05:16.530 --> 05:20.880
+you and I are using, we are saying that each of these services are in charge of deciding whether or
+
+05:20.880 --> 05:23.530
+not to authenticate a given incoming request.
+
+05:23.550 --> 05:29.370
+So whatever mechanism we decide to use here, JSON, Web token or something else, it has to be easily
+
+05:29.370 --> 05:32.970
+implementable with Express or Ruby or Java.
+
+05:34.430 --> 05:39.050
+Also, given the fact that each of these different services are going to need to somehow authenticate
+
+05:39.050 --> 05:44.360
+a user, we probably do not want to force any storage requirements on these services as well.
+
+05:44.690 --> 05:49.460
+In other words, if we are deciding on some other mechanism that is going to require us to have some
+
+05:49.460 --> 05:55.250
+backend server or a backend database just to store information to support that auth mechanism, that
+
+05:55.250 --> 05:56.210
+would probably be bad.
+
+05:56.240 --> 06:01.820
+We don't want to force, say, our order service to have some kind of specialized database to store
+
+06:01.820 --> 06:04.550
+information just to support our auth mechanism.
+
+06:04.550 --> 06:06.470
+That would be probably not that great.
+
+06:07.160 --> 06:07.460
+All right.
+
+06:07.460 --> 06:08.900
+So let's summarize all this stuff up.
+
+06:09.200 --> 06:11.240
+These are the requirements for our auth mechanism.
+
+06:11.540 --> 06:16.610
+First off, we have to store information about a user, so maybe their user ID, their email or something
+
+06:16.610 --> 06:19.370
+like that within the auth mechanism itself.
+
+06:19.910 --> 06:23.540
+That is closely coupled with this last item down here.
+
+06:24.260 --> 06:29.570
+So if we are storing information about that user, it has to be inside the auth mechanism and it must
+
+06:29.570 --> 06:32.360
+not require us to have some kind of backing data store.
+
+06:33.430 --> 06:37.150
+Next up, we have to be able to store some authorization info inside there as well.
+
+06:37.150 --> 06:42.430
+So whether or not this person is an admin, a normal user or something else, we have to have a built
+
+06:42.430 --> 06:44.710
+in and tamper resistant way.
+
+06:44.710 --> 06:50.560
+So a user should not be able to mudie around with this or kind of fool us to expire or invalidate that
+
+06:50.560 --> 06:56.140
+auth mechanism automatically without us having to reach out to a user's browser or something like that,
+
+06:56.140 --> 07:00.250
+because we can't do that and try to invalidate their auth mechanism.
+
+07:00.820 --> 07:05.440
+And then finally, whatever we choose has to be easily understood between these different languages.
+
+07:05.950 --> 07:11.620
+So suffice it to say, all these requirements right here are very heavily steering us towards a JSON
+
+07:11.620 --> 07:13.120
+web token approach.
+
+07:14.010 --> 07:19.800
+The reason for this, it satisfies well, obviously, all these different issues right here, 100%,
+
+07:19.800 --> 07:20.760
+Jason, Web tokens.
+
+07:20.760 --> 07:24.010
+We can store any arbitrary information we want about a user.
+
+07:24.030 --> 07:29.910
+There are even built in properties of JSON web tokens that lend to handling authorization very well.
+
+07:30.740 --> 07:34.220
+Jason Webb tokens can encode expiration information.
+
+07:34.510 --> 07:36.950
+They might be saying, Hey, Stephen, cookies can do that as well.
+
+07:36.950 --> 07:39.740
+We can have cookies expire after a set period of time.
+
+07:39.770 --> 07:41.660
+Well, not quite.
+
+07:41.800 --> 07:48.230
+You see, we can set some expiration on a cookie, but that is us kind of politely asking a browser
+
+07:48.230 --> 07:48.770
+to expire.
+
+07:48.770 --> 07:49.400
+The cookie.
+
+07:49.790 --> 07:54.590
+Cookie expiration is handled by the browser, so the browser is going to receive a cookie.
+
+07:54.590 --> 07:59.390
+It's going to see that we ask the browser to expire that after, say, 20 days or something like that,
+
+07:59.390 --> 08:03.030
+and after 20 days the browser will expire that cookie for us.
+
+08:03.050 --> 08:07.970
+But a user could very easily copy that cookie information and just ignore the expiration date on there
+
+08:07.970 --> 08:13.370
+and continue using that cookie in the auth mechanism or auth information side there at some point in
+
+08:13.370 --> 08:16.070
+time in the future, even beyond that expiration date.
+
+08:16.400 --> 08:21.290
+A JSON web token, however, is going to encode the expiration time in itself.
+
+08:21.290 --> 08:24.710
+And as soon as the JSON web token expires, then that's it.
+
+08:24.710 --> 08:26.600
+It will not be valid anymore.
+
+08:28.690 --> 08:32.170
+Jason Webb tokens have fantastic support between different languages.
+
+08:32.170 --> 08:36.490
+So every language out there, you're going to find an official implementation for handling JSON Web
+
+08:36.490 --> 08:37.180
+tokens.
+
+08:37.750 --> 08:43.330
+If we use solely cookie based authentication where we kind of create some kind of custom token and store
+
+08:43.330 --> 08:47.800
+it inside of a cookie, it turns out that a lot of these different custom cookie implementations will
+
+08:47.800 --> 08:50.610
+vary significantly between different languages.
+
+08:50.620 --> 08:55.330
+And if you're super curious, I can even show you instances of that with some popular cookie libraries
+
+08:55.330 --> 08:56.860
+used in the Node.js world.
+
+08:56.890 --> 09:02.830
+It would be kind of hard to create a cookie that is signed securely, so it has some actual kind of
+
+09:02.830 --> 09:09.700
+secure or encryption around it using Node.js or Express and then reuse that over in the Ruby on Rails
+
+09:09.700 --> 09:10.080
+world.
+
+09:10.090 --> 09:11.260
+That would be kind of challenging.
+
+09:12.470 --> 09:17.300
+And then finally, Jason Webb tokens do not strictly require us to have some kind of backing data store
+
+09:17.330 --> 09:18.560
+to identify this user.
+
+09:18.980 --> 09:20.720
+Now as opposed to cookies.
+
+09:20.720 --> 09:23.090
+You will see a lot of people who use cookies.
+
+09:23.090 --> 09:26.870
+They're going to try to store, just say a session ID inside the cookie.
+
+09:26.870 --> 09:31.150
+That refers to some session that is stored on a backend server that is not strictly required.
+
+09:31.160 --> 09:35.780
+We can store again any arbitrary information we want inside of a cookie, but you're going to see that
+
+09:35.780 --> 09:40.190
+a lot of people out there, a lot of methodology says that cookie based authentication, you're going
+
+09:40.190 --> 09:41.750
+to store some kind of session ID.
+
+09:41.780 --> 09:47.330
+And so of course, that does infer or imply that you will have a backing data store on the server,
+
+09:47.330 --> 09:49.580
+which again, we probably do not want to do.
+
+09:50.260 --> 09:50.480
+Okay.
+
+09:50.510 --> 09:55.400
+So again, JSON, web token, that's what we're going to use now that makes it sound really easy.
+
+09:55.400 --> 09:59.300
+And hey, these are great reasons for that, but we're still not quite done here.
+
+09:59.300 --> 10:05.450
+Remember one thing we looked at earlier, when we decide to use a JSON web token, that's not the end
+
+10:05.450 --> 10:06.470
+of the story.
+
+10:06.950 --> 10:10.370
+Jason Web tokens are just an authentication mechanism.
+
+10:10.370 --> 10:15.020
+They're a piece of data that proves that someone is logged in and stores some information about the
+
+10:15.020 --> 10:15.590
+user.
+
+10:15.950 --> 10:21.260
+We still have to somehow communicate this information between our browser and our server.
+
+10:21.680 --> 10:28.310
+We can do it either manually to a degree using these headers or sticking it into the body of a request.
+
+10:28.550 --> 10:33.830
+Or alternatively, we can have the browser handle it for us, using still this kind of cookie based
+
+10:33.830 --> 10:34.550
+idea.
+
+10:35.120 --> 10:40.160
+Now remember, this is where there really is a difference between cookies, cookie based authentication
+
+10:40.160 --> 10:41.740
+and Jason Web tokens.
+
+10:41.750 --> 10:46.310
+In this case, we're saying that we're going to use a JSON Web token to store our auth information,
+
+10:46.310 --> 10:48.740
+but the cookie is going to be the transport mechanism.
+
+10:48.740 --> 10:53.660
+That's how we actually shove or move the cookie around between the browser and the server.
+
+10:54.080 --> 10:57.440
+So we still have to decide how we are going to move this token around.
+
+10:57.440 --> 10:59.390
+So let's do that in just a moment.

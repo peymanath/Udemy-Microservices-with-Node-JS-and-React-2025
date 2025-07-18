@@ -1,0 +1,178 @@
+WEBVTT
+
+00:00.580 --> 00:01.180
+In this video.
+
+00:01.180 --> 00:05.020
+I want to add in a couple little notes around syntax of interfaces.
+
+00:05.350 --> 00:09.490
+So once again, when we define an interface, we're going to list out all the different property names
+
+00:09.490 --> 00:12.460
+and types that we expect, something that is a vehicle to have.
+
+00:12.850 --> 00:19.360
+We are not only limited to expressing primitive values inside of here, we can instead express any different
+
+00:19.390 --> 00:21.940
+type we want to inside of an interface.
+
+00:22.270 --> 00:27.280
+So for example, let's say instead of the year property being a number, we instead want this to be
+
+00:27.280 --> 00:30.790
+a more complex object, like an instance of a date.
+
+00:31.300 --> 00:34.390
+To do so, I'm going to replace number with simply date like.
+
+00:34.390 --> 00:34.930
+So.
+
+00:35.410 --> 00:40.210
+Now, in order for Old Civic to be considered to be a vehicle, you'll notice that we've got an error
+
+00:40.210 --> 00:40.780
+down here.
+
+00:40.780 --> 00:42.700
+We have to update its definition.
+
+00:42.910 --> 00:47.830
+So instead of you're being a simple number, I'm going to instead assign it an instance of a date like
+
+00:47.830 --> 00:51.430
+so as soon as I do so, that error down here goes away.
+
+00:51.880 --> 00:57.250
+So once again, we are not limited to just basic values or primitive values inside of an interface definition.
+
+00:57.250 --> 01:00.370
+We can assign any type inside there that we want.
+
+01:01.180 --> 01:03.280
+That also includes functions.
+
+01:03.550 --> 01:08.410
+So let's say that we want to say that in order for Old Civic to be considered to be a vehicle, we want
+
+01:08.410 --> 01:10.870
+it to also have a function called summary.
+
+01:11.230 --> 01:16.390
+So in other words, I want this object right here to have a property or a function called summary.
+
+01:16.390 --> 01:21.520
+And if we call it, maybe it should return a string that summarizes some different facts about the vehicle.
+
+01:22.200 --> 01:23.070
+To express that.
+
+01:23.070 --> 01:25.560
+I'm going to add in another property on vehicle.
+
+01:26.550 --> 01:28.050
+Called summary like so.
+
+01:28.910 --> 01:33.950
+And then instead of immediately putting in a set or a comma or C a colon right there, I'll put in a
+
+01:33.950 --> 01:37.550
+set of parentheses and then a colon right after it.
+
+01:37.550 --> 01:41.150
+And I'm going to label what I would expect the summary function to return.
+
+01:41.150 --> 01:45.440
+So in this case, maybe it's going to return a string that summarizes some different facts about the
+
+01:45.440 --> 01:45.950
+car.
+
+01:46.890 --> 01:52.500
+So this right here says that anything that wants to be a vehicle has to have a function called summary
+
+01:52.710 --> 01:54.030
+that returns a string.
+
+01:55.060 --> 01:58.780
+If we then go back down to the bottom again, you'll notice we have an error down here as well.
+
+01:59.110 --> 02:03.670
+So now it says that we do not have a summary property inside of Old Civic.
+
+02:04.090 --> 02:10.420
+So to fix this up, we would have to add in a summary function that satisfies this type right here.
+
+02:10.420 --> 02:12.910
+So it has to be a function with no arguments.
+
+02:13.680 --> 02:17.850
+That returns a string and so we can add it on like so.
+
+02:18.930 --> 02:24.270
+So now to return some information about this vehicle, we could return about like.
+
+02:25.250 --> 02:26.270
+Name.
+
+02:27.460 --> 02:32.050
+Is this name like so and again notice the is 2015 template string here.
+
+02:32.050 --> 02:33.820
+So I am using back ticks.
+
+02:34.630 --> 02:40.960
+So now that my object has a summary function that returns a string, it once again qualifies as being
+
+02:40.960 --> 02:41.740
+a vehicle.
+
+02:42.360 --> 02:47.970
+So if I go back down to the bottom of the file again, that error has now gone away and now inside of
+
+02:47.970 --> 02:49.310
+my print vehicle function.
+
+02:49.320 --> 02:54.210
+Rather than trying to pull off all these different properties one by one, I can instead rely upon that
+
+02:54.210 --> 02:55.200
+summary function.
+
+02:56.060 --> 02:58.610
+So I can call something like console.log.
+
+02:59.700 --> 03:02.820
+Vehicle dot summary like so.
+
+03:04.130 --> 03:04.670
+Cool.
+
+03:05.530 --> 03:05.800
+All right.
+
+03:05.800 --> 03:07.210
+So again, just two notes here.
+
+03:07.510 --> 03:11.320
+First off, we can use any type inside of our interface definition we want.
+
+03:11.350 --> 03:14.020
+We are not limited just to primitive values.
+
+03:14.200 --> 03:19.720
+Second important note is that inside of our interface definition, we can express functions inside there
+
+03:19.720 --> 03:20.320
+as well.
+
+03:21.630 --> 03:25.320
+So let's take a quick pause right here in the next video, I want to share two more important notes
+
+03:25.320 --> 03:27.720
+with you around basic syntax of interfaces.
+
+03:27.720 --> 03:29.910
+So quick pause and I'll see you in just a minute.

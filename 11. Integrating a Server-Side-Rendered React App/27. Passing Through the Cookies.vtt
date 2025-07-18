@@ -1,0 +1,199 @@
+WEBVTT
+
+00:00.670 --> 00:04.570
+As we were just discussing at the end of the last video, whenever we have this incoming request that's
+
+00:04.570 --> 00:09.250
+going to cause our next gen application to render out the app, we need to somehow take that cookie
+
+00:09.250 --> 00:14.620
+right there and include it on any requests that are going to go back out to Engine X to try to access
+
+00:14.620 --> 00:15.620
+other services.
+
+00:15.640 --> 00:17.770
+So we're going to focus on how to do that in this video.
+
+00:18.960 --> 00:22.920
+Since we've had a long couple of videos here on some pretty crazy stuff, I'm just going to give you
+
+00:22.920 --> 00:25.200
+a pretty direct answer on exactly how to fix this.
+
+00:25.410 --> 00:27.930
+Whenever get initial props gets called on the server.
+
+00:27.960 --> 00:31.680
+The first argument to the function is going to be an object that has a couple of different properties
+
+00:31.680 --> 00:32.460
+inside of it.
+
+00:32.640 --> 00:35.970
+One of the properties on that thing is the request object.
+
+00:36.300 --> 00:38.700
+I'm going to structure out that request object.
+
+00:39.240 --> 00:44.610
+This request right here is the same kind of request object that we expect to receive inside of, say,
+
+00:44.610 --> 00:46.140
+an express JS application.
+
+00:47.280 --> 00:53.190
+It's on this overall object as the rec property, so we will de structure off just rec by itself then
+
+00:53.190 --> 00:57.570
+to take a look at all the headers on that incoming request because remember the cookie is passed as
+
+00:57.570 --> 00:58.110
+a header.
+
+00:58.110 --> 01:01.950
+We can do a console log right here of rect headers.
+
+01:03.590 --> 01:05.000
+I'm then going to save this.
+
+01:05.360 --> 01:07.070
+I'll then go back over to my browser.
+
+01:07.610 --> 01:09.950
+I'm going to do a full refresh of this page.
+
+01:10.160 --> 01:11.540
+So here's a full refresh.
+
+01:12.170 --> 01:15.740
+And then I'll go back over to my terminal and take a look at what just console logged.
+
+01:17.040 --> 01:22.860
+So here is that headers object as all the different headers that were included in the initial request.
+
+01:23.680 --> 01:26.020
+From my browser to next DJs.
+
+01:26.500 --> 01:29.740
+And as you'd expect, one of the headers on there is the cookie.
+
+01:29.770 --> 01:35.680
+So that cookie right there is the exact information that we want to pass along to Ingress Engine X,
+
+01:35.680 --> 01:38.710
+so to make sure that eventually ends up with our service.
+
+01:39.420 --> 01:42.640
+There are actually a couple of other very helpful headers on here as well.
+
+01:42.660 --> 01:47.310
+In particular, if we take a look around, you'll notice that the host header is actually present on
+
+01:47.310 --> 01:48.600
+this incoming request as well.
+
+01:49.360 --> 01:54.220
+So as a matter of fact, rather than even having to specify the host right here, one thing we might
+
+01:54.220 --> 01:59.260
+be able to do is to just take all the headers on that incoming request and pass it through to the requests
+
+01:59.260 --> 02:01.330
+that we're sending off to Ingress Engine X.
+
+02:01.720 --> 02:05.910
+This would essentially cause this request right here to act as a proxy of sorts.
+
+02:05.920 --> 02:10.390
+So we're going to take a lot of attributes from that incoming request and just pass them directly along
+
+02:10.390 --> 02:11.650
+to our API call.
+
+02:11.890 --> 02:13.510
+So let's try that strategy out.
+
+02:14.700 --> 02:19.200
+I'm going to delete the headers object right there and replace it with rec dot headers.
+
+02:20.080 --> 02:22.300
+And then going to delete the console log up there.
+
+02:25.470 --> 02:25.860
+Okay.
+
+02:25.860 --> 02:27.120
+So let's save this.
+
+02:27.970 --> 02:30.850
+Now we do not have to worry about the requests coming from the browser.
+
+02:31.710 --> 02:36.860
+Because remember, the browser is going to handle appending on some headers to this thing for us automatically.
+
+02:36.870 --> 02:39.810
+So right now we really just care about the case in which it's the server.
+
+02:39.810 --> 02:41.850
+Make your request over to ingress engine x.
+
+02:42.900 --> 02:44.910
+All right to test this out, I'll go back over my browser.
+
+02:44.910 --> 02:50.640
+I'm going to refresh the page and then I should see a console log of my current user right there in
+
+02:50.640 --> 02:53.820
+my console and back inside my terminal as well.
+
+02:54.510 --> 02:55.350
+Perfect.
+
+02:55.650 --> 03:03.120
+So now when we send our request from next DJs off to ingress and Gen X, the cookie and all the associated
+
+03:03.120 --> 03:07.530
+headers with this incoming request are going to be passed along directly to the service.
+
+03:07.770 --> 03:13.200
+So the off service is a matter of fact, can barely even tell that this request is coming from our client.
+
+03:13.230 --> 03:19.140
+Instead, the service, as far as it is concerned, it might as well have been getting the request directly
+
+03:19.140 --> 03:20.730
+from the browser itself.
+
+03:21.980 --> 03:25.280
+The service would have a rather tough time telling the difference between the two.
+
+03:26.310 --> 03:26.580
+All right.
+
+03:26.580 --> 03:28.500
+Well, this looks like it is a good solution.
+
+03:28.860 --> 03:32.370
+So that should pretty much be it as far as just getting our code working.
+
+03:32.550 --> 03:37.860
+But now what we're left with inside of get initial props is pretty darn nasty.
+
+03:37.890 --> 03:41.940
+We definitely do not want to have to write out this if statement every single time that we want to make
+
+03:41.940 --> 03:44.760
+a request from a get initial props function.
+
+03:45.030 --> 03:50.400
+We don't really want to have to worry about the domain or passing through headers or anything like that.
+
+03:50.640 --> 03:53.070
+So even though this code works, we're going to take a pause right here.
+
+03:53.070 --> 03:56.640
+We're going to come back the next video, and we're going to start to make a couple of improvements
+
+03:56.640 --> 03:59.700
+to it just to make sure that this is a lot easier to use.

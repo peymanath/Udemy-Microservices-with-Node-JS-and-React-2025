@@ -1,0 +1,409 @@
+WEBVTT
+
+00:00.910 --> 00:04.210
+Now that we've installed a bunch of dependencies, we're going to start to wired them all up inside
+
+00:04.210 --> 00:05.330
+of our service.
+
+00:05.350 --> 00:09.430
+A lot of the configuration that we're about to add in is all about just getting just which is our test
+
+00:09.430 --> 00:14.080
+runner to start up inside of our project and give it some basic configuration to tell it how to test
+
+00:14.080 --> 00:15.340
+everything inside of here.
+
+00:15.850 --> 00:19.630
+We're going to first get started inside the package JSON file inside of here.
+
+00:19.630 --> 00:24.040
+I'm going to find the script section and I'm going to add in a new script called Test.
+
+00:24.550 --> 00:27.580
+Whenever we run test, we're going to execute the command.
+
+00:27.580 --> 00:29.560
+Just dash, dash, watch.
+
+00:29.560 --> 00:31.150
+ALL Dash, dash.
+
+00:31.150 --> 00:33.250
+No cache like so.
+
+00:34.420 --> 00:35.810
+So this is going to start up jest.
+
+00:35.830 --> 00:40.810
+That's going to tell it to run all the different tests inside of our project whenever any file changes.
+
+00:41.350 --> 00:46.480
+The no cash flag right here is related to our attempt to try to use TypeScript with jest.
+
+00:46.510 --> 00:51.370
+Just does not have TypeScript support out of the box and sometimes just is going to get really confused.
+
+00:51.370 --> 00:54.160
+Understanding when we change a typescript file.
+
+00:54.550 --> 00:59.380
+This no cache flag right here is going to add just a little bit of a fix that's going to catch some
+
+00:59.380 --> 01:01.780
+issues that you're going to see are going to start to arise.
+
+01:01.780 --> 01:06.370
+Any time we try to change a TypeScript file and you're going to see that sometimes just does not always
+
+01:06.370 --> 01:07.780
+recognize those changes.
+
+01:07.900 --> 01:10.780
+So the no cache flag right there is to address that little issue.
+
+01:12.320 --> 01:17.420
+Then after our entire script section, we're going to add in another configuration block for just itself.
+
+01:19.180 --> 01:19.750
+Inside of here.
+
+01:19.750 --> 01:27.160
+We're going to add in a pre set of these just so again just does not understand what TypeScript is we
+
+01:27.160 --> 01:31.480
+installed a dependency called just that is going to add in TypeScript support for us.
+
+01:32.330 --> 01:36.320
+We'll then set up a test environment flag of node.
+
+01:39.140 --> 01:44.270
+Do double check your spelling on environment, make sure you've got RN and then im easy word to misspell.
+
+01:45.390 --> 01:49.860
+And then finally, we're going to add in, set up files after E and V.
+
+01:51.190 --> 01:57.160
+So we are going to tell Jess to run a setup file inside of our project after it initially starts everything
+
+01:57.160 --> 01:57.490
+up.
+
+01:57.850 --> 02:02.170
+Inside this setup file, we're going to put together a couple of different helpers just to make facilitating
+
+02:02.170 --> 02:03.850
+writing our tests a lot easier.
+
+02:04.210 --> 02:08.350
+So we're going to tell this thing to try to run the file in the current working directory.
+
+02:08.350 --> 02:14.670
+So in the SRC folder, in the test folder called setup, it's.
+
+02:16.360 --> 02:16.660
+Okay.
+
+02:16.660 --> 02:17.680
+So let's save this.
+
+02:18.100 --> 02:20.860
+We're then going to go ahead and create this setup file.
+
+02:21.040 --> 02:23.810
+So again, we're going to do a little bit of initial setup inside there.
+
+02:23.830 --> 02:26.510
+We're going to start up MongoDB memory server.
+
+02:26.530 --> 02:32.050
+We're going to get Mongoose to connect to it and a couple of other associated things inside of my CRC
+
+02:32.050 --> 02:32.470
+directory.
+
+02:32.470 --> 02:39.200
+I'm going to make a new folder called Test and then inside there I'll make a file called Set Updates.
+
+02:41.780 --> 02:42.170
+All right.
+
+02:42.170 --> 02:44.840
+At the very top, I'm going to import a couple of different things.
+
+02:45.140 --> 02:53.750
+I'm going to get MongoDB or just Mongo memory server from MongoDB memory server.
+
+02:56.120 --> 02:58.100
+I'm going to import Mongoose.
+
+03:01.140 --> 03:03.020
+I'm going to import app.
+
+03:05.090 --> 03:09.260
+So that is our express application that we just moved over to that new app file.
+
+03:10.460 --> 03:13.190
+And I think that should be pretty much it for right now.
+
+03:13.790 --> 03:17.960
+So then inside of here, we're going to make sure that before all of our different tests start up,
+
+03:17.960 --> 03:21.320
+we're going to create a new instance of this MongoDB memory server.
+
+03:21.330 --> 03:24.620
+Again, this is going to start up a copy of MongoDB in Memory.
+
+03:24.650 --> 03:29.480
+This is going to allow us to run multiple different test suites at the same time across different projects
+
+03:29.480 --> 03:32.600
+without them all trying to reach out to the same copy of Mongo.
+
+03:33.330 --> 03:38.370
+Mongo memory server also gives us direct memory access or essentially direct access to this MongoDB
+
+03:38.370 --> 03:42.510
+database, which is going to eventually be a little bit handy for a couple of other reasons as well.
+
+03:43.300 --> 03:48.910
+So to create an instance of this before all of our test set up, we're going to define a hook function.
+
+03:49.720 --> 03:55.090
+We're going to write out before all asin an arrow function, and we will mark that arrow function as
+
+03:55.090 --> 03:55.750
+async.
+
+03:56.770 --> 03:59.410
+Again we referred to before all as a hook function.
+
+03:59.410 --> 04:00.740
+What are we passed inside of here?
+
+04:00.760 --> 04:04.750
+That function is going to run before all of our tests start to be executed.
+
+04:05.320 --> 04:10.810
+So inside of here we can start to start up MongoDB memory server and then have Mongoose connect to it.
+
+04:11.260 --> 04:12.580
+So we're going to put inside of here.
+
+04:14.040 --> 04:14.940
+Mongo.
+
+04:15.910 --> 04:19.300
+Is New Mongo memory server.
+
+04:23.080 --> 04:27.280
+We're then going to take a look at the memory server that was just created, and we're trying to go
+
+04:27.310 --> 04:29.860
+in to try to get the URL to connect to it.
+
+04:29.890 --> 04:31.510
+So we'll say mongo.
+
+04:31.930 --> 04:34.840
+You are I is a weight.
+
+04:35.770 --> 04:38.050
+Margo start yet?
+
+04:38.050 --> 04:38.830
+You try.
+
+04:40.670 --> 04:44.270
+After that, we're going to tell Mongoose to connect to this in-memory server.
+
+04:44.930 --> 04:47.960
+So we'll do await Mongoose Connect.
+
+04:48.290 --> 04:50.090
+We'll give it that URI to connect to.
+
+04:50.940 --> 04:55.230
+So Mongo Yuri And then we will pass in some configuration options to this thing as well.
+
+04:55.260 --> 04:56.610
+These options are going to pass in.
+
+04:56.610 --> 04:57.820
+Don't really do a whole lot.
+
+04:57.840 --> 05:02.580
+They're just going to make sure that Mongoose does not complain about some related stuff or some behind
+
+05:02.580 --> 05:03.870
+the scenes stuff going on.
+
+05:04.110 --> 05:05.250
+So let's say new use.
+
+05:05.250 --> 05:07.130
+New URL parser.
+
+05:07.140 --> 05:07.770
+True.
+
+05:08.340 --> 05:12.180
+Use unified topology true as well.
+
+05:14.300 --> 05:14.590
+Okay.
+
+05:14.600 --> 05:15.440
+So it looks good.
+
+05:16.930 --> 05:20.110
+After that, we're going to put together another little configuration block.
+
+05:20.350 --> 05:25.180
+So this is a hook that's going to run before all of our tests are then going to put together another
+
+05:25.180 --> 05:27.880
+hook of before each.
+
+05:28.300 --> 05:32.770
+So this is going to be a function that's going to run before each of our tests are going to mark this
+
+05:32.770 --> 05:36.660
+thing as async as well before each test starts.
+
+05:36.670 --> 05:41.920
+We're going to reach into this MongoDB database and we're going to delete or essentially reset all the
+
+05:41.920 --> 05:43.000
+data inside there.
+
+05:43.810 --> 05:44.470
+To do so.
+
+05:44.470 --> 05:50.020
+We're going to use Mongoose to take a look at all the different connections that exist inside this Mongo.
+
+05:50.320 --> 05:52.690
+And we're going to delete all those different collections.
+
+05:53.380 --> 05:54.910
+So inside of here, we'll write out.
+
+05:56.210 --> 06:03.680
+Elections is a wait don't forget that await mongoose NextGen GB elections.
+
+06:03.890 --> 06:06.230
+That's going to get us all the different collections that exist.
+
+06:06.740 --> 06:10.440
+We're then going to loop over them and tell them to delete all the data inside.
+
+06:10.460 --> 06:12.620
+So again, this is just going to reset all of our data.
+
+06:12.620 --> 06:18.350
+And between each test that we run, we'll do a four let collection of collections.
+
+06:19.710 --> 06:23.310
+And then await election dot delete.
+
+06:23.310 --> 06:25.920
+Many will pass in an empty object.
+
+06:28.020 --> 06:32.070
+And then finally, we're going to make sure that after we finish running all of our different tests,
+
+06:32.070 --> 06:35.160
+we need to stop that MongoDB memory server.
+
+06:35.160 --> 06:38.280
+And we're also going to tell Mongoose to disconnect from it as well.
+
+06:38.850 --> 06:40.530
+So we'll do that inside of a.
+
+06:41.740 --> 06:43.240
+After all.
+
+06:44.060 --> 06:46.040
+And as you guess, this is a hook that's going to run.
+
+06:46.040 --> 06:47.960
+After all of our tests are complete.
+
+06:48.230 --> 06:54.890
+We will mark this as async and then inside do and await mongo dot stop.
+
+06:55.760 --> 06:59.210
+And in a weight mongoose connection.
+
+06:59.210 --> 06:59.870
+Close.
+
+07:00.680 --> 07:01.940
+Now, one little issue here.
+
+07:01.940 --> 07:07.370
+We're trying to access the Mongo database that we had created inside the scope of this function up here.
+
+07:07.700 --> 07:13.070
+So the Mongo variable is not in the scope of, after all, because it had been defined inside this Interscope.
+
+07:13.430 --> 07:16.760
+So to get this working, we need to declare that variable ahead of time.
+
+07:16.760 --> 07:18.020
+So we'll say, let mongo.
+
+07:19.530 --> 07:22.140
+I'm going to annotate as type as any for right now.
+
+07:22.680 --> 07:24.540
+I'll then delete the concert right there.
+
+07:25.830 --> 07:29.980
+And now we should be able to access mongo right there as well.
+
+07:30.000 --> 07:31.440
+Yet looks like the error went away.
+
+07:32.760 --> 07:33.060
+All right.
+
+07:33.060 --> 07:36.960
+So I know that we went through all this setup very quickly, but this was just a little bit of stuff
+
+07:36.960 --> 07:38.340
+that pretty much had to be done.
+
+07:38.340 --> 07:42.840
+If you needed to replicate this all on your own project, well, you would end up taking a look at the
+
+07:42.840 --> 07:45.660
+documentation and getting a better idea of what's going on.
+
+07:46.000 --> 07:48.510
+We'll talk about some more config inside of here over time.
+
+07:48.510 --> 07:53.070
+And we are going to actually have to come back and add in some additional code very quickly as we start
+
+07:53.070 --> 07:56.820
+to write out our first test and realize that what we've got inside of here is good, but could be a
+
+07:56.820 --> 07:57.570
+little bit better.
+
+07:57.930 --> 08:01.170
+In particular, you'll notice that the import for the app is unused right now.
+
+08:01.170 --> 08:04.650
+We are going to eventually come back and make use of it so we can just leave it there for right now.
+
+08:05.580 --> 08:09.810
+All right, so that we've got enough setup, put together one more pause and we'll start to write out
+
+08:09.810 --> 08:11.790
+our first test in just a moment.

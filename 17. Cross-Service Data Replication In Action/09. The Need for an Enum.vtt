@@ -1,0 +1,310 @@
+WEBVTT
+
+00:00.940 --> 00:06.280
+In the last video we gave order attributes, order document and the order schema, this status property
+
+00:06.280 --> 00:09.520
+that presumably is going to describe the status of a given order.
+
+00:10.030 --> 00:14.230
+So this might be something like, Hey, the order is pending, someone just created it and we are waiting
+
+00:14.230 --> 00:15.940
+for someone to pay this order.
+
+00:16.090 --> 00:21.760
+Or maybe it has expired or maybe has been canceled by the user, or maybe has been actually paid for.
+
+00:22.180 --> 00:25.180
+So we definitely want to record the status set in order is in.
+
+00:25.450 --> 00:29.440
+Let me show you a quick diagram to help you really understand how the status is going to be used between
+
+00:29.440 --> 00:30.610
+our different services.
+
+00:31.480 --> 00:31.720
+Okay.
+
+00:31.720 --> 00:35.410
+So let's imagine for a second that we have another service inside of our application.
+
+00:35.410 --> 00:38.700
+We are going to eventually have something called payments that is going to handle payments.
+
+00:38.710 --> 00:40.480
+Let's imagine what it's going to do.
+
+00:40.990 --> 00:41.860
+At some point in time.
+
+00:41.860 --> 00:45.310
+Someone's going to come to our orders service and try to create a new order.
+
+00:45.310 --> 00:47.200
+So that's going to save a record into a database.
+
+00:47.200 --> 00:53.140
+And then presumably we will also emit a event at the same time with the type of something like order
+
+00:53.140 --> 00:53.770
+created.
+
+00:55.270 --> 00:59.260
+So that event will flow out and eventually go over to the payment service.
+
+00:59.260 --> 01:04.750
+And that's going to tell the payment service that it should expect to receive a payment or an order
+
+01:04.750 --> 01:10.210
+called by or ID of a CDF, and it knows that it should expect to receive the payment because this thing
+
+01:10.210 --> 01:11.950
+has a status of pending.
+
+01:11.950 --> 01:16.450
+And we'll imagine that status of pending means we are waiting for someone to pay this thing off.
+
+01:17.170 --> 01:22.360
+So that is specifically going to tell the payment service that we should start to watch for an incoming
+
+01:22.360 --> 01:22.990
+payment.
+
+01:23.670 --> 01:28.230
+So then at some point in time, we can imagine that either someone's going to try to order this thing
+
+01:28.230 --> 01:33.510
+like they're going to provide a payment or maybe someone puts in some payment information that is invalid
+
+01:33.510 --> 01:35.880
+and we fail to actually build the order.
+
+01:35.970 --> 01:37.980
+Let's imagine that scenario really quick.
+
+01:38.310 --> 01:42.690
+So we'll say that someone makes a request to the payment service and they enter in a faulty credit card
+
+01:42.690 --> 01:44.130
+number or something like that.
+
+01:44.130 --> 01:45.570
+And so the payment fails.
+
+01:45.900 --> 01:51.150
+If the payment fails, we probably want to emit an event and somehow tell the order service that the
+
+01:51.150 --> 01:52.350
+order has failed.
+
+01:52.830 --> 01:57.900
+So we might emit an event and say order failed and then give it a status of failed.
+
+01:58.560 --> 02:03.540
+So then that's going to float obviously up to the order service and let's imagine how that thing would
+
+02:03.540 --> 02:04.350
+process it.
+
+02:05.090 --> 02:07.430
+So we're going to get that order failed event.
+
+02:07.460 --> 02:09.140
+It's going to go into our order service.
+
+02:09.140 --> 02:11.060
+And what are we going to want to do here?
+
+02:11.090 --> 02:14.180
+Well, we'll probably want to look in the DB.
+
+02:15.360 --> 02:19.560
+Find the order with the ID from the event.
+
+02:20.490 --> 02:21.180
+Data.
+
+02:22.310 --> 02:25.280
+And then we'll probably want to update the status of that order.
+
+02:25.640 --> 02:27.470
+So we would probably update the.
+
+02:29.050 --> 02:32.230
+That is of the order to know.
+
+02:33.040 --> 02:34.600
+Underscore payment.
+
+02:35.340 --> 02:39.350
+So the exact same status that came across inside of that event data body.
+
+02:39.360 --> 02:39.960
+Right.
+
+02:40.890 --> 02:41.730
+Wait a minute.
+
+02:42.580 --> 02:43.240
+Wait a minute.
+
+02:43.240 --> 02:44.410
+Something's not right here.
+
+02:44.440 --> 02:45.410
+Take a look at this.
+
+02:45.430 --> 02:49.780
+I just put on this diagram right here that we'd want to update the status to the same kind of status
+
+02:49.780 --> 02:53.860
+that just came out of the body or the event from the expiration service.
+
+02:53.860 --> 02:56.560
+And I said that that status was no payment.
+
+02:57.070 --> 03:02.110
+Well, just a moment ago, I showed you a diagram where I said that the status was failed, so the order
+
+03:02.110 --> 03:02.850
+was failed.
+
+03:02.860 --> 03:09.160
+And between that diagram and this diagram, I mistyped or misremembered the exact string representing
+
+03:09.160 --> 03:10.750
+the status of this order.
+
+03:11.170 --> 03:12.520
+So what am I getting at here?
+
+03:12.550 --> 03:15.520
+Well, long story short, here's what I'm really saying.
+
+03:15.880 --> 03:21.250
+We're going to have several services that are very much deeply concerned with the status of in order.
+
+03:21.490 --> 03:27.400
+We need to make sure that all these different services have an exact definition of exactly what different
+
+03:27.400 --> 03:28.990
+statuses in order can have.
+
+03:29.230 --> 03:34.570
+And when I say an exact definition, I mean they need to all have the exact same string to say this
+
+03:34.570 --> 03:39.100
+order is failed, it is pending, it has been paid for, it has been completed or whatever else.
+
+03:39.190 --> 03:45.670
+And we do not want to have any possibility of accidentally having a typo inside of any of our different
+
+03:45.670 --> 03:49.270
+services regarding what the exact status of in order is.
+
+03:49.570 --> 03:54.100
+So we never want to have a scenario where we receive an event like this, and ideally we should take
+
+03:54.100 --> 03:59.170
+that status right there and set that exact same status to the order inside of our order service.
+
+03:59.170 --> 04:05.050
+But if we accidentally write out some bad code by writing in a hardcoded string and we forget the exact
+
+04:05.050 --> 04:09.400
+string for the status instead of putting in failed or something like that, if we instead put in know
+
+04:09.400 --> 04:13.360
+underscore payment, that is definitely going to lead to some issues in the future.
+
+04:14.550 --> 04:18.600
+So what I'm really saying here is this is essentially a reference back to one of those issues we ran
+
+04:18.600 --> 04:21.120
+into earlier where we had event types.
+
+04:21.120 --> 04:25.800
+And remember, it was really critical for us to make sure that we always got the name of the event or
+
+04:25.800 --> 04:26.430
+its type.
+
+04:26.430 --> 04:28.430
+Really, it's the subject is how we refer to it.
+
+04:28.440 --> 04:33.030
+We always had to make sure we got the subject exactly correct between all of our different services.
+
+04:33.060 --> 04:37.770
+Otherwise, services could be listening to different channels on Nats and they would never properly
+
+04:37.770 --> 04:38.340
+communicate.
+
+04:38.340 --> 04:39.840
+So it's essentially the same thing here.
+
+04:39.840 --> 04:44.010
+We need to make sure that all of our different services are using the exact same set of strings.
+
+04:44.400 --> 04:45.450
+So how are we going to do this?
+
+04:45.450 --> 04:50.220
+Well, naturally, we're going to define something inside of our common library and then share it amongst
+
+04:50.220 --> 04:51.480
+all of our different services.
+
+04:51.870 --> 04:55.980
+So in our common library, we're going to create a new enum called Order Status.
+
+04:56.280 --> 05:00.390
+So this is going to list out all the possible statuses that in order can have.
+
+05:02.220 --> 05:07.350
+We'll be given a exact string value for each possible status and then inside of all of our services,
+
+05:07.350 --> 05:12.690
+rather than ever trying to write out or remember the exact hardcoded string, we'll instead refer to
+
+05:12.690 --> 05:17.130
+the different cases on that email, and that will make sure that we never end up in a scenario where
+
+05:17.130 --> 05:20.970
+we accidentally misremember the exact string representing a status.
+
+05:22.370 --> 05:26.000
+Case in point, back over here inside of order adders and order doc.
+
+05:26.000 --> 05:30.560
+Rather than saying that status is going to be of type string, which could potentially be any string
+
+05:30.560 --> 05:33.230
+we could possibly think of and would definitely lead to a typo.
+
+05:33.260 --> 05:36.680
+We're going to eventually make sure this thing says order status.
+
+05:36.680 --> 05:41.720
+So it must be a status listed in order status or the Order Status enum.
+
+05:42.560 --> 05:44.420
+So now we've got a good idea of what we're going to do.
+
+05:44.660 --> 05:45.290
+Quick files right here.
+
+05:45.290 --> 05:46.790
+We're going to go back over to our common library.
+
+05:46.790 --> 05:50.930
+In the next video, we're going to define this enum, make sure it lists all the possible statuses that
+
+05:50.930 --> 05:54.890
+in order can be in, and we'll eventually share that amongst all the services that care about those
+
+05:54.890 --> 05:55.670
+statuses.

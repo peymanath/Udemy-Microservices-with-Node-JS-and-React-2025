@@ -1,0 +1,358 @@
+WEBVTT
+
+00:00.890 --> 00:04.820
+As we saw at the end of last video, we can definitely sign up for an account, but if we enter in some
+
+00:04.820 --> 00:09.230
+invalid input, we get back an error response, but we don't actually show anything on the form about
+
+00:09.230 --> 00:09.610
+it.
+
+00:09.620 --> 00:13.400
+So in this video, we're going to make sure that we capture errors during the signup request and display
+
+00:13.400 --> 00:14.330
+them on the screen.
+
+00:14.840 --> 00:17.260
+To do so, I'm going to go back over to my editor.
+
+00:17.270 --> 00:19.250
+I'm going to find that on Submit Handler.
+
+00:19.250 --> 00:24.980
+And to capture the error that comes back, I'm going to wrap this request right here inside of a try
+
+00:25.670 --> 00:26.390
+patch.
+
+00:27.450 --> 00:28.170
+Statement.
+
+00:31.110 --> 00:32.820
+And they'll fix up some indentation.
+
+00:34.220 --> 00:38.900
+So now if anything goes wrong with this request, we'll be kicked down to the catch statement and the
+
+00:38.900 --> 00:41.540
+failed request will show up as error right here.
+
+00:42.550 --> 00:47.260
+Let's just do a console log of this air thing and get a better idea of what data actually exists inside
+
+00:47.260 --> 00:47.790
+of it.
+
+00:47.800 --> 00:52.510
+So I'm going to do a console log of error, that response data.
+
+00:52.540 --> 00:54.370
+Let's just console log that for right now.
+
+00:55.290 --> 00:56.400
+I'm going to save the file.
+
+00:56.400 --> 00:57.330
+Flip back over.
+
+00:58.710 --> 01:02.340
+And I'll once again enter in an invalid email and a invalid password.
+
+01:05.210 --> 01:06.290
+All tend to sign up.
+
+01:06.470 --> 01:12.530
+Now I can see that whenever I cancel log out error response data I get back.
+
+01:12.530 --> 01:17.150
+That response will be sent back inside of all of our standardized error handling stuff.
+
+01:17.450 --> 01:21.320
+So it is a array of errors inside of a errors object.
+
+01:22.020 --> 01:25.920
+And that array of airs every year has a message and possibly a field.
+
+01:26.460 --> 01:30.930
+So in order to communicate some validation air to the user, we really just want to get a handle on
+
+01:30.930 --> 01:32.250
+this air's array.
+
+01:32.340 --> 01:37.050
+We can then iterate over the air's array and for every message inside of here, we can somehow just
+
+01:37.050 --> 01:40.470
+render it out on the screen so that the user knows that something just went wrong.
+
+01:41.130 --> 01:42.150
+Let's try that out.
+
+01:44.170 --> 01:45.430
+Back inside my editor.
+
+01:45.460 --> 01:49.030
+I'm going to go back up to the top and I'm going to add in a new piece of state.
+
+01:49.240 --> 01:54.370
+I'm going to call this Ayres and the set Ayres setter.
+
+01:56.530 --> 01:58.630
+I'm going to default this to be an empty array.
+
+01:59.770 --> 02:03.250
+Then whenever we get some kind of error in the response, it comes back.
+
+02:03.430 --> 02:05.080
+Rather than doing a console.log.
+
+02:06.010 --> 02:08.260
+We're going to instead call set errors.
+
+02:09.430 --> 02:14.170
+And we'll set it to our response data errors.
+
+02:15.190 --> 02:17.470
+So remember, that's going to be our array of errors.
+
+02:18.450 --> 02:24.570
+That has those objects with the message and possibly the field property can delete the console log now.
+
+02:25.440 --> 02:30.510
+So now down inside of our form, we can attempt to map over or iterate over this arrays array right
+
+02:30.510 --> 02:34.440
+here, and for every error message we'll simply show an error to the user.
+
+02:35.720 --> 02:36.040
+Okay.
+
+02:36.050 --> 02:37.190
+So back down here.
+
+02:38.100 --> 02:41.460
+Right above the button, I'm going to add on a mapping statement.
+
+02:41.760 --> 02:43.620
+So let's say airport map.
+
+02:46.200 --> 02:48.150
+And right now I'll just take each error.
+
+02:48.180 --> 02:53.070
+They'll abbreviate as error and I will return error message.
+
+02:53.310 --> 02:54.120
+So we'll start simple.
+
+02:54.120 --> 02:55.950
+Let's just get some text to show up.
+
+02:57.190 --> 02:58.270
+I'm going to save this.
+
+02:58.300 --> 02:59.200
+Look back over.
+
+02:59.860 --> 03:04.930
+And now if I attempt to submit the form without an email or even a password, I should see something
+
+03:04.930 --> 03:05.890
+like that right there.
+
+03:06.010 --> 03:09.520
+Now we're just taking the message off of each error and printing it up onto the screen.
+
+03:10.030 --> 03:13.880
+Let's definitely works, but we probably want some better formatting than what we have right here.
+
+03:13.900 --> 03:17.290
+So let's go back over and fix up this mapping statement just a little bit.
+
+03:18.460 --> 03:25.720
+I'm going to add in around this Ayres thing, a div that has a class name of alert and alert.
+
+03:26.550 --> 03:27.780
+The danger.
+
+03:31.880 --> 03:37.520
+Then inside that div, I'm going to add in an H four and I'm going to give it some text like oops,
+
+03:37.790 --> 03:39.500
+just to indicate that something went wrong.
+
+03:40.620 --> 03:48.420
+After the H four, I'm going to display a UL that has a class name of my dash zero and I'll close off
+
+03:48.420 --> 03:49.950
+the UL on the other side.
+
+03:52.820 --> 03:57.170
+Then as I'm mapping over these errors, I'm going to make sure that I wrap each of these error messages
+
+03:57.170 --> 04:00.710
+inside of an LIJ element so I'll put in an ly.
+
+04:02.870 --> 04:08.870
+And whenever remember we show a array of elements using React, we have to provide a key property to
+
+04:08.870 --> 04:10.940
+these elements that are being built inside the list.
+
+04:11.570 --> 04:13.640
+The requirements of that key property are just that.
+
+04:13.640 --> 04:16.160
+It is some unique key or some unique value.
+
+04:16.460 --> 04:19.490
+So we could simply use the error message itself as the key.
+
+04:20.210 --> 04:26.450
+So on the fly itself, I'll add in a prop of key and I'll set that equal to error message like so.
+
+04:27.560 --> 04:27.830
+Okay.
+
+04:27.830 --> 04:28.790
+Let's save this.
+
+04:30.400 --> 04:32.380
+I'm going to flip back over and do a quick test.
+
+04:32.830 --> 04:36.880
+Now, naturally, when we first load up the application, we see this red box right here, because right
+
+04:36.880 --> 04:40.420
+now we don't have anything saying, oh, show or don't show this thing.
+
+04:40.420 --> 04:44.140
+So we will have to wrap this entire div with some logic to decide whether or not to show it.
+
+04:44.140 --> 04:48.250
+But right now, let's just make sure that we can capture the error messages and show them on the screen.
+
+04:49.160 --> 04:50.570
+I'll go ahead and attempt to sign up.
+
+04:50.780 --> 04:52.910
+And I think I forgot something.
+
+04:52.970 --> 04:55.510
+Probably forgot those curly braces around earlier.
+
+04:55.700 --> 04:56.470
+Message.
+
+04:56.690 --> 04:57.590
+That's better.
+
+04:58.930 --> 04:59.890
+Now if I sign up.
+
+05:00.340 --> 05:01.090
+There we go.
+
+05:01.390 --> 05:05.920
+So I see email must be valid and password must be between four and 20 characters.
+
+05:05.950 --> 05:11.590
+Now, naturally, it would be better to show this validation information right next to right underneath
+
+05:11.590 --> 05:13.040
+each of these input elements.
+
+05:13.060 --> 05:17.170
+That is why we put on that field property on each of these air objects.
+
+05:17.170 --> 05:21.150
+So remember, every object has a message and possibly the field property.
+
+05:21.160 --> 05:24.970
+So we could take a look at that field property and use it to look up these different errors and then
+
+05:24.970 --> 05:27.010
+put them right underneath the appropriate input.
+
+05:27.160 --> 05:31.360
+But that was just a little bit too much on the React side for the context of this course.
+
+05:31.360 --> 05:33.450
+So I decided to just keep it simple.
+
+05:33.460 --> 05:34.870
+This is pretty much good enough.
+
+05:35.500 --> 05:39.550
+Okay, last thing that we need to do is make sure that we only show this entire div if there actually
+
+05:39.550 --> 05:40.420
+are some errors.
+
+05:40.750 --> 05:42.630
+So for that, I'm going to take the entire div.
+
+05:42.640 --> 05:44.920
+I'm going to wrap it with a set of curly braces.
+
+05:47.110 --> 05:48.460
+Ben right in front of the div.
+
+05:48.490 --> 05:49.720
+We're going to add in.
+
+05:51.440 --> 05:56.600
+Air's length greater than zero and and then the div itself.
+
+05:56.810 --> 06:00.620
+So as long as we have more than one error, let's show that div.
+
+06:01.250 --> 06:02.780
+I'm going to then save this.
+
+06:02.780 --> 06:03.950
+I'm going to flip back over.
+
+06:04.400 --> 06:06.350
+So now I don't see anything at all by default.
+
+06:06.350 --> 06:09.170
+But as soon as I have some errors I see the div start to appear.
+
+06:10.040 --> 06:14.720
+So this definitely looks good now, although this is a reasonable implementation right here.
+
+06:14.720 --> 06:19.460
+I just want to point out that this kind of validation and error display displaying logic and even the
+
+06:19.460 --> 06:23.090
+request logic that we have up here is something that we're probably going to repeat many times throughout
+
+06:23.090 --> 06:24.020
+this application.
+
+06:24.530 --> 06:27.290
+We have many different forms we need to put together.
+
+06:27.470 --> 06:32.090
+Not only do we have to put together some forms for sign in, but we also need to eventually create some
+
+06:32.090 --> 06:37.070
+forms for, say, creating an order or creating a ticket or editing a ticket.
+
+06:37.070 --> 06:40.940
+So without a doubt, a lot of the logic that we just wrote out is going to have to be repeated several
+
+06:40.940 --> 06:42.470
+times over our project.
+
+06:42.830 --> 06:44.960
+So with that in mind, let's take a pause right now.
+
+06:44.960 --> 06:49.310
+But we're going to come back the next video and we're going to try to extract a lot of this logic around
+
+06:49.310 --> 06:52.280
+making request into some kind of helper function.

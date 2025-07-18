@@ -1,0 +1,259 @@
+WEBVTT
+
+00:01.370 --> 00:03.020
+Well, we've got this ticket created, listener.
+
+00:03.020 --> 00:04.640
+And right now it's looking pretty good.
+
+00:04.690 --> 00:08.600
+But before we consider this thing to really be complete, I want to take a look at a diagram that we
+
+00:08.600 --> 00:10.850
+looked at a very long time ago inside this course.
+
+00:11.240 --> 00:15.650
+So this is a diagram that we looked at when we started this ticketing application.
+
+00:15.710 --> 00:19.970
+We listed out some things that were really painful from that first application or the blog app that
+
+00:19.970 --> 00:20.780
+we had worked on.
+
+00:21.050 --> 00:25.970
+And we had said that one of the big challenges around the blog application was that it was really hard
+
+00:25.970 --> 00:28.580
+to remember what properties an event should have.
+
+00:28.850 --> 00:32.570
+In addition, I didn't really show it on this diagram, but it was sometimes also challenging for us
+
+00:32.570 --> 00:35.760
+to remember the actual names of those different events as well.
+
+00:35.780 --> 00:37.340
+Back on that first application.
+
+00:38.150 --> 00:41.990
+Well, it turns out that both those panes are actually going to be present with our current implementation
+
+00:41.990 --> 00:42.920
+of this listener.
+
+00:43.220 --> 00:44.600
+Let me show you how.
+
+00:44.750 --> 00:50.600
+As a quick example, I want to try to console.log out some properties in this data object right here.
+
+00:50.630 --> 00:55.550
+Remember, this data object is going to be whatever we had published inside of our publisher file.
+
+00:55.580 --> 01:01.800
+So essentially this data object, that data object is essentially a ticket and on a ticket.
+
+01:01.820 --> 01:06.320
+Well, remember, I think we have property names such as the name of the ticket and the cost.
+
+01:06.320 --> 01:15.380
+So let's try to do a console log of data name and a console.log of data cost and hey, wait a minute,
+
+01:16.070 --> 01:19.130
+tickets don't have a name property and they also don't have a cost.
+
+01:19.130 --> 01:24.140
+If we go back over to the publisher, file tickets, have a title and a price.
+
+01:24.140 --> 01:29.510
+That is the actual data that we are publishing over this subject right here or on this channel.
+
+01:30.210 --> 01:35.790
+And so that's just a very quick example of a problem we really ran into back on that first application.
+
+01:35.790 --> 01:40.680
+It was kind of challenging to keep in mind the names of these different properties when we eventually
+
+01:40.680 --> 01:42.510
+receive those events somewhere else.
+
+01:43.420 --> 01:48.550
+Right now, inside of our listener, we have absolutely nothing to verify that we are accessing properties
+
+01:48.550 --> 01:51.020
+that actually exist on this data object.
+
+01:51.040 --> 01:55.690
+And what's more, we also don't have anything to verify that we entered the name of this event or the
+
+01:55.690 --> 01:57.210
+subject right here correctly.
+
+01:57.220 --> 02:00.160
+So we could have accidentally typed something like ticket.
+
+02:01.220 --> 02:03.620
+Read it with a capital T and a capital C.
+
+02:03.650 --> 02:07.390
+This is a totally different channel as far as Nats is concerned.
+
+02:07.400 --> 02:09.500
+So even though it's you and I, this might look correct.
+
+02:09.500 --> 02:12.380
+Well, our listener would not work correctly.
+
+02:12.800 --> 02:17.930
+So at this point, I think that we need to figure out some way to make use of TypeScript or something
+
+02:17.930 --> 02:24.200
+else to make sure that the subject we write out right here and the data that we receive inside of on
+
+02:24.200 --> 02:27.530
+message actually matches up to some degree.
+
+02:27.800 --> 02:32.240
+So I'll show you a couple of diagrams to help you understand how we're going to write in some code using
+
+02:32.270 --> 02:37.400
+TypeScript that's going to make sure that we've got a valid subject and a valid type of data flowing
+
+02:37.400 --> 02:38.750
+into on message.
+
+02:39.730 --> 02:40.090
+Okay.
+
+02:40.120 --> 02:45.100
+So the first thing I want us to really recognize here is that for all the different subjects inside
+
+02:45.100 --> 02:50.470
+of our application, there's always going to be a very strongly typed and kind of singly singular structure
+
+02:50.470 --> 02:53.030
+of event data that's going to go along with it.
+
+02:53.050 --> 02:58.270
+So in other words, if we have a subject of ticket colon created, I would expect to always have some
+
+02:58.270 --> 03:02.590
+data tied to that event of an idea that's a string, a title that's a string and a price.
+
+03:02.590 --> 03:03.340
+That's a number.
+
+03:04.740 --> 03:09.840
+We do not yet really have an event of type order colon updated yet, but we can kind of imagine that
+
+03:09.840 --> 03:15.390
+if we did, maybe we would expect along with that event, we would expect to have some data of maybe
+
+03:15.390 --> 03:18.510
+ID that's a string user ID and ticket ID as well.
+
+03:19.440 --> 03:25.800
+So it's very clear that there is a very strong mapping or a very close pairing between the subject and
+
+03:25.800 --> 03:29.910
+the actual properties that are contained within the accompanying event itself.
+
+03:30.750 --> 03:35.390
+So what would be really nice is when we put together this ticket created listener.
+
+03:35.400 --> 03:41.730
+If there is some way that we could tell TypeScript that we want to specify Ticket Colon created as a
+
+03:41.730 --> 03:48.930
+subject and because we specified ticket Colon created the data property right here should be of type
+
+03:48.930 --> 03:50.160
+ID that's a string title.
+
+03:50.160 --> 03:51.870
+It's the string and price that is a number.
+
+03:52.080 --> 03:57.390
+It would be really fantastic if we could get TypeScript to somehow recognize this relationship.
+
+03:57.980 --> 04:02.510
+So in other words, I want to be able to write in something right here, like ticket.
+
+04:03.320 --> 04:03.980
+Created.
+
+04:03.980 --> 04:09.410
+And by just writing that in, I want TypeScript to yield, to validate and make sure that we are receiving
+
+04:09.410 --> 04:13.340
+the correct type of data right here as the first argument to on message.
+
+04:14.090 --> 04:17.810
+So that would be really fantastic to have and that's what we're going to try to do.
+
+04:18.290 --> 04:24.260
+Likewise, it would be really nice if we accidentally entered in order colon updated as the subject
+
+04:24.260 --> 04:25.340
+inside of the listener.
+
+04:25.370 --> 04:30.710
+It'd be nice if TypeScript recognized and said, Hey, wait a minute, your event data is not going
+
+04:30.710 --> 04:33.230
+to be ID that's a string title and string and price.
+
+04:33.230 --> 04:36.740
+That's a number because you put in order colon updated right here.
+
+04:36.740 --> 04:38.720
+Instead, it would be something totally different.
+
+04:38.720 --> 04:42.200
+Your event data would be user ID, ticket ID and ID and so on.
+
+04:42.560 --> 04:49.070
+So again, I want TypeScript to somehow validate this pairing of the subject or listing and this type
+
+04:49.070 --> 04:51.470
+of this data argument to on message.
+
+04:51.710 --> 04:52.550
+So that's our goal.
+
+04:52.550 --> 04:53.900
+That's what we're going to try to do.
+
+04:54.350 --> 04:56.430
+Now, we can definitely do this with TypeScript.
+
+04:56.450 --> 05:00.990
+The downside is that it's going to involve a little bit of slightly complicated code.
+
+05:01.040 --> 05:02.330
+As usual, it always does.
+
+05:02.330 --> 05:02.660
+Right?
+
+05:02.660 --> 05:06.530
+I mean, nothing is free in life can require just a little bit of nasty code.
+
+05:07.160 --> 05:11.120
+Having said that, put in a little bit of work to understand this is definitely going to pay off because
+
+05:11.120 --> 05:16.160
+it's going to make it really much harder for us to write out an incorrect subject right there or try
+
+05:16.160 --> 05:20.030
+to accept some kind of invalid type of data into on message.
+
+05:20.980 --> 05:21.220
+Okay.
+
+05:21.250 --> 05:25.000
+So with all this in mind, with this goal in mind, let's take a pause right here and figure out how
+
+05:25.000 --> 05:28.000
+we can teach TypeScript to do this check for us.

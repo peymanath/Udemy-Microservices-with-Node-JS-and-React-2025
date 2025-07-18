@@ -1,0 +1,208 @@
+WEBVTT
+
+00:00.430 --> 00:03.560
+In this section, we're going to start to discuss classes in TypeScript.
+
+00:03.580 --> 00:07.930
+As usual, we'll get a plain definition, some examples, and then move on to discussing where we're
+
+00:07.930 --> 00:09.520
+going to actually use classes.
+
+00:10.030 --> 00:14.620
+This is the last big subject we're going to discuss before we start working on some interesting applications.
+
+00:14.620 --> 00:15.880
+So let's get to it.
+
+00:16.270 --> 00:16.630
+All right.
+
+00:16.630 --> 00:17.980
+So first off, definition.
+
+00:18.310 --> 00:21.010
+So a class is a blueprint of sorts.
+
+00:21.010 --> 00:26.140
+We are writing code here, but it's a blueprint or a model of sorts that we're going to use to create
+
+00:26.140 --> 00:29.920
+an object that has some different fields and methods attached to it.
+
+00:30.340 --> 00:36.430
+We use these classes to represent different things or objects inside of our application, and whenever
+
+00:36.430 --> 00:40.300
+I say fields, I'm referring to different values that are going to be attached to an object.
+
+00:40.300 --> 00:45.130
+And whenever I say methods, we're referring to different functions that will be attached to an object.
+
+00:46.720 --> 00:50.430
+Now we're going to break covering classes into kind of two separate subjects.
+
+00:50.440 --> 00:54.970
+We're going to first discuss how classes work with methods or functions and then come back and add in
+
+00:54.970 --> 00:56.830
+the idea of fields and values to them.
+
+00:57.310 --> 00:58.510
+So let's get to it.
+
+00:58.630 --> 01:02.530
+So I'm going to flip on over to my code editor and inside of my project directory, I'm going to make
+
+01:02.530 --> 01:04.060
+a new file called Classes.
+
+01:05.680 --> 01:10.150
+Then inside of here, I want to define a new class that's going to represent a vehicle very similar
+
+01:10.150 --> 01:12.640
+to what we did in the last little example we went through.
+
+01:13.090 --> 01:19.570
+So I'm going to write out a new class definition by using the class keyword and then the name of the
+
+01:19.570 --> 01:20.290
+class.
+
+01:20.860 --> 01:23.350
+We're always going to capitalize the name of a class.
+
+01:24.190 --> 01:27.520
+Then inside of this class body, we can define different methods.
+
+01:28.000 --> 01:30.340
+So I might write out a method called Drive.
+
+01:30.910 --> 01:35.980
+I'll annotate it as taking no arguments and maybe a return type of void.
+
+01:36.430 --> 01:41.080
+And then inside of here, maybe I'll do a quick console log and say something like Chugga, chugga.
+
+01:42.960 --> 01:48.630
+When we create a class, we are creating a blueprint or a definition of what a vehicle should be.
+
+01:49.140 --> 01:52.030
+We don't actually call the methods attached to this class directly.
+
+01:52.050 --> 01:55.230
+In some cases we can, but with normal methods we do not.
+
+01:55.260 --> 01:59.730
+Instead, we're going to use a class to create an instance of a class.
+
+02:00.360 --> 02:02.970
+To do so, we're going to use the new keyword.
+
+02:02.970 --> 02:08.190
+So, for example, down here we might say const vehicle is new vehicle like so.
+
+02:09.070 --> 02:10.900
+Notice the capitalization that we're using here.
+
+02:10.900 --> 02:15.310
+Traditionally, we're going to name all of our different classes with a capital letter, and then any
+
+02:15.310 --> 02:20.800
+time we have an instance of that class, we will sometimes use the same word but spell it out with lowercase
+
+02:20.800 --> 02:21.520
+like so.
+
+02:22.360 --> 02:26.500
+So now with this instance of the class, we have access to all the different methods we define inside
+
+02:26.500 --> 02:26.910
+there.
+
+02:26.920 --> 02:30.790
+So for example, we could do something like vehicle drive, like so.
+
+02:31.750 --> 02:35.950
+Now we've not been running a lot of the different code examples we've put together, but with classes
+
+02:35.950 --> 02:39.340
+it's really important to actually execute some code, so you get a really good idea of what's going
+
+02:39.340 --> 02:39.760
+on.
+
+02:40.090 --> 02:43.840
+So I'm going to very quickly save this file and then flip back over to my terminal to run it.
+
+02:44.810 --> 02:46.220
+Back inside my project directory.
+
+02:46.220 --> 02:51.430
+Remember, we can run some code with code node and then the name of the file in this case classes.
+
+02:51.740 --> 02:52.410
+It's.
+
+02:53.180 --> 02:55.220
+Now I can see the console log appear right there.
+
+02:56.120 --> 02:58.750
+We can attach as many methods as we want to to a class.
+
+02:58.760 --> 03:01.940
+So, for example, this class might also have a method called honk.
+
+03:02.450 --> 03:04.040
+It's not going to return anything.
+
+03:04.040 --> 03:08.420
+And anytime I call it, maybe we will do a console.log of beep like so.
+
+03:09.430 --> 03:10.690
+So we can save this file.
+
+03:10.690 --> 03:12.220
+Flip back over once again.
+
+03:12.490 --> 03:12.850
+Oh.
+
+03:12.880 --> 03:13.690
+One thing I forgot.
+
+03:13.690 --> 03:13.910
+Here.
+
+03:13.930 --> 03:14.320
+Sorry.
+
+03:14.320 --> 03:16.990
+Down here at the bottom, we want to make sure we also call that method we just added.
+
+03:16.990 --> 03:22.510
+So we'll do a quick vehicle honk like so now we'll say the file flipped back over and then run that
+
+03:22.510 --> 03:23.350
+file again.
+
+03:23.560 --> 03:25.240
+And now we can see that beep appear.
+
+03:26.100 --> 03:29.900
+Now I'm going to assume if you're in this course, you've probably seen classes before.
+
+03:29.910 --> 03:32.820
+So I just want to make sure you got a quick reminder of some of the basics around them.
+
+03:33.180 --> 03:34.470
+So let's take a quick pause right here.
+
+03:34.470 --> 03:38.850
+When we come back, the next video, we're going to start to discuss how classes in TypeScript are a
+
+03:38.850 --> 03:44.130
+little bit different than classes in a traditional like is 2015 JavaScript.
+
+03:44.310 --> 03:46.560
+So quick pause and I'll see you in just a minute.

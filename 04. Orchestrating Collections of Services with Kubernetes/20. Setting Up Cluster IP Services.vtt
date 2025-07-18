@@ -1,0 +1,145 @@
+WEBVTT
+
+00:01.220 --> 00:04.970
+Now that we've taken a look at a node port service, we're going to start to take a look at cluster
+
+00:04.970 --> 00:06.140
+IP as well.
+
+00:06.440 --> 00:12.830
+Remember that the goal of a cluster IP service is to expose a pod to other pods inside the cluster.
+
+00:13.950 --> 00:15.510
+To better explore a cluster IP.
+
+00:15.510 --> 00:20.500
+I want to give you a quick reminder on how parts of our application are working right now, but present
+
+00:20.520 --> 00:21.980
+we've got that post project.
+
+00:21.990 --> 00:27.420
+Any time someone tries to create a post, we are sending a request over to the event bus and the event
+
+00:27.420 --> 00:33.030
+bus hopefully is going to emit that event or kind of broadcast that event to everything else inside
+
+00:33.030 --> 00:35.580
+of our app, including back over to posts.
+
+00:36.450 --> 00:42.960
+So let's try to create a new pod that is going to run event bus or then going to set up some services
+
+00:42.960 --> 00:46.140
+to allow posts and event bus to communicate with each other.
+
+00:46.440 --> 00:49.650
+Let me show you a diagram to help you understand what we're really going to do here.
+
+00:51.050 --> 00:52.910
+All right, so we have one node.
+
+00:53.180 --> 00:55.910
+We currently have a pod running our post stuff.
+
+00:56.640 --> 01:00.810
+And pretty soon we're going to set up a second pod to run all the event bus code.
+
+01:02.130 --> 01:05.010
+These two pots are going to have to somehow communicate with each other.
+
+01:05.220 --> 01:09.810
+Now, unfortunately, these pods cannot just reach out directly back and forth to each other, like,
+
+01:09.810 --> 01:11.910
+so they technically can.
+
+01:11.910 --> 01:13.800
+But there are a variety of reasons that we don't do.
+
+01:13.800 --> 01:18.930
+So we never really know ahead of time what IP address a pod is going to be assigned.
+
+01:19.380 --> 01:24.810
+And so we can't really just reach out to say local host whatever they 4000 likes.
+
+01:24.810 --> 01:30.870
+So because this pod will not be accessible at local host, instead it gets assigned more or less a random
+
+01:30.870 --> 01:33.600
+IP address inside of our Kubernetes cluster.
+
+01:33.930 --> 01:38.400
+And this event bus will not know ahead of time what that IP address is.
+
+01:39.090 --> 01:43.650
+So that's why we have to communicate between these pods through these cluster IP services.
+
+01:44.650 --> 01:49.180
+The post pod is going to want to reach out and send a message over to the event bus.
+
+01:49.180 --> 01:50.980
+And we've discussed that many times before.
+
+01:51.250 --> 01:53.830
+But as I just said, we can't reach out directly.
+
+01:54.620 --> 02:00.890
+So instead we're going to create a cluster IP service that's going to govern access to the event bus
+
+02:00.890 --> 02:01.490
+pod.
+
+02:02.060 --> 02:07.760
+Whenever posts wants to emit an event, it's going to make a request over to that cluster IP service.
+
+02:09.090 --> 02:13.530
+In turn, the event bus is going to want to send an event back over to posts.
+
+02:13.710 --> 02:19.020
+It technically wants to send an event to many other pods or many other programs inside of our application,
+
+02:19.020 --> 02:22.860
+but we're not going to worry about creating anything to run, say the comments pod or anything like
+
+02:22.860 --> 02:23.460
+that just yet.
+
+02:23.490 --> 02:25.830
+We're just going to set up post an event bus.
+
+02:26.400 --> 02:30.860
+So Event Bus is going to want to send a message back over to the post pod.
+
+02:30.870 --> 02:35.070
+But as I just mentioned, we can't reach out directly, or at least not very easily.
+
+02:35.640 --> 02:41.940
+So instead we're going to have the event bus pod reach out to the cluster IP service that is governing
+
+02:41.940 --> 02:44.040
+access to the post pod like so.
+
+02:44.340 --> 02:47.900
+And I know these lines are now kind of overlapped, but that's oh.
+
+02:49.150 --> 02:50.110
+Look somewhere bad.
+
+02:50.110 --> 02:50.590
+There we go.
+
+02:50.590 --> 02:53.590
+That's kind of what it is actually looking like in reality.
+
+02:55.560 --> 03:00.420
+So essentially what we have to do is create another deployment that's going to create this event bus
+
+03:00.450 --> 03:01.020
+pod.
+
+03:01.500 --> 03:06.930
+We're then going to create one cluster IP service for posts and one cluster IP service for event bus.
+
+03:07.350 --> 03:11.910
+So with all that in mind, let's take a pause right here and start making this stuff in just a moment.

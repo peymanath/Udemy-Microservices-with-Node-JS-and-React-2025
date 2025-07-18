@@ -1,0 +1,292 @@
+WEBVTT
+
+00:00.730 --> 00:05.500
+At long last, we finally got all this information fetching stuff complete so we can focus back on creating
+
+00:05.500 --> 00:08.740
+that header component that's going to be common to all of our different pages.
+
+00:09.130 --> 00:12.850
+To get started, I'm going to find the client directory and there I'm going to make a new folder called
+
+00:12.850 --> 00:13.660
+Components.
+
+00:13.660 --> 00:17.140
+So instead of here, we're going to place all the different reusable components we might need inside
+
+00:17.140 --> 00:17.680
+of our app.
+
+00:18.370 --> 00:21.130
+Inside there all then make a header js file.
+
+00:21.920 --> 00:22.030
+Okay.
+
+00:22.140 --> 00:26.160
+So inside of here, we really want a pretty basic header, pretty much what we saw back inside of our
+
+00:26.160 --> 00:26.910
+mock ups.
+
+00:27.120 --> 00:31.170
+So it's just going to be something that shows a label on the left hand side or a logo of sorts.
+
+00:31.170 --> 00:34.620
+I imagine calling this application genetics kind of a little pun.
+
+00:34.620 --> 00:36.480
+I suppose you can call it whatever you want.
+
+00:36.510 --> 00:37.620
+Not really big difference.
+
+00:37.620 --> 00:41.310
+We just need to make sure that the links on the right hand side are going to change depending upon whether
+
+00:41.310 --> 00:42.780
+or not the user is signed in.
+
+00:43.320 --> 00:47.730
+So that means that we're going to have to create this component and expect that it's going to receive
+
+00:47.730 --> 00:50.130
+a prop of whoever the current user is.
+
+00:51.910 --> 00:52.210
+Okay.
+
+00:52.210 --> 00:58.630
+So inside of here, Edward James, I'm going to do an export default and I'm going to expect that this
+
+00:58.630 --> 01:03.070
+thing is going to receive a prop called current user.
+
+01:03.400 --> 01:07.690
+So if current user is equal to an object, that means we must be signed in and we want to show a link
+
+01:07.690 --> 01:09.640
+that will allow the user to sign out.
+
+01:09.940 --> 01:14.530
+If current user is equal to null, that means we need to show links that will allow user to actually
+
+01:14.530 --> 01:17.140
+sign in or go to the sign in or sign up page.
+
+01:18.440 --> 01:18.860
+All right.
+
+01:18.860 --> 01:22.160
+So right now, let's just focus on showing some content to the user.
+
+01:22.700 --> 01:24.770
+So I'm going to place a nav inside of here.
+
+01:25.130 --> 01:27.980
+I'm going to give it a class name of nav bar.
+
+01:28.970 --> 01:31.970
+Nap bar, dash light and BG light.
+
+01:34.000 --> 01:38.020
+Then inside of here, I'm going to want to show an anchor element on the left hand side.
+
+01:38.020 --> 01:41.410
+So this get tix thing that should actually be a link that the user can click to.
+
+01:41.410 --> 01:45.930
+Go back to our main landing page in order to display a link with next JS.
+
+01:45.970 --> 01:48.520
+We do not just put in a normal anchor tag.
+
+01:48.670 --> 01:54.850
+Instead, we want to use a custom component that's been created by link or something by next JS called
+
+01:54.850 --> 01:55.480
+Link.
+
+01:55.810 --> 02:00.130
+So at the very top I'm going to import link from next link.
+
+02:01.390 --> 02:05.890
+And then right here where I want to display this anchor tag that's going to go back over to my main
+
+02:05.890 --> 02:06.490
+landing page.
+
+02:06.490 --> 02:10.660
+I'm going to put in link h ref a forward slash.
+
+02:11.920 --> 02:16.440
+So that will take me back to my main landing page or essentially my route route.
+
+02:16.920 --> 02:20.640
+Then inside of here, we still do have to display an anchor element.
+
+02:21.060 --> 02:24.420
+So the link itself is not going to actually create an anchor for us so we can click on.
+
+02:24.420 --> 02:27.870
+We have to place the link and then display an anchor link inside.
+
+02:28.170 --> 02:32.340
+We'll put in an A with the class name of NAV Bar Grant.
+
+02:34.070 --> 02:36.260
+And I'm going to stick with the logo I showed.
+
+02:36.260 --> 02:37.970
+So get tix like so.
+
+02:39.270 --> 02:42.770
+So after that, I want to show the links over here on the right hand side.
+
+02:42.780 --> 02:45.630
+So either sign out or sign in and sign up.
+
+02:47.500 --> 02:52.150
+So I'm going to place a div with the class name of DH Dash Flex.
+
+02:53.250 --> 02:54.420
+Justify.
+
+02:55.500 --> 02:56.730
+Content and.
+
+02:59.110 --> 02:59.800
+Inside of there.
+
+02:59.800 --> 03:03.210
+I'll show a UL with the class name of nav.
+
+03:03.530 --> 03:04.810
+Dash flex.
+
+03:05.020 --> 03:07.120
+Align Items Center.
+
+03:08.640 --> 03:09.750
+I'll close off the UL.
+
+03:12.360 --> 03:13.020
+Inside of here.
+
+03:13.020 --> 03:17.220
+We're going to eventually show a couple of different links, either to sign out or sign up and sign
+
+03:17.220 --> 03:17.670
+in.
+
+03:17.820 --> 03:22.260
+Right now, let's just try to take a look at that current user prop and display some text that says
+
+03:22.260 --> 03:24.120
+you are signed in or you are signed out.
+
+03:24.690 --> 03:28.740
+We'll eventually then come back and replace it with some different elements to actually display a user
+
+03:28.740 --> 03:29.520
+can click on.
+
+03:30.090 --> 03:32.160
+So I can take a look at current user.
+
+03:32.890 --> 03:37.660
+I'm going to use a Turner expression and I'm going to say if current user is defined, then I want to
+
+03:37.660 --> 03:39.190
+show the text of.
+
+03:40.170 --> 03:41.250
+Sign out.
+
+03:42.270 --> 03:44.610
+Otherwise I'll show the text of sign in.
+
+03:46.670 --> 03:48.740
+So again, we'll eventually come back and fix this up.
+
+03:48.740 --> 03:51.410
+But right now, good enough to just make sure this thing works.
+
+03:52.260 --> 03:53.640
+All right, I'm going to save this file.
+
+03:54.030 --> 03:58.770
+I'm then going to make sure this header component actually gets displayed by going back over to my custom
+
+03:58.770 --> 03:59.640
+app component.
+
+04:00.490 --> 04:01.120
+At the very top.
+
+04:01.120 --> 04:08.710
+I'm going to import the header from up one directory components header and then I'll replace the one
+
+04:08.710 --> 04:11.140
+we have right here with header.
+
+04:13.510 --> 04:17.380
+And of course, we need to make sure that we pass down that property of current user.
+
+04:17.890 --> 04:20.860
+They'll say current user is current user.
+
+04:22.020 --> 04:22.290
+Okay.
+
+04:22.290 --> 04:23.190
+Let's save this.
+
+04:23.670 --> 04:25.020
+I'm going to flip back over.
+
+04:25.900 --> 04:29.020
+Refresh and now see this header at the very top.
+
+04:29.380 --> 04:32.890
+I am currently signed in so the text I see right here says Sign out.
+
+04:33.250 --> 04:34.570
+That's exactly what we want.
+
+04:35.290 --> 04:37.430
+Now let's test the case in which we are not signed in.
+
+04:37.450 --> 04:39.850
+So I'll once again go to that application tab.
+
+04:39.880 --> 04:41.350
+I'm going to clear my cookie.
+
+04:41.740 --> 04:42.880
+I'm going to refresh.
+
+04:43.300 --> 04:44.770
+And now I am not signed in.
+
+04:44.770 --> 04:46.570
+And the header reflects the same thing as well.
+
+04:47.230 --> 04:47.890
+Perfect.
+
+04:49.480 --> 04:50.740
+Well, this is looking pretty good.
+
+04:51.100 --> 04:53.320
+Now, all we need to do is make sure.
+
+04:54.380 --> 04:58.520
+But rather than having that plain text right there, I want to show an actual collection of links to
+
+04:58.520 --> 05:01.250
+allow the user to sign out or sign in or sign up.
+
+05:02.120 --> 05:04.790
+A quick pause right here and continue on this in just a moment.
