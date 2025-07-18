@@ -1,244 +1,229 @@
 WEBVTT
 
 00:01.030 --> 00:03.960
-In this video, we're going to get started working on our query service.
+توی این ویدیو قراره ساخت سرویس Query رو شروع کنیم.
 
 00:03.970 --> 00:06.100
-So remember the goal of this service.
+یادت باشه هدف این سرویس چیه:
 
 00:06.100 --> 00:10.990
-We want to have one service that we can make a request to, to get a full listing of all the different
+می‌خوایم یه سرویسی داشته باشیم که فقط با یه درخواست، لیست کامل پست‌ها همراه با کامنت‌هاشون رو بهمون بده.
 
 00:10.990 --> 00:13.030
-posts and their associated comments.
+یعنی فقط با یه درخواست، کل اطلاعات لازم رو بگیریم.
 
 00:13.240 --> 00:16.810
-The one request, all the data we need to actually implement this thing.
+برای پیاده‌سازی این سرویس، قراره دو تا route handler تعریف کنیم.
 
 00:16.810 --> 00:19.120
-We're going to give it to different route handlers.
+اولی، هندلریه که eventها رو از Event Bus دریافت می‌کنه.
 
 00:19.330 --> 00:22.690
-One route handler is going to receive events from our event bus.
+سرویس Query فقط به دو نوع event اهمیت می‌ده: `PostCreated` و `CommentCreated`
 
 00:23.170 --> 00:27.940
-Our query service is going to care about events of type post created and common created.
+هر وقت یکی از این eventها دریافت بشه، داده‌ی داخل اون رو می‌گیریم
 
-00:28.210 --> 00:33.280
-Whenever it sees these events, it's going to take the data contained inside the event itself and then
+00:27.940 --> 00:33.280
+و اونو توی یه ساختار داده‌ای ساده و قابل دسترسی ذخیره می‌کنیم.
 
 00:33.280 --> 00:36.460
-assemble it all into some very easy to access data structure.
+اون ساختار تمام پست‌ها و کامنت‌های مربوطه رو شامل می‌شه.
 
 00:37.260 --> 00:42.450
-The second endpoint that we're going to implement is going to have a handler for watching a request
+هندلر دوم، مربوط به endpointی هست که روی مسیر `/posts` تعریف می‌شه.
 
 00:42.450 --> 00:43.760
-to slash posts.
+هر وقت یه درخواست GET به این مسیر بیاد،
 
 00:43.770 --> 00:48.210
-Any time someone makes a get request to that endpoint, we're going to send back a full listing of all
-
-00:48.210 --> 00:49.830
-posts and related comments.
+ما لیست کامل پست‌ها به‌همراه کامنت‌هاشون رو برمی‌گردونیم.
 
 00:50.190 --> 00:52.800
-So let's get started working on our query service right now.
+خب، بریم که شروع کنیم به ساخت سرویس Query.
 
 00:54.080 --> 00:56.930
-To begin, I'm going to open up yet another terminal window.
+اول از همه، یه ترمینال جدید باز می‌کنم.
 
 00:58.260 --> 00:59.600
-Here's my new window right here.
+اینم پنجره‌ی جدید ترمیناله.
 
 00:59.610 --> 01:02.530
-I'm going to change back into our root blog directory.
+می‌رم به دایرکتوری root پروژه یعنی blog.
 
 01:02.550 --> 01:04.620
-That's where all of our services live right now.
+جایی که همه‌ی سرویس‌هامون اونجا هستن.
 
 01:05.070 --> 01:09.120
-And inside there, I'll make a new folder that will call Blue Query.
+داخل اون، یه پوشه جدید به نام `query` می‌سازم.
 
 01:10.460 --> 01:16.430
-I'll then change into that directory and I'm going to generate a package json file using npm init.
-
-01:16.800 --> 01:17.330
-Why?
+واردش می‌شم و بعد یه فایل `package.json` ایجاد می‌کنم با `npm init -y`.
 
 01:19.240 --> 01:23.050
-After I generate that file, we'll then go ahead and install two dependencies.
+بعد از ساخت فایل، دو تا وابستگی نصب می‌کنیم:
 
 01:23.560 --> 01:29.320
-All we need for this service is express and course the query service itself is not going to actually
+`express` و `cors`؛ چون این سرویس فقط قراره پاسخ بده و خودش هیچ eventی ارسال نمی‌کنه.
 
 01:29.320 --> 01:32.920
-emit any events and that's why we are not installing Axios.
+واسه همین نیازی به نصب axios نداریم.
 
 01:33.550 --> 01:37.810
-I know ahead of time that the query service is not going to emit any events, but if you were working
+من از قبل می‌دونم این سرویس قرار نیست event بفرسته.
 
 01:37.810 --> 01:42.190
-on this from scratch and if you were unsure about whether or not this thing was going to emit any events,
+ولی اگه داشتی پروژه رو از صفر می‌ساختی و مطمئن نبودی، بهتر بود axios رو نصب کنی
 
 01:42.190 --> 01:46.750
-you would go ahead and install Axios until you were sure that, okay, I don't actually need to emit
-
-01:46.750 --> 01:48.850
-any events and then you can remove that dependency.
+تا بعداً اگه دیدی لازم نیست، حذفش کنی.
 
 01:50.930 --> 01:52.550
-So go ahead and do that installation.
+خب، این دو تا پکیج رو نصب کن.
 
 01:53.450 --> 01:55.130
-I'll then go back over to my editor.
+برمی‌گردم به ادیتور کد.
 
 01:56.990 --> 01:59.150
-And I should see that new query directory.
+باید پوشه‌ی `query` رو حالا اونجا ببینم.
 
 02:00.160 --> 02:02.620
-So let's start to build this express application out.
+بریم سراغ ساخت اپلیکیشن express برای این سرویس.
 
 02:03.500 --> 02:07.370
-Inside of that directory, I'll make a new file called Index Dogs.
+داخل پوشه‌ی query، یه فایل جدید به نام `index.js` می‌سازم.
 
 02:08.380 --> 02:09.310
-And then at the top.
+و در بالای فایل،
 
 02:09.310 --> 02:10.090
-Let's go ahead.
+بیاید شروع کنیم.
 
 02:10.090 --> 02:14.530
-We're going to require an express body parser and that course module as well.
+قراره express، body-parser و پکیج cors رو import کنیم.
 
 02:15.940 --> 02:17.110
-They'll get express.
+express رو میارم،
 
 02:19.420 --> 02:20.640
-I'll get body parser.
+body-parser رو هم همینطور،
 
 02:23.680 --> 02:25.480
-And I'll get horse.
+و بعد cors رو هم اضافه می‌کنم.
 
 02:27.540 --> 02:29.400
-I'll then create my new Express app.
+یه اپلیکیشن express جدید می‌سازم.
 
 02:30.980 --> 02:33.440
-And I will wire up the body parser.
+و body-parser رو به اپ اضافه می‌کنم.
 
 02:36.780 --> 02:38.430
-And I will wire up course.
+و همچنین cors رو هم اضافه می‌کنم.
 
 02:39.820 --> 02:40.000
-Okay.
+خب،
 
 02:40.090 --> 02:40.900
-So that looks good.
+همه‌چیز درسته.
 
 02:42.370 --> 02:44.920
-So now we're going to put together our two route handlers.
+حالا وقتشه دو تا route handler تعریف کنیم.
 
 02:45.040 --> 02:50.290
-Remember, the two that we want are for a get two slash posts and a post to slash events.
+یادت باشه این دوتا مربوط به GET `/posts` و POST `/events` هستن.
 
 02:51.190 --> 02:53.650
-They'll do agate posts.
+اولی: `app.get('/posts', (req, res) => {})`
 
 02:55.460 --> 02:57.770
-And then put it in our rec and rez.
+فعلاً خالی می‌ذاریمش تا بعداً پرش کنیم.
 
 02:58.340 --> 02:59.990
-And right now I'll just leave that empty.
+بعدی: `app.post('/events', (req, res) => {})`
 
 03:00.380 --> 03:03.740
-And then the next one will be post to slash events.
+این همون endpointیه که قراره eventها رو از Event Bus دریافت کنه.
 
 03:04.340 --> 03:08.180
-So this is of course, the endpoint that is going to receive events from our event bus.
+در نهایت، پایین فایل اپ رو روی یه پورت مشخص راه‌اندازی می‌کنیم.
 
 03:10.060 --> 03:12.310
-Then finally at the very bottom, let's go ahead and set up that app.
+از `app.listen` استفاده می‌کنیم.
 
 03:12.490 --> 03:12.790
-Listen.
+خب،
 
 03:12.790 --> 03:13.300
-Call.
+می‌نویسیم:
 
 03:13.840 --> 03:14.530
-They'll do an app.
+`app.listen(...)`
 
 03:14.740 --> 03:15.390
-Listen.
+مثلاً روی پورت 4002
 
 03:15.400 --> 03:18.660
-And remember, at present we are using a couple of different ports.
+چون قبلاً پورت‌های 4000 و 4001 رو برای posts و comments استفاده کردیم.
 
 03:18.670 --> 03:25.810
-We've got ports, 4000, 4001 and 4002, I think now just 4000 or 4001.
-
-03:25.810 --> 03:28.660
-So this one will be at 4002.
+پس این یکی می‌ره روی 4002 که مربوط به سرویس query باشه.
 
 03:30.600 --> 03:32.010
-And we'll put in our callback.
+داخل callback یه log می‌نویسیم:
 
 03:33.160 --> 03:33.670
-Inside of here.
-
-03:33.670 --> 03:37.780
-We'll do a console.log listing on 4002.
+`console.log('Listening on 4002')`
 
 03:38.940 --> 03:42.810
-Before we start to worry about any implementation here just yet, let's make sure we can actually run
+قبل از اینکه بریم سراغ پیاده‌سازی handlerها، بیایم مطمئن بشیم که پروژه بدون خطا اجرا می‌شه.
 
 03:42.810 --> 03:43.680
-this project.
+فایل رو ذخیره می‌کنم.
 
 03:43.770 --> 03:45.090
-So I'm going to save this file.
+و می‌رم سراغ package.json
 
 03:45.450 --> 03:49.260
-I'll go back over to package JSON and we'll set up a startup script.
+یه start script براش تعریف می‌کنم.
 
 03:50.730 --> 03:51.390
-That's what we forgot.
+راستی،
 
 03:51.420 --> 03:53.340
-On dependencies, we forgot to get node one.
+فراموش کردیم nodemon رو نصب کنیم.
 
 03:53.430 --> 03:55.440
-I'll go and install that really quickly as well.
+الآن سریع نصبش می‌کنم.
 
 03:55.800 --> 03:57.090
-So back over my terminal.
+برمی‌گردم به ترمینال.
 
 03:58.280 --> 04:00.200
-I'll do an NPM installed node mod.
+دستور `npm install nodemon` رو اجرا می‌کنم.
 
 04:03.930 --> 04:07.290
-And then once that is installed, we can update that start script.
+بعد از اینکه نصب شد، اسکریپت `start` رو آپدیت می‌کنم:
 
 04:09.380 --> 04:14.030
-So start the node one index dot js.
+`"start": "nodemon index.js"`
 
 04:16.250 --> 04:20.420
-Let's just run this project really quickly to make sure we don't have any typos or anything like that.
+حالا پروژه رو اجرا می‌کنم تا مطمئن بشم خطای تایپی یا مشکل دیگه‌ای نداریم.
 
 04:20.810 --> 04:26.330
-So at my terminal and the window that is running our query service, we'll do an NPM start.
+توی ترمینالی که مربوط به سرویس query هست، دستور `npm start` رو می‌زنم.
 
 04:27.210 --> 04:27.920
-And there we go.
+و خب،
 
 04:27.930 --> 04:29.430
-Let's stay on 4002.
+می‌بینم که سرویس روی پورت 4002 اجرا شده.
 
 04:31.050 --> 04:34.200
-Well, now that we've got all this boilerplate put together, we can start worrying about the actual
+الآن که همه تنظیمات پایه‌ای انجام شده، می‌تونیم بریم سراغ پیاده‌سازی
 
 04:34.200 --> 04:38.130
-implementation of the post event's endpoint and get post as well.
+endpoint مربوط به `/events` و `/posts`.
 
 04:38.490 --> 04:42.060
-We'll do a quick break first and then start to worry about those two endpoints in just a moment.
+اول یه استراحت کوتاه می‌کنیم و بعد سراغشون می‌ریم.

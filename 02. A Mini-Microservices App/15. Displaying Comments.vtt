@@ -1,391 +1,373 @@
 WEBVTT
 
 00:00.880 --> 00:01.330
-All right.
+خب بریم سراغ آخرین کامپوننت.
 
 00:01.330 --> 00:02.470
-Very last component.
+این دیگه آخریشه.
 
 00:02.470 --> 00:05.770
-As soon as we're done with this thing, as I mentioned several times, this is where we're going to
+همین که اینو تموم کنیم، همون‌طور که قبلاً چند بار گفتم، تازه مشکلات شروع می‌شن.
 
 00:05.770 --> 00:08.170
-start to see some weird things start to appear.
+و دقیقاً از اینجا دوباره وارد دنیای میکروسرویس‌ها می‌شیم.
 
 00:08.170 --> 00:11.080
-And this is where we're going to get back into the world of microservices.
+فقط یه مقدار دیگه مونده از این بخش ری‌اکتی.
 
 00:11.200 --> 00:13.030
-Just a little bit more of this React stuff.
+بزن بریم اینم تموم کنیم.
 
 00:13.060 --> 00:14.320
-Let's finish this off.
+می‌ریم توی ادیتور.
 
 00:14.470 --> 00:15.820
-We're going to flip back over to our editor.
+و کامپوننت comment list رو می‌سازیم.
 
 00:15.820 --> 00:18.220
-We're going to start working on this comment list component.
+یعنی لیست کامنت‌های هر پست.
 
 00:18.820 --> 00:24.910
-So back inside my editor, inside the React Project, I'm going to find my CRC directory and inside
-
-00:24.910 --> 00:29.290
-there I'll make a new file called Comment List As.
+توی پروژه React، داخل فولدر src، یه فایل جدید می‌سازم به اسم CommentList.js
 
 00:30.250 --> 00:36.280
-At the top we will import React and the use state hook from React.
+بالای فایل، React و useState رو ایمپورت می‌کنیم.
 
 00:37.340 --> 00:39.260
-We'll get Axios from Axios.
+axios رو هم از پکیج axios میاریم.
 
 00:39.290 --> 00:43.120
-And once again, I forgot we also need use effect as well.
+و دوباره یادمون نره useEffect رو هم لازم داریم.
 
 00:43.130 --> 00:44.900
-So we'll get used to it and use effect.
+پس اونم از React ایمپورت می‌کنیم.
 
 00:46.660 --> 00:48.910
-Then inside of here, we'll do an export default.
+بعد یه export default تعریف می‌کنیم.
 
 00:51.050 --> 00:54.350
-And once again, right now I'm going to return an empty div.
+فعلاً یه div خالی برمی‌گردونیم تا ساختارمون کامل باشه.
 
 00:55.290 --> 00:57.270
-So what do we really have to do inside of here?
+خب قراره توی این کامپوننت چی کار کنیم؟
 
 00:57.300 --> 00:59.670
-Well, very similar to our comment.
+تقریباً همون کاری که توی comment create انجام دادیم.
 
 00:59.670 --> 01:05.120
-Create component or comment list is going to be responsible for managing its own data requirements.
+این کامپوننت قراره داده‌های مربوط به خودش رو مدیریت کنه.
 
 01:05.130 --> 01:10.530
-So we want comment list to make sure that it can reach out to our comments microservice and fetch all
+یعنی باید خودش بتونه به سرویس کامنت وصل بشه و کامنت‌های مربوط به یه پست خاص رو بگیره.
 
 01:10.530 --> 01:12.720
-the comments associated with some post.
+اون پست خاص رو باید بدونیم چیه.
 
 01:13.290 --> 01:17.310
-If we take a look back at the API design for our common service, here it is right here.
+اگه دوباره یه نگاهی به طراحی API سرویس کامنت بندازیم، اینجاست:
 
 01:17.790 --> 01:23.670
-Remember that we said that we can make a get request to post slash post id slash comments.
+ما گفتیم که میشه یه درخواست GET بفرستیم به: /posts/:postId/comments
 
 01:24.150 --> 01:29.550
-So we once again just like inside of our post create component, we need to know the ID of the post
+پس دقیقاً مثل کاری که توی post create کردیم، اینجا هم باید شناسه پست رو داشته باشیم.
 
 01:29.550 --> 01:31.410
-that we are trying to show comments for.
+یعنی ID اون پستی که می‌خوایم کامنت‌هاشو نشون بدیم.
 
 01:32.120 --> 01:37.220
-So all that really means is that we need to make sure that we communicate a post ID from post list down
+پس باید از post list، شناسه پست رو به comment list پاس بدیم.
 
 01:37.220 --> 01:38.540
-into comment list.
+به صورت prop.
 
 01:40.810 --> 01:45.910
-So back inside of our comment list component, I'm going to once again assume that this component will
+بنابراین، داخل کامپوننت comment list فرض می‌کنیم که prop مربوط به postId دریافت میشه.
 
 01:45.910 --> 01:48.130
-receive a post ID as a property.
+و می‌تونیم با استفاده از اون دیتا بگیریم.
 
 01:50.060 --> 01:55.550
-Then inside of here, we can write out some logic to fetch some data, set it on state, map over that
+بعد می‌نویسیم که چطور دیتا رو fetch کنیم، بریزیم توی state، روی state map بزنیم و لیست کامنت‌ها رو نشون بدیم.
 
 01:55.550 --> 01:59.120
-state, produce a list of comments and display them to the user.
-
-01:59.720 --> 02:04.040
-In practice, this is going to end up being a very, very similar, just about identical in structure
+در عمل، ساختار این کامپوننت خیلی شبیه بقیه کامپوننت‌هایی میشه که قبلاً نوشتیم.
 
 02:04.040 --> 02:06.470
-to what we did back inside a post list a moment ago.
+دقیقاً شبیه کاری که لحظاتی پیش توی post list انجام دادیم.
 
 02:06.740 --> 02:08.150
-So we're going to have some piece of state.
+قراره یه state داشته باشیم،
 
 02:08.150 --> 02:09.850
-We're going to have a function to fetch some data.
+یه تابع برای گرفتن دیتا تعریف کنیم،
 
 02:09.860 --> 02:14.000
-We're going to call that from a user effect, and then we will map over the data that we fetch.
+اون تابع رو از داخل useEffect صدا بزنیم و در نهایت روی دیتا map بزنیم.
 
 02:14.150 --> 02:16.850
-So now that we know what we're going to do, let's write out that code.
+حالا که می‌دونیم دقیقاً چی می‌خوایم، بریم سراغ کدنویسی.
 
 02:17.710 --> 02:23.140
-So first off, we'll get some comments and set comments coming from you state.
+اول از همه، useState رو برای تعریف state به اسم comments و تابع setComments استفاده می‌کنیم.
 
 02:25.570 --> 02:28.630
-We're going to initialize this to be an empty array.
+مقدار اولیه‌ش رو یه آرایه خالی قرار می‌دیم.
 
 02:28.900 --> 02:33.130
-You might recall that on our post list we initialize that piece of state to be an object.
+یادت باشه توی post list مقدار اولیه یه آبجکت بود.
 
 02:33.340 --> 02:37.510
-But whenever we get a list of comments, remember what our API sends back to us.
+ولی اینجا چون از API قراره آرایه کامنت‌ها رو بگیریم، نوعش آرایه‌ست.
 
 02:37.540 --> 02:42.790
-The API that we put together is going to give us an array of comments associated with the given post.
+API ما لیستی از کامنت‌های مرتبط با اون پست رو برمی‌گردونه، نه یه آبجکت.
 
 02:42.790 --> 02:45.490
-So in this case, we know that we're going to be working with an array.
+پس می‌دونیم با آرایه سروکار داریم.
 
 02:46.640 --> 02:48.740
-I'll then define a function called fetch data.
+بعد یه تابع تعریف می‌کنیم به اسم fetchData
 
 02:49.160 --> 02:50.750
-This will be an async function.
+تابعی async هست.
 
 02:52.580 --> 02:53.420
-Inside of here.
+داخلش
 
 02:53.420 --> 02:57.890
-We'll get some response from calling a wait Axios target.
+با استفاده از await axios یه درخواست می‌فرستیم و response رو می‌گیریم.
 
 02:58.490 --> 03:00.620
-I'm going to once again pass in a template string.
+از template string برای URL استفاده می‌کنیم.
 
 03:01.790 --> 03:05.840
-We're going to make a request to HTTP, colon, slash, slash local host.
+آدرس میشه: http://localhost
 
 03:05.840 --> 03:11.150
-And again, we're going to our comments, microservice, which is hosted at Port 4001.
+و چون سرویس کامنت‌ها روی پورت 4001 ران شده، اون پورت رو استفاده می‌کنیم.
 
 03:14.000 --> 03:20.330
-Then the path that we need to make the request to is post slash, then the post ID slash comments.
+و مسیرش میشه: /posts/${postId}/comments
 
 03:23.940 --> 03:28.710
-So then take the data out of that response and update our comments piece of state using that.
+بعد از گرفتن response، دیتا رو ازش استخراج می‌کنیم و با setComments می‌ریزیم توی state.
 
 03:28.710 --> 03:29.550
-Set comments.
+یعنی:
 
 03:29.550 --> 03:32.070
-Function set comments.
+setComments(res.data)
 
 03:32.070 --> 03:33.600
-Rez data.
+همین سادگی.
 
 03:35.420 --> 03:39.560
-Next up, we need to make sure that fetch data is called just one time when this component is first
+بعدش باید مطمئن شیم که این تابع فقط یک بار اجرا بشه، وقتی کامپوننت لود شد.
 
 03:39.560 --> 03:40.640
-displayed on the screen.
+برای همین از useEffect استفاده می‌کنیم.
 
 03:40.670 --> 03:43.250
-So that's what we got that user effect took for.
+useEffect رو صدا می‌زنیم.
 
 03:43.960 --> 03:46.840
-So put together a use effect call.
+می‌خوایم فقط یه بار اجرا بشه، پس آرگومان دومش یه آرایه خالیه.
 
 03:48.980 --> 03:52.250
-We only want this effect to be called exactly one time.
+داخل تابع useEffect فقط fetchData رو صدا می‌زنیم.
 
 03:52.250 --> 03:54.770
-So as the second argument, we'll put in that empty array.
+همین و بس.
 
 03:56.640 --> 03:57.900
-And then inside of here.
+و کار تمومه.
 
 03:59.270 --> 04:00.890
-We will call fetch data.
+حالا مرحله آخر اینه که روی آرایه کامنت‌ها map بزنیم
 
 04:02.680 --> 04:03.760
-And that's pretty much it.
+و یه خروجی JSX بسازیم.
 
 04:05.310 --> 04:10.680
-Now last thing we need to do is map over our list of comments and return some jokes out of that entire
+یعنی از هر آیتم کامنت، یه تگ یا المنت متنی بسازیم و نشونش بدیم.
 
 04:10.680 --> 04:11.250
-list.
-
-04:13.090 --> 04:14.800
-So to build out that thing.
+بریم سراغ ساختن این بخش.
 
 04:15.920 --> 04:19.370
-I think inside of our mockup we displayed it as a unordered list right here.
+توی طراحی اولیه‌مون، لیست کامنت‌ها رو به صورت unordered list نشون دادیم.
 
 04:19.370 --> 04:21.110
-So a UL with some allies.
+یعنی یک UL با liهای متعدد.
 
 04:21.110 --> 04:24.830
-So let's map over that array of comments.
+پس بیایم روی آرایه‌ی کامنت‌ها map بزنیم.
 
 04:24.950 --> 04:29.210
-It will say const rendered comments is common spot map.
+یه متغیر به اسم renderedComments تعریف می‌کنیم که از comments.map به دست میاد.
 
 04:30.130 --> 04:32.110
-And for every comment that we get back.
+و برای هر comment داخل اون لیست...
 
 04:32.900 --> 04:34.670
-We'll return and lie.
+یه li برمی‌گردونیم.
 
 04:36.490 --> 04:40.960
-Inside the lie will display the content of the comments because remember, every comment that we've
+داخل li، محتوای comment رو نمایش می‌دیم. چون هر کامنت یه فیلد content داره.
 
 04:40.960 --> 04:42.520
-created has a content property.
+پس می‌نویسیم comment.content
 
 04:42.610 --> 04:46.810
-We'll say comment content because we are building a list right here.
+چون داریم لیست تولید می‌کنیم، ری‌اکت انتظار داره که هر li یه key داشته باشه.
 
 04:46.810 --> 04:50.530
-React is going to expect this lie to have a key property assigned to it.
+برای key از comment.id استفاده می‌کنیم.
 
 04:51.360 --> 04:55.770
-So we will assign a key property and inside they will use the comments ID.
-
-04:58.170 --> 05:01.680
-So then, finally, at the very bottom, I will return a UL.
+در نهایت، خروجی کامپوننت یه تگ UL خواهد بود
 
 05:03.530 --> 05:06.590
-And inside there I will display my rendered.
+و داخلش renderedComments رو قرار می‌دیم.
 
 05:08.140 --> 05:08.860
-Comments.
+و همین کافیه.
 
 05:09.890 --> 05:11.030
-And that should be it.
+کارمون تمومه.
 
 05:11.600 --> 05:13.280
-So once again, let's save this file.
+حالا فایل رو ذخیره می‌کنیم.
 
 05:14.920 --> 05:17.530
-Well, then go back over to our post list component.
+برمی‌گردیم به فایل post list
 
 05:17.530 --> 05:19.480
-That's where we said we were going to show this thing from.
+چون قراره اونجا این کامپوننت رو نشون بدیم.
 
 05:19.750 --> 05:23.260
-So inside a post list, we want to show many copies of comment list.
+یعنی توی post list باید برای هر پست، یه نسخه از comment list رو نمایش بدیم.
 
 05:24.950 --> 05:26.660
-So here's my post list component.
+می‌ریم داخل post list component
 
 05:27.480 --> 05:28.110
-At the very top.
+بالای فایل
 
 05:28.110 --> 05:31.230
-I will import comment list.
+commentList رو ایمپورت می‌کنیم.
 
 05:32.210 --> 05:33.740
-Brown comment list.
+از مسیر comment-list
 
 05:37.080 --> 05:39.960
-Well, then go down to our Rendered Post's map function.
+حالا می‌ریم پایین، به map مربوط به renderedPosts
 
 05:39.960 --> 05:41.970
-So this is where we iterate over every post.
+یعنی جایی که روی پست‌ها پیمایش کردیم.
 
 05:42.710 --> 05:46.370
-And then right after comment creates we can show.
+و بعد از نمایش هر پست، می‌خوایم لیست کامنت‌هاش رو هم نشون بدیم.
 
 05:47.400 --> 05:48.960
-Permits are simply not right after.
+ولی نه بعد از فرم ارسال کامنت.
 
 05:48.960 --> 05:52.440
-We want right before because we want to show the list of comments and then give the user a forum to
+قبل از اون، چون اول باید کامنت‌های فعلی رو ببینه، بعد بتونه کامنت جدید بزنه.
 
 05:52.440 --> 05:53.310
-create a new one.
+پس اینجا...
 
 05:53.400 --> 05:59.760
-The right here is we will put in comment list and once again, remember, we need to tell comment list
+کامپوننت commentList رو قرار می‌دیم. ولی باید postId مربوطه رو بهش بدیم.
 
 05:59.760 --> 06:03.220
-which posts or which ID to post which post ID.
+چون commentList باید بدونه که برای کدوم پست باید کامنت‌ها رو لود کنه.
 
 06:03.240 --> 06:03.840
-There we go.
+پس
 
 06:03.870 --> 06:05.790
-This thing needs to retrieve comments for.
-
-06:05.820 --> 06:07.060
-So just like comment create.
-
-06:07.080 --> 06:09.030
-We need to pass down that post ID prop.
+دقیقاً مثل commentCreate، به commentList هم prop مربوط به postId رو پاس می‌دیم.
 
 06:09.570 --> 06:12.360
-We'll say post id is post dot ID.
+پس می‌نویسیم: postId برابر با post.id
 
 06:14.010 --> 06:14.330
-Okay.
+خب
 
 06:14.340 --> 06:16.440
-Let's save this and we'll do a test.
+فایل رو ذخیره می‌کنیم و یه تست می‌گیریم.
 
 06:18.120 --> 06:19.370
-Yeah, I see it.
+آره، مشخصه.
 
 06:19.380 --> 06:21.000
-My comment that I created just a moment ago.
+کامنتی که همین چند لحظه پیش ساختم نشون داده میشه.
 
 06:21.000 --> 06:21.270
-Up here.
+اون بالا
 
 06:21.270 --> 06:21.870
-Right there.
+دقیقاً همینه.
 
 06:22.350 --> 06:24.150
-Now, I should be able to create yet another comment.
+حالا باید بتونم یه کامنت دیگه بسازم.
 
 06:24.150 --> 06:25.980
-So I'll say second comment.
+می‌نویسم: کامنت دوم
 
 06:26.550 --> 06:27.420
-I'll submit it.
+ارسالش می‌کنم.
 
 06:28.430 --> 06:32.930
-I'm going to refresh the page because remember, we don't have any kind of reload logic inside of here
+صفحه رو رفرش می‌کنم چون هنوز هیچ منطقی برای بروزرسانی لحظه‌ای ننوشتیم.
 
 06:32.930 --> 06:33.590
-right now.
+فعلاً باید دستی رفرش کنیم.
 
 06:33.800 --> 06:37.820
-And I'll see second comment up here and I should be able to associate some comments with these other
+بعد از رفرش، کامنت دوم هم نشون داده میشه. حالا می‌تونم برای بقیه پست‌ها هم کامنت بذارم.
 
 06:37.820 --> 06:38.780
-posts I created.
+مثلاً می‌نویسم: پست جالبی بود
 
 06:38.990 --> 06:42.080
-So I'll say neat post.
+و برای سومی یه چیزی مثل: این پست فوق‌العاده‌ست
 
 06:43.420 --> 06:47.680
-And then on the third one I'll put in something like This is a great post.
+بعدش صفحه رو رفرش می‌کنم و کامنت‌ها رو می‌بینم.
 
 06:48.800 --> 06:51.320
-I'll refresh the page and I see those comments appear.
+خب، پس فعلاً همه‌چی درست کار می‌کنه.
 
 06:52.150 --> 06:53.530
-Well, this definitely works.
+ولی همون‌طور که قبلاً گفتم، یه اشکال مهم اینجا وجود داره.
 
 06:53.530 --> 06:57.250
-But like I said, there is some big downsides here.
+بذار دقیق‌تر نشونت بدم.
 
 06:57.670 --> 07:03.160
-So if we take a look at our network request log, I'm at network, I'm filtered by X Air requests.
+اگه یه نگاه به تب Network بندازیم، فیلتر رو گذاشتم روی XHR
 
 07:03.160 --> 07:08.260
-And if I refresh the page, I just want you to notice something very simple might seem very benign and
+حالا وقتی صفحه رو رفرش می‌کنم، می‌خوام یه نکته خیلی ساده رو نشونت بدم. شاید اولش بی‌اهمیت به نظر برسه.
 
 07:08.270 --> 07:08.800
-small.
+ولی نیست.
 
 07:09.100 --> 07:14.770
-We are making one request for every post we have fetched, and that's kind of the route issue that we
+برای هر پستی که گرفتیم، یه درخواست جداگونه برای کامنت‌ها فرستاده میشه. و این همون مشکل اصلیه که الان داریم.
 
 07:14.770 --> 07:15.700
-are in right now.
+ممکنه الآن مهم به نظر نرسه...
 
 07:16.180 --> 07:18.640
-That might not seem like a big deal, but let's take a pause right here.
+ولی یه وقفه بگیریم، ویدیو بعدی دلیلش رو کامل توضیح می‌دم.
 
 07:18.670 --> 07:19.540
-Come back the next video.
+که چرا این موضوع انقدر مهمه.
 
 07:19.540 --> 07:22.450
-And I want to highlight why this is kind of a big deal right now.
+پس تا چند لحظه دیگه می‌بینمت.

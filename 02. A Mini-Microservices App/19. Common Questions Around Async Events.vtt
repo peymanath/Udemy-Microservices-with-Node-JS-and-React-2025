@@ -1,214 +1,208 @@
 WEBVTT
 
 00:01.610 --> 00:05.480
-We've now taken a look twice at this style of asynchronous communication.
+ما تا الان دوبار سبک ارتباط asynchronous رو بررسی کردیم.
 
 00:05.480 --> 00:08.110
-And at this point, you probably have some really burning questions.
+و احتمالاً الآن یه سری سوال جدی توی ذهنت شکل گرفته.
 
 00:08.140 --> 00:12.380
-So in this video, I want to go over some questions I think you might have and some possible answers.
+توی این ویدیو می‌خوام برم سراغ چندتا از اون سوال‌هایی که احتمالاً توی ذهنت هست و جوابشون رو باهات مرور کنم.
 
 00:12.770 --> 00:16.070
-The first thing you might be thinking is something like, wait a minute, Steven.
+اولین سوالی که ممکنه داشته باشی اینه: «صبر کن ببینم، استیون...
 
 00:16.070 --> 00:21.650
-You're saying that if we have two types of resources, so in our case, both in comments, if we want
+تو داری می‌گی اگه دوتا نوع منبع داده داریم — مثل post و comment — برای اینکه اطلاعاتشون رو به‌درستی نشون بدیم،
 
 00:21.650 --> 00:25.370
-to serve up that information effectively, we have to create a third service.
+باید یه سرویس سوم بسازیم؟»
 
 00:25.670 --> 00:28.100
-No, that is not what I'm saying at all.
+نه، اصلاً منظورم این نبود.
 
 00:28.250 --> 00:33.950
-We are not always going to be creating extra services just for the sole purpose of joining data together.
+ما قرار نیست برای هر بار ترکیب داده‌ها یه سرویس جدید بسازیم.
 
 00:34.280 --> 00:40.070
-In reality, if we were actually building this sort of blog application, well, this blog application
+واقعیتش اینه که اگه واقعاً داشتیم یه اپلیکیشن بلاگ می‌ساختیم، این بلاگ بخشی از یه اپلیکیشن بزرگ‌تر بود.
 
 00:40.070 --> 00:44.520
-would be part of a larger scheme of resources or a larger application.
+تو اون حالت، احتمالاً پست و کامنت رو داخل یه سرویس واحد قرار می‌دادیم
 
 00:44.540 --> 00:49.730
-In reality, we would probably put this idea of posts and comments together in the same service so we
+و اون داده‌ها رو توی کدها با هم join می‌کردیم، نه اینکه برای join کردنشون یه سرویس جدید درست کنیم.
 
 00:49.730 --> 00:54.860
-could join that data together at the code level rather than at the service level by creating a third
+پس کاری که الان انجام می‌دیم صرفاً برای اهداف آموزشی هست.
 
 00:54.860 --> 00:55.520
-service.
+فقط برای یادگیریه.
 
 00:55.790 --> 00:58.790
-So what we're doing right now, this is solely for learning purposes.
+هدف اینه که با این ایده آشنا بشی که داده‌ها می‌تونن توی چند سرویس مجزا ذخیره بشن
 
 00:58.790 --> 01:04.850
-This is just to help expose you to these ideas of how we can have information stored in multiple services
+و بعد بتونی اون داده‌ها رو به‌صورت متمرکز استفاده کنی یا تکرارشون کنی.
 
 01:04.850 --> 01:09.590
-and eventually kind of replicate that data or make use of it in one single location.
+پس اصلاً توصیه نمی‌کنم که برای هر join کوچیکی بری یه سرویس جدید راه بندازی.
 
 01:09.590 --> 01:15.200
-So I'm not advocating that you create an extra service for every last join of data that you need.
+این فقط یه مدل آموزشی برای درک مفاهیم هست، نه یه معماری توصیه‌شده.
 
 01:16.680 --> 01:18.120
-Second big question you might have.
+سوال مهم بعدی که ممکنه داشته باشی:
 
 01:18.240 --> 01:22.800
-I've been saying many times that these services are independent and if one crashes, the others stay
+من بارها گفتم این سرویس‌ها مستقل هستن و اگه یکی crash کنه، بقیه هنوز پابرجان.
 
 01:22.800 --> 01:23.430
-alive.
+ممکنه بگی: خب که چی؟
 
 01:23.810 --> 01:25.220
-You might say, who cares?
+مگه چند وقت یه بار ممکنه سرویس crash کنه؟
 
 01:25.230 --> 01:27.420
-How often are these services going to be crashing?
+مگه اصلاً این اتفاق می‌افته؟
 
 01:27.900 --> 01:32.280
-Well, at this point in the course, I haven't really gone into a lot of reasons on why you would use
+راستش توی این بخش از دوره هنوز خیلی وارد دلایل اصلی استفاده از microservice نشدیم.
 
 01:32.280 --> 01:34.010
-microservices in the first place.
+ولی صادقانه بگم،
 
 01:34.020 --> 01:37.920
-To be totally honest with you, I'm kind of assuming that if you're in this course, you've already
+فرض من اینه که تو قبل از شرکت توی این دوره یه تحقیقی در مورد میکروسرویس‌ها کردی
 
 01:37.920 --> 01:43.380
-done at least a little bit of research and you might have an idea of why you want to use microservices.
+و یه درکی از اینکه چرا می‌خوای ازش استفاده کنی داری.
 
 01:44.010 --> 01:49.500
-One of the big reasons that we use microservices is the possibility of increasing the overall reliability
+یکی از دلایل اصلی استفاده از معماری میکروسرویس افزایش قابلیت اطمینان (Reliability) سیستمه.
 
 01:49.500 --> 01:50.420
-of our system.
+و این خیلی مهمه.
 
 01:50.430 --> 01:54.690
-That's a huge driving force in why we use microservices.
+این‌که ما می‌تونیم سرویس‌ها رو مستقل از هم نگه داریم
 
 01:54.960 --> 01:59.910
-So the fact that we can make these things independent and keep the vast majority of our application
+و حتی اگه یه بخش سیستم از کار بیفته، بقیه همچنان درست کار کنن،
 
 01:59.910 --> 02:02.130
-running, even if some part of it goes down.
+دلیل خیلی مهمیه برای اینکه چرا سراغ میکروسرویس می‌ریم.
 
 02:02.130 --> 02:07.380
-That's a huge driving force in why we are here learning about microservices in the first place.
-
-02:08.430 --> 02:08.640
-Okay.
+و در واقع همین ویژگی یکی از محرک‌های اصلیه که باعث شده داریم این دوره رو می‌گذرونیم.
 
 02:08.640 --> 02:10.420
-Third thing you might be saying.
+سومین چیزی که ممکنه بگی اینه:
 
 02:10.460 --> 02:14.760
-Okay, this is way too complicated for the tiny bit of benefit that we get.
+«خب، این معماری خیلی پیچیده‌ست برای اون سود کمی که ازش می‌گیریم!»
 
 02:15.520 --> 02:20.040
-We're having to create entire new projects just to support these very basic data queries.
+«داریم پروژه‌های کامل و جدا راه‌اندازی می‌کنیم فقط برای اینکه بتونیم چندتا کوئری ساده روی دیتا بزنیم!»
 
 02:20.520 --> 02:22.010
-And I know it seems that way now.
+و بله، الان ممکنه اینطوری به‌نظر بیاد.
 
 02:22.020 --> 02:28.410
-I know this entire event style architecture might seem really complicated and challenging, but it really
+می‌دونم این معماری مبتنی بر event ممکنه پیچیده و سخت به نظر برسه، ولی واقعاً فقط در این مرحله‌ی اول اینطوره.
 
 02:28.410 --> 02:30.420
-just seems like that at this point.
+الان همه چیز پیچیده به نظر می‌رسه، ولی...
 
 02:30.690 --> 02:34.910
-We're going to very shortly start to add in another feature to the project.
+خیلی زود قراره یه ویژگی جدید به همین پروژه اضافه کنیم،
 
 02:34.920 --> 02:36.570
-So the one we're working on right now.
+همین پروژه‌ای که الان داریم روش کار می‌کنیم.
 
 02:37.350 --> 02:41.880
-And by taking this kind of event style architecture, adding in this additional feature is going to
+و به‌خاطر اینکه الان از این معماری event-based استفاده کردیم، اضافه کردن اون ویژگی جدید
 
 02:41.880 --> 02:48.750
-actually be somewhat darn easy compared to if we were using a monolith or possibly some kind of synchronous
+واقعاً ساده‌تر از حالتیه که با معماری monolith یا ارتباط synchronous بخوایم اون ویژگی رو اضافه کنیم.
 
 02:48.750 --> 02:50.070
-style of communication.
+پس درسته، الان ممکنه اغراق‌آمیز به نظر بیاد،
 
 02:50.250 --> 02:54.270
-So I know it seems like this is way over the top right now, but it turns out that some things down
+ولی در آینده همه‌چی راحت‌تر می‌شه و دلیل این انتخاب رو بهتر درک می‌کنی.
 
 02:54.270 --> 02:56.250
-the line start to get a little bit easier.
+کمی صبر و پیش‌روی لازم داره.
 
 02:58.010 --> 03:01.970
-The last thing I want to mention here is that at this point, if you are really starting to think through
+آخرین چیزی که می‌خوام بگم اینه که اگه الان داری واقعاً به این معماری فکر می‌کنی،
 
 03:01.970 --> 03:04.940
-this architecture, you might be starting to say, Hey, Steven, wait.
+شاید بگی: «استیون، یه لحظه صبر کن! این سیستم فقط تو این سناریو جواب می‌ده...»
 
 03:04.970 --> 03:06.950
-This system is going to work in this scenario.
+«اگه فلان event بیفته چی؟ یا اون یکی event؟»
 
 03:06.950 --> 03:09.950
-Or what if this event occurs and that event?
+«اگه فلان حالت خاص رخ بده چی؟ یا اون گوشه‌ی خاص چطور؟»
 
 03:09.950 --> 03:11.960
-Or what about this quarter case over here?
+بذار شفاف بگم:
 
 03:12.440 --> 03:17.690
-Just to be clear, there are definitely some super special corner cases that you and I need to be concerned
+ما قطعاً یه‌سری حالت خاص داریم که باید نگرانشون باشیم و باید حساب‌شده باهاشون برخورد کنیم.
 
 03:17.690 --> 03:19.610
-about or very special scenarios.
+وقتی از این معماری event-based استفاده می‌کنیم،
 
 03:19.610 --> 03:24.830
-When we start using this event based architecture, we are going to take a deep look at some of these
+باید یه نگاه عمیق به بعضی از این سناریوها داشته باشیم و من قول می‌دم که این کار رو توی ادامه‌ی دوره انجام بدیم.
 
 03:24.830 --> 03:29.090
-problems and I mean a deep look later on inside the course.
+یعنی به‌صورت جدی بعضی از این مشکلات و گوشه‌موشه‌ها رو بررسی می‌کنیم.
 
 03:29.090 --> 03:32.390
-And if you don't see anything wrong with this current approach, hey, don't sweat it.
+و اگه الآن چیزی به نظرت عجیب نمیاد، اشکالی نداره.
 
 03:32.510 --> 03:35.990
-It's something you really have to think about for a pretty long time before we start to realize where
+این چیزیه که باید مدت طولانی روش فکر کنی تا بتونی بفهمی کجاها ممکنه سیستم دچار مشکل بشه.
 
 03:35.990 --> 03:38.270
-things start might start to go wrong again.
+و اگر هم الآن متوجه یه ایراد خاص شدی، نگران نباش.
 
 03:38.270 --> 03:41.210
-If you see some stuff that looks a little bit funny right now, don't sweat it.
+ما به مرور کلی از این حالت‌ها رو بررسی می‌کنیم و براشون راه‌حل داریم.
 
 03:41.210 --> 03:46.730
-We're going to go over a lot of possible cases later on and we have solutions for a lot of them.
+نمی‌گم برای همه‌چیز راه‌حل کامل داریم، چون شاید تو به چیزهایی فکر کنی که منم هنوز بهش نرسیدم.
 
 03:46.730 --> 03:50.270
-I'm not going to say like every possible solution, I'm sure you could think of some things that are
+ولی توی پروژه‌ی بزرگ‌تری که قراره بعداً روش کار کنیم، اکثر این حالت‌های خاص رو در نظر می‌گیریم.
 
 03:50.270 --> 03:51.890
-going to go wrong that I have not thought of.
+و واقعاً باهاشون برخورد می‌کنیم.
 
 03:51.890 --> 03:55.820
-But again, on that big application we're going to work on later, we're going to look at a lot of these
+پس نگران نباش، بهشون می‌رسیم و یاد می‌گیریم چطور کنترل‌شون کنیم.
 
 03:55.820 --> 03:56.990
-different corner cases.
+خب،
 
 03:57.730 --> 03:58.030
-Okay.
+تا اینجا همین.
 
 03:58.030 --> 03:58.600
-So that's it.
-
-03:58.600 --> 04:01.900
-Just want to go over a couple of questions and answers that you might have had.
+فقط می‌خواستم چندتا سوال مهم و جواب‌هاشون رو مرور کنم که احتمالاً تو ذهنت شکل گرفته بودن.
 
 04:02.110 --> 04:04.780
-So with all that in mind, let's take a pause right here.
+با در نظر گرفتن همه‌ی این نکاتی که گفتیم، یه توقف کوتاه داشته باشیم.
 
 04:04.810 --> 04:07.460
-We're going to start to implement this new query service.
+قراره پیاده‌سازی سرویس جدید کوئری رو شروع کنیم.
 
 04:07.480 --> 04:11.740
-We're going to start to set up this event bus and then have all these services communicating with each
+قراره Event Bus رو راه‌اندازی کنیم و کاری کنیم که همه‌ی این سرویس‌ها از طریق event با هم ارتباط داشته باشن.
 
 04:11.740 --> 04:13.900
-other via events in the next video.
+همه‌ی این موارد رو توی ویدیوی بعدی انجام می‌دیم.

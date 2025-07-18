@@ -1,193 +1,187 @@
 WEBVTT
 
 00:01.320 --> 00:03.280
-We're now going to move on to our comment service.
+حالا می‌خوایم بریم سراغ سرویس کامنت‌ها.
 
 00:03.300 --> 00:07.980
-We need to make sure that any time someone creates a new comment, we once again emit an event over
+باید مطمئن بشیم که هر بار کاربری یه کامنت جدید ایجاد می‌کنه، یه event به Event Bus ارسال می‌شه.
 
 00:07.980 --> 00:08.500
-to that event.
+توی این حالت،
 
 00:08.520 --> 00:11.830
-Plus, in this case, our event is going to look a little something like this.
+event ما یه چیزی شبیه به این خواهد بود:
 
 00:11.850 --> 00:13.590
-It'll have a type of comet created.
+یه `type` به اسم `CommentCreated` داره
 
 00:13.590 --> 00:16.620
-And the data in this case will be the actual comment itself.
+و توی `data`، خود کامنت قراره قرار بگیره.
 
 00:16.950 --> 00:19.290
-So once again, we're going to send this over to the event bus.
+پس دوباره این event رو برای Event Bus می‌فرستیم.
 
 00:19.290 --> 00:25.020
-And the event bus is going to echo, so to speak, this event over to all of our different services.
+و Event Bus هم این event رو اصطلاحاً "echo" می‌کنه و به همه سرویس‌های دیگه ارسال می‌کنه.
 
 00:25.710 --> 00:30.210
-We're going to once again see that we're going to get a couple of 400 for errors because, again, we
+احتمالاً باز هم چندتا خطای 400 می‌گیریم چون هنوز هیچ‌کدوم از سرویس‌ها endpointی برای دریافت event ندارن.
 
 00:30.210 --> 00:34.200
-don't have anything on the services themselves to receive these events just yet.
+پس طبیعیه که این اتفاق بیفته.
 
 00:34.950 --> 00:35.250
-All right.
+خب،
 
 00:35.250 --> 00:35.880
-So I'm going to change it.
+برگردم به ادیتور.
 
 00:35.880 --> 00:37.410
-Back over to my editor.
+می‌رم سراغ پوشه‌ی کامنت‌سرویس.
 
 00:38.710 --> 00:40.930
-I'm going to find the comments service folder.
+پوشه‌اش رو پیدا می‌کنم و بازش می‌کنم.
 
 00:40.960 --> 00:41.860
-Here it is right here.
+اینجاست.
 
 00:42.280 --> 00:42.880
-Inside there.
+داخلش
 
 00:42.880 --> 00:44.770
-I'll open up the index file.
+فایل index.js رو باز می‌کنم.
 
 00:45.490 --> 00:46.450
-At the very top.
+بالای فایل،
 
 00:47.270 --> 00:48.530
-I'll get Axios.
+پکیج axios رو ایمپورت می‌کنم.
 
 00:51.310 --> 00:54.130
-I'll then go down to my code where I'm creating a new comment.
+بعد می‌رم پایین‌تر، جایی که کامنت جدید ساخته می‌شه.
 
 00:54.490 --> 00:55.330
-Here it is, right here.
+اینجاست دقیقاً.
 
 00:58.040 --> 01:04.370
-Well, then add in right after we add in that new comment right there, or we push it into that array
+درست بعد از اینکه کامنت رو ساختیم و اون رو داخل آرایه قرار دادیم — یعنی جایی که در واقع کامنت رو "ذخیره" کردیم —
 
 01:04.400 --> 01:05.240
-or about right after.
+همونجا قراره event رو ارسال کنیم.
 
 01:05.240 --> 01:07.970
-That's really where we kind of save, so to speak, the comment.
+اونجا axios.post رو اضافه می‌کنیم.
 
 01:08.630 --> 01:12.020
-I'll go ahead and we'll add in Axios dot post.
+آدرس رو می‌نویسیم: `http://localhost:4005/events`
 
 01:13.410 --> 01:17.760
-To local host Colon 4005.
+و بدنه‌ی داده‌ای که می‌فرستیم، یه event با این ساختاره:
 
 01:19.650 --> 01:20.460
-Events.
+type: 'CommentCreated'
 
 01:22.660 --> 01:26.950
-And once again, the data or the event that we're going to send over is going to have a type of something
+و `data`: خود کامنت که همین الان ساختیم.
 
 01:26.950 --> 01:28.720
-like comment created.
+یعنی همون آبجکت شامل id، content و postId.
 
 01:30.000 --> 01:31.140
-And a data property.
+`data` همون کامنت کامل هست.
 
 01:31.140 --> 01:32.970
-That's going to be the actual comment itself.
+و این تمام اطلاعاتیه که نیاز داریم.
 
 01:33.480 --> 01:40.020
-So remember a comment is going to have the comment ID some content and then in that case or in this
-
-01:40.020 --> 01:41.810
-case, that is the entire comment.
+یعنی id کامنت، متن کامنت، و id پستی که این کامنت بهش تعلق داره.
 
 01:41.820 --> 01:47.910
-But we're going to also add into this data property, another property of post ID, just to clarify
+اما ما علاوه‌بر id و content، مقدار postId رو هم به data اضافه می‌کنیم
 
 01:47.910 --> 01:49.980
-exactly what comment this thing is tied to.
+تا دقیق مشخص کنیم این کامنت مربوط به کدوم پسته.
 
 01:50.760 --> 01:53.160
-So in this case, for data, I'm going to put in the.
+پس توی `data` سه مقدار قرار می‌دیم:
 
 01:54.310 --> 01:56.200
-ID of comment ID.
+اول، id کامنت
 
 01:57.820 --> 01:59.020
-The content.
+دوم، محتوای کامنت (`content`)
 
 02:00.140 --> 02:04.250
-And then finally our post ID as well, which is available inside this request.
+و در نهایت، postId که داخل همون route موجوده.
 
 02:04.250 --> 02:09.470
-Handler Remember, it's technically in that parameter string right there or the root string, so we
+یادت باشه postId به صورت پارامتر توی آدرس هست، پس می‌تونیم با `req.params.id` بهش دسترسی پیدا کنیم.
 
 02:09.470 --> 02:16.460
-can access it using rec params dot id, let's say post id is rec dot params id.
+برای وضوح، متغیر `postId` رو برابر `req.params.id` قرار می‌دیم.
 
 02:17.840 --> 02:24.890
-And then once again, I'm going to add on async to the wrapping function and await on the request itself.
+در نهایت تابع رو async می‌کنیم و قبل از `axios.post` از await استفاده می‌کنیم.
 
 02:27.450 --> 02:28.230
-So it looks good.
+به‌نظر درست میاد.
 
 02:28.710 --> 02:30.150
-So let's test this out again.
+بیایم تستش کنیم.
 
 02:30.300 --> 02:31.950
-I'm going to flip on over to my browser.
+برمی‌گردم به مرورگر.
 
 02:33.740 --> 02:38.420
-I'm going to find the post that we had just created, and I'll add in some comment and submit it.
+پستی که ساختیم رو پیدا می‌کنم، یه کامنت براش می‌نویسم و ارسال می‌کنم.
 
 02:39.130 --> 02:43.990
-I can refresh the page, see some comment up here, and then finally I'll go over to my terminal and
+صفحه رو رفرش می‌کنم، می‌بینم که کامنت جدید ظاهر شده، حالا برمی‌گردم به ترمینال.
 
 02:43.990 --> 02:49.540
-I'm going to expect to once again see a series of 404 errors coming out of our event bus.
+اینجا انتظار دارم که چند خطای 404 ببینم از طرف event-bus.
 
 02:49.570 --> 02:54.040
-Again, that's because we don't have anything inside of our services yet to actually receive these events.
+دلیلش اینه که هنوز هیچ‌کدوم از سرویس‌ها endpointی برای دریافت event ندارن.
 
 02:55.210 --> 02:55.360
-Yes.
+درسته.
 
 02:55.480 --> 02:56.260
-That looks good.
+همه‌چی خوب پیش رفته.
 
 02:57.250 --> 03:02.080
-Well, at this point in time, we've now got two services that are emitting events whenever something
+تا اینجای کار، دو تا سرویس داریم که هر وقت یه اتفاق خاص بیفته، یه event ارسال می‌کنن.
 
 03:02.080 --> 03:03.280
-interesting happens.
+این خیلی خوبه.
 
 03:03.520 --> 03:08.350
-So now we need to make sure that all of our services right now really just post and comments because
+حالا باید مطمئن بشیم که سرویس‌هامون — یعنی posts و comments (چون هنوز query service نساختیم) —
 
 03:08.350 --> 03:13.570
-we've not yet created the query service has an endpoint where it can receive these events and then do
+یه endpoint داشته باشن که بتونه این eventها رو دریافت کنه و در صورت نیاز روشون پردازش انجام بده.
 
 03:13.570 --> 03:14.680
-some processing on them.
+البته فعلاً،
 
 03:14.680 --> 03:19.900
-If that service cares about the event that was just emitted in our scenario or in our case right now,
+سرویس post و comment علاقه‌ای به هیچ event ورودی ندارن.
 
 03:19.930 --> 03:24.330
-our post service and the common service don't really care whatsoever.
+یعنی هیچ نیازی به پردازش eventهای `PostCreated` یا `CommentCreated` ندارن.
 
 03:24.340 --> 03:29.140
-They just don't care about any incoming events out of the two that we've created and created and post
+اما به محض اینکه سرویس query رو بسازیم، قراره دقیقاً با همین eventها کار کنه.
 
 03:29.140 --> 03:29.770
-created.
+و به‌شدت بهشون وابسته‌ست.
 
 03:29.920 --> 03:33.640
-But as soon as we make this query service, well, we're definitely going to have something that is
-
-03:33.640 --> 03:37.750
-very much interested in some events that are coming out of our application.
+پس توی گام بعدی، سرویس query نقطه‌ی اصلی تعامل با eventهای ما می‌شه.
 
 03:38.350 --> 03:39.310
-So quick pause right here.
+پس یه توقف کوتاه همین‌جا داشته باشیم.
 
 03:39.310 --> 03:44.980
-We're going to start putting this and this those two event or semi handlers together in just a moment.
+قراره خیلی زود بریم سراغ ساختن دو تا handler برای دریافت و پردازش eventها.

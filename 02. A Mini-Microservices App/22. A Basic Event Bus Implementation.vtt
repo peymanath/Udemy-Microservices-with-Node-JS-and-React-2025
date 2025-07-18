@@ -1,262 +1,256 @@
 WEBVTT
 
 00:01.160 --> 00:04.430
-All right, let's get started working on this event bus implementation.
+خیلی خب، بزن بریم سراغ پیاده‌سازی Event Bus.
 
 00:04.640 --> 00:08.990
-To get started, we're going to first create a new folder inside of our project directory to house all
+برای شروع، اول قراره یه پوشه جدید داخل پروژه‌مون بسازیم تا کدهای مربوط به Event Bus داخل اون قرار بگیرن.
 
 00:08.990 --> 00:10.820
-the code for this event bus.
+من برگشتم به ترمینال.
 
 00:11.030 --> 00:12.170
-So I'm back at my terminal.
+یه تب جدید باز می‌کنم.
 
 00:12.410 --> 00:14.600
-I'm going to open up yet another terminal window.
+الان چهار تا تب دارم: یکی برای React، یکی برای posts، یکی برای comments
 
 00:14.600 --> 00:19.550
-So I've now got four, got one for the React app, one for posts, one for comments.
+و این تب جدیده برای سرویس Event Bus قراره استفاده بشه.
 
 00:19.550 --> 00:20.750
-I'm down here in the new one.
+برمی‌گردم به ریشه پروژه (blog directory)
 
 00:21.140 --> 00:25.910
-In the new one, I'm going to change back to my blog directory, which is housing all of my three overall
+که تمام سرویس‌هام توش قرار دارن.
 
 00:25.910 --> 00:26.690
-services.
+اینجا یه پوشه جدید می‌سازم به اسم Events،
 
 00:27.140 --> 00:32.120
-Then in this folder I'm going to create a new folder called Events.
+یا بهتره بگیم Event-Bus تا دقیق‌تر و واضح‌تر باشه.
 
 00:32.870 --> 00:34.220
-We'll call it How about Event Bus?
+بعدش وارد اون پوشه می‌شم.
 
 00:34.220 --> 00:37.580
-Just be really clear, I'll then change into that directory.
+و اندازه پنجره ترمینال رو کمی بزرگ‌تر می‌کنم.
 
 00:39.150 --> 00:41.400
-Let me make this window just a little bit larger.
+داخل این پوشه، یه فایل package.json می‌سازیم.
 
 00:42.370 --> 00:46.000
-Inside of here, we're going to generate a new package json file.
+برای این کار از دستور `npm init -y` استفاده می‌کنیم.
 
 00:46.000 --> 00:48.520
-So that's an NP init dash y.
+بعد از اون، پکیج‌های مورد نیاز رو نصب می‌کنیم:
 
 00:50.840 --> 00:52.340
-And then we're going to install.
+Express، nodemon
 
 00:53.680 --> 00:56.020
-Express Node one.
+و axios
 
 00:56.960 --> 00:58.010
-Axios.
+فقط همین‌ها کافیه.
 
 00:59.380 --> 01:01.340
-And I think that is about it.
+همین‌ها رو نصب می‌کنیم.
 
 01:01.360 --> 01:01.660
-Yep.
+تمامه.
 
 01:01.660 --> 01:02.290
-That's it.
+بزن بریم.
 
 01:03.810 --> 01:04.940
-We'll go ahead and run that.
+بعد از نصب، ادیتور کد رو توی این پوشه باز می‌کنم.
 
 01:04.950 --> 01:08.700
-And then after this is done, I'm going to open up my code editor inside this directory.
+تا فایل‌ها و کدها رو راحت‌تر بنویسم.
 
 01:16.700 --> 01:20.540
-All right, so as usual, we're going to create an index file inside of here.
+مثل همیشه، یه فایل `index.js` می‌سازیم.
 
 01:22.840 --> 01:25.390
-At the very top, we're going to import Express.
+و در بالای فایل، express رو import می‌کنیم.
 
 01:29.600 --> 01:31.190
-We're going to get body passer.
+بعد body-parser رو میاریم.
 
 01:35.050 --> 01:36.640
-And we'll get Axios as well.
+و همچنین axios رو هم import می‌کنیم.
 
 01:39.400 --> 01:41.890
-I'm then going to create a new express application.
+حالا یه اپلیکیشن express می‌سازیم.
 
 01:44.770 --> 01:48.150
-All then associate the body parser JSON middleware with this app.
+و body-parser رو به‌صورت middleware به اپلیکیشن اضافه می‌کنیم
 
 01:48.160 --> 01:51.670
-So we'll do an API use body parser JSON.
+تا بتونه request‌های JSON رو بخونه.
 
 01:53.660 --> 01:56.010
-And then that's pretty much it for the initial setup.
+خب، تنظیمات اولیه تموم شد.
 
 01:56.030 --> 02:01.400
-Now all we have to do is implement this endpoint to watch for incoming events, as we just saw in this
+الآن فقط باید یه endpoint بسازیم که بتونه eventهایی که از بقیه سرویس‌ها میان رو دریافت کنه.
 
 02:01.400 --> 02:05.960
-diagram back over here, it's going to be a post request handler that's going to watch for post request
-
-02:05.960 --> 02:07.340
-to slash events.
+همون‌طور که توی دیاگرام قبلی دیدیم، این یه هندلر برای POST به مسیر `/events` خواهد بود.
 
 02:07.460 --> 02:12.470
-Any time we receive an event or it's going to turn right back around, make a series of requests to
+هر بار که یه event دریافت می‌کنیم، قراره بلافاصله اون رو به چندین سرویس دیگه ارسال کنیم.
 
 02:12.470 --> 02:13.820
-these different servers.
+یعنی یه سری درخواست ارسال می‌کنیم به سرویس‌های مختلف.
 
 02:15.810 --> 02:19.260
-So we'll set up a post request handler on events.
+پس باید یه هندلر برای درخواست POST به `/events` بسازیم.
 
 02:20.670 --> 02:22.770
-I'm going to put in my callback right here.
+یه کالبک براش تعریف می‌کنم اینجا.
 
 02:24.560 --> 02:28.610
-We're going to get our event, which we're going to assume is just going to be the request body.
+قراره یه event از بدنه‌ی درخواست دریافت کنیم، پس همون `req.body` می‌شه event ما.
 
 02:28.970 --> 02:32.990
-So whatever comes along in the request body, that is going to be our event.
+یعنی هرچی که توی request body اومده، همونو به عنوان event می‌گیریم.
 
 02:33.230 --> 02:35.830
-We don't know if it's going to be a JSON object.
+مهم نیست اون داده چی باشه — یه آبجکت JSON، رشته، عدد یا هر چیز دیگه‌ای.
 
 02:35.840 --> 02:38.510
-We don't know if it's going to be a string, a number, who knows what?
+ما فقط همونو می‌گیریم و برای همه سرویس‌ها می‌فرستیم.
 
 02:38.570 --> 02:42.890
-All we know is that we're going to take whatever is inside that request body and send it off to all
+هدف اینه که محتوای body رو به همه‌ی سرویس‌های در حال اجرا ارسال کنیم.
 
 02:42.890 --> 02:44.420
-of our different running services.
+صرف‌نظر از اینکه چی توشه.
 
 02:46.390 --> 02:51.520
-So now that we've got that event, we're going to make our series of post requests to our other running
+پس حالا که event رو داریم، وقتشه که چندتا درخواست POST بفرستیم به سرویس‌هامون.
 
 02:51.520 --> 02:52.300
-services.
+اولی:
 
 02:52.300 --> 02:54.910
-So we'll do an Axios post.
+یه `axios.post` به مسیر `http://localhost:4000/events`
 
 02:55.930 --> 03:01.630
-To HTTP, own slash slash local host or thousand slash events.
+و داده‌ای که می‌فرستیم همون event دریافتی هست.
 
 03:02.080 --> 03:05.320
-And the data that we're going to send along is that exact event.
+بعد دو بار اون خط رو کپی می‌کنم
 
 03:08.550 --> 03:10.710
-I'm then going to duplicate that line twice.
+و به ترتیب تغییرش می‌دم به localhost:4001 و localhost:4002
 
 03:12.120 --> 03:14.730
-And I'll put in localhost 4001.
+یعنی کامنت‌سرویس و احتمالا کوئری‌سرویس آینده.
 
 03:15.620 --> 03:17.720
-And then localhost 4002.
+پس هر سه سرویس event رو دریافت می‌کنن.
 
 03:19.970 --> 03:25.610
-And then finally at the very bottom, we'll do a resend and we'll just say any time someone tries to
+در انتها، یه پاسخ به درخواست اصلی برمی‌گردونیم تا بگیم وضعیت اوکیه.
 
 03:25.640 --> 03:28.730
-emit an event, we'll just send back something that says status.
+یعنی یه پاسخ ساده که می‌گه: `{ status: 'OK' }`
 
 03:28.850 --> 03:29.500
-Okay.
+فقط برای تأیید موفق بودن عملیات.
 
 03:30.140 --> 03:32.270
-Just to indicate that everything worked as expected.
+تا طرف مقابل بدونه همه چیز درست پیش رفته.
 
 03:34.230 --> 03:36.870
-Now there is one downside to the implementation we have right here.
+اما یه ایراد توی این پیاده‌سازی وجود داره.
 
 03:36.870 --> 03:40.800
-We are assuming that all three of these post requests are always going to succeed.
+ما فرض کردیم که هر سه درخواست POST همیشه موفق خواهند بود.
 
 03:41.400 --> 03:45.300
-We don't have any handling code around the possibility of one of them failing.
+هیچ کدی برای کنترل خطا یا شکست یکی از این درخواست‌ها نداریم.
 
 03:45.540 --> 03:48.630
-That's just something I want to point out right now, because it's going to start to become a little
+فعلاً فقط می‌خواستم به این نکته اشاره کنم چون وقتی بریم سراغ پیاده‌سازی event handlerها،
 
 03:48.630 --> 03:53.040
-bit relevant as we start to implement each of these different event endpoint handlers.
+این موضوع می‌تونه به یه مسأله جدی تبدیل بشه و باید براش فکر کنیم.
 
 03:55.090 --> 03:55.390
-Okay.
+خب،
 
 03:55.420 --> 03:59.290
-So now finally at the very bottom, we're going to make sure that this thing is listening.
+در نهایت، باید مطمئن بشیم که این سرور واقعا در حال گوش دادن هست.
 
 03:59.290 --> 04:00.280
-So we'll put on an app.
+پس از `app.listen` استفاده می‌کنیم.
 
 04:00.490 --> 04:04.510
-Listen, we're going to have this listen to 4005.
+می‌ذاریم روی پورت 4005 اجرا بشه.
 
 04:04.510 --> 04:06.400
-Notice how I skipped a couple of ports right here.
+می‌بینی که چند پورت رو رد کردم.
 
 04:06.400 --> 04:12.160
-So we've got our posts, our comments, soon to be our query service, and then our event bus is just
-
-04:12.160 --> 04:14.320
-going to go directly up to 4005.
+چون داریم از 4000 برای posts، از 4001 برای comments، بعدش query service و حالا 4005 برای event-bus.
 
 04:15.860 --> 04:18.290
-I'll put in my callback and I'll do a console.log.
+در پایان، یه `console.log` می‌نویسم:
 
 04:19.590 --> 04:22.080
-Listing on 4005.
+Listening on 4005
 
 04:25.510 --> 04:30.250
-So that is it for a very simple, very basic event plus implementation.
+خب، اینم از یه پیاده‌سازی خیلی ساده و ابتدایی برای Event Bus.
 
 04:30.850 --> 04:34.090
-Now, last thing we're going to do, we're going to open up that package, JSON file.
+حالا آخرین کاری که باید انجام بدیم اینه که فایل `package.json` رو باز کنیم.
 
 04:35.050 --> 04:36.960
-We're going to update our script inside of here.
+می‌خوایم اسکریپت‌هاش رو به‌روزرسانی کنیم.
 
 04:36.970 --> 04:40.510
-So I'm going to delete the default test one and replace it with the start script.
+اسکریپت پیش‌فرض `test` رو پاک می‌کنیم و جای اون یه اسکریپت `start` می‌نویسیم.
 
 04:40.510 --> 04:43.220
-Once again will do node on index.
+مثل همیشه، مقدارش می‌شه `node index`.
 
 04:47.090 --> 04:47.510
-Okay.
+خب،
 
 04:47.510 --> 04:49.430
-So let's go back over to our terminal.
+برگردیم به ترمینال.
 
 04:50.170 --> 04:52.750
-I've got my fourth terminal window right here.
+تو تب چهارم ترمینالم هستم.
 
 04:52.750 --> 04:55.890
-So again, react to those comments.
+پس الان داریم: react، posts، comments و event-bus رو اجرا می‌کنیم.
 
 04:55.900 --> 04:56.890
-Event bus.
+من داخل دایرکتوری event-bus هستم.
 
 04:56.920 --> 05:01.210
-I'm inside of event bus and inside there I'll do an NPM start.
+و اینجا دستور `npm start` رو اجرا می‌کنم.
 
 05:02.620 --> 05:05.860
-And so I should see a listing on 4005.
+و حالا باید پیامی ببینم که نشون می‌ده سرور داره روی پورت 4005 گوش می‌ده.
 
 05:06.280 --> 05:06.940
-Very good.
+عالیه.
 
 05:07.750 --> 05:12.610
-Now that we've got our very simple event bus put together, let's take a pause right here in the next
+حالا که Event Bus ساده‌مون راه افتاده، همینجا یه توقف کوتاه داشته باشیم.
 
 05:12.610 --> 05:16.930
-video, we're going to make sure that whenever someone creates a post or a comment, we're going to
+توی ویدیوی بعدی قراره کاری کنیم که هر وقت کسی یه پست یا کامنت ایجاد کرد،
 
 05:16.930 --> 05:19.660
-emit an event over to our event bus.
+یه event به Event Bus ارسال بشه.
 
 05:20.080 --> 05:22.210
-So a quick pause and I'll see you in just a minute.
+پس یه مکث کوتاه، و خیلی زود برمی‌گردیم.

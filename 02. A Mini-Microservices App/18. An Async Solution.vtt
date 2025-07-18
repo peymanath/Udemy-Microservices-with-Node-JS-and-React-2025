@@ -1,214 +1,208 @@
 WEBVTT
 
 00:01.710 --> 00:06.270
-We just said that using synchronous communication was maybe not the best way of solving this because
+ما گفتیم که ارتباط هم‌زمان (Synchronous) شاید بهترین راه‌حل نباشه،
 
 00:06.270 --> 00:11.340
-although it's really easy for you and I, it's not really the best solution from an engineering standpoint.
+چون گرچه برای من و تو ساده‌ست، ولی از دید مهندسی خیلی ایده‌آل نیست.
 
 00:11.550 --> 00:14.310
-So in this video, we're going to take a look at a second possible solution.
+توی این ویدیو می‌خوایم یه راه‌حل دوم رو بررسی کنیم.
 
 00:14.310 --> 00:18.180
-As you guess, this is going to be an asynchronous communication based solution.
+همون‌طور که حدس زدی، این بار می‌ریم سراغ ارتباط غیرهم‌زمان (Asynchronous).
 
 00:18.690 --> 00:23.520
-Remember, with asynchronous communication, we frequently introduce something called an event broker.
+تو ارتباط‌های غیرهم‌زمان معمولاً یه چیزی به اسم "Event Broker" معرفی می‌شه.
 
 00:23.670 --> 00:29.910
-And the goal or purpose of this event broker is to receive notifications from some different services.
+وظیفه‌ی Event Broker اینه که نوتیفیکیشن‌ها یا رویدادهایی که از سرویس‌های مختلف میان رو بگیره
 
 00:30.390 --> 00:35.610
-Take those notifications or those events and route them off to all the other services that we are running.
+و اون‌ها رو به سرویس‌های دیگه‌ای که در حال اجرا هستن ارسال کنه.
 
 00:37.190 --> 00:41.390
-So with this approach, we're going to dramatically change how our application behaves.
+پس با این رویکرد، قراره رفتار برنامه‌مون به طور جدی تغییر کنه.
 
 00:41.960 --> 00:45.560
-We are going to introduce the idea of a query service down here.
+قراره یه چیزی به اسم Query Service اضافه کنیم.
 
 00:46.160 --> 00:52.700
-The goal of the query service is to listen to any time that a post is created or a comment is created.
+وظیفه‌ی این سرویس اینه که هر زمان یه پست یا کامنت ساخته شد، به اون رویداد گوش بده.
 
 00:53.210 --> 00:58.070
-So any time a post is created or a comment is created, we're going to have these services emit an event.
+یعنی وقتی یه پست یا کامنت ساخته می‌شه، اون سرویس یه Event ارسال می‌کنه.
 
 00:58.930 --> 01:03.460
-The query service will then listen for those events and it's going to take all the different posts and
+Query Service اون Event رو دریافت می‌کنه و پست‌ها و کامنت‌ها رو جمع می‌کنه
 
 01:03.460 --> 01:09.310
-comes to get created and assemble them all into a very efficient data structure that can essentially
+و اون‌ها رو توی یه ساختار داده‌ای خیلی بهینه ذخیره می‌کنه تا بتونه مشکلی که داریم رو حل کنه،
 
 01:09.310 --> 01:14.230
-solve our root problem right now, which is to make sure that we reduce all these number of requests
+یعنی این‌که به‌جای چندین درخواست جداگانه، فقط یک درخواست به سمت سرور ارسال بشه.
 
 01:14.230 --> 01:16.300
-down to just one single request.
+همه‌چی در یک درخواست خلاصه بشه.
 
 01:16.630 --> 01:21.550
-So again, the goal of this query service is to take all the different posts, all the different comments,
+در واقع هدف Query Service اینه که تمام پست‌ها و کامنت‌ها رو جمع کنه
 
 01:21.550 --> 01:25.750
-and just serve them up to the browser in one very simple and easy request.
+و اون‌ها رو توی یه API ساده و سریع برای مرورگر فراهم کنه.
 
 01:27.360 --> 01:30.030
-Let's take a look at how this would actually work in practice.
+بیایم ببینیم این توی عمل چطوری کار می‌کنه.
 
 01:30.330 --> 01:32.820
-So here's where everything would start.
+از این‌جا شروع می‌کنیم:
 
 01:33.610 --> 01:38.830
-Whenever someone makes a post request to the post service, we're going to have our post feature emit
+وقتی کسی یه درخواست POST به سرویس پست‌ها می‌فرسته، اون سرویس یه Event ارسال می‌کنه.
 
 01:38.830 --> 01:41.410
-an event and it might look something like this.
+مثلاً یه Event به شکل زیر:
 
 01:41.590 --> 01:47.350
-Maybe it's an event that has some type of post created and it has some data associated with it as well.
+type: "PostCreated" با یک سری دیتا مثل id و title اون پست.
 
 01:47.350 --> 01:49.870
-And that data might be the actual post that was generated.
+دیتای اصلی همون پستیه که ساخته شده.
 
 01:49.870 --> 01:51.820
-So would have an ID and a title.
+حالا این Event به Event Bus ارسال می‌شه.
 
 01:52.810 --> 01:56.620
-The Postal Service would throw that event off to the event bus.
+و Event Bus اون رو به تمام سرویس‌هایی که بهش علاقه دارن می‌فرسته.
 
 01:57.420 --> 02:02.310
-And then the event bus would automatically route that event or send the event off to all of our different
+مثلاً به Query Service هم می‌فرسته.
 
 02:02.310 --> 02:04.560
-services that express some interest in it.
+حالا نوبت Query Service هست که اون Event رو پردازش کنه.
 
 02:04.860 --> 02:07.260
-We might send that event off to our query service.
+و اطلاعات مربوطه رو یه جایی ذخیره کنه.
 
 02:08.000 --> 02:12.860
-Then it would be up to the query service to somehow process this event and store some data from it.
+مثلاً توی یه ساختار داده‌ای مثل همینی که این‌جا داریم.
 
 02:13.640 --> 02:17.510
-So I've got here the query service and the event that it needs to process.
+یعنی یه آبجکت یا کالکشن که تمام پست‌ها و اطلاعات مربوط بهشون رو نگه می‌داره.
 
 02:17.960 --> 02:22.130
-We might decide to create some kind of data structure like the one you see right here to store all these
+و هر Event جدید که بیاد، اطلاعاتش به این ساختار اضافه میشه.
 
 02:22.130 --> 02:23.480
-different events that are coming in.
-
-02:24.350 --> 02:29.840
-So in this case, we might have a kind of collection or object keeping track of all of our different
+تا همیشه آپدیت بمونه.
 
 02:29.840 --> 02:30.440
-posts.
+پست‌ها.
 
 02:30.830 --> 02:35.840
-We might store the ID of every post that has been created, its title and all the relevant comments.
+ما ممکنه ID هر پست، عنوانش و کامنت‌های مرتبط باهاش رو توی این ساختار ذخیره کنیم.
 
 02:36.350 --> 02:41.270
-So any time that we see this post created event come in, we would take that ID right there.
+پس هر وقت یه Event از نوع PostCreated بیاد، ID اون پست رو برمی‌داریم
 
 02:42.390 --> 02:44.130
-And enter in a brand new post.
+و یه پست جدید توی ساختارمون اضافه می‌کنیم.
 
 02:44.130 --> 02:48.690
-So ba1 JP five is the ID, the title is new post.
+مثلاً ID می‌تونه باشه "ba1JP5" و عنوانش "new post"
 
 02:48.990 --> 02:53.370
-And then right now we don't have any comments associated with this post, but probably just default
+و چون هنوز هیچ کامنتی برای این پست نداریم، فیلد کامنت‌ها رو به صورت یه آرایه خالی مقداردهی می‌کنیم
 
 02:53.370 --> 02:58.110
-this comments property right here to be an empty array for right now until we start to actually receive
-
-02:58.110 --> 02:59.040
-some comments.
+تا بعداً که کامنتی براش میاد، به اون آرایه اضافه بشه.
 
 03:00.410 --> 03:05.480
-Then we can imagine that at some point in time in the future, maybe someone creates a comment tied
+حالا فرض کنیم یه نفر تو آینده برای همین پست یه کامنت ثبت می‌کنه.
 
 03:05.480 --> 03:06.410
-to that post.
+یعنی...
 
 03:07.890 --> 03:12.690
-So someone will make a post request to our coven service and very similar to what we just went through.
+یه درخواست POST به سرویس کامنت فرستاده می‌شه و درست مثل قبل...
 
 03:12.720 --> 03:17.250
-We're going to have our common service emit an event that might look a little something like this.
+سرویس کامنت یه Event منتشر می‌کنه، مثلاً:
 
 03:17.940 --> 03:23.100
-It might have a type of comet created and some data related or describing the comment that was just
+type: "CommentCreated" همراه با دیتا مربوط به اون کامنت جدید.
 
 03:23.100 --> 03:23.670
-made.
+مثل ID و محتواش.
 
 03:24.110 --> 03:28.620
-So that will go to our event bus, and the event bus is going to take that thing and route it off to
+این Event میره به سمت Event Bus و اون هم به همه سرویس‌هایی که علاقه دارن، ارسالش می‌کنه.
 
 03:28.620 --> 03:31.080
-any service inside of our app that is interested in it.
+یکی از اون سرویس‌ها همون Query Service هست.
 
 03:31.810 --> 03:36.550
-Now it's up to our query service once again to process this new, different incoming event.
+حالا دوباره نوبت Query Service هست که این Event جدید رو پردازش کنه.
 
 03:37.920 --> 03:39.780
-So we're back to work where we service.
+پس برمی‌گردیم به اون ساختار قبلی.
 
 03:39.930 --> 03:43.980
-We still have that same kind of data structure that we had before, and we've got the definition of
+توی Query Service همون ساختار داده‌ای قبلی رو داریم که پست‌ها داخلش هستن.
 
 03:43.980 --> 03:46.110
-some existing post inside there already.
+مثلاً پست مورد نظر قبلاً ثبت شده.
 
 03:46.710 --> 03:50.250
-So we'll write out some code inside of our query service to process this event.
+حالا یه تکه کد می‌نویسیم توی Query Service که اون کامنت جدید رو بگیره
 
 03:51.520 --> 03:53.890
-It's going to take this comment that was just created.
+و داخل آرایه‌ی کامنت‌های همون پست بریزه.
 
 03:54.220 --> 03:58.560
-It's going to find the related post with this given post ID right here.
+پست رو از روی postId پیدا می‌کنیم و کامنت رو بهش اضافه می‌کنیم.
 
 03:58.630 --> 04:01.390
-In this case, the post ID is a one JB five.
+مثلاً postId همون "a1JB5" باشه
 
 04:02.050 --> 04:03.250
-There's the post right there.
+و پست موردنظر رو پیدا می‌کنیم.
 
 04:03.820 --> 04:08.710
-So our query service will take this comment and add it into some kind of comments array.
+سپس، این کامنت جدید رو اضافه می‌کنیم به آرایه‌ی کامنت‌های اون پست.
 
 04:09.190 --> 04:16.510
-I'll say the idea of this comment is to j56 and the content is a comment like so.
+مثلاً: id: "2j56" و content: "اینم یه کامنت جدید"
 
 04:19.100 --> 04:24.800
-Then at that point in time, someone can make a request directly to our query service and ask for all
+حالا در این وضعیت، کاربر می‌تونه مستقیماً یه درخواست به Query Service بفرسته
 
 04:24.800 --> 04:27.200
-the different posts and all the related comments.
+و همه پست‌ها و کامنت‌های مربوط بهشون رو دریافت کنه.
 
 04:27.350 --> 04:32.150
-And our query service really has to do now is take this entire data structure and send it out.
+Query Service فقط لازمه کل اون ساختار داده‌ای رو به‌سادگی به مرورگر برگردونه.
 
 04:32.540 --> 04:36.320
-And inside this thing we've got all the relevant posts, all the relevant comments.
+و این ساختار همه پست‌ها و کامنت‌ها رو در خودش داره.
 
 04:37.510 --> 04:40.480
-So again, this is this kind of asynchronous communication style.
+این همون سبک ارتباط غیرهم‌زمان (asynchronous) هست.
 
 04:41.670 --> 04:45.900
-So in this diagram, I just want to make sure it's really clear rather than making a request to our
+توی این دیاگرام، فقط می‌خوام کاملاً مشخص باشه که به جای اینکه درخواست به Post Service بفرستیم
 
 04:45.900 --> 04:50.040
-post service now to get a list of all the posts and whatnot, we would instead make a get request down
+برای گرفتن لیست پست‌ها، حالا فقط یه درخواست GET به Query Service می‌فرستیم.
 
 04:50.040 --> 04:51.630
-to the query service instead.
+همین.
 
 04:51.960 --> 04:55.350
-So that would require making some changes inside of our React application.
+و البته این یعنی باید یه سری تغییرات توی اپلیکیشن React‌مون بدیم.
 
 04:56.330 --> 04:56.600
-Okay.
+تمام.
 
 04:56.600 --> 05:00.140
 So at this point, I want to go over some pros and cons of this approach.
@@ -229,112 +223,107 @@ Yes, I totally agree with you.
 I understand it does rely upon some incoming events that are being issued by those services.
 
 05:17.000 --> 05:21.350
-But if those services go down for any reason, if they stop functioning, if they stop working, the
+But if those services go d05:21.350 --> 05:24.380
+حتی اگه یکی از سرویس‌ها به هر دلیلی از کار بیفته یا قطع بشه،
 
-05:21.350 --> 05:24.380
-query service is still going to work as expected.
+05:24.380 --> 05:25.330
+Query Service همچنان به کار خودش ادامه می‌ده.
 
 05:25.330 --> 05:29.620
-The query service is also going to be really, really fast compared to that more synchronous style of
+از نظر سرعت هم Query Service خیلی خیلی سریع‌تره نسبت به مدل هم‌زمان قبلی.
 
 05:29.620 --> 05:30.550
-communication.
+و دلیلش واضحه.
 
 05:31.360 --> 05:35.800
-The reason for this is that we're not making any requests between our different services anymore.
+چون دیگه هیچ درخواست مستقیمی بین سرویس‌هامون رد و بدل نمی‌شه.
 
 05:35.830 --> 05:39.730
-If someone ever wants to get a list of all the different posts and comments associated with them, that's
+وقتی کاربر لیست پست‌ها و کامنت‌ها رو می‌خواد، فقط یه درخواست ساده می‌فرسته.
 
 05:39.730 --> 05:41.620
-going to be one very simple request.
+همه چی تو همون یه درخواست انجام می‌شه.
 
 05:43.400 --> 05:46.490
-The downsides here are identical to the downsides we looked at previously.
+اما نقطه‌ضعف‌هاش دقیقاً همون چیزایی‌ان که قبلاً گفتیم.
 
 05:46.490 --> 05:48.350
-We now have some data duplication.
+الان یه مشکلی به اسم تکرار داده داریم.
 
 05:48.770 --> 05:54.410
-One thing to be clear about is that even in this asynchronous style approach, if we have, say, a
+بذار روشن بگم: حتی تو این مدل غیرهم‌زمان، اگه یه درخواست POST به سرویس پست بیاد،
 
 05:54.410 --> 05:56.870
-post request, come in to the post service right here.
+اون سرویس همچنان پست رو تو دیتای خودش ذخیره می‌کنه.
 
 05:57.380 --> 06:00.260
-The post service is still going to store a post.
+یعنی سرویس پست تعریف خودش از یه پست رو داره و نگه می‌داره.
 
 06:00.260 --> 06:05.240
-It's still going to have its own idea of what a post is, though, still being stored here.
+اما از طرف دیگه، اطلاعات همون پست داره تو Query Service هم ذخیره میشه.
 
 06:05.240 --> 06:10.460
-But we're also storing what a post is or this some information about this post inside of our query service
+یعنی الان عملاً داده‌هامون بین این دو تا سرویس تکرار شده.
 
 06:10.460 --> 06:11.120
-as well.
+داده Duplicate شده.
 
 06:11.600 --> 06:15.890
-So we now are now effectively duplicating data between these two services.
+ممکنه در نگاه اول بگی اینکار کلی منابع هدر می‌ده، ولی واقعاً دلایل خوبی برای این تکرار وجود داره.
 
 06:16.340 --> 06:20.990
-It might sound really wasteful to duplicate this data, but there are some really good reasons to persist
+و اینکه چرا این کار منطقیه، توی ادامه‌ی دوره به طور مفصل بررسی می‌کنیم.
 
 06:20.990 --> 06:25.130
-data between these two services and these reasons are something that we'll discuss a little bit later
+و اما آخرین مشکل این مدلی اینه که—بدون هیچ شکی—فهمیدنش خیلی سخت‌تره.
 
 06:25.130 --> 06:25.550
-on.
+بدون شک.
 
 06:26.710 --> 06:31.480
-And then the last issue here is, well, without a doubt, way harder to understand.
+از دید مهندسی، پیاده‌سازی این مدل پیچیده‌تره، چون باید از تمام Eventهایی که تو برنامه در حال جریانه باخبر باشیم.
 
 06:31.510 --> 06:32.680
-No doubt about it.
+و اونا رو مدیریت کنیم.
 
 06:33.130 --> 06:37.090
-From an engineering standpoint, this is a lot harder to implement because we need to be aware of all
-
-06:37.090 --> 06:39.670
-these different events that are floating around our application.
+وگرنه همه چی خیلی زود بهم می‌ریزه.
 
 06:40.370 --> 06:45.470
-However, when it comes down to the actual operational efficiency of this, it's going to be incredibly
+با این حال، از نظر عملکرد واقعی و کارایی اجرایی، این مدل واقعاً فوق‌العاده سریعه.
 
 06:45.470 --> 06:46.250
-fast.
+خیلی بهینه‌ست.
 
 06:46.280 --> 06:48.650
-No issues with dependencies on their services.
+هیچ وابستگی‌ای به سرویس‌های دیگه نداره.
 
 06:48.650 --> 06:52.670
-So again, if anything else goes down, this service will continue to work.
+پس حتی اگه بقیه سرویس‌ها قطع بشن، این سرویس همچنان به کار خودش ادامه می‌ده.
 
 06:54.610 --> 06:57.490
-Now at this point, you might be thinking, all right, Steven.
+الان ممکنه با خودت بگی: خب استیون، باشه...
 
 06:57.940 --> 06:58.420
-Sure.
+قبوله...
 
 06:58.420 --> 06:59.070
-Whatever.
+شاید راست می‌گی...
 
 06:59.080 --> 07:00.380
-Maybe this is how it's done.
+شاید این روش درسته...
 
 07:00.400 --> 07:02.020
-You might have some really big questions.
+ولی یه عالمه سوال تو ذهنم دارم.
 
 07:02.020 --> 07:06.400
-So I put together a quick diagram here where I think I've got some questions that you might have at
+برای همین من یه دیاگرام آماده کردم که سوال‌هایی که احتمالاً الان تو ذهنت داری رو آوردم
 
 07:06.400 --> 07:09.070
-this point in time and some possible answers to them.
+و جواب‌های احتمالی هم براشون گذاشتم.
 
 07:09.340 --> 07:10.930
-This video is going a little bit long, however.
+البته این ویدیو یکم طولانی شده.
 
 07:10.930 --> 07:14.560
-So let's take a pause right here and we'll go over some of your concerns that you might have with this
-
-07:14.560 --> 07:16.000
-approach in just a moment.
+پس همین‌جا یه توقف کوتاه می‌کنیم و تو ویدیوی بعدی می‌ریم سراغ این سوال‌ها و نگرانی‌هایی که ممکنه داشته باشی.

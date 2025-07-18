@@ -1,427 +1,418 @@
 WEBVTT
 
 00:01.020 --> 00:03.420
-There's just two more components we need to create very quickly.
+فقط دو کامپوننت دیگه مونده که خیلی سریع باید بسازیم.
 
 00:03.420 --> 00:07.260
-We're going to get through these rather fast because they're really the same as two components we put
+خیلی سریع ازشون عبور می‌کنیم چون تقریباً مشابه دو کامپوننت قبلی هستن که قبلاً ساختیم.
 
 00:07.260 --> 00:08.310
-together before.
+می‌خوایم CommentCreate و CommentList رو بسازیم.
 
 00:08.400 --> 00:10.740
-So we're going to make common create and comment list.
+پس بریم سراغشون.
 
 00:10.740 --> 00:11.610
-Let's get to it.
+شروع کنیم.
 
 00:11.610 --> 00:16.350
-Well, first start with come and create back inside my editor for the React Project.
+اول با CommentCreate شروع می‌کنیم. برمی‌گردیم به ادیتور React.
 
 00:16.350 --> 00:22.230
-I'm going to make a new file inside the CRC directory called Comment Create Dogs.
+داخل دایرکتوری src یه فایل جدید به اسم CommentCreate.js می‌سازم.
 
 00:23.080 --> 00:24.910
-Inside of here, we'll import React.
+اینجا React رو ایمپورت می‌کنیم.
 
 00:25.790 --> 00:26.630
-Right away.
+همین اول کار.
 
 00:28.250 --> 00:32.330
-And then create a new component and export it like so.
+بعد یه کامپوننت جدید می‌سازیم و اکسپورتش می‌کنیم.
 
 00:33.050 --> 00:36.260
-And for right now, I'll just return once again an empty div.
+فعلاً فقط یه div خالی برمی‌گردونیم.
 
 00:38.510 --> 00:41.030
-Now let's think about what Comet Create really needs to do.
+حالا بیایم فکر کنیم که CommentCreate دقیقاً قراره چی کار کنه.
 
 00:41.180 --> 00:43.970
-Come and Create is going to represent this form right here.
+این کامپوننت در واقع فرم کامنت هست.
 
 00:43.970 --> 00:47.720
-So users going to type in some content for the comment and then click on Submit.
+کاربر قراره یه متنی برای کامنت وارد کنه و بعد روی دکمه Submit کلیک کنه.
 
 00:47.990 --> 00:53.540
-The expectation is that we should take whatever content the user enters and make a post request off
+انتظار داریم که وقتی کاربر چیزی وارد کرد، یه درخواست POST به سرویس کامنت‌هامون ارسال بشه.
 
 00:53.540 --> 00:54.770
-to our comment service.
+به یه نکته مهم دقت کن:
 
 00:55.130 --> 01:00.140
-Now one thing I want to point out in particular is that whenever we create a comment, we have to know
+وقتی یه کامنت ساخته می‌شه، باید بدونیم این کامنت به کدوم پست تعلق داره.
 
 01:00.140 --> 01:03.710
-the ID of the post that we are associating that comment with.
+پس توی کامپوننت CommentCreate باید آی‌دی پستی که این کامنت براش ساخته می‌شه رو داشته باشیم.
 
 01:04.070 --> 01:10.070
-So inside of our comment create component, we need to know the post that this comment is going to be
+پس خلاصه‌اش اینکه، وقتی داخل PostList یا هر پستی بخوایم از CommentCreate استفاده کنیم،
 
 01:10.070 --> 01:11.120
-associated with.
+باید آی‌دی اون پست رو براش ارسال کنیم.
 
 01:11.330 --> 01:17.450
-So long story short, whenever our post list or a post inside a post list.
+این یعنی باید prop آی‌دی پست رو به این کامپوننت پاس بدیم.
 
 01:18.190 --> 01:20.440
-Is going to create a common create component.
+وقتی داریم CommentCreate رو داخل یه پست استفاده می‌کنیم،
 
 01:20.440 --> 01:24.460
-We need to pass down the ID of the post that it's going to be associated with.
+باید آی‌دی اون پست رو به عنوان prop براش بفرستیم.
 
 01:24.490 --> 01:25.690
-That's the long and short of it.
+همین خلاصه‌اشه.
 
 01:26.170 --> 01:30.280
-So inside of Comet Create, we're going to assume that this thing is going to receive a prop.
+پس داخل CommentCreate فرض می‌کنیم که این کامپوننت قراره یه prop دریافت کنه.
 
 01:30.280 --> 01:35.530
-So we're going to receive some props right here that's going to contain something like post ID or something
+یه prop که احتمالاً اسمش postId یا یه چیز شبیه به اینه.
 
 01:35.530 --> 01:36.340
-very similar.
+چیز خاص دیگه‌ای نیاز نداریم.
 
 01:36.760 --> 01:41.410
-I don't really expect to receive any other props inside this thing, so I'm going to structure out just
-
-01:41.410 --> 01:43.510
-this post ID value.
+برای همین فقط postId رو از props استخراج می‌کنم.
 
 01:44.490 --> 01:44.790
-Okay.
+خب.
 
 01:44.790 --> 01:48.660
-So we're not going to make use of post ID just yet, but I just want to talk about it right away just
+فعلاً قرار نیست از postId استفاده کنیم، فقط خواستم همین اول بهش اشاره کنم تا همه‌چیز واضح باشه.
 
 01:48.660 --> 01:49.740
-to make sure it's really clear.
-
-01:49.740 --> 01:53.520
-Yeah, we needed to know the ID of the post that we're going to associate this comment with.
+آره، ما باید بدونیم که این کامنت برای کدوم پست ثبت می‌شه.
 
 01:54.240 --> 01:56.640
-So now we can start to put together the rest of this component.
+حالا می‌تونیم بقیه این کامپوننت رو بسازیم.
 
 01:57.790 --> 01:58.450
-To get started.
+برای شروع،
 
 01:58.450 --> 02:00.550
-Let's work on a little bit of mock markup.
+بیایم یه مارک‌آپ ساده و اولیه بنویسیم.
 
 02:01.660 --> 02:03.080
-I'm going to expand this div.
+div رو گسترش می‌دم.
 
 02:05.220 --> 02:06.180
-Inside there.
+داخلش،
 
 02:06.180 --> 02:10.290
-We're going to want a form element because this thing is all about showing a form that the user is going
+می‌خوایم یه المنت فرم قرار بدیم چون این کامپوننت قراره یه فرم نشون بده که کاربر توش متن وارد کنه.
 
 02:10.290 --> 02:16.350
-to enter some text into inside that will place a div with the class name of form group.
+داخل فرم، یه div با کلاس form-group قرار می‌دیم.
 
 02:17.940 --> 02:20.640
-Inside that div will do an input.
+توی این div، یه input می‌ذاریم.
 
 02:21.840 --> 02:24.000
-And right above that, let's do a label as well.
+و بالای input هم یه label قرار می‌دیم.
 
 02:25.150 --> 02:25.750
-On the label.
+برای label،
 
 02:25.750 --> 02:28.510
-I'll give it some text like how about new comment?
+یه متن مناسب مثل "کامنت جدید" می‌ذاریم.
 
 02:29.420 --> 02:30.470
-On the input.
+برای input،
 
 02:30.470 --> 02:32.270
-Let's add in a class name there as well.
+یه کلاس form-control اضافه می‌کنیم.
 
 02:32.300 --> 02:37.010
-I'll do form dash control, let in some event listeners and whatnot in just a moment.
+تا چند لحظه دیگه براش event listener هم اضافه می‌کنیم.
 
 02:37.220 --> 02:41.720
-First, right outside of that closing div that we've got right there, I'm going to add in a button.
+حالا بیرون از اون div، یه دکمه اضافه می‌کنم.
 
 02:43.720 --> 02:45.070
-That says submit.
+متن دکمه: Submit
 
 02:46.010 --> 02:50.870
-And I'll give it a class name as well of BTN Primary.
+و کلاسش هم BTN Primary باشه.
 
 02:52.740 --> 02:53.000
-Okay.
+خب.
 
 02:53.010 --> 02:54.030
-So this is a good start.
+این یه شروع خوبه.
 
 02:54.390 --> 02:58.800
-Now we need to make sure that we've got a piece of state that's going to track whatever value a user
+حالا باید یه state تعریف کنیم تا مقدار داخل input رو نگه داره.
 
 02:58.800 --> 03:00.030
-has inside this input.
+باید برای فرم یه event handler تعریف کنیم که وقتی سابمیت شد، اجرا بشه.
 
 03:00.060 --> 03:04.100
-We need to make sure we've got an event handler on the form itself to watch for a summit event.
+همچنین یه تابع نیاز داریم که یه درخواست POST بفرسته به میکروسرویس کامنت‌هامون
 
 03:04.110 --> 03:08.190
-And we need to make sure that we've got a function that's actually going to make a post request off
+و کامنت وارد شده رو ذخیره کنه.
 
 03:08.190 --> 03:12.060
-to our comments microservice and attempt to persist the given comment.
+پس بریم سراغش.
 
 03:13.010 --> 03:14.070
-So let's get to it.
+اولین قدم:
 
 03:14.090 --> 03:15.470
-Let's first add in.
+استفاده از useState.
 
 03:16.780 --> 03:18.250
-The U.S. state hook.
+هوک useState رو اضافه می‌کنیم.
 
 03:19.660 --> 03:23.010
-We're going to create a new piece of state that's going to track whatever value the user has inside
+یه state جدید تعریف می‌کنیم که مقدار input کاربر رو نگه داره.
 
 03:23.020 --> 03:23.740
-that input.
+اسمش رو می‌ذاریم content و setContent.
 
 03:24.440 --> 03:27.380
-So we'll say, how about content and set content?
+از useState می‌گیریمش و مقدار اولیه‌اش رو خالی می‌ذاریم.
 
 03:28.950 --> 03:32.010
-It's going to come from your state and we'll give it a default value of empty string.
+حالا می‌ریم سراغ input و براش value و event handler مشخص می‌کنیم.
 
 03:33.080 --> 03:36.860
-Then we can set up some event handlers and value centers on the input itself.
+value رو برابر می‌ذاریم با content.
 
 03:37.250 --> 03:40.160
-So I'll say that this things value is going to be equal to content.
+و یه onChange براش تعریف می‌کنیم.
 
 03:41.450 --> 03:43.940
-And it's going to have an unchanged event listener.
+وقتی کاربر چیزی تایپ کنه، event رو می‌گیریم
 
 03:44.940 --> 03:49.320
-Whenever a user changes this input, we're going to receive an event which once again will abbreviate
+که دوباره به صورت خلاصه e صداش می‌زنیم.
 
 03:49.320 --> 03:50.400
-just as E!
+و مقدار داخل input رو
 
 03:51.430 --> 03:55.870
-And we'll use that things target value property to update our content piece of state.
+با استفاده از e.target.value به content پاس می‌دیم تا state به‌روز بشه.
 
 03:56.050 --> 03:59.440
-We'll say set content e target value.
+یعنی می‌نویسیم: setContent(e.target.value)
 
 04:03.070 --> 04:03.340
-Okay.
+خب.
 
 04:03.370 --> 04:04.150
-That looks good.
+به‌نظر خوب میاد.
 
 04:04.780 --> 04:06.730
-So now let's work on the form itself.
+حالا بریم سراغ کار کردن روی خود فرم.
 
 04:06.880 --> 04:09.220
-We're going to add in and on Submit Listener.
+قراره یه رویداد onSubmit به فرم اضافه کنیم.
 
 04:09.700 --> 04:13.840
-Once again, any time this thing gets submitted, we'll call a function that will call simply on submit.
+هر بار که فرم ارسال شد، یه تابع اجرا می‌شه که اسمش رو می‌ذاریم onSubmit.
 
 04:15.220 --> 04:16.780
-So let's define that function right away.
+پس بیایم این تابع رو تعریف کنیم.
 
 04:17.200 --> 04:22.390
-So on submit is going to be an async function because we probably need to make a request inside of here.
+تابع onSubmit رو به‌صورت async می‌نویسیم چون باید داخلش یه درخواست HTTP ارسال کنیم.
 
 04:23.450 --> 04:25.010
-Because this is a form submission.
+چون این یه ارسال فرم هست،
 
 04:25.010 --> 04:29.870
-Once again, we're going to receive that event object and call prevent default on it.
+باید event رو بگیریم و preventDefault روش صدا بزنیم که از رفتار پیش‌فرض جلوگیری کنه.
 
 04:32.340 --> 04:38.910
-And so now finally, right here is where we're going to want to take our content and the post ID and
+حالا اینجا جاییه که باید از متغیرهای content و postId استفاده کنیم
 
 04:38.910 --> 04:41.430
-use them to make requests off to our comments.
+و باهاشون یه درخواست به سرویس کامنت‌هامون ارسال کنیم.
 
 04:41.430 --> 04:47.310
-Microservice So let's make sure that we import Axios at the top so we can actually make that request.
+پس اول از همه باید Axios رو بالای فایل ایمپورت کنیم تا بتونیم درخواست HTTP بفرستیم.
 
 04:51.250 --> 04:54.940
-And then inside of here we'll do an await Axios dot post.
+حالا اینجا از `await axios.post` استفاده می‌کنیم.
 
 04:56.330 --> 05:01.010
-It's going to be a post request because we want to create a new comment and then remember the path that
+چون می‌خوایم یه کامنت جدید بسازیم، باید از متد POST استفاده کنیم. حالا یادت بیاد که گفتیم:
 
 05:01.010 --> 05:02.840
-we said that we were going to use for that microservice.
+مسیر مورد نظر برای این میکروسرویس
 
 05:02.840 --> 05:08.120
-We said that we were going to make a post request to posts slash the ID of the post.
+قراره باشه: posts/{postId}/comments
 
 05:08.120 --> 05:10.100
-We care about slash comments.
+و بدنه‌ی درخواست باید شامل `content` باشه
 
 05:10.160 --> 05:13.370
-We were going to include a body of content and that was going to have a string.
+که مقدارش یه رشته (string) هست.
 
 05:15.180 --> 05:17.160
-So inside of here we'll use a template string.
+پس از template string استفاده می‌کنیم.
 
 05:17.190 --> 05:21.210
-Notice I'm using the back ticks and we'll say http colon, slash, slash.
+با backtick می‌نویسیم: http://
 
 05:22.100 --> 05:23.030
-Local host.
+localhost
 
 05:23.030 --> 05:24.530
-And then remember our comments.
+و پورت سرویس کامنت‌هامون که هست:
 
 05:24.530 --> 05:27.020
-Microservice is at Port 4001.
+پورت 4001
 
 05:27.980 --> 05:32.930
-We'll do such posts and then we'll do some string templating here and put in our post ID, which we
+بعدش می‌نویسیم /posts و بعد با string interpolation آی‌دی پست رو می‌ذاریم
 
 05:32.930 --> 05:33.950
-discussed a little bit ago.
+که به‌صورت prop دریافت کردیم.
 
 05:33.950 --> 05:35.270
-That's coming in as a prop.
+و در نهایت /comments
 
 05:36.600 --> 05:37.920
-Slash comments.
+حالا توی بدنه‌ی درخواست
 
 05:39.660 --> 05:45.150
-And we'll make sure that we provide the actual content inside the body of the request that's inside
+یه آبجکت پاس می‌دیم که content رو به‌عنوان فیلدش داشته باشه. این پارامتر دوم متد POST هست
 
 05:45.150 --> 05:47.400
-this object right here provided as the second argument.
+و داخلش اطلاعاتی که می‌خوایم ذخیره بشن رو می‌فرستیم.
 
 05:47.400 --> 05:49.410
-And we'll throw our content inside there.
+حالا مقدار content رو داخل بدنه درخواست قرار می‌دیم.
 
 05:50.560 --> 05:53.600
-So that should create a new comment and associate it with a given post.
+این کار باعث می‌شه یه کامنت جدید ایجاد بشه و به پست مشخص‌شده متصل بشه.
 
 05:55.270 --> 05:59.950
-Right after we make this request successfully, we're going to once again clear out the value of that
+بعد از اینکه درخواست با موفقیت انجام شد، مقدار input رو پاک می‌کنیم.
 
 05:59.950 --> 06:00.620
-input.
+یعنی ورودی رو خالی می‌کنیم
 
 06:00.640 --> 06:05.350
-So we're going to reset the inputs value back to an empty string just to make sure it's clear to a user
+تا به کاربر نشون بدیم که کامنتش با موفقیت ذخیره شده.
 
 06:05.350 --> 06:07.510
-that, hey, your comment has been persisted.
+برای این کار از setContent با مقدار رشته خالی استفاده می‌کنیم.
 
 06:08.230 --> 06:11.260
-Right after that, I'll do a set content of empty string.
+یعنی بعد از درخواست، مقدار ورودی صفر می‌شه.
 
 06:14.600 --> 06:15.140
-Yes, Alex.
+خیلی خوب.
 
 06:15.140 --> 06:15.590
-Good.
+تا اینجا عالیه.
 
 06:16.330 --> 06:19.480
-Now, before we test this, we need to make sure we actually show this component somewhere.
+قبل از تست کردن، باید مطمئن بشیم که این کامپوننت واقعاً جایی نمایش داده می‌شه.
 
 06:19.870 --> 06:22.360
-Remember, we want to show that component.
+یادت باشه که ما می‌خوایم این کامپوننتو نشون بدیم
 
 06:23.710 --> 06:25.120
-Inside of our post list.
+زیر هر پستی داخل PostList.
 
 06:25.510 --> 06:31.450
-Every single post that we display needs to have an instance of comment create displayed right underneath
+یعنی هر پستی که رندر می‌شه، باید یه CommentCreate هم زیرش نمایش داده بشه.
 
 06:31.450 --> 06:31.870
-it.
+دقیقاً زیرش.
 
 06:32.140 --> 06:36.940
-So we'll go into post list and find where we iterate over our list of posts to build out this list right
-
-06:36.940 --> 06:37.390
-here.
+پس می‌ریم سراغ فایل PostList و جایی که داریم پست‌ها رو map می‌کنیم پیدا می‌کنیم.
 
 06:39.000 --> 06:41.670
-So I will go back over to post listings.
+برمی‌گردیم به فایل PostList.
 
 06:42.820 --> 06:48.010
-I'm going to scroll it to the very top and I will import post or semi comment create.
+می‌ریم بالای فایل و کامپوننت CommentCreate رو ایمپورت می‌کنیم.
 
 06:49.820 --> 06:51.170
-From comment create.
+از فایل comment-create.
 
 06:54.500 --> 06:57.990
-Well, then find where we mapped over all those posts.
+حالا جایی که پست‌ها رو map کردیم پیدا می‌کنیم.
 
 06:58.010 --> 06:59.600
-Here's the mapping statement right here.
+اینه قسمت map مربوط به پست‌ها.
 
 07:01.060 --> 07:03.190
-So this is where we display the title of the post.
+اینجا داریم عنوان پست رو نشون می‌دیم.
 
 07:03.190 --> 07:07.630
-And as we just saw in our mockup, we want to display that form right underneath it.
+و حالا طبق طرحی که ساختیم، فرم کامنت باید دقیقاً زیرش قرار بگیره.
 
 07:08.200 --> 07:11.380
-So right after that div or see me right after the H three my mistake.
+پس درست بعد از تگ h3، یا بهتر بگم، داخل div مربوطه
 
 07:11.380 --> 07:12.610
-We want it to be inside the div.
+تا همچنان استایل card-body حفظ بشه.
 
 07:12.610 --> 07:14.950
-So it's got that card body class applied to it.
+کامپوننت CommentCreate رو قرار می‌دیم
 
 07:16.010 --> 07:20.840
-We're going to display our comment rate component and we will make sure that we give it.
+و پراپ لازم یعنی postId رو بهش می‌دیم.
 
 07:20.840 --> 07:24.110
-It's a required property, which is the post ID.
+اسم prop رو می‌ذاریم postId.
 
 07:25.320 --> 07:26.490
-We'll say post ID.
+و مقدارش رو از post می‌گیریم
 
 07:27.380 --> 07:32.120
-And we've got access to the post IDs via this post variable right here.
+که توی map بهش دسترسی داریم. پس مقدارش می‌شه post.id
 
 07:33.230 --> 07:35.510
-So we'll pass in post ID.
+و به این شکل پاسش می‌دیم.
 
 07:37.750 --> 07:37.960
-Okay.
+خب.
 
 07:37.990 --> 07:38.650
-That should be it.
+تمومه.
 
 07:38.680 --> 07:39.760
-Let's save this.
+فایل رو ذخیره می‌کنیم.
 
 07:40.030 --> 07:45.580
-We'll flip back over and once again, do a quick test so I can now see my comment creation form.
+برمی‌گردیم به مرورگر و یه تست سریع می‌زنیم. حالا می‌تونم فرم ساخت کامنت رو ببینم.
 
 07:47.000 --> 07:50.930
-I'll enter in a comment and then submit it.
+یه کامنت وارد می‌کنم و ارسالش می‌کنم.
 
 07:51.530 --> 07:56.360
-And with my network request tab open, I can see that that comment was created successfully.
+با باز بودن تب Network، می‌بینم که درخواست با موفقیت انجام شده و کامنت ساخته شده.
 
 07:59.200 --> 08:00.580
-All right, so it looks pretty good.
+خیلی خوب به‌نظر می‌رسه.
 
 08:00.610 --> 08:05.260
-Now, the last thing we have to do here is just make sure we put together the comment list component.
+حالا فقط یه کار دیگه مونده: باید کامپوننت CommentList رو هم پیاده‌سازی کنیم.
 
 08:06.080 --> 08:06.970
-So quick pause.
+یه توقف کوچیک،
 
 08:06.990 --> 08:07.880
-Work on that component.
+می‌ریم سراغ اون کامپوننت
 
 08:07.880 --> 08:09.380
-Finish it up in just a moment.
+و سریع تمومش می‌کنیم.

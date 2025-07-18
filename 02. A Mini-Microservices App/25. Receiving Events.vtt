@@ -1,253 +1,217 @@
 WEBVTT
 
 00:01.290 --> 00:06.420
-Let's go ahead and put our events handlers together for the post service and the Common Service.
+بیا بریم و هندلرهای مربوط به دریافت رویدادها رو برای سرویس Post و Comment اضافه کنیم.
 
 00:06.870 --> 00:09.950
-So I'm going to get started by going first to my post service.
+اول از همه می‌رم سراغ سرویس Post.
 
 00:09.960 --> 00:15.300
-I'll find the index case file and then to the very bottom of the file, but right above the apt list
+فایل index.js رو باز می‌کنم و می‌رم پایین‌ترین بخش فایل، درست بالای خط app.listen.
 
 00:15.300 --> 00:15.880
-in line.
+اینجا یه هندلر جدید برای درخواست POST می‌سازم.
 
 00:15.900 --> 00:18.780
-I'll add in a new post request handler.
+این هندلر مربوط میشه به مسیر /events.
 
 00:19.110 --> 00:22.470
-So this will be AP post to slash events.
-
-00:23.450 --> 00:26.210
-We'll get our rec and resin there.
+پارامترهای req و res رو می‌گیریم.
 
 00:28.820 --> 00:33.980
-And then remember, this endpoint is going to receive any event that is coming over from our event bus.
+یادت باشه این endpoint قراره هر رویدادی که از سمت Event Bus ارسال می‌شه رو دریافت کنه.
 
 00:34.070 --> 00:38.480
-So right now, inside of our post service, we don't really care about any events that are coming over.
+فعلاً توی سرویس Post اهمیتی به نوع رویداد نمی‌دیم، فقط می‌خوایم لاگ کنیم که یه رویدادی دریافت شده.
 
 00:38.480 --> 00:43.100
-Well, let's just go ahead and log any events that we receive just to say, Hey, this event exists,
+پس فقط یه console.log می‌زنیم که بگه یه event دریافت کردیم.
 
 00:43.790 --> 00:47.810
-so I'll do a console.log of received event.
+و مقدار req.body.type رو لاگ می‌کنیم.
 
 00:50.840 --> 00:52.880
-And we'll just print out the type of the event.
+این همون نوع رویدادیه که دریافت کردیم.
 
 00:53.030 --> 00:54.980
-How about req body?
+یعنی body که فرستاده شده.
 
 00:55.080 --> 00:56.510
-That's going to be the actual event.
+و طبق قرارداد، رویدادها باید type داشته باشن.
 
 00:56.510 --> 01:00.770
-And remember, every event that we receive, we said that it was going to have a type property.
+پس لاگ می‌زنیم: req.body.type
 
 01:00.980 --> 01:03.650
-So I will print out the type of the event that we just got.
+بعدش حتماً باید یه پاسخ بدیم که بگیم درخواست دریافت شده.
 
 01:05.680 --> 01:10.090
-After that, I'll make sure that I still respond to the request that was issued just to say, Hey,
+یه res.send با یه آبجکت خالی ارسال می‌کنیم که بگیم همه چی درست پیش رفته.
 
 01:10.090 --> 01:10.930
-we got this.
+و ما رویداد رو گرفتیم.
 
 01:11.440 --> 01:16.990
-So we'll do a resend of empty object just to say, Yeah, we got this event, everything.
-
-01:16.990 --> 01:17.740
-Everything's good to go.
-
-01:19.570 --> 01:23.590
-So now repeat the same process over inside of our comment service as well.
+حالا همین کار رو باید برای سرویس Comment هم تکرار کنیم.
 
 01:23.980 --> 01:27.390
-They'll find my comments directory indexes inside of there.
+می‌رم داخل پوشه comments، فایل index.js
 
 01:28.000 --> 01:31.660
-I'll go down towards the bottom and right above the list in line.
+پایین فایل، درست بالای app.listen، یه هندلر جدید اضافه می‌کنم.
 
 01:32.140 --> 01:33.610
-I'll do an app post.
+app.post('/events', ...)
 
 01:34.590 --> 01:35.490
-Four events.
+و لاگ می‌زنم:
 
 01:38.250 --> 01:41.790
-We'll do a console.log of event received.
+console.log("event received", req.body.type)
 
 01:42.670 --> 01:44.950
-And rec body type.
+و مثل قبل res.send({})
 
 01:47.540 --> 01:50.570
-And then we'll do our resent empty object.
+خوبه، همین برای تست اولیه کافیه.
 
 01:52.570 --> 01:52.900
-Okay.
+خب
 
 01:52.930 --> 01:55.000
-So that should be enough to test this stuff out.
+الان می‌تونیم بریم سراغ تست کامل این سیستم.
 
 01:55.300 --> 01:58.030
-So now we're going to really see the entire process here.
+قراره کل فرآیند رو از اول تا آخر ببینیم.
 
 01:58.030 --> 01:59.770
-We're going to see everything from start to finish.
+از ارسال رویداد تا دریافتش در سرویس‌ها.
 
 02:00.500 --> 02:05.930
-If we take a look at our terminal after we start to emit some events, we should see some console log
+اگر ترمینال رو نگاه کنیم، وقتی رویدادی ارسال بشه، باید لاگ‌هایی از طرف post service و comment service ببینیم.
 
 02:05.930 --> 02:10.730
-coming from our post service and the common service and they should say every single time they receive
-
-02:10.730 --> 02:11.780
-some kind of event.
+که نشون می‌ده هر بار یه event دریافت شده.
 
 02:12.290 --> 02:13.670
-So let's try to test this out.
+خب بیایید این رو تست کنیم.
 
 02:14.650 --> 02:17.260
-I'll go back over to the browser and find my application.
+می‌رم دوباره به مرورگر و اپلیکیشنم رو پیدا می‌کنم.
 
 02:17.500 --> 02:21.580
-I'm going to refresh the page once again because remember, every single time we make a change to our
-
-02:21.580 --> 02:23.410
-code, we dump all of our data.
+یه بار دیگه صفحه رو رفرش می‌کنم چون یادت باشه هر بار که کدمون رو تغییر می‌دیم، همه دیتاها از بین می‌رن.
 
 02:23.830 --> 02:25.290
-I'll go ahead and create a post.
+حالا یه پست جدید می‌سازم.
 
 02:25.300 --> 02:28.300
-We'll say new post and submit.
+می‌نویسم "new post" و دکمه ارسال رو می‌زنم.
 
 02:29.370 --> 02:30.550
-If I refresh.
+اگر صفحه رو رفرش کنم...
 
 02:30.570 --> 02:30.930
-Yep.
+آره
 
 02:30.930 --> 02:31.620
-There's the post.
+پست اومد بالا.
 
 02:31.620 --> 02:33.960
-But more importantly, let's go over to our terminal.
+اما مهم‌تر از اون، بریم سراغ ترمینال.
 
 02:35.230 --> 02:40.960
-The might turn a window and I can see that we've received an event for post created inside of our post
-
-02:40.960 --> 02:41.680
-service.
+تو پنجره ترمینال می‌بینم که سرویس پست یه event با نوع "PostCreated" دریافت کرده.
 
 02:42.280 --> 02:46.960
-This terminal window right here is from my comment and we've also received an event of post created.
+پنجره‌ای که مربوط به سرویس کامنت هست هم همین event "PostCreated" رو دریافت کرده.
 
 02:48.050 --> 02:50.080
-Our event bus is still throwing an air down here.
+البته Event Bus هنوز داره یه ارور می‌ده.
 
 02:50.090 --> 02:50.750
-That's okay.
+اشکالی نداره.
 
 02:50.750 --> 02:55.520
-Because remember, it's trying to send a request or this event over to our query service, which does
-
-02:55.520 --> 02:56.630
-not yet exist.
+چون داره سعی می‌کنه این event رو به سرویس Query بفرسته که هنوز وجود نداره.
 
 02:58.370 --> 03:04.040
-Let's also try to create a comet and just make sure that the event of comment created is being sent
-
-03:04.040 --> 03:06.080
-to the post incumbent service as well.
+بیایید یه کامنت بسازیم و ببینیم event مربوط به "CommentCreated" هم به سرویس‌های پست و کامنت می‌رسه یا نه.
 
 03:07.540 --> 03:11.710
-So back inside my browser, I'll put in a comment here of a comment.
+توی مرورگر یه کامنت می‌نویسم: "a comment" و ارسالش می‌کنم.
 
 03:12.130 --> 03:12.940
-I'll submit it.
+Submit رو می‌زنم.
 
 03:14.060 --> 03:14.810
-I'll refresh.
+صفحه رو رفرش می‌کنم.
 
 03:14.810 --> 03:16.430
-Just make sure I see the comment right there.
+کامنت اینجاست.
 
 03:16.430 --> 03:18.680
-And then finally if I go back over my journal.
+حالا دوباره می‌رم سراغ ترمینال.
 
 03:18.950 --> 03:19.550
-There we go.
+آره، اینم هست.
 
 03:19.550 --> 03:23.270
-So I've got my event of common created and comment and created.
+رویداد "CommentCreated" هم در هر دو سرویس لاگ شده.
 
 03:25.550 --> 03:25.940
-Okay.
+خب
 
 03:25.940 --> 03:26.960
-So that is it.
+اینم از این.
 
 03:26.960 --> 03:29.210
-That is the full communication cycle.
+کل چرخه ارتباطات به خوبی کار کرد.
 
 03:29.390 --> 03:33.050
-We have our post service sending events over the event.
+سرویس Post یه event می‌فرسته به Event Bus.
 
 03:33.050 --> 03:37.790
-Bus takes that event and sends it off to service one and two.
+Event Bus اون رو به سرویس‌های اول و دوم می‌فرسته.
 
 03:37.790 --> 03:42.440
-And in a little bit, not quite yet, but in a little bit it'll try to send it off to the query service
-
-03:42.440 --> 03:43.130
-as well.
+و خیلی زود، به سرویس Query هم ارسال خواهد شد (وقتی که ساختیمش).
 
 03:43.680 --> 03:48.320
-Now, in theory, if we had any kind of data dependency or more strict data dependency between our post
+در تئوری، اگر سرویس Post و Comment نیاز به وابستگی داده‌ای جدی داشتن، می‌تونستیم این eventها رو هندل کنیم و بر اساسشون رفتار کنیم.
 
 03:48.320 --> 03:53.120
-service and common service, we could watch those incoming events and deal with them in some way.
-
-03:53.660 --> 03:57.350
-As I've said several times now in the last couple of videos, the Post and Common Service don't really
-
-03:57.350 --> 03:59.810
-care about any of the events that are being emitted right now.
+اما همون‌طور که چند بار گفتیم، فعلاً این دو سرویس هیچ اهمیتی به رویدادهایی که داره ارسال می‌شه نمی‌دن.
 
 04:00.140 --> 04:03.790
-But now that we've got these events coming out, let's start to put this query service together and
+حالا که داریم eventها رو به‌درستی ارسال می‌کنیم، وقتشه که سرویس Query رو راه بندازیم.
 
 04:03.800 --> 04:08.900
-we'll make sure that the query service listens for a post created or a comment created.
+می‌خوایم این سرویس رو طوری پیاده کنیم که به رویدادهای PostCreated و CommentCreated گوش بده.
 
 04:09.640 --> 04:15.160
-Event starts to take that data and assemble it into some kind of usable data structure in the exact
-
-04:15.160 --> 04:19.420
-same way that we've discussed over all these last couple of diagrams.
+و این داده‌ها رو بگیره و به شکل یک ساختار داده‌ای قابل استفاده ذخیره کنه، دقیقاً همون‌طور که توی نمودارهایی که قبلاً داشتیم توضیح دادیم.
 
 04:19.420 --> 04:20.260
-Where are they?
+کجا بودن؟
 
 04:20.710 --> 04:22.660
-Like this one?
+مثل این یکی؟
 
 04:22.660 --> 04:23.350
-Yeah, here we go.
+آره، همین‌جاست.
 
 04:23.350 --> 04:24.160
-Like this one right here.
+مثل این تصویر.
 
 04:24.160 --> 04:28.210
-Remember, we're going to take all these events and assemble them into some usable data structure.
+یادت باشه، قراره همه‌ی eventها رو جمع‌آوری کنیم و تبدیل کنیم به یک ساختار داده‌ی قابل استفاده.
 
 04:28.920 --> 04:29.180
-Okay.
+خب
 
 04:29.220 --> 04:30.780
-So we're going to take care then just a moment.
+پس تا چند لحظه دیگه می‌ریم سراغش.
 
 04:30.780 --> 04:32.340
-So we'll see you in just a little bit.
+پس همینجا موقتا توقف می‌کنیم.

@@ -1,526 +1,478 @@
 WEBVTT
 
 00:01.440 --> 00:06.340
-In this video, we're going to start to work on our post list, comment list and comment create components.
+توی این ویدیو قراره کامپوننت‌های لیست پست‌ها، لیست کامنت‌ها و ساخت کامنت رو شروع کنیم.
 
 00:06.360 --> 00:10.110
-Right now, we're kind of deep in the world of React and it sure seems like we're not messing around
+الان کاملاً درگیر دنیای ری‌اکت هستیم و فعلاً خبری از میکروسرویس‌ها نیست.
 
 00:10.110 --> 00:11.660
-with microservices too much.
+ولی نگران نباش، قرار نیست زیاد طول بکشه.
 
 00:11.670 --> 00:14.640
-Don't worry, we just have to put these three components together very quickly.
+فقط باید خیلی سریع این سه‌تا کامپوننت رو کنار هم بچینیم.
 
 00:14.640 --> 00:18.720
-And as I've mentioned several times now, we're going to start to see there's some really big issues
+همون‌طور که چند بار گفتم، خیلی زود می‌فهمیم که معماری میکروسرویس‌مون یه سری مشکلات جدی داره.
 
 00:18.720 --> 00:20.660
-with our current microservices architecture.
+پس خیلی زود برمی‌گردیم سراغ میکروسرویس‌ها.
 
 00:20.670 --> 00:23.550
-So we're going to get back to the world of microservices very, very quickly.
+فعلاً فقط این کامپوننت‌ها رو سریع تموم کنیم.
 
 00:24.030 --> 00:27.960
-In the meantime, let's just finish up these components really quickly to get started.
+خب، بریم سراغ ادیتور کدمون توی پروژه ری‌اکت.
 
 00:27.960 --> 00:31.230
-I'm going to go back over to my code editor for my React project.
+اینه همون جایی که الان هستم.
 
 00:31.770 --> 00:32.610
-Here it is right here.
+داخل پوشه src
 
 00:34.190 --> 00:39.560
-Inside my CRC directory, I'm going to make a new file called Post List JS.
+یه فایل جدید می‌سازم به اسم PostList.js
 
 00:41.380 --> 00:41.920
-Inside of here.
+توی این فایل
 
 00:41.920 --> 00:43.330
-I'll import React right away.
+اول از همه React رو ایمپورت می‌کنم.
 
 00:45.450 --> 00:47.040
-I'll do an export default.
+بعد هم یه export default می‌زنم.
 
 00:49.230 --> 00:50.520
-Inside of here for right now.
+فعلاً یه div خالی برمی‌گردونم.
 
 00:50.520 --> 00:52.320
-I'm going to return an empty div.
+فقط برای اینکه ساختارش رو داشته باشیم.
 
 00:54.140 --> 00:57.080
-And I'll make sure that I show this component inside of my app component.
+و مطمئن می‌شم که این کامپوننت داخل App رندر میشه.
 
 00:57.410 --> 00:59.540
-So I'll go back over to my app file.
+برای همین برمی‌گردم به فایل App
 
 01:01.030 --> 01:01.540
-At the top.
+بالای فایل
 
 01:01.540 --> 01:06.130
-I will import post lists from post list.
+PostList رو ایمپورت می‌کنم از فایل مربوطه.
 
 01:08.200 --> 01:11.410
-Then right underneath my post create, I'm going to add in an air.
+بعد از کامپوننت ساخت پست، یه خط افقی می‌ذارم
 
 01:11.440 --> 01:15.520
-So that's a horizontal rule, just to draw a line across the screen to make sure that it's clear to
+تا صفحه بخش‌بندی بشه و کاربر متوجه بشه که داره بخش دیگه‌ای رو می‌بینه.
 
 01:15.520 --> 01:17.350
-users that they're looking at different section.
+بعدش هم یه h1 با عنوان "پست‌ها" اضافه می‌کنم.
 
 01:18.080 --> 01:20.510
-I'll put in an H one right underneath it.
+و در نهایت کامپوننت PostList رو رندر می‌کنم.
 
 01:22.500 --> 01:23.940
-And just put in their posts.
+خب همه چیز ساده و مرتب.
 
 01:24.670 --> 01:27.130
-And also the post list component.
+برگردیم سراغ خود کامپوننت PostList
 
 01:29.670 --> 01:30.030
-Okay.
+خب
 
 01:30.060 --> 01:31.170
-So simple enough.
+ببینیم این کامپوننت قراره چی کار کنه.
 
 01:32.260 --> 01:34.360
-Let's go back over to our post list component.
+باید یه درخواست بفرسته به سرویس پست
 
 01:34.690 --> 01:37.180
-So let's think about what this component really needs to do.
+و لیستی از همه پست‌هایی که تا حالا ساخته شدن رو بگیره.
 
 01:37.210 --> 01:42.160
-It needs to make a request over to our post service and get a list of all the posts that have ever been
-
-01:42.160 --> 01:42.820
-created.
-
-01:43.150 --> 01:47.080
-We're then going to iterate over that list of posts and create.
+بعد باید اون لیست پست‌ها رو پیمایش کنیم و برای هرکدوم نمایش بسازیم.
 
 01:48.230 --> 01:53.120
-Some div or something similar to just show the title of each post inside of one of these little card
+یه div ساده یا هر چیز دیگه‌ای می‌ذاریم که فقط عنوان هر پست رو داخل یه کارت کوچیک نشون بده.
 
 01:53.120 --> 01:53.990
-looking things.
+یه چیزی شبیه کارت‌های محتوا.
 
 01:55.010 --> 02:00.170
-Let's first add in some code to make a request to our post service to get the list of posts that have
+اول بیایم یه کدی بنویسیم که درخواست بفرسته به سرویس پست‌هامون تا لیست پست‌های ساخته‌شده رو بگیره.
 
 02:00.170 --> 02:00.920
-been created.
+بریم سر اصل موضوع.
 
 02:02.000 --> 02:03.240
-Do so at the very top.
+بالای فایل شروع می‌کنیم.
 
 02:03.660 --> 02:08.280
-We're going to get that use state hook from React again because we do have to store our listed posts
+از React هوک useState رو می‌گیریم چون باید یه جایی لیست پست‌ها رو ذخیره کنیم.
 
 02:08.280 --> 02:08.790
-somewhere.
+بدون این نمی‌شه.
 
 02:10.930 --> 02:12.220
-I will also.
+علاوه بر اون
 
 02:13.260 --> 02:17.100
-Import Axios from Axios so we can actually make the request itself.
+باید axios رو هم ایمپورت کنیم تا بتونیم درخواست HTTP بفرستیم.
 
 02:18.760 --> 02:20.140
-Oh, one other quick thing we need here.
+یه نکته سریع دیگه هم اینه که
 
 02:20.140 --> 02:24.910
-We need to use effect as well to make sure that we only try to fetch our list of posts one time when
+باید useEffect رو هم استفاده کنیم تا فقط یک بار موقع بارگزاری اولیه کامپوننت درخواست ارسال بشه.
 
 02:24.910 --> 02:26.290
-our component is first created.
+فقط همون بار اول.
 
 02:27.200 --> 02:27.420
-Okay.
+خب
 
 02:27.500 --> 02:29.750
-So let's write out some code to actually make this request.
+بیایم یه تابع بنویسیم برای ارسال این درخواست.
 
 02:31.080 --> 02:35.400
-We'll first get a piece of state here, so we'll declare a new piece of state called Post.
+اول از همه یه state تعریف می‌کنیم به اسم posts.
 
 02:38.620 --> 02:41.710
-And we do have to provide a initial starting value for this thing.
+و باید یه مقدار اولیه هم برای این state مشخص کنیم.
 
 02:41.920 --> 02:45.640
-Now, you might be tempted inside of here to put like an array because, hey, we're getting some list
+شاید وسوسه بشی که یه آرایه بزاری چون داریم یه لیست از پست‌ها می‌گیریم.
 
 02:45.640 --> 02:49.450
-of posts, but I want you to think back to the post service that we really put together.
+ولی بیا یه لحظه برگردیم به سرویس پست‌هامون که قبلاً نوشتیم.
 
 02:49.480 --> 02:52.330
-Let's go back over to the Post Code editor really quickly.
+می‌خوام یه چیزی رو یادت بیارم. بریم یه نگاه به کدش بندازیم.
 
 02:52.480 --> 02:55.120
-So I'm going to tab back over to my post service.
+می‌رم تب مربوط به پروژه post رو باز می‌کنم.
 
 02:55.330 --> 02:57.520
-I'm inside of my post project right now.
+الان داخل پروژه post هستم.
 
 02:58.060 --> 03:00.160
-I'm inside the indexed file inside there.
+وارد فایل index.js شدم.
 
 03:00.610 --> 03:05.260
-And as a quick reminder, we stored all of our posts inside of an object, and we're sending back that
+یادت باشه که ما همه پست‌ها رو داخل یه آبجکت ذخیره کردیم و وقتی کاربر لیست پست‌ها رو می‌خواست، همون آبجکت کامل رو برمی‌گردوندیم.
 
 03:05.260 --> 03:08.950
-entire object whenever someone tries to get a list of all of our posts.
+یعنی response از نوع آبجکت هست نه آرایه.
 
 03:09.940 --> 03:14.250
-So when we think about providing a default value for that use date call, we don't really want to put
+پس وقتی می‌خوایم مقدار اولیه برای useState مشخص کنیم، بهتره یه آبجکت بدیم.
 
 03:14.290 --> 03:15.130
-an array inside there.
+نه یه آرایه.
 
 03:15.130 --> 03:19.600
-We want to put an object instead to kind of represent what our final state is going to actually look
+چون اون چیزی که واقعاً از API قراره بگیریم یه آبجکته.
 
 03:19.600 --> 03:20.050
-like.
+نه لیست ساده.
 
 03:21.360 --> 03:26.520
-So back inside my post list component, rather than putting in an array as our default value right there,
+پس توی فایل PostList، مقدار اولیه state رو یه آبجکت می‌ذارم.
 
 03:26.520 --> 03:31.110
-I'll put in an object again just to represent how we're going to actually get this data back from our
+تا از همون اول هم‌راستا با ساختار داده‌ای باشیم که از API برمی‌گرده.
 
 03:31.110 --> 03:31.800
-API.
+درسته؟
 
 03:33.160 --> 03:38.460
-After that, I'm going to define a function that's going to make the actual request off to our host
+بعدش یه تابع تعریف می‌کنم که درخواست واقعی رو به سرویس پست ارسال کنه.
 
 03:38.500 --> 03:39.160
-service.
+اسم تابع رو می‌ذارم fetchPosts
 
 03:39.940 --> 03:42.580
-So I'm going to define a function called fetch posts.
+یه تابع async هست چون قراره از async/await استفاده کنیم.
 
 03:43.330 --> 03:47.560
-This is going to be an async function because we probably want to use that async await syntax.
+همه درخواست رو توی همین تابع می‌نویسیم و دیتا رو می‌گیریم.
 
 03:49.070 --> 03:50.120
-Inside of here.
+داخل تابع...
 
 03:50.150 --> 03:56.180
-We'll get some response from calling, await Axios docket and then remember to get our list of posts
+با استفاده از await و axios درخواست رو می‌فرستیم و منتظر می‌مونیم تا پاسخ برگرده.
 
 03:56.180 --> 04:00.100
-we need to make a get request to local host 4000.
+برای گرفتن لیست پست‌ها باید یک درخواست GET بفرستیم به http://localhost:4000
 
 04:00.110 --> 04:01.700
-That's where our post service is.
+جایی که سرویس پست‌هامون ران شده.
 
 04:01.700 --> 04:06.020
-And the actual endpoint that we want to reach out to is the post end point or the post route.
+و مسیر مربوطه هم همون /posts هست.
 
 04:06.380 --> 04:12.290
-So we will put inside of your HTTP colon slash slash local host for 1000 slash posts.
+پس آدرس نهایی میشه: http://localhost:4000/posts
 
 04:16.340 --> 04:21.090
-As a quick reminder, any time we make a request with Axios, we get back your response object.
+یادت باشه وقتی با axios درخواست می‌زنیم، نتیجه‌ای که برمی‌گرده داخل شیء response هست
 
 04:21.110 --> 04:24.560
-Our actual data is nested inside there on the data property.
+و دیتا اصلی داخل فیلد data اون قرار داره.
 
 04:25.040 --> 04:29.480
-So we're going to take that response or more specifically, the data from it and use it to update our
-
-04:29.480 --> 04:29.840
-posts.
+پس ما فقط rez.data رو برمی‌داریم و باهاش state مربوط به posts رو مقداردهی می‌کنیم.
 
 04:29.840 --> 04:31.970
-A piece of state we'll say set posts.
+با setPosts مقدار جدید رو می‌ذاریم.
 
 04:32.420 --> 04:34.160
-We'll be rez dot data.
+همون rez.data.
 
 04:38.760 --> 04:40.400
-Well, we've now got this function put together.
+خب حالا تابع آماده‌ست.
 
 04:40.410 --> 04:43.050
-So now the next thing we need to do is decide when to call it.
+فقط باید مشخص کنیم کی اجرا بشه.
 
 04:43.260 --> 04:46.260
-That's why we got this use effect took as a reminder.
+برای همین useEffect رو آوردیم.
 
 04:46.260 --> 04:51.450
-Use effect can be used to run some code at very specific points in time in the life cycle of a component.
+useEffect کمک می‌کنه که یه کدی رو در زمان مشخصی از چرخه عمر کامپوننت اجرا کنیم.
 
 04:51.660 --> 04:57.120
-In our case, we probably want to run fetch posts only when our component is first displayed on the
-
-04:57.120 --> 04:57.720
-screen.
+اینجا می‌خوایم فقط وقتی برای اولین بار کامپوننت روی صفحه ظاهر شد، fetchPosts اجرا بشه.
 
 04:58.350 --> 05:02.280
-So to make sure that we can run this function only when this component is first displayed, we will
+برای این کار useEffect رو صدا می‌زنیم و بهش دو آرگومان می‌دیم:
 
 05:02.280 --> 05:04.230
-call use effect.
+آرگومان اول یه تابع هست
 
 05:04.970 --> 05:10.250
-We will put in a function for right now as the first argument and then critically as the second argument,
+و آرگومان دوم که خیلی مهمه یه آرایه خالیه
 
 05:10.250 --> 05:11.930
-we're going to put in an empty array.
+این آرایه خالی می‌گه فقط یک بار اجرا بشه.
 
 05:11.960 --> 05:16.370
-That empty array right there is what's going to tell react to only run this function one time.
+و داخل اون تابع fetchPosts رو صدا می‌زنیم.
 
 05:17.120 --> 05:20.290
-And then inside that function, we can actually call that turbos.
+همین. اینطوری فقط همون بار اول اجرا میشه.
 
 05:21.790 --> 05:22.390
-Very good.
+عالیه.
 
 05:24.940 --> 05:27.240
-It just has a quick test right after that use effect.
+برای تست سریع، بعد از useEffect
 
 05:27.240 --> 05:31.590
-Let's put in the console log and we'll try to console log out our posts.
+یه console.log می‌ذاریم تا مقدار state پست‌ها رو ببینیم.
 
 05:31.620 --> 05:32.490
-Ease of state.
+console.log(posts)
 
 05:35.860 --> 05:36.090
-Okay.
+خب
 
 05:36.130 --> 05:38.500
-I'm going to save this flip back over.
+کد رو ذخیره می‌کنم و برمی‌گردم به مرورگر.
 
 05:40.900 --> 05:45.670
-And inside of my console right here, which I already have open, I can see that I've got one console.log.
+توی کنسول که از قبل بازه، می‌بینم که یک بار مقدار پیش‌فرض پست‌ها لاگ شده.
 
 05:45.700 --> 05:49.360
-That's the default value of posts that we initialized inside of our component.
+و بلافاصله بعدش یه آبجکت میاد که یه کلید مثل a01 و ...
 
 05:49.360 --> 05:53.770
-And then right after that I've got an object that has a key of a01, blah, blah blah.
+اون همون ID تصادفی‌ایه که موقع ساخت پست ایجاد کرده بودیم
 
 05:53.800 --> 05:58.900
-So that's the randomly generated ID that we generated when we first created a post and as a value is
+و مقدارش هم همون دیتای پسته.
 
 05:58.900 --> 06:00.220
-the actual post itself.
+پس همه چی درست کار کرده.
 
 06:01.650 --> 06:02.580
-So this looks good.
+الان باید این آبجکت رو پیمایش کنیم
 
 06:02.970 --> 06:06.720
-Now all we have to do is iterate over the values of this object.
+و برای هر مقدارش یه کارت پست روی صفحه نشون بدیم.
 
 06:07.640 --> 06:13.220
-And for every value on there, we're going to display a little post something on the screen.
+برای هر مقدار (یعنی هر پست) یه نمایش کوچیک بسازیم.
 
 06:13.610 --> 06:14.660
-Let's do that right now.
+بزن بریم.
 
 06:17.000 --> 06:19.430
-I'm going to go ahead and delete the console log we just put together.
+اول console.log رو حذف می‌کنم.
 
 06:20.610 --> 06:28.530
-And then after that I'm going to do a rendered post, and that's going to be the result of calling object
+بعدش یه متغیر به اسم renderedPosts می‌سازم که نتیجه‌ی Object.values(posts) هست.
 
 06:28.890 --> 06:31.260
-values on posts.
+Object.values لیستی از مقادیر آبجکت رو بهم می‌ده.
 
 06:32.660 --> 06:38.180
-So Object Values is a built in function JavaScript that's going to give us back an array of all the
+یعنی لیستی از پست‌ها (نه کلیدها)، چون هر کلید یه پسته.
 
 06:38.180 --> 06:40.190
-values inside of this object right here.
+بعدش روی اون لیست map می‌زنیم.
 
 06:40.460 --> 06:44.120
-So it's going to essentially be an array of actual post objects.
+برای هر post یه خروجی می‌سازیم و برمی‌گردونیم.
 
 06:44.990 --> 06:46.910
-We will then map over that array.
+توی return:
 
 06:47.650 --> 06:49.930
-And for every post inside there.
+یه تکه JSX می‌نویسیم برای نمایش پست.
 
 06:53.220 --> 06:57.210
-We're going to generate some X and return it from this mapping function.
+یه div می‌ذارم که خودش کلاس کارت داره.
 
 06:57.910 --> 06:59.080
-So I'm going to return.
+یعنی یه قاب کارت مانند.
 
 07:00.480 --> 07:02.400
-We're going to put a little bit of markup right here.
+کمی استایل هم دستی بهش می‌دم.
 
 07:03.540 --> 07:06.320
-I'll give myself a div on the div itself.
+width: 30% و margin-bottom: 26px
 
 07:06.560 --> 07:08.990
-We're going to add in a class name of card.
+تا ظاهر بهتری بگیره.
 
 07:10.020 --> 07:14.970
-I'm going to add it in a hardcoded style property just to make these cards look kind of nice.
+از اونجایی که داریم لیست تولید می‌کنیم، ری‌اکت انتظار داره هر عنصر یه key داشته باشه.
 
 07:15.270 --> 07:18.270
-I'm going to give this thing a width of 30%.
+برای همین key رو می‌ذاریم برابر با post.id
 
 07:19.450 --> 07:22.620
-And a margin bottom of 26.
+چون هر پست یه id منحصربه‌فرد داره.
 
 07:22.630 --> 07:24.490
-Let me save this so you can see that entire line.
+این میشه key یکتا برای هر آیتم.
 
 07:26.790 --> 07:31.950
-And then because we are generating a list of elements here, React is going to expect us to place a
+بعد توی این div یه div دیگه می‌ذارم با کلاس card-body
 
 07:31.950 --> 07:36.900
-key property on each of the elements that we are creating, or I should say, the top level elements.
+و توش یه تگ h3 که عنوان پست رو نشون بده.
 
 07:37.570 --> 07:40.060
-So to have an actual unique key.
+مقدار داخل h3 میشه post.title
 
 07:41.440 --> 07:47.650
-I'll use the ID out of our post object because remember every post has an ID I'll say key is going to
-
-07:47.650 --> 07:49.450
-be post id lexa.
-
-07:51.800 --> 07:52.130
-All right.
-
-07:52.130 --> 07:53.600
-Next up inside this live.
-
-07:54.520 --> 07:59.320
-I'm going to give it a another div with the class name of card body.
-
-08:03.020 --> 08:04.520
-I'll give it an H three.
-
-08:07.210 --> 08:09.280
-And inside of that age three.
-
-08:10.570 --> 08:12.190
-I'll display the actual post title.
-
-08:12.190 --> 08:17.260
-So post title, making sure that I've got those curly braces as referring to a JavaScript variable right
-
-08:17.260 --> 08:17.680
-here.
+یادت باشه از {} استفاده کنیم چون داریم متغیر جاوااسکریپتی رو می‌ذاریم.
 
 08:20.090 --> 08:21.050
-So I'd say it looks pretty good.
+خب به نظر میاد همه‌چی خیلی خوب پیش رفته.
 
 08:21.050 --> 08:24.740
-We are now generating a list of all the different post titles.
+الان داریم لیست همه عنوان‌های پست‌هامون رو نمایش می‌دیم.
 
 08:25.080 --> 08:29.780
-Now the last thing we need to do is to just make sure that we display rendered posts on the screen somewhere.
+تنها کاری که مونده اینه که مطمئن بشیم renderedPosts واقعاً روی صفحه نشون داده میشه.
 
 08:29.900 --> 08:36.020
-So we just need to make sure from the overall component, we return something that's going to wrap up
+یعنی باید توی خروجی اصلی کامپوننت، این renderedPosts داخل یک المان قرار بگیره و رندر بشه.
 
 08:36.020 --> 08:37.730
-or display rendered posts.
+پس میام همون div اصلی رو باز می‌کنم.
 
 08:38.530 --> 08:40.660
-So inside this dip, I'm going to open it up.
+تگ باز و بسته‌شو می‌ذارم.
 
 08:40.660 --> 08:42.460
-Give it a opening and closing tag.
-
-08:43.970 --> 08:46.500
-And inside they're also rendered both.
+و داخلش renderedPosts رو می‌ذارم.
 
 08:48.580 --> 08:50.260
-I'm also going to give this dip right here.
+به این div یه کلاس هم می‌دم
 
 08:50.260 --> 08:51.520
-A little class name.
+البته نه کوچیک، یه ترکیب کامل از کلاس‌هاست
 
 08:51.520 --> 08:52.310
-I shouldn't say little.
+تا استایل مرتب‌تری بگیره.
 
 08:52.330 --> 08:57.670
-This is going to be a kind of long series of class names just to get these cards to display or lay themselves
+کلاس‌ها شامل: d-flex, flex-row, flex-wrap
 
 08:57.670 --> 08:58.660
-out very nicely.
-
-08:58.780 --> 09:03.970
-We're going to say D, dash, flex, flex, dash, row, flex, dash, wrap.
-
-09:04.000 --> 09:09.490
-And then just one more justify dash content dash between.
+و در آخر هم: justify-content-between
 
 09:09.490 --> 09:12.200
-And I'll save that line once again so you can see it.
+می‌زنم ذخیره تا استایل‌ها اعمال بشن.
 
 09:12.220 --> 09:12.910
-There we go.
+همینه دقیقاً.
 
 09:16.280 --> 09:16.470
-Okay.
+خب
 
 09:16.550 --> 09:17.270
-Let's save this.
+کد رو ذخیره می‌کنم.
 
 09:17.270 --> 09:17.920
-Flip back over.
+برمی‌گردم به مرورگر
 
 09:17.930 --> 09:18.740
-Quick test.
+یه تست سریع
 
 09:19.130 --> 09:20.120
-And there we go.
+همین شد!
 
 09:21.220 --> 09:23.200
-Now you probably see something like this right here.
+الان باید چیزی شبیه به این ببینی
 
 09:23.200 --> 09:27.370
-Just as a reminder, whenever I'm showing my browser window, I'm almost always zoomed in so you can
+فقط یادت باشه من همیشه صفحه مرورگرم رو zoom کردم تا شما راحت‌تر ببینید.
 
 09:27.370 --> 09:29.080
-see everything on my screen very easily.
+اون لیست پست‌ها دقیقاً همینه.
 
 09:29.350 --> 09:31.480
-So we've got that post listed right there.
+حالا مثلاً یه پست دیگه می‌سازم، می‌نویسم:
 
 09:31.780 --> 09:34.840
-And of course, we can create another post, so I'll say second post.
+پست دوم
 
 09:36.240 --> 09:37.170
-We can submit it.
+ارسال می‌کنم.
 
 09:37.800 --> 09:40.210
-The Post does not show up on the screen right away.
+ولی پست جدید بلافاصله نشون داده نمیشه.
 
 09:40.230 --> 09:45.060
-That's because we don't have any logic to actually refresh our list of posts, so I need to manually
+چون ما هنوز منطقی برای بروزرسانی لحظه‌ای لیست پست‌ها نداریم، باید دستی صفحه رو رفرش کنیم.
 
 09:45.060 --> 09:48.120
-refresh the page and once I do, I'll see the second post appear.
+بعد از رفرش، پست دوم دیده میشه.
 
 09:48.750 --> 09:51.210
-I can do a third post.
+حالا پست سوم می‌زنم.
 
 09:52.890 --> 09:54.300
-Submit it refresh.
+ارسال می‌کنم، رفرش
 
 09:54.420 --> 09:55.800
-And there's my third post.
+پست سوم اومد.
 
 09:56.400 --> 09:59.970
-All right, well, I'd say we're off to a good start, so one more quick pause.
+خب به نظر شروع خوبی داریم. یه وقفه کوتاه می‌گیریم.
 
 09:59.970 --> 10:00.510
-Come back.
+برمی‌گردیم
 
 10:00.540 --> 10:02.940
-We're going to start to tackle all this commenting stuff.
+قراره بریم سراغ سیستم کامنت‌گذاری.
 
 10:02.940 --> 10:04.350
-So I'll see you in just a moment.
+پس همین الان می‌بینمت.
