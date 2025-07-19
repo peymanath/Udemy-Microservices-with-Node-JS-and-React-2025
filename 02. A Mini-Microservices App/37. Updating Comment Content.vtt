@@ -1,235 +1,223 @@
 WEBVTT
 
 00:01.340 --> 00:06.020
-In this video, we're going to make sure that the common service watches for the event of comment moderated.
+در این ویدیو قراره مطمئن بشیم که سرویس نظرات منتظر دریافت رویداد "moderated comment" باشه.
 
 00:06.320 --> 00:10.370
-We're going to make sure that we take some information about the comment that was just moderated and
+باید اطلاعاتی از کامنتی که به‌تازگی بررسی شده دریافت کنیم و نسخه‌ی محلی‌مون از اون کامنت رو به‌روز کنیم.
 
 00:10.370 --> 00:12.770
-update our local definition of that comment.
+یعنی وضعیت کامنت باید از حالت "در انتظار" به "تأیید شده" یا "رد شده" تغییر کنه.
 
 00:12.770 --> 00:17.210
-So the status should go from pending to either approved or rejected.
+بنابراین وضعیت باید از حالت pending بره به approved یا rejected.
 
 00:17.920 --> 00:22.450
-Now, once again, I just want to remind you that understanding the different properties that are inside
+دوباره یادآوری می‌کنم که درک دقیق ویژگی‌هایی که درون هر رویداد هست خیلی مهمه.
 
 00:22.450 --> 00:24.490
-of each of these events is super critical.
+به‌همین خاطر یه مقدار زمان گذاشتم و دقیق مستند کردم که توی رویداد comment moderated چی می‌گذره.
 
 00:24.760 --> 00:28.780
-So I took a little bit of time just to kind of document out exactly what's going on right now with the
+رویداد comment moderated شامل id، content، postId و status هست. مقدار status هم یا approved هست یا rejected.
 
 00:28.780 --> 00:35.440
-comment moderated event comment moderated has an ID, content post ID and status and status is going
+این رویداد از سمت سرویس moderation منتشر میشه و ما اون رو در سرویس comments دریافت می‌کنیم.
 
 00:35.440 --> 00:37.570
-to be either approved or rejected.
+حالا بریم سرویس comments رو باز کنیم تا مطمئن بشیم که این رویداد رو دریافت می‌کنه و از فیلد به‌روز شده status استفاده می‌کنه.
 
 00:38.970 --> 00:44.010
-It's going to be emitted from the moderation service and we're going to receive it inside of comments.
+پس سرویس comments رو باز می‌کنم و مطمئن می‌شم که این event دریافت میشه و فیلد status به‌روزرسانی میشه.
 
 00:44.310 --> 00:49.380
-So let's open up comments right now and make sure we receive this event and use that updated status
+پس می‌رم سراغ فولدر comments و فایل index.js رو باز می‌کنم.
 
 00:49.380 --> 00:49.950
-field.
+داخلش...
 
 00:51.720 --> 00:53.610
-So I'm going to open up my common directory.
+می‌رم پایین سمت handler مربوط به درخواست POST که قبلاً نوشتیمش برای هندل کردن رویدادهای دریافتی.
 
 00:53.880 --> 00:55.560
-I'll find index dogs.
+اون‌جا ادامه می‌دیم.
 
 00:56.760 --> 00:57.360
-Inside of here.
+در این فایل...
 
 00:57.360 --> 01:01.590
-I'll go down to the post request handler we had already put together to handle incoming events.
+مثل قبل type و data رو از body درخواست استخراج می‌کنم.
 
 01:04.070 --> 01:09.200
-I'm going to pull off the type and data properties once again from rec body.
+اگه type برابر با "CommentModerated" بود، یعنی باید یه کاری انجام بدیم.
 
 01:10.540 --> 01:13.180
-Well then say if type is equal to.
+پس بررسی می‌کنم اگه type برابر با این مقدار بود، هندلش کنیم.
 
 01:14.190 --> 01:15.780
-Comment moderated.
+CommentModerated
 
 01:15.930 --> 01:18.210
-Then we want to handle this thing in some way.
+در این صورت باید یه واکنشی نشون بدیم.
 
 01:20.930 --> 01:25.670
-So the first thing I do inside of here is pull out the comment that we already have stored inside of
+اولین کاری که می‌کنم اینه که کامنتی که قبلاً ذخیره کردیم رو از ساختار داده commentsByPostId پیدا کنیم.
 
 01:25.670 --> 01:29.030
-our data structure of comments by post ID.
+باید اون کامنتی که مربوط به اون پست هست رو پیدا کنیم و مقدار statusش رو به‌روز کنیم.
 
 01:29.060 --> 01:33.530
-So we need to find the appropriate comment that we've already stored inside of here and update its status
-
-01:33.530 --> 01:34.130
-property.
+یعنی اون کامنت خاص رو که قبلاً داشتیم، پیدا کنیم و statusش رو تغییر بدیم.
 
 01:38.200 --> 01:40.570
-So let's get the post ID.
+اول باید postId رو بگیریم.
 
 01:41.470 --> 01:44.770
-Well, this pull all the different properties out of data because we're probably going have to use each
+کل پراپرتی‌های data رو جدا می‌کنم چون احتمالاً قراره همشون رو استفاده کنیم.
 
 01:44.770 --> 01:45.820
-of these very shortly.
+پس id، postId و status رو استخراج می‌کنم.
 
 01:45.820 --> 01:48.820
-So I'll pull out the ID, post ID and status.
+یعنی id، postId و status رو از data می‌گیرم.
 
 01:48.820 --> 01:53.530
-So post ID, ID and status from data.
+بعد لیست کامنت‌های مربوط به اون postId رو دریافت می‌کنم.
 
 01:55.690 --> 01:58.180
-Well, then get all of our different comments.
+کامنت‌هایی که مربوط به اون postId هستن رو می‌گیریم.
 
 01:59.030 --> 02:02.500
-That are associated with that post ID will say comments is.
+و می‌گیم comments برابر باشه با:
 
 02:03.450 --> 02:07.230
-Comments by post ID at post ID.
+commentsByPostId در postId مربوطه.
 
 02:08.970 --> 02:13.620
-We then need to iterate through this array of comments and find the appropriate comment inside there
-
-02:13.620 --> 02:15.300
-or the one that we actually want to update.
+بعد باید روی این آرایه از کامنت‌ها حلقه بزنیم و اون کامنت خاصی رو که می‌خوایم به‌روز کنیم پیدا کنیم.
 
 02:15.810 --> 02:17.790
-Let's say Colin's comment is.
+فرض کنیم کامنت مربوط به "Colin" هست.
 
 02:20.350 --> 02:21.220
-Comments.
+می‌ریم سراغ آرایه‌ی کامنت‌ها...
 
 02:22.760 --> 02:23.540
-Find out.
+و از تابع find استفاده می‌کنیم.
 
 02:24.110 --> 02:26.120
-And then we're going to try to find a comment.
+تا اون کامنتی که دنبال‌ش هستیم رو پیدا کنیم.
 
 02:28.460 --> 02:30.260
-With an ID equal to.
+با ID که برابر باشه با...
 
 02:31.430 --> 02:32.990
-The ID from the event.
+همون ID که از event دریافت کردیم.
 
 02:33.470 --> 02:35.630
-So this right here is the comment that we need to update.
+این همون کامنتیه که باید وضعیتش رو به‌روز کنیم.
 
 02:37.800 --> 02:42.330
-So we'll take that comment and we're going to update it status to be the status that we just pulled
-
-02:42.330 --> 02:43.650
-out of the event as well.
+پس اون کامنت رو می‌گیریم و فیلد statusش رو با مقداری که از رویداد گرفتیم، جایگزین می‌کنیم.
 
 02:44.690 --> 02:45.560
-And that should be it.
+و همین کافیه.
 
 02:45.920 --> 02:49.400
-And we don't have to actually insert this thing back into the comments of rain or anything like that,
+لازم نیست دوباره این کامنت رو داخل آرایه‌ی کامنت‌ها قرار بدیم یا چیزی شبیه به این،
 
 02:49.400 --> 02:51.770
-because the object is the same object in memory.
+چون این آبجکت به صورت مرجع در حافظه یکیه.
 
 02:51.770 --> 02:53.480
-It's the same object inside the array.
+یعنی همون آبجکت داخل آرایه هست.
 
 02:53.600 --> 02:57.830
-We essentially just don't have to insert it back into the array or anything like that.
+پس عملاً نیاز به درج مجددش داخل آرایه نداریم.
 
 02:58.930 --> 03:00.550
-So we've now updated status.
+تا اینجا وضعیت کامنت رو به‌روزرسانی کردیم.
 
 03:00.880 --> 03:05.650
-So now the next thing we need to do is tell every other service inside our application that this update
+حالا قدم بعدی اینه که به بقیه‌ی سرویس‌ها اطلاع بدیم که این به‌روزرسانی اتفاق افتاده.
 
 03:05.650 --> 03:06.460
-just occurred.
+اینجاست که باید event جدیدی منتشر کنیم به اسم "comment updated".
 
 03:06.700 --> 03:10.300
-That's going to be where we attempt to emit content updated.
+قراره این event رو منتشر کنیم.
 
 03:12.560 --> 03:14.300
-So we're going to send out an updated.
+و این event از طریق event bus ارسال میشه.
 
 03:15.150 --> 03:16.860
-That's going to go over to our bus.
+و دوباره مطمئن می‌شیم که سرویس Query اون رو دریافت می‌کنه.
 
 03:17.100 --> 03:21.450
-And once again, we're going to make sure we receive that over inside the query service.
+می‌ریم سراغ پیاده‌سازی این قسمت.
 
 03:23.050 --> 03:26.980
-Let's also take a look at some documentation on comment updated just so we really understand the different
+قبل از اون، یه نگاهی هم بندازیم به مستندات مربوط به "comment updated" تا دقیق بدونیم چه اطلاعاتی باید توش باشه.
 
 03:26.980 --> 03:28.870
-properties that need to be inside there.
+می‌خوایم مطمئن بشیم که تمام پراپرتی‌ها کامل هستن.
 
 03:30.090 --> 03:30.960
-So common update.
+رویداد comment updated
 
 03:30.960 --> 03:37.530
-It needs to have the ID of the comment, the content, the post ID and status as well.
+باید شامل id کامنت، متن (content)، postId و وضعیت (status) باشه.
 
 03:37.530 --> 03:40.650
-And at this point, status should be either approved or rejected.
+در این مرحله، status باید یکی از دو مقدار approved یا rejected باشه.
 
 03:42.580 --> 03:45.760
-So let's put this event together and send it over to our event bus.
+پس بیایم این event رو آماده کنیم و بفرستیم به event bus.
 
 03:47.530 --> 03:50.440
-So let's say await Axios dot post.
+می‌نویسیم: await axios.post
 
 03:51.240 --> 03:54.550
-Over to http local.
+ارسال به آدرس http://localhost:4005
 
 03:54.570 --> 03:56.670
-Host 4005.
-
-04:00.760 --> 04:04.240
-The type of the event is going to be a comment updated.
+نوع event هم قراره "CommentUpdated" باشه.
 
 04:06.000 --> 04:12.000
-And our data is going to be once again ID content, post ID and the updated status.
+و داده‌ای که باید بفرستیم دوباره شامل ID، content، postId و status به‌روزرسانی شده هست.
 
 04:13.080 --> 04:20.040
-So ID we can use the shortened syntax here because we've already got ID post ID status and you what
+برای ID می‌تونیم از سینتکس خلاصه استفاده کنیم چون قبلاً این مقادیر رو داریم: ID، postId، status و البته خود کامنت هم هست.
 
 04:20.040 --> 04:22.110
-the comment will be in there as well.
+بنابراین content رو هم اضافه می‌کنیم.
 
 04:23.230 --> 04:24.280
-Or you can be content.
+یا همون content کامنت.
 
 04:26.830 --> 04:28.150
-So take the ID.
+پس ID رو می‌گیریم،
 
 04:29.410 --> 04:35.560
-The updated status, the post ID that this comment is associated with and the content as well.
+status به‌روزرسانی‌شده، postId که این کامنت به اون مربوطه، و محتوای کامنت (content) رو هم اضافه می‌کنیم.
 
 04:39.340 --> 04:43.600
-Now I'm using the syntax right here, so I'm going to make sure that I mark the enclosing function as
+چون داریم از async/await استفاده می‌کنیم، باید تابعی که این دستور توش قرار داره رو هم با async مشخص کنیم.
 
 04:43.600 --> 04:44.320
-async.
+و همین کافیه.
 
 04:45.280 --> 04:46.270
-And that should be it.
+تا اینجا کار تمومه.
 
 04:47.430 --> 04:54.500
-Now the last thing we need to do is open up our query service and just make sure that we receive comment
+آخرین کاری که باید بکنیم اینه که بریم سرویس Query رو باز کنیم و مطمئن بشیم که event مربوط به "comment updated" رو دریافت می‌کنه.
 
 04:54.500 --> 04:55.160
-updated.
+این آخرین مرحله‌ست.
 
 04:55.490 --> 04:56.600
-So another quick pause.
+یه توقف کوتاه می‌کنیم.
 
 04:56.600 --> 04:58.190
-We'll take care of that in just a moment.
+تا لحظاتی دیگه اون بخش رو هم انجام می‌دیم.

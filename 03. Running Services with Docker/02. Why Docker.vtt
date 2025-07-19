@@ -1,139 +1,118 @@
 WEBVTT
 
 00:01.250 --> 00:04.850
-In the last video, we discussed a couple of issues that we were probably going to run into once we
+توی ویدیوی قبلی درباره چندتا مشکلی صحبت کردیم که احتمالاً وقتی بخوایم اپلیکیشن رو دیپلوی کنیم، باهاشون مواجه می‌شیم.
 
 00:04.850 --> 00:06.420
-tried to deploy our application.
+توی این ویدیو قراره درباره Docker صحبت کنیم.
 
 00:06.440 --> 00:09.400
-So in this video, we're going to discuss something called Docker.
+می‌خوایم ببینیم چطور Docker می‌تونه کار ما رو خیلی راحت‌تر کنه، مخصوصاً وقتی بخوایم بریم سمت محیط production.
 
 00:09.410 --> 00:13.520
-We're going to talk about how Docker is going to make our lives a lot easier, particularly as we start
+خب، اصلاً Docker چیه؟
 
 00:13.520 --> 00:15.650
-to go towards production with our application.
+با Docker ما یه‌سری چیز به اسم Container درست می‌کنیم.
 
 00:15.920 --> 00:17.450
-So what's Docker all about?
+Container یعنی یه محیط اجرایی ایزوله‌شده.
 
 00:17.780 --> 00:21.620
-Well, with Docker, we're going to create a series of things called Containers.
+هر کانتینر شامل تمام چیزهاییه که برای اجرای یه برنامه خاص نیاز داریم.
 
 00:21.710 --> 00:24.830
-A container is like an isolated computing environment.
+ما برای هر سرویس‌مون یه کانتینر جداگانه می‌سازیم.
 
 00:24.830 --> 00:28.880
-It contains everything that is required to run one single program.
+مثلاً یه کانتینر برای Event Bus، یکی برای Posts، یکی برای Comments و همین‌طور الی آخر.
 
 00:29.240 --> 00:34.610
-We're going to end up creating separate Docker containers to run each of our individual services.
+اگه نیاز داشته باشیم یه سرویس رو چندبار اجرا کنیم — مثلاً چند نسخه از سرویس کامنت — فقط کافیه یه کانتینر دیگه برای اون سرویس بسازیم.
 
 00:34.760 --> 00:39.680
-So we'll create one container to run the event, plus one for posts, one for comments and so on.
+یعنی می‌تونیم تصور کنیم که هر کانتینر معادل یک نمونه اجرایی از یه سرویسه.
 
 00:40.070 --> 00:45.650
-If we ever need multiple copies of some service, say if we need multiple copies of comments, then
+حالا بیایم ببینیم اصلاً چرا باید از Docker استفاده کنیم؟ چه مشکلی رو حل می‌کنه؟
 
 00:45.650 --> 00:48.050
-we will start up a second docker container.
+در حال حاضر، اجرای اپلیکیشن ما یه‌سری فرض مهم در مورد محیط اجرا داره.
 
 00:48.770 --> 00:54.020
-So we can really imagine that there's going to be a 1 to 1 pairing between Docker containers and each
+مثلاً اینکه ما داریم فرض می‌کنیم NPM و Node روی سیستم‌مون نصب هستن.
 
 00:54.050 --> 00:55.700
-instance of our running program.
+این خودش یه وابستگی پنهان بزرگه.
 
 00:56.600 --> 01:00.890
-Let's discuss why we are going to use Docker at all and what problems it really solves.
+یه چیز دیگه هم هست: حتی نحوه اجرای برنامه‌مون هم دقیقاً باید مشخص باشه.
 
 01:01.370 --> 01:07.160
-So at present, running our application makes some really big assumptions about the environment that
+یعنی باید بدونیم که دقیقاً چه دستوری اجرا می‌کنه — مثلاً همین `npm start`.
 
 01:07.160 --> 01:08.420
-we are really running on.
+وگرنه چیزی بالا نمیاد.
 
 01:08.780 --> 01:10.190
-Let me tell you what I mean by that.
+پس چی شد؟
 
 01:10.490 --> 01:12.280
-How do we start up our application right now?
+برای اجرای برنامه‌مون، چندتا فرض بزرگ داریم:
 
 01:12.290 --> 01:14.400
-We run that command and PM start, right?
+یکی اینکه NPM و Node نصب هستن،
 
 01:14.420 --> 01:21.170
-Well, to run NPM by itself, we are assuming that NPM is installed on our local machine.
+و دوم اینکه دقیقاً باید بدونیم چطوری برنامه رو اجرا کنیم، با چه دستوری و با چه پیکربندی.
 
 01:21.380 --> 01:25.790
-We are also making the assumption that Node is installed on our local machine as well.
+همه اینا باعث می‌شن راه‌اندازی پروژه هم سخت‌تر بشه، هم خطاپذیرتر.
 
 01:26.180 --> 01:29.540
-So just to run our program, we are making those really big assumptions.
+هدف اصلی Docker اینه که این مشکلات رو حل کنه.
 
 01:29.540 --> 01:33.320
-We're saying NPM and Node are both installed on our local machine.
+هم راه‌اندازی رو آسون‌تر می‌کنه، هم وابستگی به محیط توسعه رو حذف می‌کنه.
 
 01:35.240 --> 01:40.640
-One other thing to be aware of is that even running our application requires some very precise knowledge
+یعنی دیگه مهم نیست روی چه سیستمی اجراش می‌کنی — همه چیز توی کانتینر بسته‌بندی شده.
 
 01:40.640 --> 01:42.260
-about exactly how to start it up.
-
-01:42.440 --> 01:45.590
-So we have to run the exact command and PM start.
-
-01:46.450 --> 01:49.510
-In order to make each of these different services start up and run.
-
-01:49.840 --> 01:56.230
-So in total, not only is starting up our application potentially confusing and kind of mysterious,
-
-01:56.530 --> 02:01.510
-but we also have these kind of implicit requirements about the environment that we're running our program
-
-02:01.510 --> 02:02.110
-on.
-
-02:02.920 --> 02:07.780
-The whole goal of Docker is to remove both those issues by creating containers.
+این یعنی تکرارپذیری و قابل اطمینان بودن.
 
 02:07.780 --> 02:11.560
-We're going to wrap up all the dependencies that a program requires.
+ما قراره همه‌ی وابستگی‌هایی که یه برنامه نیاز داره رو داخل یه محیط ایزوله‌شده بسته‌بندی کنیم.
 
 02:11.560 --> 02:16.650
-So that means we're going to wrap up NPM and Node into this little isolated computing environment.
+یعنی چی؟ یعنی مثلاً NPM و Node رو هم داخل همون محیط (کانتینر) قرار می‌دیم.
 
 02:16.660 --> 02:20.800
-And we're also going to include in that container some information about how to start up and run our
+و علاوه‌بر اون، داخل کانتینر اطلاعات مربوط به نحوه‌ی اجرای برنامه رو هم قرار می‌دیم.
 
 02:20.800 --> 02:21.940
-program as well.
+یعنی دقیقاً می‌گیم با چه دستوری اجرا بشه.
 
 02:22.560 --> 02:27.030
-So all you really need to understand about Docker at this point is that it makes it really easy to run
+پس الان فقط کافیه بدونی که Docker اجرای هر برنامه‌ای رو — نه فقط Node.js — خیلی راحت می‌کنه.
 
 02:27.030 --> 02:33.870
-any arbitrary program you can possibly imagine not just Node.js programs, but any other language.
+فرقی نمی‌کنه با چه زبان یا پلتفرمی طرف باشی؛ Docker اجراش رو ساده و قابل پیش‌بینی می‌کنه.
 
 02:33.870 --> 02:36.620
-Anything else you can just about possibly imagine.
+هر برنامه‌ای که فکرش رو بکنی، با Docker راحت اجرا می‌شه.
 
 02:36.630 --> 02:39.930
-It starts to get really easy to run when you are using Docker.
+و اینجاست که قدرت واقعی Docker خودشو نشون می‌ده.
 
 02:40.320 --> 02:42.000
-Now, why is that relevant?
+حالا چرا این موضوع مهمه؟
 
 02:42.030 --> 02:43.570
-Well, let's take a quick pause right here.
+بذار همین‌جا یه توقف کوتاه داشته باشیم.
 
 02:43.590 --> 02:47.670
-Once again, we're going to come back the next video and start to discuss this thing called Kubernetes.
+توی ویدیوی بعدی قراره وارد بحث Kubernetes بشیم.
 
 02:47.670 --> 02:52.290
-And you're going to see how this Docker thing and this idea of making it really easy to run a program
-
-02:52.290 --> 02:54.600
-works really well with Kubernetes.
+و می‌بینی که Docker و این ایده‌ی اجرای راحت برنامه چقدر با Kubernetes خوب ترکیب می‌شن.

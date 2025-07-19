@@ -1,325 +1,289 @@
 WEBVTT
 
 00:01.190 --> 00:03.700
-Our application is now in a pretty complete state.
+اپلیکیشن ما الان تقریباً به حالت کامل رسیده.
 
 00:03.710 --> 00:07.730
-So now we're going to start to think about how we could take this app and deploy it online.
+حالا می‌خوایم به این فکر کنیم که چطور می‌تونیم این اپلیکیشن رو آنلاین منتشر (deploy) کنیم.
 
 00:07.760 --> 00:12.320
-Let's first begin with a quick discussion about how our application is being executed right now on our
+بیایم اول یه مرور سریع داشته باشیم که الان روی سیستم خودمون، این اپلیکیشن چطور اجرا میشه.
 
 00:12.320 --> 00:13.130
-local machine.
+روی کامپیوترت:
 
 00:13.490 --> 00:16.250
-So, of course, this is what is going on on your computer right now.
+ما سرویس‌های posts، comments، query، moderation و event-bus رو داریم.
 
 00:16.370 --> 00:19.190
-We've got post comments, query moderation and event plus.
+همه‌شون روی پورت‌های مشخصی در حال اجرا هستن و می‌تونن مستقیماً با هم ارتباط برقرار کنن.
 
 00:19.190 --> 00:24.020
-They're all running on some very specific ports and each of them can reach directly out to the other
+یعنی سرویس‌ها می‌تونن مستقیم درخواست بفرستن یا پیام ارسال کنن.
 
 00:24.020 --> 00:27.950
-services and send messages, make requests, whatever is required.
+ارتباط ساده و مستقیمی بین همه‌ی سرویس‌ها وجود داره.
 
 00:27.980 --> 00:31.520
-It's very direct and simple communication between each of our different services.
+حالا سوال اینجاست که چطور می‌تونیم همین ساختار رو با کمترین تغییر ممکن، به محیط آنلاین منتقل کنیم؟
 
 00:31.850 --> 00:37.430
-So how can we somehow take this same kind of structure, make as few changes as possible, and deploy
+یه راه خیلی ساده اینه که بریم سراغ سرویس‌هایی مثل DigitalOcean، AWS، Azure یا هر جای دیگه، و یه ماشین مجازی اجاره کنیم.
 
 00:37.430 --> 00:38.330
-it online?
+یعنی یه سرور اختصاصی کوچیک.
 
 00:38.870 --> 00:45.230
-Well, a very easy way to do this would be to go out to Digital Ocean or AWS, Microsoft, Azure, whoever
+بعد کدهای سورس‌مون رو روی اون سرور کپی کنیم و دقیقاً به همون شکلی که الان این سرویس‌ها رو اجرا کردیم، اونجا هم اجراشون کنیم.
 
 00:45.230 --> 00:47.300
-else, and rent a virtual machine.
+یعنی هر سرویس رو با همون پورت روی همون ماشین اجرا کنیم.
 
 00:47.750 --> 00:51.520
-Once we get that virtual machine, we could transfer all of our services over to it.
+در این حالت، سرویس‌ها همچنان می‌تونن با localhost و پورت‌های 4000، 4001 و ... با هم صحبت کنن.
 
 00:51.530 --> 00:56.660
-Like when I say transfer, I really just mean copy our source code and then run each of these services
+این روش قطعاً جواب می‌ده و مشکلی نداره.
 
 00:56.660 --> 00:58.790
-in the exact same way that we are doing right now.
+اما...
 
 00:59.180 --> 01:03.890
-So we can have all the services communicating with each other by reaching out directly over local host
+اگه یه مقدار عمیق‌تر بهش فکر کنیم و بخوایم در آینده اپلیکیشن رو گسترش بدیم، کار کمی پیچیده‌تر میشه.
 
 01:03.890 --> 01:07.100
-and trying to access port 4000, 4001 and so on.
+بذار دقیق‌تر توضیح بدم که چرا.
 
 01:08.150 --> 01:10.270
-So this would definitely work without a doubt.
+فرض کن سرویس comments خیلی شلوغ شده.
 
 01:10.280 --> 01:14.330
-But as we start to really think through this scenario and think about how we would grow our application
+مثلاً تعداد زیادی کاربر دارن هم‌زمان کامنت ایجاد می‌کنن.
 
 01:14.330 --> 01:17.540
-in the future, well, life starts to get a little bit more challenging.
+خب طبیعیه که اون یکی سرویس‌مون کم بیاره.
 
 01:17.960 --> 01:19.040
-Let me show you what I mean.
+در این حالت،
 
 01:19.550 --> 01:25.700
-Let's imagine for a second that our common service right here is starting to become really overburdened.
+شاید بخوایم برای مدیریت این حجم از درخواست، دو یا سه نسخه‌ی دیگر از سرویس comments ایجاد کنیم.
 
 01:25.850 --> 01:31.130
-Maybe we have a tremendous number of users coming into our application and trying to create comments.
+یعنی سه نسخه‌ی هم‌زمان از این سرویس داشته باشیم تا بار بین‌شون تقسیم بشه.
 
 01:31.460 --> 01:36.260
-And so at some point in time, we might decide that we need to create a second or a third instance of
+یه راه ساده اینه که روی همون ماشین مجازی، دو نسخه‌ی دیگه از comment service اجرا کنیم.
 
 01:36.260 --> 01:39.050
-this common server just to handle this additional demand.
+الان می‌تونیم این سه سرویس رو با هم load balance کنیم.
 
 01:39.710 --> 01:45.020
-A very easy way to do that would be to say on the same virtual machine, let's create two new copies
+یعنی وقتی درخواست جدیدی برای ثبت کامنت میاد، به‌صورت تصادفی بین این سه سرویس تقسیم بشه.
 
 01:45.020 --> 01:46.370
-of that common service.
+و فشار بینشون پخش بشه.
 
 01:46.460 --> 01:49.850
-So now we've got the original copy right here and two more over here.
+اما این روش مشکلاتی هم داره.
 
 01:51.280 --> 01:55.540
-Whenever someone tries to create a comment, we can then load balance between these three different
+مثلاً نسخه‌های اضافی از comment service باید روی پورت‌های متفاوتی اجرا بشن.
 
-01:55.540 --> 01:56.350
-services.
-
-01:56.380 --> 02:01.750
-When I say load balance, I essentially mean just randomize which server their incoming request goes
-
-02:01.750 --> 02:02.200
-to.
-
-02:03.410 --> 02:05.720
-Now there's a couple of challenges with this approach.
-
-02:05.840 --> 02:10.670
-First off, these additional copies of the comet service would have to be allocated some Newport on
-
-02:10.670 --> 02:11.480
-this machine.
+01:55.540 --> 02:01.750
+یعنی باید برای هرکدوم یک پورت جدید رزرو کنیم تا روی هم تداخل نداشته باشن.
 
 02:11.480 --> 02:15.530
-So maybe we would have bought 4006 and 4007 right there.
+مثلاً شاید بخوایم این دو نسخه جدید از سرویس کامنت رو روی پورت‌های 4006 و 4007 اجرا کنیم.
 
 02:15.890 --> 02:21.590
-That's relevant because remember, our event bus needs to know the exact IP address and port of all
+این موضوع مهمه، چون یادت باشه که event bus باید دقیقاً بدونه هر سرویس روی چه IP و پورتی در دسترسه تا بتونه eventها رو براش بفرسته.
 
 02:21.590 --> 02:23.990
-the different services that it's going to send events to.
+یعنی چی؟
 
 02:24.380 --> 02:29.480
-So in other words, as soon as we create these additional copies of the Common Service over here, we
+یعنی به محض اینکه این نسخه‌های جدید از سرویس comments رو ایجاد کنیم، باید بریم سراغ کد event bus.
 
 02:29.480 --> 02:31.730
-would have to open up our event bus code.
+در واقع، الان این کار رو انجام می‌دم.
 
 02:31.730 --> 02:33.670
-And as a matter of fact, I can do that right now.
+فایل index مربوط به event bus رو باز می‌کنم.
 
 02:33.680 --> 02:36.230
-Here's my event bus indexed file.
+و اونجایی که داریم event رو به سرویس‌ها ارسال می‌کنیم پیدا می‌کنم.
 
 02:36.890 --> 02:41.420
-We would have to find where we tried to take an event and send it off to all these other running services.
+اونجا مجبوریم دو خط جدید اضافه کنیم برای پورت‌های 4006 و 4007.
 
 02:41.420 --> 02:48.830
-And we would have to add in two additional lines right here, something like maybe 4006 and seven like
-
-02:48.830 --> 02:49.250
-so.
+یعنی مثلاً دو تا درخواست HTTP دیگه مثل اونایی که برای 4000 و 4001 داریم، برای اینا هم اضافه کنیم.
 
 02:50.480 --> 02:55.370
-So if we follow this approach, then we're going to start to couple or very directly tie the number
+حالا اگر از این روش استفاده کنیم، داریم بین تعداد سرویس‌هایی که اجرا شدن و کد واقعی‌مون وابستگی مستقیم ایجاد می‌کنیم.
 
 02:55.370 --> 02:59.090
-of services that we are running with the actual implementation of our code.
+اگه یه روز بخوایم تعداد سرویس‌های comment رو کم یا زیاد کنیم، باید کد event bus رو هم تغییر بدیم و دوباره منتشرش کنیم.
 
 02:59.270 --> 03:04.160
-If we ever decide to increase or decrease the number of comment service servers running at any given
+و همون‌طور که می‌تونی حدس بزنی، این اصلاً خوب نیست و کلی دردسر داره.
 
 03:04.160 --> 03:08.900
-time, we are going to have to make a change to our event bus code and deploy that change as well.
+سناریو بدتر میشه اگه ببینیم این چند نسخه از سرویس comment روی همون ماشین مجازی خیلی فشار میارن و سرور کم میاره.
 
 03:09.050 --> 03:12.410
-And I bet as you can imagine, that would probably not be too great.
+تو این حالت، ممکنه تصمیم بگیریم یه ماشین مجازی دوم بگیریم و اون دو نسخه جدید رو روی اون اجرا کنیم.
 
 03:13.590 --> 03:18.600
-This whole scenario gets even more complicated if we see that the comment surfaces right here that we
+مثلاً همچنان از پورت‌های 4006 و 4007 استفاده کنیم، ولی حالا روی یه سرور دیگه.
 
 03:18.600 --> 03:21.900
-added on are overburdening the one virtual machine we have.
+در این صورت، event bus باید بدونه که این پورت‌ها روی یه IP دیگه‌ان.
 
 03:22.200 --> 03:27.720
-So let's imagine for a second that we decide to get a second virtual machine and run those two additional
+یعنی علاوه بر نگه‌داشتن لیست پورت‌ها، باید بتونه تشخیص بده هر پورت روی کدوم ماشین مجازیه.
 
 03:28.020 --> 03:29.790
-services on the second machine.
+و به اون IP خاص درخواست ارسال کنه.
 
 03:31.720 --> 03:38.230
-Maybe they are still listed at Port Airport 4006 and seven, but now the event bus not only needs to
+یعنی دیگه فقط نوشتن پورت کافی نیست، باید IP ماشین دوم هم در کد لحاظ بشه.
 
 03:38.230 --> 03:43.720
-know or keep track of ports 4006 and seven, but also is going to have to have some code to figure out
+و این باعث میشه event bus عملاً به ساختار شبکه ما وابسته بشه، که خیلی بده.
 
 03:43.720 --> 03:49.870
-how to reach out to this other virtual machine and eventually get access or send some events to the
+حالا نه‌تنها باید پورت‌ها رو توی کد بنویسیم، بلکه باید IP سرورهای دیگه هم دستی توی کد وارد کنیم.
 
 03:49.870 --> 03:53.170
-comment service right there and the comm service right there.
+و همه اینا یعنی وابستگی سفت و سخت، کد سخت‌قابل‌تغییر و پر از خطا.
 
 03:53.750 --> 03:56.630
-So once again, we would have to open up our event file.
+یعنی دوباره باید بریم داخل فایل event bus
 
 03:56.630 --> 04:01.850
-And rather than make your request to a local host, we'd have to put in the IP address of that other
+و به‌جای اینکه به localhost درخواست بفرستیم، باید آدرس IP ماشین مجازی دوم رو بنویسیم.
 
 04:01.850 --> 04:02.840
-virtual machine.
+یه چیزی شبیه این:
 
 04:03.730 --> 04:04.420
-Like so.
+http://192.168.x.x:4006
 
 04:05.100 --> 04:08.700
-And once again, I bet, as you can imagine, that would be a really tedious.
+و همون‌طور که می‌تونی تصور کنی، این کار واقعاً خسته‌کننده، تکراری و اشتباه‌پذیره.
 
 04:09.940 --> 04:11.670
-Finally, let's imagine a scenario.
+بیایم یه سناریوی دیگه هم تصور کنیم.
 
 04:11.680 --> 04:14.060
-One more just one more scenario here very quickly.
+فقط یکی دیگه، خیلی سریع.
 
 04:14.080 --> 04:19.050
-Let's imagine for a second that our website is very popular at just certain times of the day.
+فرض کنیم سایت ما فقط در بعضی ساعات روز خیلی پربازدید میشه.
 
 04:19.060 --> 04:25.330
-So maybe at 10 a.m. in the morning, a lot of people come to our website and they start to create comments.
+مثلاً ساعت ۱۰ صبح کاربران زیادی وارد سایت می‌شن و شروع می‌کنن به گذاشتن کامنت.
 
 04:25.330 --> 04:29.830
-And so at 10 a.m. in the morning, we would want to have these additional copies of the comment service
+تو این ساعت، لازمه چند نسخه‌ی اضافی از سرویس کامنت‌مون فعال باشه تا فشار رو کنترل کنه.
 
 04:29.830 --> 04:35.980
-running, but then maybe at 1 a.m. in the morning, like at the dead of night, maybe nobody is coming
+اما مثلاً ساعت ۱ نصف شب که دیگه تقریباً هیچ‌کس وارد سایت نمی‌شه، شاید بهتر باشه برای کاهش هزینه، ماشین دوم رو خاموش کنیم.
 
 04:35.980 --> 04:37.030
-to our application.
+چون استفاده‌ای ازش نمی‌شه.
 
 04:37.030 --> 04:43.510
-And so in order to save money on our hosting fees, we might decide at 1:00 am to temporarily shut down
+در نتیجه، تصمیم می‌گیریم که اون سرویس‌های اضافی موقتاً خاموش بشن تا هزینه‌ی سرور کاهش پیدا کنه.
 
 04:43.510 --> 04:47.230
-this second virtual machine and just say, Hey, no one's coming to our website.
+یعنی موقتاً ماشین دوم رو خاموش می‌کنیم چون نیاز به اون سرویس‌های اضافه نداریم.
 
 04:47.230 --> 04:49.570
-We don't need those additional copies of the Common Service.
+همه چیز خوب به نظر می‌رسه، اما...
 
 04:49.570 --> 04:52.540
-So let's just temporarily, temporarily turn all that stuff off.
+حالا Event Bus ما باید بدونه که اون ماشین دوم خاموش شده و نباید سعی کنه بهش رویداد بفرسته.
 
 04:53.200 --> 04:57.550
-So now in this scenario, once again, the event just needs to know that that second virtual machine
+برای مدیریت این وضعیت، باید دوباره بریم سراغ کد Event Bus و یه شرط زمان اضافه کنیم.
 
 04:57.550 --> 05:01.480
-is now dead and it should not attempt to send any events over there.
+مثلاً بگیم اگه الان ساعت ۱ نصف شبه، این سرویس‌ها رو رد کن.
 
 05:02.470 --> 05:06.880
-Well, to handle that, we would have to come back over to our event bus and maybe add in some code
+یعنی شاید مجبور باشیم بنویسیم: اگر الان ساعت غیر از ۱ بامداده، رویدادها رو بفرست.
 
 05:06.880 --> 05:10.090
-and say something like if it is 1 a.m..
+در غیر این صورت، بی‌خیال اون دو سرویس بشو.
 
 05:11.070 --> 05:14.370
-Or I should say if it is not 1 a.m..
+اما همون‌طور که حدس می‌زنی، این کار خیلی غیرمنطقی و اشتباهه.
 
 05:15.800 --> 05:17.690
-Then go ahead and attempt to.
+ما نباید به زمان وابسته باشیم.
 
 05:18.650 --> 05:21.890
-Send the incoming events off to those other two services.
+نباید ساعت تعیین‌کننده‌ی این باشه که آیا رویداد رو به سرویس بفرستیم یا نه.
 
 05:23.250 --> 05:28.110
-And once again, as I'm sure you can imagine, this is definitely not something we would ever want to
+این روش یعنی هر بار ساعت عوض شد یا وضعیت سرورها تغییر کرد، باید بریم کد Event Bus رو تغییر بدیم.
 
 05:28.110 --> 05:28.980
-write out right here.
+کاملاً اشتباهه.
 
 05:28.980 --> 05:33.090
-We would never want to say, oh, well, if it's a certain time of the day, let's try making a request
+هیچ‌وقت نباید بنویسیم که "اگر ساعت فلان بود، رویداد رو بفرست به فلان سرویس".
 
 05:33.090 --> 05:34.740
-over to these additional copies.
+این مسیریه که نباید واردش بشیم.
 
 05:35.040 --> 05:39.570
-So everything we're discussing now is really going down towards a very bad path.
+الان داریم Event Bus رو به شیوه‌ای خیلی سخت‌گیرانه و صریح طراحی می‌کنیم که همه چیز رو باید خودش مدیریت کنه.
 
 05:39.750 --> 05:45.000
-We are trying to put together this event bus and have it communicate between all these different services
+یعنی Event Bus باید بدونه کدوم سرویس‌ها اجرا شدن، کدوم خاموشن، کی روشن می‌شن و همیشه رویداد رو به همه بفرسته.
 
 05:45.000 --> 05:47.520
-in a very direct and imperative fashion.
+و همزمان باید وضعیت لحظه‌ای سرویس‌ها رو هم چک کنه.
 
 05:47.520 --> 05:49.050
-We're trying to say he event bus.
+همه اینا خیلی پیچیده‌ست.
 
 05:49.050 --> 05:54.330
-You need to keep track of all the different services and you need to make sure that you always send
+به‌قدری پیچیده و سخت میشه که عملاً مدیریت همچین سیستمی از دست ما خارج میشه.
 
 05:54.330 --> 05:57.060
-every incoming event to every service that is running.
+و احتمال اینکه بتونیم درست پیادش کنیم خیلی کمه.
 
 05:57.060 --> 05:59.730
-And you need to keep track of whether or not they are running.
+بنابراین نتیجه واضحه.
 
 06:00.030 --> 06:05.520
-This is all just over the top complex, way too confusing, and there's probably no way we would be
+چیزی که الان روی سیستم لوکال ما خوب کار می‌کنه، توی دنیای واقعی و مقیاس بالا جواب نمی‌ده.
 
 06:05.520 --> 06:07.140
-able to pull this off very easily.
+ما یه راه حل بهتر می‌خوایم.
 
 06:07.650 --> 06:12.150
-So I think it's pretty clear at this point that although what we have right now is working on our local
+نیاز داریم به یه سیستمی که خودش بفهمه چه سرویس‌هایی در حال اجرا هستن،
 
 06:12.150 --> 06:14.820
-machine, it would probably not work in the long term.
+بتونه خودکار سرویس جدید ایجاد کنه،
 
-06:14.820 --> 06:16.890
-We need a better solution.
-
-06:16.890 --> 06:21.090
-We need something that's going to keep track of all the different services that are running inside of
+06:14.820 --> 06:21.090
+و خودش تشخیص بده که آیا فلان سرویس فعاله یا نه و آیا اصلاً نیازه که بهش درخواست ارسال کنیم یا نه.
 
 06:21.090 --> 06:26.850
-our application has the ability to maybe create new copies of a service on the fly and make sure that
+این بحث ما رو می‌بره به سمت دو فناوری متن‌باز و بسیار مهم: Docker و Kubernetes.
 
 06:26.850 --> 06:31.650
-we have something as well that can automatically figure out whether or not a service is running and
+قراره وارد بحث مفصل این دوتا ابزار بشیم که توی ویدیوهای بعدی کامل بررسی‌شون می‌کنیم.
 
 06:31.650 --> 06:35.400
-whether or not we should maybe try to make contact between two given services.
+پس اینجا یه توقف می‌کنیم و از ویدیوی بعدی با Docker شروع می‌کنیم.
 
 06:36.000 --> 06:40.560
-So this is all going to lead us into a really big discussion in this section and all the next coming
-
-06:40.560 --> 06:46.080
-videos around to big open source technologies called Docker and Kubernetes.
-
-06:46.770 --> 06:48.050
-So we're going to take a pause right here.
-
-06:48.060 --> 06:51.090
-We're going to come back the next video and have a quick discussion on Docker.
-
-06:51.090 --> 06:54.840
-We're going to get a little bit more familiar with it and then do the same thing with Kubernetes as
-
-06:54.840 --> 06:55.350
-well.
+می‌خوایم اول با Docker بیشتر آشنا بشیم و بعدش بریم سراغ Kubernetes.

@@ -1,508 +1,433 @@
 WEBVTT
 
 00:01.030 --> 00:05.560
-Our application is now working pretty well, but at the end of the last video we saw a little issue,
+اپلیکیشن ما الان داره خوب کار می‌کنه، ولی آخر ویدیوی قبلی با یه مشکل کوچیک روبرو شدیم.
 
 00:05.560 --> 00:09.220
-and this issue might be something that's been kind of nagging in the back of your head throughout this
+شاید این مشکل از اول دوره توی ذهن شما بوده که: اگه یه سرویس برای یه مدت از دسترس خارج بشه چی میشه؟
 
 00:09.220 --> 00:10.230
-entire course.
+الان دقیقاً همینو دیدیم.
 
 00:10.240 --> 00:14.350
-What happens to our application when a service goes down for some period of time?
+سرویس moderation از دسترس خارج شد، ما یه کامنت ایجاد کردیم وقتی اون سرویس قطع بود
 
 00:14.680 --> 00:15.850
-We just saw that in the last video.
+و حالا اون کامنت تا ابد تو وضعیت pending می‌مونه.
 
 00:15.850 --> 00:21.280
-With the moderation service going down, we created a comment while the moderation service was down
+پس سوال اینه که با این وضعیت چی‌کار باید بکنیم؟
 
 00:21.280 --> 00:25.330
-and now this comment is going to be forever stuck in the pending state.
+بیایم با یه دیاگرام بهتر متوجه بشیم مشکل اصلی دقیقاً چیه.
 
 00:25.630 --> 00:26.950
-So how do we deal with this?
+پس بریم سراغش.
 
 00:27.100 --> 00:30.670
-Let's take a look at a diagram to better understand what the real issue here is.
+توی این دیاگرام که یه کم هم شاید در نگاه اول گیج‌کننده باشه، ما یه نمودار توالی زمانی داریم.
 
 00:31.460 --> 00:31.790
-Okay.
+خب
 
 00:31.790 --> 00:34.300
-So in this diagram, kind of hard to understand what's going on.
+اینجا زمان شروع اپلیکیشن‌مونه، از بالا به پایین حرکت می‌کنه.
 
 00:34.310 --> 00:36.700
-This is kind of a time sequence diagram.
+یعنی زمان به صورت عمودی به سمت پایین جریان داره.
 
 00:36.710 --> 00:41.780
-So we start off time of our application, starting up for the very first time right up here, and we
+توی اپلیکیشن ما، Bus رویدادها (event bus) این خط سبز وسطه.
 
 00:41.780 --> 00:44.240
-have time flowing down or vertically.
+تمام سرویس‌هایی که توی این نمودار نشون داده شدن، بخش‌هایی هستن که تو اون زمان فعال بودن.
 
 00:45.700 --> 00:49.000
-In our application, we've got the event bus, the green lines throughout.
+پس فرض می‌کنیم که event bus، post، comments و query همه از ابتدا روشن بودن.
 
 00:49.000 --> 00:53.380
-All these different services indicate times in which the service was successfully running.
+و توی این بازه احتمالاً چندتا رویداد هم ارسال شده.
 
 00:53.770 --> 00:56.350
-So we're going to say that our event bus was running the whole time.
+مثلاً رویداد اول فرستاده شده و با موفقیت به همه سرویس‌ها رسیده.
 
 00:56.380 --> 00:58.180
-Post was running comments and query.
+چون همه اون موقع روشن بودن.
 
 00:58.180 --> 01:02.470
-Those were all running for the entire time that our application has been up and running.
+اما حالا فرض کن یه مدتی سرویس moderation قطع بوده (خط قرمز توی نمودار).
 
 01:03.040 --> 01:06.190
-And during that time, maybe we've had a couple of events flow out.
+در همین مدت، event 2 و 3 ارسال شدن.
 
 01:06.220 --> 01:12.100
-So maybe event one went out to post comments, query and moderation successfully because all those services
-
-01:12.100 --> 01:14.320
-were up at the time that event was sent out.
+اینا با موفقیت به post، comments و query رسیدن، ولی چون moderation خاموش بوده، اون نتونسته دریافتشون کنه.
 
 01:14.920 --> 01:19.690
-Well, let's imagine that for some period of time indicated by this red line right here, maybe the
+بعدش ممکنه moderation دوباره روشن بشه و event 4 رو بگیره.
 
 01:19.690 --> 01:21.550
-moderation service was down.
+ولی دیگه event 2 و 3 برای همیشه از دست رفته‌ن.
 
 01:22.120 --> 01:27.880
-So event two and three might have been emitted from the event bus gone over to our post, successfully
+الان دیگه هیچ راهی نداریم که به moderation بگیم: این دوتا رویداد قبلاً اتفاق افتادن، پس لطفاً اونا رو هم پردازش کن.
 
 01:27.880 --> 01:33.670
-went to comments and queries successfully, but then failed to be delivered over to the moderation service.
+این فقط یکی از سناریوهاییه که توش یه سرویس برای یه مدت خاموش میشه.
 
 01:34.390 --> 01:39.250
-And then maybe some time later Moderation Service came up and it received Event four.
+ولی یه سناریوی دیگه هم هست که شاید از اول دوره تو ذهنت بوده:
 
 01:39.490 --> 01:41.950
-But Events two and three have now been lost to time.
+اگه ما از اول یه سرویسی نداشته باشیم چی؟
 
 01:41.950 --> 01:46.390
-We don't currently have any way to tell moderation about these events in how they just occurred.
+یعنی یه سرویسی مثل query رو اصلاً از ابتدا نسازیم و بعداً تصمیم بگیریم که بسازیم.
 
 01:48.200 --> 01:51.620
-Now this is the scenario in which a service goes down for some little period of time.
+مثلاً فرض کن تا ماه‌ها یا حتی سال‌ها فقط post، comments و moderation فعال بودن.
 
 01:51.620 --> 01:56.330
-But there's another scenario that you've probably been wondering about again throughout the first half
+همه اینا کلی رویداد دریافت کردن، کلی دیتا ساختن و زندگی‌شونو کردن!
 
-01:56.330 --> 01:57.370
-of this course already.
-
-01:57.380 --> 02:02.990
-What happens if we're using this kind of event style approach and we don't bring up or we don't even
+01:56.330 --> 02:02.990
+بعد شاید یک سال بعد تازه بیایم سرویس query رو بسازیم.
 
 02:02.990 --> 02:07.040
-create a service until maybe sometime in the future?
+و حالا سؤال اینجاست: این سرویس جدید چطوری می‌تونه همه اون اطلاعات قبلی رو بگیره؟
 
 02:07.040 --> 02:11.750
-So in this diagram, let's imagine that we did not initially create our query service.
+چون اون همه دیتا و event رو از دست داده، و هیچ راهی برای گرفتنشون نداره.
 
 02:11.900 --> 02:17.390
-And so maybe we've been running post comments in moderation for days, maybe even years, and they have
+بنابراین ساختن یه سرویس جدید تو این ساختار event-driven بدون فکر به replay یا sync واقعاً یه چالش جدیه.
 
 02:17.390 --> 02:22.340
-tons of data inside them and they've already received tons of events, but maybe we only created that
-
-02:22.340 --> 02:24.770
-query service like one year down the line.
+و الان وقتشه که برای این مشکلات یه راهکار حرفه‌ای و مهندسی پیدا کنیم.
 
 02:24.920 --> 02:29.090
-And so we're creating this query service, but it's already missed out on all these different events.
+وقتی سرویس query تازه ساخته می‌شه، همه اون رویدادهای قبلی رو از دست داده. پس چطوری می‌تونیم همگام‌سازیش کنیم؟
 
 02:29.090 --> 02:31.490
-How do we somehow get query into sync?
+چطوری همه پست‌ها، کامنت‌ها و وضعیت بررسی‌ها رو به query منتقل کنیم؟
 
 02:31.520 --> 02:36.950
-How do we get all the existing posts and comments and results of moderation over to the query service?
+مثل همیشه، چند روش مختلف برای حل این مسئله وجود داره. بیایم چند راهکار ممکن رو بررسی کنیم.
 
 02:37.750 --> 02:41.290
-Well, as usual, there's a couple of different ways to handle all these different cases.
+خب این گزینه اول ماست.
 
 02:41.290 --> 02:43.510
-So let's take a look at some possible solutions.
+فرض می‌کنیم سرویس‌های post و comment از ابتدا در حال اجرا بودن
 
 02:45.090 --> 02:46.410
-So here's option number one.
+و بعد مثلاً یک سال بعد سرویس query رو ایجاد کردیم.
 
 02:46.680 --> 02:50.880
-For option number one, we're going to imagine that we've had our post service in common, service running
+طبیعتاً سرویس query باید همه پست‌ها و کامنت‌های موجود رو بدونه.
 
 02:50.880 --> 02:53.130
-for the entire lifetime of our application.
+پس باید somehow با بقیه سینک بشه.
 
 02:53.430 --> 02:57.240
-And then maybe one year into the future, we create the query service.
+روش اول اینه که از درخواست‌های هم‌زمان (synchronous) استفاده کنیم.
 
 02:57.510 --> 03:02.610
-The query service, of course, needs to know about all of the posts that exist and all of the comments.
+یعنی درست وقتی که سرویس query راه‌اندازی شد، یه کد بذاریم که از طریق درخواست شبکه مستقیم، از سرویس post بخواد که لیست تمام پست‌ها رو بده.
 
 03:02.610 --> 03:06.090
-So we somehow need to get query into sync with everything else.
+با این روش، می‌تونه همه پست‌های موجود رو با یک درخواست ساده بگیره.
 
 03:06.800 --> 03:10.880
-One way or option number one would be to use synchronous requests.
+بعدش می‌تونه به سراغ سرویس comment بره و از اونم همین درخواست رو بفرسته: همه کامنت‌هات رو بده.
 
 03:11.450 --> 03:16.880
-So the instant we launch query, maybe we would have some code inside of the query service to make a
+سپس همه این کامنت‌ها رو با پست‌های مرتبط‌شون توی سرویس query ذخیره کنه.
 
 03:16.880 --> 03:21.590
-direct network requests over to post and say, give me a list of all of your posts.
+مشکل این روش واضحه: داریم برمی‌گردیم به مدل هم‌زمان یا synchronous.
 
 03:21.860 --> 03:26.720
-It could get all the different posts that exist inside the post service via plain network requests.
+یعنی برای راه‌اندازی سرویس جدید باید تو سرویس‌های post و comment یه endpoint پیاده‌سازی کنیم که مثلاً همه پست‌ها یا همه کامنت‌ها رو برگردونه.
 
 03:27.580 --> 03:31.960
-Once it stored all those posts, it could then turn round to the Common Service and also make a sync
+در حال حاضر چنین چیزی تو برنامه‌مون هست، ولی تو محیط production احتمالاً چنین endpointی نخواهیم داشت.
 
 03:31.960 --> 03:35.260
-request directly over and say, Give me all the comments you have.
+چون منطقی نیست که یه API داشته باشیم که همه داده‌های تاریخچه رو بدون محدودیت برگردونه.
 
 03:35.650 --> 03:38.530
-And then I could store all those comments with the associated posts.
+پس اگه چنین چیزی نداشتیم، باید مخصوص این نیاز پیاده‌سازیش کنیم.
 
 03:39.390 --> 03:42.270
-Now the downside to this approach is pretty clear.
+البته وقتی همه داده‌ها رو گرفتیم و سینک کردیم،
 
 03:42.270 --> 03:44.370
-We are falling back to synchronous requests.
+از اون لحظه به بعد، سرویس query می‌تونه بقیه رویدادهای جدید رو به صورت عادی دریافت کنه.
 
 03:44.760 --> 03:50.130
-The real downside here is that we would have to have some code inside of posts and comments just to
+پس در واقع فقط برای راه‌اندازی اولیه لازمه این کار رو بکنه و بعدش برمی‌گرده به رفتار استانداردش.
 
 03:50.130 --> 03:53.640
-service or kind of handle this new service that is coming online.
+این شد گزینه اول.
 
 03:54.180 --> 03:59.490
-Right now, we do not have any real bulk kind of endpoint where we can say, give me all the posts for
+اما گزینه دوم، یه استثناست نسبت به قانونی که قبلاً تو دوره گفتیم مبنی بر اینکه هر سرویس باید دیتابیس خصوصی خودش رو داشته باشه.
 
 03:59.490 --> 04:00.720
-all eternity per se.
+توی این روش دوم...
 
 04:00.750 --> 04:04.800
-Well, okay, technically our application does right now, but you can imagine that in a production
+باز هم شبیه گزینه اوله ولی با یه تفاوت مهم.
 
 04:04.800 --> 04:09.870
-application we would probably not have an endpoint that just says give me all posts that exist, probably
+می‌تونیم بگیم وقتی سرویس query تازه بالا اومد، دسترسی مستقیم به دیتابیس پست‌ها بهش بدیم.
 
 04:09.870 --> 04:11.430
-would not implement something like that.
+یعنی مستقیماً به storage داده‌های post.
 
 04:12.770 --> 04:16.460
-So if we did not already have some end point like that, we would have to implement it for both posts
+با این کار، query بدون نیاز به API می‌تونه خودش اطلاعات رو از دیتابیس بخونه.
 
-04:16.460 --> 04:17.510
-and comments.
-
-04:18.410 --> 04:23.480
-Now, one thing to be clear about, after getting all the posts and comments and synchronizing all this
+04:16.460 --> 04:23.480
+یعنی به جای اینکه از post درخواست بفرسته و post براش پاسخ بده، خودش می‌ره سراغ دیتای post.
 
 04:23.480 --> 04:29.270
-data, then from that point in time into the future, then the query service would start to receive
+این راه سریع‌تره ولی وابستگی ایجاد می‌کنه و نقض اصل انزوا (isolation) بین سرویس‌هاست.
 
 04:29.270 --> 04:31.850
-any events that are emitted from posts and comments.
-
-04:31.850 --> 04:35.270
-So eventually query would kind of revert back to our expected behavior.
-
-04:35.270 --> 04:39.740
-But just to get it online and up and running, it could make these initial synchronous requests.
-
-04:40.220 --> 04:41.360
-So that's option number one.
-
-04:42.140 --> 04:47.480
-Option number two is the one exception to that rule that we discussed earlier on inside the course around
-
-04:47.480 --> 04:50.090
-every service having its own private database.
-
-04:50.740 --> 04:54.190
-So it's option number two, which is kind of similar to option number one.
-
-04:54.190 --> 04:59.950
-We could say that the instant that query came online, we could give it direct access to the data store
-
-04:59.950 --> 05:02.800
-or essentially the database for all the posts that we have.
+و حالا بریم ببینیم این روش چقدر ارزش داره که انجامش بدیم.
 
 05:03.040 --> 05:04.630
-And same thing for comments as well.
+همین قضیه برای کامنت‌ها هم صدق می‌کنه.
 
 05:04.960 --> 05:09.220
-So rather than relying upon synchronous network requests directly to the service, we could just say,
+یعنی به‌جای اینکه به درخواست‌های هم‌زمان از طریق شبکه تکیه کنیم، می‌تونیم بگیم:
 
 05:09.220 --> 05:11.920
-you know what, query needs all the information at a database.
+سرویس query به کل دیتا نیاز داره، پس بیایم دسترسی مستقیم به دیتابیس بهش بدیم.
 
 05:11.950 --> 05:13.840
-Let's just give it access to the database.
+بذاریم خودش مستقیماً دیتا رو بخونه.
 
 05:14.020 --> 05:18.880
-Now, the upside to this is now the query service could run its own queries and figure out all the different
+مزیت این روش اینه که سرویس query می‌تونه خودش مستقیماً کوئری بزنه و هر دیتایی که نیاز داره رو از دیتابیس post و comment بخونه.
 
 05:18.880 --> 05:22.090
-data that it needs to get out of the post database and common database.
+بعد از سینک شدن اطلاعات، می‌تونه دوباره رویدادها رو از طریق event bus گوش بده.
 
 05:23.480 --> 05:27.260
-After synchronizing all this data once again, the query service could start listening to different
+ولی نقطه‌ضعف این روش هم اینه که باز داریم وارد مدل هم‌زمان (sync) می‌شیم.
 
 05:27.260 --> 05:27.890
-events.
+یعنی چی؟
 
 05:28.640 --> 05:33.530
-The downside to this approach is once again we are making sync requests over, which means we are going
+یعنی باید توی سرویس query کدی بنویسیم که مستقیماً با دیتابیس‌های post و comment کار کنه.
 
 05:33.530 --> 05:39.080
-to have to implement some code inside of query to work directly with whatever this database is or this
+حالا فرض کن post با MySQL نوشته شده، ولی comment از MongoDB استفاده می‌کنه.
 
 05:39.080 --> 05:40.040
-database is.
+چی میشه؟
 
 05:40.280 --> 05:47.480
-Let's imagine that maybe the post data store over here was my SQL and maybe the comments datastore was
+یعنی query باید بتونه هم به MySQL وصل شه، هم به MongoDB — و این یعنی کلی کد اضافه برای مدیریت این اتصال‌ها.
 
 05:47.480 --> 05:48.500
-MongoDB.
+هزینه زیاد داره.
 
 05:48.830 --> 05:54.260
-Now all of a sudden we need to write some code inside a query to interface with a MySQL database and
+پس بریم سراغ گزینه سوم — همون گزینه‌ای که قراره ما هم انجامش بدیم.
 
 05:54.260 --> 05:55.790
-a MongoDB database.
+آماده‌ای؟
 
 05:55.970 --> 05:58.310
-That's a lot of extra code to potentially have to write.
+گزینه سوم همون کاریه که ممکنه اولش بگی: امکان نداره، خیلی ناکارآمده، اصلاً قابل اجرا نیست.
 
 05:58.950 --> 06:03.540
-So on to option number three, which as you can guess, is what we are going to be doing.
+ولی باید بدونی واقعاً این روش در دنیای واقعی استفاده می‌شه، کاملاً رایجه، دارم از خودم در نمی‌آرم!
 
 06:04.820 --> 06:05.270
-All right.
+بریم ببینیم چی هست.
 
 06:05.270 --> 06:10.340
-So option number three really falls into the same category that we've gone through several times in
+فرض کنیم که ما سرویس query رو یه زمانی در آینده راه‌اندازی می‌کنیم، مثلاً این نقطه توی نمودار.
 
 06:10.340 --> 06:14.270
-the course where I'm going to tell you this and you're going to say, no way, not possible, totally
+تئوریکاً، اگه query به همه رویدادهایی که قبلاً emit شدن دسترسی داشت، می‌تونست کاملاً درست کار کنه.
 
 06:14.270 --> 06:15.680
-inefficient, can't do it.
+یعنی چی؟
 
 06:15.680 --> 06:16.580
-Not going to happen.
+مثلاً...
 
 06:16.580 --> 06:21.020
-But once again, yes, this is how people actually implement microservices.
+سرویس post رویدادهایی مثل event 1، 2، و 3 رو ارسال کرده که همه مثلاً مربوط به ایجاد پست هستن.
 
 06:21.020 --> 06:22.970
-People do this, not making this stuff up.
+Query به اینا نیاز داره.
 
 06:23.720 --> 06:25.250
-So it's option number three.
+اگه به اون رویدادها دسترسی داشت، کارش راه می‌افتاد.
 
 06:25.280 --> 06:29.510
-We're going to once again say that we are implementing or bringing query online at some point in time
+پس استراتژی ما هم دقیقاً همینه: کاری کنیم که query به این eventهای قدیمی دسترسی داشته باشه.
 
 06:29.510 --> 06:30.860
-in the future, like right here.
+چطور؟
 
 06:32.350 --> 06:38.230
-Now in theory, query could work if it had access to all the events that had been emitted in the past.
+می‌گیم هر وقت یه سرویسی هر نوع رویدادی رو منتشر کرد، event bus اون رویداد رو علاوه بر فرستادن به بقیه سرویس‌ها...
 
 06:38.740 --> 06:42.850
-So the post service, for example, is going to emit events maybe one, two and three, and each of
+یه کار دیگه هم انجام بده: اون رویداد رو داخل خودش ذخیره کنه.
 
-06:42.850 --> 06:45.010
-these might be a post creation event.
-
-06:45.040 --> 06:47.530
-Those are all events that Query cares about.
-
-06:47.530 --> 06:49.930
-If Query just had access to those events.
-
-06:49.960 --> 06:54.130
-It could work just fine, and that's what the strategy is going to rely upon.
-
-06:54.430 --> 07:01.210
-We're going to say that whenever any of our services emits any event whatsoever over to the event bus,
-
-07:01.540 --> 07:06.400
-the event bus will send that event out to all the other services, but it's going to do something else
-
-07:06.400 --> 07:07.390
-at the same time.
-
-07:07.390 --> 07:10.210
-It's going to store that event internally.
+06:42.850 --> 06:54.130
+یعنی هم forward کنه، هم persist کنه — اینطوری می‌تونیم بعداً هر سرویس جدیدی مثل query رو بیاریم بالا و replay کنیم همه‌ی رویدادها رو براش.
 
 07:12.140 --> 07:17.180
-So we can imagine that after event one gets emitted, the event bus is going to store that event internally
+پس می‌تونیم فرض کنیم که بعد از اینکه Event 1 منتشر شد، Event Bus اون رویداد رو داخل یه ساختار داده‌ای ذخیره می‌کنه.
 
 07:17.180 --> 07:18.830
-in some kind of data structure.
+احتمالاً نه در حافظه، بلکه در یه دیتابیس یا یه سیستم مشابه،
 
 07:18.890 --> 07:23.840
-Probably not in memory, probably in some kind of database or something similar because this data store
+چون این دیتاستور به مرور زمان خیلی بزرگ می‌شه و نمی‌تونیم فقط به RAM تکیه کنیم.
 
 07:23.840 --> 07:26.840
-is going to grow to be very, very large over time.
+بعدش مثلاً Event 2 هم از سمت post منتشر می‌شه.
 
 07:27.730 --> 07:31.930
-We can then imagine that maybe the post service event number two.
+و Event Bus هم اونو ذخیره می‌کنه. حالا یه رکورد از Event 1 و Event 2 داره.
 
 07:33.260 --> 07:38.510
-And so we would add that on now Event Bus has a record of event one and Event two.
+در نهایت Event 3 هم اضافه می‌شه. پس الان Event Bus هر سه رو داره.
 
 07:38.780 --> 07:41.090
-And then finally Event three as well.
+و ما فرض می‌کنیم که تا این لحظه همه اینا ذخیره شدن.
 
 07:41.150 --> 07:43.370
-And so we can imagine that at that point in time.
+پس Event Bus الان می‌دونه Event 1، 2 و 3 چی بودن.
 
 07:44.870 --> 07:48.080
-The event bus now knows about event one, two and three.
+تأکید می‌کنم، این رویدادها هنوز همزمان به سرویس‌های دیگه ارسال می‌شن، مثل قبل.
 
 07:48.290 --> 07:53.180
-Again, I want to repeat, these events are still going out to all the other services as they currently
-
-07:53.180 --> 07:53.360
-are.
+ما فقط یه مرحله اضافی اضافه کردیم: ذخیره‌سازی رویدادها در Event Bus.
 
 07:53.390 --> 07:55.730
-We are just adding in one extra little step here.
+فقط همین، هیچ چیزی از قبل خراب نمی‌شه.
 
 07:55.820 --> 07:58.250
-The event bus is going to store all these events.
+فقط داریم این Eventها رو ذخیره می‌کنیم.
 
 07:59.030 --> 08:04.130
-Now the upside to this approach is that if query comes along or online at some point in time, the future
+مزیت این روش چیه؟ اگه سرویس query بعداً آنلاین شد، می‌تونه به Event Bus بگه:
 
 08:04.160 --> 08:10.080
-where you can say over to the event bus, hey, give me access to all the events you have stored, all
+«همه رویدادهایی که ذخیره کردی رو بده به من، خودم تشخیص می‌دم کدوما برام مهمه».
 
 08:10.080 --> 08:10.370
-of them.
+همه‌شو بده.
 
 08:10.370 --> 08:13.580
-Just throw them over and I'll decide whether or not I care about them.
+اون موقع Event 1 و Event 2 و Event 3 هم براش فرستاده می‌شن.
 
 08:13.760 --> 08:17.210
-And so we can send over event one and event two.
+و حالا سرویس query کاملاً با بقیه همگام شده.
 
 08:18.250 --> 08:19.690
-And Event three.
+و می‌تونه با همون کدی که قبلاً داشتیم، این رویدادها رو پردازش کنه.
 
 08:20.470 --> 08:25.570
-And now the query service will be totally up to speed and we can use all the same code that we've probably
+پس دیگه لازم نیست هیچ کد جدیدی بنویسیم — فقط از Eventهای قدیمی استفاده می‌کنیم.
 
 08:25.570 --> 08:30.460
-already written to handle these exact events so we don't have to write any extra code.
+تنها مسئولیت اضافه‌ای که داریم اینه که این Eventها رو توی Event Bus ذخیره کنیم.
 
 08:30.790 --> 08:36.940
-The only extra burden we really have here is storing all these events inside of our event bus data store.
+درسته که این دیتاستور ممکنه با گذشت زمان خیلی بزرگ بشه، ولی قبلاً هم محاسبه کردیم که می‌تونیم با ۱۵ دلار در ماه ۱۰۰ میلیون آیتم ذخیره کنیم.
 
 08:37.090 --> 08:41.620
-Now, admittedly, this data store could grow to be extremely large over time.
+یعنی حتی اگه هزینه‌بر باشه، اون‌قدری که فکر می‌کنید گرون نیست.
 
 08:41.860 --> 08:46.120
-But as you saw from that calculation we did a little bit ago where we said, hey, we could pay like
+پس این همون چیزیه که قراره توی این دوره انجام بدیم.
 
 08:46.120 --> 08:48.980
-$15 a month for 100 million products.
+ما از گزینه سوم استفاده می‌کنیم.
 
 08:49.000 --> 08:54.400
-Well, even though it might cost some amount of money, it probably costs way less than you might think.
+هر وقت رویدادی منتشر شد، اون رو با Event Bus ذخیره می‌کنیم تا بعداً اگه سرویسی مثل query بالا اومد...
 
 08:55.100 --> 08:56.810
-So that's what we're going to do inside this course.
+بتونه همه رویدادهای قبلی رو دریافت کنه.
 
 08:56.810 --> 08:58.690
-We are going to be using option number three.
+و کاملاً با بقیه هماهنگ بشه.
 
 08:58.700 --> 09:04.250
-We're going to say that whenever we emit an event, we're going to store it with our event bus so that
+این روش، مشکل قطع شدن یک سرویس برای مدتی کوتاه رو هم حل می‌کنه.
 
 09:04.250 --> 09:09.170
-if we ever bring a service online in the future, we can get access to all those events that occurred
+مثلاً فرض کنیم سرویس moderation فقط Event 1 رو گرفته ولی Event 2 و 3 رو از دست داده.
 
 09:09.170 --> 09:09.950
-in the past.
+چی میشه؟
 
 09:11.580 --> 09:15.450
-This also solves the issue with a service going down for some point in time.
+وقتی moderation دوباره بالا بیاد، می‌تونه چک کنه آخرین Eventی که دریافت کرده چی بوده.
 
 09:15.900 --> 09:19.800
-Let's imagine I don't have a diagram prepared for this, but I'll just improvise really quick.
+مثلاً اگه فقط Event 1 رو گرفته، می‌تونه به Event Bus بگه:
 
 09:21.110 --> 09:23.300
-So let's imagine that.
+«همه رویدادهایی که از اون موقع تا حالا منتشر شده رو بده بهم».
 
 09:24.170 --> 09:28.760
-Moderation misses out on events two and three, but it did receive event one.
-
-09:28.940 --> 09:33.770
-When moderation comes back online right here, it can take a look at what the last event was that it
-
-09:33.770 --> 09:34.450
-received.
-
-09:34.460 --> 09:39.050
-Maybe moderation would know that it had received event one and it could say to the event bus, Hey,
-
-09:39.050 --> 09:40.700
-give me all the events.
-
-09:41.800 --> 09:45.520
-Give me everything that occurred during the time that I was down.
+یعنی از Event 2 به بعد — و اینطوری می‌تونه اون فاصله‌ای که پایین بوده رو جبران کنه.
 
 09:47.000 --> 09:52.940
-And so Event Bus can say, okay, you received event one, we'll give you everything since then so we
+پس Event Bus می‌تونه بگه: خب، تو Event 1 رو دریافت کردی، پس از اون به بعد هرچی بوده رو می‌فرستم برات.
 
 09:52.940 --> 09:54.320
-can take event to.
+یعنی Event 2...
 
 09:55.520 --> 09:57.880
-Throw it over to moderation and event three.
+می‌فرستیمش برای moderation، و بعد Event 3...
 
 09:57.890 --> 09:58.850
-Throw it over.
+اونم می‌فرستیم.
 
 09:58.850 --> 09:59.270
-And now.
+و حالا...
 
 09:59.300 --> 10:00.900
-Moderation is all caught up.
+moderation هم کامل به‌روز شده.
 
 10:00.920 --> 10:04.940
-It's received two events, two in three, even though it was down for some period of time.
+حتی با اینکه یه مدتی خاموش بوده، حالا Event 2 و 3 رو هم گرفته.
 
 10:05.900 --> 10:08.990
-So you can see that this approach actually ends up working out pretty well.
+می‌بینی که این روش چقدر خوب جواب می‌ده.
 
 10:08.990 --> 10:13.070
-Not only does it solve the issue of bringing services online in the future, but it also solves this
+نه‌تنها مشکل راه‌اندازی سرویس جدید رو حل می‌کنه، بلکه جلوی از دست رفتن رویدادها رو هم می‌گیره،
 
 10:13.070 --> 10:18.110
-problem of events possibly being missed while a service is experiencing some amount of downtime.
+مخصوصاً وقتی که یه سرویس برای مدتی داون باشه.
 
 10:19.050 --> 10:19.470
-All right.
+خب
 
 10:19.470 --> 10:20.970
-So let's take a pause right here.
+پس همین‌جا یه مکث می‌کنیم.
 
 10:21.000 --> 10:22.440
-I apologize for the long video.
+ببخشید اگه ویدیو طولانی شد.
 
 10:22.470 --> 10:23.760
-We'll continue in just a moment.
+الان یه لحظه استراحت می‌کنیم و بعد ادامه می‌دیم.

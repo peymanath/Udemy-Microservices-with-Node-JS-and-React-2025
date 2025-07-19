@@ -1,313 +1,289 @@
 WEBVTT
 
 00:00.890 --> 00:02.240
-Just one last big step.
+فقط یک قدم بزرگ دیگه مونده.
 
 00:02.240 --> 00:06.350
-We need to make sure that we open up our query service and watch for the comment updated event.
+باید مطمئن بشیم که سرویس کوئری ما بازه و رویداد "comment updated" رو گوش می‌ده.
 
 00:06.350 --> 00:10.220
-Whenever we receive that, we're going to find the appropriate comment in memory and we're going to
+هر وقت این رویداد رو دریافت کردیم، باید کامنت مورد نظر رو از حافظه پیدا کنیم و
 
 00:10.220 --> 00:13.730
-update its status to whatever the status is inside the event.
+وضعیتش رو با وضعیتی که توی رویداد اومده، به‌روزرسانی کنیم.
 
 00:13.880 --> 00:14.720
-So let's get to it.
+پس بریم سراغش.
 
 00:14.720 --> 00:16.340
-Let's open up our query service.
+بریم سرویس کوئری رو باز کنیم.
 
 00:17.420 --> 00:18.620
-Back inside my editor.
+برمی‌گردیم به ادیتورمون.
 
 00:19.930 --> 00:22.570
-I'm going to find my query service.
+سرویس کوئری‌م رو پیدا می‌کنم.
 
 00:22.600 --> 00:24.850
-Open up the index dog's file inside there.
+فایل index مربوط به اون رو باز می‌کنم.
 
 00:25.780 --> 00:28.900
-I will find where we handle all the different events that are coming in here.
+و می‌گردم دنبال جایی که همه رویدادهای ورودی رو پردازش می‌کنیم.
 
 00:30.480 --> 00:34.950
-I'm going to add on a new if statement and watch for a type of.
+یه شرط if جدید اضافه می‌کنم که رویداد از نوع "comment updated" باشه.
 
 00:36.400 --> 00:37.750
 Comment updated.
 
 00:39.800 --> 00:45.260
-I'll then pull out the updated ID content post ID and status.
+بعدش فیلدهای id، content، postId و status رو از data استخراج می‌کنیم.
 
 00:46.300 --> 00:47.110
-From Data.
+از داده‌ها.
 
 00:48.540 --> 00:51.720
-And we'll once again attempt to find the appropriate comment.
+و دوباره سعی می‌کنیم کامنت مورد نظر رو پیدا کنیم.
 
 00:52.110 --> 00:55.920
-As a quick reminder, we are storing all of our posts inside of an object.
+یادآوری سریع: همه پست‌هامون رو داخل یه آبجکت ذخیره کردیم.
 
 00:55.920 --> 00:57.200
-So we're going to look inside there.
+پس باید توی همون آبجکت بگردیم.
 
 00:57.210 --> 01:00.420
-We're going to find all the comments with the appropriate post.
+کامنت‌های مربوط به پست مورد نظر رو پیدا می‌کنیم.
 
 01:00.420 --> 01:04.650
-And then we need to, just as we did a moment ago, look to that array of comments and find the comment
+و دقیقاً مثل قبل، باید داخل اون آرایه از کامنت‌ها بگردیم تا کامنتی که باید به‌روزرسانی بشه رو پیدا کنیم.
 
 01:04.650 --> 01:05.550
-that we're trying to update.
+خیلی شبیه به کاریه که لحظاتی قبل توی سرویس کامنت کردیم.
 
 01:05.550 --> 01:10.710
-So very similar code to what we wrote in the back inside of our comment service just in the last video.
+یعنی دقیقا مشابه کدی که توی ویدیو قبلی نوشتیم.
 
 01:11.370 --> 01:13.710
-So I'll say post is going to be.
+می‌نویسیم: post مساوی با
 
 01:15.230 --> 01:17.120
-Posts at post ID.
+posts با کلید postId.
 
 01:21.400 --> 01:23.860
-Well, then find the appropriate comment.
+بعد کامنت مناسب رو پیدا می‌کنیم.
 
 01:25.110 --> 01:30.480
-Which will be post comments find we're going to iterate over every comment.
+یعنی post.comments.find و روی همه کامنت‌ها پیمایش می‌کنیم.
 
 01:31.380 --> 01:37.620
-And then return comment ID equal to the idea of the comment that we're trying to update.
+و کامنتی رو برمی‌گردونیم که id اون با id کامنتی که قراره آپدیت بشه برابر باشه.
 
 01:41.770 --> 01:43.240
-Well, then update that comment.
+بعد اون کامنت رو آپدیت می‌کنیم.
 
 01:44.220 --> 01:47.880
-So let's say that it's status is going to be this new status.
+یعنی statusش رو می‌ذاریم برابر با status جدید.
 
 01:48.060 --> 01:52.770
-But remember, climate updated right here is kind of a very generic update or it's saying, hey, there's
+ولی یادت باشه، رویداد "comment updated" اینجا یه به‌روزرسانی کلیه، یعنی می‌گه این کامنت یک سری ویژگی جدید داره.
 
 01:52.770 --> 01:54.900
-some new attributes associated with this comment.
+پس احتمال زیاد فقط status آپدیت نشده، شاید متن کامنت هم تغییر کرده باشه.
 
 01:55.080 --> 02:00.210
-So chances are we would want to not only update the status here, we might have also updated the content
+پس بهتره اون ویژگی content هم که توی event اومده رو هم استفاده کنیم و محتوای کامنت رو هم به‌روزرسانی کنیم.
 
 02:00.210 --> 02:01.610
-of the comment itself as well.
+چون دقیق نمی‌دونیم چی تغییر کرده.
 
 02:01.620 --> 02:06.000
-So we should probably just take that property and use it to update this comment because again, we don't
-
-02:06.000 --> 02:07.470
-really know what change here might have been.
+پس منطقیه که تمام خصوصیات ارسالی از سمت event رو اعمال کنیم.
 
 02:07.470 --> 02:10.020
-The status might have been the content, who knows?
+ممکنه چیزی که تغییر کرده فقط وضعیت باشه یا محتوا، واقعاً معلوم نیست.
 
 02:10.020 --> 02:13.470
-We'll just take all these updated properties and assign them to this comment.
+ما فقط همه ویژگی‌های آپدیت‌شده رو می‌گیریم و به این کامنت نسبت می‌دیم.
 
 02:14.070 --> 02:15.240
-So I'll do comment.
+پس می‌نویسیم:
 
 02:15.240 --> 02:17.520
-Content is content.
+comment.content برابر با content جدید.
 
 02:20.530 --> 02:21.970
-And that should pretty much be it.
+و در واقع همین بود، تموم شد.
 
 02:22.000 --> 02:26.290
-Once again, we don't have to try to save this or stored this back inside the comments array because
-
-02:26.290 --> 02:28.600
-we are updating the object that already exists inside there.
+لازم نیست این شیء رو دوباره توی آرایه‌ی کامنت‌ها ذخیره کنیم یا جایگزینش کنیم، چون داریم مستقیماً همون شیء داخل حافظه رو آپدیت می‌کنیم.
 
 02:30.530 --> 02:31.100
-Okay.
+خب
 
 02:31.100 --> 02:33.830
-So we've made many changes so far.
+تا الان کلی تغییر ایجاد کردیم.
 
 02:33.830 --> 02:39.710
-And I just want to say that chances are some point in time during this process, you have said, wow,
+و می‌خوام بگم احتمالاً یه جایی وسط این فرایند با خودت گفتی: وای، این خیلی عجیب و پیچیده‌ست!
 
 02:39.710 --> 02:41.750
-this seems crazy, this seems insane.
+یا مثلاً گفتی: از کجا بدونم چی داره تغییر می‌کنه؟
 
 02:41.750 --> 02:44.330
-How do I know what changes are being made?
+این سوال‌ها خیلی خوبن و طبیعین.
 
 02:44.630 --> 02:46.340
-Those are some really great questions.
+واقعاً هم همینطوره.
 
 02:46.340 --> 02:50.900
-And honestly, if you did not get confused during this process of updating these services, I would
+اگه وسط این فرایند آپدیت سرویس‌ها گیج نشده باشی، واقعاً برام عجیبه!
 
 02:50.900 --> 02:52.220
-be kind of surprised.
+چون این کارا واقعاً سخت بودن.
 
 02:52.370 --> 02:57.890
-This really was nasty, and I'm going to be kind of surprised if you made all these changes without
-
-02:57.890 --> 02:59.810
-making any typos whatsoever.
+و اگه تونسته باشی همه این تغییرات رو بدون حتی یه اشتباه تایپی انجام بدی، واقعاً کار بزرگیه.
 
 03:00.230 --> 03:04.610
-I just want you to keep that in mind, because this entire process of having to go between these different
+فقط اینو تو ذهنت داشته باش، چون این رفت و برگشت بین سرویس‌ها، اضافه کردن رویداد جدید، تغییر در رویدادها، همه‌ش خیلی دردسر داره.
 
 03:04.610 --> 03:09.620
-services, add in some events, change events, that's some really nasty stuff.
+و بدون شک اگه بخوایم وارد ساخت یه اپلیکیشن بزرگتر بشیم، نیاز به ابزارهای بهتر
 
 03:09.620 --> 03:13.700
-And with that doubt, if we're going to start working on any larger application, we need some better
+یا متدولوژی دقیق‌تری برای مدیریت تعریف این همه رویداد بین سرویس‌ها داریم.
 
 03:13.700 --> 03:19.700
-tools or some better methodology of managing the definition of all these events between these services.
+بدون هیچ شکی باید به راه‌حل بهتری فکر کنیم.
 
 03:19.700 --> 03:20.810
-There's no doubt about it.
+شکی درش نیست.
 
 03:20.810 --> 03:26.450
-We need a better way of managing all this stuff because the last three videos really have not been fun.
+ما باید راه بهتری برای مدیریت این چیزها داشته باشیم، چون سه ویدیوی آخر واقعاً خسته‌کننده و سخت بودن.
 
 03:27.830 --> 03:31.610
-Having said that, I think it's time to actually do a test of the application and see if this moderation
+با این حال، وقتشه که بالاخره یه تست از برنامه بگیریم ببینیم این ماژول مدیریت کامنت واقعاً کار می‌کنه یا نه.
 
 03:31.610 --> 03:32.930
-stuff is actually working.
+بیایم امتحان کنیم.
 
 03:32.960 --> 03:37.730
-Now, remember, we do not actually have anything on the React side, this application yet to actually
+یادت باشه که هنوز توی بخش React این اپلیکیشن چیزی نداریم که نشون بده آیا کامنت تأیید شده یا رد شده یا نه.
 
 03:37.730 --> 03:42.230
-show something that says, hey, this comment is being approved or rejected or what have you.
+پس فعلاً باید بریم لاگ درخواست‌های شبکه توی Chrome رو نگاه کنیم و مطمئن بشیم که وضعیت کامنت‌ها درست ثبت شده.
 
 03:42.260 --> 03:46.160
-So for right now, we're going to take a look at our network request, log inside of Chrome and make
+الان قبل از اینکه تست رو شروع کنیم، یه نگاهی به ترمینال می‌ندازم ببینم تو هیچ‌کدوم از پنجره‌ها خطا نیست.
 
 03:46.160 --> 03:49.850
-sure that all these different comments we're creating have the appropriate status attached to them.
+اگه خطایی ببینی یعنی احتمالاً یه جایی توی کدت اشتباه تایپی داشتی.
 
 03:50.690 --> 03:54.230
-Before we do any of that testing, however, I'm going to go over to my terminal and I'm going to make
+قبل از شروع تست فقط یه نکته سریع بگم:
 
 03:54.230 --> 03:57.800
-sure that none of these windows have any airs being displayed inside them.
+اگه تست رو انجام دادی و هیچ خطایی نداشتی، من واقعاً تعجب می‌کنم!
 
 03:57.890 --> 04:01.280
-If you see any errors, that means you likely have a typo somewhere inside of your code.
+چون کلی تغییر انجام دادیم و کلی جا هست که خیلی راحت می‌شه اشتباه کرد.
 
 04:01.700 --> 04:04.070
-Now, one last thing I want to mention very quickly.
+خب، بریم توی مرورگر و تست رو شروع کنیم.
 
 04:04.070 --> 04:09.470
-If you go through this process of testing out this application and you don't get an error from something,
+صفحه رو رفرش می‌کنم، یه پست جدید می‌سازم، یه کامنت اضافه می‌کنم و بعدش برمی‌گردم به ترمینال ببینم چی شده.
 
 04:09.470 --> 04:15.710
-again, I'm kind of going to be surprised because we've made a ton of changes, so many places where
+اگه برگردم به ترمینال و هیچ خطایی نبینم یعنی فعلاً اوضاع خوبه.
 
 04:15.710 --> 04:18.200
-you can make a typo very, very easily.
+باز هم می‌گم، خیلی محتمله که یه جایی توی کدت ارور داشته باشی.
 
 04:19.390 --> 04:22.240
-All right, so let's go over to our browser and at least try to do a test.
+اگه خطا دیدی، می‌تونی خودت سعی کنی رفعش کنی یا از کد نهایی آماده استفاده کنی که همراه دوره گذاشتم.
 
 04:22.480 --> 04:23.830
-So I'm going to refresh the page.
+خب، بریم صفحه رو رفرش کنیم.
 
 04:24.190 --> 04:26.080
-I'm going to create a new post.
+یه پست جدید ایجاد می‌کنم.
 
 04:26.080 --> 04:27.910
-So say new post.
+می‌نویسم مثلاً "new post".
 
 04:29.580 --> 04:35.820
-I'll refresh the page, I'll add in a new comment at Submit and I'll go back over to my terminal and
+دوباره صفحه رو رفرش می‌کنم، یه کامنت اضافه می‌کنم و ارسال می‌زنم و برمی‌گردم به ترمینال.
 
 04:35.820 --> 04:36.660
-see what I have.
+ببینم چی داریم.
 
 04:37.140 --> 04:39.670
-When I flip back over, I don't see any errors anywhere.
+وقتی برمی‌گردم می‌بینم هیچ اروری نیست.
 
 04:39.690 --> 04:43.920
-Again, incredibly likely that you will have an error from somewhere inside of here.
+باز هم می‌گم، خیلی محتمله که شما یه ارور ببینید، چون جاهای زیادی برای اشتباه وجود داره.
 
 04:43.950 --> 04:48.840
-If you have an error, you can either try to hunt it down yourself or just download the completed code
-
-04:48.840 --> 04:51.690
-that is attached to this lecture and try running that instead.
+اگه ارور دیدی، یا خودت دنبالش بگرد و حلش کن یا سورس کد کامل رو دانلود کن و با اون اجرا کن.
 
 04:53.460 --> 04:54.630
-So I'm going to go back over now.
+الان دوباره برمی‌گردم.
 
 04:54.660 --> 04:55.880
-I'm going to refresh the page.
+صفحه رو رفرش می‌کنم.
 
 04:55.890 --> 04:57.420
-I see the comment right there.
+کامنت رو همونجا می‌بینم.
 
 04:58.020 --> 05:03.120
-If I click on my list of posts or see my yes, my list of posts inside the network request log, I'll
-
-05:03.120 --> 05:04.900
-expand that one post that I have.
-
-05:04.920 --> 05:08.910
-Take a look at the comments and you'll notice that this comment has been approved.
+اگه توی تب Network برید، لیست پست‌هامون رو ببینید و پست رو باز کنید، می‌بینید که کامنت "approved" شده.
 
 05:09.980 --> 05:10.100
-Okay.
+خب
 
 05:10.250 --> 05:11.090
-Well, that's good.
+عالیه
 
 05:11.120 --> 05:13.850
-Let's now try making a comment that should be rejected.
+الان بیایم یه کامنتی بذاریم که باید رد بشه.
 
 05:14.000 --> 05:16.070
-So I'm going to put in a comment here.
+یه کامنت می‌نویسم
 
 05:17.090 --> 05:18.200
-Of orange.
+"orange"
 
 05:18.410 --> 05:19.490
-I will submit it.
+ارسالش می‌کنم
 
 05:20.200 --> 05:21.340
-I'm going to refresh.
+صفحه رو رفرش می‌کنم
 
 05:22.420 --> 05:25.450
-I'll click on the post request again.
+دوباره روی درخواست پست کلیک می‌کنم
 
 05:26.030 --> 05:28.130
-And now I should see a second comment inside of here.
+باید کامنت دوم رو اینجا ببینم
 
 05:28.130 --> 05:32.750
-And this time around it should have a status of rejected because it met our criteria for rejecting a
-
-05:32.750 --> 05:33.100
-comment.
+و این بار وضعیتش باید "rejected" باشه چون شرط رد کردن کامنت شامل کلمه "orange" بود
 
 05:33.110 --> 05:34.640
-It had the word orange inside of it.
+یعنی مکانیزم داره درست کار می‌کنه
 
 05:35.120 --> 05:37.910
-So that means that, hey, this stuff is working out pretty well.
+تا اینجای کار خیلی خوب پیش رفته
 
 05:39.460 --> 05:42.340
-The last thing we really need to do is update the React application.
+تنها کاری که مونده اینه که React اپلیکیشن رو آپدیت کنیم
 
 05:42.340 --> 05:45.930
-So the React application should show, hey, this comment has been rejected.
+باید توی React نشون بدیم که این کامنت رد شده
 
 05:45.940 --> 05:50.590
-If the comment has been rejected and it should show something like this comment is still being moderated
+یا اینکه بگیم کامنت هنوز توی وضعیت بررسیه، اگه status اون "pending" باشه
 
 05:50.590 --> 05:52.870
-if it is still in the pending state.
-
-05:53.080 --> 05:56.770
-So let's take a look at the React application in just a moment and fix it up.
+پس بریم سراغ اپلیکیشن React و اونجا درستش کنیم

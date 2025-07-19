@@ -1,247 +1,222 @@
 WEBVTT
 
 00:01.340 --> 00:05.390
-In this video, we're going to do a quick overview of some very basic Docker commands just to make sure
+توی این ویدیو قراره یه مرور سریع روی چندتا دستور پایه‌ای Docker داشته باشیم، تا این مفاهیم توی ذهنت تازه بمونه.
 
 00:05.390 --> 00:06.750
-these are fresh in your mind.
+ما این دستورات رو زیاد استفاده خواهیم کرد،
 
 00:06.770 --> 00:10.970
-We're going to be running all the commands you see here quite a bit and also running some variants of
-
-00:10.970 --> 00:13.220
-them that are based on Kubernetes as opposed to Docker.
-
-00:13.220 --> 00:14.930
-But don't worry about that part just yet.
+و حتی نسخه‌هایی از اون‌ها رو که مخصوص Kubernetes هست هم اجرا می‌کنیم — ولی فعلاً نگران اون قسمت نباش.
 
 00:15.260 --> 00:18.290
-So first command we're going to get a quick reminder on is Docker build.
+اولین دستوری که یادآوری می‌کنیم `docker build` هست.
 
 00:18.290 --> 00:22.880
-We did just run this in the last video, but just as a reminder, whenever we build a new image, we
+تو ویدیوی قبلی ازش استفاده کردیم، ولی برای یادآوری: هر وقت بخوایم یه ایمیج بسازیم،
 
 00:22.880 --> 00:26.840
-can add on that dash flag that will tag the image that is created.
+می‌تونیم از فلگ `-t` استفاده کنیم تا یه تگ برای اون ایمیج مشخص کنیم.
 
 00:26.960 --> 00:32.390
-If we add on the dash t, then we can easily create a new container out of that image using either the
+با این تگ بعداً راحت‌تر می‌تونیم با اون ایمیج کار کنیم، چه برای ساخت کانتینر جدید، چه برای اجرای اون.
 
 00:32.390 --> 00:34.250
-image ID or the image tag.
+می‌تونیم هم از ID استفاده کنیم هم از tag.
 
 00:34.520 --> 00:37.490
-So for example, if we go back over to our post service.
+مثلاً بریم سراغ سرویس پست‌مون:
 
 00:38.780 --> 00:45.650
-We can do a Docker, build a dash T and then usually we'll put in our Docker ID, which for me is Stephen
+می‌تونیم بزنیم:  
+`docker build -t docker-id/project-name .`  
+که برای من می‌شه:  
+`docker build -t stephengrider/post .`
 
 00:45.650 --> 00:48.500
-Grider Slash and then the name of our project.
+نقطه‌ی آخر یعنی از دایرکتوری فعلی build بگیر.
 
 00:48.500 --> 00:53.720
-So for us it'd be post and then after that we would put in a dot to specify that we want to build this
-
-00:53.720 --> 00:56.030
-image out of the current directory that we're in.
+از اونجایی که از ویدیوی قبلی تغییری ندادیم، این build خیلی سریع انجام می‌شه.
 
 00:56.510 --> 01:01.370
-So I would run that the build runs very quickly because I've not made any changes to it from the last
-
-01:01.370 --> 01:01.940
-video.
+حالا می‌تونم با استفاده از image ID یا همون tag که مشخص کردم، یه کانتینر از این ایمیج بسازم.
 
 01:02.650 --> 01:07.810
-And now I can create an image out or a container out of this image using either the image ID that's
+یعنی مثلاً با دستور زیر:
+`docker run stephengrider/post`
 
 01:07.810 --> 01:10.240
-right there or the tag that is right there.
+این کانتینر رو راه‌اندازی می‌کنم و سرویس post بالا میاد.
 
 01:12.340 --> 01:17.950
-Once we have built the image, we can create and start a container based on it by using Docker run and
+همون‌طور که دیدی، خیلی راحت می‌تونیم یه کانتینر بسازیم و اجرا کنیم.
 
 01:17.950 --> 01:20.680
-then providing either the image ID or the tag.
+ولی فقط این نیست — می‌تونیم دستور پیش‌فرض رو هم override کنیم.
 
 01:20.980 --> 01:23.080
-So for example, I could now do.
+یعنی چی؟
 
 01:24.550 --> 01:28.480
-Docker run Steven Grider posts like so.
+یعنی به‌جای اینکه کانتینر به صورت خودکار مثلاً `npm start` رو اجرا کنه...
 
 01:28.960 --> 01:29.650
-And there we go.
+ما می‌تونیم بگیم مثلاً bash اجرا بشه.
 
 01:29.650 --> 01:31.180
-There's our post service.
+یعنی یه ترمینال داخل اون کانتینر باز بشه.
 
 01:33.540 --> 01:39.720
-Next up, whenever we start up a container, we can either just use Docker run by itself, or alternatively
+برای این کار از فلگ `-it` استفاده می‌کنیم که به معنی interactive + terminal هست.
 
 01:39.720 --> 01:46.620
-we can override the default command of the container by providing both that it flag right there and
+و بعدش دستور جایگزین رو می‌نویسیم.
 
 01:46.620 --> 01:50.610
-then the command that we want to execute instead of the default one right there at the very end.
+مثلاً بزنیم:  
+`docker run -it stephengrider/post sh`
 
 01:51.210 --> 01:56.640
-So for example, I could start up that post service container that we just created and start up a shell
+که این باعث می‌شه داخل همون کانتینری که مربوط به سرویس post هست، یه shell باز بشه و بتونیم از داخلش دستورات بزنیم.
 
 01:56.640 --> 01:57.270
-inside there.
+و به‌جای اینکه مستقیم npm start بزنه...
 
 01:57.270 --> 02:01.890
-So essentially a terminal window inside that container rather than actually running the default command,
-
-02:01.890 --> 02:03.270
-which is NPM start.
-
-02:03.570 --> 02:06.330
-So we could do a Docker run, dash it.
+ما خودمون کنترل کامل داریم که داخل اون کانتینر چی اجرا کنیم.
 
 02:07.320 --> 02:13.290
-Stephen Greider posts and I would put in S-H, which will start up a shell inside their S-H is short
+مثلاً می‌تونم بزنم: `docker run -it stephengrider/post sh`  
+که `sh` همون Shell ساده است (مخفف shell).
 
 02:13.290 --> 02:14.160
-for the word shell.
+یه نوع خاص از ترمیناله،
 
 02:14.160 --> 02:19.290
-It is a very specific type of shell, essentially equivalent to if you're running bash right now on
+تقریباً معادل bash توی سیستم‌عامل‌های Unix مثل لینوکس یا macOS.
 
 02:19.290 --> 02:20.100
-your computer.
+یعنی یه محیط دستور ساده.
 
 02:21.360 --> 02:26.460
-And so now, rather than running our server inside there, I've got a shell running and inside of here
+الان به‌جای اینکه سرور رو اجرا کنه، من داخل اون کانتینر یه محیط shell دارم و می‌تونم توش دستور بزنم.
 
 02:26.460 --> 02:30.820
-I can run typical commands, all being executed inside of that container.
+یعنی هرچی تایپ کنم، داخل همون کانتینر اجرا می‌شه.
 
 02:30.840 --> 02:36.900
-So if I do an LZ, I'll see all of the files that have been built inside that image or change to the
+مثلاً می‌زنم `ls` تا لیست فایل‌های داخل اون ایمیج یا کانتینر رو ببینم.
 
 02:36.900 --> 02:38.040
-or the container.
+یا می‌تونم مسیر عوض کنم.
 
 02:39.280 --> 02:43.150
-Or I can change to my route directory and prints out all the files and folders inside of their.
+مثلاً می‌رم تو مسیر root و می‌زنم `ls` تا کل دایرکتوری‌ها و فایل‌ها رو ببینم.
 
 02:44.770 --> 02:46.890
-And then if I want to exit, I can hit command.
+برای خروج از کانتینر، می‌تونی `exit` بزنی.
 
 02:47.200 --> 02:53.720
-I always smash commands or control C out of habit, but control or command.
+البته خود من معمولاً عادت دارم Ctrl + C یا Cmd + C بزنم، ولی بهتره از `exit` استفاده کنید.
 
 02:55.440 --> 02:55.860
-Okay.
+خب
 
 02:55.890 --> 02:56.880
-Next comment.
+بریم سراغ دستور بعدی.
 
 02:57.490 --> 02:57.910
-Docker.
+`docker ps`
 
 02:57.920 --> 03:02.320
-PS We can use this to print out information about all the containers that we are currently running.
+این دستور لیست تمام کانتینرهایی که الان در حال اجرا هستن رو نشون می‌ده.
 
 03:02.830 --> 03:06.550
-So for example, if we start up a container in one terminal window.
+مثلاً اگه توی یه ترمینال کانتینری رو اجرا کردی و بعد یه ترمینال جدید باز کردی و زدی `docker ps`...
 
 03:07.720 --> 03:10.810
-And then open up a second terminal window and do a Docker piece in there.
+می‌تونی ببینی کانتینر فعاله، IDش چیه، با چه ایمیجی ساخته شده، چه دستوری اجرا شده و چند وقت پیش ساخته شده.
 
 03:11.200 --> 03:16.180
-We'll see the ID of the running container, the image that is using the command that was used to start
-
-03:16.180 --> 03:18.910
-it up, how long ago it was created and so on.
+یه ابزار خیلی خوب برای مانیتور کردن کانتینرهاست.
 
 03:22.060 --> 03:26.080
-Once a container is running, we can also execute arbitrary commands inside of it.
+حالا اگه یه کانتینر در حال اجرا باشه، می‌تونی هر دستوری رو داخلش اجرا کنی.
 
 03:26.290 --> 03:31.960
-So for example, we could do a Docker exec, dash it, then put in the container ID and then the command
+برای این کار از `docker exec -it` استفاده می‌کنیم + ID کانتینر + دستور مورد نظر.
 
 03:31.960 --> 03:33.700
-that we want to actually run inside there.
+مثلاً می‌خوای یه shell داخل یه کانتینر باز کنی.
 
 03:34.210 --> 03:39.520
-So for example, if I wanted to start up a shell inside of my running post service right now, I could
+ID اون کانتینر رو از `docker ps` می‌گیری، بعد می‌زنی:  
+`docker exec -it container_id sh`
 
 03:39.520 --> 03:40.900
-take that container ID.
-
-03:41.580 --> 03:48.480
-I could do a Docker exec dash it, but in that ID and then once again run S-H and that will start up
-
-03:48.480 --> 03:50.190
-a shell inside that running container.
+و دوباره وارد ترمینال اون کانتینر می‌شی.
 
 03:54.620 --> 03:58.280
-And then finally, one more very useful command is Docker logs.
+یه دستور خیلی مفید دیگه هم داریم: `docker logs`
 
 03:58.310 --> 04:04.190
-This will print out all the logs that have been executed emitted by the primary process inside of that
-
-04:04.190 --> 04:04.850
-container.
+این دستور لاگ‌هایی که پروسه اصلی داخل کانتینر تولید کرده رو چاپ می‌کنه.
 
 04:05.180 --> 04:11.090
-So for example, if I flip back over, I'm going to stop the running container.
+مثلاً اگه یه کانتینر با `npm start` بالا اومده و لاگ توی کنسول چاپ کرده، `docker logs` اون‌ها رو نشون می‌ده.
 
 04:13.770 --> 04:17.250
-I'll then start it back up, but I'm not going to override the default command.
+می‌تونیم کانتینر رو stop کنیم و بعد دوباره بدون override کردن command، اجراش کنیم:
 
 04:17.610 --> 04:21.510
-So we'll do a Docker run even greater post.
+`docker run stephengrider/post`
 
 04:22.760 --> 04:27.830
-And so as soon as I start this up, our primary process, which is that NPM start command is emitting
+و همون لحظه، `npm start` اجرا می‌شه و لاگ‌هایی رو روی stdout چاپ می‌کنه.
 
 04:27.830 --> 04:30.020
-some different logs here over standard out.
+و این لاگ‌ها همون چیزیه که داخل ترمینال می‌بینیم.
 
 04:30.020 --> 04:31.310
-That's everything we see right here.
+حالا چجوری از یه جای دیگه بخونیمش؟
 
 04:31.760 --> 04:35.540
-I can get all that information printed out inside of a second terminal window.
+توی یه ترمینال دیگه می‌تونی بزنی `docker ps`، ID کانتینر رو بگیری.
 
 04:36.380 --> 04:40.130
-By doing a Docker, he's getting the new container ID.
+و بعد بزنی:  
+`docker logs container_id`
 
 04:41.820 --> 04:45.990
-And then a docker logs and I'll provide the relevant container ID.
+و این کل لاگ‌هایی که پروسه اصلی چاپ کرده رو بهت نشون می‌ده.
 
 04:47.340 --> 04:50.670
-And that will essentially show me everything that that primary process has emitted.
+خیلی کاربردیه، مخصوصاً برای دیباگ کردن سرویس‌ها داخل کانتینر.
 
 04:53.640 --> 04:53.940
-Okay.
+خب، تا اینجا کافی بود.
 
 04:53.940 --> 04:55.950
-So again, just some very basic commands.
+خب، اینا فقط یه‌سری دستورات خیلی پایه‌ای بودن.
 
 04:55.950 --> 04:59.670
-We are going to be using these commands quite a bit and again, we'll be running kind of variants of
+ما قراره این دستورات رو توی پروژه‌مون زیاد استفاده کنیم و همچنین نسخه‌های مشابه‌شون رو توی دنیای Kubernetes هم اجرا کنیم.
 
 04:59.670 --> 05:05.070
-them in the Kubernetes world in just a little bit as well, to just inspect what's going on inside of
-
-05:05.070 --> 05:06.510
-all of our different containers.
+مثلاً برای بررسی وضعیت کانتینرها و اینکه داخلشون چه خبره، این ابزارها خیلی به درد می‌خورن.
 
 05:07.310 --> 05:11.660
-Well, at this point, we have seen how to make use of Docker, how to build an image.
+تا اینجای کار دیدیم که چطور می‌شه از Docker استفاده کرد، چطور یه ایمیج ساختیم...
 
 05:11.660 --> 05:14.560
-We've made an image out of just the post service.
+و فعلاً این ایمیج فقط برای سرویس post بود.
 
 05:14.570 --> 05:15.980
-So let's take a quick pause right here.
+خب، همین‌جا یه توقف کوتاه داشته باشیم.
 
 05:15.980 --> 05:19.700
-When we come back, the next video, we're going to take that Docker file and Docker ignore, and we're
+توی ویدیوی بعدی، فایل Dockerfile و .dockerignore رو برمی‌داریم
 
 05:19.700 --> 05:23.300
-going to copy it over to all of our different other services as well.
+و برای همه‌ی سرویس‌های دیگه‌مون هم کپی می‌کنیم تا Docker رو به کل پروژه اعمال کنیم.

@@ -1,250 +1,238 @@
 WEBVTT
 
 00:01.170 --> 00:05.770
-In the last video, we put together some sync code inside of our query before we test this out.
+توی ویدیوی قبلی یه مقدار کد sync توی سرویس query نوشتیم. قبل از اینکه تستش کنیم...
 
 00:05.790 --> 00:10.890
-We did try to make use of Axios in here, but unfortunately our query service does not yet have Axios
+ما سعی کردیم از Axios استفاده کنیم، ولی متأسفانه Axios هنوز روی سرویس query نصب نشده.
 
 00:10.890 --> 00:11.580
-installed.
+و اصلاً اصلاً توی فایل index هم import نشده.
 
 00:11.610 --> 00:14.550
-We haven't even required it into this index file.
+پس اول از همه باید اون رو به بالای فایل اضافه کنیم.
 
 00:14.910 --> 00:16.710
-So I'm going to go up to the very top of this file.
+می‌رم بالای فایل و Axios رو require می‌کنم.
 
 00:16.980 --> 00:19.530
-I'm going to require in Axios.
+بعد فایل رو ذخیره می‌کنم.
 
 00:20.990 --> 00:21.950
-I'll save this.
+حالا می‌رم ترمینال.
 
 00:22.310 --> 00:23.840
-I'll then go back over to my terminal.
+ترمینالی که مربوط به این سرویسه رو پیدا می‌کنم.
 
 00:24.170 --> 00:28.340
-I'm going to find the terminal window that is running my service.
+اون سرویس رو متوقف می‌کنم.
 
 00:28.880 --> 00:30.200
-I'm going to stop that thing.
+سریع Axios رو نصب می‌کنم.
 
 00:30.620 --> 00:32.810
-I'll install Axios really quickly.
+و بعد دوباره سرویس query رو اجرا می‌کنم.
 
 00:34.830 --> 00:36.390
-And then I'll start that server back up.
+خب، فعلاً همه چیز خوبه.
 
 00:38.070 --> 00:38.370
-Okay.
+اوکی
 
 00:38.400 --> 00:39.240
-So it looks good.
+همه چیز مرتب به نظر می‌رسه.
 
 00:39.780 --> 00:43.320
-So now we need to make sure that we can actually test this out effectively.
+حالا باید مطمئن بشیم که واقعاً می‌تونیم این کد رو به‌درستی تست کنیم.
 
 00:43.830 --> 00:47.730
-So I'm going to just go ahead and stop that server, even though we just started it up.
+برای همین، حتی با اینکه سرویس رو الان بالا آوردیم، دوباره متوقفش می‌کنم.
 
 00:47.820 --> 00:50.450
-So now we do not have any access to query.
+یعنی الان سرویس query کامل خاموشه.
 
 00:50.460 --> 00:52.240
-It just doesn't exist.
+اصلاً وجود نداره.
 
 00:52.260 --> 00:58.290
-But hopefully we can try to create some posts, comments and whatever else those events will be cached
-
-00:58.290 --> 01:00.600
-or stored by our event bus.
+اما امیدوارم بتونیم یه پست و کامنت ایجاد کنیم و این رویدادها توسط event bus ذخیره بشن.
 
 01:00.690 --> 01:05.280
-And then as soon as we launch query, hopefully queries should be resync and get all the different events
+و وقتی سرویس query دوباره اجرا بشه، بتونه همه اون رویدادهایی که از دست داده رو دریافت کنه و سینک بشه.
 
 01:05.280 --> 01:06.750
-that it has missed over time.
+پس بریم تستش کنیم.
 
 01:07.230 --> 01:10.990
-So let's try this out, making sure that the query service is not running.
+الان که query اجرا نمی‌شه، می‌رم تو مرورگر.
 
 01:11.010 --> 01:12.840
-I'm going to go over to my browser.
+صفحه رو رفرش می‌کنم.
 
 01:13.580 --> 01:14.990
-I'm going to refresh the page.
+می‌بینید که یه خطا توی کنسول دارم.
 
 01:15.500 --> 01:19.610
-You'll notice I've got an air inside of my console right now, and that is to be expected because the
+اینم طبیعیه چون query الان اصلاً ران نیست.
 
 01:19.610 --> 01:21.470
-query service does not exist right now.
+کاملاً خاموشه.
 
 01:21.470 --> 01:22.700
-It's not running at all.
+ولی باید بتونم یه پست بسازم.
 
 01:23.630 --> 01:25.340
-But I should be able to create a post.
+پس یه پست می‌سازم: مثلاً "new post" و Submit می‌زنم.
 
 01:25.340 --> 01:29.480
-So I'll go ahead and create a post, something like new post and submit.
+از نظر تئوری، این پست توی سرویس post ذخیره شده و بقیه فرآیندها انجام شده.
 
 01:31.180 --> 01:36.130
-Now, in theory, this post has been created and we've gone through that entire process of storing it
-
-01:36.130 --> 01:37.900
-on the post service and so on.
+اگه دوباره رفرش کنم، طبیعتاً دوباره خطا می‌گیرم چون query هنوز اجرا نشده.
 
 01:38.260 --> 01:42.700
-If I refresh right now, I get another error again because the query service doesn't exist.
+حالا می‌رم سراغ ترمینال و سرویس query رو اجرا می‌کنم.
 
 01:43.390 --> 01:45.010
-So now let's go back over to our terminal.
+به محض اجرا شدنش...
 
 01:45.730 --> 01:47.710
-We'll go ahead and launch the query service.
+باید به event bus وصل بشه.
 
 01:47.710 --> 01:51.340
-And as soon as we do so, it should reach out to our event bus.
+ممکنه یه‌سری ارورها ببینید، نگران نباشید، می‌تونید نادیده‌شون بگیرید.
 
 01:51.370 --> 01:52.590
-You'll notice there are some errors here.
+مهم اینه که query باید سعی کنه...
 
 01:52.600 --> 01:53.530
-You could ignore them.
+رویدادهای از دست رفته رو بگیره.
 
 01:53.590 --> 01:58.330
-It should reach out to our event bus and try to receive all the different events that it has missed.
+یعنی همه چیزهایی که تا قبل از بالا اومدنش اتفاق افتاده بودن.
 
 01:58.900 --> 02:00.430
-So I'm going to start up the query service.
+پس سرویس query رو اجرا می‌کنم.
 
 02:01.150 --> 02:04.120
-And you'll notice right away it's processed in event of post created.
+می‌بینی که به محض اجرای سرویس query، اولین چیزی که لاگ شده رویداد "post created" ـه.
 
 02:04.120 --> 02:05.650
-That's the event that it had missed.
+یعنی دقیقاً همون رویدادی که قبلاً از دست داده بود.
 
 02:06.130 --> 02:09.850
-So if I now go back to the browser, I can refresh and there's my post.
+حالا اگه دوباره برم توی مرورگر و صفحه رو رفرش کنم، پستم رو می‌بینم.
 
 02:11.360 --> 02:15.620
-Now the benefit to this approach if I kill my service once again.
+حالا بیایم یه قدم جلوتر بریم: سرویس query رو دوباره خاموش می‌کنم.
 
 02:15.620 --> 02:16.760
-So now it's dead again.
+پس دوباره قطع شد.
 
 02:16.850 --> 02:18.950
-Now I can start to maybe create some comments.
+حالا شروع می‌کنم به ساختن کامنت.
 
 02:18.950 --> 02:21.260
-I can say comment number.
+مثلاً یه کامنت با متن "comment number one"
 
 02:22.660 --> 02:23.410
-One.
+کامنت اول.
 
 02:23.590 --> 02:24.560
-I can create a comment.
+بعدی: "comment number two"
 
 02:24.580 --> 02:29.140
-Number two, I can create even an invalid comment, something with the word orange in it, something
-
-02:29.140 --> 02:30.460
-that's going to get rejected.
+و حتی یه کامنت نامعتبر هم می‌نویسم — مثلاً یه چیزی با کلمه "orange" که باعث رد شدن کامنت می‌شه.
 
 02:31.060 --> 02:35.650
-Now, if I refresh again, once again, I don't see anything because the query service is down and the
+اگه دوباره صفحه رو رفرش کنم، هنوز هیچی نمی‌بینم چون سرویس query خاموشه
 
 02:35.650 --> 02:38.370
-query service has completely missed all these different events.
+و هیچ‌کدوم از رویدادها (comment created, moderated, updated) رو دریافت نکرده.
 
 02:38.380 --> 02:43.960
-It hasn't seen any of the comment created, any of the comment moderated or the comment updated events.
+الان query هیچ اطلاعی از این تغییرات نداره.
 
 02:44.560 --> 02:46.180
-So now let's relaunch query.
+پس بیایم دوباره سرویس query رو بالا بیاریم.
 
 02:47.660 --> 02:51.170
-And instantly it's going to process all those different events that it just missed out on.
+و به محض اجرا، همه رویدادهایی که از دست داده رو دریافت و پردازش می‌کنه.
 
 02:51.830 --> 02:54.110
-So now if I go back over to the browser, I can refresh.
+الان می‌رم تو مرورگر و صفحه رو رفرش می‌کنم.
 
 02:56.520 --> 02:58.620
-Looks like the CD is taking just a moment.
+انگار داره یه کم طول می‌کشه برای رندر.
 
 02:59.430 --> 03:01.170
-Chances are it's going to refresh way faster for you.
+احتمالاً برای شما خیلی سریع‌تر اجرا می‌شه.
 
 03:01.170 --> 03:01.800
-There we go.
+اینه شد!
 
 03:01.800 --> 03:05.970
-And now we can see that the query service is online and 100% up to date.
+الان می‌بینیم که سرویس query بالا اومده و کاملاً آپ‌تودیته.
 
 03:05.970 --> 03:06.930
-We've got our post.
+پست‌مون هست.
 
 03:06.930 --> 03:10.380
-We've got those comments and the comment that was rejected as well.
+کامنت‌ها هستن — حتی اون کامنتی که رد شده هم هست.
 
 03:11.210 --> 03:11.630
-All right.
+خب
 
 03:11.630 --> 03:13.700
-So you got to admit, that's pretty neat.
+قبول کن که این خیلی باحاله!
 
 03:13.820 --> 03:19.850
-So this 100% really deals with this issue of a service being brought online at some point in time in
+این روش ۱۰۰٪ مشکل راه‌اندازی دیرهنگام سرویس یا قطع شدن موقت یه سرویس و از دست رفتن چندتا رویداد رو حل می‌کنه.
 
 03:19.850 --> 03:25.250
-the future, or possibly the case in which a service goes down for some very small period of time and
+حتی اگه یه سرویس وسط کار خاموش بشه و چندتا event رو از دست بده، با این روش همه چی جبران می‌شه.
 
 03:25.250 --> 03:27.230
-misses out on a couple of event events.
+و ما قراره توی اپلیکیشن بعدی حسابی از این استراتژی استفاده کنیم.
 
 03:27.680 --> 03:31.460
-We're going to use this strategy very heavily as we start to work on our next application.
+اگه به این روش ایرادی می‌بینی، درسته! بعضی مشکلات توش هست — قطعاً هست.
 
 03:32.600 --> 03:36.890
-Now, if you see some issues with this approach and there are some problems inside of here, without
-
-03:36.890 --> 03:38.320
-a doubt, don't sweat it.
+ولی فعلاً نگرانش نباش، توی مراحل بعدی بهش می‌پردازیم و اصلاحش می‌کنیم.
 
 03:38.330 --> 03:43.430
-There are cases and we are going to cover these corner cases, particularly around the possibility of
+یه‌سری حالت‌های خاص وجود داره و ما قراره این سناریوهای گوشه‌ای (corner cases) رو هم بررسی کنیم،
 
 03:43.430 --> 03:45.030
-having persistent data.
+به‌خصوص در مورد داده‌های پایدار (persistent data).
 
 03:45.050 --> 03:46.790
-Right now, none of our data is persistent.
+الان، هیچ‌کدوم از داده‌های ما پایدار نیستن.
 
 03:46.790 --> 03:51.680
-We store it inside of some in-memory data structure that's lost instantly whenever a service goes down.
+همه‌شون توی یه ساختار داده‌ای در حافظه (in-memory) ذخیره می‌شن که به محض خاموش شدن سرویس، از بین می‌رن.
 
 03:52.660 --> 03:57.910
-But if we were using a database where we were storing these posts and comments inside of some database
+ولی اگه از یه دیتابیس استفاده می‌کردیم — مثلاً اگه پست‌ها و کامنت‌ها رو توی یه دیتابیس ذخیره می‌کردیم...
 
 03:57.910 --> 04:01.900
-with, say, the query service, you might be thinking, Hey, we'll get into some trouble here if we
+مثلاً توی سرویس query — ممکنه با خودت بگی: خب، اگه یه event دوبار پردازش بشه چی؟
 
 04:01.900 --> 04:04.730
-try to run the same event or process the same event twice.
+یعنی اگه یه رویداد تکراری دوباره اجرا بشه، ممکنه به مشکل بخوریم؟
 
 04:04.750 --> 04:07.030
-Again, if you're thinking that, don't sweat it.
+اگه به این فکر کردی، نگران نباش.
 
 04:07.180 --> 04:10.330
-There are solutions to it that we're going to implement in our next application.
+براش راه‌حل داریم و قراره توی اپلیکیشن بعدی دقیقاً اون‌ها رو پیاده‌سازی کنیم.
 
 04:10.870 --> 04:14.280
-Okay, so this entire idea of sinking events looks like it's pretty handy.
+پس کل ایده‌ی سینک شدن با رویدادها خیلی کار راه‌اندازه.
 
 04:14.290 --> 04:15.250
-So pause right here.
+همین‌جا یه توقف کوچیک داشته باشیم.
 
 04:15.250 --> 04:16.360
-Continue in just a minute.
+و در ادامه، ویدیو رو ادامه می‌دیم.

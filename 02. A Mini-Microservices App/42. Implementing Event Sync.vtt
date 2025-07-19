@@ -1,289 +1,259 @@
 WEBVTT
 
 00:01.200 --> 00:05.250
-In this video, we're going to try implementing option number three inside of our application.
+توی این ویدیو می‌خوایم گزینه سوم رو داخل اپلیکیشن‌مون پیاده‌سازی کنیم.
 
 00:05.460 --> 00:08.190
-So we're going to take our query service down.
+قراره سرویس Query رو متوقف کنیم.
 
 00:08.190 --> 00:12.180
-We're then going to try to create some number of posts and some number of comments as well.
+بعد یه تعداد پست و یه سری کامنت ایجاد کنیم.
 
 00:12.210 --> 00:16.110
-We're then going to launch our query service and we're going to try to make sure that the query service
+سپس دوباره سرویس Query رو اجرا می‌کنیم و بررسی می‌کنیم که آیا این سرویس می‌تونه به event bus وصل بشه و ازش درخواست کنه که:
 
 00:16.110 --> 00:17.970
-can reach out to the event bus and tell it.
+«همه رویدادهایی که تا الان اتفاق افتاده رو بهم بده».
 
 00:17.970 --> 00:20.880
-Give me all the events that have occurred up to this point in time.
+یادت باشه ما داریم یه نسخه ساده‌شده و دست‌ساز از event bus می‌سازیم.
 
 00:21.270 --> 00:25.710
-And I want to remind you that we are putting together a home grown version of an event bus.
+پروژه‌های متن‌باز زیادی هستن که در محیط‌های production به شکل خیلی حرفه‌ای همین کارها رو انجام می‌دن.
 
 00:25.830 --> 00:32.280
-So there are real open source projects, very production quality in nature that are going to do a lot
+اما ما اینجا فقط می‌خوایم درک کنیم که پشت صحنه دقیقاً چه اتفاقی می‌افته، نه اینکه یه سیستم واقعی برای محیط عملیاتی بنویسیم.
 
 00:32.280 --> 00:37.140
-of what we are discussing right here in a much more automated and well intentioned fashion that within
+پس کدی که اینجا می‌نویسیم نباید توی محیط production استفاده بشه.
 
 00:37.140 --> 00:41.190
-what we are doing currently so all you and I are doing are trying to get a sense of what is going on
+هدف فقط اینه که بفهمیم فرآیند چطور پیش می‌ره.
 
 00:41.190 --> 00:41.730
-here.
+همین و بس.
 
 00:41.760 --> 00:44.850
-You should not use this code that we're about to write in a production environment.
+پس لطفاً از این کد توی پروژه واقعی استفاده نکن.
 
 00:44.850 --> 00:48.060
-I just want you to have an idea of what is going on behind the scenes.
+فقط برای یادگیریه.
 
 00:48.960 --> 00:53.460
-The first thing we're going to do is to make sure that whenever our event bus receives an event, we
+اولین کاری که می‌کنیم اینه که وقتی event bus یک رویداد دریافت کرد، اون رو داخل یه آرایه ذخیره کنه.
 
 00:53.460 --> 00:55.320
-are going to store it inside of an array.
+همه رویدادها رو توی یک آرایه نگه می‌داریم.
 
 00:55.740 --> 01:00.990
-We're then going to add in a new endpoint to our event bus, an endpoint that can allow us to retrieve
+سپس یک endpoint جدید به event bus اضافه می‌کنیم تا بتونیم همه‌ی رویدادهای گذشته رو ازش بگیریم.
 
 01:00.990 --> 01:02.670
-all the events that have ever occurred.
+یعنی یه مسیر جدید برای دریافت کل آرشیو eventها.
 
 01:03.090 --> 01:07.470
-Well, then make sure that whenever we launch the query service, we'll have it reach out to the event
+بعد مطمئن می‌شیم که وقتی سرویس Query اجرا میشه، بره از event bus تمام رویدادهای قبلی رو بگیره.
 
 01:07.470 --> 01:12.000
-bus and request all the events that have occurred, and we'll make sure that the query service attempts
+و اون‌ها رو پردازش کنه تا بتونه وضعیتش رو با کل سیستم هماهنگ نگه داره.
 
 01:12.000 --> 01:13.530
-to process all that data.
+خب، بریم سراغ پیاده‌سازی.
 
 01:14.300 --> 01:15.110
-So let's get to it.
+شروع کنیم.
 
 01:15.110 --> 01:19.130
-The first thing we're going to do is open up our event bus and make sure that we store all the different
-
-01:19.130 --> 01:21.110
-events that we collect over time.
+اولین مرحله اینه که بریم سراغ event bus و مطمئن بشیم که همه‌ی eventهایی که دریافت می‌کنیم رو ذخیره می‌کنیم.
 
 01:22.720 --> 01:26.020
-So back inside my editor, I'll find the event bus implementation.
+توی ادیتور، می‌رم سراغ پیاده‌سازی event bus.
 
 01:26.020 --> 01:27.490
-So here's indexes.
+فایل index.js رو باز می‌کنم.
 
 01:28.600 --> 01:32.140
-Right above our post request handler where we deal with incoming events.
+در بالای handler مربوط به POST که برای دریافت رویدادهاست،
 
 01:32.290 --> 01:39.100
-I'm going to simply create a new variable called events and will have it be an array like so.
+یه متغیر جدید تعریف می‌کنم به اسم events که یک آرایه خالیه.
 
 01:39.280 --> 01:43.180
-So we're going to take every single incoming event and throw it into this array.
+قراره همه رویدادهایی که دریافت می‌کنیم رو داخل این آرایه بریزیم.
 
 01:44.840 --> 01:46.580
-Then inside of our post request handler.
+حالا می‌ریم داخل handler مربوط به POST request.
 
 01:47.560 --> 01:51.840
-We'll take a look at the event that we receive and we will push it into that array.
+اونجا هر event که دریافت شد، با استفاده از events.push ذخیره‌اش می‌کنیم.
 
 01:51.850 --> 01:55.180
-So we'll do an events dot push event.
+یعنی می‌نویسیم: events.push(event)
 
 01:56.640 --> 02:00.660
-So now critically, the most recent event is going to be at the end of this array.
+در نتیجه، آخرین رویدادی که دریافت کردیم انتهای آرایه قرار می‌گیره.
 
 02:00.690 --> 02:04.140
-The first event that we receive will be at the very front of the array.
+و اولین رویداد هم در ابتدای آرایه باقی می‌مونه.
 
 02:05.360 --> 02:10.130
-We're then going to create another endpoint on this event bus to retrieve all the events that have ever
-
-02:10.130 --> 02:10.730
-occurred.
+حالا قراره یه endpoint جدید توی event bus بسازیم تا بتونیم همه‌ی این رویدادها رو دریافت کنیم.
 
 02:11.270 --> 02:13.730
-So after that existing post request handler.
+بعد از اون handler مربوط به POST که قبلاً داشتیم،
 
 02:14.930 --> 02:22.760
-I'll put in an AppKit for events with rec and rez, and then if anyone ever makes a request to splash
+یه route جدید تعریف می‌کنم با app.get برای مسیر /events و اگر کسی به این مسیر درخواست بده،
 
 02:22.760 --> 02:27.800
-events right here, we will simply respond with that big list of events.
+ما کل لیست eventهایی که توی اون آرایه ذخیره کردیم رو براش برمی‌گردونیم.
 
 02:28.780 --> 02:29.530
-Now again, one.
+دوباره یادآوری کنم:
 
 02:29.530 --> 02:31.820
-Repeat what I said just 2 minutes ago.
+همون‌طور که قبل‌تر هم گفتم،
 
 02:31.840 --> 02:35.990
-Real implementations of event buses are way more complex than what we have right here.
+پیاده‌سازی واقعی یه event bus خیلی پیچیده‌تر از چیزیه که ما الان داریم.
 
 02:36.010 --> 02:41.500
-This is just to give you a sense of this approach of trying to synchronize services after they've been
+ما فقط می‌خوایم با این ساختار ساده بفهمیم وقتی یه سرویس خاموش میشه و دوباره برمی‌گرده، چطور می‌تونه خودش رو با بقیه هماهنگ کنه.
 
 02:41.500 --> 02:45.400
-out of service, down, not even in existence or whatever else.
+چه اون سرویس فقط موقتاً قطع شده باشه یا تازه ساخته شده باشه.
 
 02:46.640 --> 02:46.940
-Okay.
+خب،
 
 02:46.940 --> 02:49.310
-So now let's go over to our query service.
+حالا بریم سراغ سرویس query.
 
 02:49.910 --> 02:51.020
-I'm going to close that file.
+فایل event bus رو می‌بندم.
 
 02:51.320 --> 02:54.560
-I'll go over to the query service and open up the indexed JS file.
+می‌رم سراغ فایل index.js در سرویس query.
 
 02:56.530 --> 03:00.580
-The first thing we're going to do inside of here is extract some of the logic that we have inside of
+اولین کاری که اینجا می‌کنیم اینه که کدی که مربوط به مدیریت eventهاست رو از handler اصلی جدا کنیم.
 
 03:00.580 --> 03:03.040
-our host events, root handler right now.
+چون الان تمام منطق مرتبط با هر event
 
 03:03.430 --> 03:08.380
-So inside of here, we've got a lot of code that knows exactly how to deal with or handle any given
+مستقیماً داخل همون handler مربوط به POST نوشته شده، که باعث میشه قابل استفاده در جای دیگه نباشه.
 
 03:08.380 --> 03:12.940
-event that's all localized directly inside this post request handler right now.
+ما قراره از این منطق در جاهای دیگه فایل هم استفاده کنیم، پس بهتره اون رو در قالب یه تابع مجزا دربیاریم.
 
 03:13.150 --> 03:18.160
-But we're going to need to very quickly process events in some different locations inside this file.
+پس تمام ifهایی که مربوط به بررسی type event هستن رو می‌بُریم و می‌بریم توی یه تابع helper.
 
 03:18.370 --> 03:22.420
-Long story short, we're going to take all these if statements and extract them into a separate helper
+توی handler مربوط به POST، می‌رم سراغ اولین if و تا آخرین if رو انتخاب می‌کنم.
 
 03:22.420 --> 03:23.080
-function.
+همه رو cut می‌کنم.
 
 03:23.990 --> 03:27.470
-So inside this post events, I'm going to find the first if statement.
+فقط مقدار type و data و یه console.log باقی می‌مونه.
 
 03:27.890 --> 03:30.590
-I'm going to go down to the bottom if statement right here.
+حالا میام پایین‌تر از route مربوط به POST
 
 03:31.980 --> 03:33.270
-I'm going to cut all that.
+و یه تابع جدید تعریف می‌کنم به اسم handleEvent.
 
 03:33.480 --> 03:38.190
-And so I'm just left with type data, a console log and the send right there.
+و اون کدهایی که cut کرده بودم رو داخل این تابع paste می‌کنم.
 
-03:40.930 --> 03:46.210
-I'm then going to define a new function right underneath posts and I'll call it handle event.
-
-03:48.610 --> 03:52.870
-And then I'm going to paste all the stuff that we just cut inside of that function.
-
-03:55.690 --> 04:00.250
-Now this function is going to need access to the data of the event and the type as well.
+03:40.930 --> 04:00.250
+این تابع نیاز داره به type و data دسترسی داشته باشه، پس این دوتا رو به عنوان پارامتر بهش می‌دم.
 
 04:00.280 --> 04:05.620
-So I'm going to assume that we're going to provide the type and the data as arguments to handle event.
+در نهایت توی handler اصلی، اون console.log رو حذف می‌کنم و به جاش تابع handleEvent رو صدا می‌زنم.
 
 04:07.530 --> 04:11.400
-Then finally back inside of our post request handler here is right here.
+و مقادیر type و data رو بهش پاس می‌دم.
 
 04:11.490 --> 04:14.010
-We're going to delete that console log, which we don't really need anymore.
+یعنی الان منطق پردازش eventها رو ریختیم داخل یه تابع قابل استفاده مجدد.
 
 04:14.800 --> 04:17.600
-And I'll replace it with a call to handle event.
+خیلی خوب.
 
 04:18.690 --> 04:21.660
-And I will pass in the type and data.
+حالا آخرین کاری که می‌خوایم انجام بدیم اینه که زمانی که سرویس query میاد بالا و شروع می‌کنه به گوش دادن روی پورت 4002،
 
 04:23.010 --> 04:27.030
-So all we just did is extract all that event, handling data into a reusable function.
+بلافاصله بعدش، یه درخواست به event bus بفرسته تا تمام رویدادهای قبلی رو دریافت کنه.
 
 04:28.840 --> 04:29.170
-Okay.
+خب،
 
 04:29.170 --> 04:35.190
-So now last thing we need to do whenever our query service comes online and it starts listening on Port
+پس بلافاصله بعد از console.log مربوط به شروع سرویس، می‌نویسم:
 
 04:35.200 --> 04:36.440
-4002.
+await axios.get
 
 04:36.460 --> 04:42.490
-Right after that would probably be a pretty good time to make a request over to our event bus and try
-
-04:42.490 --> 04:47.110
-to get a listing of all the different events that have been emitted up to this point in time.
-
-04:48.230 --> 04:56.480
-So right after we do that console.log, I'm going to add in and await Axios dot get we're going to reach
-
-04:56.480 --> 05:02.840
-out to http slash local host 4005 events.
+برای آدرس http://localhost:4005/events
 
 05:04.780 --> 05:07.200
-That's going to give us all the events that have occurred over time.
+این درخواست به ما تمام eventهایی که تا الان اتفاق افتادن رو می‌ده.
 
 05:07.210 --> 05:09.250
-Remember, we're making a gift request right here.
+یادت باشه، اینجا داریم یک درخواست GET می‌فرستیم.
 
 05:10.530 --> 05:12.690
-It was sign that to some rose variable.
+نتیجه رو داخل یه متغیر به اسم res ذخیره می‌کنم.
 
 05:13.800 --> 05:17.190
-I'm going to make sure I also mark the enclosing function as async.
+فراموش نکنیم که تابعی که این کد توشه باید async باشه چون داریم از await استفاده می‌کنیم.
 
 05:18.710 --> 05:22.730
-And then finally we're going to iterate through all the events that have occurred using a simple for
+در نهایت، روی تمام eventهایی که دریافت کردیم حلقه می‌زنیم، با یک for...of ساده.
 
 05:22.730 --> 05:23.240
-of loop.
+می‌تونی از forEach هم استفاده کنی، ولی اینجا ما با for...of پیش می‌ریم چون مستقیم و ساده‌ست.
 
 05:23.240 --> 05:25.820
-We can also do a for each whatever you want to do.
+می‌نویسم: let event of res.data
 
 05:25.820 --> 05:31.340
-But in this case I'll just use a four of very simple, straightforward, so let's say let event of rez
-
-05:31.340 --> 05:32.390
-dot data.
+یادت باشه که وقتی از axios استفاده می‌کنیم، داده اصلی داخل پاسخ در فیلد res.data قرار می‌گیره.
 
 05:32.420 --> 05:37.490
-Remember whenever we use Axios, the response or the actual data we get back is available on the data
-
-05:37.490 --> 05:38.990
-property of this response.
+داخل حلقه، اول یه console.log می‌زنیم که مثلاً بنویسه "در حال پردازش event نوع ..."
 
 05:41.370 --> 05:46.410
-So then inside of here, maybe first we could do a quick council log and say something like processing
+یعنی بنویسیم: Processing event: و بعدش type اون event رو چاپ کنیم.
 
 05:46.650 --> 05:47.520
-event.
+برای تست خوبه.
 
 05:49.270 --> 05:50.620
-And then event type.
+بعد از اون، واقعاً event رو پردازش می‌کنیم.
 
 05:52.530 --> 05:54.960
-And then right after that, we'll go ahead and actually handle the event.
+یعنی تابع handleEvent رو صدا می‌زنیم.
 
 05:54.960 --> 05:56.340
-So handle event.
+و type و data اون event رو بهش می‌دیم.
 
 05:56.790 --> 06:00.120
-We'll put in the event type in the event data.
+handleEvent(event.type, event.data)
 
 06:01.670 --> 06:02.720
-And that should be it.
+و همین.
 
 06:04.430 --> 06:04.700
-Okay.
+خب،
 
 06:04.700 --> 06:05.720
-So let's save this.
+کد رو ذخیره می‌کنیم.
 
 06:06.230 --> 06:10.190
-This is kind of a long video, so we'll take a quick pause right here and then test it out in just a
-
-06:10.190 --> 06:10.700
-moment.
+این ویدیو کمی طولانی شد، پس یه توقف کوتاه می‌کنیم و بعد بریم تستش کنیم ببینیم جواب می‌ده یا نه.
